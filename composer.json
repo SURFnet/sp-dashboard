@@ -1,5 +1,5 @@
 {
-    "name": "nic/sp-dashboard",
+    "name": "surfnet/sp-dashboard",
     "license": "proprietary",
     "type": "project",
     "autoload": {
