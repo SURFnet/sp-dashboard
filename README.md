@@ -1,4 +1,27 @@
-sp-dashboard
-============
+# Service Provider Dashboard
 
-A Symfony project created on April 25, 2017, 12:40 pm.
+Dashboard for [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/index.html) Service Providers.
+
+## Prerequisites
+
+- [Composer](https://getcomposer.org/doc/00-intro.md)
+- [Ansible](https://docs.ansible.com/ansible/intro_installation.html)
+- [Vagrant](https://www.vagrantup.com/docs/installation/)
+  - Optional, but recommended: [Hostsupdater plugin](https://github.com/cogitatio/vagrant-hostsupdater)
+
+## Getting started
+
+Install Composer dependencies using:
+
+```bash
+composer install
+```
+
+Start the Vagrant box:
+
+```bash
+vagrant up
+```
+
+The web interface is now accessible at [https://dev.support.surfconext.nl/](https://dev.support.surfconext.nl/).
+Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add `dev.support.openconext.nl` to your hosts file.
