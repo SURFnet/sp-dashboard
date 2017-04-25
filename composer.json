@@ -1,5 +1,6 @@
 {
     "name": "surfnet/sp-dashboard",
+    "description": "Dashboard application for SURFconext Service Providers",
     "license": "proprietary",
     "type": "project",
     "autoload": {
