@@ -24,5 +24,12 @@
             <arg value="text" />
             <arg path="phpmd.xml" />
         </exec>
+
+        <exec executable="vendor/bin/phpcs">
+            <arg line="--runtime-set ignore_warnings_on_exit 1" />
+            <arg line="--standard=phpcs.xml" />
+            <arg path="src" />
+            <arg path="tests" />
+        </exec>
     </target>
 </project>
