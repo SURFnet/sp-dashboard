@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SURFnet Service Provider Dashboard" default="test">
+    <target name="test" depends="lint" />
+
+    <target name="lint">
+        <exec executable="bin/console">
+            <arg line="lint:twig" />
+            <arg path="app/Resources" />
+        </exec>
+
+        <exec executable="bin/console">
+            <arg line="lint:yaml" />
+            <arg path="app/config" />
+        </exec>
+
+        <exec executable="composer">
+            <arg line="validate" />
+        </exec>
+    </target>
+</project>
