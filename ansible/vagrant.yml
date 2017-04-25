@@ -32,8 +32,3 @@
     - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
 
     - app
-  tasks:
-     - name: Run Doctrine Migrations
-       command: /vagrant/app/console doctrine:migrations:migrate -n
-     - name: Load Doctrine Fixtures
-       command: /vagrant/app/console doctrine:fixtures:load -n
