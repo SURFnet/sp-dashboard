@@ -16,6 +16,7 @@
   become: true
   vars:
     document_root: /vagrant/web
+    front_controller: app_dev.php
     support_domain: dev.support.surfconext.nl
     support_data_dir: /vagrant
     support_fpm_user: vagrant
