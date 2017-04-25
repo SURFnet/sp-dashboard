@@ -1,0 +1,54 @@
+- name: Install git
+  yum: name={{ item }} state=present
+  with_items:
+     - git
+
+
+- name: Checkout spform branch
+  git: repo=https://github.com/SURFnet/Service-provider-registration.git dest="{{ spform_branch_dir }}" version={{ spform_branch }} force=yes
+  when: spform_branch != ''
+  register: support_gitclone
+
+- name: Copy makerelease.sh
+  copy: src=makeRelease.sh dest={{spform_branch_dir}} mode=770
+
+- name: Make release
+  command: "./makeRelease.sh {{ spform_branch }}"
+  args:
+    chdir: "{{ spform_branch_dir }}"
+
+- name: Unpack current version
+  unarchive: src="/root/Releases/Service-provider-registration-{{ spform_branch }}.tar.gz" dest="{{ support_data_dir}}/releases" copy=no
+
+- name: Create current symlink
+  file: src="{{ support_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}" dest="{{ support_data_dir}}/current"  state=link
+
+- name: Create /registration symlink
+  file: src="{{ support_data_dir}}/current/web" dest="{{ support_data_dir}}/registration"  state=link
+
+- name: Delete log and data dir
+  file: path={{support_data_dir}}/current/app/{{ item }} state=absent
+  with_items: 
+     - logs
+     - data
+     - config/parameters.yml
+
+- name: Create symlinks
+  file: src={{support_data_dir}}/shared/app/{{ item }} dest={{ support_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}/app/{{item}} owner=root group=root state=link
+  with_items: 
+     - logs
+     - data
+     - config/parameters.yml
+
+- name: Create img symlink
+  file: src={{support_data_dir}}/shared/web/img/logos dest={{ support_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}/web/img/logos state=link
+
+- name: Run database migrations
+  command: app/console doc:mig:mig
+  args:
+    chdir: "{{ support_data_dir }}/current/"
+  notify: restart memcached
+
+- name: Make cache dir writeable for FPM user
+  file: path={{support_data_dir}}/current/app/cache owner={{ support_fpm_user }}
+

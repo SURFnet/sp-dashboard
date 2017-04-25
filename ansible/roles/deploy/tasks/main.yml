@@ -1,0 +1,34 @@
+---
+- name: Create directory for vhosts to store PHP sessions
+  file: path={{ php_session_dir}}/support state=directory owner={{ support_fpm_user }} group=root mode=770
+
+- name: Create the shared and releases directory for the support form
+  file: path={{ support_data_dir}}/{{item}} state=directory owner=root group=root mode=775
+  with_items:
+    - releases
+    - shared/app
+    - shared/app/config
+    - shared/web
+
+- name: Create shared directories writable by the FPM instance
+  file: path={{ support_data_dir}}/{{item}} state=directory owner={{ support_fpm_user }} group=root mode=775
+  with_items:
+    - shared/web/img
+    - shared/web/logos
+    - shared/web/img/logos
+
+- name: Create shared and writeables directory 
+  file: path={{ support_data_dir}}/shared/app/{{item}} state=directory owner={{ support_fpm_user }} group=root mode=775
+  with_items:
+    - logs
+    - data
+
+- name: Install config file
+  template: src=parameters.yml.j2 dest={{ support_data_dir}}/shared/app/config/parameters.yml
+
+- name: Check if latest version is installed
+  stat: path="{{ support_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}"
+  register: branch_installed
+
+- include: install-branch.yml
+  when: branch_installed.stat.exists == false

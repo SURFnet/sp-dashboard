@@ -1,0 +1,63 @@
+{% if apache_app_listen_address.support is defined %}
+Listen {{ apache_app_listen_address.support }}:{{ loadbalancing.support.port }}
+<Virtualhost {{ apache_app_listen_address.support }}:{{ loadbalancing.support.port }}>
+{% else %}
+<Virtualhost *:443 >
+{% endif %}
+    ServerName   https://{{ support_domain }}
+    ServerAdmin {{ apache_server_admin }}
+    Options -indexes +Includes
+    DocumentRoot {{ document_root }}
+    Alias /registration {{ support_data_dir }}/current/web
+    SetEnv HTTPS on
+
+    <Directory "{{ support_data_dir }}">
+        Require all granted
+        AllowOverride All
+        Options FollowSymLinks
+	Options -MultiViews
+	RewriteEngine On
+        # Generic mappings for SURFconext support
+	RewriteRule ^$ https://wiki.surfnet.nl/display/conextsupport [L,R]
+	RewriteRule ^[sS][pP]$ https://wiki.surfnet.nl/display/surfconextdev/Documentation+for+Service+Providers [R]
+	RewriteRule ^[iI][dD][pP]$ https://wiki.surfnet.nl/display/surfconextdev/Documentatie+voor+Identity+Providers
+	RewriteRule ^[vV][oO]$ https://wiki.surfnet.nl/display/surfconextdev/Samenwerkingsorganisaties [R]
+	RewriteRule ^[dD][iI][yY]$ https://wiki.surfnet.nl/display/surfconextdev/Guest+and+Test+Identity+Providers [R]
+	RewriteRule ^[cC][oO][nN][tT][aA][cC][tT]$ https://wiki.surfnet.nl/display/surfconextdev/Support [R]
+
+	# SP registration form 
+	RewriteRule ^spform/?$ https://support.surfconext.nl/SPregistration/form [NC,R]
+	RewriteRule ^SPregistration/?$ https://support.surfconext.nl/SPregistration/form [NC,R]
+
+ 
+	RewriteRule ^edugain/?$ https://wiki.surfnet.nl/display/surfconextdev/International+collaboration+through+eduGAIN [NC,R]
+	RewriteRule ^eduGAIN/?$ https://wiki.surfnet.nl/display/surfconextdev/International+collaboration+through+eduGAIN [NC,R]
+
+	RewriteRule ^sterke-?authenticatie  https://wiki.surfnet.nl/display/surfconextdev/SURFconext+strong+authentication [R=301,L]
+	RewriteRule ^strong-?authentication https://wiki.surfnet.nl/display/surfconextdev/SURFconext+strong+authentication [R=301,L]
+ 
+        # Rewrite rules voor SURFconext Dashboard 
+        RewriteRule ^dashboard https://wiki.surfnet.nl/display/surfconextdev/Beschikbare+diensten+activeren  [R=301,L]
+        RewriteRule ^rolverdeling https://wiki.surfnet.nl/display/surfconextdev/Rolverdeling+contactpersonen [R=301,L]
+        # Rewrite rules voor SURFconext AuthN 
+        RewriteRule ^autorisatie https://wiki.surfnet.nl/display/surfconextdev/Autorisatieregels [R=301,L]
+        # Rewrite rules voor sterke authenticatie
+        RewriteRule ^faq-sterke-authenticatie https://wiki.surfnet.nl/display/conextsupport/SURFconext+Sterke+Authenticatie [R=301,L]
+        RewriteRule ^faq-strong-authentication https://wiki.surfnet.nl/display/conextsupport/SURFconext+authentication+in+two+steps [R=301,L]
+    </Directory>
+{% if apache_app_listen_address.all is defined %}
+      SSLEngine on
+      SSLCertificateFile      {{ tls.cert_path }}/{{ tls_star_cert }}
+      SSLCertificateKeyFile   {{ tls.cert_private_path }}/{{ tls_star_cert_key }}
+      SSLCertificateChainFile {{ tls.cert_path_ca }}/{{ tls_ca }}
+      BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+      # MSIE 7 and newer should be able to use keepalive
+      BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+{% endif %}
+
+    # Proxy the requests to FPM
+    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php-fpm/support-pool.sock|fcgi://localhost/{{ document_root }}/$1
+
+    ErrorLog "|/usr/bin/logger -p local3.err  -t 'Apache-SUPPORT'"
+    CustomLog "|/usr/bin/logger -p local3.info  -t 'Apache-SUPPORT'" combined
+</VirtualHost>

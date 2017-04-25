@@ -1,0 +1,39 @@
+---
+- hosts: all
+  tasks:
+   - name: "include OpenConext-deploy vars"
+     include_vars: "../../OpenConext-deploy/environments/vm/group_vars/vm.yml"
+   - name: "Include OpenConext-deploy secrets"
+     include_vars: "../../OpenConext-deploy/environments/vm/secrets/vm.yml"
+   - name: Set base_domain  
+     set_fact: 
+       base_domain: dev.support.surfconext.nl
+       engine_feature_ldap_integration: 0
+
+  tags: always
+
+- hosts: all
+  become: true
+  vars:
+    document_root: /vagrant/web
+    support_domain: dev.support.surfconext.nl
+    support_data_dir: /vagrant
+    support_fpm_user: vagrant
+  roles:
+    - ../OpenConext-deploy/roles/openconext-common
+    - ../OpenConext-deploy/roles/httpd
+    - ../OpenConext-deploy/roles/php56fpm
+    - { role: ../OpenConext-deploy/roles/mysql, tags: ['mysql'] }
+    - { role: ../OpenConext-deploy/roles/vm_only_provision_eb_sr, tags: ['prov'] }
+    - { role: ../OpenConext-deploy/roles/janus, tags: ['janus'] }
+    - { role: ../OpenConext-deploy/roles/engineblock, tags: ['eb'] }
+    - { role: ../OpenConext-deploy/roles/java,             tags: ['java' ] }
+    - { role: ../OpenConext-deploy/roles/mujina-idp,        tags: ['legacy' ] }
+    - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
+
+    - app
+  tasks:
+     - name: Run Doctrine Migrations
+       command: /vagrant/app/console doctrine:migrations:migrate -n
+     - name: Load Doctrine Fixtures
+       command: /vagrant/app/console doctrine:fixtures:load -n

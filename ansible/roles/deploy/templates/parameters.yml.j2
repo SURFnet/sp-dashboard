@@ -1,0 +1,34 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: {{ mariadb_host }}
+    database_port: 3306
+    database_name: spregistration
+    database_user: sprw
+    database_password: {{ mysql_passwords.spregistration }}
+    database_path: '%kernel.root_dir%/data.db3'
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: phipoo8ohrohNgeeyeTahn6pooseip6v
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: true
+    router.request_context.host: support.surfconext.nl
+    mail_from: support@surfconext.nl
+    mail_receiver: support@surfconext.nl
+    simplesamlphp.path: simplesaml/
+    simplesamlphp.admin_password: {{ support_simplesaml_secret }}
+    simplesamlphp.technical_contact_name: 'SURFconext Operations'
+    simplesamlphp.technical_contact_email: surfconext-beheer@surfnet.nl
+    simplesamlphp.idp: 'https://engine.{{base_domain}}/authentication/idp/metadata'
+    memcached_servers:
+        localhost: 11211
+    janus_url: 'https://aansluitform:ifnUcm6nqsEbU9IiYh@serviceregistry.{{ base_domain }}/janus/app.php/api'
+    error_mail_address: coin-logs@list.surfnet.nl
+    error_mail_subject: 'Service Provider Registration Error'
+    ssllabs_required_grade: B
+    metadata_url_timeout: 30
+
