@@ -37,6 +37,7 @@
         "phpunit/phpunit": "^5.7",
         "sensio/distribution-bundle": "^5.0",
         "sensio/generator-bundle": "^3.0",
+        "squizlabs/php_codesniffer": "^2.8",
         "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {
