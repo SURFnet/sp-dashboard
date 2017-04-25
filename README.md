@@ -1,3 +1,8 @@
+<a href="https://www.surf.nl/over-surf/werkmaatschappijen/surfnet">
+    <img src="https://www.surf.nl/binaries/werkmaatschappijlogo/content/gallery/surf/logos/surfnet.png" alt="SURFnet"
+         align="right" />
+</a>
+
 # Service Provider Dashboard
 
 Dashboard for [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/index.html) Service Providers.
