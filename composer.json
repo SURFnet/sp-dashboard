@@ -33,6 +33,7 @@
     },
     "require-dev": {
         "incenteev/composer-parameter-handler": "^2.0",
+        "phpunit/phpunit": "^5.7",
         "sensio/distribution-bundle": "^5.0",
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0"
