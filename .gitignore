@@ -1,3 +1,5 @@
+/.vagrant/
+/ansible/*.retry
 /app/config/parameters.yml
 /build/
 /phpunit.xml
