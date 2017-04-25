@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SURFnet Service Provider Dashboard" default="test">
-    <target name="test" depends="lint" />
+    <target name="test" depends="lint,static-analysis" />
 
     <target name="lint">
         <exec executable="bin/console">
@@ -15,6 +15,14 @@
 
         <exec executable="composer">
             <arg line="validate" />
+        </exec>
+    </target>
+
+    <target name="static-analysis">
+        <exec executable="vendor/bin/phpmd">
+            <arg path="src" />
+            <arg value="text" />
+            <arg path="phpmd.xml" />
         </exec>
     </target>
 </project>
