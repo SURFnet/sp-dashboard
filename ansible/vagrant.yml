@@ -15,7 +15,8 @@
 - hosts: all
   become: true
   vars:
-    document_root: /vagrant/web
+    sp_dashboard_document_root: /vagrant/web
+    front_controller: app_dev.php
     support_domain: dev.support.surfconext.nl
     support_data_dir: /vagrant
     support_fpm_user: vagrant
@@ -32,8 +33,3 @@
     - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
 
     - app
-  tasks:
-     - name: Run Doctrine Migrations
-       command: /vagrant/app/console doctrine:migrations:migrate -n
-     - name: Load Doctrine Fixtures
-       command: /vagrant/app/console doctrine:fixtures:load -n
