@@ -7,9 +7,9 @@ Listen {{ apache_app_listen_address.support }}:{{ loadbalancing.support.port }}
     ServerName   https://{{ support_domain }}
     ServerAdmin {{ apache_server_admin }}
     Options -indexes +Includes
-    DocumentRoot {{ document_root }}
+    DocumentRoot {{ sp_dashboard_document_root }}
 
-    <Directory {{ document_root }}>
+    <Directory {{ sp_dashboard_document_root }}>
         AllowOverride None
         Require all granted
 
@@ -30,7 +30,7 @@ Listen {{ apache_app_listen_address.support }}:{{ loadbalancing.support.port }}
 {% endif %}
 
     # Proxy the requests to FPM
-    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php-fpm/support-pool.sock|fcgi://localhost/{{ document_root }}/$1
+    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php-fpm/support-pool.sock|fcgi://localhost/{{ sp_dashboard_document_root }}/$1
 
     ErrorLog "|/usr/bin/logger -p local3.err  -t 'Apache-SUPPORT'"
     CustomLog "|/usr/bin/logger -p local3.info  -t 'Apache-SUPPORT'" combined
