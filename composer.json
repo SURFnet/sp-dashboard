@@ -1,7 +1,7 @@
 {
     "name": "surfnet/sp-dashboard",
     "description": "Dashboard application for SURFconext Service Providers",
-    "license": "proprietary",
+    "license": "Apache-2.0",
     "type": "project",
     "autoload": {
         "psr-4": {
