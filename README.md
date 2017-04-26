@@ -3,6 +3,8 @@
          align="right" />
 </a>
 
+[![Build status](https://img.shields.io/travis/SURFnet/sp-dashboard.svg)](https://travis-ci.org/SURFnet/sp-dashboard)
+
 # Service Provider Dashboard
 
 Dashboard for [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/index.html) Service Providers.
