@@ -33,6 +33,7 @@
     },
     "require-dev": {
         "incenteev/composer-parameter-handler": "^2.0",
+        "jakub-onderka/php-parallel-lint": "^0.9.2",
         "phpmd/phpmd": "^2.6",
         "phpunit/phpunit": "^5.7",
         "sensio/distribution-bundle": "^5.0",

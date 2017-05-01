@@ -3,6 +3,13 @@
     <target name="test" depends="lint,static-analysis,unit-tests,integration-tests" />
 
     <target name="lint">
+        <exec executable="vendor/bin/parallel-lint">
+            <arg path="app" />
+            <arg path="src" />
+            <arg path="tests" />
+            <arg path="web" />
+        </exec>
+
         <exec executable="bin/console">
             <arg line="lint:twig" />
             <arg path="app/Resources" />
