@@ -7,7 +7,7 @@ php:
 
 cache:
   directories:
-    - ~/.composer/cache
+    - ~/.composer/cache/files
 
 before_script:
   - phpenv config-add .travis.php.ini
