@@ -38,6 +38,10 @@
             <arg path="src" />
             <arg path="tests" />
         </exec>
+
+        <exec executable="vendor/bin/phpcpd" failonerror="false">
+            <arg path="src" />
+        </exec>
     </target>
 
     <target name="unit-tests">
