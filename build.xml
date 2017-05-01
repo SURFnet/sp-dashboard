@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SURFnet Service Provider Dashboard" default="test">
+    <target name="test" depends="lint,static-analysis,unit-tests,integration-tests" />
+
+    <target name="lint">
+        <exec executable="vendor/bin/parallel-lint" failonerror="true">
+            <arg path="app" />
+            <arg path="src" />
+            <arg path="tests" />
+            <arg path="web" />
+        </exec>
+
+        <exec executable="bin/console" failonerror="true">
+            <arg line="lint:twig" />
+            <arg path="app/Resources" />
+        </exec>
+
+        <exec executable="bin/console" failonerror="true">
+            <arg line="lint:yaml" />
+            <arg path="app/config" />
+        </exec>
+
+        <exec executable="composer" failonerror="true">
+            <arg line="validate" />
+        </exec>
+    </target>
+
+    <target name="static-analysis">
+        <exec executable="vendor/bin/phpmd" failonerror="true">
+            <arg path="src" />
+            <arg value="text" />
+            <arg path="phpmd.xml" />
+        </exec>
+
+        <exec executable="vendor/bin/phpcs" failonerror="true">
+            <arg line="--runtime-set ignore_warnings_on_exit 1" />
+            <arg line="--standard=phpcs.xml" />
+            <arg path="src" />
+            <arg path="tests" />
+        </exec>
+
+        <exec executable="vendor/bin/phpcpd" failonerror="false">
+            <arg path="src" />
+        </exec>
+    </target>
+
+    <target name="unit-tests">
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg line="--testsuite unit" />
+        </exec>
+    </target>
+
+    <target name="integration-tests">
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg line="--testsuite integration" />
+        </exec>
+    </target>
+</project>
