@@ -40,3 +40,9 @@ Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add
 ### Running the tests
 
 `ant test` will run the full suite of tests and static analysis.
+
+## Other resources
+
+ - [Developer documentation](docs/index.md)
+ - [Issue tracker](https://www.pivotaltracker.com/n/projects/1400064)
+ - [License](LICENSE.txt)
