@@ -14,7 +14,7 @@ services.
 
 ## Prerequisites
 
-- [PHP](https://secure.php.net/manual/en/install.php) 5.6 or higher
+- [PHP](https://secure.php.net/manual/en/install.php) (5.6 or higher)
 - [Composer](https://getcomposer.org/doc/00-intro.md)
 - [Apache Ant](https://ant.apache.org/manual/install.html)
 - [Ansible](https://docs.ansible.com/ansible/intro_installation.html)
