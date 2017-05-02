@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SURFnet Service Provider Dashboard" default="test">
-    <target name="test" depends="lint,static-analysis,unit-tests,integration-tests" />
+    <target name="test" depends="lint,static-analysis,unit-tests,integration-tests,security-tests" />
 
     <target name="lint">
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
@@ -53,6 +53,12 @@
     <target name="integration-tests">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite integration" />
+        </exec>
+    </target>
+
+    <target name="security-tests">
+        <exec executable="vendor/bin/security-checker" failonerror="true">
+            <arg line="security:check" />
         </exec>
     </target>
 </project>

@@ -39,6 +39,7 @@
         "sebastian/phpcpd": "^3.0",
         "sensio/distribution-bundle": "^5.0",
         "sensio/generator-bundle": "^3.0",
+        "sensiolabs/security-checker": "^4.0",
         "squizlabs/php_codesniffer": "^2.8",
         "symfony/phpunit-bridge": "^3.0"
     },
