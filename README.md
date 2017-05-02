@@ -36,3 +36,7 @@ vagrant up
 
 The web interface is now accessible at [https://dev.support.surfconext.nl/](https://dev.support.surfconext.nl/).
 Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add `dev.support.openconext.nl` to your hosts file.
+
+### Running the tests
+
+`ant test` will run the full suite of tests and static analysis.
