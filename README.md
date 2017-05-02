@@ -4,6 +4,7 @@
 </a>
 
 [![Build status](https://img.shields.io/travis/SURFnet/sp-dashboard.svg)](https://travis-ci.org/SURFnet/sp-dashboard)
+[![Issue tracker](https://img.shields.io/badge/issues-Pivotal%20Tracker-blue.svg)](https://www.pivotaltracker.com/n/projects/1400064)
 
 # Service Provider Dashboard
 
