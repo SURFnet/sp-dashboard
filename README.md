@@ -8,7 +8,9 @@
 
 # Service Provider Dashboard
 
-Dashboard for [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/index.html) Service Providers.
+The Service Provider Dashboard is a dashboard where
+[SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/index.html) Service Providers can register their
+services.
 
 ## Prerequisites
 
