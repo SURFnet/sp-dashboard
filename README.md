@@ -15,6 +15,7 @@ Dashboard for [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/
 
 - [PHP](https://secure.php.net/manual/en/install.php) 5.6 or higher
 - [Composer](https://getcomposer.org/doc/00-intro.md)
+- [Apache Ant](https://ant.apache.org/manual/install.html)
 - [Ansible](https://docs.ansible.com/ansible/intro_installation.html)
 - [Vagrant](https://www.vagrantup.com/docs/installation/)
   - Optional, but recommended: [Hostsupdater plugin](https://github.com/cogitatio/vagrant-hostsupdater)
