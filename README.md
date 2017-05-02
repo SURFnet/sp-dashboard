@@ -11,6 +11,7 @@ Dashboard for [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/
 
 ## Prerequisites
 
+- [PHP](https://secure.php.net/manual/en/install.php) 5.6 or higher
 - [Composer](https://getcomposer.org/doc/00-intro.md)
 - [Ansible](https://docs.ansible.com/ansible/intro_installation.html)
 - [Vagrant](https://www.vagrantup.com/docs/installation/)
