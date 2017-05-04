@@ -28,20 +28,18 @@ project lives.
 
 ## Getting started
 
-Install Composer dependencies using:
+First, run `composer install`. This will install all PHP dependencies, including the development dependencies.
 
-```bash
-composer install
-```
+In order to start the development environment, run `vagrant up`. This will build and start the virtual machine that is
+used in development to run the application. When started for the first time, the Vagrant box will be provisioned using
+Ansible.
 
-Start the Vagrant box:
+Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add
+`192.168.33.19  dev.support.surfconext.nl` to your hosts file so that requests will be routed to the virtual machine.
 
-```bash
-vagrant up
-```
-
-The web interface is now accessible at [https://dev.support.surfconext.nl/](https://dev.support.surfconext.nl/).
-Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add `dev.support.openconext.nl` to your hosts file.
+The application is now up and running and can be accessed at
+[https://dev.support.surfconext.nl/](https://dev.support.surfconext.nl/). Note that in development the `app_dev.php`
+front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
 
 ### Running the tests
 
