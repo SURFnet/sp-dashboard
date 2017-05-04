@@ -21,6 +21,11 @@ their services.
 - [Vagrant](https://www.vagrantup.com/docs/installation/)
   - Optional, but recommended: [Hostsupdater plugin](https://github.com/cogitatio/vagrant-hostsupdater)
 
+The Ansible playbook for SP Dashboard depends on some roles from
+[OpenConext-deploy](https://github.com/OpenConext/OpenConext-deploy), so in order to provision the Vagrant box you need
+to have that repository checked out in a directory called `OpenConext-deploy` in the parent directory of where this
+project lives.
+
 ## Getting started
 
 Install Composer dependencies using:
