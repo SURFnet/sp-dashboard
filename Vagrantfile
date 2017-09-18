@@ -12,4 +12,8 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "ansible/vagrant.yml"
     ansible.groups = {"dev" => "default"}
   end
+
+  # Stop/start Mailcatcher
+  config.vm.provision :shell, run: "always", inline: "pkill mailcatcher || true"
+  config.vm.provision :shell, run: "always", inline: "/usr/local/bin/mailcatcher --ip=0.0.0.0"
 end

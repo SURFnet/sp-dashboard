@@ -45,6 +45,7 @@ bin console doctrine:migrations:migrate
 The application is now up and running and can be accessed at
 [https://dev.support.surfconext.nl/](https://dev.support.surfconext.nl/). Note that in development the `app_dev.php`
 front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
+* To view mails caught by Mailcatcher, visit [dev.support.surfconext.nl:1080](https://dev.support.surfconext.nl:1080/)
 
 ### Running the tests
 

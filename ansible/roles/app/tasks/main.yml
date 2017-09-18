@@ -52,3 +52,6 @@
 
 - name: Create symfony database
   mysql_db: name=symfony state=present
+
+- include: mailcatcher.yml
+  when: develop_spd
