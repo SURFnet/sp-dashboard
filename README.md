@@ -37,6 +37,11 @@ Ansible.
 Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add
 `192.168.33.19  dev.support.surfconext.nl` to your hosts file so that requests will be routed to the virtual machine.
 
+Install database migrations
+```
+bin console doctrine:migrations:migrate
+```
+
 The application is now up and running and can be accessed at
 [https://dev.support.surfconext.nl/](https://dev.support.surfconext.nl/). Note that in development the `app_dev.php`
 front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
