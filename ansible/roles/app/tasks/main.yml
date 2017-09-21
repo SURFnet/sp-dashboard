@@ -37,6 +37,18 @@
   notify:
     - reload php-fpm
 
+- name: Install PHP Xdebug extension
+  yum: name={{ item }} state=present
+  with_items:
+    - php-pecl-xdebug
+  when: develop_spd
+
+- name: Configure PHP Xdebug
+  template: src=xdebug.ini.j2 dest=/etc/php.d/15-xdebug.ini
+  notify:
+    - restart php-fpm
+  when: develop_spd
+
 - name: Remove ssl.conf
   file:
     path: /etc/httpd/conf.d/ssl.conf

@@ -51,6 +51,10 @@ front controller is used automatically, so you don't have to include `/app_dev.p
 
 `ant test` will run the full suite of tests and static analysis.
 
+### Xdebug
+Xdebug is configured when provisioning your development Vagrant box. The Vagrantfile sets the `develop_spd` 
+environment variable in Ansible. This will prevent Xdebug from being enabled in test and production releases.
+
 ## Other resources
 
  - [Developer documentation](docs/index.md)
