@@ -37,6 +37,18 @@
   notify:
     - reload php-fpm
 
+- name: Install PHP Xdebug extension
+  yum: name={{ item }} state=present
+  with_items:
+    - php-pecl-xdebug
+  when: develop_spd
+
+- name: Configure PHP Xdebug
+  template: src=xdebug.ini.j2 dest=/etc/php.d/15-xdebug.ini
+  notify:
+    - restart php-fpm
+  when: develop_spd
+
 - name: Remove ssl.conf
   file:
     path: /etc/httpd/conf.d/ssl.conf
@@ -50,5 +62,13 @@
     state: present
     line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl serviceregistry.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl'
 
-- name: Create symfony database
-  mysql_db: name=symfony state=present
+- name: Create SP Dashboard database
+  mysql_db: name={{ item }} state=present
+  with_items: "{{ spd_databases.names }}"
+
+- name: Create SP Dashboard user
+  mysql_user: name={{ item.name }} password={{ item.password }} priv={{ item.db_name }}.*:ALL state=present login_user=root login_password={{ mysql_root_password }}
+  with_items: "{{ spd_databases.users }}"
+
+- include: mailcatcher.yml
+  when: develop_spd

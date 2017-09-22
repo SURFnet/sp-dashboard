@@ -13,16 +13,15 @@ instance_name: "OpenConext dev"
 mysql_root_password: secret
 mariadb_host: localhost
 mysql_host: localhost
-mysql_passwords:
+spd_mysql_passwords:
   spregistration: secret
   sr: secret
-databases:
+spd_databases:
   names:
     - spregistration
     - "{{ janus_database_name }}"
-
   users:
-   - { name: sprw, db_name: spregistration, password: "{{ mysql_passwords.spregistration }}" }
+   - { name: sprw, db_name: spregistration, password: "{{ spd_mysql_passwords.spregistration }}" }
    - { name: "{{ janus_database_user }}", db_name: "{{ janus_database_name }}", password: "{{ mysql_passwords.sr }}" }
 
 database_clients: [ "{{ mysql_host }}" ]
