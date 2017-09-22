@@ -58,7 +58,7 @@ class Contact
     private $emailAddress;
 
     /**
-     * @var \Surfnet\ServiceProviderDashboard\Entity\Supplier
+     * @var Supplier
      *
      * @ORM\ManyToOne(targetEntity="Supplier", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)

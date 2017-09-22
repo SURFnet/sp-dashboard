@@ -63,4 +63,11 @@ class Supplier
      * @ORM\OneToMany(targetEntity="Contact", mappedBy="supplier", cascade={"persist"}, orphanRemoval=true)
      */
     private $contacts;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Service", mappedBy="supplier", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $services;
 }
