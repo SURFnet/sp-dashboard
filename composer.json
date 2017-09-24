@@ -5,7 +5,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Surfnet\\ServiceProviderDashboard\\": "src/"
+            "Surfnet\\": "src/Surfnet"
         },
         "classmap": [
             "app/AppKernel.php",
