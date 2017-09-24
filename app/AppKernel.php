@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DashboardBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
