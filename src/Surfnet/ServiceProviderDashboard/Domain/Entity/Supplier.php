@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet bv
+ * Copyright 2017 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Entity;
+namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,8 +24,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  */
-class Contact
+class Supplier
 {
     /**
      * @var int
@@ -39,29 +41,35 @@ class Contact
     /**
      * @var string
      *
-     * @ORM\Column(length=150)
+     * @ORM\Column(type="guid", unique=true)
      */
-    private $nameId;
+    private $guid;
 
     /**
      * @var string
      *
      * @ORM\Column(length=255)
      */
-    private $displayName;
+    private $name;
 
     /**
      * @var string
      *
      * @ORM\Column(length=255)
      */
-    private $emailAddress;
+    private $teamName;
 
     /**
-     * @var Supplier
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="Supplier", inversedBy="contacts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity="Contact", mappedBy="supplier", cascade={"persist"}, orphanRemoval=true)
      */
-    private $supplier;
+    private $contacts;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Service", mappedBy="supplier", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $services;
 }

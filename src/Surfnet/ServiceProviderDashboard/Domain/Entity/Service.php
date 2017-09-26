@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet bv
+ * Copyright 2017 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Entity;
+namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Surfnet\ServiceProviderDashboard\Model\Contact as ContactPerson;
-use Surfnet\ServiceProviderDashboard\Model\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\Model\Contact as ContactPerson;
+use Surfnet\ServiceProviderDashboard\Domain\Model\Attribute;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -28,6 +28,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Service
 {
@@ -298,5 +301,4 @@ class Service
      * @ORM\JoinColumn(nullable=false)
      */
     private $supplier;
-
 }
