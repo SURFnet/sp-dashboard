@@ -18,14 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
  * @ORM\Entity
- *
- * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  */
 class Supplier
 {
@@ -42,6 +42,9 @@ class Supplier
      * @var string
      *
      * @ORM\Column(type="guid", unique=true)
+     *
+     * @Assert\NotBlank
+     * @Assert\Uuid
      */
     private $guid;
 
@@ -49,6 +52,8 @@ class Supplier
      * @var string
      *
      * @ORM\Column(length=255)
+     *
+     * @Assert\NotBlank
      */
     private $name;
 
@@ -56,6 +61,8 @@ class Supplier
      * @var string
      *
      * @ORM\Column(length=255)
+     *
+     * @Assert\NotBlank
      */
     private $teamName;
 
@@ -72,4 +79,66 @@ class Supplier
      * @ORM\OneToMany(targetEntity="Service", mappedBy="supplier", cascade={"persist"}, orphanRemoval=true)
      */
     private $services;
+
+    public function __construct()
+    {
+        $this->contacts = new ArrayCollection();
+        $this->services = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGuid()
+    {
+        return $this->guid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTeamName()
+    {
+        return $this->teamName;
+    }
+
+    /**
+     * @param string $guid
+     */
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $teamName
+     */
+    public function setTeamName($teamName)
+    {
+        $this->teamName = $teamName;
+    }
 }
