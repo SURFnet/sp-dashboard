@@ -1,1 +1,3 @@
 services:
+    dashboard.monolog.json_formatter:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
