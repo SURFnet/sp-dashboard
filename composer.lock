@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "243781b7ac05dc621fe06e43323d8391",
+    "content-hash": "2ac8b31b56a59d20d32aa6a5faa39e1d",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2507,16 +2507,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.34.0",
+            "version": "v1.34.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "b38636760c4c96b75c8d6c7ee2690485317ab4fa"
+                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b38636760c4c96b75c8d6c7ee2690485317ab4fa",
-                "reference": "b38636760c4c96b75c8d6c7ee2690485317ab4fa",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/f878bab48edb66ad9c6ed626bf817f60c6c096ee",
+                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee",
                 "shasum": ""
             },
             "require": {
@@ -2568,7 +2568,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-06-05T17:16:52+00:00"
+            "time": "2017-07-04T13:19:31+00:00"
         },
         {
             "name": "zendframework/zend-code",
