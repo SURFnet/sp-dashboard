@@ -14,6 +14,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Surfnet\\": "src\\Surfnet",
             "Surfnet\\ServiceProviderDashboard\\Tests\\": "tests/"
         },
         "files": [
@@ -26,6 +27,7 @@
         "doctrine/doctrine-cache-bundle": "^1.2",
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "doctrine/orm": "^2.5",
+        "stof/doctrine-extensions-bundle": "^1.2",
         "symfony/assetic-bundle": "^2.8",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
