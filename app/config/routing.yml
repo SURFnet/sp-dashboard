@@ -1,0 +1,2 @@
+dashboard:
+    resource: '@DashboardBundle/Resources/config/routing.yml'
