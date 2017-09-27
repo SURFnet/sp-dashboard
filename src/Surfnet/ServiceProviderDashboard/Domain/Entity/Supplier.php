@@ -42,9 +42,6 @@ class Supplier
      * @var string
      *
      * @ORM\Column(type="guid", unique=true)
-     *
-     * @Assert\NotBlank
-     * @Assert\Uuid
      */
     private $guid;
 
@@ -52,8 +49,6 @@ class Supplier
      * @var string
      *
      * @ORM\Column(length=255)
-     *
-     * @Assert\NotBlank
      */
     private $name;
 
@@ -61,8 +56,6 @@ class Supplier
      * @var string
      *
      * @ORM\Column(length=255)
-     *
-     * @Assert\NotBlank
      */
     private $teamName;
 

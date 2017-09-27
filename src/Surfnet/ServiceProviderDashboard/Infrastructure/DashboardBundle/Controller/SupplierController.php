@@ -18,10 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\SupplierType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,6 +31,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SupplierController extends Controller
 {
+    /**
+     * @var CommandBus
+     */
+    private $commandBus;
+
+    /**
+     * @param CommandBus $commandBus
+     */
+    public function __construct(CommandBus $commandBus)
+    {
+        $this->commandBus = $commandBus;
+    }
+
     /**
      * @Method({"GET", "POST"})
      * @Route("/supplier/create", name="supplier_add")
@@ -40,31 +55,20 @@ class SupplierController extends Controller
     {
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        $supplier = new Supplier();
-        $form = $this->createForm(SupplierType::class, $supplier);
+        $command = new CreateSupplier();
+
+        $form = $this->createForm(SupplierType::class, $command);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $logger->info(sprintf('Save new Supplier, entity was created by: %s', '@todo'), (array) $supplier);
-
-            return $this->redirectToRoute('supplier_overview');
+            $logger->info(sprintf('Save new Supplier, entity was created by: %s', '@todo'), (array) $command);
+            $this->commandBus->handle($command);
+            return $this->redirectToRoute('entity_list');
         }
 
         return $this->render('DashboardBundle:Supplier:create.html.twig', array(
             'form' => $form->createView(),
         ));
     }
-
-    /**
-     * @Method("GET")
-     * @Route("/supplier", name="supplier_overview")
-     * @Template()
-     */
-    public function overviewAction()
-    {
-
-    }
-
 }

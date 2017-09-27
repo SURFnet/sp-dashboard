@@ -43,13 +43,25 @@ class CreateSupplier implements Command
 
     /**
      * @param string $guid
-     * @param string $teamName
-     * @param string $name
      */
-    public function __construct($guid, $teamName, $name)
+    public function setGuid($guid)
     {
         $this->guid = $guid;
+    }
+
+    /**
+     * @param string $teamName
+     */
+    public function setTeamName($teamName)
+    {
         $this->teamName = $teamName;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
         $this->name = $name;
     }
 
