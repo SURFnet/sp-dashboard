@@ -17,3 +17,5 @@
 /web/bundles/
 /app/bootstrap.php.cache
 /.idea
+/node_modules
+/web/build
