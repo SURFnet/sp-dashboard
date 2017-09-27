@@ -21,7 +21,7 @@ outside world (database, other applications, etc.) which significantly speeds up
 ## Separation of read and write sides (CQRS)
 
 The **domain** is only used for write operations, i.e. the handling of commands. For read operations, a simple read 
-model will be used which exists of simple Doctrine entities with public properties. This read model will be part of the
+model will be used which exists of simple Doctrine entities. This read model will be part of the
 infrastructure layer.
 
 Since this read model reads its data from the same database as the data of the write model is written to (instead of 
@@ -30,3 +30,5 @@ Since this read model reads its data from the same database as the data of the w
 Separating the read- and write sides of the application allows to deviate between them and gives more freedom to match
 the data model to what is required for the user interface. It also saves some trouble that might occur when trying to 
 force the use of entities and value objects on the read side.
+
+[Tactician from the PHP League](https://tactician.thephpleague.com) is used to assist in the handling of write commands.
