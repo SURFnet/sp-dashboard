@@ -1,0 +1,72 @@
+h2 {
+  margin: 35px 0 20px 0;
+  font-size: 22px;
+}
+
+label {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: $medium-grey;
+  display: block;
+}
+
+em {
+  display: block;
+  font-size: smaller;
+  font-style: italic;
+  &.error {
+    color: $red;
+    &.with-checkbox {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.validity-input-wrapper {
+  position: relative;
+
+  i {
+    position: absolute;
+    right: 5px;
+    top: 6px;
+    font-size: large;
+  }
+}
+
+input[type=text], input[type=email], textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid $lighter-grey;
+  padding: 6px;
+  border-radius: $br;
+  font-size: 14px;
+  margin-top: 5px;
+  &[disabled] {
+    background-color: $light-grey;
+  }
+}
+
+.button {
+  min-width: 200px;
+}
+
+div.checkbox {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  &.with-error {
+    margin-bottom: 0;
+  }
+  em {
+    margin-left: 8px;
+  }
+}
+
+@include phone {
+  section.buttons {
+    .button {
+      min-width: inherit;
+    }
+  }
+}
+

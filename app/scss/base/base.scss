@@ -1,0 +1,27 @@
+body {
+  font-family: "Roboto", Sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: $dark-grey;
+  -webkit-font-smoothing: antialiased;
+  background-color: $background;
+
+}
+
+a {
+  cursor: pointer;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+::-webkit-input-placeholder {
+  color: $blue;
+}
+
+::-moz-placeholder {
+  color: $blue;
+  opacity: 1;
+}

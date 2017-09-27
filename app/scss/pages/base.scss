@@ -1,0 +1,36 @@
+.page-container {
+
+  @include page;
+
+  h2 {
+    margin: 35px 0 20px 0;
+    font-size: 22px;
+  }
+
+  .card {
+    @include card;
+    @import "../excludes/forms.scss";
+    padding: 25px;
+
+    section.form-divider {
+      border-bottom: 1px solid $lighter-grey;
+      padding-bottom: 25px;
+      margin-bottom: 25px;
+    }
+
+    .validity-input-wrapper {
+
+      i {
+        &.fa-check {
+          color: $green;
+        }
+        &.fa-exclamation {
+          color: $red;
+        }
+        &.fa-search {
+          color: $blue;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+div.footer {
+
+  padding: 15px;
+  border-top: 3px solid white;
+  margin-top: 25px;
+
+  div.footer-inner {
+    @include page;
+
+    display: flex;
+    align-items: flex-end;
+
+    span {
+      border-right: 1px solid $lighter-grey;
+      &:first-child {
+        margin-left: auto;
+      }
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    a {
+      color: darken($blue, 10%);
+      &:visited, &:hover {
+        text-decoration: none;
+      }
+      text-decoration: none;
+      padding: 0 15px;
+    }
+
+    @include phone {
+      flex-direction: column;
+      span {
+        padding: 5px 0;
+      }
+    }
+
+  }
+
+}

@@ -6,6 +6,7 @@ Encore
     .cleanupOutputBeforeBuild()
     .addEntry('app', './app/js/application.js')
     .addStyleEntry('global', './app/scss/application.scss')
+    .addLoader({ test: /\.scss$/, loader: 'import-glob-loader' })
     .enableSassLoader()
     .autoProvidejQuery()
     .enableSourceMaps(!Encore.isProduction())

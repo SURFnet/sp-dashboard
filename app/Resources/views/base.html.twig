@@ -8,10 +8,61 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="flash hide undefined">
+            <div class="message-container">
+                <p></p>
+                <a class="close"><i class="fa fa-remove"></i></a>
+            </div>
+        </div>
+        <div class="header-container">
+            <div class="header">
+                <a class="logo" href="/">
+                    <img src="/images/surfconext-logo.png" alt="SURFconext" />
+                </a>
+                <ul class="links">
+                    <li class="title">
+                        <span>Registration</span>
+                    </li>
+                    <li class="profile" tabindex="1">
+                        <a class="welcome-link">
+                            <i class="fa fa-user-circle-o"></i>
+                            John Doe
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://wiki.surfnet.nl/" target="_blank">Help</a>
+                    </li>
+                    <li class="border-left"><a>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="navigation-container">
+            <div class="navigation">
+                <a href="/" class="active">Services</a>
+                <a href="/entity/create">Registration</a>
+            </div>
+        </div>
+        <div class="page-container">
+            <div class="icon-legend">
+                <section class="roles">
+                    <span class="role">
+                        <i class="fa fa-star"></i>Admin
+                    </span>
+                </section>
+            </div>
+            <div class="card">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-inner">
+                <span><a href="/" target="_blank">Privacy</a></span>
+                <span><a href="/" target="_blank">Contact</a></span>
+            </div>
+        </div>
         {% block javascripts %}
             <script src="{{ asset('build/app.js') }}"></script>
         {% endblock %}
-        {% block content %}{% endblock %}
     </body>
 </html>

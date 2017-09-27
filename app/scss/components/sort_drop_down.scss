@@ -1,0 +1,70 @@
+section.sort-drop-down {
+
+  position: relative;
+
+  border: 1px solid $lighter-grey;
+  border-radius: $br;
+  margin-top: 15px;
+  min-width: 215px;
+  display: inline-block;
+  font-weight: bold;
+
+  .selected {
+    display: flex;
+    padding: 10px;
+    cursor: pointer;
+
+    .sort-label, .sort-label-divider {
+      color: $medium-grey;
+    }
+
+    .sort-name {
+      text-transform: uppercase;
+      color: $blue;
+      margin: 0 15px;
+    }
+
+    span:last-child {
+      margin-left: auto;
+    }
+
+    i {
+      color: $blue;
+    }
+  }
+
+  ul.drop-down {
+    position: absolute;
+    z-index: 2;
+    top: 40px;
+    right: 0;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 1px 2px 6px 1px $medium-grey;
+    min-width: 144px;
+    border-radius: $br;
+
+    li {
+      cursor: pointer;
+      text-transform: uppercase;
+      display: flex;
+      color: $medium-grey;
+
+      &.current {
+        color: $blue;
+      }
+      span {
+        display: inline-block;
+
+        &:first-child {
+          padding: 2px;
+        }
+
+        &:last-child {
+          margin-left: auto;
+        }
+      }
+
+    }
+  }
+}

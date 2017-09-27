@@ -1,6 +1,8 @@
 {
   "devDependencies": {
     "@symfony/webpack-encore": "^0.15.1",
+    "compass-mixins": "^0.12.10",
+    "import-glob-loader": "^1.1.0",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6"
   }
