@@ -21,6 +21,7 @@
     support_data_dir: /vagrant
     support_fpm_user: vagrant
   roles:
+    - ../OpenConext-deploy/roles/common
     - ../OpenConext-deploy/roles/openconext-common
     - ../OpenConext-deploy/roles/httpd
     - ../OpenConext-deploy/roles/php56fpm
@@ -31,5 +32,9 @@
     - { role: ../OpenConext-deploy/roles/java,             tags: ['java' ] }
     - { role: ../OpenConext-deploy/roles/mujina-idp,        tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
+    - { role: ../OpenConext-deploy/roles/shibboleth,             tags: ['shib' ] }
+    - { role: ../OpenConext-deploy/roles/mongo,             tags: ['mongo'] }
+    - { role: ../OpenConext-deploy/roles/manage-gui,        tags: ['manage', 'manage-gui'] }
+    - { role: ../OpenConext-deploy/roles/manage-server,     tags: ['manage', 'manage-server'] }
 
     - app
