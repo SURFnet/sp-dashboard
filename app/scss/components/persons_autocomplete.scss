@@ -1,0 +1,30 @@
+section.persons-autocomplete {
+
+  position: absolute;
+  z-index: 2;
+  top: 2px;
+  width: 100%;
+  border-radius: $br;
+  background-color: white;
+  box-shadow: 1px 4px 12px 1px $medium-grey;
+  margin: 28px 0;
+
+  span {
+    &.row {
+      display: inline-block;
+      border-bottom: 1px solid $light-grey;
+      cursor: pointer;
+      padding: 12px 8px;
+      width: 100%;
+
+      &.active, &:hover {
+        background-color: $light-grey;
+      }
+    }
+    &.matched {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+
+}

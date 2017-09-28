@@ -1,0 +1,39 @@
+.navigation-container {
+
+  background-color: $blue;
+
+  .navigation {
+    max-width: $medium;
+    margin: 0 auto;
+    padding: 25px 15px 0 15px;
+    font-size: 20px;
+    display: flex;
+
+    ul {
+      height: 38px;
+
+      li {
+        float: left;
+
+        &.current a {
+          color: white;
+          border-bottom: 6px solid white;
+          font-weight: bold;
+        }
+      }
+    }
+
+    a {
+      color: lighten($light-blue, 5);
+      margin-right: 50px;
+      padding-bottom: 12px;
+      @include no-text-decoration;
+    }
+
+  }
+}
+
+
+
+
+

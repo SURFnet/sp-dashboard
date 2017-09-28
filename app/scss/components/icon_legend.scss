@@ -1,0 +1,28 @@
+div.icon-legend {
+  display: flex;
+  align-items: center;
+  padding: 30px 0 10px 0;
+
+  h2 {
+    font-size: 26px;
+    line-height: 26px;
+    margin-right: auto;
+  }
+  section.roles {
+    margin-left: auto;
+
+    @include phone {
+      display: none;
+    }
+
+    span.role {
+      color: $medium-grey;
+      margin-left: 18px;
+      font-weight: bold;
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
