@@ -9,17 +9,25 @@
     font-size: 20px;
     display: flex;
 
+    ul {
+      height: 38px;
+
+      li {
+        float: left;
+
+        &.current a {
+          color: white;
+          border-bottom: 6px solid white;
+          font-weight: bold;
+        }
+      }
+    }
+
     a {
-      font-weight: bold;
       color: lighten($light-blue, 5);
       margin-right: 50px;
       padding-bottom: 12px;
       @include no-text-decoration;
-
-      &.active {
-        color: white;
-        border-bottom: 6px solid white;
-      }
     }
 
   }
