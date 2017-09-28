@@ -60,7 +60,7 @@
   lineinfile:
     dest: /etc/hosts
     state: present
-    line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl serviceregistry.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl'
+    line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl serviceregistry.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl aa.dev.support.surfconext.nl authz.dev.support.surfconext.nl teams.dev.support.surfconext.nl voot.dev.support.surfconext.nl' 
 
 - name: Create SP Dashboard database
   mysql_db: name={{ item }} state=present
@@ -69,12 +69,3 @@
 - name: Create SP Dashboard user
   mysql_user: name={{ item.name }} password={{ item.password }} priv={{ item.db_name }}.*:ALL state=present login_user=root login_password={{ mysql_root_password }}
   with_items: "{{ spd_databases.users }}"
-
-- include: mailcatcher.yml
-  when: develop_spd
-
-- name: Install ant
-  yum: name={{ item }} state=present
-  with_items:
-    - ant
-  when: develop_spd
