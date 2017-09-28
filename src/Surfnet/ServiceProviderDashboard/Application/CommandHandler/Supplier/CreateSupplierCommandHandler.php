@@ -23,7 +23,6 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateSupplierCommandHandler implements CommandHandler
 {
@@ -51,9 +50,7 @@ class CreateSupplierCommandHandler implements CommandHandler
         $supplier->setGuid($command->getGuid());
         $supplier->setTeamName($command->getTeamName());
 
-        if (!$this->supplierRepository->isUnique($supplier)) {
-            throw new InvalidArgumentException('Non unique field values in CreateSupplier command');
-        }
+        $this->supplierRepository->isUnique($supplier);
 
         $this->supplierRepository->save($supplier);
     }

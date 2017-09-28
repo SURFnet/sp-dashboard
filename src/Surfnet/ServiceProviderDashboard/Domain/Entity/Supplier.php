@@ -25,7 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
- * @ORM\Entity(repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository")
+ * @ORM\Entity(
+ *     repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository"
+ * )
  */
 class Supplier
 {

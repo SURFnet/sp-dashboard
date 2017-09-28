@@ -16,5 +16,6 @@ services:
     public: true
     arguments:
       - '@surfnet.dashboard.repository.supplier'
+      - '@validator'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier }

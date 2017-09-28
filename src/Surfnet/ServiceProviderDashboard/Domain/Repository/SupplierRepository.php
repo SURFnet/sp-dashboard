@@ -25,5 +25,13 @@ interface SupplierRepository
     /**
      * @param Supplier $supplier
      */
-    public function add(Supplier $supplier);
+    public function save(Supplier $supplier);
+
+    /**
+     * Is the proposed supplier entity unique? The id of the supplier is not taken into account in this test.
+     *
+     * @param Supplier $supplier
+     * @return bool
+     */
+    public function isUnique(Supplier $supplier);
 }
