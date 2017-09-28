@@ -22,6 +22,10 @@
         <testsuite name="integration">
             <directory>tests/Integration</directory>
         </testsuite>
+
+        <testsuite name="webtests">
+            <directory>tests/webtests</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
