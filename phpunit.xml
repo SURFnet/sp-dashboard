@@ -20,7 +20,7 @@
         </testsuite>
 
         <testsuite name="integration">
-            <directory>tests/Integration</directory>
+            <directory>tests/integration</directory>
         </testsuite>
 
         <testsuite name="webtests">

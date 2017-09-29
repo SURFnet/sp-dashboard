@@ -1,3 +1,21 @@
 services:
-    dashboard.monolog.json_formatter:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\SupplierController:
+    arguments:
+      - '@tactician.commandbus'
+
+  dashboard.monolog.json_formatter:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
+
+  surfnet.dashboard.repository.supplier:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository
+    factory: ['@doctrine', 'getRepository']
+    arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier]
+
+  surfnet.dashboard.command_handler.create_supplier:
+    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler
+    public: true
+    arguments:
+      - '@surfnet.dashboard.repository.supplier'
+      - '@validator'
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier }
