@@ -68,7 +68,8 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
     /**
      * @test
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The Guid of the new Supplier should be unique. This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
+     * @expectedExceptionMessage The Guid of the new Supplier should be unique.
+     *                           This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
      * @group CommandHandler
      */
     public function it_rejects_non_unique_create_supplier_command()

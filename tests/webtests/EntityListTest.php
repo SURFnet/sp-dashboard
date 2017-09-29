@@ -16,23 +16,20 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
+namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class EntityListController
+class EntityListTest extends WebTestCase
 {
-    /**
-     * @Method("GET")
-     * @Route("/", name="entity_list")
-     * @Template()
-     */
-    public function listAction()
+    public function test_entity_list()
     {
-        return [
-            'text' => 'TODO',
-        ];
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/');
+
+        $pageTitle = $crawler->filter('.page-container .card h2');
+
+        $this->assertEquals('Services', $pageTitle->text());
     }
 }
