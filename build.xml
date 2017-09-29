@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SURFnet Service Provider Dashboard" default="test">
-    <target name="test" depends="lint,static-analysis,unit-tests,integration-tests,security-tests" />
+    <target name="test" depends="lint,static-analysis,unit-tests,integration-tests,web-tests,security-tests" />
 
     <target name="lint">
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
@@ -41,6 +41,11 @@
             <arg line="--runtime-set ignore_warnings_on_exit 1" />
             <arg line="--standard=phpcs.xml" />
             <arg path="src" />
+        </exec>
+
+        <exec executable="vendor/bin/phpcs" failonerror="true">
+            <arg line="--runtime-set ignore_warnings_on_exit 1" />
+            <arg line="--standard=phpcs_tests.xml" />
             <arg path="tests" />
         </exec>
 
@@ -58,6 +63,12 @@
     <target name="integration-tests">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite integration" />
+        </exec>
+    </target>
+
+    <target name="web-tests">
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg line="--testsuite webtests" />
         </exec>
     </target>
 
