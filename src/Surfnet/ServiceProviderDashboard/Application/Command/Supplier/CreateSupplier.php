@@ -25,6 +25,7 @@ class CreateSupplier implements Command
 {
     /**
      * @var string
+     * @Assert\NotBlank
      * @Assert\Uuid
      */
     private $guid;
