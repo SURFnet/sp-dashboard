@@ -35,6 +35,9 @@ class Builder implements ContainerAwareInterface
         $menu->addChild('Add new supplier', array(
             'route' => 'supplier_add',
         ));
+        $menu->addChild('Edit supplier', array(
+            'route' => 'supplier_edit',
+        ));
 
         return $menu;
     }

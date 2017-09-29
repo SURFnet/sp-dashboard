@@ -30,8 +30,8 @@ class SupplierRepository extends EntityRepository implements SupplierRepositoryI
      */
     public function save(Supplier $supplier)
     {
-        $this->_em->persist($supplier);
-        $this->_em->flush($supplier);
+        $this->getEntityManager()->persist($supplier);
+        $this->getEntityManager()->flush($supplier);
     }
 
     /**
@@ -40,50 +40,63 @@ class SupplierRepository extends EntityRepository implements SupplierRepositoryI
      */
     public function isUnique(Supplier $supplier)
     {
-        $this->isGuidUnique($supplier->getGuid());
-        $this->isTeamNameUnique($supplier->getTeamName());
+        $this->isGuidUnique($supplier->getGuid(), $supplier->getId());
+        $this->isTeamNameUnique($supplier->getTeamName(), $supplier->getId());
         return true;
     }
 
     /**
      * @param string $guid
+     * @param null|int $id
      * @throws InvalidArgumentException
      */
-    private function isGuidUnique($guid)
+    private function isGuidUnique($guid, $id = null)
     {
-        $supplierExists = $this->createQueryBuilder('s')
+        $qb = $this->createQueryBuilder('s')
             ->where('s.guid = :guid')
-            ->setParameter('guid', $guid)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setParameter('guid', $guid);
+
+        // When checking uniqueness of existing entity, exclude its own record from the results
+        if (!is_null($id)) {
+            $qb->andWhere('s.id != :id')
+                ->setParameter('id', $id);
+        }
+
+        $supplierExists = $qb->getQuery()->getOneOrNullResult();
 
         if ($supplierExists) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'The Guid of the new Supplier should be unique. This teamname is taken by: "%s" with Guid: "%s"',
-                    $supplierExists->getName(),
-                    $supplierExists->getGuid()
+                    'The Guid of the Supplier should be unique. This Guid is taken by: "%s"',
+                    $supplierExists->getName()
                 )
             );
         }
     }
 
     /**
-     * @param string {
+     * @param $teamName
+     * @param int|null $id
      * @throws InvalidArgumentException
      */
-    private function isTeamNameUnique($teamName)
+    private function isTeamNameUnique($teamName, $id = null)
     {
-        $supplierExists = $this->createQueryBuilder('s')
+        $qb = $this->createQueryBuilder('s')
             ->where('s.teamName = :teamname')
-            ->setParameter('teamname', $teamName)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setParameter('teamname', $teamName);
+
+        // When checking uniqueness of existing entity, exclude its own record from the results
+        if (!is_null($id)) {
+            $qb->andWhere('s.id != :id')
+                ->setParameter('id', $id);
+        }
+
+        $supplierExists = $qb->getQuery()->getOneOrNullResult();
 
         if ($supplierExists) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'The teamname of the new Supplier should be unique. This teamname is taken by: "%s" with Guid: "%s"',
+                    'The teamname of the Supplier should be unique. This teamname is taken by: "%s" with Guid: "%s"',
                     $supplierExists->getName(),
                     $supplierExists->getGuid()
                 )
