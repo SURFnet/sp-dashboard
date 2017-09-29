@@ -32,7 +32,7 @@ class SupplierType extends AbstractType
             ->add('guid')
             ->add('name')
             ->add('teamName')
-            ->add('save', SubmitType::class);
+            ->add('save', SubmitType::class, ['attr' => ['class'=>'button']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

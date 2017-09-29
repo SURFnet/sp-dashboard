@@ -1,13 +1,9 @@
 div.flash {
   color: white;
-
-  position: fixed;
   width: 100%;
-  top: 0;
-  z-index: 6;
   opacity: .9;
-
   transition: top 150ms ease-in-out;
+  padding: 10px;
 
   &.hide {
     transition: top 1000ms ease-in-out;

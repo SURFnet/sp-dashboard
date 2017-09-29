@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\SupplierType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -53,6 +54,7 @@ class SupplierController extends Controller
      */
     public function createAction(Request $request)
     {
+        $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
         $command = new CreateSupplier();
@@ -63,8 +65,12 @@ class SupplierController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $logger->info(sprintf('Save new Supplier, entity was created by: %s', '@todo'), (array) $command);
-            $this->commandBus->handle($command);
-            return $this->redirectToRoute('entity_list');
+            try {
+                $this->commandBus->handle($command);
+                return $this->redirectToRoute('entity_list');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
         }
 
         return $this->render('DashboardBundle:Supplier:create.html.twig', array(
