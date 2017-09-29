@@ -43,5 +43,4 @@
     - { role: ../OpenConext-deploy/roles/teams-server,                 tags: ['teams', 'teams-server'  ] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-gui,    tags: ['attribute-aggregation', 'attribute-aggregation-gui'] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-server, tags: ['attribute-aggregation', 'attribute-aggregation-server'] }
-
-    - app
+    - { role: spdashboard,                                  tags: ['spdashboard'] } 
