@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Supplier;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CreateSupplier implements Command
+class CreateSupplierCommand implements Command
 {
     /**
      * @var string

@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,7 +38,7 @@ class SupplierType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => CreateSupplier::class,
+            'data_class' => CreateSupplierCommand::class,
         ));
     }
 

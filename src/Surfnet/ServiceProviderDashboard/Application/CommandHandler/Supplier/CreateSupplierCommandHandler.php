@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
@@ -40,10 +40,10 @@ class CreateSupplierCommandHandler implements CommandHandler
     }
 
     /**
-     * @param CreateSupplier $command
+     * @param CreateSupplierCommand $command
      * @throws InvalidArgumentException
      */
-    public function handle(CreateSupplier $command)
+    public function handle(CreateSupplierCommand $command)
     {
         $supplier = new Supplier();
         $supplier->setName($command->getName());

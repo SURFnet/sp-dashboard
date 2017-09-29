@@ -23,7 +23,7 @@ use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -68,7 +68,7 @@ class SupplierController extends Controller
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        $command = new CreateSupplier();
+        $command = new CreateSupplierCommand();
 
         $form = $this->createForm(SupplierType::class, $command);
 

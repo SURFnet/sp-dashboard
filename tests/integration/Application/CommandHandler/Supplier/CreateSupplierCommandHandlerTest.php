@@ -20,13 +20,12 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Command
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository as DoctrineSupplierRepository;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateSupplierCommandHandlerTest extends MockeryTestCase
 {
@@ -54,7 +53,7 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
         $entity->setTeamName('team-foobar');
         $entity->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
 
-        $command = new CreateSupplier();
+        $command = new CreateSupplierCommand();
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
@@ -74,7 +73,7 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
      */
     public function it_rejects_non_unique_create_supplier_command()
     {
-        $command = new CreateSupplier();
+        $command = new CreateSupplierCommand();
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
