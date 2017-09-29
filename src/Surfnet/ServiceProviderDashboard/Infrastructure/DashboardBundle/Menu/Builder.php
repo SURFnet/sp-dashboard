@@ -16,8 +16,8 @@ class Builder implements ContainerAwareInterface
 
         $menu->addChild('Services', array('route' => 'entity_list'));
 
-        $menu->addChild('Registration', array(
-            'uri' => '/',
+        $menu->addChild('Add new supplier', array(
+            'route' => 'supplier_add',
         ));
 
         return $menu;
