@@ -26,6 +26,11 @@
     </target>
 
     <target name="static-analysis">
+        <echo message="Checking for missing license headers..." />
+        <exec executable="vendor/bin/docheader" failonerror="true">
+            <arg line="check src/ tests/" />
+        </exec>
+
         <exec executable="vendor/bin/phpmd" failonerror="true">
             <arg path="src" />
             <arg value="text" />
