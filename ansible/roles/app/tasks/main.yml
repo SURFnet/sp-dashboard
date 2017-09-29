@@ -72,3 +72,9 @@
 
 - include: mailcatcher.yml
   when: develop_spd
+
+- name: Install ant
+  yum: name={{ item }} state=present
+  with_items:
+    - ant
+  when: develop_spd
