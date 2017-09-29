@@ -1,23 +1,13 @@
 ---
+- name: Include developement VM tasks
+  include: spdashboardvm.yml
+  when: develop_spd
+
 - name: Add group {{ support_fpm_user }}
   group: name={{ support_fpm_user }} state=present
 
 - name: Add user {{ support_fpm_user }}
   user: name={{ support_fpm_user }} group={{ support_fpm_user }} createhome=no state=present
-
-- name: Create SSL key
-  copy: content="{{ https_dev_star_private_key }}" dest={{ tls.cert_private_path }}/star.{{ base_domain  }}.key mode=0600 owner=root
-  when: certs_sp_dashboard
-
-- name: Create SSL certificate
-  copy: src=files/certs/star.{{ base_domain }}.pem dest="{{ tls.cert_path }}/star.{{ base_domain}}.pem"
-  when: certs_sp_dashboard
-
-- name: Copy ca file
-  copy: src=files/certs/star.{{ base_domain}}_ca.pem dest={{tls.cert_path_ca}}/star.{{ base_domain}}_ca.pem
-  register: copy ca_file
-  notify: update_ca_trust
-  when: certs_sp_dashboard
 
 - name: Install Apache vhosts
   template:
@@ -37,30 +27,12 @@
   notify:
     - reload php-fpm
 
-- name: Install PHP Xdebug extension
-  yum: name={{ item }} state=present
-  with_items:
-    - php-pecl-xdebug
-  when: develop_spd
-
-- name: Configure PHP Xdebug
-  template: src=xdebug.ini.j2 dest=/etc/php.d/15-xdebug.ini
-  notify:
-    - restart php-fpm
-  when: develop_spd
-
 - name: Remove ssl.conf
   file:
     path: /etc/httpd/conf.d/ssl.conf
     state: absent
   notify:
     - reload httpd
-
-- name: Add hosts file
-  lineinfile:
-    dest: /etc/hosts
-    state: present
-    line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl serviceregistry.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl aa.dev.support.surfconext.nl authz.dev.support.surfconext.nl teams.dev.support.surfconext.nl voot.dev.support.surfconext.nl' 
 
 - name: Create SP Dashboard database
   mysql_db: name={{ item }} state=present
