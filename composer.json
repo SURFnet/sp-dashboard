@@ -43,6 +43,7 @@
         "malukenho/docheader": "^0.1.6",
         "mockery/mockery": "^0.9.9",
         "phpmd/phpmd": "^2.6",
+        "phpunit/phpcov": "~3.0",
         "phpunit/phpunit": "^5.7",
         "sebastian/phpcpd": "^3.0",
         "sensio/distribution-bundle": "^5.0",
