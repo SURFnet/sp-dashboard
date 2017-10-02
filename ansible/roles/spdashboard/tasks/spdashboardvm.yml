@@ -9,13 +9,14 @@
     - sqlite-devel
     - npm
     - yarn
+    - ant
 
 - name: Install Mailcatcher
   action: command gem install mailcatcher creates=/usr/local/bin/mailcatcher
 
 - name: Create SSL key
   copy: content="{{ https_dev_star_private_key }}" dest={{ tls.cert_private_path }}/star.{{ base_domain  }}.key mode=0600 owner=root
-
+  
 - name: Create SSL certificate
   copy: src=files/certs/star.{{ base_domain }}.pem dest="{{ tls.cert_path }}/star.{{ base_domain}}.pem"
 
