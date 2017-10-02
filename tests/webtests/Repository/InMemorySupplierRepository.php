@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Repository;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository as SupplierRepositoryInterface;
 
