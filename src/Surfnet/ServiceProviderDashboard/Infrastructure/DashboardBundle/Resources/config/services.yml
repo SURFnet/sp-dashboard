@@ -19,3 +19,22 @@ services:
       - '@validator'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier }
+
+  dashboard.service.admin_switcher:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService
+    arguments:
+      - '@session'
+      - '@surfnet.dashboard.repository.supplier'
+
+  surfnet.dashboard.command_handler.select_supplier:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
+    public: true
+    arguments:
+      - '@dashboard.service.admin_switcher'
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand }
+
+  dashboard.twig.admin_switcher_extension:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\AdminSwitcherExtension
+    tags: [twig.extension]
+    autowire: true

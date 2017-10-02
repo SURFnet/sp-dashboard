@@ -38,5 +38,13 @@ class DashboardExtension extends Extension
             __DIR__.'/../Resources/config'
         ));
         $loader->load('services.yml');
+
+        $serviceContainer = $container->get('service_container');
+        $environment = $serviceContainer->getParameter('kernel.environment');
+        $rootDir = $serviceContainer->getParameter('kernel.root_dir');
+
+        if ($environment === 'test') {
+            $loader->load($rootDir . '/../tests/webtests/Resources/config/services.yml');
+        }
     }
 }

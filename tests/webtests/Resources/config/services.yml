@@ -1,0 +1,5 @@
+# This DI configuration file containes overrides on the DashboardBundle configuration,
+# typically to replace doctrine repositories with in-memory repositories.
+services:
+  surfnet.dashboard.repository.supplier:
+    class: Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemorySupplierRepository
