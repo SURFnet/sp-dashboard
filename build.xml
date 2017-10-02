@@ -11,11 +11,6 @@
         </exec>
 
         <exec executable="bin/console" failonerror="true">
-            <arg line="lint:twig" />
-            <arg path="app/Resources" />
-        </exec>
-
-        <exec executable="bin/console" failonerror="true">
             <arg line="lint:yaml" />
             <arg path="app/config" />
         </exec>
