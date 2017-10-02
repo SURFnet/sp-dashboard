@@ -16,22 +16,31 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token;
 
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
-class Configuration implements ConfigurationInterface
+class SamlToken extends AbstractToken
 {
     /**
-     * {@inheritdoc}
+     * @var \SAML2_Assertion
      */
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('dashboard');
+    public $assertion;
 
-        return $treeBuilder;
+    public function __construct(array $roles = array())
+    {
+        parent::__construct($roles);
+
+        $this->setAuthenticated(count($roles));
+    }
+
+    /**
+     * Returns the user credentials.
+     *
+     * @return mixed The user credentials
+     */
+    public function getCredentials()
+    {
+        return '';
     }
 }

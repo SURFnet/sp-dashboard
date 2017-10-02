@@ -16,22 +16,27 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication;
 
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-
-class Configuration implements ConfigurationInterface
+interface SamlAuthenticationStateHandler
 {
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('dashboard');
+    public function getRequestId();
 
-        return $treeBuilder;
-    }
+    /**
+     * @param string $requestId
+     */
+    public function setRequestId($requestId);
+
+    /**
+     * @return bool
+     */
+    public function hasRequestId();
+
+    /**
+     * Removes the requestId from the session
+     */
+    public function clearRequestId();
 }

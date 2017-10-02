@@ -66,4 +66,52 @@ class Contact
      * @ORM\JoinColumn(nullable=false)
      */
     private $supplier;
+
+    /**
+     * @param string $nameId
+     * @param string $emailAddress
+     * @param string $displayName
+     */
+    public function __construct($nameId, $emailAddress, $displayName)
+    {
+        $this->nameId = $nameId;
+        $this->emailAddress = $emailAddress;
+        $this->displayName = $displayName;
+    }
+
+    /**
+     * @param string $emailAddress
+     *
+     * @return Contact
+     */
+    public function setEmailAddress($emailAddress)
+    {
+        $this->emailAddress = $emailAddress;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailAddress()
+    {
+        return $this->emailAddress;
+    }
+
+    /**
+     * @param string $displayName
+     *
+     * @return Contact
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
 }

@@ -1,0 +1,12 @@
+{% extends '::base.html.twig' %}
+
+{% block page_title %}{{ 'ss.error.saml_authn_failed.title'|trans }}{% endblock %}
+
+{% block content %}
+    <h2>{{ block('page_title') }}</h2>
+
+    <p>{{ 'ss.error.saml_authn_failed.text.authn_failed'|trans }}</p>
+    <a class="btn btn-primary" href="{{ path('ss_entry_point') }}">
+        {{ 'ss.error.saml_authn_failed.button.try_again'|trans }}
+    </a>
+{% endblock %}

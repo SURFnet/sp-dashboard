@@ -15,23 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security;
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-
-class Configuration implements ConfigurationInterface
+class Identity
 {
     /**
-     * {@inheritdoc}
+     * @var Contact
      */
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('dashboard');
+    private $contact;
 
-        return $treeBuilder;
+    public function __construct(Contact $contact)
+    {
+        $this->contact = $contact;
+    }
+
+    /**
+     * @return Contact
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->contact->getDisplayName();
     }
 }

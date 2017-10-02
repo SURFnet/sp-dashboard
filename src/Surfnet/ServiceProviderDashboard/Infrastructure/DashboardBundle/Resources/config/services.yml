@@ -55,6 +55,9 @@ services:
     surfnet.dashboard.service.admin_switcher:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService
 
+    surfnet.dashboard.service.contact:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\ContactService
+
     surfnet.dashboard.service.saml_service:
         class: Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
 

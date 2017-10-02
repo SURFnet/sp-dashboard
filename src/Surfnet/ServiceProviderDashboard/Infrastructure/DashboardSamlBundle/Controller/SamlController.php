@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Controller;
 
 use Exception;
+use LogicException;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,10 +29,10 @@ use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\Http\XMLResponse;
 use Surfnet\SamlBundle\Metadata\MetadataFactory;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class SamlController
+class SamlController extends Controller
 {
     /**
      * @var LoggerInterface $logger
@@ -78,31 +79,9 @@ class SamlController
      */
     public function consumeAssertionAction(Request $request)
     {
-        $this->logger->notice('Received "%s" SAMLResponse, attempting to process');
-
-        try {
-            $assertion = $this->postBinding->processResponse(
-                $request,
-                $this->identityProvider,
-                $this->serviceProvider
-            );
-        } catch (Exception $exception) {
-            $this->logger->error(
-                'Could not process received response',
-                [
-                    'message' => $exception->getMessage(),
-                    'exception' => $exception,
-                ]
-            );
-
-            throw $exception;
-        }
-
-        $this->logger->info(
-            sprintf('Succesful login for nameID "%s": ', $assertion->getNameId())
+        throw new \Surfnet\SamlBundle\Exception\LogicException(
+            'Unreachable statement, should be handled by the SAML firewall'
         );
-
-        return new RedirectResponse('/');
     }
 
     /**

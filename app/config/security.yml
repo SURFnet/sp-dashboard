@@ -4,8 +4,8 @@ security:
 
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        in_memory:
-            memory: ~
+        dashboard:
+            id: surfnet.dashboard.service.contact
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -13,12 +13,16 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
-            anonymous: ~
-            # activate different ways to authenticate
+        saml_based:
+            saml: true
+            logout:
+                path: /logout
+                target: %logout_redirect_url%
+                invalidate_session: true
+                csrf_token_generator: security.csrf.token_manager
+                csrf_parameter: 't'
+                csrf_token_id: 'dashboard_logout_token'
 
-            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
-
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
-            #form_login: ~
+    access_control:
+        - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/, roles: ROLE_USER, requires_channel: https }

@@ -16,22 +16,10 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception;
 
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use LogicException as CoreLogicException;
 
-class Configuration implements ConfigurationInterface
+class LogicException extends CoreLogicException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigTreeBuilder()
-    {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('dashboard');
-
-        return $treeBuilder;
-    }
 }
