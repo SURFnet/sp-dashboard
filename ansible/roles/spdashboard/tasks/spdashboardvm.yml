@@ -1,16 +1,4 @@
-- name: Install yarn repo file
-  copy: src=yarn.repo dest=/etc/yum.repos.d/
-
-- name: Install some packages needed for development
-  yum: pkg={{ item }} state=present
-  with_items:
-    - ruby-devel
-    - gcc-c++
-    - sqlite-devel
-    - npm
-    - yarn
-    - ant
-
+---
 - name: Install Mailcatcher
   action: command gem install mailcatcher creates=/usr/local/bin/mailcatcher
 

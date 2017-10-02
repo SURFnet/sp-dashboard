@@ -3,6 +3,19 @@
   include: spdashboardvm.yml
   when: develop_spd
 
+- name: Install yarn repo file
+  copy: src=yarn.repo dest=/etc/yum.repos.d/
+
+- name: Install some packages needed for development
+  yum: pkg={{ item }} state=present
+  with_items:
+    - ruby-devel
+    - gcc-c++
+    - sqlite-devel
+    - npm 
+    - yarn
+    - ant 
+
 - name: Add group {{ spdashboard_fpm_user }}
   group: name={{ spdashboard_fpm_user }} state=present
 
