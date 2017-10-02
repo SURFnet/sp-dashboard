@@ -1,5 +1,5 @@
-; Create a new pool named support.
-[support]
+; Create a new pool named spdashboard.
+[spdashboard]
 
 ; The address on which to accept FastCGI requests.
 ; Valid syntaxes are:
@@ -11,7 +11,7 @@
 ; Note: This value is mandatory.
 
 ; Use unix socket
-listen = /var/run/php-fpm/support-pool.sock
+listen = /var/run/php-fpm/spdashboard-pool.sock
 ; Set listen(2) backlog. A value of '-1' means unlimited.
 ; Default Value: -1
 ;listen.backlog = -1
@@ -36,8 +36,8 @@ listen.mode = 0640
 ; Unix user/group of processes
 ; Note: The user is mandatory. If the group is not set, the default user's group
 ;       will be used.
-user = {{ support_fpm_user }}
-group = {{ support_fpm_user }}
+user = {{ spdashboard_fpm_user }}
+group = {{ spdashboard_fpm_user }}
 
 ; Choose how the process manager will control the number of child processes.
 ; Possible Values:
@@ -215,7 +215,7 @@ slowlog = /var/log/php-fpm/www-slow.log
 ;                specified at startup with the -d argument
 ;php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f www@my.domain.com
 ;php_flag[display_errors] = off
-php_admin_value[error_log] = /var/log/php-fpm/support-error.log
+php_admin_value[error_log] = /var/log/php-fpm/spdashboard-error.log
 php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 128M
 

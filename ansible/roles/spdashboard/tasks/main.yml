@@ -3,18 +3,18 @@
   include: spdashboardvm.yml
   when: develop_spd
 
-- name: Add group {{ support_fpm_user }}
-  group: name={{ support_fpm_user }} state=present
+- name: Add group {{ spdashboard_fpm_user }}
+  group: name={{ spdashboard_fpm_user }} state=present
 
-- name: Add user {{ support_fpm_user }}
-  user: name={{ support_fpm_user }} group={{ support_fpm_user }} createhome=no state=present
+- name: Add user {{ spdashboard_fpm_user }}
+  user: name={{ spdashboard_fpm_user }} group={{ spdashboard_fpm_user }} createhome=no state=present
 
 - name: Install Apache vhosts
   template:
     src: '{{ item }}.j2'
     dest: /etc/httpd/conf.d/{{ item }}
   with_items:
-    - support.conf
+    - spdashboard.conf
   notify:
     - reload httpd
 
@@ -23,7 +23,7 @@
     src: '{{ item }}.j2'
     dest: /etc/php-fpm.d/{{ item }}
   with_items:
-     - support-pool.conf
+     - spdashboard-pool.conf
   notify:
     - reload php-fpm
 

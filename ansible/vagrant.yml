@@ -17,9 +17,9 @@
   vars:
     sp_dashboard_document_root: /vagrant/web
     front_controller: app_dev.php
-    support_domain: dev.support.surfconext.nl
-    support_data_dir: /vagrant
-    support_fpm_user: vagrant
+    spdashboard_domain: spdashboard.dev.support.surfconext.nl
+    spdashboard_data_dir: /vagrant
+    spdashboard_fpm_user: vagrant
   roles:
     - ../OpenConext-deploy/roles/common
     - ../OpenConext-deploy/roles/openconext-common

@@ -1,10 +1,10 @@
-{% if apache_app_listen_address.support is defined %}
-Listen {{ apache_app_listen_address.support }}:{{ loadbalancing.support.port }}
-<Virtualhost {{ apache_app_listen_address.support }}:{{ loadbalancing.support.port }}>
+{% if apache_app_listen_address.spdashboard is defined %}
+Listen {{ apache_app_listen_address.spdashboard }}:{{ loadbalancing.spdashboard.port }}
+<Virtualhost {{ apache_app_listen_address.spdashboard }}:{{ loadbalancing.spdashboard.port }}>
 {% else %}
 <Virtualhost *:443 >
 {% endif %}
-    ServerName   https://{{ support_domain }}
+    ServerName   https://{{ spdashboard_domain }}
     ServerAdmin {{ apache_server_admin }}
     Options -indexes +Includes
     DocumentRoot {{ sp_dashboard_document_root }}
@@ -30,7 +30,7 @@ Listen {{ apache_app_listen_address.support }}:{{ loadbalancing.support.port }}
 {% endif %}
 
     # Proxy the requests to FPM
-    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php-fpm/support-pool.sock|fcgi://localhost/{{ sp_dashboard_document_root }}/$1
+    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php-fpm/spdashboard-pool.sock|fcgi://localhost/{{ sp_dashboard_document_root }}/$1
 
     ErrorLog "|/usr/bin/logger -p local3.err  -t 'Apache-SUPPORT'"
     CustomLog "|/usr/bin/logger -p local3.info  -t 'Apache-SUPPORT'" combined
