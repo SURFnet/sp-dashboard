@@ -17,19 +17,30 @@
   vars:
     sp_dashboard_document_root: /vagrant/web
     front_controller: app_dev.php
-    support_domain: dev.support.surfconext.nl
-    support_data_dir: /vagrant
-    support_fpm_user: vagrant
+    spdashboard_domain: spdashboard.dev.support.surfconext.nl
+    spdashboard_data_dir: /vagrant
+    spdashboard_fpm_user: vagrant
   roles:
+    - ../OpenConext-deploy/roles/common
     - ../OpenConext-deploy/roles/openconext-common
     - ../OpenConext-deploy/roles/httpd
     - ../OpenConext-deploy/roles/php56fpm
-    - { role: ../OpenConext-deploy/roles/mysql, tags: ['mysql'] }
+    - { role: ../OpenConext-deploy/roles/mysql,             tags: ['mysql'] }
     - { role: ../OpenConext-deploy/roles/vm_only_provision_eb_sr, tags: ['prov'] }
-    - { role: ../OpenConext-deploy/roles/janus, tags: ['janus'] }
-    - { role: ../OpenConext-deploy/roles/engineblock, tags: ['eb'] }
-    - { role: ../OpenConext-deploy/roles/java,             tags: ['java' ] }
+    - { role: ../OpenConext-deploy/roles/janus,             tags: ['janus'] }
+    - { role: ../OpenConext-deploy/roles/engineblock,       tags: ['eb'] }
+    - { role: ../OpenConext-deploy/roles/java,              tags: ['java' ] }
     - { role: ../OpenConext-deploy/roles/mujina-idp,        tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
-
-    - app
+    - { role: ../OpenConext-deploy/roles/shibboleth,        tags: ['shib' ] }
+    - { role: ../OpenConext-deploy/roles/mongo,             tags: ['mongo'] }
+    - { role: ../OpenConext-deploy/roles/manage-gui,        tags: ['manage', 'manage-gui'] }
+    - { role: ../OpenConext-deploy/roles/manage-server,     tags: ['manage', 'manage-server'] }
+    - { role: ../OpenConext-deploy/roles/authz-server,      tags: ['oauth', 'authz' ] }
+    - { role: ../OpenConext-deploy/roles/authz-admin,       tags: ['oauth', 'authz-admin' ] }
+    - { role: ../OpenConext-deploy/roles/voot,              tags: ['oauth', 'voot' ] }
+    - { role: ../OpenConext-deploy/roles/teams-gui,                    tags: ['teams', 'teams-gui'  ] }
+    - { role: ../OpenConext-deploy/roles/teams-server,                 tags: ['teams', 'teams-server'  ] }
+    - { role: ../OpenConext-deploy/roles/attribute-aggregation-gui,    tags: ['attribute-aggregation', 'attribute-aggregation-gui'] }
+    - { role: ../OpenConext-deploy/roles/attribute-aggregation-server, tags: ['attribute-aggregation', 'attribute-aggregation-server'] }
+    - { role: spdashboard,                                  tags: ['spdashboard'] } 

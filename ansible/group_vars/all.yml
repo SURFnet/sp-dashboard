@@ -27,7 +27,7 @@ spd_databases:
 database_clients: [ "{{ mysql_host }}" ]
 
 support_simplesaml_secret: secret
-
+mongo_primary: True
 
 janus_database_name: sr
 janus_database_host: "{{ mariadb_host }}"
@@ -41,8 +41,6 @@ janus_ssp_technicalcontact_name: "Technical Contact"
 janus_ssp_technicalcontact_email: "{{ support_email }}"
 janus_ssp_managingcontact_name: "Managing Contact"
 janus_ssp_managingcontact_email: "{{ support_email }}"
-janus_no_federative_login: 1
-janus_default_sp: "example-auth"
 
 engine_janus_secret: secret
 engine_api_janus_user: serviceregistry
@@ -127,4 +125,5 @@ engineblock_private_key: |
 
 maven_repo: https://build.openconext.org/repository/public/releases
 maven_snapshot_repo: https://build.openconext.org/repository/public/snapshots
+error_subject_prefix: "[{{ ansible_hostname }}] "
 

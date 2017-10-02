@@ -18,37 +18,37 @@
     chdir: "{{ spform_branch_dir }}"
 
 - name: Unpack current version
-  unarchive: src="/root/Releases/Service-provider-registration-{{ spform_branch }}.tar.gz" dest="{{ support_data_dir}}/releases" copy=no
+  unarchive: src="/root/Releases/Service-provider-registration-{{ spform_branch }}.tar.gz" dest="{{ spdashboard_data_dir}}/releases" copy=no
 
 - name: Create current symlink
-  file: src="{{ support_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}" dest="{{ support_data_dir}}/current"  state=link
+  file: src="{{ spdashboard_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}" dest="{{ spdashboard_data_dir}}/current"  state=link
 
 - name: Create /registration symlink
-  file: src="{{ support_data_dir}}/current/web" dest="{{ support_data_dir}}/registration"  state=link
+  file: src="{{ spdashboard_data_dir}}/current/web" dest="{{ spdashboard_data_dir}}/registration"  state=link
 
 - name: Delete log and data dir
-  file: path={{support_data_dir}}/current/app/{{ item }} state=absent
+  file: path={{spdashboard_data_dir}}/current/app/{{ item }} state=absent
   with_items: 
      - logs
      - data
      - config/parameters.yml
 
 - name: Create symlinks
-  file: src={{support_data_dir}}/shared/app/{{ item }} dest={{ support_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}/app/{{item}} owner=root group=root state=link
+  file: src={{spdashboard_data_dir}}/shared/app/{{ item }} dest={{ spdashboard_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}/app/{{item}} owner=root group=root state=link
   with_items: 
      - logs
      - data
      - config/parameters.yml
 
 - name: Create img symlink
-  file: src={{support_data_dir}}/shared/web/img/logos dest={{ support_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}/web/img/logos state=link
+  file: src={{spdashboard_data_dir}}/shared/web/img/logos dest={{ spdashboard_data_dir}}/releases/Service-provider-registration-{{ spform_branch }}/web/img/logos state=link
 
 - name: Run database migrations
   command: app/console doc:mig:mig
   args:
-    chdir: "{{ support_data_dir }}/current/"
+    chdir: "{{ spdashboard_data_dir }}/current/"
   notify: restart memcached
 
 - name: Make cache dir writeable for FPM user
-  file: path={{support_data_dir}}/current/app/cache owner={{ support_fpm_user }}
+  file: path={{spdashboard_data_dir}}/current/app/cache owner={{ spdashboard_fpm_user }}
 

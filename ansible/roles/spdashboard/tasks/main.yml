@@ -1,0 +1,56 @@
+---
+- name: Include developement VM tasks
+  include: spdashboardvm.yml
+  when: develop_spd
+
+- name: Install yarn repo file
+  copy: src=yarn.repo dest=/etc/yum.repos.d/
+
+- name: Install some packages needed for development
+  yum: pkg={{ item }} state=present
+  with_items:
+    - ruby-devel
+    - gcc-c++
+    - sqlite-devel
+    - npm 
+    - yarn
+    - ant 
+
+- name: Add group {{ spdashboard_fpm_user }}
+  group: name={{ spdashboard_fpm_user }} state=present
+
+- name: Add user {{ spdashboard_fpm_user }}
+  user: name={{ spdashboard_fpm_user }} group={{ spdashboard_fpm_user }} createhome=no state=present
+
+- name: Install Apache vhosts
+  template:
+    src: '{{ item }}.j2'
+    dest: /etc/httpd/conf.d/{{ item }}
+  with_items:
+    - spdashboard.conf
+  notify:
+    - reload httpd
+
+- name: php-fpm config
+  template:
+    src: '{{ item }}.j2'
+    dest: /etc/php-fpm.d/{{ item }}
+  with_items:
+     - spdashboard-pool.conf
+  notify:
+    - reload php-fpm
+
+- name: Remove ssl.conf
+  file:
+    path: /etc/httpd/conf.d/ssl.conf
+    state: absent
+  notify:
+    - reload httpd
+
+- name: Create SP Dashboard database
+  mysql_db: name={{ item }} state=present
+  with_items: "{{ spd_databases.names }}"
+
+- name: Create SP Dashboard user
+  mysql_user: name={{ item.name }} password={{ item.password }} priv={{ item.db_name }}.*:ALL state=present login_user=root login_password={{ mysql_root_password }}
+  with_items: "{{ spd_databases.users }}"
