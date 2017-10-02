@@ -16,27 +16,31 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Symfony\Component\Validator\Constraints as Assert;
 
-interface SupplierRepository
+class SelectSupplierCommand implements Command
 {
     /**
-     * @param Supplier $supplier
+     * @var string
      */
-    public function save(Supplier $supplier);
+    private $selectedSupplier;
 
     /**
-     * Is the proposed supplier entity unique? The id of the supplier is not taken into account in this test.
-     *
-     * @param Supplier $supplier
-     * @return bool
+     * @param string $selectedSupplier ID of selected supplier
      */
-    public function isUnique(Supplier $supplier);
+    public function __construct($selectedSupplier)
+    {
+        $this->selectedSupplier = $selectedSupplier;
+    }
 
     /**
-     * @return Supplier[]
+     * @return string
      */
-    public function findAll();
+    public function getSelectedSupplier()
+    {
+        return $this->selectedSupplier;
+    }
 }

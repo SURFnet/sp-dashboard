@@ -15,7 +15,7 @@
     "autoload-dev": {
         "psr-4": {
             "Surfnet\\": "src\\Surfnet",
-            "Surfnet\\ServiceProviderDashboard\\Tests\\": "tests/"
+            "Surfnet\\ServiceProviderDashboard\\Webtests\\": "tests/webtests"
         },
         "files": [
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"

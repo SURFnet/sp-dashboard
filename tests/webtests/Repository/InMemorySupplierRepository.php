@@ -16,27 +16,42 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Webtests\Repository;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository as SupplierRepositoryInterface;
 
-interface SupplierRepository
+class InMemorySupplierRepository implements SupplierRepositoryInterface
 {
+    private static $memory = [];
+
+    public function clear()
+    {
+        self:$memory = [];
+    }
+
     /**
      * @param Supplier $supplier
      */
-    public function save(Supplier $supplier);
+    public function save(Supplier $supplier)
+    {
+        self::$memory[] = $supplier;
+    }
 
     /**
-     * Is the proposed supplier entity unique? The id of the supplier is not taken into account in this test.
-     *
      * @param Supplier $supplier
      * @return bool
      */
-    public function isUnique(Supplier $supplier);
+    public function isUnique(Supplier $supplier)
+    {
+        return true;
+    }
 
     /**
      * @return Supplier[]
      */
-    public function findAll();
+    public function findAll()
+    {
+        return self::$memory;
+    }
 }

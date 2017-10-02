@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\SupplierType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -76,5 +77,22 @@ class SupplierController extends Controller
         return $this->render('DashboardBundle:Supplier:create.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @Method("POST")
+     * @Route("/supplier/select", name="select_supplier")
+     */
+    public function selectAction(Request $request)
+    {
+        $command = new SelectSupplierCommand(
+            $request->request->get('supplier')
+        );
+
+        $this->commandBus->handle($command);
+
+        return $this->redirect(
+            $request->headers->get('referer')
+        );
     }
 }

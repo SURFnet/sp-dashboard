@@ -1,0 +1,10 @@
+<form action="{{ path('select_supplier') }}" method="POST">
+    <select name="supplier" id="admin-switcher">
+    {% for supplier_id,supplier_name in suppliers %}
+        <option value="{{ supplier_id }}" {{ supplier_id == selected_supplier ? 'selected' : '' }}>{{ supplier_name }}</option>
+    {% endfor %}
+    </select>
+    <noscript>
+        <input type="submit" value="Select" />
+    </noscript>
+</form>
