@@ -1,9 +1,65 @@
 {% extends '::base.html.twig' %}
 
+{% block page_heading %}{{ 'service.list.title'|trans }}{%endblock%}
 {% block body %}
-
-    <h2>Services</h2>
-    
-    {{ text }}
+    {% if service_list.services is empty %}
+        {{ 'service.list.empty'|trans }}
+    {% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>{{ 'service.list.service'|trans }}</th>
+                <th>{{ 'service.list.entity_id'|trans }}</th>
+                <th>{{ 'service.list.primary_contact'|trans }}</th>
+                <th>{{ 'service.list.environment'|trans }}</th>
+                <th>{{ ''|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in service_list.services %}
+            <tr>
+                <td>{{ service.name }}</td>
+                <td>{{ service.id }}</td>
+                <td>{{ service.contact }}</td>
+                <td>{{ service.environment }}</td>
+                <td>
+                    <div class="actions">
+                        <a class="opener" href="#">
+                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    {{ 'service.list.action.view'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('service_edit', {serviceId: service.id}) }}">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                    {{ 'service.list.action.edit'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-copy" aria-hidden="true"></i>
+                                    {{ 'service.list.action.copy'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    {{ 'service.list.action.delete'|trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 
 {% endblock %}

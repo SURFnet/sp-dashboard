@@ -15,36 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\ViewObject;
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
-
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-
-interface ServiceRepository
+class ServiceList
 {
     /**
-     * @param Service $service
+     * @var Service[]
      */
-    public function save(Service $service);
+    private $services;
 
     /**
-     * @param int $id
-     *
-     * @return bool
+     * @param Service[] $services
      */
-    public function isUnique($id);
+    public function __construct(array $services)
+    {
+        $this->services = $services;
+    }
 
     /**
-     * @param int $id
-     *
-     * @return Service|null
-     */
-    public function findById($id);
-
-    /**
-     * @param int $supplierId
-     *
      * @return Service[]
      */
-    public function findBySupplierId($supplierId);
+    public function getServices()
+    {
+        return $this->services;
+    }
 }

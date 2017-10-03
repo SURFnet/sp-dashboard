@@ -28,7 +28,7 @@ class ServiceListTest extends WebTestCase
 
         $crawler = $client->request('GET', '/');
 
-        $pageTitle = $crawler->filter('.page-container .card h2');
+        $pageTitle = $crawler->filter('.page-container h1');
 
         $this->assertEquals('Services', $pageTitle->text());
     }

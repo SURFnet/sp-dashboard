@@ -60,4 +60,15 @@ class ServiceRepository extends EntityRepository implements ServiceRepositoryInt
     {
         return $this->find($id);
     }
+
+    /**
+     * @param int $supplierId
+     * @return Service[]
+     */
+    public function findBySupplierId($supplierId)
+    {
+        return parent::findBy([
+            'supplier' => $supplierId,
+        ]);
+    }
 }

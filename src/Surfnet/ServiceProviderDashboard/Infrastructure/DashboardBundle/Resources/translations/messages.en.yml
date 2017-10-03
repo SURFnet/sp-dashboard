@@ -1,1 +1,11 @@
+service.list.title: Services
+service.list.empty: There are no services configured
+service.list.service: Service
+service.list.entity_id: Entity ID
+service.list.primary_contact: Primary contact
+service.list.environment: Environment
+service.list.action.view: View
+service.list.action.edit: Edit
+service.list.action.copy: Copy
+service.list.action.delete: Delete
 supplier.create.title: Add new supplier

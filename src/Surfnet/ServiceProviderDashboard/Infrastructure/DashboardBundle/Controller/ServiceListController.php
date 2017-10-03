@@ -21,9 +21,30 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SamlServiceService;
 
 class ServiceListController
 {
+    /**
+     * @var AdminSwitcherService
+     */
+    private $adminSwitcherService;
+
+    /**
+     * @var SamlServiceService
+     */
+    private $samlServiceService;
+
+    /**
+     * @param CommandBus $commandBus
+     */
+    public function __construct(AdminSwitcherService $adminSwitcherService, SamlServiceService $samlServiceService)
+    {
+        $this->adminSwitcherService = $adminSwitcherService;
+        $this->samlServiceService = $samlServiceService;
+    }
+
     /**
      * @Method("GET")
      * @Route("/", name="service_list")
@@ -32,7 +53,9 @@ class ServiceListController
     public function listAction()
     {
         return [
-            'text' => 'TODO',
+            'service_list' => $this->samlServiceService->getServiceListForSupplier(
+                $this->adminSwitcherService->getSelectedSupplier()
+            )
         ];
     }
 }

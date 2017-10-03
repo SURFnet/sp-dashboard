@@ -77,4 +77,23 @@ class InMemoryServiceRepository implements ServiceRepository
 
         return null;
     }
+
+    /**
+     * @param int $supplierId
+     *
+     * @return Service[]
+     */
+    public function findBySupplierId($supplierId)
+    {
+        $allServices = $this->findAll();
+        $result = [];
+
+        foreach ($allServices as $service) {
+            if ($service->getId() == $supplierId) {
+                $result[] = $service;
+            }
+        }
+
+        return $result;
+    }
 }

@@ -22,14 +22,14 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceComm
 use Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\ViewObject;
 
 class SamlServiceService
 {
-
     /**
      * @var ServiceRepository
      */
-    private $repository;
+    private $serviceRepository;
 
     /**
      * @var ServiceCommandFactory
@@ -37,12 +37,14 @@ class SamlServiceService
     private $factory;
 
     /**
-     * @param ServiceRepository $repository
+     * @param ServiceRepository $serviceRepository
      * @param ServiceCommandFactory $factory
      */
-    public function __construct(ServiceRepository $repository, ServiceCommandFactory $factory)
-    {
-        $this->repository = $repository;
+    public function __construct(
+        ServiceRepository $serviceRepository,
+        ServiceCommandFactory $factory
+    ) {
+        $this->serviceRepository = $serviceRepository;
         $this->factory = $factory;
     }
 
@@ -61,7 +63,7 @@ class SamlServiceService
      */
     public function getServiceById($serviceId)
     {
-        return $this->repository->findById($serviceId);
+        return $this->serviceRepository->findById($serviceId);
     }
 
     /**
@@ -72,5 +74,21 @@ class SamlServiceService
     public function buildEditServiceCommand(Service $service)
     {
         return $this->factory->build($service);
+    }
+
+    /**
+     * @param int $supplierId
+     *
+     * @return ViewObject\ServiceList
+     */
+    public function getServiceListForSupplier($supplierId)
+    {
+        $services = [];
+
+        foreach ($this->serviceRepository->findBySupplierId($supplierId) as $service) {
+            $services[] = ViewObject\Service::fromEntity($service);
+        }
+
+        return new ViewObject\ServiceList($services);
     }
 }
