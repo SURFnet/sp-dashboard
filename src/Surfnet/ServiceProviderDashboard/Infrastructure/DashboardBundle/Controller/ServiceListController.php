@@ -22,11 +22,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-class EntityListController
+class ServiceListController
 {
     /**
      * @Method("GET")
-     * @Route("/", name="entity_list")
+     * @Route("/", name="service_list")
      * @Template()
      */
     public function listAction()

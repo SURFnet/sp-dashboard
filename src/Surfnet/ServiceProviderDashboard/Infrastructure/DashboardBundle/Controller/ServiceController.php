@@ -115,7 +115,7 @@ class ServiceController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('entity_list');
+                return $this->redirectToRoute('service_list');
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
             }

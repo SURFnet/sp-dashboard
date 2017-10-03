@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class EntityListTest extends WebTestCase
+class ServiceListTest extends WebTestCase
 {
     public function test_entity_list()
     {
