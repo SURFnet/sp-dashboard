@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SURFnet Service Provider Dashboard" default="test">
-    <target name="test" depends="lint,static-analysis,unit-tests,integration-tests,web-tests,security-tests" />
+    <target name="test" depends="lint,static-analysis,phpunit-no-coverage,security-tests" />
 
     <target name="lint">
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
@@ -49,21 +49,58 @@
         </exec>
     </target>
 
-    <target name="unit-tests">
+    <target name="phpunit-no-coverage" depends="unit-tests-no-coverage,integration-tests-no-coverage,web-tests-no-coverage" />
+
+    <target name="phpunit" depends="unit-tests,integration-tests,web-tests,merge-coverage" />
+
+    <target name="create-coverage-dir">
+        <exec executable="mkdir" failonerror="true">
+            <arg line="-p /tmp/sp-dashboard-coverage" />
+        </exec>
+    </target>
+
+    <target name="merge-coverage">
+        <exec executable="vendor/bin/phpcov" failonerror="true">
+            <arg line="merge /tmp/sp-dashboard-coverage --html web/coverage" />
+        </exec>
+    </target>
+
+    <target name="unit-tests-no-coverage">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite unit" />
         </exec>
     </target>
 
-    <target name="integration-tests">
+    <target name="integration-tests-no-coverage">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite integration" />
         </exec>
     </target>
 
-    <target name="web-tests">
+    <target name="web-tests-no-coverage">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite webtests" />
+        </exec>
+    </target>
+
+    <target name="unit-tests" depends="create-coverage-dir">
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg line="--testsuite unit" />
+            <arg line="--coverage-php /tmp/sp-dashboard-coverage/unit.cov" />
+        </exec>
+    </target>
+
+    <target name="integration-tests" depends="create-coverage-dir">
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg line="--testsuite integration" />
+            <arg line="--coverage-php /tmp/sp-dashboard-coverage/integration.cov" />
+        </exec>
+    </target>
+
+    <target name="web-tests" depends="create-coverage-dir">
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg line="--testsuite webtests" />
+            <arg line="--coverage-php /tmp/sp-dashboard-coverage/webtests.cov" />
         </exec>
     </target>
 
