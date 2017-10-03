@@ -20,14 +20,15 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class AdminSwitcherServiceTest extends MockeryTestCase
 {
-    /** @var SupplierRepository|m\MockInterface */
+    /** @var ServiceRepository|m\MockInterface */
     private $repository;
 
     /** @var Session|m\MockInterface */
@@ -48,17 +49,17 @@ class AdminSwitcherServiceTest extends MockeryTestCase
     {
         $this->repository->shouldReceive('findAll')
             ->andReturn([
-                m::mock(Supplier::class)
+                m::mock(Service::class)
                     ->shouldReceive('getId')
                     ->andReturn('c')->getMock()
                     ->shouldReceive('getName')
                     ->andReturn('C')->getMock(),
-                m::mock(Supplier::class)
+                m::mock(Service::class)
                     ->shouldReceive('getId')
                     ->andReturn('a')->getMock()
                     ->shouldReceive('getName')
                     ->andReturn('A')->getMock(),
-                m::mock(Supplier::class)
+                m::mock(Service::class)
                     ->shouldReceive('getId')
                     ->andReturn('b')->getMock()
                     ->shouldReceive('getName')

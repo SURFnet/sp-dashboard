@@ -29,6 +29,7 @@
         "doctrine/orm": "^2.5",
         "knplabs/knp-menu-bundle": "^2.1",
         "league/tactician-bundle": "^0.4.1",
+        "ramsey/uuid": "^3.7",
         "sensio/framework-extra-bundle": "^3.0",
         "stof/doctrine-extensions-bundle": "^1.2",
         "symfony/monolog-bundle": "^3.1.0",

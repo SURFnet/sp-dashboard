@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository")
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -64,7 +64,7 @@ class Service
      * @var int
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private $status = self::STATE_DRAFT;
 
     /**
      * @var \DateTime $created
@@ -301,4 +301,68 @@ class Service
      * @ORM\JoinColumn(nullable=false)
      */
     private $supplier;
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param Supplier $supplier
+     */
+    public function setSupplier($supplier)
+    {
+        $this->supplier = $supplier;
+    }
+
+    /**
+     * @param string $ticketNumber
+     */
+    public function setTicketNumber($ticketNo)
+    {
+        $this->ticketNo = $ticketNo;
+    }
+
+    /**
+     * @return Supplier
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTicketNumber()
+    {
+        return $this->ticketNo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
 }

@@ -90,4 +90,13 @@ class SupplierRepository extends EntityRepository implements SupplierRepositoryI
             );
         }
     }
+
+    /**
+     * @param int $id
+     * @return Supplier|null
+     */
+    public function findById($id)
+    {
+        return $this->find($id);
+    }
 }

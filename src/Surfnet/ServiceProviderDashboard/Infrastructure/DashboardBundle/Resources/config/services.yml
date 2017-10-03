@@ -3,6 +3,13 @@ services:
     arguments:
       - '@tactician.commandbus'
 
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
+    arguments:
+      - '@tactician.commandbus'
+      - '@dashboard.service.saml_service'
+      - '@dashboard.service.admin_switcher'
+      - '@dashboard.service.ticket'
+
   dashboard.monolog.json_formatter:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
@@ -11,12 +18,24 @@ services:
     factory: ['@doctrine', 'getRepository']
     arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier]
 
+  surfnet.dashboard.repository.service:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository
+    factory: ['@doctrine', 'getRepository']
+    arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
+
+  surfnet.dashboard.command_handler.create_service:
+    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
+    public: true
+    arguments:
+      - '@surfnet.dashboard.repository.service'
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
+
   surfnet.dashboard.command_handler.create_supplier:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler
     public: true
     arguments:
       - '@surfnet.dashboard.repository.supplier'
-      - '@validator'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier }
 
@@ -25,6 +44,12 @@ services:
     arguments:
       - '@session'
       - '@surfnet.dashboard.repository.supplier'
+
+  dashboard.service.saml_service:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SamlServiceService
+
+  dashboard.service.ticket:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\TicketService
 
   surfnet.dashboard.command_handler.select_supplier:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler

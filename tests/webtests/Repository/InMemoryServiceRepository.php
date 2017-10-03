@@ -19,33 +19,16 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Repository;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository as SupplierRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository as SupplierRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
-class InMemorySupplierRepository implements SupplierRepositoryInterface
+class InMemoryServiceRepository implements ServiceRepository
 {
     private static $memory = [];
 
     public function clear()
     {
         self:$memory = [];
-    }
-
-    /**
-     * @param Supplier $supplier
-     */
-    public function save(Supplier $supplier)
-    {
-        self::$memory[] = $supplier;
-    }
-
-    /**
-     * @param Supplier $supplier
-     * @return bool
-     */
-    public function isUnique(Supplier $supplier)
-    {
-        return true;
     }
 
     /**
@@ -57,19 +40,27 @@ class InMemorySupplierRepository implements SupplierRepositoryInterface
     }
 
     /**
+     * @param Service $service
+     */
+    public function save(Service $service)
+    {
+        self::$memory[] = $service;
+    }
+
+    /**
      * @param int $id
      *
-     * @return Supplier|null
+     * @return bool
      */
-    public function findById($id)
+    public function isUnique($id)
     {
-        $allSuppliers = $this->findAll();
-        foreach ($allSuppliers as $supplier) {
-            if ($supplier->getId() == $id) {
-                return $supplier;
+        $allServices = $this->findAll();
+        foreach ($allServices as $service) {
+            if ($service->getId() == $id) {
+                return false;
             }
         }
 
-        return null;
+        return true;
     }
 }

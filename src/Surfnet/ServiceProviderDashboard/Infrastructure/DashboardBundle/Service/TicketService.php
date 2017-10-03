@@ -15,36 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
-
+use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 
-interface SupplierRepository
+class TicketService
 {
     /**
+     * @param $serviceId
      * @param Supplier $supplier
+     * @return string
      */
-    public function save(Supplier $supplier);
-
-    /**
-     * Is the proposed supplier entity unique? The id of the supplier is not taken into account in this test.
-     *
-     * @param Supplier $supplier
-     *
-     * @return bool
-     */
-    public function isUnique(Supplier $supplier);
-
-    /**
-     * @return Supplier[]
-     */
-    public function findAll();
-
-    /**
-     * @param int $id
-     *
-     * @return Supplier|null
-     */
-    public function findById($id);
+    public function getTicketIdForService($serviceId, Supplier $supplier)
+    {
+        // For now return an uuid, later in the project an integration with Jira should be implemented.
+        return (string) Uuid::uuid1();
+    }
 }
