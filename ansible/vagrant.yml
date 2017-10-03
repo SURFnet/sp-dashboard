@@ -15,7 +15,7 @@
 - hosts: all
   become: true
   vars:
-    sp_dashboard_document_root: /vagrant/web
+    spdashboard_document_root: /vagrant/web
     front_controller: app_dev.php
     spdashboard_domain: spdashboard.dev.support.surfconext.nl
     spdashboard_data_dir: /vagrant

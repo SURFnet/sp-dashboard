@@ -3,5 +3,7 @@ front_controller: app.php
 develop_spd: False
 spdashboard_fpm_user: spdashboard
 spdashboard_domain: spdashboard.{{ base_domain }}
-sp_dashboard_document_root: /opt/openconext/spdashboard
-
+spdashboard_data_dir: /opt/openconext/spdashboard
+spdashboard_document_root: "{{ spdashboard_data_dir }}/current/web"
+spdashboard_branch: master
+spdashboard_branch_dir: /opt/openconext/builds/spdashboard
