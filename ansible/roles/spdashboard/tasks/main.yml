@@ -43,14 +43,6 @@
   notify:
     - reload httpd
 
-- name: Create SP Dashboard database
-  mysql_db: name={{ item }} state=present
-  with_items: "{{ spd_databases.names }}"
-
-- name: Create SP Dashboard user
-  mysql_user: name={{ item.name }} password={{ item.password }} priv={{ item.db_name }}.*:ALL state=present login_user=root login_password={{ mysql_root_password }}
-  with_items: "{{ spd_databases.users }}"
-
 - name: Check if latest version is installed
   stat: path="{{ spdashboard_data_dir}}/releases/sp-dashboard-{{ spdashboard_branch }}" 
   register: branch_installed
