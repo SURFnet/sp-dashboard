@@ -2,6 +2,7 @@ services:
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\SupplierController:
     arguments:
       - '@tactician.commandbus'
+      - '@dashboard.service.admin_switcher'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
     arguments:
@@ -38,6 +39,14 @@ services:
       - '@surfnet.dashboard.repository.supplier'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier }
+
+  surfnet.dashboard.command_handler.edit_supplier:
+    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\EditSupplierCommandHandler
+    public: true
+    arguments:
+      - '@surfnet.dashboard.repository.supplier'
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand }
 
   dashboard.service.admin_switcher:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService

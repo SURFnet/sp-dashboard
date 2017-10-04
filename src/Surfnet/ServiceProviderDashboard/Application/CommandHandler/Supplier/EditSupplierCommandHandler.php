@@ -18,13 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 
-class CreateSupplierCommandHandler implements CommandHandler
+class EditSupplierCommandHandler implements CommandHandler
 {
     /**
      * @var SupplierRepository
@@ -40,12 +40,18 @@ class CreateSupplierCommandHandler implements CommandHandler
     }
 
     /**
-     * @param CreateSupplierCommand $command
+     * @param EditSupplierCommand $command
      * @throws InvalidArgumentException
+     * @throws EntityNotFoundException
      */
-    public function handle(CreateSupplierCommand $command)
+    public function handle(EditSupplierCommand $command)
     {
-        $supplier = new Supplier();
+        $supplier = $this->supplierRepository->findById($command->getId());
+
+        if (is_null($supplier)) {
+            throw new EntityNotFoundException('The requested Supplier cannot be found');
+        }
+
         $supplier->setName($command->getName());
         $supplier->setGuid($command->getGuid());
         $supplier->setTeamName($command->getTeamName());

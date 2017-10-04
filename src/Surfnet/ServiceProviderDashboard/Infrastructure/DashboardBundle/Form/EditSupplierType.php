@@ -18,13 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SupplierType extends AbstractType
+class EditSupplierType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -38,12 +38,12 @@ class SupplierType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => CreateSupplierCommand::class,
+            'data_class' => EditSupplierCommand::class,
         ));
     }
 
     public function getBlockPrefix()
     {
-        return 'dashboard_bundle_supplier_type';
+        return 'dashboard_bundle_edit_supplier_type';
     }
 }

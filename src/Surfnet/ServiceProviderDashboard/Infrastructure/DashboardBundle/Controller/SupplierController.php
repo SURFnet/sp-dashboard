@@ -23,10 +23,14 @@ use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\EditSupplierType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\SupplierType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,11 +42,18 @@ class SupplierController extends Controller
     private $commandBus;
 
     /**
-     * @param CommandBus $commandBus
+     * @var AdminSwitcherService
      */
-    public function __construct(CommandBus $commandBus)
+    private $switcherService;
+
+    /**
+     * @param CommandBus $commandBus
+     * @param AdminSwitcherService $switcherService
+     */
+    public function __construct(CommandBus $commandBus, AdminSwitcherService $switcherService)
     {
         $this->commandBus = $commandBus;
+        $this->switcherService = $switcherService;
     }
 
     /**
@@ -57,7 +68,7 @@ class SupplierController extends Controller
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        $command = new CreateSupplier();
+        $command = new CreateSupplierCommand();
 
         $form = $this->createForm(SupplierType::class, $command);
 
@@ -74,6 +85,47 @@ class SupplierController extends Controller
         }
 
         return $this->render('DashboardBundle:Supplier:create.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Method({"GET", "POST"})
+     * @Route("/supplier/edit", name="supplier_edit")
+     * @Template()
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction(Request $request)
+    {
+        $this->get('session')->getFlashBag()->clear();
+        /** @var LoggerInterface $logger */
+        $logger = $this->get('logger');
+        $supplier = $this->switcherService->getSupplierById((int) $this->switcherService->getSelectedSupplier());
+
+        $command = new EditSupplierCommand(
+            $supplier->getId(),
+            $supplier->getGuid(),
+            $supplier->getName(),
+            $supplier->getTeamName()
+        );
+
+        $form = $this->createForm(EditSupplierType::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $logger->info(sprintf('Supplier was edited by: "%s"', '@todo'), (array)$command);
+            try {
+                $this->commandBus->handle($command);
+                return $this->redirectToRoute('entity_list');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            } catch (EntityNotFoundException $e) {
+                $this->addFlash('error', 'The Supplier could not be found while handling the request');
+            }
+        }
+
+        return $this->render('DashboardBundle:Supplier:edit.html.twig', array(
             'form' => $form->createView(),
         ));
     }

@@ -21,8 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Supplier;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CreateSupplier implements Command
+class EditSupplierCommand implements Command
 {
+    /**
+     * @var int
+     */
+    private $id;
+
     /**
      * @var string
      * @Assert\NotBlank
@@ -41,6 +46,20 @@ class CreateSupplier implements Command
      * @Assert\NotBlank
      */
     private $name;
+
+    /**
+     * @param int $id
+     * @param string $guid
+     * @param string $teamName
+     * @param string $name
+     */
+    public function __construct($id, $guid, $name, $teamName)
+    {
+        $this->id = $id;
+        $this->guid = $guid;
+        $this->name = $name;
+        $this->teamName = $teamName;
+    }
 
     /**
      * @param string $guid
@@ -64,6 +83,14 @@ class CreateSupplier implements Command
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
