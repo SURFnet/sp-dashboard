@@ -23,4 +23,29 @@ service.edit.attributes.title: Attributes
 service.edit.attributes.text: Text should be set in web translations
 service.edit.comments.title: Comments
 service.edit.comments.text: Text should be set in web translations
-supplier.edit.title: Supplier details
+service.edit.information.ticketNumber:
+service.edit.information.importUrl: Text should be set in web translations
+service.edit.information.metadataUrl: Text should be set in web translations
+service.edit.information.metadataXml: Text should be set in web translations
+service.edit.information.certificate: Text should be set in web translations
+service.edit.information.descriptionNl: Text should be set in web translations
+service.edit.information.descriptionEn: Text should be set in web translations
+service.edit.information.administrativeContact: Text should be set in web translations
+service.edit.information.administrativeContact: Text should be set in web translations
+service.edit.information.supportContact: Text should be set in web translations
+service.edit.information.givenNameAttribute: Text should be set in web translations
+service.edit.information.surNameAttribute: Text should be set in web translations
+service.edit.information.commonNameAttribute: Text should be set in web translations
+service.edit.information.displayNameAttribute: Text should be set in web translations
+service.edit.information.emailAddressAttribute: Text should be set in web translations
+service.edit.information.organizationAttribute: Text should be set in web translations
+service.edit.information.organizationTypeAttribute: Text should be set in web translations
+service.edit.information.affiliationAttribute: Text should be set in web translations
+service.edit.information.entitlementAttribute': Text should be set in web translations
+service.edit.information.principleNameAttribute: Text should be set in web translations
+service.edit.information.uidAttribute: Text should be set in web translations
+service.edit.information.preferredLanguageAttribute: Text should be set in web translations
+service.edit.information.personalCodeAttribute: Text should be set in web translations
+service.edit.information.scopedAffiliationAttribute: Text should be set in web translations
+service.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
+service.edit.information.comments: Text should be set in web translations
