@@ -328,6 +328,294 @@ class Service
     }
 
     /**
+     * @param bool $archived
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
+    }
+
+    /**
+     * @param string $environment
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @param string $janusId
+     */
+    public function setJanusId($janusId)
+    {
+        $this->janusId = $janusId;
+    }
+
+    /**
+     * @param string $importUrl
+     */
+    public function setImportUrl($importUrl)
+    {
+        $this->importUrl = $importUrl;
+    }
+
+    /**
+     * @param string $metadataUrl
+     */
+    public function setMetadataUrl($metadataUrl)
+    {
+        $this->metadataUrl = $metadataUrl;
+    }
+
+    /**
+     * @param string $metadataXml
+     */
+    public function setMetadataXml($metadataXml)
+    {
+        $this->metadataXml = $metadataXml;
+    }
+
+    /**
+     * @param string $acsLocation
+     */
+    public function setAcsLocation($acsLocation)
+    {
+        $this->acsLocation = $acsLocation;
+    }
+
+    /**
+     * @param string $entityId
+     */
+    public function setEntityId($entityId)
+    {
+        $this->entityId = $entityId;
+    }
+
+    /**
+     * @param string $certificate
+     */
+    public function setCertificate($certificate)
+    {
+        $this->certificate = $certificate;
+    }
+
+    /**
+     * @param string $logoUrl
+     */
+    public function setLogoUrl($logoUrl)
+    {
+        $this->logoUrl = $logoUrl;
+    }
+
+    /**
+     * @param string $nameNl
+     */
+    public function setNameNl($nameNl)
+    {
+        $this->nameNl = $nameNl;
+    }
+
+    /**
+     * @param string $nameEn
+     */
+    public function setNameEn($nameEn)
+    {
+        $this->nameEn = $nameEn;
+    }
+
+    /**
+     * @param string $descriptionNl
+     */
+    public function setDescriptionNl($descriptionNl)
+    {
+        $this->descriptionNl = $descriptionNl;
+    }
+
+    /**
+     * @param string $descriptionEn
+     */
+    public function setDescriptionEn($descriptionEn)
+    {
+        $this->descriptionEn = $descriptionEn;
+    }
+
+    /**
+     * @param string $applicationUrl
+     */
+    public function setApplicationUrl($applicationUrl)
+    {
+        $this->applicationUrl = $applicationUrl;
+    }
+
+    /**
+     * @param string $eulaUrl
+     */
+    public function setEulaUrl($eulaUrl)
+    {
+        $this->eulaUrl = $eulaUrl;
+    }
+
+    /**
+     * @param ContactPerson $administrativeContact
+     */
+    public function setAdministrativeContact(ContactPerson $administrativeContact)
+    {
+        $this->administrativeContact = $administrativeContact;
+    }
+
+    /**
+     * @param ContactPerson $technicalContact
+     */
+    public function setTechnicalContact(ContactPerson $technicalContact)
+    {
+        $this->technicalContact = $technicalContact;
+    }
+
+    /**
+     * @param ContactPerson $supportContact
+     */
+    public function setSupportContact(ContactPerson $supportContact)
+    {
+        $this->supportContact = $supportContact;
+    }
+
+    /**
+     * @param Attribute $givenNameAttribute
+     */
+    public function setGivenNameAttribute(Attribute $givenNameAttribute)
+    {
+        $this->givenNameAttribute = $givenNameAttribute;
+    }
+
+    /**
+     * @param Attribute $surNameAttribute
+     */
+    public function setSurNameAttribute(Attribute $surNameAttribute)
+    {
+        $this->surNameAttribute = $surNameAttribute;
+    }
+
+    /**
+     * @param Attribute $commonNameAttribute
+     */
+    public function setCommonNameAttribute(Attribute $commonNameAttribute)
+    {
+        $this->commonNameAttribute = $commonNameAttribute;
+    }
+
+    /**
+     * @param Attribute $displayNameAttribute
+     */
+    public function setDisplayNameAttribute(Attribute $displayNameAttribute)
+    {
+        $this->displayNameAttribute = $displayNameAttribute;
+    }
+
+    /**
+     * @param Attribute $emailAddressAttribute
+     */
+    public function setEmailAddressAttribute(Attribute $emailAddressAttribute)
+    {
+        $this->emailAddressAttribute = $emailAddressAttribute;
+    }
+
+    /**
+     * @param Attribute $organizationAttribute
+     */
+    public function setOrganizationAttribute(Attribute $organizationAttribute)
+    {
+        $this->organizationAttribute = $organizationAttribute;
+    }
+
+    /**
+     * @param Attribute $organizationTypeAttribute
+     */
+    public function setOrganizationTypeAttribute(Attribute $organizationTypeAttribute)
+    {
+        $this->organizationTypeAttribute = $organizationTypeAttribute;
+    }
+
+    /**
+     * @param Attribute $affiliationAttribute
+     */
+    public function setAffiliationAttribute(Attribute $affiliationAttribute)
+    {
+        $this->affiliationAttribute = $affiliationAttribute;
+    }
+
+    /**
+     * @param Attribute $entitlementAttribute
+     */
+    public function setEntitlementAttribute(Attribute $entitlementAttribute)
+    {
+        $this->entitlementAttribute = $entitlementAttribute;
+    }
+
+    /**
+     * @param Attribute $principleNameAttribute
+     */
+    public function setPrincipleNameAttribute(Attribute $principleNameAttribute)
+    {
+        $this->principleNameAttribute = $principleNameAttribute;
+    }
+
+    /**
+     * @param Attribute $uidAttribute
+     */
+    public function setUidAttribute(Attribute $uidAttribute)
+    {
+        $this->uidAttribute = $uidAttribute;
+    }
+
+    /**
+     * @param Attribute $preferredLanguageAttribute
+     */
+    public function setPreferredLanguageAttribute(Attribute $preferredLanguageAttribute)
+    {
+        $this->preferredLanguageAttribute = $preferredLanguageAttribute;
+    }
+
+    /**
+     * @param Attribute $personalCodeAttribute
+     */
+    public function setPersonalCodeAttribute(Attribute $personalCodeAttribute)
+    {
+        $this->personalCodeAttribute = $personalCodeAttribute;
+    }
+
+    /**
+     * @param Attribute $scopedAffiliationAttribute
+     */
+    public function setScopedAffiliationAttribute(Attribute $scopedAffiliationAttribute)
+    {
+        $this->scopedAffiliationAttribute = $scopedAffiliationAttribute;
+    }
+
+    /**
+     * @param Attribute $eduPersonTargetedIDAttribute
+     */
+    public function setEduPersonTargetedIDAttribute(Attribute $eduPersonTargetedIDAttribute)
+    {
+        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
+    }
+
+    /**
+     * @param string $comments
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+    }
+
+    /**
      * @return Supplier
      */
     public function getSupplier()
@@ -389,14 +677,6 @@ class Service
     public function getUpdated()
     {
         return $this->updated;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTicketNo()
-    {
-        return $this->ticketNo;
     }
 
     /**

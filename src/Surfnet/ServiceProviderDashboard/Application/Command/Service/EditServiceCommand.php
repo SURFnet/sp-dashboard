@@ -435,14 +435,6 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @return string
-     */
-    public function getTicketNo()
-    {
-        return $this->ticketNo;
-    }
-
-    /**
      * @param string $ticketNo
      */
     public function setTicketNo($ticketNo)

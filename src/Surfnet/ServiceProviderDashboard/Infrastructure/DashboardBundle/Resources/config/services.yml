@@ -32,6 +32,14 @@ services:
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
+  surfnet.dashboard.command_handler.edit_service:
+    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
+    public: true
+    arguments:
+      - '@surfnet.dashboard.repository.service'
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand }
+
   surfnet.dashboard.command_handler.create_supplier:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler
     public: true

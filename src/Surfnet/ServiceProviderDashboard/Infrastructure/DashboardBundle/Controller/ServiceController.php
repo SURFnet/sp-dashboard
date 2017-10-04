@@ -111,20 +111,16 @@ class ServiceController extends Controller
 
         $form = $this->createForm(EditServiceType::class, $command);
         $form->handleRequest($request);
-//
 
-//
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->commandBus->handle($command);
+                return $this->redirectToRoute('entity_list');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
 
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            try {
-//                $this->commandBus->handle($command);
-//                return $this->redirectToRoute('entity_list');
-//            } catch (InvalidArgumentException $e) {
-//                $this->addFlash('error', $e->getMessage());
-//            }
-//        }
-//
         return $this->render('DashboardBundle:Service:edit.html.twig', array(
             'form' => $form->createView(),
         ));
