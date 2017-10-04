@@ -91,3 +91,14 @@ lexik_translation:
         type: all
         managed_locales_only: true
     base_layout: "::Translation/layout.html.twig"
+
+stfalcon_tinymce:
+    tinymce_jquery: false
+    language: "%locale%"
+    theme:
+        simple:
+            theme: "modern"
+            menubar: false
+            toolbar: "bold italic underline | styleselect | bullist numlist outdent indent | link"
+            plugins:
+                - "autolink lists link contextmenu paste"

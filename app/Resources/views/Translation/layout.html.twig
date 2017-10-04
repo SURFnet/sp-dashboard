@@ -1,6 +1,8 @@
 {% extends '::base.html.twig' %}
 
 {% block body_container %}
+    {{ tinymce_init({}) }}
+
     {% block lexik_stylesheets %}
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
             <link rel="stylesheet" href="{{ asset('bundles/lexiktranslation/ng-table/ng-table.min.css') }}">
@@ -22,7 +24,9 @@
         </div>
     {% endblock lexik_flash_message %}
 
-    {% block lexik_content '' %}
+    <div class="translation-ui">
+        {% block lexik_content '' %}
+    </div>
 
     {% block lexik_javascript_footer %}
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
