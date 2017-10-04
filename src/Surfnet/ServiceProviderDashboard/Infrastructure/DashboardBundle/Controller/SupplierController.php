@@ -142,8 +142,6 @@ class SupplierController extends Controller
 
         $this->commandBus->handle($command);
 
-        return $this->redirect(
-            $request->headers->get('referer')
-        );
+        return $this->redirectToRoute('service_list');
     }
 }
