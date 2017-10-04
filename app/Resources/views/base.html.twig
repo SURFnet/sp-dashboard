@@ -31,9 +31,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="https://wiki.surfnet.nl/" target="_blank">Help</a>
+                        <a href="https://wiki.surfnet.nl/" target="_blank">{{ 'page.header.help'|trans }}</a>
                     </li>
-                    <li class="border-left"><a>Logout</a></li>
+                    <li class="border-left"><a>{{ 'page.header.logout'|trans }}</a></li>
                     <li class="admin-switcher">
                         {{ admin_switcher() }}
                     </li>
@@ -59,8 +59,8 @@
         </div>
         <div class="footer">
             <div class="footer-inner">
-                <span><a href="/" target="_blank">Privacy</a></span>
-                <span><a href="/" target="_blank">Contact</a></span>
+                <span><a href="/" target="_blank">{{ 'page.header.privacy'|trans }}</a></span>
+                <span><a href="/" target="_blank">{{ 'page.header.contact'|trans }}</a></span>
             </div>
         </div>
         {% block javascripts %}
