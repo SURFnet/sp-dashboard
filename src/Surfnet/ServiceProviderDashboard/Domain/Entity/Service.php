@@ -42,9 +42,9 @@ class Service
 
     /**
      * @var string
+     *
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="guid", unique=true, length=36)
      */
     private $id;
 
