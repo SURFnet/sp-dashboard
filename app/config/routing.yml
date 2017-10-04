@@ -1,2 +1,6 @@
 dashboard:
     resource: '@DashboardBundle/Resources/config/routing.yml'
+
+lexik_translation_edition:
+    resource: "@LexikTranslationBundle/Resources/config/routing.yml"
+    prefix:   /translations

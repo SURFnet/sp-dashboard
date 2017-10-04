@@ -10,7 +10,7 @@ parameters:
 
 framework:
     #esi: ~
-    #translator: { fallbacks: ['%locale%'] }
+    translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
     router:
         resource: '%kernel.root_dir%/config/routing.yml'
@@ -81,3 +81,12 @@ stof_doctrine_extensions:
     orm:
         default:
             timestampable: true
+
+lexik_translation:
+    fallback_locale: [en] # (required) default locale(s) to use
+    managed_locales: [en] # (required) locales that the bundle has to manage
+    grid_input_type: textarea
+    grid_toggle_similar: true
+    resources_registration:
+        type: all
+        managed_locales_only: true
