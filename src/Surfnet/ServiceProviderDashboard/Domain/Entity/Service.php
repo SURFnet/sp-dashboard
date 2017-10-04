@@ -29,8 +29,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository")
  *
- * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Service
 {
@@ -321,9 +322,9 @@ class Service
     /**
      * @param string $ticketNumber
      */
-    public function setTicketNumber($ticketNo)
+    public function setTicketNumber($ticketNumber)
     {
-        $this->ticketNo = $ticketNo;
+        $this->ticketNo = $ticketNumber;
     }
 
     /**
@@ -364,5 +365,301 @@ class Service
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArchived()
+    {
+        return $this->archived;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTicketNo()
+    {
+        return $this->ticketNo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJanusId()
+    {
+        return $this->janusId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImportUrl()
+    {
+        return $this->importUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetadataUrl()
+    {
+        return $this->metadataUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetadataXml()
+    {
+        return $this->metadataXml;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAcsLocation()
+    {
+        return $this->acsLocation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCertificate()
+    {
+        return $this->certificate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogoUrl()
+    {
+        return $this->logoUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameNl()
+    {
+        return $this->nameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameEn()
+    {
+        return $this->nameEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescriptionNl()
+    {
+        return $this->descriptionNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescriptionEn()
+    {
+        return $this->descriptionEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicationUrl()
+    {
+        return $this->applicationUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEulaUrl()
+    {
+        return $this->eulaUrl;
+    }
+
+    /**
+     * @return ContactPerson
+     */
+    public function getAdministrativeContact()
+    {
+        return $this->administrativeContact;
+    }
+
+    /**
+     * @return ContactPerson
+     */
+    public function getTechnicalContact()
+    {
+        return $this->technicalContact;
+    }
+
+    /**
+     * @return ContactPerson
+     */
+    public function getSupportContact()
+    {
+        return $this->supportContact;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getGivenNameAttribute()
+    {
+        return $this->givenNameAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getSurNameAttribute()
+    {
+        return $this->surNameAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getCommonNameAttribute()
+    {
+        return $this->commonNameAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getDisplayNameAttribute()
+    {
+        return $this->displayNameAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getEmailAddressAttribute()
+    {
+        return $this->emailAddressAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getOrganizationAttribute()
+    {
+        return $this->organizationAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getOrganizationTypeAttribute()
+    {
+        return $this->organizationTypeAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getAffiliationAttribute()
+    {
+        return $this->affiliationAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getEntitlementAttribute()
+    {
+        return $this->entitlementAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getPrincipleNameAttribute()
+    {
+        return $this->principleNameAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getUidAttribute()
+    {
+        return $this->uidAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getPreferredLanguageAttribute()
+    {
+        return $this->preferredLanguageAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getPersonalCodeAttribute()
+    {
+        return $this->personalCodeAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getScopedAffiliationAttribute()
+    {
+        return $this->scopedAffiliationAttribute;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getEduPersonTargetedIDAttribute()
+    {
+        return $this->eduPersonTargetedIDAttribute;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

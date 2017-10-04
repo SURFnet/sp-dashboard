@@ -33,4 +33,11 @@ interface ServiceRepository
      * @return bool
      */
     public function isUnique($id);
+
+    /**
+     * @param int $id
+     *
+     * @return Service|null
+     */
+    public function findById($id);
 }

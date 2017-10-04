@@ -18,14 +18,59 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
 
 use Ramsey\Uuid\Uuid;
+use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class SamlServiceService
 {
+
+    /**
+     * @var ServiceRepository
+     */
+    private $repository;
+
+    /**
+     * @var ServiceCommandFactory
+     */
+    private $factory;
+
+    /**
+     * @param ServiceRepository $repository
+     * @param ServiceCommandFactory $factory
+     */
+    public function __construct(ServiceRepository $repository, ServiceCommandFactory $factory)
+    {
+        $this->repository = $repository;
+        $this->factory = $factory;
+    }
+
     /**
      * @return string
      */
     public function createServiceId()
     {
         return (string) Uuid::uuid1();
+    }
+
+    /**
+     * @param $serviceId
+     *
+     * @return Service|null
+     */
+    public function getServiceById($serviceId)
+    {
+        return $this->repository->findById($serviceId);
+    }
+
+    /**
+     * @param Service $service
+     *
+     * @return EditServiceCommand
+     */
+    public function buildEditServiceCommand(Service $service)
+    {
+        return $this->factory->build($service);
     }
 }

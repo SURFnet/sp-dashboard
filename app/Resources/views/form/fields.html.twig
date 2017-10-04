@@ -1,0 +1,8 @@
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {% for attrname,attrvalue in attr %}
+        {% if attrname == 'help' %}
+            <span class="help-block" data-help-text="{{ attrvalue|trans }}">?</span>{% endif %}
+    {% endfor %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock form_widget_simple -%}

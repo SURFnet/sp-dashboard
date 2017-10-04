@@ -56,9 +56,15 @@ services:
 
   dashboard.service.saml_service:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SamlServiceService
+    arguments:
+      - '@surfnet.dashboard.repository.service'
+      - '@dashboard.factory.service'
 
   dashboard.service.ticket:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\TicketService
+
+  dashboard.factory.service:
+    class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
 
   surfnet.dashboard.command_handler.select_supplier:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
