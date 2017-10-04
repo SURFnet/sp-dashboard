@@ -2,9 +2,8 @@
 
 {% extends '::base.html.twig' %}
 
-{% block body %}
-
-    <h1>Service Provider registration form</h1>
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'service.edit.title'|trans }}{%endblock%}</h1>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 

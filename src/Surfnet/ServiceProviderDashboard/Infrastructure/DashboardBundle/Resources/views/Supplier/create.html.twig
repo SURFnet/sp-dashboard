@@ -1,8 +1,8 @@
 {% extends '::base.html.twig' %}
 
-{% block body %}
+{% block page_heading %}{{ 'supplier.edit.title'|trans }}{%endblock%}
 
-    <h2>{{ 'supplier.create.title'|trans }}</h2>
+{% block body %}
 
     {% for message in app.flashes('error') %}
         <div class="message error">

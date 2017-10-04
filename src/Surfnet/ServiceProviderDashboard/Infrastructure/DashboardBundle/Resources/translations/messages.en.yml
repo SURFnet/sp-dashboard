@@ -1,3 +1,4 @@
+service.edit.title: Service details
 service.list.title: Services
 service.list.empty: There are no services configured
 service.list.service: Service
@@ -9,3 +10,4 @@ service.list.action.edit: Edit
 service.list.action.copy: Copy
 service.list.action.delete: Delete
 supplier.create.title: Add new supplier
+supplier.edit.title: Supplier details
