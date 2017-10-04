@@ -113,4 +113,13 @@
             <arg line="--end-point=http://security.sensiolabs.org/check_lock" />
         </exec>
     </target>
+
+    <target name="import-translations">
+        <exec executable="bin/console" failonerror="true">
+            <arg line="lexik:translations:import" />
+        </exec>
+        <exec executable="bin/console" failonerror="true">
+            <arg line="lexik:translations:import DashboardBundle" />
+        </exec>
+    </target>
 </project>
