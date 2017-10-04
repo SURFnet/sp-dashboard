@@ -75,10 +75,10 @@ class SupplierController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $logger->info(sprintf('Save new Supplier, entity was created by: %s', '@todo'), (array) $command);
+            $logger->info(sprintf('Save new Supplier, service was created by: %s', '@todo'), (array) $command);
             try {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('entity_list');
+                return $this->redirectToRoute('service_list');
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
             }
@@ -117,7 +117,7 @@ class SupplierController extends Controller
             $logger->info(sprintf('Supplier was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('entity_list');
+                return $this->redirectToRoute('service_list');
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
             } catch (EntityNotFoundException $e) {
@@ -142,8 +142,6 @@ class SupplierController extends Controller
 
         $this->commandBus->handle($command);
 
-        return $this->redirect(
-            $request->headers->get('referer')
-        );
+        return $this->redirectToRoute('service_list');
     }
 }

@@ -1,4 +1,9 @@
 services:
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceListController:
+    arguments:
+      - '@dashboard.service.admin_switcher'
+      - '@dashboard.service.saml_service'
+
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\SupplierController:
     arguments:
       - '@tactician.commandbus'

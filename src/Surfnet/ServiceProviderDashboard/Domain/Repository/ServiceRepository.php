@@ -40,4 +40,11 @@ interface ServiceRepository
      * @return Service|null
      */
     public function findById($id);
+
+    /**
+     * @param int $supplierId
+     *
+     * @return Service[]
+     */
+    public function findBySupplierId($supplierId);
 }

@@ -30,7 +30,7 @@ class Builder implements ContainerAwareInterface
     {
         $menu = $factory->createItem('root');
 
-        $menu->addChild('Services', array('route' => 'entity_list'));
+        $menu->addChild('Services', array('route' => 'service_list'));
 
         $menu->addChild('Add new service', array(
             'route' => 'service_add',

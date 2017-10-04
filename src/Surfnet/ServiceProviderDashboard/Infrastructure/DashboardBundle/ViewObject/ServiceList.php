@@ -15,21 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\ViewObject;
 
-namespace Surfnet\ServiceProviderDashboard\Webtests;
-
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class EntityListTest extends WebTestCase
+class ServiceList
 {
-    public function test_entity_list()
+    /**
+     * @var Service[]
+     */
+    private $services;
+
+    /**
+     * @param Service[] $services
+     */
+    public function __construct(array $services)
     {
-        $client = static::createClient();
+        $this->services = $services;
+    }
 
-        $crawler = $client->request('GET', '/');
-
-        $pageTitle = $crawler->filter('.page-container .card h2');
-
-        $this->assertEquals('Services', $pageTitle->text());
+    /**
+     * @return Service[]
+     */
+    public function getServices()
+    {
+        return $this->services;
     }
 }

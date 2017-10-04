@@ -46,14 +46,8 @@
             </div>
         </div>
         <div class="page-container">
-            <div class="icon-legend">
-                <section class="roles">
-                    <span class="role">
-                        <i class="fa fa-star"></i>Admin
-                    </span>
-                </section>
-            </div>
             {% block body_container %}
+            <h1>{% block page_heading %}{% endblock %}</h1>
             <div class="card">
                 {% block body %}{% endblock %}
             </div>

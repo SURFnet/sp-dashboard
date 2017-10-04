@@ -1,0 +1,23 @@
+table {
+  width: 100%;
+
+  tr {
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: $lighter-grey;
+
+    th {
+      color: $dark-grey;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    td, th {
+      padding: 10px 0;
+    }
+  }
+
+  thead tr {
+    border-width: 0;
+  }
+}
