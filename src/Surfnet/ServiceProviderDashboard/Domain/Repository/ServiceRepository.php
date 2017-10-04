@@ -18,33 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
-interface SupplierRepository
+interface ServiceRepository
 {
     /**
-     * @param Supplier $supplier
+     * @param Service $service
      */
-    public function save(Supplier $supplier);
-
-    /**
-     * Is the proposed supplier entity unique? The id of the supplier is not taken into account in this test.
-     *
-     * @param Supplier $supplier
-     *
-     * @return bool
-     */
-    public function isUnique(Supplier $supplier);
-
-    /**
-     * @return Supplier[]
-     */
-    public function findAll();
+    public function save(Service $service);
 
     /**
      * @param int $id
      *
-     * @return Supplier|null
+     * @return bool
      */
-    public function findById($id);
+    public function isUnique($id);
 }

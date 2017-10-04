@@ -3,3 +3,6 @@
 services:
   surfnet.dashboard.repository.supplier:
     class: Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemorySupplierRepository
+
+  surfnet.dashboard.repository.service:
+    class: Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemoryServiceRepository
