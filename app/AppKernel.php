@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DashboardBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
+            new Lexik\Bundle\TranslationBundle\LexikTranslationBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
