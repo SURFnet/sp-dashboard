@@ -1,5 +1,3 @@
-service.edit.title: Service details
-service.edit.attribute_input_placeholder: The service will use this attribute to...
 service.list.title: Services
 service.list.empty: There are no services configured
 service.list.service: Service
@@ -11,4 +9,18 @@ service.list.action.edit: Edit
 service.list.action.copy: Copy
 service.list.action.delete: Delete
 supplier.create.title: Add new supplier
+service.edit.title: Service Provider registration form
+service.edit.info.title: Info
+service.edit.info.text: Text should be set in web translations
+service.edit.general.title: General
+service.edit.general.text: Text should be set in web translations
+service.edit.metadata.title: Metadata
+service.edit.metadata.text: Text should be set in web translations
+service.edit.contact_information.title: Contact information
+service.edit.contact_information.text: Text should be set in web translations
+service.edit.attribute_input_placeholder: The service will use this attribute to...
+service.edit.attributes.title: Attributes
+service.edit.attributes.text: Text should be set in web translations
+service.edit.comments.title: Comments
+service.edit.comments.text: Text should be set in web translations
 supplier.edit.title: Supplier details

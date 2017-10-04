@@ -8,32 +8,32 @@
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
     <div class="fieldset card">
-        <h2>{{ 'general_title'|trans }}</h2>
-        <div>{{ 'general_text'|trans }}</div>
+        <h2>{{ 'service.edit.info.title'|trans }}</h2>
+        <div>{{ 'service.edit.info.html'|trans }}</div>
         {{ form_widget(form.general) }}
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'metadata_title'|trans }}</h2>
-        <div>{{ 'metadata_text'|trans }}</div>
+        <h2>{{ 'service.edit.general.title'|trans }}</h2>
+        <div>{{ 'service.edit.general.html'|trans }}</div>
         {{ form_widget(form.metadata) }}
     </div>
 
     <div class="fieldset card contact">
-        <h2>{{ 'contact_information_title'|trans }}</h2>
-        <div>{{ 'contact_information_text'|trans }}</div>
+        <h2>{{ 'service.edit.metadata.title'|trans }}</h2>
+        <div>{{ 'service.edit.metadata.html'|trans }}</div>
         {{ form_widget(form.contactInformation) }}
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'attributes_title'|trans }}</h2>
-        <div>{{ 'attributes_text'|trans }}</div>
+        <h2>{{ 'service.edit.attributes.title'|trans }}</h2>
+        <div>{{ 'service.edit.attributes.html'|trans }}</div>
         {{ form_widget(form.attributes) }}
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'comments_title'|trans }}</h2>
-        <div>{{ 'comments_text'|trans }}</div>
+        <h2>{{ 'service.edit.comments.title'|trans }}</h2>
+        <div>{{ 'service.edit.comments.html'|trans }}</div>
         {{ form_widget(form.comments) }}
     </div>
 
