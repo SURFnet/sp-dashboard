@@ -44,7 +44,7 @@ class InMemoryServiceRepository implements ServiceRepository
      */
     public function save(Service $service)
     {
-        self::$memory[] = $service;
+        self::$memory[$service->getId()] = $service;
     }
 
     /**
@@ -62,5 +62,19 @@ class InMemoryServiceRepository implements ServiceRepository
         }
 
         return true;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Service|null
+     */
+    public function findById($id)
+    {
+        if (array_key_exists($id, self::$memory)) {
+            return self::$memory[$id];
+        }
+
+        return null;
     }
 }

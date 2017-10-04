@@ -51,4 +51,13 @@ class ServiceRepository extends EntityRepository implements ServiceRepositoryInt
 
         return false;
     }
+
+    /**
+     * @param int $id
+     * @return Service|null
+     */
+    public function findById($id)
+    {
+        return $this->find($id);
+    }
 }

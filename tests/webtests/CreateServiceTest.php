@@ -74,7 +74,7 @@ class CreateServiceTest extends WebTestCase
         $records = $this->serviceRepository->findAll();
         $this->assertCount(1, $records);
         /** @var Service $service */
-        $service = $records[0];
+        $service = array_pop($records);
 
         // The Id and TicketNumber fields are Uuids
         $this->assertNotEmpty($service->getId());

@@ -22,10 +22,12 @@ use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SamlServiceService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\TicketService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ServiceController extends Controller
@@ -44,6 +46,7 @@ class ServiceController extends Controller
      * @var AdminSwitcherService
      */
     private $switcherService;
+
     /**
      * @var TicketService
      */
@@ -93,31 +96,33 @@ class ServiceController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/service/edit/{serviceId}", name="service_edit")
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     *
+     * @param Request $request
+     * @param $serviceId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editAction($serviceId)
+    public function editAction(Request $request, $serviceId)
     {
-        return new Response($serviceId);
-//        // Todo: perform authorization check
-//        $this->get('session')->getFlashBag()->clear();
-//        /** @var LoggerInterface $logger */
-//        $command = new EditServiceCommand();
-//
-//        $form = $this->createForm(ServiceType::class, $command);
-//
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            try {
-//                $this->commandBus->handle($command);
-//                return $this->redirectToRoute('entity_list');
-//            } catch (InvalidArgumentException $e) {
-//                $this->addFlash('error', $e->getMessage());
-//            }
-//        }
-//
-//        return $this->render('DashboardBundle:Service:edit.html.twig', array(
-//            'form' => $form->createView(),
-//        ));
+
+        $service = $this->samlService->getServiceById($serviceId);
+
+        $command = $this->samlService->buildEditServiceCommand($service);
+
+        $form = $this->createForm(EditServiceType::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->commandBus->handle($command);
+                return $this->redirectToRoute('entity_list');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('DashboardBundle:Service:edit.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 }
