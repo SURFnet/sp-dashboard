@@ -8,7 +8,7 @@ export SPFORM_ENV=production
 
 RELEASE_DIR=${HOME}/Releases
 GITHUB_USER=SURFnet
-PROJECT_NAME=Service-provider-registration
+PROJECT_NAME=sp-dashboard
 
 if [ -z "$1" ]
 then
@@ -51,6 +51,9 @@ git checkout ${TAG} &&
 echo "Running Composer Install";
 curl -sS https://getcomposer.org/installer | php
 php ./composer.phar install -n --prefer-dist -o --ignore-platform-reqs&&
+yarn install &&
+yarn run encore production &&
+
 
 echo "Tagging the release in RELEASE file" &&
 COMMITHASH=`git rev-parse HEAD` &&
@@ -69,6 +72,8 @@ rm -rf ${PROJECT_DIR}/build.xml &&
 rm -rf ${PROJECT_DIR}/tests &&
 rm -rf ${PROJECT_DIR}/ci &&
 rm -rf ${PROJECT_DIR}/.travis.yml &&
+rm -rf ${PROJECT_DIR}/ansible &&
+rm -rf ${PROJECT_DIR}/Vagrantfile &&
 
 echo "Create tarball" &&
 cd ${RELEASE_DIR} &&

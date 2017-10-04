@@ -7,9 +7,9 @@ Listen {{ apache_app_listen_address.spdashboard }}:{{ loadbalancing.spdashboard.
     ServerName   https://{{ spdashboard_domain }}
     ServerAdmin {{ apache_server_admin }}
     Options -indexes +Includes
-    DocumentRoot {{ sp_dashboard_document_root }}
+    DocumentRoot {{ spdashboard_document_root }}
 
-    <Directory {{ sp_dashboard_document_root }}>
+    <Directory {{ spdashboard_document_root }}>
         AllowOverride None
         Require all granted
 
@@ -30,8 +30,8 @@ Listen {{ apache_app_listen_address.spdashboard }}:{{ loadbalancing.spdashboard.
 {% endif %}
 
     # Proxy the requests to FPM
-    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php-fpm/spdashboard-pool.sock|fcgi://localhost/{{ sp_dashboard_document_root }}/$1
+    ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php-fpm/spdashboard-pool.sock|fcgi://localhost/{{ spdashboard_document_root }}/$1
 
-    ErrorLog "|/usr/bin/logger -p local3.err  -t 'Apache-SUPPORT'"
-    CustomLog "|/usr/bin/logger -p local3.info  -t 'Apache-SUPPORT'" combined
+    ErrorLog "|/usr/bin/logger -p local3.err  -t 'Apache-DASHBOARD'"
+    CustomLog "|/usr/bin/logger -p local3.info  -t 'Apache-DASHBOARD'" combined
 </VirtualHost>

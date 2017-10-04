@@ -1,0 +1,65 @@
+- name: Create the shared and releases directory for the SP dashboard
+  file: path={{ spdashboard_data_dir }}/{{item}} state=directory owner=root group=root mode=775
+  with_items:
+    - releases
+    
+- name: Create shared and writeable directories for logs and data
+  file: path={{ spdashboard_data_dir }}/shared/{{item}} state=directory owner={{ spdashboard_fpm_user }} group=root mode=775
+  with_items:
+    - logs
+    - sessions
+    - cache
+
+- name: Install git
+  yum: name={{ item }} state=present
+  with_items:
+     - git
+
+- name: Checkout spdashboard branch
+  git: repo=https://github.com/SURFnet/sp-dashboard.git dest="{{ spdashboard_branch_dir }}" version={{ spdashboard_branch }} force=yes
+  when: spdashboard_branch != ''
+  register: support_gitclone
+
+- name: Copy makerelease.sh
+  copy: src=makeRelease.sh dest={{spdashboard_branch_dir}} mode=770
+
+- name: Make release
+  command: "./makeRelease.sh {{ spdashboard_branch }}"
+  args:
+    chdir: "{{ spdashboard_branch_dir }}"
+
+- name: Unpack current version
+  unarchive: src="/root/Releases/sp-dashboard-{{ spdashboard_branch }}.tar.gz" dest="{{ spdashboard_data_dir}}/releases" copy=no
+
+- name: Create current symlink
+  file: src="{{ spdashboard_data_dir}}/releases/sp-dashboard-{{ spdashboard_branch }}" dest="{{ spdashboard_data_dir}}/current"  state=link
+
+- name: Delete config
+  file: path={{spdashboard_data_dir}}/current/app/{{ item }} state=absent
+  with_items: 
+     - config/parameters.yml
+
+- name: Delete cache, log and sessions
+  file: path={{spdashboard_data_dir}}/current/var/{{ item }} state=absent
+  with_items:
+     - logs
+     - sessions
+     - cache
+
+- name: Create symlink to logs,sessions and cache
+  file: src={{spdashboard_data_dir}}/shared/{{ item }} dest={{ spdashboard_data_dir}}/releases/sp-dashboard-{{ spdashboard_branch }}/var/{{item}} owner=root group=root state=link
+  with_items: 
+     - logs
+     - sessions
+     - cache
+
+- name: Install config file
+  template: src=parameters.yml.j2 dest={{ spdashboard_data_dir}}/current/app/config/parameters.yml
+
+- name: Run database migrations
+  command: bin/console doctrine:migrations:migrate
+  args:
+    chdir: "{{ spdashboard_data_dir }}/current/"
+
+- name: Chown the cachedir recursively again
+  file: dest={{spdashboard_data_dir}}/shared/cache owner=spdashboard recurse=yes
