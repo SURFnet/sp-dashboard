@@ -36,6 +36,10 @@ class Builder implements ContainerAwareInterface
             'route' => 'supplier_add',
         ));
 
+        $menu->addChild('Translations', array(
+            'route' => 'lexik_translation_overview',
+        ));
+
         return $menu;
     }
 }

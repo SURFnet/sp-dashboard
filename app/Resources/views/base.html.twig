@@ -53,9 +53,11 @@
                     </span>
                 </section>
             </div>
+            {% block body_container %}
             <div class="card">
                 {% block body %}{% endblock %}
             </div>
+            {% endblock %}
         </div>
         <div class="footer">
             <div class="footer-inner">
