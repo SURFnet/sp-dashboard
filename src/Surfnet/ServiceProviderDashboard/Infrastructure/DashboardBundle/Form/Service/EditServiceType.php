@@ -137,15 +137,15 @@ class EditServiceType extends AbstractType
                     )
             )
             ->add(
-                $builder->create('attributes', FormType::class, ['inherit_data' => true])
+                $builder->create('attributes', FormType::class, [
+                    'inherit_data' => true,
+                    'attr' => ['class' => 'attributes']
+                ])
                     ->add(
                         'givenNameAttribute',
                         AttributeType::class,
                         [
-                            'attr' => [
-                                'help' => 'service.edit.information.givenNameAttribute',
-                                'class' => 'attributes'
-                            ],
+                            'attr' => ['help' => 'service.edit.information.givenNameAttribute'],
                         ]
                     )
                     ->add(
