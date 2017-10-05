@@ -1,0 +1,78 @@
+form {
+  .attributes .form-row {
+    width: 100%;
+
+    label {
+      padding-bottom: 5px;
+    }
+
+    .attribute-row-wrapper {
+      @include clearfix;
+
+      border: 1px solid $lighter-grey;
+      border-radius: $br;
+      width: 100%;
+
+      // Checkbox element wrapper
+      .form-row {
+        background-color: $light-blue;
+        clear: none;
+        float: left;
+        margin-bottom: 0;
+        width: 40px;
+
+        // Input element wrapper
+        & + .form-row {
+          background-color: white;
+          width: calc(100% - 40px);
+        }
+
+        & + div.clearfix {
+          clear: both;
+          margin: 0;
+        }
+
+        input.requested {
+          margin: 11px;
+        }
+
+        ::-webkit-input-placeholder {
+          color: $lighter-grey;
+        }
+
+        ::-moz-placeholder {
+          color: $lighter-grey;
+          opacity: 1;
+        }
+
+        input.motivation {
+          border: 0;
+          margin-top: 0;
+          padding: 9px;
+        }
+
+        label {
+          display: none;
+        }
+      }
+
+      .form-row.disabled {
+        background-color: $lighter-grey;
+
+        ::-webkit-input-placeholder {
+          color: $dark-grey;
+        }
+
+        ::-moz-placeholder {
+          color: $dark-grey;
+          opacity: 1;
+        }
+
+        input.motivation {
+          background-color: $light-grey;
+          border-radius: 0;
+        }
+      }
+    }
+  }
+}

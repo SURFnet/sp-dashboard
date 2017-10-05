@@ -1,4 +1,5 @@
 service.edit.title: Service details
+service.edit.attribute_input_placeholder: The service will use this attribute to...
 service.list.title: Services
 service.list.empty: There are no services configured
 service.list.service: Service
