@@ -4,7 +4,7 @@
             <span class="help-button">
                 <i class="fa fa-question-circle"></i>
                 <div class="balloon">
-                    {{ attrvalue|trans }}
+                    {{ attrvalue|trans|raw }}
                 </div>
             </span>{% endif %}
     {% endfor %}
