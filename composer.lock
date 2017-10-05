@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6e97a89a5a1e2cbacd74b6226011214",
+    "content-hash": "35bf5916d8e5ce816ed1f3fc9af2684e",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1387,16 +1387,16 @@
         },
         {
             "name": "lexik/translation-bundle",
-            "version": "v4.0.4",
+            "version": "dev-feature/fix-url-encode-issue",
             "source": {
                 "type": "git",
-                "url": "https://github.com/lexik/LexikTranslationBundle.git",
-                "reference": "a1df6797fe435861b1d6e7e1b0fb5a033a8ac5ed"
+                "url": "https://github.com/ibuildingsnl/LexikTranslationBundle.git",
+                "reference": "575219aaa89b3e93b2602e2490864e970cbf2cc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lexik/LexikTranslationBundle/zipball/a1df6797fe435861b1d6e7e1b0fb5a033a8ac5ed",
-                "reference": "a1df6797fe435861b1d6e7e1b0fb5a033a8ac5ed",
+                "url": "https://api.github.com/repos/ibuildingsnl/LexikTranslationBundle/zipball/575219aaa89b3e93b2602e2490864e970cbf2cc9",
+                "reference": "575219aaa89b3e93b2602e2490864e970cbf2cc9",
                 "shasum": ""
             },
             "require": {
@@ -1427,18 +1427,17 @@
                     "Lexik\\Bundle\\TranslationBundle\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "name": "Dev Lexik",
-                    "email": "dev@lexik.fr"
-                },
-                {
                     "name": "Cedric Girard",
                     "email": "c.girard@lexik.fr"
+                },
+                {
+                    "name": "Dev Lexik",
+                    "email": "dev@lexik.fr"
                 }
             ],
             "description": "This bundle allows to import translation files content into the database and provide a GUI to edit translations.",
@@ -1449,7 +1448,10 @@
                 "i18n",
                 "translation"
             ],
-            "time": "2017-09-13T13:00:53+00:00"
+            "support": {
+                "source": "https://github.com/ibuildingsnl/LexikTranslationBundle/tree/feature/fix-url-encode-issue"
+            },
+            "time": "2017-10-05T09:37:17+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2030,6 +2032,66 @@
                 "controllers"
             ],
             "time": "2017-08-23T12:40:59+00:00"
+        },
+        {
+            "name": "stfalcon/tinymce-bundle",
+            "version": "v2.1",
+            "target-dir": "Stfalcon/Bundle/TinymceBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stfalcon/TinymceBundle.git",
+                "reference": "a23ff96d6efec9cb014d3409c908b724b42fbbf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/a23ff96d6efec9cb014d3409c908b724b42fbbf8",
+                "reference": "a23ff96d6efec9cb014d3409c908b724b42fbbf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "symfony/symfony": ">=2.1"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stfalcon\\Bundle\\TinymceBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stepan Tanasiychuk",
+                    "email": "ceo@stfalcon.com",
+                    "homepage": "http://blog.stfalcon.com"
+                },
+                {
+                    "name": "Igor Negrutsa",
+                    "email": "progi2007@gmail.com",
+                    "homepage": "http://igor-negrutsa.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/stfalcon/TinymceBundle/contributors"
+                }
+            ],
+            "description": "This Bundle integrates TinyMCE WYSIWYG editor into a Symfony2 project.",
+            "keywords": [
+                "Symfony2",
+                "bundle",
+                "editor",
+                "tinymce",
+                "wysiwyg"
+            ],
+            "time": "2016-05-18T14:48:11+00:00"
         },
         {
             "name": "stof/doctrine-extensions-bundle",
@@ -5178,7 +5240,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "lexik/translation-bundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

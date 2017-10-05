@@ -21,6 +21,12 @@
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
         ]
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ibuildingsnl/LexikTranslationBundle.git"
+        }
+    ],
     "require": {
         "php": "^5.6||^7.0",
         "doctrine/doctrine-bundle": "^1.6",
@@ -29,9 +35,10 @@
         "doctrine/orm": "^2.5",
         "knplabs/knp-menu-bundle": "^2.1",
         "league/tactician-bundle": "^0.4.1",
-        "lexik/translation-bundle": "~4.0",
+        "lexik/translation-bundle": "dev-feature/fix-url-encode-issue",
         "ramsey/uuid": "^3.7",
         "sensio/framework-extra-bundle": "^3.0",
+        "stfalcon/tinymce-bundle": "^2.1",
         "stof/doctrine-extensions-bundle": "^1.2",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
