@@ -75,4 +75,24 @@ form {
       }
     }
   }
+
+  .fieldset.contact .form-row {
+    // Header: "Administrative contact", "..."
+    & > label {
+      border-bottom: 3px solid $lighter-grey;
+      color: $dark-grey;
+      font-size: 18px;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      text-transform: none;
+    }
+    .form-row label {
+      border-bottom: none;
+      color: $medium-grey;
+      font-size: 100%;
+      margin-bottom: 0;
+      padding-bottom: 0;
+      text-transform: uppercase;
+    }
+  }
 }
