@@ -10,3 +10,7 @@ in app/ and each bundle.
 To import the default translations into the lexik database, run the
 `import-translations` ant target. This should be done after each
 deployment.
+
+Translation tokens ending with `.html` will be loaded in a WYSIWYG editor in the translation interface. These
+translations are also to be outputted unescaped in the template. To do so in twig use the raw filter. For example:
+`{{ 'service.edit.comments.html'|trans|raw }}` 
