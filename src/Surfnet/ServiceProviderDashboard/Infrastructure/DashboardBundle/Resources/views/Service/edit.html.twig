@@ -2,9 +2,8 @@
 
 {% extends '::base.html.twig' %}
 
-{% block body %}
-
-    <h1>Service Provider registration form</h1>
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'service.edit.title'|trans }}{%endblock%}</h1>
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
@@ -20,7 +19,7 @@
         {{ form_widget(form.metadata) }}
     </div>
 
-    <div class="fieldset card">
+    <div class="fieldset card contact">
         <h2>{{ 'contact_information_title'|trans }}</h2>
         <div>{{ 'contact_information_text'|trans }}</div>
         {{ form_widget(form.contactInformation) }}
@@ -38,6 +37,8 @@
         {{ form_widget(form.comments) }}
     </div>
 
-    {{ form_end(form) }}
+    <div class="button-wrapper">
+        {{ form_end(form) }}
+    </div>
 
 {% endblock %}

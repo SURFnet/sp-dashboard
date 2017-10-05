@@ -137,112 +137,119 @@ class EditServiceType extends AbstractType
                     )
             )
             ->add(
-                $builder->create('attributes', FormType::class, ['inherit_data' => true])
-                    ->add(
-                        'givenNameAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.givenNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'surNameAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.surNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'commonNameAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.commonNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'displayNameAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.displayNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'emailAddressAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.emailAddressAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.organizationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationTypeAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.organizationTypeAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'affiliationAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.affiliationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'entitlementAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.entitlementAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'principleNameAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.principleNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'uidAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.uidAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'preferredLanguageAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.preferredLanguageAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'personalCodeAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.personalCodeAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'scopedAffiliationAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.scopedAffiliationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'eduPersonTargetedIDAttribute',
-                        AttributeType::class,
-                        [
-                            'attr' => ['help' => 'edit.service.eduPersonTargetedIDAttribute'],
-                        ]
-                    )
+                $builder->create(
+                    'attributes',
+                    FormType::class,
+                    [
+                        'inherit_data' => true,
+                        'attr' => ['class' => 'attributes']
+                    ]
+                )
+                ->add(
+                    'givenNameAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.givenNameAttribute'],
+                    ]
+                )
+                ->add(
+                    'surNameAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.surNameAttribute'],
+                    ]
+                )
+                ->add(
+                    'commonNameAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.commonNameAttribute'],
+                    ]
+                )
+                ->add(
+                    'displayNameAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.displayNameAttribute'],
+                    ]
+                )
+                ->add(
+                    'emailAddressAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.emailAddressAttribute'],
+                    ]
+                )
+                ->add(
+                    'organizationAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.organizationAttribute'],
+                    ]
+                )
+                ->add(
+                    'organizationTypeAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.organizationTypeAttribute'],
+                    ]
+                )
+                ->add(
+                    'affiliationAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.affiliationAttribute'],
+                    ]
+                )
+                ->add(
+                    'entitlementAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.entitlementAttribute'],
+                    ]
+                )
+                ->add(
+                    'principleNameAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.principleNameAttribute'],
+                    ]
+                )
+                ->add(
+                    'uidAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.uidAttribute'],
+                    ]
+                )
+                ->add(
+                    'preferredLanguageAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.preferredLanguageAttribute'],
+                    ]
+                )
+                ->add(
+                    'personalCodeAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.personalCodeAttribute'],
+                    ]
+                )
+                ->add(
+                    'scopedAffiliationAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.scopedAffiliationAttribute'],
+                    ]
+                )
+                ->add(
+                    'eduPersonTargetedIDAttribute',
+                    AttributeType::class,
+                    [
+                        'attr' => ['help' => 'edit.service.eduPersonTargetedIDAttribute'],
+                    ]
+                )
             )
             ->add(
                 $builder->create('comments', FormType::class, ['inherit_data' => true])

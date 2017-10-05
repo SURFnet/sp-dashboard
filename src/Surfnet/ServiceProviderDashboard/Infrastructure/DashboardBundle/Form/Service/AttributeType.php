@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\S
 use Surfnet\ServiceProviderDashboard\Domain\Model\Attribute;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,8 +29,17 @@ class AttributeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('requested', CheckboxType::class);
-        $builder->add('motivation');
+        $builder->add('requested', CheckboxType::class, ['attr' => ['class' => 'requested']]);
+        $builder->add(
+            'motivation',
+            TextType::class,
+            [
+                'attr' => [
+                    'class' => 'motivation',
+                    'placeholder' => 'service.edit.attribute_input_placeholder',
+                ],
+            ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -41,6 +51,6 @@ class AttributeType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'dashboard_bundle_contact_type';
+        return 'attribute';
     }
 }

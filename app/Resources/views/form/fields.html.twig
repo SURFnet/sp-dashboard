@@ -1,8 +1,49 @@
-{%- block form_widget_simple -%}
-    {%- set type = type|default('text') -%}
+{%- block help_block -%}
     {% for attrname,attrvalue in attr %}
         {% if attrname == 'help' %}
-            <span class="help-block" data-help-text="{{ attrvalue|trans }}">?</span>{% endif %}
+            <span class="help-button">
+                <i class="fa fa-question-circle"></i>
+                <div class="balloon">
+                    {{ attrvalue|trans }}
+                </div>
+            </span>{% endif %}
     {% endfor %}
+{%- endblock -%}
+
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {{ block('help_block') }}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 {%- endblock form_widget_simple -%}
+
+{%- block attribute_widget -%}
+    {{ block('help_block') }}
+    <div {{ block('widget_container_attributes') }}>
+        {%- if form.parent is empty -%}
+            {{ form_errors(form) }}
+        {%- endif -%}
+        <div class="attribute-row-wrapper">
+            {{- block('form_rows') -}}
+        </div>
+        {{- form_rest(form) -}}
+    </div>
+{%- endblock attribute_widget -%}
+
+{%- block form_row -%}
+    <div class="form-row">
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {{- form_widget(form) -}}
+    </div>
+{%- endblock form_row -%}
+
+{%- block form_widget_compound -%}
+    {{ block('help_block') }}
+    <div {{ block('widget_container_attributes') }}>
+        {%- if form.parent is empty -%}
+            {{ form_errors(form) }}
+        {%- endif -%}
+        {{- block('form_rows') -}}
+        {{- form_rest(form) -}}
+    </div>
+{%- endblock form_widget_compound -%}

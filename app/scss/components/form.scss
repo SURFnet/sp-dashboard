@@ -1,0 +1,42 @@
+form {
+  .form-row {
+    position: relative;
+  }
+
+  .help-button {
+    i.fa {
+      color: $blue;
+    }
+
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .balloon {
+      @include tool-tip;
+      
+      display: none;
+      font-weight: normal;
+      cursor: initial;
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      z-index: 500;
+    }
+
+    &:hover .balloon {
+      display: block;
+    }
+  }
+
+  .button-wrapper {
+    margin-top: 25px;
+
+    div {
+      display: inline;
+      margin-right: 25px;
+    }
+  }
+}
