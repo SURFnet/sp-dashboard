@@ -1,5 +1,3 @@
-service.edit.title: Service details
-service.edit.attribute_input_placeholder: The service will use this attribute to...
 service.list.title: Services
 service.list.empty: There are no services configured
 service.list.service: Service
@@ -11,4 +9,90 @@ service.list.action.edit: Edit
 service.list.action.copy: Copy
 service.list.action.delete: Delete
 supplier.create.title: Add new supplier
-supplier.edit.title: Supplier details
+service.edit.title: Service Provider registration form
+service.edit.info.title: Info
+service.edit.info.html: "
+<p>Documentation about this SP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
+
+<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
+In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
+<ul>
+<li>Various contacts responsible for the service. Support, administrative and technical
+should be present.</li>
+<li>Information about SAML 2.0 configuration.</li>
+<li>Metadata information including URL, certificate and logo of your service.</li>
+<li>A list of the attributes your Service Provider requires to operate.</li>
+</ul>
+
+<p>
+<strong>Publish</strong>
+When all fields are filled in correctly you can publish the configuration to the SURFconext test environment. The service will be available directly for testing.
+</p>
+
+<p>
+<strong>Update</strong>
+The configuration can be modified whenever you see fit. Just change the fields, press 'update' and 'confirm'. The changes are available instantenously.
+</p>
+
+
+<p>
+<strong>Production</strong>
+When tests are successful you can request a production connection. Simply press the button 'to production' to initiate this process.
+<strong>Note:</strong> your service can get production status only if the required contracts are in place.
+</p>
+
+<p>If there are any questions during completion of the form don’t hesitate to mail to support@surfconext.nl. Please add the ticket number to the subject (CXT-...).</p>
+"
+service.edit.general.title: General
+service.edit.general.html: "<p>Enter/edit your contact information below. We will use this information in case we have additional questions.</p>"
+service.edit.metadata.title: Metadata
+service.edit.metadata.html: "Please provide the metadata URL of your service. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>.</p>"
+service.edit.contact_information.title: Contact information
+service.edit.contact_information.html: "
+<p>Every service connected to SURFconext requires various types of contact details. Depending on the nature of the issue we will consult the following contact:</p>
+<ul>
+<li>Administrative</li>
+<li>Technical</li>
+<li>Support</li>
+</ul>
+<p>See the question mark for a more extensive description. Possibly some information below already has been filled through the metadata. Please check the fields and edit when necessary.</p>
+
+<p><i>Technical and administrative contact details will not be communicated to end-users.</i></p>
+"
+.attribute_input_placeholder: The service will use this attribute to...
+service.edit.attributes.title: Attributes
+service.edit.attributes.html: "
+<p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a service. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
+
+<p>Possibly some boxes have already been checked. This information is reused from the metadata.</p>
+
+<p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your service.</i></p>
+"
+service.edit.comments.title: Comments
+service.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
+service.edit.information.ticketNumber:
+service.edit.information.importUrl: Text should be set in web translations
+service.edit.information.metadataUrl: Text should be set in web translations
+service.edit.information.metadataXml: Text should be set in web translations
+service.edit.information.certificate: Text should be set in web translations
+service.edit.information.descriptionNl: Text should be set in web translations
+service.edit.information.descriptionEn: Text should be set in web translations
+service.edit.information.administrativeContact: Text should be set in web translations
+service.edit.information.supportContact: Text should be set in web translations
+service.edit.information.givenNameAttribute: Text should be set in web translations
+service.edit.information.surNameAttribute: Text should be set in web translations
+service.edit.information.commonNameAttribute: Text should be set in web translations
+service.edit.information.displayNameAttribute: Text should be set in web translations
+service.edit.information.emailAddressAttribute: Text should be set in web translations
+service.edit.information.organizationAttribute: Text should be set in web translations
+service.edit.information.organizationTypeAttribute: Text should be set in web translations
+service.edit.information.affiliationAttribute: Text should be set in web translations
+service.edit.information.entitlementAttribute': Text should be set in web translations
+service.edit.information.principleNameAttribute: Text should be set in web translations
+service.edit.information.uidAttribute: Text should be set in web translations
+service.edit.information.preferredLanguageAttribute: Text should be set in web translations
+service.edit.information.personalCodeAttribute: Text should be set in web translations
+service.edit.information.scopedAffiliationAttribute: Text should be set in web translations
+service.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
+service.edit.information.comments: Text should be set in web translations
