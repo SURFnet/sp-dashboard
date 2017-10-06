@@ -29,7 +29,7 @@ class AdminSwitcherTest extends WebTestCase
     private $client;
 
     /**
-     * @var SupplierRepository
+     * @var Surfnet\ServiceProviderDashboard\WebTests\Repository\InMemorySupplierRepository
      */
     private $repository;
 
@@ -55,7 +55,7 @@ class AdminSwitcherTest extends WebTestCase
     {
         $this->client->getCookieJar()->clear();
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/supplier/create');
 
         $this->assertEmpty(
             $crawler->filter('select#admin-switcher option:selected')
@@ -66,20 +66,21 @@ class AdminSwitcherTest extends WebTestCase
     {
         $this->client->getCookieJar()->clear();
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/supplier/create');
         $options = $crawler->filter('select#admin-switcher option');
 
-        $this->assertCount(2, $options, 'Expecting 2 suppliers in admin switcher');
+        $this->assertCount(3, $options, 'Expecting 2 suppliers in admin switcher (excluding empty option)');
 
-        $this->assertEquals('test1', $options->eq(0)->text());
-        $this->assertEquals('test2', $options->eq(1)->text());
+        $this->assertEquals('', $options->eq(0)->text());
+        $this->assertEquals('test1', $options->eq(1)->text());
+        $this->assertEquals('test2', $options->eq(2)->text());
     }
 
     public function test_switcher_remembers_selected_supplier()
     {
         $this->client->getCookieJar()->clear();
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/supplier/create');
         $form = $crawler->filter('.admin-switcher')
             ->selectButton('Select')
             ->form();

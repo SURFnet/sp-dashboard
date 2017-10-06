@@ -67,7 +67,7 @@ class Service
         }
 
         return new self(
-            $service->getId(),
+            $service->getEntityId(),
             $service->getNameEn(),
             $formattedContact,
             $service->getEnvironment()

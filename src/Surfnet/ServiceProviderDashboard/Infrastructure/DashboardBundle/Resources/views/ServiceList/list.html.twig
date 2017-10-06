@@ -2,7 +2,9 @@
 
 {% block page_heading %}{{ 'service.list.title'|trans }}{%endblock%}
 {% block body %}
-    {% if service_list.services is empty %}
+    {% if no_supplier_selected %}
+        {{ 'service.list.no_supplier_selected'|trans }}
+    {% elseif service_list.services is empty %}
         {{ 'service.list.empty'|trans }}
     {% else %}
     <table>
