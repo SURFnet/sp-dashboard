@@ -77,7 +77,7 @@ class ServiceListTest extends WebTestCase
 
     public function test_entity_list()
     {
-        $switcherService = $this->client->getContainer()->get('dashboard.service.admin_switcher');
+        $switcherService = $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher');
         $switcherService->setSelectedSupplier('test1');
 
         $crawler = $this->client->request('GET', '/');

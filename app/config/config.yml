@@ -77,7 +77,7 @@ monolog:
             path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
             channels: ['!event']
-            formatter: dashboard.monolog.json_formatter
+            formatter: surfnet.dashboard.monolog.json_formatter
         console:
             type: console
             channels: ['!event', '!doctrine']
