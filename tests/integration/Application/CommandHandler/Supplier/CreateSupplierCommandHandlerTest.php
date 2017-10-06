@@ -25,7 +25,6 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateS
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository as DoctrineSupplierRepository;
 
 class CreateSupplierCommandHandlerTest extends MockeryTestCase
 {
@@ -38,7 +37,7 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = m::mock(DoctrineSupplierRepository::class);
+        $this->repository = m::mock(SupplierRepository::class);
         $this->commandHandler = new CreateSupplierCommandHandler($this->repository);
     }
 

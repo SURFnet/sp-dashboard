@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\EditSup
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository as DoctrineSupplierRepository;
 
 class EditSupplierCommandHandlerTest extends MockeryTestCase
 {
@@ -39,7 +38,7 @@ class EditSupplierCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = m::mock(DoctrineSupplierRepository::class);
+        $this->repository = m::mock(SupplierRepository::class);
         $this->commandHandler = new EditSupplierCommandHandler($this->repository);
     }
 
