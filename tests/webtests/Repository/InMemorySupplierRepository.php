@@ -18,16 +18,20 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Repository;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository as SupplierRepositoryInterface;
 
 class InMemorySupplierRepository implements SupplierRepositoryInterface
 {
+    /**
+     * @var Supplier[]
+     */
     private static $memory = [];
 
     public function clear()
     {
-        self:$memory = [];
+        self::$memory = [];
     }
 
     /**
@@ -41,9 +45,20 @@ class InMemorySupplierRepository implements SupplierRepositoryInterface
     /**
      * @param Supplier $supplier
      * @return bool
+     * @throws InvalidArgumentException
      */
     public function isUnique(Supplier $supplier)
     {
+        foreach (self::$memory as $storedSupplier) {
+            if ($storedSupplier->getGuid() == $supplier->getGuid()) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'The Guid of the Supplier should be unique. This Guid is taken by: "%s"',
+                        $storedSupplier->getName()
+                    )
+                );
+            }
+        }
         return true;
     }
 

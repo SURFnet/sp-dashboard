@@ -51,7 +51,7 @@ services:
     arguments:
       - '@surfnet.dashboard.repository.supplier'
     tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier }
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand }
 
   surfnet.dashboard.command_handler.edit_supplier:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\EditSupplierCommandHandler
