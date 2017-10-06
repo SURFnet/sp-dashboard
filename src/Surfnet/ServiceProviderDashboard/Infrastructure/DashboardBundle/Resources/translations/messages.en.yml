@@ -60,7 +60,7 @@ service.edit.contact_information.html: "
 
 <p><i>Technical and administrative contact details will not be communicated to end-users.</i></p>
 "
-.attribute_input_placeholder: The service will use this attribute to...
+service.edit.attribute_input_placeholder: The service will use this attribute to...
 service.edit.attributes.title: Attributes
 service.edit.attributes.html: "
 <p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a service. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
@@ -88,7 +88,7 @@ service.edit.information.emailAddressAttribute: Text should be set in web transl
 service.edit.information.organizationAttribute: Text should be set in web translations
 service.edit.information.organizationTypeAttribute: Text should be set in web translations
 service.edit.information.affiliationAttribute: Text should be set in web translations
-service.edit.information.entitlementAttribute': Text should be set in web translations
+service.edit.information.entitlementAttribute: Text should be set in web translations
 service.edit.information.principleNameAttribute: Text should be set in web translations
 service.edit.information.uidAttribute: Text should be set in web translations
 service.edit.information.preferredLanguageAttribute: Text should be set in web translations
