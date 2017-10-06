@@ -39,10 +39,9 @@ class SelectSupplierCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group CommandHandler
      */
-    public function handler_processes_command_and_selects_supplier()
+    public function test_handler_processes_command_and_selects_supplier()
     {
         $command = new SelectSupplierCommand('ibuildings');
 

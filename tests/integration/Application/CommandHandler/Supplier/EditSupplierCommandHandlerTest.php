@@ -44,10 +44,9 @@ class EditSupplierCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group CommandHandler
      */
-    public function it_can_process_an_edit_supplier_command()
+    public function test_it_can_process_an_edit_supplier_command()
     {
         $command = new EditSupplierCommand('1', '30dd879c-ee2f-11db-8314-0800200c9a66', 'Foobar', 'team-foobar');
         $command->setName('Foobar');
@@ -78,12 +77,11 @@ class EditSupplierCommandHandlerTest extends MockeryTestCase
      * Its highly unlikely to happen, but this tests the event that a supplier was removed while someone else is
      * editing it. An EntityNotFound exception is thrown in this case.
      *
-     * @test
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException
      * @expectedExceptionMessage The requested Supplier cannot be found
      * @group CommandHandler
      */
-    public function it_rejects_non_existing_supplier()
+    public function test_it_rejects_non_existing_supplier()
     {
         $command = new EditSupplierCommand(1, '30dd879c-ee2f-11db-8314-0800200c9a66', 'Foobar', 'team-foobar');
 
@@ -93,13 +91,12 @@ class EditSupplierCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @expectedExceptionMessage The Guid of the new Supplier should be unique.
      *                           This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
      * @group CommandHandler
      */
-    public function it_rejects_non_unique_edit_supplier_command()
+    public function test_it_rejects_non_unique_edit_supplier_command()
     {
         $command = new EditSupplierCommand(1, '30dd879c-ee2f-11db-8314-0800200c9a66', 'Foobar', 'team-foobar');
 

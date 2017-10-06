@@ -39,10 +39,9 @@ class ServiceCommandFactoryTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group Factory
      */
-    public function it_can_build_a_command_from_an_entity()
+    public function test_it_can_build_a_command_from_an_entity()
     {
         /** @var Service $entity */
         $entity = m::mock(Service::class)->makePartial();

@@ -35,10 +35,9 @@ class AdminSwitcherServiceTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group Service
      */
-    public function service_writes_selected_supplier_to_session()
+    public function test_service_writes_selected_supplier_to_session()
     {
         $this->session->shouldReceive('set')
             ->with('selected_supplier', 'test');
@@ -47,10 +46,9 @@ class AdminSwitcherServiceTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group Service
      */
-    public function service_reads_selected_supplier_from_session()
+    public function test_service_reads_selected_supplier_from_session()
     {
         $this->session->shouldReceive('get')
             ->andReturn('test');

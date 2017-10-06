@@ -36,10 +36,9 @@ class SupplierServiceTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group Service
      */
-    public function service_returns_supplier_options_sorted()
+    public function test_service_returns_supplier_options_sorted()
     {
         $this->repository->shouldReceive('findAll')
             ->andReturn([

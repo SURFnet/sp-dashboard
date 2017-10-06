@@ -45,10 +45,9 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group CommandHandler
      */
-    public function it_should_handle_a_create_service_command()
+    public function test_it_should_handle_a_create_service_command()
     {
         $command = new CreateServiceCommand(
             'd3d21618-b643-4b73-a971-bf735dd46481',
@@ -63,13 +62,12 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group CommandHandler
      *
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @expectedExceptionMessage The id that was generated for the Service was not unique, please try again
      */
-    public function it_should_reject_an_existing_id_collision()
+    public function test_it_should_reject_an_existing_id_collision()
     {
         $command = new CreateServiceCommand(
             'd3d21618-b643-4b73-a971-bf735dd46481',

@@ -43,10 +43,9 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group CommandHandler
      */
-    public function it_can_process_a_create_supplier_command()
+    public function test_it_can_process_a_create_supplier_command()
     {
         $entity = new Supplier();
         $entity->setName('Foobar');
@@ -65,13 +64,12 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @expectedExceptionMessage The Guid of the new Supplier should be unique.
      *                           This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
      * @group CommandHandler
      */
-    public function it_rejects_non_unique_create_supplier_command()
+    public function test_it_rejects_non_unique_create_supplier_command()
     {
         $command = new CreateSupplierCommand();
         $command->setName('Foobar');
