@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Model\Contact as Contact;
 class Service
 {
     /**
-     * @var int
+     * @var string
      */
     private $id;
 
@@ -48,7 +48,7 @@ class Service
     private $environment;
 
     /**
-     * @param int $id
+     * @param string $id
      * @param string $entityId
      * @param string $name
      * @param string $contact
@@ -96,7 +96,7 @@ class Service
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
