@@ -23,9 +23,14 @@ use Surfnet\ServiceProviderDashboard\Domain\Model\Contact as Contact;
 class Service
 {
     /**
-     * @var string
+     * @var int
      */
     private $id;
+
+    /**
+     * @var string
+     */
+    private $entityId;
 
     /**
      * @var string
@@ -43,14 +48,16 @@ class Service
     private $environment;
 
     /**
-     * @param string $id
+     * @param int $id
+     * @param string $entityId
      * @param string $name
      * @param string $contact
      * @param string $environment
      */
-    public function __construct($id, $name, $contact, $environment)
+    public function __construct($id, $entityId, $name, $contact, $environment)
     {
         $this->id = $id;
+        $this->entityId = $entityId;
         $this->name = $name;
         $this->contact = $contact;
         $this->environment = $environment;
@@ -67,6 +74,7 @@ class Service
         }
 
         return new self(
+            $service->getId(),
             $service->getEntityId(),
             $service->getNameEn(),
             $formattedContact,
@@ -88,11 +96,19 @@ class Service
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
     }
 
     /**
