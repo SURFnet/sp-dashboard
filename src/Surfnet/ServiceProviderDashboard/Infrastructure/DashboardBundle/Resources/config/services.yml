@@ -1,69 +1,69 @@
 services:
-  _defaults:
-    autowire: true
+    _defaults:
+        autowire: true
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
-    resource: '../../Controller'
-    tags: ['controller.service_arguments']
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
 
-  surfnet.dashboard.command_handler.create_service:
-    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
-    public: true
-    tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
+    surfnet.dashboard.command_handler.create_service:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
-  surfnet.dashboard.command_handler.create_supplier:
-    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler
-    public: true
-    tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand }
+    surfnet.dashboard.command_handler.create_supplier:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand }
 
-  surfnet.dashboard.command_handler.edit_service:
-    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
-    public: true
-    tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand }
+    surfnet.dashboard.command_handler.edit_service:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand }
 
-  surfnet.dashboard.command_handler.edit_supplier:
-    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\EditSupplierCommandHandler
-    public: true
-    tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand }
+    surfnet.dashboard.command_handler.edit_supplier:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\EditSupplierCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand }
 
-  surfnet.dashboard.command_handler.select_supplier:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
-    public: true
-    tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand }
+    surfnet.dashboard.command_handler.select_supplier:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand }
 
-  surfnet.dashboard.factory.service:
-    class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
+    surfnet.dashboard.factory.service:
+        class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
 
-  surfnet.dashboard.monolog.json_formatter:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
+    surfnet.dashboard.monolog.json_formatter:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
-  surfnet.dashboard.repository.service:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository
-    factory: ['@doctrine', 'getRepository']
-    arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
+    surfnet.dashboard.repository.service:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository
+        factory: ['@doctrine', 'getRepository']
+        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
 
-  surfnet.dashboard.repository.supplier:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository
-    factory: ['@doctrine', 'getRepository']
-    arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier]
+    surfnet.dashboard.repository.supplier:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository
+        factory: ['@doctrine', 'getRepository']
+        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier]
 
-  surfnet.dashboard.service.admin_switcher:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService
+    surfnet.dashboard.service.admin_switcher:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService
 
-  surfnet.dashboard.service.saml_service:
-    class: Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
+    surfnet.dashboard.service.saml_service:
+        class: Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
 
-  surfnet.dashboard.service.supplier:
-    class: Surfnet\ServiceProviderDashboard\Application\Service\SupplierService
+    surfnet.dashboard.service.supplier:
+        class: Surfnet\ServiceProviderDashboard\Application\Service\SupplierService
 
-  surfnet.dashboard.service.ticket:
-    class: Surfnet\ServiceProviderDashboard\Application\Service\TicketService
+    surfnet.dashboard.service.ticket:
+        class: Surfnet\ServiceProviderDashboard\Application\Service\TicketService
 
-  surfnet.dashboard.twig.admin_switcher_extension:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\AdminSwitcherExtension
-    tags: [twig.extension]
+    surfnet.dashboard.twig.admin_switcher_extension:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\AdminSwitcherExtension
+        tags: [twig.extension]
