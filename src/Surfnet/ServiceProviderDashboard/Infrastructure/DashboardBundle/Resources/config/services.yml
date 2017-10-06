@@ -1,8 +1,10 @@
 services:
+  _defaults:
+    autowire: true
+
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
     resource: '../../Controller'
     tags: ['controller.service_arguments']
-    autowire: true
 
   surfnet.dashboard.monolog.json_formatter:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
@@ -20,50 +22,35 @@ services:
   surfnet.dashboard.command_handler.create_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
     public: true
-    arguments:
-      - '@surfnet.dashboard.repository.service'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
   surfnet.dashboard.command_handler.edit_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
     public: true
-    arguments:
-      - '@surfnet.dashboard.repository.service'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand }
 
   surfnet.dashboard.command_handler.create_supplier:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler
     public: true
-    arguments:
-      - '@surfnet.dashboard.repository.supplier'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand }
 
   surfnet.dashboard.command_handler.edit_supplier:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\EditSupplierCommandHandler
     public: true
-    arguments:
-      - '@surfnet.dashboard.repository.supplier'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand }
 
   surfnet.dashboard.service.admin_switcher:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService
-    arguments:
-      - '@session'
 
   surfnet.dashboard.service.saml_service:
     class: Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
-    arguments:
-      - '@surfnet.dashboard.repository.service'
-      - '@surfnet.dashboard.factory.service'
 
   surfnet.dashboard.service.supplier:
     class: Surfnet\ServiceProviderDashboard\Application\Service\SupplierService
-    arguments:
-      - '@surfnet.dashboard.repository.supplier'
 
   surfnet.dashboard.service.ticket:
     class: Surfnet\ServiceProviderDashboard\Application\Service\TicketService
@@ -74,12 +61,9 @@ services:
   surfnet.dashboard.command_handler.select_supplier:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
     public: true
-    arguments:
-      - '@surfnet.dashboard.service.admin_switcher'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand }
 
   surfnet.dashboard.twig.admin_switcher_extension:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\AdminSwitcherExtension
     tags: [twig.extension]
-    autowire: true
