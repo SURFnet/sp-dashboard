@@ -72,7 +72,7 @@ class EditServiceTest extends WebTestCase
 
         $this->serviceRepository->save($service);
 
-        $this->client->getContainer()->get('dashboard.service.admin_switcher')->setSelectedSupplier(1);
+        $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher')->setSelectedSupplier(1);
     }
 
     public function test_it_renders_the_form()
