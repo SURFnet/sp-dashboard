@@ -70,6 +70,18 @@ doctrine_migrations:
     name: Application Migrations
     organize_migrations: false
 
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!event']
+            formatter: dashboard.monolog.json_formatter
+        console:
+            type: console
+            channels: ['!event', '!doctrine']
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: '%mailer_transport%'
