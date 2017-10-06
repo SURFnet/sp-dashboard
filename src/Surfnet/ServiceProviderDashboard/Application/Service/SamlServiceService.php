@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
+namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\ViewObject;
 
 class SamlServiceService
 {

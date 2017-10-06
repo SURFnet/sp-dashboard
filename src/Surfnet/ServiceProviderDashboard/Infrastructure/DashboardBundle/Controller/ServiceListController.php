@@ -21,8 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
+use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SamlServiceService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ServiceListController extends Controller
@@ -33,18 +34,28 @@ class ServiceListController extends Controller
     private $adminSwitcherService;
 
     /**
-     * @var SamlServiceService
+     * @var \Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
      */
     private $samlServiceService;
 
     /**
+     * @var SupplierService
+     */
+    private $supplierService;
+
+    /**
      * @param AdminSwitcherService $adminSwitcherService
      * @param SamlServiceService $samlServiceService
+     * @param SupplierService $supplierService
      */
-    public function __construct(AdminSwitcherService $adminSwitcherService, SamlServiceService $samlServiceService)
-    {
+    public function __construct(
+        AdminSwitcherService $adminSwitcherService,
+        SamlServiceService $samlServiceService,
+        SupplierService $supplierService
+    ) {
         $this->adminSwitcherService = $adminSwitcherService;
         $this->samlServiceService = $samlServiceService;
+        $this->supplierService = $supplierService;
     }
 
     /**
@@ -56,7 +67,7 @@ class ServiceListController extends Controller
      */
     public function listAction()
     {
-        $supplierOptions = $this->adminSwitcherService->getSupplierOptions();
+        $supplierOptions = $this->supplierService->getSupplierNames();
 
         if (empty($supplierOptions)) {
             return $this->redirectToRoute('supplier_add');

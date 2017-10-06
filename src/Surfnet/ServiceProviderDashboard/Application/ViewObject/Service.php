@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\ViewObject;
+namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service as ServiceEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Model\Contact as Contact;

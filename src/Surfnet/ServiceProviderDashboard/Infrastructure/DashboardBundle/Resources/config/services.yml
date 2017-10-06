@@ -3,6 +3,7 @@ services:
     arguments:
       - '@dashboard.service.admin_switcher'
       - '@dashboard.service.saml_service'
+      - '@dashboard.service.supplier'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\SupplierController:
     arguments:
@@ -13,6 +14,7 @@ services:
     arguments:
       - '@tactician.commandbus'
       - '@dashboard.service.saml_service'
+      - '@dashboard.service.supplier'
       - '@dashboard.service.admin_switcher'
       - '@dashboard.service.ticket'
 
@@ -65,16 +67,20 @@ services:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService
     arguments:
       - '@session'
-      - '@surfnet.dashboard.repository.supplier'
 
   dashboard.service.saml_service:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SamlServiceService
+    class: Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
     arguments:
       - '@surfnet.dashboard.repository.service'
       - '@dashboard.factory.service'
 
+  dashboard.service.supplier:
+    class: Surfnet\ServiceProviderDashboard\Application\Service\SupplierService
+    arguments:
+      - '@surfnet.dashboard.repository.supplier'
+
   dashboard.service.ticket:
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\TicketService
+    class: Surfnet\ServiceProviderDashboard\Application\Service\TicketService
 
   dashboard.factory.service:
     class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
