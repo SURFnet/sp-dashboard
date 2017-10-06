@@ -20,67 +20,24 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class AdminSwitcherServiceTest extends MockeryTestCase
 {
-    /** @var ServiceRepository|m\MockInterface */
-    private $repository;
-
     /** @var Session|m\MockInterface */
     private $session;
 
     public function setUp()
     {
-        $this->repository = m::mock(SupplierRepository::class);
         $this->session = m::mock(Session::class);
-        $this->service = new AdminSwitcherService($this->session, $this->repository);
+        $this->service = new AdminSwitcherService($this->session);
     }
 
     /**
-     * @test
      * @group Service
      */
-    public function service_returns_supplier_options_sorted()
-    {
-        $this->repository->shouldReceive('findAll')
-            ->andReturn([
-                m::mock(Service::class)
-                    ->shouldReceive('getId')
-                    ->andReturn('c')->getMock()
-                    ->shouldReceive('getName')
-                    ->andReturn('C')->getMock(),
-                m::mock(Service::class)
-                    ->shouldReceive('getId')
-                    ->andReturn('a')->getMock()
-                    ->shouldReceive('getName')
-                    ->andReturn('A')->getMock(),
-                m::mock(Service::class)
-                    ->shouldReceive('getId')
-                    ->andReturn('b')->getMock()
-                    ->shouldReceive('getName')
-                    ->andReturn('B')->getMock(),
-            ]);
-
-        $this->assertEquals(
-            [
-                'a' => 'A',
-                'b' => 'B',
-                'c' => 'C',
-            ],
-            $this->service->getSupplierOptions()
-        );
-    }
-
-    /**
-     * @test
-     * @group Service
-     */
-    public function service_writes_selected_supplier_to_session()
+    public function test_service_writes_selected_supplier_to_session()
     {
         $this->session->shouldReceive('set')
             ->with('selected_supplier', 'test');
@@ -89,10 +46,9 @@ class AdminSwitcherServiceTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @group Service
      */
-    public function service_reads_selected_supplier_from_session()
+    public function test_service_reads_selected_supplier_from_session()
     {
         $this->session->shouldReceive('get')
             ->andReturn('test');

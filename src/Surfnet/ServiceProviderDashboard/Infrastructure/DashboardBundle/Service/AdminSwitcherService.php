@@ -17,8 +17,6 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class AdminSwitcherService
@@ -28,29 +26,9 @@ class AdminSwitcherService
      */
     private $session;
 
-    public function __construct(Session $session, SupplierRepository $repository)
+    public function __construct(Session $session)
     {
         $this->session = $session;
-        $this->repository = $repository;
-    }
-
-    /**
-     * Get the select options for the admin switcher.
-     *
-     * Format: [ '<supplier id>' => '<supplier display name>' ]
-     * @return array
-     */
-    public function getSupplierOptions()
-    {
-        $options = [];
-
-        foreach ($this->repository->findAll() as $supplier) {
-            $options[$supplier->getId()] = $supplier->getName();
-        }
-
-        asort($options);
-
-        return $options;
     }
 
     /**
@@ -71,15 +49,5 @@ class AdminSwitcherService
     public function getSelectedSupplier()
     {
         return $this->session->get('selected_supplier');
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Supplier|null
-     */
-    public function getSupplierById($id)
-    {
-        return $this->repository->findById($id);
     }
 }

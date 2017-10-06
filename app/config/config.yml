@@ -10,7 +10,9 @@ parameters:
 
 framework:
     #esi: ~
-    translator: { fallbacks: ['%locale%'] }
+    translator:
+        fallbacks: ['%locale%']
+        logging: false
     secret: '%secret%'
     router:
         resource: '%kernel.root_dir%/config/routing.yml'
@@ -67,6 +69,18 @@ doctrine_migrations:
     table_name: migration_versions
     name: Application Migrations
     organize_migrations: false
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: debug
+            channels: ['!event']
+            formatter: surfnet.dashboard.monolog.json_formatter
+        console:
+            type: console
+            channels: ['!event', '!doctrine']
 
 # Swiftmailer Configuration
 swiftmailer:

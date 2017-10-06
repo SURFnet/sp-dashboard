@@ -25,7 +25,6 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateS
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository as DoctrineSupplierRepository;
 
 class CreateSupplierCommandHandlerTest extends MockeryTestCase
 {
@@ -38,15 +37,14 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = m::mock(DoctrineSupplierRepository::class);
+        $this->repository = m::mock(SupplierRepository::class);
         $this->commandHandler = new CreateSupplierCommandHandler($this->repository);
     }
 
     /**
-     * @test
      * @group CommandHandler
      */
-    public function it_can_process_a_create_supplier_command()
+    public function test_it_can_process_a_create_supplier_command()
     {
         $entity = new Supplier();
         $entity->setName('Foobar');
@@ -65,13 +63,12 @@ class CreateSupplierCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @test
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @expectedExceptionMessage The Guid of the new Supplier should be unique.
      *                           This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
      * @group CommandHandler
      */
-    public function it_rejects_non_unique_create_supplier_command()
+    public function test_it_rejects_non_unique_create_supplier_command()
     {
         $command = new CreateSupplierCommand();
         $command->setName('Foobar');

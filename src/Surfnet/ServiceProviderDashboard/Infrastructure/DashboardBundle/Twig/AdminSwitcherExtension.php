@@ -17,6 +17,7 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Twig_Environment;
 use Twig_Extension;
@@ -24,11 +25,20 @@ use Twig_SimpleFunction;
 
 class AdminSwitcherExtension extends Twig_Extension
 {
-    private $service;
+    /**
+     * @var AdminSwitcherService
+     */
+    private $switcherService;
 
-    public function __construct(AdminSwitcherService $service)
+    /**
+     * @var SupplierService
+     */
+    private $supplierService;
+
+    public function __construct(AdminSwitcherService $switcherService, SupplierService $supplierService)
     {
-        $this->service = $service;
+        $this->switcherService = $switcherService;
+        $this->supplierService = $supplierService;
     }
 
     public function getFunctions()
@@ -47,8 +57,8 @@ class AdminSwitcherExtension extends Twig_Extension
         return $environment->render(
             'DashboardBundle:TwigExtension:admin_switcher.html.twig',
             [
-                'suppliers' => $this->service->getSupplierOptions(),
-                'selected_supplier' => $this->service->getSelectedSupplier(),
+                'suppliers' => $this->supplierService->getSupplierNames(),
+                'selected_supplier' => $this->switcherService->getSelectedSupplier(),
             ]
         );
     }

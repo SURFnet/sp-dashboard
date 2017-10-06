@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\ViewObject;
+namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service as ServiceEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Model\Contact as Contact;
@@ -26,6 +26,11 @@ class Service
      * @var string
      */
     private $id;
+
+    /**
+     * @var string
+     */
+    private $entityId;
 
     /**
      * @var string
@@ -44,13 +49,15 @@ class Service
 
     /**
      * @param string $id
+     * @param string $entityId
      * @param string $name
      * @param string $contact
      * @param string $environment
      */
-    public function __construct($id, $name, $contact, $environment)
+    public function __construct($id, $entityId, $name, $contact, $environment)
     {
         $this->id = $id;
+        $this->entityId = $entityId;
         $this->name = $name;
         $this->contact = $contact;
         $this->environment = $environment;
@@ -67,6 +74,7 @@ class Service
         }
 
         return new self(
+            $service->getId(),
             $service->getEntityId(),
             $service->getNameEn(),
             $formattedContact,
@@ -93,6 +101,14 @@ class Service
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
     }
 
     /**
