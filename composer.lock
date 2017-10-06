@@ -1391,12 +1391,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ibuildingsnl/LexikTranslationBundle.git",
-                "reference": "575219aaa89b3e93b2602e2490864e970cbf2cc9"
+                "reference": "950d106daf6c6cbf364e58efb2f8c56d3004ea18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ibuildingsnl/LexikTranslationBundle/zipball/575219aaa89b3e93b2602e2490864e970cbf2cc9",
-                "reference": "575219aaa89b3e93b2602e2490864e970cbf2cc9",
+                "url": "https://api.github.com/repos/ibuildingsnl/LexikTranslationBundle/zipball/950d106daf6c6cbf364e58efb2f8c56d3004ea18",
+                "reference": "950d106daf6c6cbf364e58efb2f8c56d3004ea18",
                 "shasum": ""
             },
             "require": {
@@ -1451,7 +1451,7 @@
             "support": {
                 "source": "https://github.com/ibuildingsnl/LexikTranslationBundle/tree/feature/fix-url-encode-issue"
             },
-            "time": "2017-10-05T09:37:17+00:00"
+            "time": "2017-10-06T06:50:09+00:00"
         },
         {
             "name": "monolog/monolog",

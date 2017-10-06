@@ -11,6 +11,10 @@ $(document).ready(function() {
 
             var tinymceInstance = tinymce.get(textarea.attr('id'));
             tinymceInstance.on('Change', function() {
+                textarea.val(
+                    tinymceInstance.getContent()
+                );
+
                 angular.element(textarea)
                     .triggerHandler('input');
             });
