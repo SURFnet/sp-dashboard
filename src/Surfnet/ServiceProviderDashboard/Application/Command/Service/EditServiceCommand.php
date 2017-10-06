@@ -667,7 +667,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @return ContactPerson
+     * @return Contact
      */
     public function getAdministrativeContact()
     {
@@ -675,7 +675,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @param ContactPerson $administrativeContact
+     * @param Contact $administrativeContact
      */
     public function setAdministrativeContact($administrativeContact)
     {
@@ -683,7 +683,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @return ContactPerson
+     * @return Contact
      */
     public function getTechnicalContact()
     {
@@ -691,7 +691,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @param ContactPerson $technicalContact
+     * @param Contact $technicalContact
      */
     public function setTechnicalContact($technicalContact)
     {
@@ -699,7 +699,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @return ContactPerson
+     * @return Contact
      */
     public function getSupportContact()
     {
@@ -707,7 +707,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @param ContactPerson $supportContact
+     * @param Contact $supportContact
      */
     public function setSupportContact($supportContact)
     {
