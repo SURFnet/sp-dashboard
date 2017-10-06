@@ -18,7 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service as ServiceEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Model\Contact as Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
 
 class Service
 {

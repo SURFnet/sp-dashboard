@@ -21,8 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Model\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\Model\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**

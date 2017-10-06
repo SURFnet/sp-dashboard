@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Model;
+namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 class Contact
 {
