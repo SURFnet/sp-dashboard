@@ -8,7 +8,6 @@ service.list.action.view: View
 service.list.action.edit: Edit
 service.list.action.copy: Copy
 service.list.action.delete: Delete
-supplier.create.title: Add new supplier
 service.edit.title: Service Provider registration form
 service.edit.info.title: Info
 service.edit.info.html: "
@@ -96,3 +95,5 @@ service.edit.information.personalCodeAttribute: Text should be set in web transl
 service.edit.information.scopedAffiliationAttribute: Text should be set in web translations
 service.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
 service.edit.information.comments: Text should be set in web translations
+supplier.create.title: Add new supplier
+supplier.edit.title: Edit supplier
