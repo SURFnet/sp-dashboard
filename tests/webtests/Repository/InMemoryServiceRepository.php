@@ -28,7 +28,7 @@ class InMemoryServiceRepository implements ServiceRepository
 
     public function clear()
     {
-        self:$memory = [];
+        self::$memory = [];
     }
 
     /**
@@ -89,7 +89,7 @@ class InMemoryServiceRepository implements ServiceRepository
         $result = [];
 
         foreach ($allServices as $service) {
-            if ($service->getId() == $supplierId) {
+            if ($service->getSupplier()->getId() === $supplierId) {
                 $result[] = $service;
             }
         }

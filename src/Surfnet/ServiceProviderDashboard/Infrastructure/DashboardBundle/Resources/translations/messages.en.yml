@@ -1,5 +1,6 @@
 service.list.title: Services
 service.list.empty: There are no services configured
+service.list.no_supplier_selected: Please select a supplier
 service.list.service: Service
 service.list.entity_id: Entity ID
 service.list.primary_contact: Primary contact

@@ -23,8 +23,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SamlServiceService;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ServiceListController
+class ServiceListController extends Controller
 {
     /**
      * @var AdminSwitcherService
@@ -37,7 +38,8 @@ class ServiceListController
     private $samlServiceService;
 
     /**
-     * @param CommandBus $commandBus
+     * @param AdminSwitcherService $adminSwitcherService
+     * @param SamlServiceService $samlServiceService
      */
     public function __construct(AdminSwitcherService $adminSwitcherService, SamlServiceService $samlServiceService)
     {
@@ -49,13 +51,22 @@ class ServiceListController
      * @Method("GET")
      * @Route("/", name="service_list")
      * @Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
     public function listAction()
     {
+        $supplierOptions = $this->adminSwitcherService->getSupplierOptions();
+
+        if (empty($supplierOptions)) {
+            return $this->redirectToRoute('supplier_add');
+        }
+
+        $selectedSupplierId = $this->adminSwitcherService->getSelectedSupplier();
+
         return [
-            'service_list' => $this->samlServiceService->getServiceListForSupplier(
-                $this->adminSwitcherService->getSelectedSupplier()
-            )
+            'no_supplier_selected' => empty($selectedSupplierId),
+            'service_list' => $this->samlServiceService->getServiceListForSupplier($selectedSupplierId),
         ];
     }
 }
