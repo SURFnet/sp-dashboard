@@ -1,22 +1,8 @@
 services:
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceListController:
-    arguments:
-      - '@surfnet.dashboard.service.admin_switcher'
-      - '@surfnet.dashboard.service.saml_service'
-      - '@surfnet.dashboard.service.supplier'
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\SupplierController:
-    arguments:
-      - '@tactician.commandbus'
-      - '@surfnet.dashboard.service.admin_switcher'
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
-    arguments:
-      - '@tactician.commandbus'
-      - '@surfnet.dashboard.service.saml_service'
-      - '@surfnet.dashboard.service.supplier'
-      - '@surfnet.dashboard.service.admin_switcher'
-      - '@surfnet.dashboard.service.ticket'
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
+    resource: '../../Controller'
+    tags: ['controller.service_arguments']
+    autowire: true
 
   surfnet.dashboard.monolog.json_formatter:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
