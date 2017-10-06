@@ -29,7 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundExcepti
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\EditSupplierType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\SupplierType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\CreateSupplierType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +70,7 @@ class SupplierController extends Controller
         $logger = $this->get('logger');
         $command = new CreateSupplierCommand();
 
-        $form = $this->createForm(SupplierType::class, $command);
+        $form = $this->createForm(CreateSupplierType::class, $command);
 
         $form->handleRequest($request);
 
