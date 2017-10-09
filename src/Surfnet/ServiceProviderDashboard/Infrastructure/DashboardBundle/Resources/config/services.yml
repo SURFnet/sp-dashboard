@@ -30,6 +30,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand }
 
+    surfnet.dashboard.command_handler.load_metadata:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\LoadMetadataCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\LoadMetadataCommand }
+
     surfnet.dashboard.command_handler.select_supplier:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
         public: true
@@ -39,6 +45,9 @@ services:
     surfnet.dashboard.factory.service:
         class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
 
+    surfnet.dashboard.metadata.certificate_parser:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\CertificateParser
+
     surfnet.dashboard.metadata.client:
         class: GuzzleHttp\Client
 
@@ -46,8 +55,20 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Fetcher
         arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%metadata_url_timeout%']
 
+    surfnet.dashboard.metadata.parser:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Parser
+        arguments:
+            - '@surfnet.dashboard.metadata.certificate_parser'
+            - '@surfnet.dashboard.repository.attributes_metadata'
+            - '%kernel.project_dir%/src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Resources'
+            - '@logger'
+
     surfnet.dashboard.monolog.json_formatter:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
+
+    surfnet.dashboard.repository.attributes_metadata:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributesMetadataRepository
+        arguments:  ['%kernel.project_dir%/src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Resources']
 
     surfnet.dashboard.repository.service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository

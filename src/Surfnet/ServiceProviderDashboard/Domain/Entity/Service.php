@@ -792,26 +792,35 @@ class Service
     }
 
     /**
-     * @return ContactPerson
+     * @return ContactPerson|null
      */
     public function getAdministrativeContact()
     {
+        if (!is_null($this->administrativeContact) && !$this->administrativeContact->isContactSet()) {
+            return null;
+        }
         return $this->administrativeContact;
     }
 
     /**
-     * @return ContactPerson
+     * @return ContactPerson|null
      */
     public function getTechnicalContact()
     {
+        if (!is_null($this->technicalContact) && !$this->technicalContact->isContactSet()) {
+            return null;
+        }
         return $this->technicalContact;
     }
 
     /**
-     * @return ContactPerson
+     * @return ContactPerson|null
      */
     public function getSupportContact()
     {
+        if (!is_null($this->supportContact) && !$this->supportContact->isContactSet()) {
+            return null;
+        }
         return $this->supportContact;
     }
 

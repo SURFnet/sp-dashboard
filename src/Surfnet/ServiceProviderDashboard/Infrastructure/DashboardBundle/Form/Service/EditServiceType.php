@@ -70,17 +70,24 @@ class EditServiceType extends AbstractType
                         ]
                     )
                     ->add(
-                        'metadataUrl',
-                        TextType::class,
-                        [
-                            'attr' => ['help' => 'service.edit.information.metadataUrl'],
-                        ]
-                    )
-                    ->add(
                         'metadataXml',
                         TextareaType::class,
                         [
                             'attr' => ['help' => 'service.edit.information.metadataXml'],
+                        ]
+                    )
+                    ->add(
+                        'importButton',
+                        SubmitType::class,
+                        [
+                            'label' => 'Import',
+                        ]
+                    )
+                    ->add(
+                        'metadataUrl',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'service.edit.information.metadataUrl'],
                         ]
                     )
                     ->add('acsLocation')

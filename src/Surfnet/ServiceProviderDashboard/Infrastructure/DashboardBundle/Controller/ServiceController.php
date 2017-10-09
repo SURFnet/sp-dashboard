@@ -22,6 +22,7 @@ use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Service\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
@@ -123,11 +124,20 @@ class ServiceController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->commandBus->handle($command);
-                return $this->redirectToRoute('service_list');
-            } catch (InvalidArgumentException $e) {
-                $this->addFlash('error', $e->getMessage());
+            switch ($form->getClickedButton()->getName()) {
+                case 'importButton':
+                    // Handle an import action based on the posted xml or import url.
+                    $metadataCommand = new LoadMetadataCommand($command);
+                    $this->commandBus->handle($metadataCommand);
+                    break;
+                default:
+                    try {
+                        $this->commandBus->handle($command);
+                        return $this->redirectToRoute('service_list');
+                    } catch (InvalidArgumentException $e) {
+                        $this->addFlash('error', $e->getMessage());
+                    }
+                    break;
             }
         }
 

@@ -23,7 +23,7 @@ use GuzzleHttp\Exception\ConnectException;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 
-class Fetcher
+class Fetcher implements FetcherInterface
 {
     /**
      * @var ClientInterface
