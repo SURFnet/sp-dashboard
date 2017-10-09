@@ -39,6 +39,13 @@ services:
     surfnet.dashboard.factory.service:
         class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
 
+    surfnet.dashboard.metadata.client:
+        class: GuzzleHttp\Client
+
+    surfnet.dashboard.metadata.fetcher:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Fetcher
+        arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%metadata_url_timeout%']
+
     surfnet.dashboard.monolog.json_formatter:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
