@@ -19,8 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Mockery as m;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -57,12 +58,18 @@ class ServiceListTest extends WebTestCase
         $this->suppliers->save($supplier1);
         $this->suppliers->save($supplier2);
 
+        $contact = new Contact();
+        $contact->setFirstName('John');
+        $contact->setLastName('Doe');
+        $contact->setEmail('jdoe@example.org');
+
         $service1 = new Service();
         $service1->setId(1);
         $service1->setSupplier($supplier1);
         $service1->setNameEn('Service1');
         $service1->setEntityId('service-1');
         $service1->setEnvironment('connect');
+        $service1->setAdministrativeContact($contact);
 
         $service2 = new Service();
         $service2->setId(2);
@@ -70,6 +77,7 @@ class ServiceListTest extends WebTestCase
         $service2->setNameEn('Service2');
         $service2->setEntityId('service-2');
         $service2->setEnvironment('connect');
+        $service2->setAdministrativeContact($contact);
 
         $this->services->save($service1);
         $this->services->save($service2);
@@ -90,6 +98,7 @@ class ServiceListTest extends WebTestCase
         $row = $crawler->filter('table tr')->eq(1);
         $this->assertEquals('Service1', $row->filter('td')->eq(0)->text(), 'Name not found in service list');
         $this->assertEquals('service-1', $row->filter('td')->eq(1)->text(), 'Entity ID not found in service list');
+        $this->assertEquals('John Doe (jdoe@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
         $this->assertEquals('connect', $row->filter('td')->eq(3)->text(), 'Environment not found in service list');
     }
 
