@@ -33,6 +33,7 @@
         "doctrine/doctrine-cache-bundle": "^1.2",
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "doctrine/orm": "^2.5",
+        "guzzlehttp/guzzle": "^6.3",
         "knplabs/knp-menu-bundle": "^2.1",
         "league/tactician-bundle": "^0.4.1",
         "lexik/translation-bundle": "dev-feature/fix-url-encode-issue",
