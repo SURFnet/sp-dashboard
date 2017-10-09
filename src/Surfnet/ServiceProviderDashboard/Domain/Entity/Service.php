@@ -19,8 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Surfnet\ServiceProviderDashboard\Domain\Model\Contact as ContactPerson;
-use Surfnet\ServiceProviderDashboard\Domain\Model\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 

@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Model\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

@@ -11,7 +11,9 @@ $(document).ready(function() {
 
             var motivation = rows.find('input.motivation');
             motivation.removeAttr('disabled');
-            motivation.val(motivation.data('old-value'));
+            if (motivation.data('old-value')) {
+                motivation.val(motivation.data('old-value'));
+            }
         } else {
             rows.addClass('disabled');
             rows.find('input.motivation').attr('disabled', 'disabled');

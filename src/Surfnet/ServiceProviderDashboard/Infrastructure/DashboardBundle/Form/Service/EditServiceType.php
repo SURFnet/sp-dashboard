@@ -118,6 +118,7 @@ class EditServiceType extends AbstractType
                         'administrativeContact',
                         ContactType::class,
                         [
+                            'by_reference' => false,
                             'attr' => ['help' => 'service.edit.information.administrativeContact'],
                         ]
                     )
@@ -125,6 +126,7 @@ class EditServiceType extends AbstractType
                         'technicalContact',
                         ContactType::class,
                         [
+                            'by_reference' => false,
                             'attr' => ['help' => 'service.edit.information.administrativeContact'],
                         ]
                     )
@@ -132,6 +134,7 @@ class EditServiceType extends AbstractType
                         'supportContact',
                         ContactType::class,
                         [
+                            'by_reference' => false,
                             'attr' => ['help' => 'service.edit.information.supportContact'],
                         ]
                     )
@@ -145,6 +148,8 @@ class EditServiceType extends AbstractType
                         'givenNameAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.givenNameAttribute'],
                         ]
                     )
@@ -152,6 +157,8 @@ class EditServiceType extends AbstractType
                         'surNameAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.surNameAttribute'],
                         ]
                     )
@@ -159,6 +166,8 @@ class EditServiceType extends AbstractType
                         'commonNameAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.commonNameAttribute'],
                         ]
                     )
@@ -166,6 +175,8 @@ class EditServiceType extends AbstractType
                         'displayNameAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.displayNameAttribute'],
                         ]
                     )
@@ -173,6 +184,8 @@ class EditServiceType extends AbstractType
                         'emailAddressAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.emailAddressAttribute'],
                         ]
                     )
@@ -180,6 +193,8 @@ class EditServiceType extends AbstractType
                         'organizationAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.organizationAttribute'],
                         ]
                     )
@@ -187,6 +202,8 @@ class EditServiceType extends AbstractType
                         'organizationTypeAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.organizationTypeAttribute'],
                         ]
                     )
@@ -194,6 +211,8 @@ class EditServiceType extends AbstractType
                         'affiliationAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.affiliationAttribute'],
                         ]
                     )
@@ -201,6 +220,8 @@ class EditServiceType extends AbstractType
                         'entitlementAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.entitlementAttribute'],
                         ]
                     )
@@ -208,6 +229,8 @@ class EditServiceType extends AbstractType
                         'principleNameAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.principleNameAttribute'],
                         ]
                     )
@@ -215,6 +238,8 @@ class EditServiceType extends AbstractType
                         'uidAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.uidAttribute'],
                         ]
                     )
@@ -222,6 +247,8 @@ class EditServiceType extends AbstractType
                         'preferredLanguageAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.preferredLanguageAttribute'],
                         ]
                     )
@@ -229,6 +256,8 @@ class EditServiceType extends AbstractType
                         'personalCodeAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.personalCodeAttribute'],
                         ]
                     )
@@ -236,6 +265,8 @@ class EditServiceType extends AbstractType
                         'scopedAffiliationAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.scopedAffiliationAttribute'],
                         ]
                     )
@@ -243,6 +274,8 @@ class EditServiceType extends AbstractType
                         'eduPersonTargetedIDAttribute',
                         AttributeType::class,
                         [
+                            'by_reference' => false,
+                            'required' => false,
                             'attr' => ['help' => 'service.edit.information.eduPersonTargetedIDAttribute'],
                         ]
                     )
