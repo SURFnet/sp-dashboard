@@ -47,6 +47,9 @@ The application is now up and running and can be accessed at
 front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
 * To view mails caught by Mailcatcher, visit [dev.support.surfconext.nl:1080](https://dev.support.surfconext.nl:1080/)
 
+If you run into the `shibsp::ConfigurationException`, please reload your box, the issue should be resolved after a 
+reboot. The Shiboleth deamon might not come out 100% correctly out of the initial provisioning run.
+
 ### Running the tests
 
 `ant test` will run the full suite of tests and static analysis.
