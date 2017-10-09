@@ -24,7 +24,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Fetcher;
 
 class FetcherTest extends MockeryTestCase
