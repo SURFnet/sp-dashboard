@@ -31,6 +31,9 @@ class FakeFetcher implements FetcherInterface
             case 'https://engine.surfconext.nl/authentication/sp/metadata-valid-incomplete':
                 return file_get_contents(__DIR__ . '/../fixtures/metadata/valid_metadata_incomplete.xml');
                 break;
+            case 'https://this.does.not/exist':
+                return 'burp';
+                break;
         }
     }
 }

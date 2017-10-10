@@ -287,4 +287,30 @@ class EditServiceTest extends WebTestCase
         $this->assertTrue($service->getOrganizationTypeAttribute()->isRequested());
         $this->assertTrue($service->getAffiliationAttribute()->isRequested());
     }
+
+    public function test_it_shows_flash_message_on_exception()
+    {
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'metadata' => [
+                    'importUrl' => 'https://this.does.not/exist',
+                ],
+            ],
+        ];
+
+        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+        $message = $crawler->filter('.message.error')->first();
+
+        $this->assertEquals(
+            'The metadata XML is invalid considering the associated XSD',
+            trim($message->text()),
+            'Expected an error message for this invalid importUrl'
+        );
+    }
 }

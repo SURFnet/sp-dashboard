@@ -18,11 +18,16 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Metadata;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Fetcher;
 
@@ -41,35 +46,25 @@ class FetcherTest extends MockeryTestCase
      */
     private $logger;
 
+    /**
+     * @var MockHandler
+     */
+    private $mockHandler;
+
     public function setUp()
     {
-        $this->client = m::mock(ClientInterface::class);
+        $this->mockHandler = new MockHandler();
+        $handler = HandlerStack::create($this->mockHandler);
+        $client = new Client(['handler' => $handler]);
+
+        $this->client = $client;
         $this->logger = m::mock(LoggerInterface::class);
         $this->fetcher = new Fetcher($this->client, $this->logger, 11);
     }
 
     public function test_it_can_fetch_xml_from_an_url()
     {
-        $response = m::mock(ResponseInterface::class);
-        $stream = m::mock(StreamInterface::class);
-
-        $response
-            ->shouldReceive('getBody')
-            ->andReturn($stream);
-
-        $stream
-            ->shouldReceive('getContents')
-            ->andReturn('<xml>');
-
-        $this->client
-            ->shouldReceive('request')
-            ->with(
-                'GET',
-                'https://www.ibuildings.nl/saml/metadata.xml',
-                [ 'timeout' => 11, 'verify' => false ]
-            )
-            ->andReturn($response);
-
+        $this->mockHandler->append(new Response(200, [], '<xml>'));
         $xml = $this->fetcher->fetch('https://www.ibuildings.nl/saml/metadata.xml');
         $this->assertEquals('<xml>', $xml);
     }
@@ -80,14 +75,76 @@ class FetcherTest extends MockeryTestCase
      */
     public function test_it_handles_exceptions()
     {
-        $exception = m::mock(\Exception::class);
-        $this->client
-            ->shouldReceive('request')
-            ->andThrow($exception);
+        $exception = new \Exception('');
+        $this->mockHandler->append($exception);
 
         $this->logger
             ->shouldReceive('info')
             ->with('Metadata exception', ['e' => $exception]);
+
+        $this->fetcher->fetch('https://exapmle.com/foobar.xml');
+    }
+
+    /**
+     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Failed retrieving the metadata (SSL certificate cannot be authenticated - message:
+     *  cURL error 60: Peer certificate cannot be authenticated with known CA certificates.)
+     *  (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)
+     */
+    public function test_it_handles_curl_ssl_authentication_error()
+    {
+        $exceptionMessage = 'cURL error 60: Peer certificate cannot be authenticated with known CA certificates. 
+                             (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)';
+        $exception = new ConnectException(
+            $exceptionMessage,
+            new Request('GET', 'https://exapmle.com/foobar.xml')
+        );
+        $this->mockHandler->append($exception);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Metadata CURL exception', ['e' => $exception]);
+
+        $this->fetcher->fetch('https://exapmle.com/foobar.xml');
+    }
+
+    /**
+     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Failed retrieving the metadata (SSL certificate is not valid - message:
+     *  The remote server's SSL certificate or SSH md5 fingerprint was deemed not OK.
+     */
+    public function test_it_handles_curl_ssl_invalid_certificate_error()
+    {
+        $exceptionMessage = 'cURL error 51: The remote server\'s SSL certificate or SSH md5 fingerprint was deemed not 
+                             OK.';
+        $exception = new ConnectException(
+            $exceptionMessage,
+            new Request('GET', 'https://exapmle.com/foobar.xml')
+        );
+        $this->mockHandler->append($exception);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Metadata CURL exception', ['e' => $exception]);
+
+        $this->fetcher->fetch('https://exapmle.com/foobar.xml');
+    }
+
+    /**
+     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Failed retrieving the metadata (message:cURL error 52: Nothing was returned from the
+     * server, and under the circumstances, getting nothing is considered an error.).
+     */
+    public function test_it_handles_curl_errors()
+    {
+        $exceptionMessage = 'cURL error 52: Nothing was returned from the server, and under the circumstances, getting 
+                             nothing is considered an error.';
+        $exception = new ConnectException($exceptionMessage, new Request('GET', 'https://exapmle.com/foobar.xml'));
+        $this->mockHandler->append($exception);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Metadata CURL exception', ['e' => $exception]);
 
         $this->fetcher->fetch('https://exapmle.com/foobar.xml');
     }

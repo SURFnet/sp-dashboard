@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Exception\ParserException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -115,7 +116,7 @@ class ServiceController extends Controller
      */
     public function editAction(Request $request, $serviceId)
     {
-
+        $this->get('session')->getFlashBag()->clear();
         $service = $this->samlService->getServiceById($serviceId);
 
         $command = $this->samlService->buildEditServiceCommand($service);
@@ -124,20 +125,23 @@ class ServiceController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form->getClickedButton()->getName()) {
-                case 'importButton':
-                    // Handle an import action based on the posted xml or import url.
-                    $metadataCommand = new LoadMetadataCommand($command);
-                    $this->commandBus->handle($metadataCommand);
-                    break;
-                default:
-                    try {
+            try {
+                switch ($form->getClickedButton()->getName()) {
+                    case 'importButton':
+                        // Handle an import action based on the posted xml or import url.
+                        $metadataCommand = new LoadMetadataCommand($command);
+                        $this->commandBus->handle($metadataCommand);
+                        return $this->redirectToRoute('service_edit', ['serviceId' => $service->getId()]);
+                        break;
+                    default:
                         $this->commandBus->handle($command);
                         return $this->redirectToRoute('service_list');
-                    } catch (InvalidArgumentException $e) {
-                        $this->addFlash('error', $e->getMessage());
-                    }
-                    break;
+                        break;
+                }
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            } catch (ParserException $e) {
+                $this->addFlash('error', $e->getMessage());
             }
         }
 

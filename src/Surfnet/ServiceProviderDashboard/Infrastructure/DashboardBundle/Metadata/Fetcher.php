@@ -69,9 +69,9 @@ class Fetcher implements FetcherInterface
             $response = $this->guzzle->request('GET', $url, $guzzleOptions);
             $responseXml = $response->getBody()->getContents();
             return $responseXml;
-        } catch (ConnectException $ex) {
-            $this->logger->info('Metadata CURL exception', array('e' => $ex));
-            $curlError = ' (' . $this->getCurlErrorDescription($ex->getMessage()) . ').';
+        } catch (ConnectException $e) {
+            $this->logger->info('Metadata CURL exception', array('e' => $e));
+            $curlError = ' (' . $this->getCurlErrorDescription($e->getMessage()) . ').';
             throw new InvalidArgumentException('Failed retrieving the metadata' . $curlError);
         } catch (\Exception $e) {
             $this->logger->info('Metadata exception', array('e' => $e));
@@ -101,15 +101,15 @@ class Fetcher implements FetcherInterface
             $error .= ' - ';
         }
 
-        return $error . ' message ' . $message;
+        return $error . 'message:' . $message;
     }
 
     private function extractErrorNumber($message)
     {
         $matches = [];
         preg_match(self::$curlErrorRegex, $message, $matches);
-        if (is_numeric($matches[0])) {
-            return $matches[0];
+        if (is_numeric($matches[1])) {
+            return $matches[1];
         }
         return $message;
     }
