@@ -24,13 +24,9 @@
                         <span>SP Dashboard</span>
                     </li>
                     <li class="profile" tabindex="1">
-                        <a class="welcome-link">
-                            <i class="fa fa-user-circle-o"></i>
-                            John Doe
-                            <i class="fa fa-caret-down"></i>
-                        </a>
+                        {{ identity() }}
                     </li>
-                    <li>
+                    <li class="border-left">
                         <a href="https://wiki.surfnet.nl/" target="_blank">{{ 'page.header.help'|trans }}</a>
                     </li>
                     <li class="border-left"><a>{{ 'page.header.logout'|trans }}</a></li>

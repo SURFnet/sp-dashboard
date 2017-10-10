@@ -70,3 +70,7 @@ services:
     surfnet.dashboard.twig.admin_switcher_extension:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\AdminSwitcherExtension
         tags: [twig.extension]
+
+    surfnet.dashboard.twig.identity_extension:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension
+        tags: [twig.extension]
