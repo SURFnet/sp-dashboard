@@ -27,9 +27,10 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplier
 use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\EditSupplierType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\CreateSupplierType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\EditSupplierType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,13 +48,23 @@ class SupplierController extends Controller
     private $switcherService;
 
     /**
+     * @var SupplierService
+     */
+    private $supplierService;
+
+    /**
      * @param CommandBus $commandBus
      * @param AdminSwitcherService $switcherService
+     * @param SupplierService $supplierService
      */
-    public function __construct(CommandBus $commandBus, AdminSwitcherService $switcherService)
-    {
+    public function __construct(
+        CommandBus $commandBus,
+        AdminSwitcherService $switcherService,
+        SupplierService $supplierService
+    ) {
         $this->commandBus = $commandBus;
         $this->switcherService = $switcherService;
+        $this->supplierService = $supplierService;
     }
 
     /**
@@ -101,7 +112,7 @@ class SupplierController extends Controller
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        $supplier = $this->switcherService->getSupplierById((int) $this->switcherService->getSelectedSupplier());
+        $supplier = $this->supplierService->getSupplierById((int) $this->switcherService->getSelectedSupplier());
 
         $command = new EditSupplierCommand(
             $supplier->getId(),
