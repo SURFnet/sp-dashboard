@@ -61,5 +61,21 @@
   args:
     chdir: "{{ spdashboard_data_dir }}/current/"
 
+- name: Run translation import
+  command: bin/console lexik:translations:import
+  args:
+    chdir: "{{ spdashboard_data_dir }}/current/"
+
+- name: Run translation import DashboardBundle
+  command: bin/console lexik:translations:import DashboardBundle
+  args:
+    chdir: "{{ spdashboard_data_dir }}/current/"
+
+- name: Clean the cache
+  command: bin/console cache:clear --env=prod
+  args:
+    chdir: "{{ spdashboard_data_dir }}/current/"
+  notify: restart php-fpm
+
 - name: Chown the cachedir recursively again
   file: dest={{spdashboard_data_dir}}/shared/cache owner=spdashboard recurse=yes
