@@ -245,4 +245,46 @@ class EditServiceTest extends WebTestCase
         $this->assertNull($service->getAdministrativeContact());
         $this->assertNull($service->getSupportContact());
     }
+
+    public function test_it_loads_xml_from_textarea()
+    {
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'metadata' => [
+                    'importUrl' => '',
+                    'metadataXml' => file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'),
+                ],
+            ],
+        ];
+
+        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        /** @var Service[] $services */
+        $services = $this->serviceRepository->findAll();
+        $this->assertCount(1, $services);
+        $service = array_pop($services);
+
+        // Should not have overwritten existing fields
+        $this->assertEquals('MyEntity', $service->getNameEn());
+
+        $this->assertInstanceOf(Contact::class, $service->getAdministrativeContact());
+        $this->assertEquals('Test2', $service->getAdministrativeContact()->getFirstName());
+
+        $this->assertInstanceOf(Contact::class, $service->getTechnicalContact());
+        $this->assertEquals('Test', $service->getTechnicalContact()->getFirstName());
+
+        $this->assertInstanceOf(Contact::class, $service->getSupportContact());
+        $this->assertEquals('Test3', $service->getSupportContact()->getFirstName());
+
+        $this->assertTrue($service->getCommonNameAttribute()->isRequested());
+        $this->assertTrue($service->getUidAttribute()->isRequested());
+        $this->assertTrue($service->getOrganizationTypeAttribute()->isRequested());
+        $this->assertTrue($service->getAffiliationAttribute()->isRequested());
+    }
 }

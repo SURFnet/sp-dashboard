@@ -73,7 +73,6 @@ class LoadMetadataCommandHandler implements CommandHandler
                 $xml = $this->metadataFetcher->fetch($command->getImportUrl());
                 break;
             case $command->isXmlSet():
-                // TODO
                 $xml = $command->getMetadataXml();
                 break;
             default:
@@ -164,7 +163,7 @@ class LoadMetadataCommandHandler implements CommandHandler
             $getter = $serviceMethods[0];
             $setter = $serviceMethods[1];
             // Only update the value on the service if the user didn't set it previously
-            if (!is_null($metadata->$metadataFieldName) && is_null(call_user_func([$service, $getter]))) {
+            if (!is_null($metadata->$metadataFieldName) && empty(call_user_func([$service, $getter]))) {
                 call_user_func([$service, $setter], $metadata->$metadataFieldName);
             }
         }
