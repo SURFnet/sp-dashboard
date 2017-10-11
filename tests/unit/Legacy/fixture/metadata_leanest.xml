@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://domain.org/saml/metadata">
+    <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://domain.org/saml/sp/saml2-post/default-sp" index="0"/>
+    </md:SPSSODescriptor>
+</md:EntityDescriptor>
