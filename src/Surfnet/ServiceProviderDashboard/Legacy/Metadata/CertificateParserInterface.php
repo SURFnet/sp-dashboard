@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata;
+namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 
 interface CertificateParserInterface
 {

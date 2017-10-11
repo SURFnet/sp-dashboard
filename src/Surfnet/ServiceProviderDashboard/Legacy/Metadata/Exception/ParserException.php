@@ -16,16 +16,33 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata;
+namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 
-interface ParserInterface
+/**
+ * ParserException
+ */
+class ParserException extends InvalidArgumentException
 {
     /**
-     * @param string $xml
-     *
-     * @return Metadata
+     * @var \LibXMLError[]
      */
-    public function parseXml($xml);
+    private $parserErrors;
+
+    /**
+     * @param \LibXMLError[] $errors
+     */
+    public function setParserErrors(array $errors)
+    {
+        $this->parserErrors = $errors;
+    }
+
+    /**
+     * @return \LibXMLError[]
+     */
+    public function getParserErrors()
+    {
+        return $this->parserErrors;
+    }
 }
