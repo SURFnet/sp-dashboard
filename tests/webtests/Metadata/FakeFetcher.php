@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Metadata;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\FetcherInterface;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
 
 class FakeFetcher implements FetcherInterface
 {

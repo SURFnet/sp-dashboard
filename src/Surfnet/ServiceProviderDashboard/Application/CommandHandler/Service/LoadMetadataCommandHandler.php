@@ -21,11 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\FetcherInterface;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\ParserInterface;
 
 class LoadMetadataCommandHandler implements CommandHandler
 {
