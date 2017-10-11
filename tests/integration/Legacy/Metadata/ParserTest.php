@@ -22,8 +22,8 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\CertificateParser;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Parser;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributesMetadataRepository;
 
 class ParserTest extends MockeryTestCase
@@ -42,7 +42,7 @@ class ParserTest extends MockeryTestCase
     {
         $this->logger = m::mock(LoggerInterface::class);
 
-        $rootDir = __DIR__ . '/../../../../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Resources/';
+        $rootDir = __DIR__.'/../../../../app/Resources/';
         $this->parser = new Parser(
             new CertificateParser(),
             new AttributesMetadataRepository($rootDir),
@@ -53,7 +53,7 @@ class ParserTest extends MockeryTestCase
 
     public function test_it_can_parse_valid_metadata()
     {
-        $metadata = $this->parser->parseXml(file_get_contents(__DIR__  . '/fixture/metadata.xml'));
+        $metadata = $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/metadata.xml'));
 
         $this->assertInstanceOf(Metadata::class, $metadata);
 
@@ -144,14 +144,14 @@ CER
     }
 
     /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Exception\ParserException
+     * @expectedException \Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException
      * @expectedExceptionMessage The metadata XML is invalid considering the associated XSD
      */
     public function test_it_rejects_missing_acs_metadata()
     {
         $this->logger->shouldReceive('info');
 
-        $this->parser->parseXml(file_get_contents(__DIR__ . '/fixture/invalid_acs_metadata.xml'));
+        $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_acs_metadata.xml'));
     }
 
     /**
@@ -161,6 +161,6 @@ CER
     public function test_it_rejects_to_many_acs_entries()
     {
         $this->logger->shouldReceive('info');
-        $this->parser->parseXml(file_get_contents(__DIR__ .'/fixture/invalid_index_metadata.xml'));
+        $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_index_metadata.xml'));
     }
 }

@@ -29,7 +29,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Fetcher;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher;
 
 class FetcherTest extends MockeryTestCase
 {
