@@ -16,21 +16,16 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
+namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
-interface CertificateParserInterface
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
+
+interface ParserInterface
 {
     /**
-     * @param string $certificateString
+     * @param string $xml
      *
-     * @return string
+     * @return Metadata
      */
-    public function parse($certificateString);
-
-    /**
-     * @param string $certificate
-     *
-     * @return string
-     */
-    public function getSubject($certificate);
+    public function parseXml($xml);
 }

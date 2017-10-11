@@ -16,18 +16,21 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
+namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-
-interface FetcherInterface
+interface CertificateParserInterface
 {
     /**
-     * @param string $url
+     * @param string $certificateString
      *
      * @return string
-     *
-     * @throws InvalidArgumentException
      */
-    public function fetch($url);
+    public function parse($certificateString);
+
+    /**
+     * @param string $certificate
+     *
+     * @return string
+     */
+    public function getSubject($certificate);
 }

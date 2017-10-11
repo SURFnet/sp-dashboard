@@ -16,16 +16,18 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
+namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 
-interface ParserInterface
+interface FetcherInterface
 {
     /**
-     * @param string $xml
+     * @param string $url
      *
-     * @return Metadata
+     * @return string
+     *
+     * @throws InvalidArgumentException
      */
-    public function parseXml($xml);
+    public function fetch($url);
 }

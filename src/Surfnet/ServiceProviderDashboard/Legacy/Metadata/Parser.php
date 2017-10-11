@@ -20,16 +20,14 @@ namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\CertificateParserInterface;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Exception\ParserException;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 
-/**
- * Class Parser
- *
- */
 class Parser implements ParserInterface
 {
     const NS_LANG = 'http://www.w3.org/XML/1998/namespace';

@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 
+use Surfnet\ServiceProviderDashboard\Application\Metadata\CertificateParserInterface;
+
 /**
  * Class CertificateParser
  */
