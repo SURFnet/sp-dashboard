@@ -70,10 +70,10 @@ class EditServiceType extends AbstractType
                         ]
                     )
                     ->add(
-                        'metadataXml',
+                        'pastedMetadata',
                         TextareaType::class,
                         [
-                            'attr' => ['help' => 'service.edit.information.metadataXml'],
+                            'attr' => ['help' => 'service.edit.information.pastedMetadata'],
                         ]
                     )
                     ->add(

@@ -53,7 +53,6 @@ class EditServiceCommandHandler implements CommandHandler
         $service->setJanusId($command->getJanusId());
         $service->setImportUrl($command->getImportUrl());
         $service->setMetadataUrl($command->getMetadataUrl());
-        $service->setMetadataXml($command->getMetadataXml());
         $service->setAcsLocation($command->getAcsLocation());
         $service->setEntityId($command->getEntityId());
         $service->setCertificate($command->getCertificate());

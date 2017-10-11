@@ -84,13 +84,9 @@ class EditServiceCommand implements Command
     private $metadataUrl;
 
     /**
-     * SAML XML Metadata for entity.
-     *
-     * Imported from metadataurl.
-     *
      * @var string
      */
-    private $metadataXml;
+    private $pastedMetadata;
 
     /**
      * @var string
@@ -143,17 +139,17 @@ class EditServiceCommand implements Command
     private $eulaUrl;
 
     /**
-     * @var ContactPerson
+     * @var Contact
      */
     private $administrativeContact;
 
     /**
-     * @var ContactPerson
+     * @var Contact
      */
     private $technicalContact;
 
     /**
-     * @var ContactPerson
+     * @var Contact
      */
     private $supportContact;
 
@@ -249,7 +245,7 @@ class EditServiceCommand implements Command
      * @param string $janusId
      * @param string $importUrl
      * @param string $metadataUrl
-     * @param string $metadataXml
+     * @param string $pastedMetadata
      * @param string $acsLocation
      * @param string $entityId
      * @param string $certificate
@@ -290,7 +286,7 @@ class EditServiceCommand implements Command
         $janusId,
         $importUrl,
         $metadataUrl,
-        $metadataXml,
+        $pastedMetadata,
         $acsLocation,
         $entityId,
         $certificate,
@@ -330,7 +326,7 @@ class EditServiceCommand implements Command
         $this->janusId = $janusId;
         $this->importUrl = $importUrl;
         $this->metadataUrl = $metadataUrl;
-        $this->metadataXml = $metadataXml;
+        $this->pastedMetadata = $pastedMetadata;
         $this->acsLocation = $acsLocation;
         $this->entityId = $entityId;
         $this->certificate = $certificate;
@@ -437,9 +433,9 @@ class EditServiceCommand implements Command
     /**
      * @param string $ticketNo
      */
-    public function setTicketNo($ticketNo)
+    public function setTicketNumber($ticketNo)
     {
-        $this->ticketNo = $ticketNo;
+        $this->ticketNumber = $ticketNo;
     }
 
     /**
@@ -493,17 +489,17 @@ class EditServiceCommand implements Command
     /**
      * @return string
      */
-    public function getMetadataXml()
+    public function getPastedMetadata()
     {
-        return $this->metadataXml;
+        return $this->pastedMetadata;
     }
 
     /**
-     * @param string $metadataXml
+     * @param string $metadataUrl
      */
-    public function setMetadataXml($metadataXml)
+    public function setPastedMetadata($metadataUrl)
     {
-        $this->metadataXml = $metadataXml;
+        $this->pastedMetadata = $metadataUrl;
     }
 
     /**

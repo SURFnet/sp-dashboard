@@ -74,7 +74,7 @@ service.edit.comments.html: "<p>If there are any questions regarding your SURFco
 service.edit.information.ticketNumber:
 service.edit.information.importUrl: Text should be set in web translations
 service.edit.information.metadataUrl: Text should be set in web translations
-service.edit.information.metadataXml: Text should be set in web translations
+service.edit.information.pastedMetadata: Text should be set in web translations
 service.edit.information.certificate: Text should be set in web translations
 service.edit.information.descriptionNl: Text should be set in web translations
 service.edit.information.descriptionEn: Text should be set in web translations
