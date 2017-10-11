@@ -73,12 +73,15 @@ class LoadMetadataCommandHandler implements CommandHandler
                 $xml = $this->metadataFetcher->fetch($command->getImportUrl());
                 break;
             case $command->isXmlSet():
-                $xml = $command->getMetadataXml();
+                $xml = $command->getPastedMetadata();
                 break;
             default:
                 throw new InvalidArgumentException('Unable to load XML from the LoadMetadataCommand');
                 break;
         }
+
+        $service->setMetadataXml($xml);
+        $service->setPastedMetadata($xml);
 
         $metadata = $this->metadataParser->parseXml($xml);
 

@@ -206,6 +206,9 @@ class EditServiceTest extends WebTestCase
         $this->assertTrue($service->getUidAttribute()->isRequested());
         $this->assertTrue($service->getOrganizationTypeAttribute()->isRequested());
         $this->assertTrue($service->getAffiliationAttribute()->isRequested());
+
+        $expectedXml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml');
+        $this->assertEquals($expectedXml, $service->getMetadataXml());
     }
 
     public function test_it_handles_valid_but_incomplete_metadata()
@@ -248,11 +251,12 @@ class EditServiceTest extends WebTestCase
 
     public function test_it_loads_xml_from_textarea()
     {
+        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml');
         $formData = [
             'dashboard_bundle_edit_service_type' => [
                 'metadata' => [
                     'importUrl' => '',
-                    'metadataXml' => file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'),
+                    'pastedMetadata' => $xml,
                 ],
             ],
         ];
@@ -286,6 +290,9 @@ class EditServiceTest extends WebTestCase
         $this->assertTrue($service->getUidAttribute()->isRequested());
         $this->assertTrue($service->getOrganizationTypeAttribute()->isRequested());
         $this->assertTrue($service->getAffiliationAttribute()->isRequested());
+
+        $this->assertEquals($xml, $service->getPastedMetadata());
+        $this->assertEquals($xml, $service->getMetadataXml());
     }
 
     public function test_it_shows_flash_message_on_exception()

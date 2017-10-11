@@ -47,7 +47,7 @@ class LoadMetadataCommand implements Command
 
     public function isXmlSet()
     {
-        if (!empty($this->editServiceCommand->getMetadataXml())) {
+        if (!empty($this->editServiceCommand->getPastedMetadata())) {
             return true;
         }
         return false;
@@ -58,8 +58,8 @@ class LoadMetadataCommand implements Command
         return $this->editServiceCommand->getImportUrl();
     }
 
-    public function getMetadataXml()
+    public function getPastedMetadata()
     {
-        return $this->editServiceCommand->getMetadataXml();
+        return $this->editServiceCommand->getPastedMetadata();
     }
 }
