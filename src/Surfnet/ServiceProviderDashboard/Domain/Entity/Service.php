@@ -110,6 +110,12 @@ class Service
     private $metadataUrl;
 
     /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $pastedMetadata;
+
+    /**
      * SAML XML Metadata for entity.
      *
      * Imported from metadataurl.
@@ -381,6 +387,14 @@ class Service
     public function setMetadataXml($metadataXml)
     {
         $this->metadataXml = $metadataXml;
+    }
+
+    /**
+     * @param string $pastedMetadata
+     */
+    public function setPastedMetadata($pastedMetadata)
+    {
+        $this->pastedMetadata = $pastedMetadata;
     }
 
     /**
@@ -709,6 +723,14 @@ class Service
     public function getMetadataXml()
     {
         return $this->metadataXml;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPastedMetadata()
+    {
+        return $this->pastedMetadata;
     }
 
     /**
