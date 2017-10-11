@@ -8,6 +8,13 @@
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
     <div class="fieldset card">
+
+        {% for message in app.flashes('error') %}
+            <div class="message error">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         <h2>{{ 'service.edit.info.title'|trans }}</h2>
         <div class="wysiwyg">{{ 'service.edit.info.html'|trans|raw }}</div>
     </div>

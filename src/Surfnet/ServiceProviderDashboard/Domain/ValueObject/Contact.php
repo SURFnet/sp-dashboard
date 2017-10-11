@@ -135,4 +135,13 @@ class Contact
 
         return $result;
     }
+
+    public function isContactSet()
+    {
+        if (empty($this->firstName) && empty($this->lastName) && empty($this->email) && empty($this->phone)) {
+            return false;
+        }
+
+        return true;
+    }
 }
