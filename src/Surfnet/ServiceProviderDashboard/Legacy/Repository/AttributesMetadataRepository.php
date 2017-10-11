@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
+namespace Surfnet\ServiceProviderDashboard\Legacy\Repository;
 
 use stdClass;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository as AttributesMetadataRepositoryInterface;

@@ -24,7 +24,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class ParserTest extends MockeryTestCase
 {
