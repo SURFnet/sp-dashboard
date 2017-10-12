@@ -49,6 +49,15 @@ class AdminSwitcherTest extends WebTestCase
         $this->repository->save($supplier2);
     }
 
+    public function test_admin_switcher_is_not_displayed_for_suppliers()
+    {
+        $this->logIn('ROLE_USER');
+
+        $crawler = $this->client->request('GET', '/');
+
+        $this->assertEmpty($crawler->filter('select#admin-switcher'));
+    }
+
     public function test_no_supplier_is_selected_when_session_is_empty()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
