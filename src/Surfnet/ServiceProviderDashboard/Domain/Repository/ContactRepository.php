@@ -15,37 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
+
+namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository;
 
-class ContactService
+interface ContactRepository
 {
-    private $contacts;
-
-    public function __construct(ContactRepository $contacts)
-    {
-        $this->contacts = $contacts;
-    }
+    /**
+     * @param Contact $contact
+     */
+    public function save(Contact $contact);
 
     /**
      * @param string $nameId
      *
      * @return Contact|null
      */
-    public function findByNameId($nameId)
-    {
-        return $this->contacts->findByNameId($nameId);
-    }
-
-    public function createContact(Contact $contact)
-    {
-        $this->contacts->save($contact);
-    }
-
-    public function updateContact(Contact $contact)
-    {
-        $this->contacts->save($contact);
-    }
+    public function findByNameId($nameId);
 }

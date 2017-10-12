@@ -27,14 +27,14 @@ class Identity
     private $contact;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $teamName;
+    private $teamNames;
 
-    public function __construct(Contact $contact, $teamName)
+    public function __construct(Contact $contact, $teamNames)
     {
         $this->contact = $contact;
-        $this->teamName = $teamName;
+        $this->teamNames = $teamNames;
     }
 
     /**
@@ -46,11 +46,11 @@ class Identity
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getTeamName()
+    public function getTeamNames()
     {
-        return $this->teamName;
+        return $this->teamNames;
     }
 
     /**

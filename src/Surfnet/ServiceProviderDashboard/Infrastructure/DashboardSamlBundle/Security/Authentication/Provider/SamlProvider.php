@@ -46,14 +46,21 @@ class SamlProvider implements AuthenticationProviderInterface
      */
     private $logger;
 
+    /**
+     * @var string
+     */
+    private $administratorTeam;
+
     public function __construct(
         ContactService $contactService,
         AttributeDictionary $attributeDictionary,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        $administratorTeam
     ) {
         $this->contactService = $contactService;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
+        $this->administratorTeam = $administratorTeam;
     }
 
     /**
@@ -81,10 +88,17 @@ class SamlProvider implements AuthenticationProviderInterface
             $this->contactService->updateContact($contact);
         }
 
-        $authenticatedToken = new SamlToken(['ROLE_USER']);
+        // Default to the ROLE_USER role for suppliers.
+        $role = 'ROLE_USER';
 
+        $teamNames = $translatedAssertion->getAttributeValue('isMemberOf');
+        if (in_array($this->administratorTeam, $teamNames)) {
+            $role = 'ROLE_ADMINISTRATOR';
+        }
+
+        $authenticatedToken = new SamlToken([$role]);
         $authenticatedToken->setUser(
-            new Identity($contact, '')
+            new Identity($contact, $teamNames)
         );
 
         return $authenticatedToken;

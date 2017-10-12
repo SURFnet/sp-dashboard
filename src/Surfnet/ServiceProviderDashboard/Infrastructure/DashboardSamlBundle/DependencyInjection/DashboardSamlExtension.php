@@ -40,6 +40,10 @@ class DashboardSamlExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter(
+            'surfnet.dashboard.security.authentication.administrator_team',
+            $config['administrator_team']
+        );
+        $container->setParameter(
             'surfnet.dashboard.security.authentication.session.maximum_absolute_lifetime_in_seconds',
             $config['session_lifetimes']['max_absolute_lifetime']
         );

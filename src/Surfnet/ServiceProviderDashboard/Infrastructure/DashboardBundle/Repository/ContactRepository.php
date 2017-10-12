@@ -15,37 +15,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
 
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
+
+use Doctrine\ORM\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository as ContactRepositoryInterface;
 
-class ContactService
+class ContactRepository extends EntityRepository implements ContactRepositoryInterface
 {
-    private $contacts;
-
-    public function __construct(ContactRepository $contacts)
+    /**
+     * @param Contact $contact
+     */
+    public function save(Contact $contact)
     {
-        $this->contacts = $contacts;
+        $this->getEntityManager()->persist($contact);
+        $this->getEntityManager()->flush($contact);
     }
 
     /**
      * @param string $nameId
-     *
      * @return Contact|null
      */
     public function findByNameId($nameId)
     {
-        return $this->contacts->findByNameId($nameId);
-    }
-
-    public function createContact(Contact $contact)
-    {
-        $this->contacts->save($contact);
-    }
-
-    public function updateContact(Contact $contact)
-    {
-        $this->contacts->save($contact);
+        return parent::findBy([
+            'nameId' => $nameId,
+        ]);
     }
 }

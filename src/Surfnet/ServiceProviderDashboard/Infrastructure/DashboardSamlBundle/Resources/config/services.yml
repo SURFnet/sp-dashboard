@@ -26,6 +26,7 @@ services:
             - "@surfnet.dashboard.service.contact"
             - "@surfnet_saml.saml.attribute_dictionary"
             - "@logger"
+            - '%surfnet.dashboard.security.authentication.administrator_team%'
 
     surfnet.dashboard.security.authentication.saml_interaction:
         public: false
@@ -116,3 +117,7 @@ services:
         factory: [Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame, ofSeconds]
         arguments:
             - "%surfnet.dashboard.security.authentication.session.maximum_relative_lifetime_in_seconds%"
+
+    surfnet.dashboard.security.service.identity:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Service\IdentityService
+
