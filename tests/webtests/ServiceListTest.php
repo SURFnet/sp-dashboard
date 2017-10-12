@@ -22,26 +22,24 @@ use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceListTest extends WebTestCase
 {
-    private $client;
-
     /**
-     * @var Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemorySupplierRepository
+     * @var \Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemorySupplierRepository
      */
     private $suppliers;
 
     /**
-     * @var Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemoryServiceRepository
+     * @var \Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemoryServiceRepository
      */
     private $services;
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
         $this->suppliers = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->services = $this->client->getContainer()->get('surfnet.dashboard.repository.service');
         $this->suppliers->clear();
@@ -85,6 +83,8 @@ class ServiceListTest extends WebTestCase
 
     public function test_entity_list()
     {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
         $switcherService = $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher');
         $switcherService->setSelectedSupplier('test1');
 
@@ -104,7 +104,8 @@ class ServiceListTest extends WebTestCase
 
     public function test_entity_list_redirects_to_supplier_add_when_no_supplier_exists()
     {
-        $this->client->getCookieJar()->clear();
+        $this->logIn('ROLE_ADMINISTRATOR');
+
         $this->suppliers->clear();
 
         $crawler = $this->client->request('GET', '/');
@@ -120,7 +121,7 @@ class ServiceListTest extends WebTestCase
 
     public function test_entity_list_shows_message_when_no_supplier_selected()
     {
-        $this->client->getCookieJar()->clear();
+        $this->logIn('ROLE_ADMINISTRATOR');
 
         $crawler = $this->client->request('GET', '/');
         $response = $this->client->getResponse();

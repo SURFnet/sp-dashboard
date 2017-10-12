@@ -22,16 +22,10 @@ use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EditSupplierTest extends WebTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     /**
      * @var SupplierRepository
      */
@@ -39,7 +33,8 @@ class EditSupplierTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
         $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->supplierRepository->clear();
 
@@ -56,6 +51,8 @@ class EditSupplierTest extends WebTestCase
 
     public function test_can_edit_existing_supplier()
     {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
         $formData = [
             'dashboard_bundle_edit_supplier_type' => [
                 'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',

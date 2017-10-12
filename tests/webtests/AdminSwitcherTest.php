@@ -20,14 +20,11 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AdminSwitcherTest extends WebTestCase
 {
-    private $client;
-
     /**
      * @var Surfnet\ServiceProviderDashboard\WebTests\Repository\InMemorySupplierRepository
      */
@@ -35,7 +32,8 @@ class AdminSwitcherTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
         $this->repository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->repository->clear();
 
@@ -53,7 +51,7 @@ class AdminSwitcherTest extends WebTestCase
 
     public function test_no_supplier_is_selected_when_session_is_empty()
     {
-        $this->client->getCookieJar()->clear();
+        $this->logIn('ROLE_ADMINISTRATOR');
 
         $crawler = $this->client->request('GET', '/supplier/create');
 
@@ -64,7 +62,7 @@ class AdminSwitcherTest extends WebTestCase
 
     public function test_switcher_lists_all_suppliers()
     {
-        $this->client->getCookieJar()->clear();
+        $this->logIn('ROLE_ADMINISTRATOR');
 
         $crawler = $this->client->request('GET', '/supplier/create');
         $options = $crawler->filter('select#admin-switcher option');
@@ -78,7 +76,7 @@ class AdminSwitcherTest extends WebTestCase
 
     public function test_switcher_remembers_selected_supplier()
     {
-        $this->client->getCookieJar()->clear();
+        $this->logIn('ROLE_ADMINISTRATOR');
 
         $crawler = $this->client->request('GET', '/supplier/create');
         $form = $crawler->filter('.admin-switcher')

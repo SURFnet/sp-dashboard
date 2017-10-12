@@ -17,6 +17,7 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
+use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Environment;
 use Twig_Extension;
@@ -52,6 +53,12 @@ class IdentityExtension extends Twig_Extension
 
         if ($token) {
             $contact = $token->getUser()->getContact();
+        }
+
+        if (!$contact) {
+            throw new RuntimeException(
+                'No authenticated user found in session'
+            );
         }
 
         return $environment->render(

@@ -6,3 +6,10 @@ services:
 
   surfnet.dashboard.repository.service:
     class: Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemoryServiceRepository
+
+  surfnet.dashboard.session.storage.mock_file:
+    class: Surfnet\ServiceProviderDashboard\Webtests\Session\Storage\MockFileSessionStorage
+    arguments:
+      - '%kernel.cache_dir%/sessions/'
+      - 'MOCKSESSID'
+      - '@session.storage.metadata_bag'

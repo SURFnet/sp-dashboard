@@ -23,14 +23,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CreateServiceTest extends WebTestCase
 {
-    private $client;
-
     /**
      * @var SupplierRepository
      */
@@ -42,7 +39,8 @@ class CreateServiceTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
         $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->supplierRepository->clear();
 
@@ -60,6 +58,7 @@ class CreateServiceTest extends WebTestCase
 
     public function test_switcher_remembers_selected_supplier()
     {
+        $this->logIn('ROLE_ADMINISTRATOR');
 
         $this->client->request('GET', '/service/create');
 

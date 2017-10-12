@@ -2,6 +2,9 @@
 # http://symfony.com/doc/current/security.html
 security:
 
+    role_hierarchy:
+        ROLE_ADMINISTRATOR: ROLE_USER
+
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         dashboard:
@@ -25,4 +28,4 @@ security:
 
     access_control:
         - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-        - { path: ^/, roles: ROLE_USER, requires_channel: https }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }

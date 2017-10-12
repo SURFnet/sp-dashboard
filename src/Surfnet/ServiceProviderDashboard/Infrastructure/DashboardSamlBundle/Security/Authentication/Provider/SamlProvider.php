@@ -84,7 +84,7 @@ class SamlProvider implements AuthenticationProviderInterface
         $authenticatedToken = new SamlToken(['ROLE_USER']);
 
         $authenticatedToken->setUser(
-            new Identity($contact)
+            new Identity($contact, '')
         );
 
         return $authenticatedToken;

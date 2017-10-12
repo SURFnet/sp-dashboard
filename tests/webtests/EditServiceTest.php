@@ -26,16 +26,10 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EditServiceTest extends WebTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     /**
      * @var SupplierRepository
      */
@@ -48,7 +42,8 @@ class EditServiceTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
         $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->supplierRepository->clear();
 
@@ -77,6 +72,8 @@ class EditServiceTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
         $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
@@ -91,6 +88,8 @@ class EditServiceTest extends WebTestCase
 
     public function test_it_updates_form_submissions_to_a_service()
     {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
         $formData = [
             'dashboard_bundle_edit_service_type' => [
                 'general' => [
