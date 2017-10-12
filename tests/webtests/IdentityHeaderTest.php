@@ -31,7 +31,30 @@ class IdentityHeaderTest extends WebTestCase
         $crawler = $this->client->request('GET', '/supplier/create');
 
         $this->assertEquals(
-            'John Doe', trim($crawler->filter('a.welcome-link')->text())
+            'John Doe',
+            trim($crawler->filter('a.welcome-link')->text())
         );
+    }
+
+    public function test_page_header_does_not_show_administration_links_to_suppliers()
+    {
+        $this->logIn('ROLE_USER');
+
+        $crawler = $this->client->request('GET', '/');
+
+        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Add new supplier")'));
+        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Edit supplier")'));
+        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Translations")'));
+    }
+
+    public function test_page_header_displays_administration_links_to_administrators()
+    {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $crawler = $this->client->request('GET', '/');
+
+        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Add new supplier")'));
+        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Edit supplier")'));
+        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Translations")'));
     }
 }

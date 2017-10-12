@@ -22,6 +22,7 @@ use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand;
@@ -70,7 +71,9 @@ class SupplierController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/supplier/create", name="supplier_add")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -103,7 +106,9 @@ class SupplierController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/supplier/edit", name="supplier_edit")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -144,6 +149,7 @@ class SupplierController extends Controller
     /**
      * @Method("POST")
      * @Route("/supplier/select", name="select_supplier")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      */
     public function selectAction(Request $request)
     {

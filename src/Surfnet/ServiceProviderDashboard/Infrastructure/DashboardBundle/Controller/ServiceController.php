@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
@@ -83,6 +84,7 @@ class ServiceController extends Controller
     /**
      * @Method("GET")
      * @Route("/service/create", name="service_add")
+     * @Security("has_role('ROLE_USER')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -106,6 +108,7 @@ class ServiceController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/service/edit/{serviceId}", name="service_edit")
+     * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
      * @param $serviceId

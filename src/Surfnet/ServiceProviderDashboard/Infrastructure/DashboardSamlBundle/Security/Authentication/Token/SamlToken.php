@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Role\Role;
 
 class SamlToken extends AbstractToken
 {
@@ -32,6 +33,25 @@ class SamlToken extends AbstractToken
         parent::__construct($roles);
 
         $this->setAuthenticated(count($roles));
+    }
+
+
+    /**
+     * Check if token contains given role.
+     */
+    public function hasRole($expected)
+    {
+        foreach ($this->getRoles() as $role) {
+            if ($role instanceof Role) {
+                $role = $role->getRole();
+            }
+
+            if ($role === $expected) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

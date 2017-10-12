@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
@@ -61,6 +62,7 @@ class ServiceListController extends Controller
     /**
      * @Method("GET")
      * @Route("/", name="service_list")
+     * @Security("has_role('ROLE_USER')")
      * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array

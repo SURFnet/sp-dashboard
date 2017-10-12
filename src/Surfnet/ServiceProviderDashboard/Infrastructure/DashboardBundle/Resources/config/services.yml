@@ -39,6 +39,11 @@ services:
     surfnet.dashboard.factory.service:
         class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
 
+    surfnet.dashboard.menu.builder:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder
+        tags:
+            - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
+
     surfnet.dashboard.monolog.json_formatter:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
