@@ -16,26 +16,33 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Symfony\Component\Validator\Constraints as Assert;
 
-interface PublishServiceRepository
+class PublishServiceCommand implements Command
 {
     /**
-     * Publishes the service to a Service registry (like Janus, Manage, ..) This action might also result in the
-     * sending of a mail message to a service desk who in turn can publish the service in the registry.
-     *
-     * @param Service $service
-     *
-     * @return mixed
+     * @var string
+     * @Assert\NotBlank
+     * @Assert\Uuid
      */
-    public function publish(Service $service);
+    private $id;
 
     /**
-     * Push the metadata from Manage to Engineblock
-     *
-     * @return mixed
+     * @param string $id
      */
-    public function pushMetadata();
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

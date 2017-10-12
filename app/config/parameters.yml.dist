@@ -36,3 +36,8 @@ parameters:
 
     # The default timeout for Curl requests when retrieving metadata
     metadata_url_timeout: 30
+
+    # Manage defaults
+    manage_test_host: 'https://manage.dev.support.surfconext.nl'
+    manage_test_username: sp-dashboard
+    manage_test_password: secret

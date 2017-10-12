@@ -19,9 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Generator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class EntityMetadataController extends Controller
 {
     /**
-     * @var GeneratorInterface
+     * @var Generator
      */
     private $generator;
 
@@ -44,12 +44,12 @@ class EntityMetadataController extends Controller
     private $entityService;
 
     /**
-     * @param GeneratorInterface $generator
+     * @param Generator $generator
      * @param ParserInterface $parser
      * @param EntityService $entityService
      */
     public function __construct(
-        GeneratorInterface $generator,
+        Generator $generator,
         ParserInterface $parser,
         EntityService $entityService
     ) {

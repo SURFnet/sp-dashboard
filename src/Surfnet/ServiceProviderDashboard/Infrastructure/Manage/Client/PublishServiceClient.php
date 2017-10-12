@@ -20,43 +20,82 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishServiceRepository as PublishServiceRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\JsonGenerator;
 
 class PublishServiceClient implements PublishServiceRepositoryInterface
 {
+    /**
+     * @var HttpClient
+     */
     private $client;
 
     /**
-     * @param HttpClient $client
+     * @var JsonGenerator
      */
-    public function __construct(HttpClient $client)
+    private $generator;
+
+    /**
+     * @param HttpClient $client
+     * @param JsonGenerator $generator
+     */
+    public function __construct(HttpClient $client, JsonGenerator $generator)
     {
         $this->client = $client;
+        $this->generator = $generator;
     }
 
     /**
      * @param Service $service
      *
      * @return mixed
+     *
+     * @throws PublishMetadataException
      */
     public function publish(Service $service)
     {
-        $publishRequest = PublishRequest::from($service);
-        $json = $this->convertToJson($publishRequest);
-        return $this->client->post($json, '/api/internal/metadata');
+        $json = $this->generator->generate($service);
+
+        try {
+            $response = $this->client->post(
+                $json,
+                '/manage/api/internal/metadata',
+                [],
+                ['Content-Type' => 'application/json']
+            );
+            return $response;
+        } catch (HttpException $e) {
+            // Todo: Log this?
+            // Todo: Provide feedback to end user, publishing failed
+            throw new PublishMetadataException('Publishing of metadata failed', 0, $e);
+        }
     }
 
     /**
-     * @param PublishRequest $request
+     * @return mixed
      *
-     * @return string
+     * @throws PushMetadataException
      */
-    private function convertToJson(PublishRequest $request)
+    public function pushMetadata()
     {
-        $response = $this->client->post(
-            json_encode(['xml' => $request->metadataXml], true),
-            '/api/client/import/xml'
-        );
-        return json_encode($response, true);
+        try {
+            $response = $this->client->read(
+                '/manage/api/internal/push',
+                [],
+                ['Content-Type' => 'application/json']
+            );
+        } catch (HttpException $e) {
+            // Todo: Log this?
+            // Todo: Provide feedback to end user, publishing failed
+            throw new PushMetadataException('Http layer issue during pushing metadata action', 0, $e);
+        }
+
+        if ($response['status'] != "OK") {
+            throw new PushMetadataException('Pushing did not succeed.');
+        }
+        return $response;
     }
 }

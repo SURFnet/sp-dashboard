@@ -1,0 +1,74 @@
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" validUntil="2017-10-13T10:24:57Z" entityID="https://engine.test2.surfconext.nl/authentication/sp/metadata" ID="CORTO19f4752da4106a22b9c2aea8fd60548eaf543f38">
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:SignedInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+            <ds:Reference URI="#CORTO19f4752da4106a22b9c2aea8fd60548eaf543f38">
+                <ds:Transforms>
+                    <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                </ds:Transforms>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                <ds:DigestValue>RezRq7K0hMI851ZOb2bMXQ27eGM=</ds:DigestValue>
+            </ds:Reference>
+        </ds:SignedInfo>
+        <ds:SignatureValue>
+            IwJUj8DnMLGyxien858fJ4UU283xMTeiehMR+OCFiYIOpjOzW1e6hqnEEAiZC8Ov5rGiO+5qKU9XqeB2MV0XLoRcx+tSlyWiEhoX5EDVw/pUKfdeQzpUlIvQC4+son2zmnAeHCnFSLyWKSoYYOQY8Be9YMEhe8HvbRhc5di/VvQ=
+        </ds:SignatureValue>
+        <ds:KeyInfo>
+            <ds:X509Data>
+                <ds:X509Certificate>
+                    MIIC+zCCAmSgAwIBAgIJAPJvLjQsRR4iMA0GCSqGSIb3DQEBBQUAMF0xCzAJBgNVBAYTAk5MMRAwDgYDVQQIEwdVdHJlY2h0MRAwDgYDVQQHEwdVdHJlY2h0MRAwDgYDVQQKEwdTVVJGbmV0MRgwFgYDVQQDEw90ZXN0MiBzYW1sIGNlcnQwHhcNMTUwMzI0MTQwMzE3WhcNMjUwMzIxMTQwMzE3WjBdMQswCQYDVQQGEwJOTDEQMA4GA1UECBMHVXRyZWNodDEQMA4GA1UEBxMHVXRyZWNodDEQMA4GA1UEChMHU1VSRm5ldDEYMBYGA1UEAxMPdGVzdDIgc2FtbCBjZXJ0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxKYrnW8NwqdRwRwaHulueL69gQFTJbdfoASLhYie2bOioJyJw1f+cAvpjsl4SVYpvEseIetXH8Lgpk7K73PkDJL8dFg4sEjFF6jgmjrOES3ox/gtTd9d/VwPHI/vPIcGy1sbVJ4pEMFl5d8GOAzoJkNWdPj9wV4rv4uv35May8wIDAQABo4HCMIG/MB0GA1UdDgQWBBTTIaPwpKpJlY8eIMSzNRZUjStbijCBjwYDVR0jBIGHMIGEgBTTIaPwpKpJlY8eIMSzNRZUjStbiqFhpF8wXTELMAkGA1UEBhMCTkwxEDAOBgNVBAgTB1V0cmVjaHQxEDAOBgNVBAcTB1V0cmVjaHQxEDAOBgNVBAoTB1NVUkZuZXQxGDAWBgNVBAMTD3Rlc3QyIHNhbWwgY2VydIIJAPJvLjQsRR4iMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAK8EvTU0LgHJsSugorOemgRlppMfJAeOmuuZNhSMY2QhumFOZpaAb8NFIwUKUVyyJnSo7k6ktHCKI94sQs976242hTDDYEwWJD9HhAsAqOo21Ua8gZT38/wm62e3KgrKXvnljAbKPXDXJM4akz7y6H6wvvIGT6f0f0iJWHq34jww=
+                </ds:X509Certificate>
+            </ds:X509Data>
+        </ds:KeyInfo>
+    </ds:Signature>
+    <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol" WantAssertionsSigned="true">
+        <md:Extensions>
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="nl">OpenConext Engine</mdui:DisplayName>
+                <mdui:DisplayName xml:lang="en">OpenConext Engine</mdui:DisplayName>
+                <mdui:Description xml:lang="nl">OpenConext SSO Proxy</mdui:Description>
+                <mdui:Description xml:lang="en">OpenConext SSO Proxy</mdui:Description>
+                <mdui:Logo height="96" width="96">
+                    https://static.test2.surfconext.nl/media/conext_logo.png
+                </mdui:Logo>
+            </mdui:UIInfo>
+        </md:Extensions>
+        <md:KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIC+zCCAmSgAwIBAgIJAPJvLjQsRR4iMA0GCSqGSIb3DQEBBQUAMF0xCzAJBgNVBAYTAk5MMRAwDgYDVQQIEwdVdHJlY2h0MRAwDgYDVQQHEwdVdHJlY2h0MRAwDgYDVQQKEwdTVVJGbmV0MRgwFgYDVQQDEw90ZXN0MiBzYW1sIGNlcnQwHhcNMTUwMzI0MTQwMzE3WhcNMjUwMzIxMTQwMzE3WjBdMQswCQYDVQQGEwJOTDEQMA4GA1UECBMHVXRyZWNodDEQMA4GA1UEBxMHVXRyZWNodDEQMA4GA1UEChMHU1VSRm5ldDEYMBYGA1UEAxMPdGVzdDIgc2FtbCBjZXJ0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxKYrnW8NwqdRwRwaHulueL69gQFTJbdfoASLhYie2bOioJyJw1f+cAvpjsl4SVYpvEseIetXH8Lgpk7K73PkDJL8dFg4sEjFF6jgmjrOES3ox/gtTd9d/VwPHI/vPIcGy1sbVJ4pEMFl5d8GOAzoJkNWdPj9wV4rv4uv35May8wIDAQABo4HCMIG/MB0GA1UdDgQWBBTTIaPwpKpJlY8eIMSzNRZUjStbijCBjwYDVR0jBIGHMIGEgBTTIaPwpKpJlY8eIMSzNRZUjStbiqFhpF8wXTELMAkGA1UEBhMCTkwxEDAOBgNVBAgTB1V0cmVjaHQxEDAOBgNVBAcTB1V0cmVjaHQxEDAOBgNVBAoTB1NVUkZuZXQxGDAWBgNVBAMTD3Rlc3QyIHNhbWwgY2VydIIJAPJvLjQsRR4iMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAK8EvTU0LgHJsSugorOemgRlppMfJAeOmuuZNhSMY2QhumFOZpaAb8NFIwUKUVyyJnSo7k6ktHCKI94sQs976242hTDDYEwWJD9HhAsAqOo21Ua8gZT38/wm62e3KgrKXvnljAbKPXDXJM4akz7y6H6wvvIGT6f0f0iJWHq34jww=
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://engine.test2.surfconext.nl/authentication/sp/consume-assertion" index="0"/>
+        <md:AttributeConsumingService index="0">
+            <md:ServiceName xml:lang="nl">OpenConext Engine</md:ServiceName>
+            <md:ServiceName xml:lang="en">OpenConext Engine</md:ServiceName>
+            <md:ServiceDescription xml:lang="nl">OpenConext SSO Proxy</md:ServiceDescription>
+            <md:ServiceDescription xml:lang="en">OpenConext SSO Proxy</md:ServiceDescription>
+            <md:RequestedAttribute Name="urn:mace:dir:attribute-def:displayName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="false"/>
+            <md:RequestedAttribute Name="urn:mace:dir:attribute-def:mail" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="false"/>
+            <md:RequestedAttribute Name="urn:mace:dir:attribute-def:uid" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+            <md:RequestedAttribute Name="urn:mace:terena.org:attribute-def:schacHomeOrganization" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" isRequired="true"/>
+        </md:AttributeConsumingService>
+    </md:SPSSODescriptor>
+    <md:ContactPerson contactType="technical">
+        <md:GivenName>Support</md:GivenName>
+        <md:SurName>OpenConext</md:SurName>
+        <md:EmailAddress>support@openconext.org</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson contactType="support">
+        <md:GivenName>Support</md:GivenName>
+        <md:SurName>OpenConext</md:SurName>
+        <md:EmailAddress>support@openconext.org</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson contactType="administrative">
+        <md:GivenName>Support</md:GivenName>
+        <md:SurName>OpenConext</md:SurName>
+        <md:EmailAddress>support@openconext.org</md:EmailAddress>
+    </md:ContactPerson>
+</md:EntityDescriptor>

@@ -40,6 +40,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand }
 
+    surfnet.dashboard.command_handler.publish_service:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\PublishServiceCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\PublishServiceCommand }
+
     surfnet.dashboard.command_handler.select_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler
         public: true
@@ -118,3 +124,19 @@ services:
     surfnet.dashboard.twig.identity_extension:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension
         tags: [twig.extension]
+
+    surfnet.manage.client.publish_service.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishServiceClient
+        arguments:
+            - '@surfnet.manage.http.client.test_environment'
+
+    surfnet.manage.http.client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
+        arguments:
+            - '@surfnet.manage.http.guzzle.test_environement'
+
+    surfnet.manage.http.guzzle.test_environement:
+        class: GuzzleHttp\Client
+        arguments:
+        - base_uri: "%manage_test_host%"
+          auth: ["%manage_test_username%", "%manage_test_password%", "Basic"]
