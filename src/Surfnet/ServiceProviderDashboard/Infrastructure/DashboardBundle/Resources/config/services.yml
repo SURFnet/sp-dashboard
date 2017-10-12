@@ -59,6 +59,11 @@ services:
         class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher
         arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%metadata_url_timeout%']
 
+    surfnet.dashboard.metadata.generator:
+        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Generator
+        arguments:
+            - '@surfnet.dashboard.repository.attributes_metadata'
+
     surfnet.dashboard.metadata.parser:
         class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser
         arguments:

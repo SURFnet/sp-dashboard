@@ -31,6 +31,14 @@ class InMemoryServiceRepository implements ServiceRepository
         self::$memory = [];
     }
 
+    public function find($id)
+    {
+        if (!empty(self::$memory[$id])) {
+            return self::$memory[$id];
+        }
+        return null;
+    }
+
     /**
      * @return Supplier[]
      */
