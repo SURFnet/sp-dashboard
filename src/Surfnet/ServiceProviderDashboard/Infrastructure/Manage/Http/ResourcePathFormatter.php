@@ -35,10 +35,9 @@ final class ResourcePathFormatter
             throw new InvalidArgumentException('Resource path data expected to be string');
         }
 
+        $resource = $resourcePathFormat;
         if (count($parameters) > 0) {
             $resource = vsprintf($resourcePathFormat, array_map('urlencode', $parameters));
-        } else {
-            $resource = $resourcePathFormat;
         }
 
         if (empty($resource)) {
