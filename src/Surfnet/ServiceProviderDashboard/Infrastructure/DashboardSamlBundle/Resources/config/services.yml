@@ -23,7 +23,8 @@ services:
     surfnet.dashboard.security.authentication.provider.saml:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider
         arguments:
-            - "@surfnet.dashboard.service.contact"
+            - "@surfnet.dashboard.repository.contact"
+            - "@surfnet.dashboard.service.supplier"
             - "@surfnet_saml.saml.attribute_dictionary"
             - "@logger"
             - '%surfnet.dashboard.security.authentication.administrator_team%'

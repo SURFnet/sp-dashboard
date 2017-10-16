@@ -19,10 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\ContactService;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -32,9 +34,14 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 class SamlProvider implements AuthenticationProviderInterface
 {
     /**
-     * @var \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\ContactService
+     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository
      */
-    private $contactService;
+    private $contacts;
+
+    /**
+     * @var \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SupplierService
+     */
+    private $supplierService;
 
     /**
      * @var \Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary
@@ -52,12 +59,14 @@ class SamlProvider implements AuthenticationProviderInterface
     private $administratorTeam;
 
     public function __construct(
-        ContactService $contactService,
+        ContactRepository $contacts,
+        SupplierService $supplierService,
         AttributeDictionary $attributeDictionary,
         LoggerInterface $logger,
         $administratorTeam
     ) {
-        $this->contactService = $contactService;
+        $this->contacts = $contacts;
+        $this->supplierService = $supplierService;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
         $this->administratorTeam = $administratorTeam;
@@ -75,19 +84,6 @@ class SamlProvider implements AuthenticationProviderInterface
         $email          = $this->getSingleStringValue('mail', $translatedAssertion);
         $commonName     = $this->getSingleStringValue('commonName', $translatedAssertion);
 
-        $contact = $this->contactService->findByNameId($nameId);
-
-        if ($contact === null) {
-            $contact = new Contact($nameId, $email, $commonName);
-
-            $this->contactService->createContact($contact);
-        } elseif ($contact->getEmailAddress() !== $email || $contact->getDisplayName() !== $commonName) {
-            $contact->setEmailAddress($email);
-            $contact->setDisplayName($commonName);
-
-            $this->contactService->updateContact($contact);
-        }
-
         // Default to the ROLE_USER role for suppliers.
         $role = 'ROLE_USER';
 
@@ -96,12 +92,47 @@ class SamlProvider implements AuthenticationProviderInterface
             $role = 'ROLE_ADMINISTRATOR';
         }
 
+        $contact = $this->contacts->findByNameId($nameId);
+
+        if ($contact === null) {
+            $contact = new Contact($nameId, $email, $commonName);
+        } elseif ($contact->getEmailAddress() !== $email || $contact->getDisplayName() !== $commonName) {
+            $contact->setEmailAddress($email);
+            $contact->setDisplayName($commonName);
+        }
+
+        $this->assignSupplierToContact($contact, $teamNames);
+
+        $this->contacts->save($contact);
+
         $authenticatedToken = new SamlToken([$role]);
         $authenticatedToken->setUser(
             new Identity($contact, $teamNames)
         );
 
         return $authenticatedToken;
+    }
+
+    /**
+     * @param  SamlToken|TokenInterface $token
+     * @return TokenInterface|void
+     */
+    private function assignSupplierToContact(Contact $contact, $teamNames)
+    {
+        $suppliers = $this->supplierService->findByTeamNames($teamNames);
+        if (empty($suppliers)) {
+            throw new RuntimeException(
+                'You do not have access to a supplier'
+            );
+        } elseif (count($suppliers) > 0) {
+            throw new RuntimeException(
+                'You are assigned multiple suppliers: this is not supported'
+            );
+        }
+
+        $contact->setSupplier(
+            reset($suppliers)
+        );
     }
 
     public function supports(TokenInterface $token)

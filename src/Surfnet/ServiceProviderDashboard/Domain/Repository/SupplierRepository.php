@@ -47,4 +47,13 @@ interface SupplierRepository
      * @return Supplier|null
      */
     public function findById($id);
+
+    /**
+     * Find all suppliers for given team names.
+     *
+     * @param string[] $teamNames
+     *
+     * @return Supplier[]
+     */
+    public function findByTeamNames($teamNames);
 }
