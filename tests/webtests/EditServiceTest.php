@@ -21,10 +21,10 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -160,5 +160,164 @@ class EditServiceTest extends WebTestCase
         $this->assertInstanceOf(Attribute::class, $givenNameAttribute);
         $this->assertTrue($givenNameAttribute->isRequested());
         $this->assertEquals('We really need it!', $givenNameAttribute->getMotivation());
+    }
+
+    public function test_it_loads_xml_from_url()
+    {
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'general' => [
+                    'environment' => 'connect',
+                    'janusId' => '123321',
+                ],
+                'metadata' => [
+                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
+                    'nameEn' => 'The A Team',
+                ],
+            ],
+        ];
+
+        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        /** @var Service[] $services */
+        $services = $this->serviceRepository->findAll();
+        $this->assertCount(1, $services);
+        $service = array_pop($services);
+
+        // Should not have overwritten existing fields
+        $this->assertEquals('MyEntity', $service->getNameEn());
+
+        $this->assertInstanceOf(Contact::class, $service->getAdministrativeContact());
+        $this->assertEquals('Test2', $service->getAdministrativeContact()->getFirstName());
+
+        $this->assertInstanceOf(Contact::class, $service->getTechnicalContact());
+        $this->assertEquals('Test', $service->getTechnicalContact()->getFirstName());
+
+        $this->assertInstanceOf(Contact::class, $service->getSupportContact());
+        $this->assertEquals('Test3', $service->getSupportContact()->getFirstName());
+
+        $this->assertTrue($service->getCommonNameAttribute()->isRequested());
+        $this->assertTrue($service->getUidAttribute()->isRequested());
+        $this->assertTrue($service->getOrganizationTypeAttribute()->isRequested());
+        $this->assertTrue($service->getAffiliationAttribute()->isRequested());
+
+        $expectedXml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml');
+        $this->assertEquals($expectedXml, $service->getMetadataXml());
+    }
+
+    public function test_it_handles_valid_but_incomplete_metadata()
+    {
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'metadata' => [
+                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata-valid-incomplete',
+                ],
+            ],
+        ];
+
+        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        /** @var Service[] $services */
+        $services = $this->serviceRepository->findAll();
+        $this->assertCount(1, $services);
+        $service = array_pop($services);
+
+        // Explicitly not set with the value in post!
+        $this->assertEquals('MyEntity', $service->getNameEn());
+
+        $this->assertNull($service->getCommonNameAttribute());
+        $this->assertNull($service->getUidAttribute());
+        $this->assertTrue($service->getOrganizationTypeAttribute()->isRequested());
+        $this->assertTrue($service->getAffiliationAttribute()->isRequested());
+
+        $this->assertInstanceOf(Contact::class, $service->getTechnicalContact());
+        $this->assertEquals('Test', $service->getTechnicalContact()->getFirstName());
+
+        $this->assertNull($service->getAdministrativeContact());
+        $this->assertNull($service->getSupportContact());
+    }
+
+    public function test_it_loads_xml_from_textarea()
+    {
+        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml');
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'metadata' => [
+                    'importUrl' => '',
+                    'pastedMetadata' => $xml,
+                ],
+            ],
+        ];
+
+        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        /** @var Service[] $services */
+        $services = $this->serviceRepository->findAll();
+        $this->assertCount(1, $services);
+        $service = array_pop($services);
+
+        // Should not have overwritten existing fields
+        $this->assertEquals('MyEntity', $service->getNameEn());
+
+        $this->assertInstanceOf(Contact::class, $service->getAdministrativeContact());
+        $this->assertEquals('Test2', $service->getAdministrativeContact()->getFirstName());
+
+        $this->assertInstanceOf(Contact::class, $service->getTechnicalContact());
+        $this->assertEquals('Test', $service->getTechnicalContact()->getFirstName());
+
+        $this->assertInstanceOf(Contact::class, $service->getSupportContact());
+        $this->assertEquals('Test3', $service->getSupportContact()->getFirstName());
+
+        $this->assertTrue($service->getCommonNameAttribute()->isRequested());
+        $this->assertTrue($service->getUidAttribute()->isRequested());
+        $this->assertTrue($service->getOrganizationTypeAttribute()->isRequested());
+        $this->assertTrue($service->getAffiliationAttribute()->isRequested());
+
+        $this->assertEquals($xml, $service->getPastedMetadata());
+        $this->assertEquals($xml, $service->getMetadataXml());
+    }
+
+    public function test_it_shows_flash_message_on_exception()
+    {
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'metadata' => [
+                    'importUrl' => 'https://this.does.not/exist',
+                ],
+            ],
+        ];
+
+        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+        $message = $crawler->filter('.message.error')->first();
+
+        $this->assertEquals(
+            'The metadata XML is invalid considering the associated XSD',
+            trim($message->text()),
+            'Expected an error message for this invalid importUrl'
+        );
     }
 }

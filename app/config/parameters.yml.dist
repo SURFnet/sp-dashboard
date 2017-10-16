@@ -17,3 +17,6 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret: ThisTokenIsNotSoSecretChangeIt
+
+    # The default timeout for Curl requests when retrieving metadata
+    metadata_url_timeout: 30

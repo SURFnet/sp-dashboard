@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://domain.org/saml/metadata">
+    <md:SPSSODescriptor
+            protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                                Location="https://domain.org/saml/sp/saml2-logout.php/default-sp"/>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
+                                Location="https://domain.org/saml/sp/saml2-logout.php/default-sp"/>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                                     Location="https://domain.org/saml/sp/saml2-acs.php/default-sp" index="0"/>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
+                                     Location="https://domain.org/saml/sp/saml1-acs.php/default-sp" index="1"/>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+                                     Location="https://domain.org/saml/sp/saml2-acs.php/default-sp" index="10"/>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
+                                     Location="https://domain.org/saml/sp/saml1-acs.php/default-sp/artifact" index="3"/>
+    </md:SPSSODescriptor>
+    <md:ContactPerson contactType="technical">
+        <md:GivenName>Test</md:GivenName>
+        <md:SurName>Tester</md:SurName>
+        <md:EmailAddress>test@domain.org</md:EmailAddress>
+    </md:ContactPerson>
+</md:EntityDescriptor>
