@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Integratoin\Infrastructure\DashboardBundle\Metadata;
+namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Legacy\Metadata;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
