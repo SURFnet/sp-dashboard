@@ -46,7 +46,7 @@ class EditSupplierTest extends WebTestCase
 
         $this->supplierRepository->save($supplier);
 
-        $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher')->setSelectedSupplier(1);
+        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
     }
 
     public function test_can_edit_existing_supplier()

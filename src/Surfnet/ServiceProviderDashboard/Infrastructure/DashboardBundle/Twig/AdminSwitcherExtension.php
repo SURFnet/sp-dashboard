@@ -18,7 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Environment;
 use Twig_Extension;
@@ -27,9 +27,9 @@ use Twig_SimpleFunction;
 class AdminSwitcherExtension extends Twig_Extension
 {
     /**
-     * @var AdminSwitcherService
+     * @var AuthorizationService
      */
-    private $switcherService;
+    private $authorizationService;
 
     /**
      * @var SupplierService
@@ -43,11 +43,11 @@ class AdminSwitcherExtension extends Twig_Extension
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        AdminSwitcherService $switcherService,
+        AuthorizationService $authorizationService,
         SupplierService $supplierService
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->switcherService = $switcherService;
+        $this->authorizationService = $authorizationService;
         $this->supplierService = $supplierService;
     }
 
@@ -72,7 +72,7 @@ class AdminSwitcherExtension extends Twig_Extension
             'DashboardBundle:TwigExtension:admin_switcher.html.twig',
             [
                 'suppliers' => $this->supplierService->getSupplierNames(),
-                'selected_supplier' => $this->switcherService->getSelectedSupplier(),
+                'selected_supplier' => $this->authorizationService->getAdminSwitcherSupplierId(),
             ]
         );
     }

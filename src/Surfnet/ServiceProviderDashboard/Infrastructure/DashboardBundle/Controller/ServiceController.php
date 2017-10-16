@@ -28,7 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,9 +51,9 @@ class ServiceController extends Controller
     private $supplierService;
 
     /**
-     * @var AdminSwitcherService
+     * @var AuthorizationService
      */
-    private $switcherService;
+    private $authorizationService;
 
     /**
      * @var TicketService
@@ -64,20 +64,20 @@ class ServiceController extends Controller
      * @param CommandBus $commandBus
      * @param SamlServiceService $samlService
      * @param SupplierService $supplierService
-     * @param AdminSwitcherService $switcherService
+     * @param AuthorizationService $authorizationService
      * @param \Surfnet\ServiceProviderDashboard\Application\Service\TicketService $ticketService
      */
     public function __construct(
         CommandBus $commandBus,
         SamlServiceService $samlService,
         SupplierService $supplierService,
-        AdminSwitcherService $switcherService,
+        AuthorizationService $authorizationService,
         TicketService $ticketService
     ) {
         $this->commandBus = $commandBus;
         $this->samlService = $samlService;
         $this->supplierService = $supplierService;
-        $this->switcherService = $switcherService;
+        $this->authorizationService = $authorizationService;
         $this->ticketService = $ticketService;
     }
 
@@ -90,8 +90,10 @@ class ServiceController extends Controller
      */
     public function createAction()
     {
-        // Todo: perform authorization check
-        $supplier = $this->supplierService->getSupplierById((int) $this->switcherService->getSelectedSupplier());
+        $supplier = $this->supplierService->getSupplierById(
+            $this->authorizationService->getActiveSupplierId()
+        );
+
         $serviceId = $this->samlService->createServiceId();
         $ticketNumber = $this->ticketService->getTicketIdForService($serviceId, $supplier);
         if (is_null($supplier)) {

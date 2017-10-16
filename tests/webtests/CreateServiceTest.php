@@ -53,7 +53,7 @@ class CreateServiceTest extends WebTestCase
 
         $this->supplierRepository->save($supplier);
 
-        $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher')->setSelectedSupplier(1);
+        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
     }
 
     public function test_switcher_remembers_selected_supplier()

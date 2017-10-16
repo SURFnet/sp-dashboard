@@ -46,7 +46,7 @@ class CreateSupplierTest extends WebTestCase
 
         $this->supplierRepository->save($supplier);
 
-        $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher')->setSelectedSupplier(1);
+        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
     }
 
     public function test_it_validates_the_form()

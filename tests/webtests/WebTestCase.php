@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
@@ -41,16 +42,21 @@ class WebTestCase extends SymfonyWebTestCase
         );
     }
 
-    protected function logIn($role = 'ROLE_ADMINISTRATOR', $teamName = 'surfnet')
+    protected function logIn($role = 'ROLE_ADMINISTRATOR', Supplier $supplier = null)
     {
         $session = $this->client->getContainer()->get('session');
 
+        $contact = new Contact('webtest:nameid:johndoe', 'johndoe@localhost', 'John Doe');
+
+        if (!$supplier) {
+            $supplier = new Supplier();
+        }
+
+        $contact->setSupplier($supplier);
+
         $authenticatedToken = new SamlToken([$role]);
         $authenticatedToken->setUser(
-            new Identity(
-                new Contact('webtest:nameid:johndoe', 'johndoe@localhost', 'John Doe'),
-                $teamName
-            )
+            new Identity($contact)
         );
 
         $session->set('_security_saml_based', serialize($authenticatedToken));

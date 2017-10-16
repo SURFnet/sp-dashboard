@@ -20,18 +20,23 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class AdminSwitcherServiceTest extends MockeryTestCase
+class AuthorizationServiceTest extends MockeryTestCase
 {
     /** @var Session|m\MockInterface */
     private $session;
 
+    /** @var TokenStorageInterface|m\MockInterface */
+    private $tokenStorage;
+
     public function setUp()
     {
         $this->session = m::mock(Session::class);
-        $this->service = new AdminSwitcherService($this->session);
+        $this->tokenStorage = m::mock(TokenStorageInterface::class);
+        $this->service = new AuthorizationService($this->session, $this->tokenStorage);
     }
 
     /**
@@ -40,9 +45,9 @@ class AdminSwitcherServiceTest extends MockeryTestCase
     public function test_service_writes_selected_supplier_to_session()
     {
         $this->session->shouldReceive('set')
-            ->with('selected_supplier', 'test');
+            ->with('admin_supplier_id', 'test');
 
-        $this->service->setSelectedSupplier('test');
+        $this->service->setAdminSwitcherSupplierId('test');
     }
 
     /**
@@ -53,6 +58,6 @@ class AdminSwitcherServiceTest extends MockeryTestCase
         $this->session->shouldReceive('get')
             ->andReturn('test');
 
-        $this->assertEquals('test', $this->service->getSelectedSupplier());
+        $this->assertEquals('test', $this->service->getAdminSwitcherSupplierId());
     }
 }

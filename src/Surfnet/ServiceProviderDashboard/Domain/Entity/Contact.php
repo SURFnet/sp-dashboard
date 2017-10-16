@@ -105,6 +105,8 @@ class Contact
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+
+        return $this;
     }
 
     /**
@@ -113,5 +115,25 @@ class Contact
     public function getDisplayName()
     {
         return $this->displayName;
+    }
+
+    /**
+     * @param Supplier $supplier
+     *
+     * @return Contact
+     */
+    public function setSupplier(Supplier $supplier)
+    {
+        $this->supplier = $supplier;
+
+        return $this;
+    }
+
+    /**
+     * @return Supplier
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
     }
 }

@@ -20,16 +20,16 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Comman
 
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 
 class SelectSupplierCommandHandler implements CommandHandler
 {
     /**
-     * @var AdminSwitcherService
+     * @var AuthorizationService
      */
     private $service;
 
-    public function __construct(AdminSwitcherService $service)
+    public function __construct(AuthorizationService $service)
     {
         $this->service = $service;
     }
@@ -39,6 +39,6 @@ class SelectSupplierCommandHandler implements CommandHandler
      */
     public function handle(SelectSupplierCommand $command)
     {
-        $this->service->setSelectedSupplier($command->getSelectedSupplier());
+        $this->service->setAdminSwitcherSupplierId($command->getSelectedSupplier());
     }
 }

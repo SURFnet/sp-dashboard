@@ -85,8 +85,8 @@ class ServiceListTest extends WebTestCase
     {
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $switcherService = $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher');
-        $switcherService->setSelectedSupplier('test1');
+        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')
+            ->setAdminSwitcherSupplierId('test1');
 
         $crawler = $this->client->request('GET', '/');
 
