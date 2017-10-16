@@ -110,6 +110,12 @@ class Service
     private $metadataUrl;
 
     /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $pastedMetadata;
+
+    /**
      * SAML XML Metadata for entity.
      *
      * Imported from metadataurl.
@@ -381,6 +387,14 @@ class Service
     public function setMetadataXml($metadataXml)
     {
         $this->metadataXml = $metadataXml;
+    }
+
+    /**
+     * @param string $pastedMetadata
+     */
+    public function setPastedMetadata($pastedMetadata)
+    {
+        $this->pastedMetadata = $pastedMetadata;
     }
 
     /**
@@ -714,6 +728,14 @@ class Service
     /**
      * @return string
      */
+    public function getPastedMetadata()
+    {
+        return $this->pastedMetadata;
+    }
+
+    /**
+     * @return string
+     */
     public function getAcsLocation()
     {
         return $this->acsLocation;
@@ -792,26 +814,35 @@ class Service
     }
 
     /**
-     * @return ContactPerson
+     * @return ContactPerson|null
      */
     public function getAdministrativeContact()
     {
+        if (!is_null($this->administrativeContact) && !$this->administrativeContact->isContactSet()) {
+            return null;
+        }
         return $this->administrativeContact;
     }
 
     /**
-     * @return ContactPerson
+     * @return ContactPerson|null
      */
     public function getTechnicalContact()
     {
+        if (!is_null($this->technicalContact) && !$this->technicalContact->isContactSet()) {
+            return null;
+        }
         return $this->technicalContact;
     }
 
     /**
-     * @return ContactPerson
+     * @return ContactPerson|null
      */
     public function getSupportContact()
     {
+        if (!is_null($this->supportContact) && !$this->supportContact->isContactSet()) {
+            return null;
+        }
         return $this->supportContact;
     }
 
@@ -941,5 +972,16 @@ class Service
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDraft()
+    {
+        if ($this->status == self::STATE_DRAFT) {
+            return true;
+        }
+        return false;
     }
 }

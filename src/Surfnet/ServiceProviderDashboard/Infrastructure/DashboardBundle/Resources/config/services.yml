@@ -30,6 +30,16 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand }
 
+    surfnet.dashboard.command_handler.load_metadata:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\LoadMetadataCommandHandler
+        arguments:
+            - '@surfnet.dashboard.repository.service'
+            - '@surfnet.dashboard.metadata.fetcher'
+            - '@surfnet.dashboard.metadata.parser'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\LoadMetadataCommand }
+
     surfnet.dashboard.command_handler.select_supplier:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
         public: true
@@ -44,6 +54,29 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
 
+    surfnet.dashboard.metadata.certificate_parser:
+        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser
+
+    surfnet.dashboard.metadata.client:
+        class: GuzzleHttp\Client
+
+    surfnet.dashboard.metadata.fetcher:
+        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher
+        arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%metadata_url_timeout%']
+
+    surfnet.dashboard.metadata.generator:
+        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Generator
+        arguments:
+            - '@surfnet.dashboard.repository.attributes_metadata'
+
+    surfnet.dashboard.metadata.parser:
+        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser
+        arguments:
+            - '@surfnet.dashboard.metadata.certificate_parser'
+            - '@surfnet.dashboard.repository.attributes_metadata'
+            - '%kernel.root_dir%/Resources'
+            - '@logger'
+
     surfnet.dashboard.monolog.json_formatter:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
@@ -51,6 +84,10 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Contact]
+
+    surfnet.dashboard.repository.attributes_metadata:
+        class: Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository
+        arguments:  ['%kernel.root_dir%/Resources']
 
     surfnet.dashboard.repository.service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository

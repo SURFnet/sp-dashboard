@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository")
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  */

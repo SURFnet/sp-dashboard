@@ -24,7 +24,7 @@ use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SupplierService;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -39,9 +39,9 @@ class SamlProvider implements AuthenticationProviderInterface
     private $contacts;
 
     /**
-     * @var \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\SupplierService
+     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository
      */
-    private $supplierService;
+    private $suppliers;
 
     /**
      * @var \Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary
@@ -60,13 +60,13 @@ class SamlProvider implements AuthenticationProviderInterface
 
     public function __construct(
         ContactRepository $contacts,
-        SupplierService $supplierService,
+        SupplierRepository $suppliers,
         AttributeDictionary $attributeDictionary,
         LoggerInterface $logger,
         $administratorTeam
     ) {
         $this->contacts = $contacts;
-        $this->supplierService = $supplierService;
+        $this->suppliers = $suppliers;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
         $this->administratorTeam = $administratorTeam;
@@ -101,9 +101,10 @@ class SamlProvider implements AuthenticationProviderInterface
             $contact->setDisplayName($commonName);
         }
 
-        $this->assignSupplierToContact($contact, $teamNames);
-
-        $this->contacts->save($contact);
+        if ($role === 'ROLE_USER') {
+            $this->assignSupplierToContact($contact, $teamNames);
+            $this->contacts->save($contact);
+        }
 
         $authenticatedToken = new SamlToken([$role]);
         $authenticatedToken->setUser(
@@ -119,12 +120,23 @@ class SamlProvider implements AuthenticationProviderInterface
      */
     private function assignSupplierToContact(Contact $contact, $teamNames)
     {
-        $suppliers = $this->supplierService->findByTeamNames($teamNames);
+        $suppliers = $this->suppliers->findByTeamNames($teamNames);
+
         if (empty($suppliers)) {
+            $this->logger->warning(sprintf(
+                'User is member of teams "%s" but no supplier with that team name found',
+                implode(', ', $teamNames)
+            ));
+
             throw new RuntimeException(
                 'You do not have access to a supplier'
             );
-        } elseif (count($suppliers) > 0) {
+        } elseif (count($suppliers) > 1) {
+            $this->logger->warning(sprintf(
+                'User is member of multiple teams ("%s"), matching more than one suppliers in the dashboard - not supported.',
+                implode(', ', $teamNames)
+            ));
+
             throw new RuntimeException(
                 'You are assigned multiple suppliers: this is not supported'
             );

@@ -45,9 +45,12 @@ bin console doctrine:migrations:migrate
 Now follow the instructions in [SAML configuration for development](docs/saml-dev-setup.md) to setup authentication.
  
 The application is now up and running and can be accessed at
-[https://dev.support.surfconext.nl/](https://dev.support.surfconext.nl/). Note that in development the `app_dev.php`
+[https://spdashboard.dev.support.surfconext.nl/](https://spdashboard.dev.support.surfconext.nl/). Note that in development the `app_dev.php`
 front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
-* To view mails caught by Mailcatcher, visit [dev.support.surfconext.nl:1080](https://dev.support.surfconext.nl:1080/)
+* To view mails caught by Mailcatcher, visit [spdashboard.dev.support.surfconext.nl:1080](https://spdashboard.dev.support.surfconext.nl:1080/)
+
+If you run into the `shibsp::ConfigurationException`, please reload your box, the issue should be resolved after a 
+reboot. The Shiboleth deamon might not come out 100% correctly out of the initial provisioning run.
 
 ### Running the tests
 

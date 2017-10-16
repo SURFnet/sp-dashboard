@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository as ContactRepositoryInterface;
 
@@ -40,8 +39,14 @@ class ContactRepository extends EntityRepository implements ContactRepositoryInt
      */
     public function findByNameId($nameId)
     {
-        return parent::findBy([
+        $contacts = parent::findBy([
             'nameId' => $nameId,
         ]);
+
+        if (empty($contacts)) {
+            return null;
+        }
+
+        return reset($contacts);
     }
 }

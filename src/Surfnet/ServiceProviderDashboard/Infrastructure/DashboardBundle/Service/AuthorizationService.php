@@ -63,18 +63,18 @@ class AuthorizationService
 
     public function getActiveSupplierId()
     {
-        $selectedSupplierId = $this->getAdminSwitcherSupplierId();
-        if ($selectedSupplierId) {
-            return $selectedSupplierId;
-        }
-
         $token = $this->tokenStorage->getToken();
-        $contact = null;
-
-        if ($token) {
-            $contact = $token->getUser()->getContact();
+        if (!$token) {
+            throw new RuntimeException(
+                'No authentication token found in session'
+            );
         }
 
+        if ($token->hasRole('ROLE_ADMINISTRATOR')) {
+            return $this->getAdminSwitcherSupplierId();
+        }
+
+        $contact = $token->getUser()->getContact();
         if (!$contact) {
             throw new RuntimeException(
                 'No authenticated user found in session'

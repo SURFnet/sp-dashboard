@@ -20,7 +20,7 @@ security:
             saml: true
             logout:
                 path: /logout
-                target: %logout_redirect_url%
+                target: "%logout_redirect_url%"
                 invalidate_session: true
                 csrf_token_generator: security.csrf.token_manager
                 csrf_parameter: 't'
