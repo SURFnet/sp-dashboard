@@ -75,6 +75,9 @@ services:
         arguments:
             - '@surfnet.dashboard.repository.attributes_metadata'
 
+    surfnet.dashboard.metadata.json_generator:
+        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\JsonGenerator
+
     surfnet.dashboard.metadata.parser:
         class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser
         arguments:
@@ -129,6 +132,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishServiceClient
         arguments:
             - '@surfnet.manage.http.client.test_environment'
+            - '@surfnet.dashboard.metadata.json_generator'
 
     surfnet.manage.http.client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
