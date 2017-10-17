@@ -16,6 +16,10 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        login_firewall:
+            pattern:    ^/saml/metadata
+            anonymous:  ~
+
         saml_based:
             saml: true
             logout:
