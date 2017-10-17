@@ -1,0 +1,124 @@
+services:
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Controller\SamlController:
+      arguments:
+          - '@logger'
+          - '@surfnet_saml.metadata_factory'
+          - '@surfnet_saml.http.post_binding'
+          - '@surfnet_saml.remote.idp'
+          - '@surfnet_saml.hosted.service_provider'
+
+    # Firewall
+    surfnet.dashboard.security.authentication.listener:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Firewall\SamlListener
+        arguments:
+            - "@surfnet.dashboard.security.authentication.handler.authenticated_user_handler"
+            - "@surfnet.dashboard.security.authentication.saml_interaction"
+            - "@logger"
+
+    surfnet.dashboard.security.authentication.provider.saml:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider
+        arguments:
+            - "@surfnet.dashboard.repository.contact"
+            - "@surfnet.dashboard.repository.supplier"
+            - "@surfnet_saml.saml.attribute_dictionary"
+            - "@logger"
+            - '%surfnet.dashboard.security.authentication.administrator_team%'
+
+    surfnet.dashboard.security.authentication.saml_interaction:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlInteractionProvider
+        arguments:
+            - "@surfnet_saml.hosted.service_provider"
+            - "@surfnet_saml.remote.idp"
+            - "@surfnet_saml.http.redirect_binding"
+            - "@surfnet_saml.http.post_binding"
+            - "@surfnet.dashboard.security.authentication.session.session_storage"
+
+    # Authentication Handlers
+    surfnet.dashboard.security.authentication.handler.authenticated_user_handler:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\AuthenticatedUserHandler
+        arguments:
+            - "@security.token_storage"
+            - "@surfnet.dashboard.security.authentication.session.session_lifetime_guard"
+            - "@surfnet.dashboard.security.authentication.session.session_storage"
+            - "@logger"
+        calls:
+            - ["setNext", ["@surfnet.dashboard.security.authentication.handler.explicit_session_timeout"]]
+
+    surfnet.dashboard.security.authentication.handler.explicit_session_timeout:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ExplicitSessionTimeoutHandler
+        arguments:
+            - "@security.token_storage"
+            - "@surfnet.dashboard.security.authentication.session.session_storage"
+            - "@surfnet.dashboard.security.authentication.session.session_lifetime_guard"
+            - "@security.logout.handler.session"
+            - "@security.logout.handler.cookie_clearing.saml_based"
+            - "@router"
+            - "@logger"
+        calls:
+            - ["setNext", ["@surfnet.dashboard.security.authentication.handler.initiate_saml_request"]]
+
+    surfnet.dashboard.security.authentication.handler.initiate_saml_request:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\InitiateSamlAuthenticationHandler
+        arguments:
+            - "@security.token_storage"
+            - "@surfnet.dashboard.security.authentication.session.session_storage"
+            - "@surfnet.dashboard.security.authentication.session.session_storage"
+            - "@surfnet.dashboard.security.authentication.saml_interaction"
+            - "@router"
+            - "@surfnet_saml.logger"
+            - "@logger"
+        calls:
+            - ["setNext", ["@surfnet.dashboard.security.authentication.handler.process_saml_response"]]
+
+    surfnet.dashboard.security.authentication.handler.process_saml_response:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ProcessSamlAuthenticationHandler
+        arguments:
+            - "@security.token_storage"
+            - "@surfnet.dashboard.security.authentication.saml_interaction"
+            - "@surfnet.dashboard.security.authentication.session.session_storage"
+            - "@surfnet.dashboard.security.authentication.session.session_storage"
+            - "@security.authentication.manager"
+            - "@surfnet_saml.logger"
+            - "@templating"
+
+    # Session
+    surfnet.dashboard.security.authentication.session.session_storage:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage
+        arguments:
+            - "@session"
+
+    surfnet.dashboard.security.authentication.session.session_lifetime_guard:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard
+        arguments:
+            - "@surfnet.dashboard.security.authentication.session.absolute_maximum_lifetime"
+            - "@surfnet.dashboard.security.authentication.session.relative_maximum_lifetime"
+
+    surfnet.dashboard.security.authentication.session.absolute_maximum_lifetime:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame
+        factory: [Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame, ofSeconds]
+        arguments:
+            - "%surfnet.dashboard.security.authentication.session.maximum_absolute_lifetime_in_seconds%"
+
+    surfnet.dashboard.security.authentication.session.relative_maximum_lifetime:
+        public: false
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame
+        factory: [Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame, ofSeconds]
+        arguments:
+            - "%surfnet.dashboard.security.authentication.session.maximum_relative_lifetime_in_seconds%"
+
+    surfnet.dashboard.security.service.identity:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Service\IdentityService
+

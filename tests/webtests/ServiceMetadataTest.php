@@ -23,16 +23,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ServiceMetadataTest extends WebTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     /**
      * @var Supplier
      */
@@ -50,7 +43,8 @@ class ServiceMetadataTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
         $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->supplierRepository->clear();
 
@@ -78,7 +72,9 @@ class ServiceMetadataTest extends WebTestCase
 
         $this->serviceRepository->save($service);
 
-        $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher')->setSelectedSupplier(1);
+        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
+
+        $this->logIn('ROLE_ADMINISTRATOR');
     }
 
     /**

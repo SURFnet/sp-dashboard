@@ -25,17 +25,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EditServiceTest extends WebTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     /**
      * @var SupplierRepository
      */
@@ -48,7 +41,8 @@ class EditServiceTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
         $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->supplierRepository->clear();
 
@@ -72,7 +66,9 @@ class EditServiceTest extends WebTestCase
 
         $this->serviceRepository->save($service);
 
-        $this->client->getContainer()->get('surfnet.dashboard.service.admin_switcher')->setSelectedSupplier(1);
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
     }
 
     public function test_it_renders_the_form()

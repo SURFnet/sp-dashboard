@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block page_title %}{{ 'ss.error.saml_precondition_not_met.title'|trans }}{% endblock %}
+
+{% block content %}
+    <h2>{{ block('page_title') }}</h2>
+
+    <p>{{ 'ss.error.saml_precondition_not_met.text.precondition_not_met'|trans }}</p>
+{% endblock %}

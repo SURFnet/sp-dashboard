@@ -42,6 +42,8 @@ Install database migrations
 bin console doctrine:migrations:migrate
 ```
 
+Now follow the instructions in [SAML configuration for development](docs/saml-dev-setup.md) to setup authentication.
+ 
 The application is now up and running and can be accessed at
 [https://spdashboard.dev.support.surfconext.nl/](https://spdashboard.dev.support.surfconext.nl/). Note that in development the `app_dev.php`
 front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
@@ -60,6 +62,7 @@ environment variable in Ansible. This will prevent Xdebug from being enabled in 
 
 ## Other resources
 
+ - [SAML configuration for development](docs/saml-dev-setup.md)
  - [Developer documentation](docs/index.md)
  - [Issue tracker](https://www.pivotaltracker.com/n/projects/1400064)
  - [License](LICENSE.txt)

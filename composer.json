@@ -41,6 +41,7 @@
         "sensio/framework-extra-bundle": "^3.0",
         "stfalcon/tinymce-bundle": "^2.1",
         "stof/doctrine-extensions-bundle": "^1.2",
+        "surfnet/stepup-saml-bundle": "^2.9",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.3.10",

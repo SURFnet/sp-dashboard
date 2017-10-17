@@ -1,7 +1,6 @@
 # This DI configuration file containes overrides on the DashboardBundle configuration,
 # typically to replace doctrine repositories with in-memory repositories.
 services:
-
     surfnet.dashboard.metadata.fetcher:
         class: Surfnet\ServiceProviderDashboard\Webtests\Metadata\FakeFetcher
 
@@ -10,3 +9,11 @@ services:
 
     surfnet.dashboard.repository.service:
         class: Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemoryServiceRepository
+
+    surfnet.dashboard.session.storage.mock_file:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Session\Storage\MockFileSessionStorage
+        arguments:
+            - '%kernel.cache_dir%/sessions/'
+            - 'MOCKSESSID'
+            - '@session.storage.metadata_bag'
+

@@ -22,6 +22,7 @@ use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand;
@@ -31,7 +32,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\CreateSupplierType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\EditSupplierType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,9 +44,9 @@ class SupplierController extends Controller
     private $commandBus;
 
     /**
-     * @var AdminSwitcherService
+     * @var AuthorizationService
      */
-    private $switcherService;
+    private $authorizationService;
 
     /**
      * @var SupplierService
@@ -54,23 +55,25 @@ class SupplierController extends Controller
 
     /**
      * @param CommandBus $commandBus
-     * @param AdminSwitcherService $switcherService
+     * @param AuthorizationService $authorizationService
      * @param SupplierService $supplierService
      */
     public function __construct(
         CommandBus $commandBus,
-        AdminSwitcherService $switcherService,
+        AuthorizationService $authorizationService,
         SupplierService $supplierService
     ) {
         $this->commandBus = $commandBus;
-        $this->switcherService = $switcherService;
+        $this->authorizationService = $authorizationService;
         $this->supplierService = $supplierService;
     }
 
     /**
      * @Method({"GET", "POST"})
      * @Route("/supplier/create", name="supplier_add")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -103,7 +106,9 @@ class SupplierController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/supplier/edit", name="supplier_edit")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -112,7 +117,9 @@ class SupplierController extends Controller
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        $supplier = $this->supplierService->getSupplierById((int) $this->switcherService->getSelectedSupplier());
+        $supplier = $this->supplierService->getSupplierById(
+            $this->authorizationService->getAdminSwitcherSupplierId()
+        );
 
         $command = new EditSupplierCommand(
             $supplier->getId(),
@@ -144,6 +151,7 @@ class SupplierController extends Controller
     /**
      * @Method("POST")
      * @Route("/supplier/select", name="select_supplier")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      */
     public function selectAction(Request $request)
     {

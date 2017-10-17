@@ -112,4 +112,18 @@ class SupplierRepository extends EntityRepository implements SupplierRepositoryI
     {
         return $this->find($id);
     }
+
+    /**
+     * Find all suppliers for given team names.
+     *
+     * @param string[] $teamNames
+     *
+     * @return Supplier[]
+     */
+    public function findByTeamNames($teamNames)
+    {
+        return parent::findBy([
+            'teamName' => $teamNames,
+        ]);
+    }
 }

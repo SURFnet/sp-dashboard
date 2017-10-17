@@ -22,19 +22,19 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 
 class SelectSupplierCommandHandlerTest extends MockeryTestCase
 {
     /** @var SelectSupplierCommandHandler */
     private $commandHandler;
 
-    /** @var AdminSwitcherService|m\MockInterface */
+    /** @var AuthorizationService|m\MockInterface */
     private $service;
 
     public function setUp()
     {
-        $this->service = m::mock(AdminSwitcherService::class);
+        $this->service = m::mock(AuthorizationService::class);
         $this->commandHandler = new SelectSupplierCommandHandler($this->service);
     }
 
@@ -45,7 +45,7 @@ class SelectSupplierCommandHandlerTest extends MockeryTestCase
     {
         $command = new SelectSupplierCommand('ibuildings');
 
-        $this->service->shouldReceive('setSelectedSupplier')->with('ibuildings')->once();
+        $this->service->shouldReceive('setAdminSwitcherSupplierId')->with('ibuildings')->once();
 
         $this->commandHandler->handle($command);
     }

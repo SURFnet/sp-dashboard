@@ -19,32 +19,38 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class Builder implements ContainerAwareInterface
+class Builder
 {
-    use ContainerAwareTrait;
-
-    public function mainMenu(FactoryInterface $factory, array $options)
+    public function __construct(FactoryInterface $factory, TokenStorageInterface $tokenStorage)
     {
-        $menu = $factory->createItem('root');
+        $this->factory = $factory;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function mainMenu(array $options)
+    {
+        $menu = $this->factory->createItem('root');
 
         $menu->addChild('Services', array('route' => 'service_list'));
 
         $menu->addChild('Add new service', array(
             'route' => 'service_add',
         ));
-        $menu->addChild('Add new supplier', array(
-            'route' => 'supplier_add',
-        ));
-        $menu->addChild('Edit supplier', array(
-            'route' => 'supplier_edit',
-        ));
 
-        $menu->addChild('Translations', array(
-            'route' => 'lexik_translation_overview',
-        ));
+        if ($this->tokenStorage->getToken()->hasRole('ROLE_ADMINISTRATOR')) {
+            $menu->addChild('Add new supplier', array(
+                'route' => 'supplier_add',
+            ));
+            $menu->addChild('Edit supplier', array(
+                'route' => 'supplier_edit',
+            ));
+
+            $menu->addChild('Translations', array(
+                'route' => 'lexik_translation_overview',
+            ));
+        }
 
         return $menu;
     }

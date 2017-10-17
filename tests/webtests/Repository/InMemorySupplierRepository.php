@@ -86,4 +86,22 @@ class InMemorySupplierRepository implements SupplierRepositoryInterface
 
         return null;
     }
+
+    /**
+     * @param string[] $teamNames
+     *
+     * @return Supplier[]
+     */
+    public function findByTeamNames($teamNames)
+    {
+        $result = [];
+
+        foreach ($this->findAll() as $supplier) {
+            if (in_array($supplier->getTeamName(), $teamNames)) {
+                $result[] = $supplier;
+            }
+        }
+
+        return $result;
+    }
 }

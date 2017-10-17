@@ -49,6 +49,11 @@ services:
     surfnet.dashboard.factory.service:
         class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
 
+    surfnet.dashboard.menu.builder:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder
+        tags:
+            - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
+
     surfnet.dashboard.metadata.certificate_parser:
         class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser
 
@@ -75,6 +80,11 @@ services:
     surfnet.dashboard.monolog.json_formatter:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
+    surfnet.dashboard.repository.contact:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository
+        factory: ['@doctrine', 'getRepository']
+        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Contact]
+
     surfnet.dashboard.repository.attributes_metadata:
         class: Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository
         arguments:  ['%kernel.root_dir%/Resources']
@@ -89,8 +99,8 @@ services:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier]
 
-    surfnet.dashboard.service.admin_switcher:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService
+    surfnet.dashboard.service.authorization:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
 
     surfnet.dashboard.service.saml_service:
         class: Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
@@ -103,4 +113,8 @@ services:
 
     surfnet.dashboard.twig.admin_switcher_extension:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\AdminSwitcherExtension
+        tags: [twig.extension]
+
+    surfnet.dashboard.twig.identity_extension:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension
         tags: [twig.extension]

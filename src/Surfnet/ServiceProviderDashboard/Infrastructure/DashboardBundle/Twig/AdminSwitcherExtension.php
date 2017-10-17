@@ -18,7 +18,8 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Environment;
 use Twig_Extension;
 use Twig_SimpleFunction;
@@ -26,18 +27,27 @@ use Twig_SimpleFunction;
 class AdminSwitcherExtension extends Twig_Extension
 {
     /**
-     * @var AdminSwitcherService
+     * @var AuthorizationService
      */
-    private $switcherService;
+    private $authorizationService;
 
     /**
      * @var SupplierService
      */
     private $supplierService;
 
-    public function __construct(AdminSwitcherService $switcherService, SupplierService $supplierService)
-    {
-        $this->switcherService = $switcherService;
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        AuthorizationService $authorizationService,
+        SupplierService $supplierService
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->authorizationService = $authorizationService;
         $this->supplierService = $supplierService;
     }
 
@@ -54,11 +64,15 @@ class AdminSwitcherExtension extends Twig_Extension
 
     public function renderAdminSwitcher(Twig_Environment $environment)
     {
+        if (!$this->tokenStorage->getToken()->hasRole('ROLE_ADMINISTRATOR')) {
+            return '';
+        }
+
         return $environment->render(
             'DashboardBundle:TwigExtension:admin_switcher.html.twig',
             [
                 'suppliers' => $this->supplierService->getSupplierNames(),
-                'selected_supplier' => $this->switcherService->getSelectedSupplier(),
+                'selected_supplier' => $this->authorizationService->getAdminSwitcherSupplierId(),
             ]
         );
     }

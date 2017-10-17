@@ -15,39 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
-class AdminSwitcherService
+class Identity
 {
     /**
-     * @var Session
+     * @var Contact
      */
-    private $session;
+    private $contact;
 
-    public function __construct(Session $session)
+    public function __construct(Contact $contact)
     {
-        $this->session = $session;
+        $this->contact = $contact;
     }
 
     /**
-     * @param string $supplierId
-     *
-     * @return AdminSwitcherService
+     * @return Contact
      */
-    public function setSelectedSupplier($supplierId)
+    public function getContact()
     {
-        $this->session->set('selected_supplier', $supplierId);
-
-        return $this;
+        return $this->contact;
     }
 
     /**
      * @return string
      */
-    public function getSelectedSupplier()
+    public function __toString()
     {
-        return $this->session->get('selected_supplier');
+        return $this->contact->getDisplayName();
     }
 }

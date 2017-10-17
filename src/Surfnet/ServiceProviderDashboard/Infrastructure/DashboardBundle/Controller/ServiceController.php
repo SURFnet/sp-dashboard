@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -29,7 +30,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Exception\ParserException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,9 +53,9 @@ class ServiceController extends Controller
     private $supplierService;
 
     /**
-     * @var AdminSwitcherService
+     * @var AuthorizationService
      */
-    private $switcherService;
+    private $authorizationService;
 
     /**
      * @var TicketService
@@ -65,33 +66,36 @@ class ServiceController extends Controller
      * @param CommandBus $commandBus
      * @param SamlServiceService $samlService
      * @param SupplierService $supplierService
-     * @param AdminSwitcherService $switcherService
+     * @param AuthorizationService $authorizationService
      * @param \Surfnet\ServiceProviderDashboard\Application\Service\TicketService $ticketService
      */
     public function __construct(
         CommandBus $commandBus,
         SamlServiceService $samlService,
         SupplierService $supplierService,
-        AdminSwitcherService $switcherService,
+        AuthorizationService $authorizationService,
         TicketService $ticketService
     ) {
         $this->commandBus = $commandBus;
         $this->samlService = $samlService;
         $this->supplierService = $supplierService;
-        $this->switcherService = $switcherService;
+        $this->authorizationService = $authorizationService;
         $this->ticketService = $ticketService;
     }
 
     /**
      * @Method("GET")
      * @Route("/service/create", name="service_add")
+     * @Security("has_role('ROLE_USER')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createAction()
     {
-        // Todo: perform authorization check
-        $supplier = $this->supplierService->getSupplierById((int) $this->switcherService->getSelectedSupplier());
+        $supplier = $this->supplierService->getSupplierById(
+            $this->authorizationService->getActiveSupplierId()
+        );
+
         $serviceId = $this->samlService->createServiceId();
         $ticketNumber = $this->ticketService->getTicketIdForService($serviceId, $supplier);
         if (is_null($supplier)) {
@@ -108,6 +112,7 @@ class ServiceController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/service/edit/{serviceId}", name="service_edit")
+     * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
      * @param $serviceId

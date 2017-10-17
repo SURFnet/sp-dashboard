@@ -20,18 +20,19 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AdminSwitcherService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ServiceListController extends Controller
 {
     /**
-     * @var AdminSwitcherService
+     * @var AuthorizationService
      */
-    private $adminSwitcherService;
+    private $authorizationService;
 
     /**
      * @var \Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
@@ -44,16 +45,16 @@ class ServiceListController extends Controller
     private $supplierService;
 
     /**
-     * @param AdminSwitcherService $adminSwitcherService
+     * @param AuthorizationService $authorizationService
      * @param SamlServiceService $samlServiceService
      * @param SupplierService $supplierService
      */
     public function __construct(
-        AdminSwitcherService $adminSwitcherService,
+        AuthorizationService $authorizationService,
         SamlServiceService $samlServiceService,
         SupplierService $supplierService
     ) {
-        $this->adminSwitcherService = $adminSwitcherService;
+        $this->authorizationService = $authorizationService;
         $this->samlServiceService = $samlServiceService;
         $this->supplierService = $supplierService;
     }
@@ -61,6 +62,7 @@ class ServiceListController extends Controller
     /**
      * @Method("GET")
      * @Route("/", name="service_list")
+     * @Security("has_role('ROLE_USER')")
      * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
@@ -73,7 +75,7 @@ class ServiceListController extends Controller
             return $this->redirectToRoute('supplier_add');
         }
 
-        $selectedSupplierId = $this->adminSwitcherService->getSelectedSupplier();
+        $selectedSupplierId = $this->authorizationService->getActiveSupplierId();
 
         return [
             'no_supplier_selected' => empty($selectedSupplierId),
