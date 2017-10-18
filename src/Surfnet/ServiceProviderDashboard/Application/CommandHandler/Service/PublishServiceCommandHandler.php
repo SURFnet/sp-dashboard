@@ -77,7 +77,6 @@ class PublishServiceCommandHandler implements CommandHandler
     {
         $service = $this->repository->findById($command->getId());
         try {
-            throw new PublishMetadataException('Awaits xml -> json conversion.');
             $this->logger->info(sprintf('Publishing service "%s" to Manage in test environment', $service->getNameNl()));
             $publishResponse = $this->publishClient->publish($service);
 
