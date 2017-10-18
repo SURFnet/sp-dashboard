@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishServiceRepository as PublishServiceRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\ConvertMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
@@ -49,8 +50,8 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
      */
     public function publish(Service $service)
     {
-        // Todo: convert xml metadata to json using Okke's new endpoint.
-        $json = '';
+
+        $json = $this->retrieveJsonMetadata($service->getMetadataXml());
 
         try {
             $response = $this->client->post(
@@ -61,7 +62,7 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
             );
             return $response;
         } catch (HttpException $e) {
-            throw new PublishMetadataException('Publishing of metadata failed', 0, $e);
+            throw new PublishMetadataException('Unable to publish the metadata to Manage', 0, $e);
         }
     }
 
@@ -79,12 +80,37 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
                 ['Content-Type' => 'application/json']
             );
         } catch (HttpException $e) {
-            throw new PushMetadataException('Http layer issue during pushing metadata action', 0, $e);
+            throw new PushMetadataException('Unable to push the metadata to Engineblock', 0, $e);
         }
 
         if ($response['status'] != "OK") {
             throw new PushMetadataException('Pushing did not succeed.');
         }
         return $response;
+    }
+
+    /**
+     * Converts the Metadata XML to the Manage JSON format.
+     *
+     * @param $xml
+     *
+     * @return string
+     *
+     * @throws ConvertMetadataException
+     */
+    private function retrieveJsonMetadata($xml)
+    {
+        $json = json_encode(['xml', $xml]);
+        try {
+            $response = $this->client->post(
+                $json,
+                '/manage/api/internal/convert',
+                [],
+                ['Content-Type' => 'application/json']
+            );
+            return json_encode($response);
+        } catch (HttpException $e) {
+            throw new ConvertMetadataException('Unable to convert the XML metadata to JSON', 0, $e);
+        }
     }
 }
