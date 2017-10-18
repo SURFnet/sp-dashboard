@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishServiceCommandHandler implements CommandHandler
 {
@@ -45,17 +46,26 @@ class PublishServiceCommandHandler implements CommandHandler
     private $logger;
 
     /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
      * @param ServiceRepository $serviceRepository
      * @param PublishServiceRepository $publishClient
+     * @param LoggerInterface $logger
+     * @param FlashBagInterface $flashBag
      */
     public function __construct(
         ServiceRepository $serviceRepository,
         PublishServiceRepository $publishClient,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        FlashBagInterface $flashBag
     ){
         $this->repository = $serviceRepository;
         $this->publishClient = $publishClient;
         $this->logger = $logger;
+        $this->flashBag = $flashBag;
     }
 
     /**
@@ -67,6 +77,7 @@ class PublishServiceCommandHandler implements CommandHandler
     {
         $service = $this->repository->findById($command->getId());
         try {
+            throw new PublishMetadataException('Awaits xml -> json conversion.');
             $this->logger->info(sprintf('Publishing service "%s" to Manage in test environment', $service->getNameNl()));
             $publishResponse = $this->publishClient->publish($service);
 
@@ -82,14 +93,10 @@ class PublishServiceCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            // Todo: Inform end user?
-
-            // Todo: Inform servicedesk by email?
+            $this->flashBag->add('error', 'service.edit.error.publish');
         } catch (PushMetadataException $e) {
             $this->logger->error(sprintf('Pushing to Engineblock failed with message: ', $e->getMessage()));
-            // Todo: Inform end user?
-
-            // Todo: Inform servicedesk by email?
+            $this->flashBag->add('error', 'service.edit.error.push');
         }
     }
 }
