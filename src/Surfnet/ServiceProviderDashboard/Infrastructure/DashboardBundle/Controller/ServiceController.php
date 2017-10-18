@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
@@ -28,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Exception\ParserException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -35,6 +37,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ServiceController extends Controller
 {
     /**
@@ -106,23 +111,23 @@ class ServiceController extends Controller
         $command = new CreateServiceCommand($serviceId, $supplier, $ticketNumber);
         $this->commandBus->handle($command);
 
-        return $this->redirectToRoute('service_edit', ['serviceId' => $serviceId]);
+        return $this->redirectToRoute('service_edit', ['id' => $serviceId]);
     }
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/service/edit/{serviceId}", name="service_edit")
-     * @Security("has_role('ROLE_USER')")
+     * @ParamConverter("service", class="SurfnetServiceProviderDashboard:Service")
+     * @Route("/service/edit/{id}", name="service_edit")
+     * @Security("token.hasAccessToService(request.get('service'))")
      *
      * @param Request $request
-     * @param $serviceId
+     * @param Service $service
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editAction(Request $request, $serviceId)
+    public function editAction(Request $request, Service $service)
     {
         $this->get('session')->getFlashBag()->clear();
-        $service = $this->samlService->getServiceById($serviceId);
 
         $command = $this->samlService->buildEditServiceCommand($service);
 
@@ -136,7 +141,7 @@ class ServiceController extends Controller
                         // Handle an import action based on the posted xml or import url.
                         $metadataCommand = new LoadMetadataCommand($command);
                         $this->commandBus->handle($metadataCommand);
-                        return $this->redirectToRoute('service_edit', ['serviceId' => $service->getId()]);
+                        return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
                         break;
                     default:
                         $this->commandBus->handle($command);

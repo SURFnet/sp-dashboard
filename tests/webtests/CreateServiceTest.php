@@ -35,7 +35,7 @@ class CreateServiceTest extends WebTestCase
         );
     }
 
-    public function test_switcher_remembers_selected_supplier()
+    public function test_service_can_be_created()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
 

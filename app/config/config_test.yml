@@ -4,7 +4,7 @@ imports:
 doctrine:
     dbal:
         driver: pdo_sqlite
-        path: "%kernel.root_dir%/../var/spdashboard-webtests.sqlite"
+        path: "/tmp/spdashboard-webtests.sqlite"
 
 framework:
     test: ~

@@ -59,6 +59,19 @@ class EditServiceTest extends WebTestCase
         );
     }
 
+    public function test_it_rejects_unauthorized_visitors()
+    {
+        $ibuildings = $this->getSupplierRepository()->findByName('Ibuildings B.V.');
+        $surfNet = $this->getSupplierRepository()->findByName('SURFnet');
+
+        $surfNetServiceId = $surfNet->getServices()->first()->getId();
+
+        $this->logIn('ROLE_USER', $ibuildings);
+
+        $this->client->request('GET', "/service/edit/{$surfNetServiceId}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+    }
+
     public function test_it_updates_form_submissions_to_a_service()
     {
         $formData = [
