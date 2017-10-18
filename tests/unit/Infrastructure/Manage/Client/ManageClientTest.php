@@ -41,6 +41,7 @@ class ManageClientTest extends MockeryTestCase
 
     public function setUp()
     {
+        $this->markTestSkipped('The API is not ready to be consumed yet. Awaiting Okke\'s changes.');
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
         $this->client = new PublishServiceClient(new HttpClient($guzzle));

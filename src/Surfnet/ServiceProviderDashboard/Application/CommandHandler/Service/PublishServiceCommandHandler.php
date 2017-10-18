@@ -61,7 +61,7 @@ class PublishServiceCommandHandler implements CommandHandler
         PublishServiceRepository $publishClient,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
-    ){
+    ) {
         $this->repository = $serviceRepository;
         $this->publishClient = $publishClient;
         $this->logger = $logger;

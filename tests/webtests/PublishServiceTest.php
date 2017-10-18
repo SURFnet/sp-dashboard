@@ -21,21 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class EditServiceTest extends WebTestCase
+class PublishServiceTest extends WebTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     /**
      * @var SupplierRepository
      */
@@ -48,7 +38,10 @@ class EditServiceTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        parent::setUp();
+
+        $this->markTestSkipped('The API is not ready to be consumed yet. Awaiting Okke\'s changes.');
+
         $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
         $this->supplierRepository->clear();
 

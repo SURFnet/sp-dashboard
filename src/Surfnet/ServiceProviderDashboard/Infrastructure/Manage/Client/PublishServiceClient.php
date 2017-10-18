@@ -24,7 +24,6 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMeta
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\JsonGenerator;
 
 class PublishServiceClient implements PublishServiceRepositoryInterface
 {
@@ -34,18 +33,11 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
     private $client;
 
     /**
-     * @var JsonGenerator
-     */
-    private $generator;
-
-    /**
      * @param HttpClient $client
-     * @param JsonGenerator $generator
      */
-    public function __construct(HttpClient $client, JsonGenerator $generator)
+    public function __construct(HttpClient $client)
     {
         $this->client = $client;
-        $this->generator = $generator;
     }
 
     /**
@@ -57,7 +49,8 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
      */
     public function publish(Service $service)
     {
-        $json = $this->generator->generate($service);
+        // Todo: convert xml metadata to json using Okke's new endpoint.
+        $json = '';
 
         try {
             $response = $this->client->post(
@@ -68,8 +61,6 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
             );
             return $response;
         } catch (HttpException $e) {
-            // Todo: Log this?
-            // Todo: Provide feedback to end user, publishing failed
             throw new PublishMetadataException('Publishing of metadata failed', 0, $e);
         }
     }
@@ -88,8 +79,6 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
                 ['Content-Type' => 'application/json']
             );
         } catch (HttpException $e) {
-            // Todo: Log this?
-            // Todo: Provide feedback to end user, publishing failed
             throw new PushMetadataException('Http layer issue during pushing metadata action', 0, $e);
         }
 
