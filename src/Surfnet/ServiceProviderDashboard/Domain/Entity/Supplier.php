@@ -136,4 +136,26 @@ class Supplier
     {
         $this->teamName = $teamName;
     }
+
+    /**
+     * @return ArrayCollection<Service>
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+    /**
+     * @param Service $serviceQ
+     *
+     * @return Supplier
+     */
+    public function addService(Service $service)
+    {
+        $this->services[] = $service;
+
+        $service->setSupplier($this);
+
+        return $this;
+    }
 }

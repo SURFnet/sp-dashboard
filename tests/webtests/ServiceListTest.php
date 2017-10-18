@@ -18,75 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceListTest extends WebTestCase
 {
-    /**
-     * @var \Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemorySupplierRepository
-     */
-    private $suppliers;
-
-    /**
-     * @var \Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemoryServiceRepository
-     */
-    private $services;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->suppliers = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-        $this->services = $this->client->getContainer()->get('surfnet.dashboard.repository.service');
-        $this->suppliers->clear();
-        $this->services->clear();
-
-        $supplier1 = m::mock(Supplier::class)->makePartial();
-        $supplier1->setName('test1');
-        $supplier1->shouldReceive('getId')->andReturn('test1');
-
-        $supplier2 = m::mock(Supplier::class)->makePartial();
-        $supplier2->setName('test2');
-        $supplier2->shouldReceive('getId')->andReturn('test2');
-
-        $this->suppliers->save($supplier1);
-        $this->suppliers->save($supplier2);
-
-        $contact = new Contact();
-        $contact->setFirstName('John');
-        $contact->setLastName('Doe');
-        $contact->setEmail('jdoe@example.org');
-
-        $service1 = new Service();
-        $service1->setId(1);
-        $service1->setSupplier($supplier1);
-        $service1->setNameEn('Service1');
-        $service1->setEntityId('service-1');
-        $service1->setEnvironment('connect');
-        $service1->setAdministrativeContact($contact);
-
-        $service2 = new Service();
-        $service2->setId(2);
-        $service2->setSupplier($supplier1);
-        $service2->setNameEn('Service2');
-        $service2->setEntityId('service-2');
-        $service2->setEnvironment('connect');
-        $service2->setAdministrativeContact($contact);
-
-        $this->services->save($service1);
-        $this->services->save($service2);
-    }
-
     public function test_entity_list()
     {
+        $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')
-            ->setAdminSwitcherSupplierId('test1');
+        $this->getAuthorizationService()->setAdminSwitcherSupplierId(
+            $this->getSupplierRepository()->findByName('SURFnet')->getId()
+        );
 
         $crawler = $this->client->request('GET', '/');
 
@@ -96,24 +39,23 @@ class ServiceListTest extends WebTestCase
         $this->assertCount(3, $crawler->filter('table tr'), 'Expecting three rows (including header)');
 
         $row = $crawler->filter('table tr')->eq(1);
-        $this->assertEquals('Service1', $row->filter('td')->eq(0)->text(), 'Name not found in service list');
-        $this->assertEquals('service-1', $row->filter('td')->eq(1)->text(), 'Entity ID not found in service list');
+        $this->assertEquals('SP1', $row->filter('td')->eq(0)->text(), 'Name not found in service list');
+        $this->assertEquals('SP1', $row->filter('td')->eq(1)->text(), 'Entity ID not found in service list');
         $this->assertEquals('John Doe (jdoe@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
         $this->assertEquals('connect', $row->filter('td')->eq(3)->text(), 'Environment not found in service list');
     }
 
     public function test_entity_list_redirects_to_supplier_add_when_no_supplier_exists()
     {
+        $this->clearFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
-
-        $this->suppliers->clear();
 
         $crawler = $this->client->request('GET', '/');
         $response = $this->client->getResponse();
 
         $this->assertTrue(
             $response instanceof RedirectResponse,
-            'Expecting a redirect response after selecting a supplier'
+            'Expecting a redirect response to add form when no supplier exists'
         );
 
         $this->assertRegExp('#supplier/create$#', $response->headers->get('location'));
@@ -121,6 +63,7 @@ class ServiceListTest extends WebTestCase
 
     public function test_entity_list_shows_message_when_no_supplier_selected()
     {
+        $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
         $crawler = $this->client->request('GET', '/');

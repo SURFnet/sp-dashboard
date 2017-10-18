@@ -18,12 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Symfony\Component\DomCrawler\Crawler;
 
 class IdentityHeaderTest extends WebTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->loadFixtures();
+    }
+
     public function test_page_header_displays_username()
     {
         $this->logIn('ROLE_ADMINISTRATOR');

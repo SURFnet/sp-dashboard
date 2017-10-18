@@ -18,40 +18,15 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AdminSwitcherTest extends WebTestCase
 {
-    /**
-     * @var Surfnet\ServiceProviderDashboard\WebTests\Repository\InMemorySupplierRepository
-     */
-    private $repository;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->repository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-        $this->repository->clear();
-
-        $supplier1 = m::mock(Supplier::class)->makePartial();
-        $supplier1->setName('test1');
-        $supplier1->shouldReceive('getId')->andReturn('test1');
-
-        $supplier2 = m::mock(Supplier::class)->makePartial();
-        $supplier2->setName('test2');
-        $supplier2->shouldReceive('getId')->andReturn('test2');
-
-        $this->repository->save($supplier1);
-        $this->repository->save($supplier2);
-    }
-
     public function test_admin_switcher_is_not_displayed_for_suppliers()
     {
         $this->logIn('ROLE_USER');
+        $this->loadFixtures();
 
         $crawler = $this->client->request('GET', '/');
 
@@ -61,6 +36,7 @@ class AdminSwitcherTest extends WebTestCase
     public function test_no_supplier_is_selected_when_session_is_empty()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
+        $this->loadFixtures();
 
         $crawler = $this->client->request('GET', '/supplier/create');
 
@@ -72,6 +48,7 @@ class AdminSwitcherTest extends WebTestCase
     public function test_switcher_lists_all_suppliers()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
+        $this->loadFixtures();
 
         $crawler = $this->client->request('GET', '/supplier/create');
         $options = $crawler->filter('select#admin-switcher option');
@@ -79,20 +56,23 @@ class AdminSwitcherTest extends WebTestCase
         $this->assertCount(3, $options, 'Expecting 2 suppliers in admin switcher (excluding empty option)');
 
         $this->assertEquals('', $options->eq(0)->text());
-        $this->assertEquals('test1', $options->eq(1)->text());
-        $this->assertEquals('test2', $options->eq(2)->text());
+        $this->assertEquals('Ibuildings B.V.', $options->eq(1)->text());
+        $this->assertEquals('SURFnet', $options->eq(2)->text());
     }
 
     public function test_switcher_remembers_selected_supplier()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
+        $this->loadFixtures();
 
         $crawler = $this->client->request('GET', '/supplier/create');
         $form = $crawler->filter('.admin-switcher')
             ->selectButton('Select')
             ->form();
 
-        $form['supplier']->select('test2');
+        $form['supplier']->select(
+            $this->getSupplierRepository()->findByName('SURFnet')->getId()
+        );
 
         $this->client->submit($form);
 
@@ -104,6 +84,6 @@ class AdminSwitcherTest extends WebTestCase
         $crawler = $this->client->followRedirect();
         $selectedSupplier = $crawler->filter('select#admin-switcher option:selected')->first();
 
-        $this->assertEquals('test2', $selectedSupplier->text(), "Suplier 'test2' should be selected");
+        $this->assertEquals('SURFnet', $selectedSupplier->text(), "Suplier 'SURFnet' should be selected");
     }
 }

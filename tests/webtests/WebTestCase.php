@@ -18,12 +18,22 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\StringInput;
 
 class WebTestCase extends SymfonyWebTestCase
 {
@@ -31,6 +41,16 @@ class WebTestCase extends SymfonyWebTestCase
      * @var \Symfony\Bundle\FrameworkBundle\Client
      */
     protected $client;
+
+    /**
+     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+     */
+    private $serviceRepository;
+
+    /**
+     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
+     */
+    private $supplierRepository;
 
     public function setUp()
     {
@@ -40,6 +60,35 @@ class WebTestCase extends SymfonyWebTestCase
             'HTTPS' => 'on',
             ]
         );
+    }
+
+    protected function loadFixtures()
+    {
+        $em = $this->getEntityManager();
+
+        $loader = new Loader();
+        $loader->addFixture(new WebTestFixtures);
+
+        $purger = new ORMPurger($em);
+        $executor = new ORMExecutor($em, $purger);
+        $executor->execute($loader->getFixtures());
+    }
+
+    protected function clearFixtures()
+    {
+        $em = $this->getEntityManager();
+
+        $purger = new ORMPurger($em);
+        $executor = new ORMExecutor($em, $purger);
+        $executor->execute([]);
+    }
+
+    /**
+     * @return EntityManager
+     */
+    private function getEntityManager()
+    {
+        return $this->client->getContainer()->get('doctrine')->getManager();
     }
 
     protected function logIn($role = 'ROLE_ADMINISTRATOR', Supplier $supplier = null)
@@ -65,5 +114,29 @@ class WebTestCase extends SymfonyWebTestCase
         $cookie = new Cookie($session->getName(), $session->getId());
 
         $this->client->getCookieJar()->set($cookie);
+    }
+
+    /**
+     * @return SupplierRepository
+     */
+    protected function getSupplierRepository()
+    {
+        return $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
+    }
+
+    /**
+     * @return ServiceRepository
+     */
+    protected function getServiceRepository()
+    {
+        return $this->client->getContainer()->get('surfnet.dashboard.repository.service');
+    }
+
+    /**
+     * @return AuthorizationService
+     */
+    protected function getAuthorizationService()
+    {
+        return $this->client->getContainer()->get('surfnet.dashboard.service.authorization');
     }
 }

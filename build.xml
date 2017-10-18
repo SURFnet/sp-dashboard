@@ -53,6 +53,15 @@
 
     <target name="phpunit" depends="unit-tests,integration-tests,web-tests,merge-coverage" />
 
+    <target name="create-test-db">
+        <exec executable="bin/console" failonerror="true">
+            <arg line="doctrine:schema:drop --force --env=test" />
+        </exec>
+        <exec executable="bin/console" failonerror="true">
+            <arg line="doctrine:schema:create --env=test" />
+        </exec>
+    </target>
+
     <target name="create-coverage-dir">
         <exec executable="mkdir" failonerror="true">
             <arg line="-p /tmp/sp-dashboard-coverage" />
@@ -77,7 +86,7 @@
         </exec>
     </target>
 
-    <target name="web-tests-no-coverage">
+    <target name="web-tests-no-coverage" depends="create-test-db">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite webtests" />
         </exec>
@@ -97,7 +106,7 @@
         </exec>
     </target>
 
-    <target name="web-tests" depends="create-coverage-dir">
+    <target name="web-tests" depends="create-coverage-dir,create-test-db">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite webtests" />
             <arg line="--coverage-php /tmp/sp-dashboard-coverage/webtests.cov" />
