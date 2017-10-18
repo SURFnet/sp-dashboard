@@ -338,7 +338,7 @@ class Service
      */
     public function setArchived($archived)
     {
-        $this->archived = $archived;
+        $this->archived = (bool) $archived;
     }
 
     /**
