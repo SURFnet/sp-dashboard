@@ -12,12 +12,14 @@ label {
   display: block;
 }
 
-em {
+em, div.message {
   display: block;
-  font-size: smaller;
-  font-style: italic;
+  padding: 5px;
+  border-radius: 4px;
+
   &.error {
-    color: $red;
+    color: white;
+    background-color: $red;
     &.with-checkbox {
       margin-bottom: 15px;
     }
