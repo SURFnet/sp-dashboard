@@ -31,7 +31,12 @@ class Builder
 
     public function mainMenu(array $options)
     {
+        $token = $this->tokenStorage->getToken();
         $menu = $this->factory->createItem('root');
+
+        if (!$token) {
+            return $menu;
+        }
 
         $menu->addChild('Services', array('route' => 'service_list'));
 
@@ -39,7 +44,7 @@ class Builder
             'route' => 'service_add',
         ));
 
-        if ($this->tokenStorage->getToken()->hasRole('ROLE_ADMINISTRATOR')) {
+        if ($token->hasRole('ROLE_ADMINISTRATOR')) {
             $menu->addChild('Add new supplier', array(
                 'route' => 'supplier_add',
             ));
