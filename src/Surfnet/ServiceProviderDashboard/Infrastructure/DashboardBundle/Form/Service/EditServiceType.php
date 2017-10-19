@@ -55,10 +55,6 @@ class EditServiceType extends AbstractType
                             'attr' => ['help' => 'service.edit.information.ticketNumber'],
                         ]
                     )
-                    ->add('archived')
-                    ->add('environment')
-                    ->add('status')
-                    ->add('janusId')
             )
             ->add(
                 $builder->create('metadata', FormType::class, ['inherit_data' => true])
