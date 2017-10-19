@@ -11,7 +11,7 @@
 
         {% for message in app.flashes('error') %}
             <div class="message error">
-                {{ message }}
+                {{ message|trans }}
             </div>
         {% endfor %}
 

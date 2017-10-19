@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -287,7 +285,35 @@ class EditServiceTest extends WebTestCase
         $message = $crawler->filter('.message.error')->first();
 
         $this->assertEquals(
-            'The metadata XML is invalid considering the associated XSD',
+            'The provided metadata is invalid.',
+            trim($message->text()),
+            'Expected an error message for this invalid importUrl'
+        );
+    }
+
+    public function test_it_shows_flash_message_on_parse_exception()
+    {
+        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata.xml');
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'metadata' => [
+                    'importUrl' => '',
+                    'pastedMetadata' => $xml,
+                ],
+            ],
+        ];
+
+        $crawler = $this->client->request('GET', "/service/edit/{$this->serviceId}");
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+        $message = $crawler->filter('.message.error')->first();
+
+        $this->assertEquals(
+            'An error occurred while importing the metadata.',
             trim($message->text()),
             'Expected an error message for this invalid importUrl'
         );
