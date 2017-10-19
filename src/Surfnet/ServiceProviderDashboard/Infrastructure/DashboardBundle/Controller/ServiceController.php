@@ -31,8 +31,9 @@ use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Metadata\Exception\ParserException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -148,10 +149,12 @@ class ServiceController extends Controller
                         return $this->redirectToRoute('service_list');
                         break;
                 }
-            } catch (InvalidArgumentException $e) {
-                $this->addFlash('error', $e->getMessage());
+            } catch (MetadataFetchException $e) {
+                $this->addFlash('error', 'service.edit.metadata.fetch.exception');
             } catch (ParserException $e) {
-                $this->addFlash('error', $e->getMessage());
+                $this->addFlash('error', 'service.edit.metadata.parse.exception');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', 'service.edit.metadata.invalid.exception');
             }
         }
 

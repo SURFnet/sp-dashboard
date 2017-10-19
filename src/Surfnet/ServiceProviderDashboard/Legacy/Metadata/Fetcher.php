@@ -21,8 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 
 class Fetcher implements FetcherInterface
 {
@@ -61,7 +61,7 @@ class Fetcher implements FetcherInterface
      *
      * @return string
      *
-     * @throws InvalidArgumentException
+     * @throws MetadataFetchException
      */
     public function fetch($url)
     {
@@ -73,10 +73,10 @@ class Fetcher implements FetcherInterface
         } catch (ConnectException $e) {
             $this->logger->info('Metadata CURL exception', array('e' => $e));
             $curlError = ' (' . $this->getCurlErrorDescription($e->getMessage()) . ').';
-            throw new InvalidArgumentException('Failed retrieving the metadata' . $curlError);
+            throw new MetadataFetchException('Failed retrieving the metadata' . $curlError);
         } catch (\Exception $e) {
             $this->logger->info('Metadata exception', array('e' => $e));
-            throw new InvalidArgumentException('Failed retrieving the metadata.');
+            throw new MetadataFetchException('Failed retrieving the metadata.');
         }
     }
 
