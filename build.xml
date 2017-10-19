@@ -130,5 +130,8 @@
         <exec executable="bin/console" failonerror="true">
             <arg line="lexik:translations:import DashboardBundle" />
         </exec>
+        <exec executable="bin/console" failonerror="true">
+            <arg line="lexik:translations:import DashboardSamlBundle" />
+        </exec>
     </target>
 </project>
