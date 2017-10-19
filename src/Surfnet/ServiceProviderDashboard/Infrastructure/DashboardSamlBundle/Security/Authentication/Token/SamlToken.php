@@ -69,6 +69,8 @@ class SamlToken extends AbstractToken
 
     /**
      * Check if token contains given role.
+     *
+     * @param string $expected
      */
     public function hasRole($expected)
     {

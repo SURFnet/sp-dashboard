@@ -46,6 +46,9 @@ class IdentityExtension extends Twig_Extension
         ];
     }
 
+    /**
+     * @return string
+     */
     public function renderIdentity(Twig_Environment $environment)
     {
         $token = $this->tokenStorage->getToken();
@@ -56,9 +59,7 @@ class IdentityExtension extends Twig_Extension
         }
 
         if (!$contact) {
-            throw new RuntimeException(
-                'No authenticated user found in session'
-            );
+            return '';
         }
 
         return $environment->render(
