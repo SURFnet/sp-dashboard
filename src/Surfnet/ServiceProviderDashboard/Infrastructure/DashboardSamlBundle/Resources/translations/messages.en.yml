@@ -1,0 +1,5 @@
+saml_authn_failed.title: "Sign in"
+saml_authn_failed.text.authn_failed: "Sign in unsuccessful. Please try again."
+saml_authn_failed.button.try_again: "Retry to sign-in"
+saml_precondition_not_met.title: "Sign in"
+saml_precondition_not_met.text.precondition_not_met: "You are not authorised to log in."
