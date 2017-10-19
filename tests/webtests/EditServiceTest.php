@@ -74,10 +74,6 @@ class EditServiceTest extends WebTestCase
     {
         $formData = [
             'dashboard_bundle_edit_service_type' => [
-                'general' => [
-                    'environment' => 'connect',
-                    'janusId' => '123321',
-                ],
                 'metadata' => [
                     'importUrl' => 'https://www.google.com',
                     'nameEn' => 'The A Team',
@@ -144,10 +140,6 @@ class EditServiceTest extends WebTestCase
     {
         $formData = [
             'dashboard_bundle_edit_service_type' => [
-                'general' => [
-                    'environment' => 'connect',
-                    'janusId' => '123321',
-                ],
                 'metadata' => [
                     'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
                     'nameEn' => 'The A Team',
