@@ -62,9 +62,13 @@ class AdminSwitcherExtension extends Twig_Extension
         ];
     }
 
+    /**
+     * @return string
+     */
     public function renderAdminSwitcher(Twig_Environment $environment)
     {
-        if (!$this->tokenStorage->getToken()->hasRole('ROLE_ADMINISTRATOR')) {
+        $token = $this->tokenStorage->getToken();
+        if (!$token || !$token->hasRole('ROLE_ADMINISTRATOR')) {
             return '';
         }
 
