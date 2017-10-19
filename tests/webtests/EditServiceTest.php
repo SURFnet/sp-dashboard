@@ -18,71 +18,58 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EditServiceTest extends WebTestCase
 {
-    /**
-     * @var SupplierRepository
-     */
-    private $supplierRepository;
-
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
+    private $serviceId;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-        $this->supplierRepository->clear();
-
-        $supplier = m::mock(Supplier::class)->makePartial();
-        $supplier->setName('test1');
-        $supplier->setGuid('f1af6b9e-2546-4593-a57f-6ca34d2561e9');
-        $supplier->setTeamName('team-test');
-        $supplier->shouldReceive('getId')->andReturn(1);
-
-        $this->supplierRepository->save($supplier);
-
-        $this->serviceRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.service');
-        $this->serviceRepository->clear();
-
-        $service = new Service();
-        $service->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
-        $service->setStatus(1);
-        $service->setSupplier($supplier);
-        $service->setNameEn('MyEntity');
-        $service->setTicketNumber('IID-9');
-
-        $this->serviceRepository->save($service);
+        $this->loadFixtures();
 
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
+        $supplier = $this->getSupplierRepository()->findByName('SURFnet');
+
+        $this->getAuthorizationService()->setAdminSwitcherSupplierId($supplier->getId());
+
+        $this->serviceId = $supplier->getServices()
+            ->first()
+            ->getId();
     }
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $crawler = $this->client->request('GET', "/service/edit/{$this->serviceId}");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
         $nameEnfield = $form->get('dashboard_bundle_edit_service_type[metadata][nameEn]');
         $this->assertEquals(
-            'MyEntity',
+            'SP1',
             $nameEnfield->getValue(),
             'Expect the NameEN field to be set with value from command'
         );
+    }
+
+    public function test_it_rejects_unauthorized_visitors()
+    {
+        $ibuildings = $this->getSupplierRepository()->findByName('Ibuildings B.V.');
+        $surfNet = $this->getSupplierRepository()->findByName('SURFnet');
+
+        $surfNetServiceId = $surfNet->getServices()->first()->getId();
+
+        $this->logIn('ROLE_USER', $ibuildings);
+
+        $this->client->request('GET', "/service/edit/{$surfNetServiceId}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_it_updates_form_submissions_to_a_service()
@@ -126,7 +113,7 @@ class EditServiceTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $crawler = $this->client->request('GET', "/service/edit/{$this->serviceId}");
 
         $form = $crawler
             ->selectButton('Save')
@@ -138,10 +125,7 @@ class EditServiceTest extends WebTestCase
             'Expecting a redirect response after editing a service'
         );
 
-        /** @var Service[] $services */
-        $services = $this->serviceRepository->findAll();
-        $this->assertCount(1, $services);
-        $service = array_pop($services);
+        $service = $this->getServiceRepository()->findById($this->serviceId);
 
         $this->assertInstanceOf(Contact::class, $service->getAdministrativeContact());
         $this->assertEquals('John', $service->getAdministrativeContact()->getFirstName());
@@ -173,7 +157,7 @@ class EditServiceTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $crawler = $this->client->request('GET', "/service/edit/{$this->serviceId}");
 
         $form = $crawler
             ->selectButton('Import')
@@ -181,16 +165,14 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        /** @var Service[] $services */
-        $services = $this->serviceRepository->findAll();
-        $this->assertCount(1, $services);
-        $service = array_pop($services);
+        $service = $this->getServiceRepository()->findById($this->serviceId);
 
         // Should not have overwritten existing fields
-        $this->assertEquals('MyEntity', $service->getNameEn());
+        $this->assertEquals('SP1', $service->getNameEn());
 
+        // Administrative contact is also an existing field in the fixture
         $this->assertInstanceOf(Contact::class, $service->getAdministrativeContact());
-        $this->assertEquals('Test2', $service->getAdministrativeContact()->getFirstName());
+        $this->assertEquals('John', $service->getAdministrativeContact()->getFirstName());
 
         $this->assertInstanceOf(Contact::class, $service->getTechnicalContact());
         $this->assertEquals('Test', $service->getTechnicalContact()->getFirstName());
@@ -217,7 +199,7 @@ class EditServiceTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $crawler = $this->client->request('GET', "/service/edit/{$this->serviceId}");
 
         $form = $crawler
             ->selectButton('Import')
@@ -225,13 +207,10 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        /** @var Service[] $services */
-        $services = $this->serviceRepository->findAll();
-        $this->assertCount(1, $services);
-        $service = array_pop($services);
+        $service = $this->getServiceRepository()->findById($this->serviceId);
 
         // Explicitly not set with the value in post!
-        $this->assertEquals('MyEntity', $service->getNameEn());
+        $this->assertEquals('SP1', $service->getNameEn());
 
         $this->assertNull($service->getCommonNameAttribute());
         $this->assertNull($service->getUidAttribute());
@@ -241,7 +220,6 @@ class EditServiceTest extends WebTestCase
         $this->assertInstanceOf(Contact::class, $service->getTechnicalContact());
         $this->assertEquals('Test', $service->getTechnicalContact()->getFirstName());
 
-        $this->assertNull($service->getAdministrativeContact());
         $this->assertNull($service->getSupportContact());
     }
 
@@ -257,7 +235,7 @@ class EditServiceTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $crawler = $this->client->request('GET', "/service/edit/{$this->serviceId}");
 
         $form = $crawler
             ->selectButton('Import')
@@ -265,16 +243,14 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        /** @var Service[] $services */
-        $services = $this->serviceRepository->findAll();
-        $this->assertCount(1, $services);
-        $service = array_pop($services);
+        $service = $this->getServiceRepository()->findById($this->serviceId);
 
         // Should not have overwritten existing fields
-        $this->assertEquals('MyEntity', $service->getNameEn());
+        $this->assertEquals('SP1', $service->getNameEn());
 
+        // Administrative contact is also an existing field in the fixture
         $this->assertInstanceOf(Contact::class, $service->getAdministrativeContact());
-        $this->assertEquals('Test2', $service->getAdministrativeContact()->getFirstName());
+        $this->assertEquals('John', $service->getAdministrativeContact()->getFirstName());
 
         $this->assertInstanceOf(Contact::class, $service->getTechnicalContact());
         $this->assertEquals('Test', $service->getTechnicalContact()->getFirstName());
@@ -301,7 +277,7 @@ class EditServiceTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $crawler = $this->client->request('GET', "/service/edit/{$this->serviceId}");
 
         $form = $crawler
             ->selectButton('Import')

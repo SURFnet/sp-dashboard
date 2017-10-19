@@ -114,6 +114,30 @@ class SupplierRepository extends EntityRepository implements SupplierRepositoryI
     }
 
     /**
+     * Find a supplier by name.
+     *
+     * @param string $name
+     *
+     * @return Supplier|null
+     */
+    public function findByName($name)
+    {
+        $suppliers = parent::findBy([
+            'name' => $name,
+        ]);
+
+        if (empty($suppliers)) {
+            return null;
+        } elseif (count($suppliers) > 1) {
+            throw new InvalidArgumentException(
+                "Found multiple suppliers with name '{$name}'"
+            );
+        }
+
+        return reset($suppliers);
+    }
+
+    /**
      * Find all suppliers for given team names.
      *
      * @param string[] $teamNames

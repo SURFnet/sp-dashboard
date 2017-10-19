@@ -25,11 +25,11 @@ class TicketService
     /**
      * @param $serviceId
      * @param Supplier $supplier
-     * @return string
+     * @return string|null
      */
     public function getTicketIdForService($serviceId, Supplier $supplier)
     {
-        // For now return an uuid, later in the project an integration with Jira should be implemented.
-        return (string) Uuid::uuid1();
+        // @todo implement Jira integration
+        return null;
     }
 }

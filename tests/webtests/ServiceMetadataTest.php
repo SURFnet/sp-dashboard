@@ -18,63 +18,15 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 
 class ServiceMetadataTest extends WebTestCase
 {
-    /**
-     * @var Supplier
-     */
-    private $supplier;
-
-    /**
-     * @var SupplierRepository
-     */
-    private $supplierRepository;
-
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-        $this->supplierRepository->clear();
-
-        $this->supplier = m::mock(Supplier::class)->makePartial();
-        $this->supplier->setName('test1');
-        $this->supplier->setGuid('f1af6b9e-2546-4593-a57f-6ca34d2561e9');
-        $this->supplier->setTeamName('team-test');
-        $this->supplier->shouldReceive('getId')->andReturn(1);
-
-        $this->supplierRepository->save($this->supplier);
-
-        $this->serviceRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.service');
-        $this->serviceRepository->clear();
-
-        $service = new Service();
-        $service->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
-        $service->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp');
-        $service->setCertificate('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds');
-        $service->setStatus(1);
-        $service->setSupplier($this->supplier);
-        $service->setNameEn('MyService');
-        $service->setNameNl('MijnService');
-        $service->setTicketNumber('IID-9');
-        $service->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'));
-
-        $this->serviceRepository->save($service);
-
-        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
-
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->loadFixtures();
     }
 
     /**
@@ -85,6 +37,23 @@ class ServiceMetadataTest extends WebTestCase
      */
     public function test_it_renders_metadata()
     {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $service = new Service();
+        $service->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $service->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp');
+        $service->setCertificate('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds');
+        $service->setStatus(1);
+        $service->setSupplier(
+            $this->getSupplierRepository()->findByName('SURFnet')
+        );
+        $service->setNameEn('MyService');
+        $service->setNameNl('MijnService');
+        $service->setTicketNumber('IID-9');
+        $service->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'));
+
+        $this->getServiceRepository()->save($service);
+
         $crawler = $this->client->request('GET', '/service/metadata/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
 
         $nodeNl = $crawler->filterXPath('//mdui:DisplayName[@xml:lang="nl"]');
@@ -100,14 +69,18 @@ class ServiceMetadataTest extends WebTestCase
 
     public function test_service_must_be_out_of_draft()
     {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
         $service = new Service();
-        $service->setId('2d57cffd-0409-45c7-a37a-81bb5e7e5e72');
+        $service->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
         $service->setStatus(Service::STATE_DRAFT);
-        $service->setSupplier($this->supplier);
+        $service->setSupplier(
+            $this->getSupplierRepository()->findByName('SURFnet')
+        );
 
-        $this->serviceRepository->save($service);
+        $this->getServiceRepository()->save($service);
 
-        $crawler = $this->client->request('GET', '/service/metadata/2d57cffd-0409-45c7-a37a-81bb5e7e5e72');
+        $crawler = $this->client->request('GET', '/service/metadata/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
         $this->assertContains(
             'Service cannot be in draft when generating the Metadata (400 Bad Request)',
             $crawler->text()

@@ -18,35 +18,20 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CreateSupplierTest extends WebTestCase
 {
-    /**
-     * @var SupplierRepository
-     */
-    private $supplierRepository;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-        $this->supplierRepository->clear();
+        $this->loadFixtures();
 
-        $supplier = m::mock(Supplier::class)->makePartial();
-        $supplier->setName('test1');
-        $supplier->setGuid('f1af6b9e-2546-4593-a57f-6ca34d2561e9');
-        $supplier->setTeamName('team-test');
-        $supplier->shouldReceive('getId')->andReturn(1);
-
-        $this->supplierRepository->save($supplier);
-
-        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
+        $this->getAuthorizationService()->setAdminSwitcherSupplierId(
+            $this->getSupplierRepository()->findByName('SURFnet')->getId()
+        );
     }
 
     public function test_it_validates_the_form()
@@ -78,9 +63,11 @@ class CreateSupplierTest extends WebTestCase
     {
         $this->logIn('ROLE_ADMINISTRATOR');
 
+        $existingGuid = $this->getSupplierRepository()->findByName('SURFnet')->getGuid();
+
         $formData = [
             'dashboard_bundle_supplier_type' => [
-                'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',
+                'guid' => $existingGuid,
                 'name' => 'The A Team',
                 'teamName' => 'team-a',
             ]
@@ -97,7 +84,7 @@ class CreateSupplierTest extends WebTestCase
         $nodes = $crawler->filter('.page-container .message.error');
 
         $this->assertEquals(
-            'The Guid of the Supplier should be unique. This Guid is taken by: "test1"',
+            'The Guid of the Supplier should be unique. This Guid is taken by: "SURFnet"',
             trim($nodes->first()->text())
         );
     }
@@ -127,12 +114,7 @@ class CreateSupplierTest extends WebTestCase
             'Expecting a redirect response after adding a supplier'
         );
 
-        $suppliers = $this->supplierRepository->findAll();
-        $this->assertCount(2, $suppliers);
-
-        $expectedUids = ['b9aaa8c4-3376-4e9d-b828-afa38cf29986', 'f1af6b9e-2546-4593-a57f-6ca34d2561e9'];
-        foreach ($suppliers as $supplier) {
-            $this->assertContains($supplier->getGuid(), $expectedUids);
-        }
+        $suppliers = $this->getSupplierRepository()->findAll();
+        $this->assertCount(3, $suppliers);
     }
 }

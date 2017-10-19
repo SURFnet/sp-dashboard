@@ -4,12 +4,6 @@ services:
     surfnet.dashboard.metadata.fetcher:
         class: Surfnet\ServiceProviderDashboard\Webtests\Metadata\FakeFetcher
 
-    surfnet.dashboard.repository.supplier:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemorySupplierRepository
-
-    surfnet.dashboard.repository.service:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Repository\InMemoryServiceRepository
-
     surfnet.dashboard.session.storage.mock_file:
         class: Surfnet\ServiceProviderDashboard\Webtests\Session\Storage\MockFileSessionStorage
         arguments:

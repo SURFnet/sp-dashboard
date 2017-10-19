@@ -85,7 +85,7 @@ class Service
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $ticketNo;
 
@@ -338,7 +338,7 @@ class Service
      */
     public function setArchived($archived)
     {
-        $this->archived = $archived;
+        $this->archived = (bool) $archived;
     }
 
     /**

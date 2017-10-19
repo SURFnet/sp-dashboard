@@ -18,45 +18,24 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CreateServiceTest extends WebTestCase
 {
-    /**
-     * @var SupplierRepository
-     */
-    private $supplierRepository;
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-        $this->supplierRepository->clear();
+        $this->loadFixtures();
 
-        $this->serviceRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.service');
-        $this->serviceRepository->clear();
-
-        $supplier = m::mock(Supplier::class)->makePartial();
-        $supplier->setName('test1');
-        $supplier->shouldReceive('getId')->andReturn(1);
-
-        $this->supplierRepository->save($supplier);
-
-        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
+        $this->getAuthorizationService()->setAdminSwitcherSupplierId(
+            $this->getSupplierRepository()->findByName('Ibuildings B.V.')->getId()
+        );
     }
 
-    public function test_switcher_remembers_selected_supplier()
+    public function test_service_can_be_created()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
 
@@ -69,19 +48,20 @@ class CreateServiceTest extends WebTestCase
 
         $this->client->followRedirect();
 
+        $supplier = $this->getSupplierRepository()->findByName('Ibuildings B.V.');
+        $services = $supplier->getServices();
+
         // One Service has been created
-        $records = $this->serviceRepository->findAll();
-        $this->assertCount(1, $records);
+        $this->assertCount(1, $services);
+
         /** @var Service $service */
-        $service = array_pop($records);
+        $service = $services->last();
 
         // The Id and TicketNumber fields are Uuids
         $this->assertNotEmpty($service->getId());
-        $this->assertNotEmpty($service->getTicketNumber());
 
         $this->assertEquals(Service::ENVIRONMENT_CONNECT, $service->getEnvironment());
         $this->assertEquals(Service::STATE_DRAFT, $service->getStatus());
-        $this->assertEquals('1', $service->getSupplier()->getId());
-        $this->assertEquals('test1', $service->getSupplier()->getName());
+        $this->assertEquals('Ibuildings B.V.', $service->getSupplier()->getName());
     }
 }

@@ -18,35 +18,20 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Mockery as m;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EditSupplierTest extends WebTestCase
 {
-    /**
-     * @var SupplierRepository
-     */
-    private $supplierRepository;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->supplierRepository = $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-        $this->supplierRepository->clear();
+        $this->loadFixtures();
 
-        $supplier = m::mock(Supplier::class)->makePartial();
-        $supplier->setName('test1');
-        $supplier->setGuid('f1af6b9e-2546-4593-a57f-6ca34d2561e9');
-        $supplier->setTeamName('team-test');
-        $supplier->shouldReceive('getId')->andReturn(1);
-
-        $this->supplierRepository->save($supplier);
-
-        $this->client->getContainer()->get('surfnet.dashboard.service.authorization')->setAdminSwitcherSupplierId(1);
+        $this->getAuthorizationService()->setAdminSwitcherSupplierId(
+            $this->getSupplierRepository()->findByName('SURFnet')->getId()
+        );
     }
 
     public function test_can_edit_existing_supplier()
@@ -69,7 +54,7 @@ class EditSupplierTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        $supplier = $this->supplierRepository->findAll()[0];
+        $supplier = $this->getSupplierRepository()->findAll()[0];
 
         $this->assertEquals('f1af6b9e-2546-4593-a57f-6ca34d2561e9', $supplier->getGuid());
         $this->assertEquals('The A Team', $supplier->getName());
