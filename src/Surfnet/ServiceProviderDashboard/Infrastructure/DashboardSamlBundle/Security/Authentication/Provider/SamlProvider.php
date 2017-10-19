@@ -74,7 +74,8 @@ class SamlProvider implements AuthenticationProviderInterface
 
     /**
      * @param  SamlToken|TokenInterface $token
-     * @return TokenInterface|void
+     *
+     * @return TokenInterface
      */
     public function authenticate(TokenInterface $token)
     {
@@ -115,8 +116,8 @@ class SamlProvider implements AuthenticationProviderInterface
     }
 
     /**
-     * @param  SamlToken|TokenInterface $token
-     * @return TokenInterface|void
+     * @param Contact $contact
+     * @param array $teamNames
      */
     private function assignSupplierToContact(Contact $contact, $teamNames)
     {
