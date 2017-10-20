@@ -17,7 +17,6 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Environment;
@@ -32,23 +31,14 @@ class ServiceSwitcherExtension extends Twig_Extension
     private $authorizationService;
 
     /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
 
-    public function __construct(
-        TokenStorageInterface $tokenStorage,
-        AuthorizationService $authorizationService,
-        ServiceService $serviceService
-    ) {
+    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationService $authorizationService)
+    {
         $this->tokenStorage = $tokenStorage;
         $this->authorizationService = $authorizationService;
-        $this->serviceService = $serviceService;
     }
 
     public function getFunctions()
@@ -68,15 +58,20 @@ class ServiceSwitcherExtension extends Twig_Extension
     public function render(Twig_Environment $environment)
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token || !$token->hasRole('ROLE_ADMINISTRATOR')) {
+        if (!$token) {
+            return '';
+        }
+
+        $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
+        if (count($allowedServices) <= 1) {
             return '';
         }
 
         return $environment->render(
             'DashboardBundle:TwigExtension:service_switcher.html.twig',
             [
-                'services' => $this->serviceService->getServiceNames(),
-                'selected_service' => $this->authorizationService->getSelectedServiceId(),
+                'services' => $allowedServices,
+                'selected_service' => $this->authorizationService->getActiveServiceId(),
             ]
         );
     }

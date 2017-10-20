@@ -64,8 +64,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
 
     /**
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The Guid of the new service should be unique.
-     *                           This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
+     * @expectedExceptionMessage This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
      * @group CommandHandler
      */
     public function test_it_rejects_non_unique_create_service_command()
@@ -79,7 +78,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('isUnique')
             ->andThrow(
                 InvalidArgumentException::class,
-                'The Guid of the new service should be unique. This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66'
+                'This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66'
             )
             ->once();
         $this->commandHandler->handle($command);

@@ -60,12 +60,12 @@ class Contact
     private $emailAddress;
 
     /**
-     * @var Service
+     * @var Service[]
      *
-     * @ORM\ManyToOne(targetEntity="Service", inversedBy="contacts")
+     * @ORM\ManyToMany(targetEntity="Service", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $service;
+    private $services;
 
     /**
      * @param string $nameId
@@ -118,22 +118,34 @@ class Contact
     }
 
     /**
-     * @param Service $service
+     * @param Service[] $services
      *
      * @return Contact
      */
-    public function setService(Service $service)
+    public function setServices(array $services)
     {
-        $this->service = $service;
+        $this->services = $services;
 
         return $this;
     }
 
     /**
-     * @return Service
+     * @param Service $service
+     *
+     * @return Contact
      */
-    public function getService()
+    public function addService(Service $service)
     {
-        return $this->service;
+        $this->services[] = $service;
+
+        return $this;
+    }
+
+    /**
+     * @return Service[]
+     */
+    public function getServices()
+    {
+        return $this->services;
     }
 }

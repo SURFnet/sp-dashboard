@@ -23,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -40,23 +39,13 @@ class EntityListController extends Controller
     private $entityService;
 
     /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
      * @param AuthorizationService $authorizationService
      * @param EntityService $entityService
-     * @param ServiceService $serviceService
      */
-    public function __construct(
-        AuthorizationService $authorizationService,
-        EntityService $entityService,
-        ServiceService $serviceService
-    ) {
+    public function __construct(AuthorizationService $authorizationService, EntityService $entityService)
+    {
         $this->authorizationService = $authorizationService;
         $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
     }
 
     /**
@@ -69,7 +58,7 @@ class EntityListController extends Controller
      */
     public function listAction()
     {
-        $serviceOptions = $this->serviceService->getServiceNames();
+        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
 
         if (empty($serviceOptions)) {
             return $this->redirectToRoute('service_add');

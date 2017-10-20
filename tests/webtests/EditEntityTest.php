@@ -64,7 +64,7 @@ class EditEntityTest extends WebTestCase
 
         $surfNetEntityId = $surfNet->getEntities()->first()->getId();
 
-        $this->logIn('ROLE_USER', $ibuildings);
+        $this->logIn('ROLE_USER', [$ibuildings]);
 
         $this->client->request('GET', "/entity/edit/{$surfNetEntityId}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());

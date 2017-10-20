@@ -41,7 +41,7 @@ class ServiceService
      * Format: [ '<service id>' => '<service display name>' ]
      * @return array
      */
-    public function getServiceNames()
+    public function getServiceNamesById()
     {
         $options = [];
 

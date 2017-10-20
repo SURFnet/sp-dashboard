@@ -19,38 +19,42 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 
 class Builder
 {
-    public function __construct(FactoryInterface $factory, TokenStorageInterface $tokenStorage)
+    public function __construct(FactoryInterface $factory, AuthorizationService $authorizationService)
     {
         $this->factory = $factory;
-        $this->tokenStorage = $tokenStorage;
+        $this->authorizationService = $authorizationService;
     }
 
     public function mainMenu(array $options)
     {
-        $token = $this->tokenStorage->getToken();
         $menu = $this->factory->createItem('root');
 
-        if (!$token) {
+        if (!$this->authorizationService->isLoggedIn()) {
             return $menu;
         }
 
-        $menu->addChild('My entities', array('route' => 'entity_list'));
+        if ($this->authorizationService->hasActiveServiceId()) {
+            $menu->addChild('My entities', array('route' => 'entity_list'));
 
-        $menu->addChild('Add new entity', array(
-            'route' => 'entity_add',
-        ));
+            $menu->addChild('Add new entity', array(
+                'route' => 'entity_add',
+            ));
+        }
 
-        if ($token->hasRole('ROLE_ADMINISTRATOR')) {
+        if ($this->authorizationService->isAdministrator()) {
             $menu->addChild('Add new service', array(
                 'route' => 'service_add',
             ));
-            $menu->addChild('Edit service', array(
-                'route' => 'service_edit',
-            ));
+
+            if ($this->authorizationService->hasActiveServiceId()) {
+                $menu->addChild('Edit service', array(
+                    'route' => 'service_edit',
+                ));
+            }
 
             $menu->addChild('Translations', array(
                 'route' => 'lexik_translation_overview',

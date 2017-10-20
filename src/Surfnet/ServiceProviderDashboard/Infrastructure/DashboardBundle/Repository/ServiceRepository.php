@@ -40,38 +40,8 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
      */
     public function isUnique(Service $service)
     {
-        $this->isGuidUnique($service->getGuid(), $service->getId());
         $this->isTeamNameUnique($service->getTeamName(), $service->getId());
         return true;
-    }
-
-    /**
-     * @param string $guid
-     * @param null|int $id
-     * @throws InvalidArgumentException
-     */
-    private function isGuidUnique($guid, $id = null)
-    {
-        $qb = $this->createQueryBuilder('s')
-            ->where('s.guid = :guid')
-            ->setParameter('guid', $guid);
-
-        // When checking uniqueness of existing entity, exclude its own record from the results
-        if (!is_null($id)) {
-            $qb->andWhere('s.id != :id')
-                ->setParameter('id', $id);
-        }
-
-        $serviceExists = $qb->getQuery()->getOneOrNullResult();
-
-        if ($serviceExists) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'The Guid of the service should be unique. This Guid is taken by: "%s"',
-                    $serviceExists->getName()
-                )
-            );
-        }
     }
 
     /**
@@ -96,9 +66,8 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
         if ($serviceExists) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'The teamname of the Service should be unique. This teamname is taken by: "%s" with Guid: "%s"',
-                    $serviceExists->getName(),
-                    $serviceExists->getGuid()
+                    'The teamname of the service should be unique. This teamname is taken by: "%s"',
+                    $serviceExists->getName()
                 )
             );
         }

@@ -59,7 +59,6 @@ class IdentityHeaderTest extends WebTestCase
         $crawler = $this->client->request('GET', '/');
 
         $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Add new service")'));
-        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Edit service")'));
         $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Translations")'));
     }
 }

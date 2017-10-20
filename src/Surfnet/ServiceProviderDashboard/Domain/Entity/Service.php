@@ -43,7 +43,7 @@ class Service
     /**
      * @var string
      *
-     * @ORM\Column(type="guid", unique=true)
+     * @ORM\Column(type="guid")
      */
     private $guid;
 
@@ -64,7 +64,7 @@ class Service
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Contact", mappedBy="service", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="Contact", mappedBy="services", cascade={"persist"}, orphanRemoval=true)
      */
     private $contacts;
 
