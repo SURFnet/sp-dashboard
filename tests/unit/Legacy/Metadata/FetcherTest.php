@@ -21,8 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
@@ -93,7 +93,7 @@ class FetcherTest extends MockeryTestCase
      */
     public function test_it_handles_curl_ssl_authentication_error()
     {
-        $exceptionMessage = 'cURL error 60: Peer certificate cannot be authenticated with known CA certificates. 
+        $exceptionMessage = 'cURL error 60: Peer certificate cannot be authenticated with known CA certificates.
                              (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)';
         $exception = new ConnectException(
             $exceptionMessage,
@@ -115,7 +115,7 @@ class FetcherTest extends MockeryTestCase
      */
     public function test_it_handles_curl_ssl_invalid_certificate_error()
     {
-        $exceptionMessage = 'cURL error 51: The remote server\'s SSL certificate or SSH md5 fingerprint was deemed not 
+        $exceptionMessage = 'cURL error 51: The remote server\'s SSL certificate or SSH md5 fingerprint was deemed not
                              OK.';
         $exception = new ConnectException(
             $exceptionMessage,
@@ -137,7 +137,7 @@ class FetcherTest extends MockeryTestCase
      */
     public function test_it_handles_curl_errors()
     {
-        $exceptionMessage = 'cURL error 52: Nothing was returned from the server, and under the circumstances, getting 
+        $exceptionMessage = 'cURL error 52: Nothing was returned from the server, and under the circumstances, getting
                              nothing is considered an error.';
         $exception = new ConnectException($exceptionMessage, new Request('GET', 'https://exapmle.com/foobar.xml'));
         $this->mockHandler->append($exception);

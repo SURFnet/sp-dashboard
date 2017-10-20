@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 use InvalidArgumentException;
 use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
@@ -49,17 +49,17 @@ class Generator implements GeneratorInterface
     }
 
     /**
-     * @param Service $service
+     * @param Entity $entity
      *
      * @return string
      */
-    public function generate(Service $service)
+    public function generate(Entity $entity)
     {
-        $xml = $service->getMetadataXml();
+        $xml = $entity->getMetadataXml();
 
         if (empty($xml)) {
             throw new InvalidArgumentException(
-                'Subscription without metadata xml: ' . $service->getId()
+                'Subscription without metadata xml: ' . $entity->getId()
             );
         }
 
@@ -67,7 +67,7 @@ class Generator implements GeneratorInterface
 
         if (!$xml instanceof SimpleXMLElement) {
             throw new InvalidArgumentException(
-                'Subscription without invalid xml: ' . $service->getId()
+                'Subscription without invalid xml: ' . $entity->getId()
             );
         }
 
@@ -82,28 +82,28 @@ class Generator implements GeneratorInterface
         // Remove the Signature if it exists.
         unset($descriptor->Signature);
 
-        $this->generateUi($descriptor, $service);
-        $this->generateContacts($xml, $service);
-        $this->generateAttributes($descriptor, $service);
+        $this->generateUi($descriptor, $entity);
+        $this->generateContacts($xml, $entity);
+        $this->generateAttributes($descriptor, $entity);
 
         return $xml->asXML();
     }
 
     /**
      * @param SimpleXMLElement $xml
-     * @param Service $service
+     * @param Entity $entity
      */
-    private function generateUi(SimpleXMLElement $xml, Service $service)
+    private function generateUi(SimpleXMLElement $xml, Entity $entity)
     {
         $extensions = $this->setNode($xml, 'md:Extensions', null, array(), array('md' => self::NS_SAML), array(), 0);
         $ui = $this->setNode($extensions, 'ui:UIInfo', null, array(), array('ui' => self::NS_UI));
 
-        $this->generateLogo($ui, $service);
+        $this->generateLogo($ui, $entity);
 
         $this->setNode(
             $ui,
             'ui:Description',
-            $service->getDescriptionEn(),
+            $entity->getDescriptionEn(),
             array('xml:lang' => 'en'),
             array('ui' => self::NS_UI),
             array('xml' => self::NS_LANG)
@@ -112,7 +112,7 @@ class Generator implements GeneratorInterface
         $this->setNode(
             $ui,
             'ui:Description',
-            $service->getDescriptionNl(),
+            $entity->getDescriptionNl(),
             array('xml:lang' => 'nl'),
             array('ui' => self::NS_UI),
             array('xml' => self::NS_LANG)
@@ -121,7 +121,7 @@ class Generator implements GeneratorInterface
         $this->setNode(
             $ui,
             'ui:DisplayName',
-            $service->getNameEn(),
+            $entity->getNameEn(),
             array('xml:lang' => 'en'),
             array('ui' => self::NS_UI),
             array('xml' => self::NS_LANG)
@@ -130,7 +130,7 @@ class Generator implements GeneratorInterface
         $this->setNode(
             $ui,
             'ui:DisplayName',
-            $service->getNameNl(),
+            $entity->getNameNl(),
             array('xml:lang' => 'nl'),
             array('ui' => self::NS_UI),
             array('xml' => self::NS_LANG)
@@ -139,7 +139,7 @@ class Generator implements GeneratorInterface
         $this->setNode(
             $ui,
             'ui:InformationURL',
-            $service->getApplicationUrl(),
+            $entity->getApplicationUrl(),
             array('xml:lang' => 'en'),
             array('ui' => self::NS_UI),
             array('xml' => self::NS_LANG)
@@ -148,11 +148,11 @@ class Generator implements GeneratorInterface
 
     /**
      * @param SimpleXMLElement $xml
-     * @param Service $service
+     * @param Entity $entity
      */
-    private function generateLogo(SimpleXMLElement $xml, Service $service)
+    private function generateLogo(SimpleXMLElement $xml, Entity $entity)
     {
-        $logo = $service->getLogoUrl();
+        $logo = $entity->getLogoUrl();
         if (empty($logo)) {
             $this->removeNode($xml, 'ui:Logo', array(), array('ui' => self::NS_UI));
 
@@ -179,20 +179,20 @@ class Generator implements GeneratorInterface
 
     /**
      * @param SimpleXMLElement $xml
-     * @param Service $service
+     * @param Entity $entity
      */
-    private function generateContacts(SimpleXMLElement $xml, Service $service)
+    private function generateContacts(SimpleXMLElement $xml, Entity $entity)
     {
-        if ($service->getSupportContact() instanceof Contact) {
-            $this->generateContact($xml, $service->getSupportContact(), 'support');
+        if ($entity->getSupportContact() instanceof Contact) {
+            $this->generateContact($xml, $entity->getSupportContact(), 'support');
         }
 
-        if ($service->getTechnicalContact() instanceof Contact) {
-            $this->generateContact($xml, $service->getTechnicalContact(), 'technical');
+        if ($entity->getTechnicalContact() instanceof Contact) {
+            $this->generateContact($xml, $entity->getTechnicalContact(), 'technical');
         }
 
-        if ($service->getAdministrativeContact() instanceof Contact) {
-            $this->generateContact($xml, $service->getAdministrativeContact(), 'administrative');
+        if ($entity->getAdministrativeContact() instanceof Contact) {
+            $this->generateContact($xml, $entity->getAdministrativeContact(), 'administrative');
         }
     }
 
@@ -219,11 +219,11 @@ class Generator implements GeneratorInterface
 
     /**
      * @param SimpleXMLElement $xml
-     * @param Service $service
+     * @param Entity $entity
      */
-    private function generateAttributes(SimpleXMLElement $xml, Service $service)
+    private function generateAttributes(SimpleXMLElement $xml, Entity $entity)
     {
-        if (!$this->hasRequestedAttributes($service)) {
+        if (!$this->hasRequestedAttributes($entity)) {
             $this->removeNode($xml, 'md:AttributeConsumingService', array(), array('md' => self::NS_SAML));
 
             return;
@@ -241,7 +241,7 @@ class Generator implements GeneratorInterface
             $this->setNode(
                 $node,
                 'md:ServiceName',
-                $service->getNameEn(),
+                $entity->getNameEn(),
                 array('xml:lang' => 'en'),
                 array('md' => self::NS_SAML),
                 array('xml' => self::NS_LANG),
@@ -254,11 +254,11 @@ class Generator implements GeneratorInterface
             $getterName = 'get' . ucfirst($attributeMetadata->id) . 'Attribute';
 
             // Skip attributes we know about but don't have registered.
-            if (!method_exists($service, $getterName)) {
+            if (!method_exists($entity, $getterName)) {
                 continue;
             }
 
-            $attr = $service->$getterName();
+            $attr = $entity->$getterName();
 
             if ($attr instanceof Attribute && $attr->isRequested()) {
                 $this->generateAttribute($node, $attributeMetadata->urns, $attributeMetadata->friendlyName);
@@ -269,11 +269,11 @@ class Generator implements GeneratorInterface
     }
 
     /**
-     * @param Service $service
+     * @param Entity $entity
      *
      * @return bool
      */
-    private function hasRequestedAttributes(Service $service)
+    private function hasRequestedAttributes(Entity $entity)
     {
         $attributesMetadata = $this->attributesMetadataRepository->findAll();
 
@@ -281,11 +281,11 @@ class Generator implements GeneratorInterface
             $getterName = 'get' . ucfirst($attributeMetadata->id) . 'Attribute';
 
             // Skip attributes we know about but don't have registered.
-            if (!method_exists($service, $getterName)) {
+            if (!method_exists($entity, $getterName)) {
                 continue;
             }
 
-            $attr = $service->$getterName();
+            $attr = $entity->$getterName();
 
             if ($attr instanceof Attribute && $attr->isRequested()) {
                 return true;

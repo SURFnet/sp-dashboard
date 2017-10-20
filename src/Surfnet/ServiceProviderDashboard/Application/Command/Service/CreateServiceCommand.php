@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateServiceCommand implements Command
@@ -29,53 +28,65 @@ class CreateServiceCommand implements Command
      * @Assert\NotBlank
      * @Assert\Uuid
      */
-    private $id;
-
-    /**
-     * @var Supplier
-     * @Assert\NotNull
-     */
-    private $supplier;
+    private $guid;
 
     /**
      * @var string
      * @Assert\NotBlank
      */
-    private $ticketNumber;
+    private $teamName;
 
     /**
-     * @param string $id
-     * @param Supplier $supplier
-     * @param string $ticketNumber
+     * @var string
+     * @Assert\NotBlank
      */
-    public function __construct($id, Supplier $supplier, $ticketNumber)
+    private $name;
+
+    /**
+     * @param string $guid
+     */
+    public function setGuid($guid)
     {
-        $this->id = $id;
-        $this->supplier = $supplier;
-        $this->ticketNumber = $ticketNumber;
+        $this->guid = $guid;
+    }
+
+    /**
+     * @param string $teamName
+     */
+    public function setTeamName($teamName)
+    {
+        $this->teamName = $teamName;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**
      * @return string
      */
-    public function getId()
+    public function getGuid()
     {
-        return $this->id;
-    }
-
-    /**
-     * @return Supplier
-     */
-    public function getSupplier()
-    {
-        return $this->supplier;
+        return $this->guid;
     }
 
     /**
      * @return string
      */
-    public function getTicketNumber()
+    public function getTeamName()
     {
-        return $this->ticketNumber;
+        return $this->teamName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

@@ -6,7 +6,7 @@
     <h2>{{ block('page_title') }}</h2>
 
     <p>{{ 'saml_authn_failed.text.authn_failed'|trans }}</p>
-    <a class="btn btn-primary" href="{{ path('service_list') }}">
+    <a class="btn btn-primary" href="{{ path('entity_list') }}">
         {{ 'saml_authn_failed.button.try_again'|trans }}
     </a>
 {% endblock %}

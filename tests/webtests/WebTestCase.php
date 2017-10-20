@@ -23,9 +23,9 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
@@ -41,16 +41,6 @@ class WebTestCase extends SymfonyWebTestCase
      * @var \Symfony\Bundle\FrameworkBundle\Client
      */
     protected $client;
-
-    /**
-     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-     */
-    private $serviceRepository;
-
-    /**
-     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-     */
-    private $supplierRepository;
 
     public function setUp()
     {
@@ -91,17 +81,17 @@ class WebTestCase extends SymfonyWebTestCase
         return $this->client->getContainer()->get('doctrine')->getManager();
     }
 
-    protected function logIn($role = 'ROLE_ADMINISTRATOR', Supplier $supplier = null)
+    protected function logIn($role = 'ROLE_ADMINISTRATOR', Service $service = null)
     {
         $session = $this->client->getContainer()->get('session');
 
         $contact = new Contact('webtest:nameid:johndoe', 'johndoe@localhost', 'John Doe');
 
-        if (!$supplier) {
-            $supplier = new Supplier();
+        if (!$service) {
+            $service = new Service();
         }
 
-        $contact->setSupplier($supplier);
+        $contact->setService($service);
 
         $authenticatedToken = new SamlToken([$role]);
         $authenticatedToken->setUser(
@@ -117,19 +107,19 @@ class WebTestCase extends SymfonyWebTestCase
     }
 
     /**
-     * @return SupplierRepository
-     */
-    protected function getSupplierRepository()
-    {
-        return $this->client->getContainer()->get('surfnet.dashboard.repository.supplier');
-    }
-
-    /**
      * @return ServiceRepository
      */
     protected function getServiceRepository()
     {
         return $this->client->getContainer()->get('surfnet.dashboard.repository.service');
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    protected function getEntityRepository()
+    {
+        return $this->client->getContainer()->get('surfnet.dashboard.repository.entity');
     }
 
     /**

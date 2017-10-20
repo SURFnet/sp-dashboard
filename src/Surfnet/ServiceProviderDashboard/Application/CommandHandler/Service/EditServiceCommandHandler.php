@@ -18,9 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class EditServiceCommandHandler implements CommandHandler
@@ -28,61 +29,35 @@ class EditServiceCommandHandler implements CommandHandler
     /**
      * @var ServiceRepository
      */
-    private $repository;
+    private $serviceRepository;
 
     /**
-     * @param ServiceRepository $repository
+     * @param ServiceRepository $serviceRepository
      */
-    public function __construct(ServiceRepository $repository)
+    public function __construct(ServiceRepository $serviceRepository)
     {
-        $this->repository = $repository;
+        $this->serviceRepository = $serviceRepository;
     }
 
+    /**
+     * @param EditServiceCommand $command
+     * @throws InvalidArgumentException
+     * @throws EntityNotFoundException
+     */
     public function handle(EditServiceCommand $command)
     {
-        $service = $this->repository->findById($command->getId());
+        $service = $this->serviceRepository->findById($command->getId());
 
         if (is_null($service)) {
             throw new EntityNotFoundException('The requested Service cannot be found');
         }
 
-        $service->setSupplier($command->getSupplier());
-        $service->setArchived($command->isArchived());
-        $service->setEnvironment($command->getEnvironment());
-        $service->setStatus($command->getStatus());
-        $service->setJanusId($command->getJanusId());
-        $service->setImportUrl($command->getImportUrl());
-        $service->setMetadataUrl($command->getMetadataUrl());
-        $service->setAcsLocation($command->getAcsLocation());
-        $service->setEntityId($command->getEntityId());
-        $service->setCertificate($command->getCertificate());
-        $service->setLogoUrl($command->getLogoUrl());
-        $service->setNameNl($command->getNameNl());
-        $service->setNameEn($command->getNameEn());
-        $service->setDescriptionNl($command->getDescriptionNl());
-        $service->setDescriptionEn($command->getDescriptionEn());
-        $service->setApplicationUrl($command->getApplicationUrl());
-        $service->setEulaUrl($command->getEulaUrl());
-        $service->setAdministrativeContact($command->getAdministrativeContact());
-        $service->setTechnicalContact($command->getTechnicalContact());
-        $service->setSupportContact($command->getSupportContact());
-        $service->setGivenNameAttribute($command->getGivenNameAttribute());
-        $service->setSurNameAttribute($command->getSurNameAttribute());
-        $service->setCommonNameAttribute($command->getCommonNameAttribute());
-        $service->setDisplayNameAttribute($command->getDisplayNameAttribute());
-        $service->setEmailAddressAttribute($command->getEmailAddressAttribute());
-        $service->setOrganizationAttribute($command->getOrganizationAttribute());
-        $service->setOrganizationTypeAttribute($command->getOrganizationTypeAttribute());
-        $service->setAffiliationAttribute($command->getAffiliationAttribute());
-        $service->setEntitlementAttribute($command->getEntitlementAttribute());
-        $service->setPrincipleNameAttribute($command->getPrincipleNameAttribute());
-        $service->setUidAttribute($command->getUidAttribute());
-        $service->setPreferredLanguageAttribute($command->getPreferredLanguageAttribute());
-        $service->setPersonalCodeAttribute($command->getPersonalCodeAttribute());
-        $service->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
-        $service->setEduPersonTargetedIDAttribute($command->getEduPersonTargetedIDAttribute());
-        $service->setComments($command->getComments());
+        $service->setName($command->getName());
+        $service->setGuid($command->getGuid());
+        $service->setTeamName($command->getTeamName());
 
-        $this->repository->save($service);
+        $this->serviceRepository->isUnique($service);
+
+        $this->serviceRepository->save($service);
     }
 }

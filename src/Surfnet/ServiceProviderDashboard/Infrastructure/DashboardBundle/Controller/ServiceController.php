@@ -19,28 +19,23 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Service\LoadMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService;
-use Surfnet\ServiceProviderDashboard\Application\Service\SupplierService;
-use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\CreateServiceType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class ServiceController extends Controller
 {
     /**
@@ -49,117 +44,123 @@ class ServiceController extends Controller
     private $commandBus;
 
     /**
-     * @var SamlServiceService
-     */
-    private $samlService;
-
-    /**
-     * @var SupplierService
-     */
-    private $supplierService;
-
-    /**
      * @var AuthorizationService
      */
     private $authorizationService;
 
     /**
-     * @var TicketService
+     * @var ServiceService
      */
-    private $ticketService;
+    private $serviceService;
 
     /**
      * @param CommandBus $commandBus
-     * @param SamlServiceService $samlService
-     * @param SupplierService $supplierService
      * @param AuthorizationService $authorizationService
-     * @param \Surfnet\ServiceProviderDashboard\Application\Service\TicketService $ticketService
+     * @param ServiceService $serviceService
      */
     public function __construct(
         CommandBus $commandBus,
-        SamlServiceService $samlService,
-        SupplierService $supplierService,
         AuthorizationService $authorizationService,
-        TicketService $ticketService
+        ServiceService $serviceService
     ) {
         $this->commandBus = $commandBus;
-        $this->samlService = $samlService;
-        $this->supplierService = $supplierService;
         $this->authorizationService = $authorizationService;
-        $this->ticketService = $ticketService;
-    }
-
-    /**
-     * @Method("GET")
-     * @Route("/service/create", name="service_add")
-     * @Security("has_role('ROLE_USER')")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function createAction()
-    {
-        $supplier = $this->supplierService->getSupplierById(
-            $this->authorizationService->getActiveSupplierId()
-        );
-
-        $serviceId = $this->samlService->createServiceId();
-        $ticketNumber = $this->ticketService->getTicketIdForService($serviceId, $supplier);
-        if (is_null($supplier)) {
-            $this->get('logger')->error('Unable to find selected Supplier while creating a new Service');
-            // Todo: show error page?
-        }
-
-        $command = new CreateServiceCommand($serviceId, $supplier, $ticketNumber);
-        $this->commandBus->handle($command);
-
-        return $this->redirectToRoute('service_edit', ['id' => $serviceId]);
+        $this->serviceService = $serviceService;
     }
 
     /**
      * @Method({"GET", "POST"})
-     * @ParamConverter("service", class="SurfnetServiceProviderDashboard:Service")
-     * @Route("/service/edit/{id}", name="service_edit")
-     * @Security("token.hasAccessToService(request.get('service'))")
+     * @Route("/service/create", name="service_add")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Template()
      *
      * @param Request $request
-     * @param Service $service
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, Service $service)
+    public function createAction(Request $request)
     {
         $this->get('session')->getFlashBag()->clear();
+        /** @var LoggerInterface $logger */
+        $logger = $this->get('logger');
+        $command = new CreateServiceCommand();
 
-        $command = $this->samlService->buildEditServiceCommand($service);
+        $form = $this->createForm(CreateServiceType::class, $command);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
+            try {
+                $this->commandBus->handle($command);
+                return $this->redirectToRoute('entity_list');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('DashboardBundle:Service:create.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Method({"GET", "POST"})
+     * @Route("/service/edit", name="service_edit")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Template()
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction(Request $request)
+    {
+        $this->get('session')->getFlashBag()->clear();
+        /** @var LoggerInterface $logger */
+        $logger = $this->get('logger');
+        $service = $this->serviceService->getServiceById(
+            $this->authorizationService->getSelectedServiceId()
+        );
+
+        $command = new EditServiceCommand(
+            $service->getId(),
+            $service->getGuid(),
+            $service->getName(),
+            $service->getTeamName()
+        );
 
         $form = $this->createForm(EditServiceType::class, $command);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
-                switch ($form->getClickedButton()->getName()) {
-                    case 'importButton':
-                        // Handle an import action based on the posted xml or import url.
-                        $metadataCommand = new LoadMetadataCommand($command);
-                        $this->commandBus->handle($metadataCommand);
-                        return $this->redirectToRoute('service_edit', ['id' => $service->getId()]);
-                        break;
-                    default:
-                        $this->commandBus->handle($command);
-                        return $this->redirectToRoute('service_list');
-                        break;
-                }
-            } catch (MetadataFetchException $e) {
-                $this->addFlash('error', 'service.edit.metadata.fetch.exception');
-            } catch (ParserException $e) {
-                $this->addFlash('error', 'service.edit.metadata.parse.exception');
+                $this->commandBus->handle($command);
+                return $this->redirectToRoute('entity_list');
             } catch (InvalidArgumentException $e) {
-                $this->addFlash('error', 'service.edit.metadata.invalid.exception');
+                $this->addFlash('error', $e->getMessage());
+            } catch (EntityNotFoundException $e) {
+                $this->addFlash('error', 'The Service could not be found while handling the request');
             }
         }
 
         return $this->render('DashboardBundle:Service:edit.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @Method("POST")
+     * @Route("/service/select", name="select_service")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     */
+    public function selectAction(Request $request)
+    {
+        $command = new SelectServiceCommand(
+            $request->request->get('service')
+        );
+
+        $this->commandBus->handle($command);
+
+        return $this->redirectToRoute('entity_list');
     }
 }

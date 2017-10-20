@@ -33,7 +33,7 @@ class IdentityHeaderTest extends WebTestCase
     {
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $crawler = $this->client->request('GET', '/supplier/create');
+        $crawler = $this->client->request('GET', '/service/create');
 
         $this->assertEquals(
             'John Doe',
@@ -41,14 +41,14 @@ class IdentityHeaderTest extends WebTestCase
         );
     }
 
-    public function test_page_header_does_not_show_administration_links_to_suppliers()
+    public function test_page_header_does_not_show_administration_links_to_services()
     {
         $this->logIn('ROLE_USER');
 
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Add new supplier")'));
-        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Edit supplier")'));
+        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Add new service")'));
+        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Edit service")'));
         $this->assertEmpty($crawler->filter('.navigation ul li:contains("Translations")'));
     }
 
@@ -58,8 +58,8 @@ class IdentityHeaderTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Add new supplier")'));
-        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Edit supplier")'));
+        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Add new service")'));
+        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Edit service")'));
         $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Translations")'));
     }
 }

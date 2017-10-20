@@ -4,30 +4,30 @@ error.403.title: "Access denied"
 error.403.text: "You do not have access to this page."
 error.404.title:  "Page not found"
 error.404.text: "Oops, we were unable to find the page."
-service.list.title: Services
-service.list.empty: There are no services configured
-service.list.no_supplier_selected: Please select a supplier
-service.list.service: Service
-service.list.entity_id: Entity ID
-service.list.primary_contact: Primary contact
-service.list.environment: Environment
-service.list.action.view: View
-service.list.action.edit: Edit
-service.list.action.copy: Copy
-service.list.action.delete: Delete
-service.edit.title: Service Provider registration form
-service.edit.info.title: Info
-service.edit.info.html: "
+entity.list.title: My entities
+entity.list.empty: There are no entities configured
+entity.list.no_service_selected: Please select a service
+entity.list.service: Entity
+entity.list.entity_id: Entity ID
+entity.list.primary_contact: Primary contact
+entity.list.environment: Environment
+entity.list.action.view: View
+entity.list.action.edit: Edit
+entity.list.action.copy: Copy
+entity.list.action.delete: Delete
+entity.edit.title: Service Provider registration form
+entity.edit.info.title: Info
+entity.edit.info.html: "
 <p>Documentation about this SP registration form can be found at:
 <a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
 
 <p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
 In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
 <ul>
-<li>Various contacts responsible for the service. Support, administrative and technical
+<li>Various contacts responsible for the entity. Support, administrative and technical
 should be present.</li>
 <li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL, certificate and logo of your service.</li>
+<li>Metadata information including URL, certificate and logo of your entity.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 
@@ -50,15 +50,15 @@ When tests are successful you can request a production connection. Simply press 
 
 <p>If there are any questions during completion of the form don’t hesitate to mail to support@surfconext.nl. Please add the ticket number to the subject (CXT-...).</p>
 "
-service.edit.general.title: General
-service.edit.general.html: "<p>Enter/edit your contact information below. We will use this information in case we have additional questions.</p>"
-service.edit.metadata.fetch.exception: "Unable to load the metadata from the provided import url."
-service.edit.metadata.html: "Please provide the metadata URL of your service. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>.</p>"
-service.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
-service.edit.metadata.title: Metadata
-service.edit.metadata.parse.exception: "The provided metadata is invalid."
-service.edit.contact_information.title: Contact information
-service.edit.contact_information.html: "
+entity.edit.general.title: General
+entity.edit.general.html: "<p>Enter/edit your contact information below. We will use this information in case we have additional questions.</p>"
+entity.edit.metadata.fetch.exception: "Unable to load the metadata from the provided import url."
+entity.edit.metadata.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>.</p>"
+entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
+entity.edit.metadata.title: Metadata
+entity.edit.metadata.parse.exception: "The provided metadata is invalid."
+entity.edit.contact_information.title: Contact information
+entity.edit.contact_information.html: "
 <p>Every service connected to SURFconext requires various types of contact details. Depending on the nature of the issue we will consult the following contact:</p>
 <ul>
 <li>Administrative</li>
@@ -69,41 +69,41 @@ service.edit.contact_information.html: "
 
 <p><i>Technical and administrative contact details will not be communicated to end-users.</i></p>
 "
-service.edit.attribute_input_placeholder: The service will use this attribute to...
-service.edit.attributes.title: Attributes
-service.edit.attributes.html: "
-<p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a service. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
+entity.edit.attribute_input_placeholder: The service will use this attribute to...
+entity.edit.attributes.title: Attributes
+entity.edit.attributes.html: "
+<p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a entity. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
 
 <p>Possibly some boxes have already been checked. This information is reused from the metadata.</p>
 
-<p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your service.</i></p>
+<p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
 "
-service.edit.comments.title: Comments
-service.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
-service.edit.information.ticketNumber:
-service.edit.information.importUrl: Text should be set in web translations
-service.edit.information.metadataUrl: Text should be set in web translations
-service.edit.information.pastedMetadata: Text should be set in web translations
-service.edit.information.certificate: Text should be set in web translations
-service.edit.information.descriptionNl: Text should be set in web translations
-service.edit.information.descriptionEn: Text should be set in web translations
-service.edit.information.administrativeContact: Text should be set in web translations
-service.edit.information.supportContact: Text should be set in web translations
-service.edit.information.givenNameAttribute: Text should be set in web translations
-service.edit.information.surNameAttribute: Text should be set in web translations
-service.edit.information.commonNameAttribute: Text should be set in web translations
-service.edit.information.displayNameAttribute: Text should be set in web translations
-service.edit.information.emailAddressAttribute: Text should be set in web translations
-service.edit.information.organizationAttribute: Text should be set in web translations
-service.edit.information.organizationTypeAttribute: Text should be set in web translations
-service.edit.information.affiliationAttribute: Text should be set in web translations
-service.edit.information.entitlementAttribute: Text should be set in web translations
-service.edit.information.principleNameAttribute: Text should be set in web translations
-service.edit.information.uidAttribute: Text should be set in web translations
-service.edit.information.preferredLanguageAttribute: Text should be set in web translations
-service.edit.information.personalCodeAttribute: Text should be set in web translations
-service.edit.information.scopedAffiliationAttribute: Text should be set in web translations
-service.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
-service.edit.information.comments: Text should be set in web translations
-supplier.create.title: Add new supplier
-supplier.edit.title: Edit supplier
+entity.edit.comments.title: Comments
+entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
+entity.edit.information.ticketNumber:
+entity.edit.information.importUrl: Text should be set in web translations
+entity.edit.information.metadataUrl: Text should be set in web translations
+entity.edit.information.pastedMetadata: Text should be set in web translations
+entity.edit.information.certificate: Text should be set in web translations
+entity.edit.information.descriptionNl: Text should be set in web translations
+entity.edit.information.descriptionEn: Text should be set in web translations
+entity.edit.information.administrativeContact: Text should be set in web translations
+entity.edit.information.supportContact: Text should be set in web translations
+entity.edit.information.givenNameAttribute: Text should be set in web translations
+entity.edit.information.surNameAttribute: Text should be set in web translations
+entity.edit.information.commonNameAttribute: Text should be set in web translations
+entity.edit.information.displayNameAttribute: Text should be set in web translations
+entity.edit.information.emailAddressAttribute: Text should be set in web translations
+entity.edit.information.organizationAttribute: Text should be set in web translations
+entity.edit.information.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.affiliationAttribute: Text should be set in web translations
+entity.edit.information.entitlementAttribute: Text should be set in web translations
+entity.edit.information.principleNameAttribute: Text should be set in web translations
+entity.edit.information.uidAttribute: Text should be set in web translations
+entity.edit.information.preferredLanguageAttribute: Text should be set in web translations
+entity.edit.information.personalCodeAttribute: Text should be set in web translations
+entity.edit.information.scopedAffiliationAttribute: Text should be set in web translations
+entity.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
+entity.edit.information.comments: Text should be set in web translations
+service.create.title: Add new service
+service.edit.title: Edit service

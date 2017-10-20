@@ -18,8 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CreateServiceTest extends WebTestCase
@@ -30,38 +29,92 @@ class CreateServiceTest extends WebTestCase
 
         $this->loadFixtures();
 
-        $this->getAuthorizationService()->setAdminSwitcherSupplierId(
-            $this->getSupplierRepository()->findByName('Ibuildings B.V.')->getId()
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
     }
 
-    public function test_service_can_be_created()
+    public function test_it_validates_the_form()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->client->request('GET', '/service/create');
+        $formData = [
+            'dashboard_bundle_service_type' => [
+                'guid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                'name' => 'The A Team',
+                'teamName' => 'team-a',
+            ]
+        ];
+
+        $crawler = $this->client->request('GET', '/service/create');
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+
+
+        $nodes = $crawler->filter('#dashboard_bundle_service_type li');
+        $this->assertEquals('This is not a valid UUID.', $nodes->first()->text());
+    }
+
+    public function test_it_rejects_duplicate_guids()
+    {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $existingGuid = $this->getServiceRepository()->findByName('SURFnet')->getGuid();
+
+        $formData = [
+            'dashboard_bundle_service_type' => [
+                'guid' => $existingGuid,
+                'name' => 'The A Team',
+                'teamName' => 'team-a',
+            ]
+        ];
+
+        $crawler = $this->client->request('GET', '/service/create');
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+
+        $nodes = $crawler->filter('.page-container .message.error');
+
+        $this->assertEquals(
+            'The Guid of the service should be unique. This Guid is taken by: "SURFnet"',
+            trim($nodes->first()->text())
+        );
+    }
+
+    public function test_can_create_new_service()
+    {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $formData = [
+            'dashboard_bundle_service_type' => [
+                'guid' => 'b9aaa8c4-3376-4e9d-b828-afa38cf29986',
+                'name' => 'The A Team',
+                'teamName' => 'team-a',
+            ]
+        ];
+
+        $crawler = $this->client->request('GET', '/service/create');
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form, $formData);
 
         $this->assertTrue(
             $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after creating as Service'
+            'Expecting a redirect response after adding a service'
         );
 
-        $this->client->followRedirect();
-
-        $supplier = $this->getSupplierRepository()->findByName('Ibuildings B.V.');
-        $services = $supplier->getServices();
-
-        // One Service has been created
-        $this->assertCount(1, $services);
-
-        /** @var Service $service */
-        $service = $services->last();
-
-        // The Id and TicketNumber fields are Uuids
-        $this->assertNotEmpty($service->getId());
-
-        $this->assertEquals(Service::ENVIRONMENT_CONNECT, $service->getEnvironment());
-        $this->assertEquals(Service::STATE_DRAFT, $service->getStatus());
-        $this->assertEquals('Ibuildings B.V.', $service->getSupplier()->getName());
+        $services = $this->getServiceRepository()->findAll();
+        $this->assertCount(3, $services);
     }
 }

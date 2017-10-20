@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block page_heading %}{{ 'service.create.title'|trans }}{%endblock%}
+
+{% block body %}
+
+    {% for message in app.flashes('error') %}
+        <div class="message error">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+
+    {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+{% endblock %}

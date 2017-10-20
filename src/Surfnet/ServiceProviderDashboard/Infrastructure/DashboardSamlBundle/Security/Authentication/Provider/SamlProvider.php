@@ -24,7 +24,7 @@ use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -39,9 +39,9 @@ class SamlProvider implements AuthenticationProviderInterface
     private $contacts;
 
     /**
-     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository
+     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository
      */
-    private $suppliers;
+    private $services;
 
     /**
      * @var \Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary
@@ -60,13 +60,13 @@ class SamlProvider implements AuthenticationProviderInterface
 
     public function __construct(
         ContactRepository $contacts,
-        SupplierRepository $suppliers,
+        ServiceRepository $services,
         AttributeDictionary $attributeDictionary,
         LoggerInterface $logger,
         $administratorTeam
     ) {
         $this->contacts = $contacts;
-        $this->suppliers = $suppliers;
+        $this->services = $services;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
         $this->administratorTeam = $administratorTeam;
@@ -85,7 +85,7 @@ class SamlProvider implements AuthenticationProviderInterface
         $email          = $this->getSingleStringValue('mail', $translatedAssertion);
         $commonName     = $this->getSingleStringValue('commonName', $translatedAssertion);
 
-        // Default to the ROLE_USER role for suppliers.
+        // Default to the ROLE_USER role for services.
         $role = 'ROLE_USER';
 
         $teamNames = $translatedAssertion->getAttributeValue('isMemberOf');
@@ -103,7 +103,7 @@ class SamlProvider implements AuthenticationProviderInterface
         }
 
         if ($role === 'ROLE_USER') {
-            $this->assignSupplierToContact($contact, $teamNames);
+            $this->assignServiceToContact($contact, $teamNames);
             $this->contacts->save($contact);
         }
 
@@ -119,32 +119,32 @@ class SamlProvider implements AuthenticationProviderInterface
      * @param Contact $contact
      * @param array $teamNames
      */
-    private function assignSupplierToContact(Contact $contact, $teamNames)
+    private function assignServiceToContact(Contact $contact, $teamNames)
     {
-        $suppliers = $this->suppliers->findByTeamNames($teamNames);
+        $services = $this->services->findByTeamNames($teamNames);
 
-        if (empty($suppliers)) {
+        if (empty($services)) {
             $this->logger->warning(sprintf(
-                'User is member of teams "%s" but no supplier with that team name found',
+                'User is member of teams "%s" but no service with that team name found',
                 implode(', ', $teamNames)
             ));
 
             throw new RuntimeException(
-                'You do not have access to a supplier'
+                'You do not have access to a service'
             );
-        } elseif (count($suppliers) > 1) {
+        } elseif (count($services) > 1) {
             $this->logger->warning(sprintf(
-                'User is member of multiple teams ("%s"), matching more than one suppliers in the dashboard - not supported.',
+                'User is member of multiple teams ("%s"), matching more than one services in the dashboard - not supported.',
                 implode(', ', $teamNames)
             ));
 
             throw new RuntimeException(
-                'You are assigned multiple suppliers: this is not supported'
+                'You are assigned multiple services: this is not supported'
             );
         }
 
-        $contact->setSupplier(
-            reset($suppliers)
+        $contact->setService(
+            reset($services)
         );
     }
 

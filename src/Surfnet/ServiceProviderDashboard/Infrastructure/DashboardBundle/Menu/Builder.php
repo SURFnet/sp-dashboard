@@ -38,18 +38,18 @@ class Builder
             return $menu;
         }
 
-        $menu->addChild('Services', array('route' => 'service_list'));
+        $menu->addChild('My entities', array('route' => 'entity_list'));
 
-        $menu->addChild('Add new service', array(
-            'route' => 'service_add',
+        $menu->addChild('Add new entity', array(
+            'route' => 'entity_add',
         ));
 
         if ($token->hasRole('ROLE_ADMINISTRATOR')) {
-            $menu->addChild('Add new supplier', array(
-                'route' => 'supplier_add',
+            $menu->addChild('Add new service', array(
+                'route' => 'service_add',
             ));
-            $menu->addChild('Edit supplier', array(
-                'route' => 'supplier_edit',
+            $menu->addChild('Edit service', array(
+                'route' => 'service_edit',
             ));
 
             $menu->addChild('Translations', array(

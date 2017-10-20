@@ -18,16 +18,16 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Ramsey\Uuid\Uuid;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
 class TicketService
 {
     /**
      * @param $serviceId
-     * @param Supplier $supplier
+     * @param Service $service
      * @return string|null
      */
-    public function getTicketIdForService($serviceId, Supplier $supplier)
+    public function getTicketIdForService($serviceId, Service $service)
     {
         // @todo implement Jira integration
         return null;
