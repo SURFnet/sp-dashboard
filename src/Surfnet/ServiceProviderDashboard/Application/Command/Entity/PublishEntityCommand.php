@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
+namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PublishServiceCommand implements Command
+class PublishEntityCommand implements Command
 {
     /**
      * @var string

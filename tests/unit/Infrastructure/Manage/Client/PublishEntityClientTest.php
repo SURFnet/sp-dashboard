@@ -23,14 +23,15 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishServiceClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
-class PublishServiceClientTest extends MockeryTestCase
+class PublishEntityClientTest extends MockeryTestCase
 {
     /**
-     * @var PublishServiceClient
+     * @var PublishEntityClient
      */
     private $client;
 
@@ -43,38 +44,19 @@ class PublishServiceClientTest extends MockeryTestCase
     {
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
-        $this->client = new PublishServiceClient(new HttpClient($guzzle));
+        $this->client = new PublishEntityClient(new HttpClient($guzzle));
     }
 
     public function test_it_can_publish_to_manage()
     {
-        // First call represents the 'xml to json' POST on the Manage endpoint
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/fixture/metadata.json')));
-        // Second call is the response returned from Manage after adding the service to the registry
         $this->mockHandler->append(new Response(200, [], json_encode(['test' => 'OK'])));
 
-        $service = m::mock(Service::class);
-        $service
+        $entity = m::mock(Entity::class);
+        $entity
             ->shouldReceive('getMetadataXml')
             ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
-        $response = $this->client->publish($service);
+        $response = $this->client->publish($entity);
         $this->assertEquals('OK', $response['test']);
-    }
-
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\ConvertMetadataException
-     * @expectedExceptionMessage Unable to convert the XML metadata to JSON
-     */
-    public function test_it_handles_failing_conversion()
-    {
-        // First call represents the 'xml to json' POST on the Manage endpoint
-        $this->mockHandler->append(new Response(418));
-
-        $service = m::mock(Service::class);
-        $service
-            ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
-        $this->client->publish($service);
     }
 
     /**
@@ -83,21 +65,18 @@ class PublishServiceClientTest extends MockeryTestCase
      */
     public function test_it_handles_failing_publish_action()
     {
-        // First call represents the 'xml to json' POST on the Manage endpoint
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/fixture/metadata.json')));
-        // The second call fails (publish to manage)
+        // The call fails (publish to manage)
         $this->mockHandler->append(new Response(418));
 
-        $service = m::mock(Service::class);
-        $service
+        $entity = m::mock(Entity::class);
+        $entity
             ->shouldReceive('getMetadataXml')
             ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
-        $this->client->publish($service);
+        $this->client->publish($entity);
     }
 
     public function test_it_can_push_to_engineblock()
     {
-        // First call represents the 'xml to json' POST on the Manage endpoint
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         $response = $this->client->pushMetadata();

@@ -18,19 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
-interface PublishServiceRepository
+interface PublishEntityRepository
 {
     /**
-     * Publishes the service to a Service registry (like Janus, Manage, ..) This action might also result in the
-     * sending of a mail message to a service desk who in turn can publish the service in the registry.
+     * Publishes the Entity to a Service registry (like Janus, Manage, ..) This action might also result in the
+     * sending of a mail message to a service desk who in turn can publish the entity in the registry.
      *
-     * @param Service $service
+     * @param Entity $entity
      *
      * @return mixed
      */
-    public function publish(Service $service);
+    public function publish(Entity $entity);
 
     /**
      * Push the metadata from Manage to Engineblock

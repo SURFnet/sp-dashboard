@@ -1,8 +1,0 @@
-{% extends '::base.html.twig' %}
-
-{% block page_heading %}{{ 'service.published.title'|trans }}{%endblock%}
-{% block body %}
-
-    {{ 'service.published.text.html'|trans({'%serviceName%': serviceName})|raw }}
-
-{% endblock %}

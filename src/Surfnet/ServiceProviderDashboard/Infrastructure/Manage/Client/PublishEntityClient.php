@@ -18,15 +18,15 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishServiceRepository as PublishServiceRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\ConvertMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
-class PublishServiceClient implements PublishServiceRepositoryInterface
+class PublishEntityClient implements PublishEntityRepositoryInterface
 {
     /**
      * @var HttpClient
@@ -42,21 +42,21 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
     }
 
     /**
-     * @param Service $service
+     * @param Entity $entity
      *
      * @return mixed
      *
      * @throws PublishMetadataException
      */
-    public function publish(Service $service)
+    public function publish(Entity $entity)
     {
 
-        $json = $this->retrieveJsonMetadata($service->getMetadataXml());
+        $json = json_encode(['xml' => $entity->getMetadataXml()]);
 
         try {
             $response = $this->client->post(
                 $json,
-                '/manage/api/internal/metadata',
+                '/manage/api/internal/new-sp',
                 [],
                 ['Content-Type' => 'application/json']
             );
@@ -87,30 +87,5 @@ class PublishServiceClient implements PublishServiceRepositoryInterface
             throw new PushMetadataException('Pushing did not succeed.');
         }
         return $response;
-    }
-
-    /**
-     * Converts the Metadata XML to the Manage JSON format.
-     *
-     * @param $xml
-     *
-     * @return string
-     *
-     * @throws ConvertMetadataException
-     */
-    private function retrieveJsonMetadata($xml)
-    {
-        $json = json_encode(['xml', $xml]);
-        try {
-            $response = $this->client->post(
-                $json,
-                '/manage/api/internal/convert',
-                [],
-                ['Content-Type' => 'application/json']
-            );
-            return json_encode($response);
-        } catch (HttpException $e) {
-            throw new ConvertMetadataException('Unable to convert the XML metadata to JSON', 0, $e);
-        }
     }
 }

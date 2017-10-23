@@ -40,11 +40,11 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand }
 
-    surfnet.dashboard.command_handler.publish_service:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\PublishServiceCommandHandler
+    surfnet.dashboard.command_handler.publish_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\PublishServiceCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand }
 
     surfnet.dashboard.command_handler.select_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler
@@ -109,7 +109,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
 
     surfnet.dashboard.service.entity_service:
-        class: Surfnet\ServiceProviderDashboard\Application\Service\SamlEntityService
+        class: Surfnet\ServiceProviderDashboard\Application\Service\EntityService
 
     surfnet.dashboard.service.service_service:
         class: Surfnet\ServiceProviderDashboard\Application\Service\ServiceService
@@ -125,8 +125,8 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension
         tags: [twig.extension]
 
-    surfnet.manage.client.publish_service.test_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishServiceClient
+    surfnet.manage.client.publish_entity.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
         arguments:
             - '@surfnet.manage.http.client.test_environment'
 

@@ -16,27 +16,27 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
+namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Service\PublishServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishServiceRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class PublishServiceCommandHandler implements CommandHandler
+class PublishEntityCommandHandler implements CommandHandler
 {
     /**
-     * @var ServiceRepository
+     * @var EntityRepository
      */
     private $repository;
 
     /**
-     * @var PublishServiceRepository
+     * @var PublishEntityRepository
      */
     private $publishClient;
 
@@ -51,51 +51,51 @@ class PublishServiceCommandHandler implements CommandHandler
     private $flashBag;
 
     /**
-     * @param ServiceRepository $serviceRepository
-     * @param PublishServiceRepository $publishClient
+     * @param EntityRepository $entityRepository
+     * @param PublishEntityRepository $publishClient
      * @param LoggerInterface $logger
      * @param FlashBagInterface $flashBag
      */
     public function __construct(
-        ServiceRepository $serviceRepository,
-        PublishServiceRepository $publishClient,
+        EntityRepository $entityRepository,
+        PublishEntityRepository $publishClient,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
-        $this->repository = $serviceRepository;
+        $this->repository = $entityRepository;
         $this->publishClient = $publishClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
     }
 
     /**
-     * @param PublishServiceCommand $command
+     * @param PublishEntityCommand $command
      *
      * @throws InvalidArgumentException
      */
-    public function handle(PublishServiceCommand $command)
+    public function handle(PublishEntityCommand $command)
     {
-        $service = $this->repository->findById($command->getId());
+        $entity = $this->repository->findById($command->getId());
         try {
-            $this->logger->info(sprintf('Publishing service "%s" to Manage in test environment', $service->getNameNl()));
-            $publishResponse = $this->publishClient->publish($service);
+            $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
+            $publishResponse = $this->publishClient->publish($entity);
 
             if (array_key_exists('id', $publishResponse)) {
-                $this->logger->info(sprintf('Pushing service "%s" to engineblock', $service->getNameNl()));
+                $this->logger->info(sprintf('Pushing entity "%s" to engineblock', $entity->getNameNl()));
                 $this->publishClient->pushMetadata();
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $service->getNameNl(),
+                    $entity->getNameNl(),
                     $e->getMessage()
                 )
             );
-            $this->flashBag->add('error', 'service.edit.error.publish');
+            $this->flashBag->add('error', 'entity.edit.error.publish');
         } catch (PushMetadataException $e) {
             $this->logger->error(sprintf('Pushing to Engineblock failed with message: ', $e->getMessage()));
-            $this->flashBag->add('error', 'service.edit.error.push');
+            $this->flashBag->add('error', 'entity.edit.error.push');
         }
     }
 }

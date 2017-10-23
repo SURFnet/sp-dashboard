@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Service;
+namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -25,24 +25,24 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Service\PublishServiceCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\PublishServiceCommandHandler;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishServiceClient;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class PublishServiceCommandHandlerTest extends MockeryTestCase
+class PublishEntityCommandHandlerTest extends MockeryTestCase
 {
 
     /**
-     * @var PublishServiceCommandHandler
+     * @var PublishEntityCommandHandler
      */
     private $commandHandler;
 
     /**
-     * @var ServiceRepository|Mock
+     * @var EntityRepository|Mock
      */
     private $repository;
 
@@ -63,16 +63,16 @@ class PublishServiceCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = m::mock(ServiceRepository::class);
+        $this->repository = m::mock(EntityRepository::class);
 
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
-        $client = new PublishServiceClient(new HttpClient($guzzle));
+        $client = new PublishEntityClient(new HttpClient($guzzle));
 
         $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
 
-        $this->commandHandler = new PublishServiceCommandHandler(
+        $this->commandHandler = new PublishEntityCommandHandler(
             $this->repository,
             $client,
             $this->logger,
@@ -82,47 +82,46 @@ class PublishServiceCommandHandlerTest extends MockeryTestCase
 
     public function test_it_can_publish_to_manage()
     {
-        $service = m::mock(Service::class);
-        $service
+        $entity = m::mock(Entity::class);
+        $entity
             ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
+            ->andReturn(file_get_contents(__DIR__.'/fixture/metadata.xml'));
 
-        $service
+        $entity
             ->shouldReceive('getNameNl')
-            ->andReturn('Test Service Name');
+            ->andReturn('Test Entity Name');
 
         $this->repository
             ->shouldReceive('findById')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($service);
+            ->andReturn($entity);
 
         $this->logger
             ->shouldReceive('info')
             ->times(2);
 
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/fixture/metadata.json')));
         $this->mockHandler->append(new Response(200, [], '{"id": "d6f394b2-08b1-4882-8b32-81688c15c489"}'));
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
-        $command = new PublishServiceCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
 
     public function test_it_handles_failing_push()
     {
-        $service = m::mock(Service::class);
-        $service
+        $entity = m::mock(Entity::class);
+        $entity
             ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
+            ->andReturn(file_get_contents(__DIR__.'/fixture/metadata.xml'));
 
-        $service
+        $entity
             ->shouldReceive('getNameNl')
-            ->andReturn('Test Service Name');
+            ->andReturn('Test Entity Name');
 
         $this->repository
             ->shouldReceive('findById')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($service);
+            ->andReturn($entity);
 
         $this->logger
             ->shouldReceive('info')
@@ -134,31 +133,30 @@ class PublishServiceCommandHandlerTest extends MockeryTestCase
 
         $this->flashBag
             ->shouldReceive('add')
-            ->with('error', 'service.edit.error.push');
+            ->with('error', 'entity.edit.error.push');
 
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/fixture/metadata.json')));
         $this->mockHandler->append(new Response(200, [], '{"id": "d6f394b2-08b1-4882-8b32-81688c15c489"}'));
         $this->mockHandler->append(new Response(418));
 
-        $command = new PublishServiceCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
 
     public function test_it_handles_failing_publish()
     {
-        $service = m::mock(Service::class);
-        $service
+        $entity = m::mock(Entity::class);
+        $entity
             ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
+            ->andReturn(file_get_contents(__DIR__.'/fixture/metadata.xml'));
 
-        $service
+        $entity
             ->shouldReceive('getNameNl')
-            ->andReturn('Test Service Name');
+            ->andReturn('Test Entity Name');
 
         $this->repository
             ->shouldReceive('findById')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($service);
+            ->andReturn($entity);
 
         $this->logger
             ->shouldReceive('info')
@@ -170,12 +168,11 @@ class PublishServiceCommandHandlerTest extends MockeryTestCase
 
         $this->flashBag
             ->shouldReceive('add')
-            ->with('error', 'service.edit.error.publish');
+            ->with('error', 'entity.edit.error.publish');
 
-        $this->mockHandler->append(new Response(200, [], file_get_contents(__DIR__ . '/fixture/metadata.json')));
         $this->mockHandler->append(new Response(418));
 
-        $command = new PublishServiceCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
 }
