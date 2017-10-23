@@ -125,8 +125,25 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension
         tags: [twig.extension]
 
+    surfnet.dashboard.validator.entity_id:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator
+        arguments:  ['@surfnet.manage.client.query_entity.test_environment']
+        tags:
+            - { name: validator.constraint_validator, alias: entity_id }
+
+    surfnet.dashboard.validator.metadata:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataValidator
+        arguments:  ['@surfnet.dashboard.metadata.parser']
+        tags:
+            - { name: validator.constraint_validator, alias: metadata }
+
     surfnet.manage.client.publish_entity.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
+        arguments:
+            - '@surfnet.manage.http.client.test_environment'
+
+    surfnet.manage.client.query_entity.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient
         arguments:
             - '@surfnet.manage.http.client.test_environment'
 

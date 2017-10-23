@@ -979,9 +979,6 @@ class Entity
      */
     public function isDraft()
     {
-        if ($this->status == self::STATE_DRAFT) {
-            return true;
-        }
-        return false;
+        return ($this->status == self::STATE_DRAFT);
     }
 }

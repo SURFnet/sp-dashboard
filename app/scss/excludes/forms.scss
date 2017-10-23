@@ -26,6 +26,17 @@ em, div.message {
   }
 }
 
+div.form-row.error {
+
+  input, textarea {
+    background-color: $lighter-red;
+  }
+
+  ul li {
+    color: $red;
+  }
+}
+
 .validity-input-wrapper {
   position: relative;
 

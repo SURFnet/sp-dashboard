@@ -138,7 +138,7 @@ class EntityController extends Controller
         $form = $this->createForm(EditEntityType::class, $command);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             try {
                 switch ($form->getClickedButton()->getName()) {
                     case 'importButton':
@@ -148,10 +148,13 @@ class EntityController extends Controller
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
                         break;
                     case 'publishButton':
-                        $metadataCommand = new PublishEntityCommand($entity->getId());
-                        $this->commandBus->handle($metadataCommand);
-                        if (!$flashBag->has('error')) {
-                            return $this->redirectToRoute('service_published', ['serviceId' => $entity->getId()]);
+                        // Only trigger form validation on publish
+                        if ($form->isValid()) {
+                            $metadataCommand = new PublishEntityCommand($entity->getId());
+                            $this->commandBus->handle($metadataCommand);
+                            if (!$flashBag->has('error')) {
+                                return $this->redirectToRoute('service_published', ['serviceId' => $entity->getId()]);
+                            }
                         }
                         break;
                     default:

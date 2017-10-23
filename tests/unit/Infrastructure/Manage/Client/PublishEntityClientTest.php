@@ -65,7 +65,6 @@ class PublishEntityClientTest extends MockeryTestCase
      */
     public function test_it_handles_failing_publish_action()
     {
-        // The call fails (publish to manage)
         $this->mockHandler->append(new Response(418));
 
         $entity = m::mock(Entity::class);

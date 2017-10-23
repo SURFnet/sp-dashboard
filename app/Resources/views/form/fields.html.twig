@@ -13,7 +13,7 @@
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {{ block('help_block') }}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
 {%- endblock form_widget_simple -%}
 
 {%- block attribute_widget -%}
@@ -30,7 +30,7 @@
 {%- endblock attribute_widget -%}
 
 {%- block form_row -%}
-    <div class="form-row">
+    <div class="form-row{% if errors is not empty %} error {% endif %}">
         {{- form_label(form) -}}
         {{- form_errors(form) -}}
         {{- form_widget(form) -}}
@@ -47,3 +47,13 @@
         {{- form_rest(form) -}}
     </div>
 {%- endblock form_widget_compound -%}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <ul>
+            {%- for error in errors -%}
+                <li class="error">{{ error.message }}</li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
+{%- endblock form_errors -%}

@@ -98,9 +98,8 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
         $this->logger
             ->shouldReceive('info')
-            ->times(2);
+            ->times(1);
 
-        $this->mockHandler->append(new Response(200, [], '{"id": "d6f394b2-08b1-4882-8b32-81688c15c489"}'));
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
