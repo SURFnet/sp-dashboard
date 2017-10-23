@@ -18,38 +18,90 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository as DoctrineEntityRepository;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository as ServiceRepositoryInterface;
 
-class ServiceRepository extends EntityRepository implements ServiceRepositoryInterface
+class ServiceRepository extends DoctrineEntityRepository implements ServiceRepositoryInterface
 {
     /**
      * @param Service $service
      */
     public function save(Service $service)
     {
-        $this->_em->persist($service);
-        $this->_em->flush($service);
+        $this->getEntityManager()->persist($service);
+        $this->getEntityManager()->flush($service);
     }
 
     /**
-     * @param int $id
-     *
+     * @param Service $service
      * @return bool
      */
-    public function isUnique($id)
+    public function isUnique(Service $service)
     {
-        $service = $this->createQueryBuilder('s')
-            ->where('s.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
-        if (is_null($service)) {
-            return true;
+        $this->isGuidUnique($service->getGuid(), $service->getId());
+        $this->isTeamNameUnique($service->getTeamName(), $service->getId());
+        return true;
+    }
+
+    /**
+     * @param string $guid
+     * @param null|int $id
+     * @throws InvalidArgumentException
+     */
+    private function isGuidUnique($guid, $id = null)
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->where('s.guid = :guid')
+            ->setParameter('guid', $guid);
+
+        // When checking uniqueness of existing entity, exclude its own record from the results
+        if (!is_null($id)) {
+            $qb->andWhere('s.id != :id')
+                ->setParameter('id', $id);
         }
 
-        return false;
+        $serviceExists = $qb->getQuery()->getOneOrNullResult();
+
+        if ($serviceExists) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The Guid of the service should be unique. This Guid is taken by: "%s"',
+                    $serviceExists->getName()
+                )
+            );
+        }
+    }
+
+    /**
+     * @param $teamName
+     * @param int|null $id
+     * @throws InvalidArgumentException
+     */
+    private function isTeamNameUnique($teamName, $id = null)
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->where('s.teamName = :teamname')
+            ->setParameter('teamname', $teamName);
+
+        // When checking uniqueness of existing entity, exclude its own record from the results
+        if (!is_null($id)) {
+            $qb->andWhere('s.id != :id')
+                ->setParameter('id', $id);
+        }
+
+        $serviceExists = $qb->getQuery()->getOneOrNullResult();
+
+        if ($serviceExists) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The teamname of the Service should be unique. This teamname is taken by: "%s" with Guid: "%s"',
+                    $serviceExists->getName(),
+                    $serviceExists->getGuid()
+                )
+            );
+        }
     }
 
     /**
@@ -62,13 +114,40 @@ class ServiceRepository extends EntityRepository implements ServiceRepositoryInt
     }
 
     /**
-     * @param int $supplierId
+     * Find a service by name.
+     *
+     * @param string $name
+     *
+     * @return Service|null
+     */
+    public function findByName($name)
+    {
+        $services = parent::findBy([
+            'name' => $name,
+        ]);
+
+        if (empty($services)) {
+            return null;
+        } elseif (count($services) > 1) {
+            throw new InvalidArgumentException(
+                "Found multiple services with name '{$name}'"
+            );
+        }
+
+        return reset($services);
+    }
+
+    /**
+     * Find all services for given team names.
+     *
+     * @param string[] $teamNames
+     *
      * @return Service[]
      */
-    public function findBySupplierId($supplierId)
+    public function findByTeamNames($teamNames)
     {
         return parent::findBy([
-            'supplier' => $supplierId,
+            'teamName' => $teamNames,
         ]);
     }
 }

@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
@@ -41,24 +41,16 @@ class CreateServiceCommandHandler implements CommandHandler
 
     /**
      * @param CreateServiceCommand $command
-     *
      * @throws InvalidArgumentException
      */
     public function handle(CreateServiceCommand $command)
     {
-
-        $id = $command->getId();
-
-        if (!$this->serviceRepository->isUnique($id)) {
-            throw new InvalidArgumentException(
-                'The id that was generated for the Service was not unique, please try again'
-            );
-        }
-
         $service = new Service();
-        $service->setId($id);
-        $service->setSupplier($command->getSupplier());
-        $service->setTicketNumber($command->getTicketNumber());
+        $service->setName($command->getName());
+        $service->setGuid($command->getGuid());
+        $service->setTeamName($command->getTeamName());
+
+        $this->serviceRepository->isUnique($service);
 
         $this->serviceRepository->save($service);
     }

@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Role\Role;
 
@@ -40,15 +40,15 @@ class SamlToken extends AbstractToken
     /**
      * @return bool
      */
-    public function hasAccessToService(Service $service)
+    public function hasAccessToEntity(Entity $entity)
     {
-        return $this->hasAccessToSupplier($service->getSupplier());
+        return $this->hasAccessToService($entity->getService());
     }
 
     /**
      * @return bool
      */
-    public function hasAccessToSupplier(Supplier $supplier)
+    public function hasAccessToService(Service $service)
     {
         if ($this->hasRole('ROLE_ADMINISTRATOR')) {
             return true;
@@ -64,7 +64,7 @@ class SamlToken extends AbstractToken
             return false;
         }
 
-        return $contact->getSupplier()->getId() === $supplier->getId();
+        return $contact->getService()->getId() === $service->getId();
     }
 
     /**

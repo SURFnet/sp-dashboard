@@ -42,22 +42,22 @@ class AuthorizationServiceTest extends MockeryTestCase
     /**
      * @group Service
      */
-    public function test_service_writes_selected_supplier_to_session()
+    public function test_service_writes_selected_service_to_session()
     {
         $this->session->shouldReceive('set')
-            ->with('admin_supplier_id', 'test');
+            ->with('selected_service_id', 'test');
 
-        $this->service->setAdminSwitcherSupplierId('test');
+        $this->service->setSelectedServiceId('test');
     }
 
     /**
      * @group Service
      */
-    public function test_service_reads_selected_supplier_from_session()
+    public function test_service_reads_selected_service_from_session()
     {
         $this->session->shouldReceive('get')
             ->andReturn('test');
 
-        $this->assertEquals('test', $this->service->getAdminSwitcherSupplierId());
+        $this->assertEquals('test', $this->service->getSelectedServiceId());
     }
 }

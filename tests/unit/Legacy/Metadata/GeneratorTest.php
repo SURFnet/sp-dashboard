@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Legacy\Metadata;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
@@ -67,11 +67,11 @@ class GeneratorTest extends MockeryTestCase
     /**
      * @param string $metadataXml
      *
-     * @return Service
+     * @return Entity
      */
     private function buildService($metadataXml)
     {
-        $service = new Service();
+        $service = new Entity();
         $service->setNameNl('UNAMENL');
         $service->setNameEn('UNAMEEN');
         $service->setDescriptionNl('UPDATEDDESCRNL');

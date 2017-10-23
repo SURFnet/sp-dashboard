@@ -18,9 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\LogicException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlAuthenticationStateHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\AuthenticatedSessionStateHandler;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlAuthenticationStateHandler;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\LogicException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\DateTime;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 

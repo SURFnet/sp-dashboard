@@ -60,12 +60,12 @@ class Contact
     private $emailAddress;
 
     /**
-     * @var Supplier
+     * @var Service
      *
-     * @ORM\ManyToOne(targetEntity="Supplier", inversedBy="contacts")
+     * @ORM\ManyToOne(targetEntity="Service", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $supplier;
+    private $service;
 
     /**
      * @param string $nameId
@@ -118,22 +118,22 @@ class Contact
     }
 
     /**
-     * @param Supplier $supplier
+     * @param Service $service
      *
      * @return Contact
      */
-    public function setSupplier(Supplier $supplier)
+    public function setService(Service $service)
     {
-        $this->supplier = $supplier;
+        $this->service = $service;
 
         return $this;
     }
 
     /**
-     * @return Supplier
+     * @return Service
      */
-    public function getSupplier()
+    public function getService()
     {
-        return $this->supplier;
+        return $this->service;
     }
 }

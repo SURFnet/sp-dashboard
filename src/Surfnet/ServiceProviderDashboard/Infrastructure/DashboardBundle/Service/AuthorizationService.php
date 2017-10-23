@@ -42,13 +42,13 @@ class AuthorizationService
     }
 
     /**
-     * @param string $supplierId
+     * @param string $serviceId
      *
      * @return AuthorizationService
      */
-    public function setAdminSwitcherSupplierId($supplierId)
+    public function setSelectedServiceId($serviceId)
     {
-        $this->session->set('admin_supplier_id', $supplierId);
+        $this->session->set('selected_service_id', $serviceId);
 
         return $this;
     }
@@ -56,12 +56,12 @@ class AuthorizationService
     /**
      * @return string
      */
-    public function getAdminSwitcherSupplierId()
+    public function getSelectedServiceId()
     {
-        return $this->session->get('admin_supplier_id');
+        return $this->session->get('selected_service_id');
     }
 
-    public function getActiveSupplierId()
+    public function getActiveServiceId()
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {
@@ -71,7 +71,7 @@ class AuthorizationService
         }
 
         if ($token->hasRole('ROLE_ADMINISTRATOR')) {
-            return $this->getAdminSwitcherSupplierId();
+            return $this->getSelectedServiceId();
         }
 
         $contact = $token->getUser()->getContact();
@@ -81,13 +81,13 @@ class AuthorizationService
             );
         }
 
-        $supplier = $contact->getSupplier();
-        if (!$supplier) {
+        $service = $contact->getService();
+        if (!$service) {
             throw new RuntimeException(
-                'No supplier found for authenticated user'
+                'No service found for authenticated user'
             );
         }
 
-        return $contact->getSupplier()->getId();
+        return $contact->getService()->getId();
     }
 }

@@ -21,8 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFi
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 class WebTestFixtures extends Fixture
@@ -30,17 +30,17 @@ class WebTestFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $manager->persist(
-            $this->createSupplier('SURFnet', 'urn:collab:org:surf.nl')
-                ->addService(
-                    $this->createService('SP1')
+            $this->createService('SURFnet', 'urn:collab:org:surf.nl')
+                ->addEntity(
+                    $this->createEntity('SP1')
                 )
-                ->addService(
-                    $this->createService('SP2')
+                ->addEntity(
+                    $this->createEntity('SP2')
                 )
         );
 
         $manager->persist(
-            $this->createSupplier('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl')
+            $this->createService('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl')
         );
 
         $manager->flush();
@@ -50,35 +50,35 @@ class WebTestFixtures extends Fixture
      * @param string $name
      * @param string $teamName
      *
-     * @return Supplier
+     * @return Service
      */
-    private function createSupplier($name, $teamName)
+    private function createService($name, $teamName)
     {
-        $supplier = new Supplier();
-        $supplier->setName($name);
-        $supplier->setTeamName($teamName);
-        $supplier->setGuid(Uuid::uuid4());
+        $service = new Service();
+        $service->setName($name);
+        $service->setTeamName($teamName);
+        $service->setGuid(Uuid::uuid4());
 
-        return $supplier;
+        return $service;
     }
 
     /**
      * @param string $name
      *
-     * @return Service
+     * @return Entity
      */
-    private function createService($name)
+    private function createEntity($name)
     {
-        $service = new Service();
-        $service->setId(Uuid::uuid4());
-        $service->setNameEn($name);
-        $service->setEntityId($name);
-        $service->setEnvironment('connect');
-        $service->setAdministrativeContact(
+        $entity = new Entity();
+        $entity->setId(Uuid::uuid4());
+        $entity->setNameEn($name);
+        $entity->setEntityId($name);
+        $entity->setEnvironment('connect');
+        $entity->setAdministrativeContact(
             $this->createContact('John', 'Doe', 'jdoe@example.org')
         );
 
-        return $service;
+        return $entity;
     }
 
     /**

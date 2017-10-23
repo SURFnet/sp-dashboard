@@ -18,13 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 interface GeneratorInterface
 {
     /**
-     * @param Service $service
+     * @param Entity $entity
      * @return string
      */
-    public function generate(Service $service);
+    public function generate(Entity $entity);
 }

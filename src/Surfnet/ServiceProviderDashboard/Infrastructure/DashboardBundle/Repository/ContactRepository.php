@@ -18,11 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository as DoctrineEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository as ContactRepositoryInterface;
 
-class ContactRepository extends EntityRepository implements ContactRepositoryInterface
+class ContactRepository extends DoctrineEntityRepository implements ContactRepositoryInterface
 {
     /**
      * @param Contact $contact

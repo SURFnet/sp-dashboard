@@ -28,11 +28,18 @@ interface ServiceRepository
     public function save(Service $service);
 
     /**
-     * @param int $id
+     * Is the proposed service entity unique? The id of the service is not taken into account in this test.
+     *
+     * @param Service $service
      *
      * @return bool
      */
-    public function isUnique($id);
+    public function isUnique(Service $service);
+
+    /**
+     * @return Service[]
+     */
+    public function findAll();
 
     /**
      * @param int $id
@@ -42,9 +49,20 @@ interface ServiceRepository
     public function findById($id);
 
     /**
-     * @param int $supplierId
+     * Find a service by name.
+     *
+     * @param string $name
+     *
+     * @return Service|null
+     */
+    public function findByName($name);
+
+    /**
+     * Find all services for given team names.
+     *
+     * @param string[] $teamNames
      *
      * @return Service[]
      */
-    public function findBySupplierId($supplierId);
+    public function findByTeamNames($teamNames);
 }

@@ -6,17 +6,23 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
+    surfnet.dashboard.command_handler.create_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand }
+
     surfnet.dashboard.command_handler.create_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
-    surfnet.dashboard.command_handler.create_supplier:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\CreateSupplierCommandHandler
+    surfnet.dashboard.command_handler.edit_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EditEntityCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\CreateSupplierCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand }
 
     surfnet.dashboard.command_handler.edit_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
@@ -24,30 +30,24 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand }
 
-    surfnet.dashboard.command_handler.edit_supplier:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Supplier\EditSupplierCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Supplier\EditSupplierCommand }
-
     surfnet.dashboard.command_handler.load_metadata:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\LoadMetadataCommandHandler
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\LoadMetadataCommandHandler
         arguments:
-            - '@surfnet.dashboard.repository.service'
+            - '@surfnet.dashboard.repository.entity'
             - '@surfnet.dashboard.metadata.fetcher'
             - '@surfnet.dashboard.metadata.parser'
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\LoadMetadataCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand }
 
-    surfnet.dashboard.command_handler.select_supplier:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Supplier\SelectSupplierCommandHandler
+    surfnet.dashboard.command_handler.select_service:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Supplier\SelectSupplierCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand }
 
-    surfnet.dashboard.factory.service:
-        class: Surfnet\ServiceProviderDashboard\Application\Factory\ServiceCommandFactory
+    surfnet.dashboard.factory.entity:
+        class: Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory
 
     surfnet.dashboard.menu.builder:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder
@@ -89,30 +89,30 @@ services:
         class: Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository
         arguments:  ['%kernel.root_dir%/Resources']
 
+    surfnet.dashboard.repository.entity:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository
+        factory: ['@doctrine', 'getRepository']
+        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Entity]
+
     surfnet.dashboard.repository.service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
 
-    surfnet.dashboard.repository.supplier:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\SupplierRepository
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier]
-
     surfnet.dashboard.service.authorization:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
 
-    surfnet.dashboard.service.saml_service:
-        class: Surfnet\ServiceProviderDashboard\Application\Service\SamlServiceService
+    surfnet.dashboard.service.entity_service:
+        class: Surfnet\ServiceProviderDashboard\Application\Service\SamlEntityService
 
-    surfnet.dashboard.service.supplier:
-        class: Surfnet\ServiceProviderDashboard\Application\Service\SupplierService
+    surfnet.dashboard.service.service_service:
+        class: Surfnet\ServiceProviderDashboard\Application\Service\ServiceService
 
     surfnet.dashboard.service.ticket:
         class: Surfnet\ServiceProviderDashboard\Application\Service\TicketService
 
-    surfnet.dashboard.twig.admin_switcher_extension:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\AdminSwitcherExtension
+    surfnet.dashboard.twig.service_switcher_extension:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension
         tags: [twig.extension]
 
     surfnet.dashboard.twig.identity_extension:
