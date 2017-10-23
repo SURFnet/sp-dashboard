@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -59,17 +60,15 @@ class CreateServiceTest extends WebTestCase
         $this->assertEquals('This is not a valid UUID.', $nodes->first()->text());
     }
 
-    public function test_it_rejects_duplicate_guids()
+    public function test_it_rejects_duplicate_teamnames()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $existingGuid = $this->getServiceRepository()->findByName('SURFnet')->getGuid();
-
         $formData = [
             'dashboard_bundle_service_type' => [
-                'guid' => $existingGuid,
+                'guid' => Uuid::uuid4(),
                 'name' => 'The A Team',
-                'teamName' => 'team-a',
+                'teamName' => 'urn:collab:org:surf.nl',
             ]
         ];
 
@@ -84,7 +83,7 @@ class CreateServiceTest extends WebTestCase
         $nodes = $crawler->filter('.page-container .message.error');
 
         $this->assertEquals(
-            'The Guid of the service should be unique. This Guid is taken by: "SURFnet"',
+            'The teamname of the service should be unique. This teamname is taken by: "SURFnet"',
             trim($nodes->first()->text())
         );
     }

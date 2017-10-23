@@ -64,7 +64,13 @@ class SamlToken extends AbstractToken
             return false;
         }
 
-        return $contact->getService()->getId() === $service->getId();
+        foreach ($contact->getServices() as $grantedService) {
+            if ($grantedService->getId() === $service->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

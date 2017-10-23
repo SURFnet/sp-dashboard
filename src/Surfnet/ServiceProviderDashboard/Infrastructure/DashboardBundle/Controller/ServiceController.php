@@ -118,7 +118,7 @@ class ServiceController extends Controller
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
         $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getSelectedServiceId()
+            $this->authorizationService->getActiveServiceId()
         );
 
         $command = new EditServiceCommand(
@@ -151,7 +151,7 @@ class ServiceController extends Controller
     /**
      * @Method("POST")
      * @Route("/service/select", name="select_service")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Security("has_role('ROLE_USER')")
      */
     public function selectAction(Request $request)
     {

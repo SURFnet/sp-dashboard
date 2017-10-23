@@ -103,7 +103,7 @@ class SamlProvider implements AuthenticationProviderInterface
         }
 
         if ($role === 'ROLE_USER') {
-            $this->assignServiceToContact($contact, $teamNames);
+            $this->assignServicesToContact($contact, $teamNames);
             $this->contacts->save($contact);
         }
 
@@ -119,7 +119,7 @@ class SamlProvider implements AuthenticationProviderInterface
      * @param Contact $contact
      * @param array $teamNames
      */
-    private function assignServiceToContact(Contact $contact, $teamNames)
+    private function assignServicesToContact(Contact $contact, $teamNames)
     {
         $services = $this->services->findByTeamNames($teamNames);
 
@@ -132,20 +132,11 @@ class SamlProvider implements AuthenticationProviderInterface
             throw new RuntimeException(
                 'You do not have access to a service'
             );
-        } elseif (count($services) > 1) {
-            $this->logger->warning(sprintf(
-                'User is member of multiple teams ("%s"), matching more than one services in the dashboard - not supported.',
-                implode(', ', $teamNames)
-            ));
-
-            throw new RuntimeException(
-                'You are assigned multiple services: this is not supported'
-            );
         }
 
-        $contact->setService(
-            reset($services)
-        );
+        foreach ($services as $service) {
+            $contact->addService($service);
+        }
     }
 
     public function supports(TokenInterface $token)

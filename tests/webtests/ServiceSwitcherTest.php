@@ -23,14 +23,42 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceSwitcherTest extends WebTestCase
 {
-    public function test_admin_switcher_is_not_displayed_for_services()
+    public function test_switcher_is_not_displayed_when_there_is_only_one_option()
     {
-        $this->logIn('ROLE_USER');
         $this->loadFixtures();
+
+        $serviceRepository = $this->getServiceRepository();
+
+        $this->logIn(
+            'ROLE_USER',
+            [
+                $serviceRepository->findByName('SURFnet'),
+            ]
+        );
 
         $crawler = $this->client->request('GET', '/');
 
         $this->assertEmpty($crawler->filter('select#service-switcher'));
+    }
+
+    public function test_switcher_is_displayed_when_user_has_access_to_multiple_services()
+    {
+        $this->loadFixtures();
+
+        $serviceRepository = $this->getServiceRepository();
+
+        $this->logIn(
+            'ROLE_USER',
+            [
+                $serviceRepository->findByName('SURFnet'),
+                $serviceRepository->findByName('Ibuildings B.V.'),
+            ]
+        );
+
+        $crawler = $this->client->request('GET', '/');
+
+        $options = $crawler->filter('select#service-switcher option');
+        $this->assertCount(3, $options, 'Expecting 2 services in service switcher (excluding empty option)');
     }
 
     public function test_no_service_is_selected_when_session_is_empty()
@@ -45,7 +73,7 @@ class ServiceSwitcherTest extends WebTestCase
         );
     }
 
-    public function test_switcher_lists_all_services()
+    public function test_switcher_lists_all_services_for_administrators()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
         $this->loadFixtures();

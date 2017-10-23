@@ -81,17 +81,21 @@ class WebTestCase extends SymfonyWebTestCase
         return $this->client->getContainer()->get('doctrine')->getManager();
     }
 
-    protected function logIn($role = 'ROLE_ADMINISTRATOR', Service $service = null)
+    /**
+     * @param string $role
+     * @param Service[] $services
+     */
+    protected function logIn($role = 'ROLE_ADMINISTRATOR', array $services = [])
     {
         $session = $this->client->getContainer()->get('session');
 
         $contact = new Contact('webtest:nameid:johndoe', 'johndoe@localhost', 'John Doe');
 
-        if (!$service) {
-            $service = new Service();
+        if (empty($services)) {
+            $services[] = new Service();
         }
 
-        $contact->setService($service);
+        $contact->setServices($services);
 
         $authenticatedToken = new SamlToken([$role]);
         $authenticatedToken->setUser(

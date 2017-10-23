@@ -65,7 +65,7 @@ class ServiceServiceTest extends MockeryTestCase
                 'b' => 'B',
                 'c' => 'C',
             ],
-            $this->service->getServiceNames()
+            $this->service->getServiceNamesById()
         );
     }
 }
