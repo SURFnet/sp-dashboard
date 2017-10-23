@@ -7,3 +7,7 @@ spdashboard_data_dir: /opt/openconext/spdashboard
 spdashboard_document_root: "{{ spdashboard_data_dir }}/current/web"
 spdashboard_branch: master
 spdashboard_branch_dir: /opt/openconext/builds/spdashboard
+spdashboard_saml_sp_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer"
+spdashboard_saml_sp_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
+spdashboard_saml_metadata_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer"
+spdashboard_saml_metadata_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
