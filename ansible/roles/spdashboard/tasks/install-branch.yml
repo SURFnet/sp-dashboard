@@ -71,6 +71,11 @@
   args:
     chdir: "{{ spdashboard_data_dir }}/current/"
 
+- name: Run translation import DashboardiSamlBundle
+  command: bin/console lexik:translations:import DashboardSamlBundle
+  args:
+    chdir: "{{ spdashboard_data_dir }}/current/"
+
 - name: Clean the cache
   command: bin/console cache:clear --env=prod
   args:
