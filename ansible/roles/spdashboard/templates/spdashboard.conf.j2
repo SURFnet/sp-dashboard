@@ -8,6 +8,7 @@ Listen {{ apache_app_listen_address.spdashboard }}:{{ loadbalancing.spdashboard.
     ServerAdmin {{ apache_server_admin }}
     Options -indexes +Includes
     DocumentRoot {{ spdashboard_document_root }}
+    SetEnv HTTPS on
 
     <Directory {{ spdashboard_document_root }}>
         AllowOverride None
