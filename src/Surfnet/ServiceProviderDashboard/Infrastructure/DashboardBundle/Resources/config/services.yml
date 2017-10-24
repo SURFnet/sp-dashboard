@@ -133,7 +133,9 @@ services:
 
     surfnet.dashboard.validator.metadata:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataValidator
-        arguments:  ['@surfnet.dashboard.metadata.parser']
+        arguments:
+            - '@surfnet.dashboard.metadata.fetcher'
+            - '@surfnet.dashboard.metadata.parser'
         tags:
             - { name: validator.constraint_validator, alias: metadata }
 

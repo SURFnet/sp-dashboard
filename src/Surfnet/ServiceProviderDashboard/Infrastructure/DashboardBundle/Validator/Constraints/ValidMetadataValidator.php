@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Component\Validator\Constraint;
@@ -26,15 +27,18 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ValidMetadataValidator extends ConstraintValidator
 {
     /**
+     * @var FetcherInterface
+     */
+    private $fetcher;
+
+    /**
      * @var ParserInterface
      */
     private $parser;
 
-    /**
-     * @param ParserInterface $parser
-     */
-    public function __construct(ParserInterface $parser)
+    public function __construct(FetcherInterface $fetcher, ParserInterface $parser)
     {
+        $this->fetcher = $fetcher;
         $this->parser = $parser;
     }
 
@@ -49,7 +53,8 @@ class ValidMetadataValidator extends ConstraintValidator
         }
 
         try {
-            $this->parser->parseXml($value);
+            $xml = $this->fetcher->fetch($value);
+            $this->parser->parseXml($xml);
         } catch (ParserException $e) {
             $this->context->addViolation($constraint->parseMessage, $this->processErrors($e->getParserErrors()));
         } catch (\Exception $e) {
