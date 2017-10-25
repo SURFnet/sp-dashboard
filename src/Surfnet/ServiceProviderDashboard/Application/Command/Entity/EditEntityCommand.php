@@ -94,7 +94,6 @@ class EditEntityCommand implements Command
      *      message = "url.notSecure",
      *      groups={"finished"}
      * )
-     * @SpDashboardAssert\ValidMetadata()
      */
     private $metadataUrl;
 
