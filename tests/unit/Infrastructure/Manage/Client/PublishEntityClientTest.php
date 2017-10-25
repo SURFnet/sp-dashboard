@@ -24,6 +24,7 @@ use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
+use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -54,7 +55,9 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator = m::mock(GeneratorInterface::class);
 
-        $this->client = new PublishEntityClient(new HttpClient($guzzle), $this->generator);
+        $logger = m::mock(LoggerInterface::class);
+
+        $this->client = new PublishEntityClient(new HttpClient($guzzle), $this->generator, $logger);
     }
 
     public function test_it_can_publish_to_manage()

@@ -70,15 +70,15 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
     public function setUp()
     {
         $this->repository = m::mock(EntityRepository::class);
+        $this->logger = m::mock(LoggerInterface::class);
 
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
 
         $this->generator = m::mock(GeneratorInterface::class);
 
-        $client = new PublishEntityClient(new HttpClient($guzzle), $this->generator);
+        $client = new PublishEntityClient(new HttpClient($guzzle), $this->generator, $this->logger);
 
-        $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
 
         $this->commandHandler = new PublishEntityCommandHandler(

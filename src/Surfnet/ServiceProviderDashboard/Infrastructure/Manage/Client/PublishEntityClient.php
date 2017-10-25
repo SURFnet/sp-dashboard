@@ -18,10 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
+use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\ConvertMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
@@ -39,10 +39,16 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      */
     private $generator;
 
-    public function __construct(HttpClient $client, GeneratorInterface $generator)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(HttpClient $client, GeneratorInterface $generator, LoggerInterface $logger)
     {
         $this->client = $client;
         $this->generator = $generator;
+        $this->logger = $logger;
     }
 
     /**
@@ -68,6 +74,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
             // Validation fails with response code 400
             if (isset($response['status']) && $response['status'] == 400) {
+                $this->logger->error('Schema violations returned from Manage', $response);
                 throw new PublishMetadataException('Unable to publish the metadata to Manage');
             }
 
