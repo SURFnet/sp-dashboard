@@ -1,6 +1,12 @@
 # This DI configuration file containes overrides on the DashboardBundle configuration,
 # typically to replace doctrine repositories with in-memory repositories.
 services:
+    surfnet.dashboard.command_handler.publish_entity:
+        class: Surfnet\ServiceProviderDashboard\Webtests\CommandHandler\MockPublishEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand }
+
     surfnet.dashboard.metadata.fetcher:
         class: Surfnet\ServiceProviderDashboard\Webtests\Metadata\FakeFetcher
 
@@ -10,4 +16,7 @@ services:
             - '%kernel.cache_dir%/sessions/'
             - 'MOCKSESSID'
             - '@session.storage.metadata_bag'
-
+    surfnet.dashboard.validator.logo:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints\MockValidLogoValidator
+        tags:
+            - { name: validator.constraint_validator, alias: logo }

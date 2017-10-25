@@ -16,37 +16,33 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Symfony\Component\Validator\Constraints as Assert;
 
-interface EntityRepository
+class DeletePublishedEntityCommand implements Command
 {
     /**
-     * @param Entity $entity
+     * @var string
+     * @Assert\NotBlank
+     * @Assert\Uuid
      */
-    public function save(Entity $entity);
-
-    public function delete(Entity $entity);
-
-    /**
-     * @param int $id
-     *
-     * @return bool
-     */
-    public function isUnique($id);
+    private $id;
 
     /**
-     * @param int $id
-     *
-     * @return Entity|null
+     * @param string $id
      */
-    public function findById($id);
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
 
     /**
-     * @param int $serviceId
-     *
-     * @return Entity[]
+     * @return string
      */
-    public function findByServiceId($serviceId);
+    public function getId()
+    {
+        return $this->id;
+    }
 }

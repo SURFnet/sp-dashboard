@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
+use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\ConvertMetadataException;
@@ -34,11 +35,14 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     private $client;
 
     /**
-     * @param HttpClient $client
+     * @var GeneratorInterface
      */
-    public function __construct(HttpClient $client)
+    private $generator;
+
+    public function __construct(HttpClient $client, GeneratorInterface $generator)
     {
         $this->client = $client;
+        $this->generator = $generator;
     }
 
     /**
@@ -50,8 +54,9 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      */
     public function publish(Entity $entity)
     {
-
-        $json = json_encode(['xml' => $entity->getMetadataXml()]);
+        // Once more generate the xml based on the latest values set on the entity
+        $xmlMetadata = $this->generator->generate($entity);
+        $json = json_encode(['xml' => $xmlMetadata]);
 
         try {
             $response = $this->client->post(
@@ -60,6 +65,12 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 [],
                 ['Content-Type' => 'application/json']
             );
+
+            // Validation fails with response code 400
+            if (isset($response['status']) && $response['status'] == 400) {
+                throw new PublishMetadataException('Unable to publish the metadata to Manage');
+            }
+
             return $response;
         } catch (HttpException $e) {
             throw new PublishMetadataException('Unable to publish the metadata to Manage', 0, $e);

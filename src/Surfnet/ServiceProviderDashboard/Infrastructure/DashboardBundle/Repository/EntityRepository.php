@@ -71,4 +71,10 @@ class EntityRepository extends DoctrineEntityRepository implements EntityReposit
             'service' => $serviceId,
         ]);
     }
+
+    public function delete(Entity $entity)
+    {
+        $this->_em->remove($entity);
+        $this->_em->flush($entity);
+    }
 }

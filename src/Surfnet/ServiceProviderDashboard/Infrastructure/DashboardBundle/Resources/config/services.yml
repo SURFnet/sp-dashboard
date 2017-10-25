@@ -18,6 +18,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
+    surfnet.dashboard.command_handler.delete_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand }
+
     surfnet.dashboard.command_handler.edit_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EditEntityCommandHandler
         public: true
@@ -131,18 +137,16 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: entity_id }
 
-    surfnet.dashboard.validator.metadata:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataValidator
-        arguments:
-            - '@surfnet.dashboard.metadata.fetcher'
-            - '@surfnet.dashboard.metadata.parser'
+    surfnet.dashboard.validator.logo:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator
         tags:
-            - { name: validator.constraint_validator, alias: metadata }
+            - { name: validator.constraint_validator, alias: logo }
 
     surfnet.manage.client.publish_entity.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
         arguments:
             - '@surfnet.manage.http.client.test_environment'
+            - '@surfnet.dashboard.metadata.generator'
 
     surfnet.manage.client.query_entity.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient

@@ -16,22 +16,20 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
+namespace Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * @Annotation
+ * Validation of logo's is omitted in the web tests.
+ *
+ * @see tests/integration/Infrastructure/DashboardBundle/Validator/Constraints/ValidLogoValidatorTest.php
  */
-class ValidLogo extends Constraint
+class MockValidLogoValidator extends ConstraintValidator
 {
-    public $message = 'Logo is not a valid image.';
-
-    /**
-     * @return string
-     */
-    public function validatedBy()
+    public function validate($value, Constraint $constraint)
     {
-        return 'logo';
+        return;
     }
 }

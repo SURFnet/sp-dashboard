@@ -16,22 +16,17 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
+namespace Surfnet\ServiceProviderDashboard\Webtests\CommandHandler;
 
-use Symfony\Component\Validator\Constraint;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 
 /**
- * @Annotation
+ * Publishing to an actual service registry is out of scope for the web tests.
  */
-class ValidLogo extends Constraint
+class MockPublishEntityCommandHandler implements CommandHandler
 {
-    public $message = 'Logo is not a valid image.';
-
-    /**
-     * @return string
-     */
-    public function validatedBy()
+    public function handle(PublishEntityCommand $command)
     {
-        return 'logo';
     }
 }

@@ -23,6 +23,8 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\Mock;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
@@ -40,21 +42,36 @@ class PublishEntityClientTest extends MockeryTestCase
      */
     private $mockHandler;
 
+    /**
+     * @var GeneratorInterface|Mock
+     */
+    private $generator;
+
     public function setUp()
     {
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
-        $this->client = new PublishEntityClient(new HttpClient($guzzle));
+
+        $this->generator = m::mock(GeneratorInterface::class);
+
+        $this->client = new PublishEntityClient(new HttpClient($guzzle), $this->generator);
     }
 
     public function test_it_can_publish_to_manage()
     {
         $this->mockHandler->append(new Response(200, [], json_encode(['test' => 'OK'])));
 
+        $xml = file_get_contents(__DIR__ . '/fixture/metadata.xml');
+
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
+            ->andReturn($xml);
+
+        $this->generator
+            ->shouldReceive('generate')
+            ->andReturn($xml);
+
         $response = $this->client->publish($entity);
         $this->assertEquals('OK', $response['test']);
     }
@@ -67,10 +84,17 @@ class PublishEntityClientTest extends MockeryTestCase
     {
         $this->mockHandler->append(new Response(418));
 
+        $xml = file_get_contents(__DIR__ . '/fixture/metadata.xml');
+
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getMetadataXml')
             ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
+
+        $this->generator
+            ->shouldReceive('generate')
+            ->andReturn($xml);
+
         $this->client->publish($entity);
     }
 

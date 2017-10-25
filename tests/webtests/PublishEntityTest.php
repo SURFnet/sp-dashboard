@@ -19,8 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PublishEntityTest extends WebTestCase
 {
@@ -28,35 +30,92 @@ class PublishEntityTest extends WebTestCase
     {
         parent::setUp();
 
-        $this->markTestSkipped('The API is not ready to be consumed yet. Awaiting Okke\'s changes.');
+        $this->loadFixtures();
+        $serviceRepository = $this->getServiceRepository();
 
-        $service = $this->getServiceRepository()->findByName('SURFnet');
-        $service->setName('test1');
-        $service->setGuid('f1af6b9e-2546-4593-a57f-6ca34d2561e9');
-        $service->setTeamName('team-test');
-        $this->getServiceRepository()->save($service);
+        $surfNet = $serviceRepository->findByName('SURFnet');
 
-        $this->getAuthorizationService()->setSelectedServiceId($service->getId());
+        $this->logIn(
+            'ROLE_USER',
+            [
+                $surfNet,
+            ]
+        );
 
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $surfNet->getId()
+        );
+    }
+
+    private function buildEntity(Service $service)
+    {
         $entity = new Entity();
         $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
-        $entity->setStatus(Entity::STATE_DRAFT);
-        $entity->setSupplier($service);
-        $entity->setNameEn('MyEntity');
+        $entity->setEntityId('https://domain.org/saml/sp/saml2-post/default-sp/metadata');
+        $entity->setMetadataUrl('https://domain.org/saml/sp/saml2-post/default-sp/metadata');
+        $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp/acs');
+        $entity->setCertificate(file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'));
+        $entity->setLogoUrl('http://localhost/img.png');
+        $entity->setStatus(1);
+        $entity->setService($service);
+        $entity->setNameEn('MyService');
+        $entity->setNameNl('MijnService');
+        $entity->setTicketNumber('IID-9');
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
 
-        $this->getEntityRepository()->save($entity);
+        return $entity;
     }
 
     public function test_it_published_metadata_to_manage()
     {
-        $crawler = $this->client->request('GET', '/service/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        // Build and save an entity to work with
+        $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));
+        $this->getEntityRepository()->save($entity);
+
+        $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
+
         $this->client->submit($form);
 
-        $this->assertTrue(true);
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after selecting a service'
+        );
+
+        $crawler = $this->client->followRedirect();
+        $selectedService = $crawler->filter('div.card')->first();
+
+        $this->assertEquals(
+            'Thanks for publishing "MyService" to our test environment.',
+            trim($selectedService->text()),
+            "Publishing thank you text should be displayed"
+        );
+
+        // After publishing the entity, it should no longer be accessible
+        $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function test_it_validates_the_from_on_publish()
+    {
+        $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));
+        $entity->setCertificate('-----BEGIN CERTIFICATE-----THIS IS NOT A VALID CERTIFICATE-----END CERTIFICATE-----');
+        $this->getEntityRepository()->save($entity);
+
+        $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $crawler = $this->client->submit($form);
+
+        $errors = $crawler->filter('div.form-row.error');
+        $error = $errors->first()->filter('li.error')->first()->text();
+        $this->assertCount(1, $errors);
+        $this->assertEquals('The certificate is not valid.', $error);
     }
 }

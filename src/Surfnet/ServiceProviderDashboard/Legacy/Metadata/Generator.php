@@ -82,6 +82,9 @@ class Generator implements GeneratorInterface
         // Remove the Signature if it exists.
         unset($descriptor->Signature);
 
+        // Update the entityID value with the value set on the entity
+        $xml['entityID'] = $entity->getEntityId();
+
         $this->generateUi($descriptor, $entity);
         $this->generateContacts($xml, $entity);
         $this->generateAttributes($descriptor, $entity);

@@ -27,6 +27,7 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
@@ -61,13 +62,21 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
      */
     private $flashBag;
 
+    /**
+     * @var GeneratorInterface|Mock
+     */
+    private $generator;
+
     public function setUp()
     {
         $this->repository = m::mock(EntityRepository::class);
 
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
-        $client = new PublishEntityClient(new HttpClient($guzzle));
+
+        $this->generator = m::mock(GeneratorInterface::class);
+
+        $client = new PublishEntityClient(new HttpClient($guzzle), $this->generator);
 
         $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
@@ -82,14 +91,20 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
     public function test_it_can_publish_to_manage()
     {
+        $xml = file_get_contents(__DIR__.'/fixture/metadata.xml');
+
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__.'/fixture/metadata.xml'));
+            ->andReturn($xml);
 
         $entity
             ->shouldReceive('getNameNl')
             ->andReturn('Test Entity Name');
+
+        $this->generator
+            ->shouldReceive('generate')
+            ->andReturn($xml);
 
         $this->repository
             ->shouldReceive('findById')
@@ -108,10 +123,12 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
     public function test_it_handles_failing_push()
     {
+        $xml = file_get_contents(__DIR__.'/fixture/metadata.xml');
+
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__.'/fixture/metadata.xml'));
+            ->andReturn($xml);
 
         $entity
             ->shouldReceive('getNameNl')
@@ -134,6 +151,10 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('add')
             ->with('error', 'entity.edit.error.push');
 
+        $this->generator
+            ->shouldReceive('generate')
+            ->andReturn($xml);
+
         $this->mockHandler->append(new Response(200, [], '{"id": "d6f394b2-08b1-4882-8b32-81688c15c489"}'));
         $this->mockHandler->append(new Response(418));
 
@@ -143,10 +164,12 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
     public function test_it_handles_failing_publish()
     {
+        $xml = file_get_contents(__DIR__.'/fixture/metadata.xml');
+
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__.'/fixture/metadata.xml'));
+            ->andReturn($xml);
 
         $entity
             ->shouldReceive('getNameNl')
@@ -168,6 +191,10 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
         $this->flashBag
             ->shouldReceive('add')
             ->with('error', 'entity.edit.error.publish');
+
+        $this->generator
+            ->shouldReceive('generate')
+            ->andReturn($xml);
 
         $this->mockHandler->append(new Response(418));
 

@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -152,8 +153,14 @@ class EntityController extends Controller
                         if ($form->isValid()) {
                             $metadataCommand = new PublishEntityCommand($entity->getId());
                             $this->commandBus->handle($metadataCommand);
+
                             if (!$flashBag->has('error')) {
-                                return $this->redirectToRoute('service_published', ['serviceId' => $entity->getId()]);
+                                $this->get('session')->set('published.entity.clone', clone $entity);
+
+                                $deleteCommand = new DeletePublishedEntityCommand($entity->getId());
+                                $this->commandBus->handle($deleteCommand);
+
+                                return $this->redirectToRoute('service_published');
                             }
                         }
                         break;
@@ -178,15 +185,16 @@ class EntityController extends Controller
 
     /**
      * @Method("GET")
-     * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
-     * @Route("/service/published/{entityId}", name="service_published")
+     * @Route("/service/published", name="service_published")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function publishedAction(Entity $entity)
+    public function publishedAction()
     {
+        /** @var Entity $entity */
+        $entity = $this->get('session')->get('published.entity.clone');
         return $this->render('DashboardBundle:Entity:published.html.twig', ['entityName' => $entity->getNameEn()]);
     }
 }

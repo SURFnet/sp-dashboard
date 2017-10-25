@@ -116,7 +116,7 @@ final class HttpClient
             throw new AccessDeniedException($resource);
         }
 
-        if ($statusCode < 200 || $statusCode >= 300) {
+        if (($statusCode < 200 || $statusCode >= 300) && $statusCode != 400) {
             throw new UnreadableResourceException(sprintf('Resource could not be read (status code %d)', $statusCode));
         }
 
