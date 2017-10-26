@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions;
 
+use DateTime;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -73,12 +74,12 @@ class PrivacyQuestionsCommand implements Command
     private $certificationLocation;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $certificationValidFrom;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $certificationValidTo;
 
@@ -161,17 +162,17 @@ class PrivacyQuestionsCommand implements Command
     }
 
     /**
-     * @param string $certificationValidFrom
+     * @param DateTime $certificationValidFrom
      */
-    public function setCertificationValidFrom($certificationValidFrom)
+    public function setCertificationValidFrom(DateTime $certificationValidFrom = null)
     {
         $this->certificationValidFrom = $certificationValidFrom;
     }
 
     /**
-     * @param string $certificationValidTo
+     * @param DateTime $certificationValidTo
      */
-    public function setCertificationValidTo($certificationValidTo)
+    public function setCertificationValidTo(DateTime $certificationValidTo = null)
     {
         $this->certificationValidTo = $certificationValidTo;
     }
@@ -273,7 +274,7 @@ class PrivacyQuestionsCommand implements Command
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getCertificationValidFrom()
     {
@@ -281,7 +282,7 @@ class PrivacyQuestionsCommand implements Command
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getCertificationValidTo()
     {
@@ -358,6 +359,12 @@ class PrivacyQuestionsCommand implements Command
         $command->mode = self::MODE_CREATE;
 
         $command->service = $service;
+
+        $validFrom = new DateTime('-2 years');
+        $validTo = new DateTime('+1 years');
+
+        $command->certificationValidFrom = $validFrom;
+        $command->certificationValidTo = $validTo;
 
         return $command;
     }

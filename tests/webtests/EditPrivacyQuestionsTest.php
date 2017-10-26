@@ -75,11 +75,7 @@ class EditPrivacyQuestionsTest extends WebTestCase
                 'accessData' => 'Some data will be accessed',
                 'country' => 'The Netherlands',
                 'certification' => true,
-                'certificationValidTo' => [
-                    'year' => 2022,
-                    'month' => 12,
-                    'day' => 31,
-                ],
+                'certificationValidTo' => '2018-12-31',
                 'privacyPolicyUrl' => 'http://example.org/privacy',
             ],
         ];
@@ -104,27 +100,8 @@ class EditPrivacyQuestionsTest extends WebTestCase
         );
 
         $this->assertEquals(
-            2022,
-            $crawler
-                ->filter('#dashboard_bundle_privacy_questions_type_certificationValidTo_year option:selected')
-                ->first()
-                ->text()
-        );
-
-        $this->assertEquals(
-            'Dec',
-            $crawler
-                ->filter('select#dashboard_bundle_privacy_questions_type_certificationValidTo_month option:selected')
-                ->first()
-                ->text()
-        );
-
-        $this->assertEquals(
-            31,
-            $crawler
-                ->filter('select#dashboard_bundle_privacy_questions_type_certificationValidTo_day option:selected')
-                ->first()
-                ->text()
+            '2018-12-31',
+            $crawler->filter('#dashboard_bundle_privacy_questions_type_certificationValidTo')->attr('value')
         );
     }
 }

@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class PrivacyQuestionsFormBuilder
@@ -91,6 +91,7 @@ class PrivacyQuestionsFormBuilder
             DateType::class,
             [
                 'label' => 'privacy.form.label.certificationValidFrom',
+                'widget' => 'single_text',
             ]
         );
 
@@ -99,6 +100,7 @@ class PrivacyQuestionsFormBuilder
             DateType::class,
             [
                 'label' => 'privacy.form.label.certificationValidTo',
+                'widget' => 'single_text',
             ]
         );
 
@@ -140,7 +142,7 @@ class PrivacyQuestionsFormBuilder
 
         $builder->add(
             'privacyPolicyUrl',
-            UrlType::class,
+            TextType::class,
             [
                 'label' => 'privacy.form.label.privacyPolicyUrl',
                 'attr' => ['help' => 'privacy.information.privacyPolicyUrl'],
