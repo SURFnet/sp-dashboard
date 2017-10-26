@@ -65,17 +65,30 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         $json = json_encode(['xml' => $xmlMetadata]);
 
         try {
-            $response = $this->client->post(
-                $json,
-                '/manage/api/internal/new-sp',
-                [],
-                ['Content-Type' => 'application/json']
-            );
+            $response = $this->client->post($json, '/manage/api/internal/new-sp');
 
             // Validation fails with response code 400
             if (isset($response['status']) && $response['status'] == 400) {
                 $this->logger->error('Schema violations returned from Manage', $response);
                 throw new PublishMetadataException('Unable to publish the metadata to Manage');
+            }
+
+            // We have a valid response, set the comment as a revision note
+            $this->logger->info('Update entity, set comment as revision note');
+
+            $update = json_encode([
+                'id' => $response['id'],
+                'type' => 'saml20_sp',
+                'pathUpdates' => [
+                    'revisionnote' => $entity->getComments(),
+                ],
+            ]);
+
+            $response = $this->client->put($update, 'manage/api/internal/merge');
+            // Validation fails with response code 400
+            if (isset($response['status']) && $response['status'] == 400) {
+                $this->logger->error('Schema violations returned from Manage while updating data', $response);
+                throw new PublishMetadataException('Unable to update data of the entity in Manage');
             }
 
             return $response;

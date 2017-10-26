@@ -44,6 +44,11 @@ class PublishEntityClientTest extends MockeryTestCase
     private $mockHandler;
 
     /**
+     * @var LoggerInterface|Mock
+     */
+    private $logger;
+
+    /**
      * @var GeneratorInterface|Mock
      */
     private $generator;
@@ -55,13 +60,14 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator = m::mock(GeneratorInterface::class);
 
-        $logger = m::mock(LoggerInterface::class);
+        $this->logger = m::mock(LoggerInterface::class);
 
-        $this->client = new PublishEntityClient(new HttpClient($guzzle), $this->generator, $logger);
+        $this->client = new PublishEntityClient(new HttpClient($guzzle), $this->generator, $this->logger);
     }
 
     public function test_it_can_publish_to_manage()
     {
+        $this->mockHandler->append(new Response(200, [], json_encode(['id' => '25055635-8c2c-4f54-95a6-68891a554e95'])));
         $this->mockHandler->append(new Response(200, [], json_encode(['test' => 'OK'])));
 
         $xml = file_get_contents(__DIR__ . '/fixture/metadata.xml');
@@ -70,6 +76,13 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getMetadataXml')
             ->andReturn($xml);
+
+        $entity
+            ->shouldReceive('getComments')
+            ->andReturn('Lorem ipsum dolor sit');
+
+        $this->logger
+            ->shouldReceive('info');
 
         $this->generator
             ->shouldReceive('generate')

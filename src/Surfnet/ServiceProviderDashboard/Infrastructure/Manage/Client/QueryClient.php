@@ -70,12 +70,7 @@ class QueryClient implements QueryEntityRepository
                 'entityid' => $entityId,
                 "REQUESTED_ATTRIBUTES" => ['metaDataFields.name:en']
             ]);
-            $results = $this->client->post(
-                $query,
-                '/manage/api/internal/search/saml20_sp',
-                [],
-                ['Content-Type' => 'application/json']
-            );
+            $results = $this->client->post($query, '/manage/api/internal/search/saml20_sp');
             return $results;
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(

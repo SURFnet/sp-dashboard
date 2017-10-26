@@ -102,6 +102,10 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getNameNl')
             ->andReturn('Test Entity Name');
 
+        $entity
+            ->shouldReceive('getComments')
+            ->andReturn('Lorem ipsum dolor sit');
+
         $this->generator
             ->shouldReceive('generate')
             ->andReturn($xml);
@@ -113,8 +117,9 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
         $this->logger
             ->shouldReceive('info')
-            ->times(1);
+            ->times(2);
 
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
@@ -131,6 +136,10 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             ->andReturn($xml);
 
         $entity
+            ->shouldReceive('getComments')
+            ->andReturn('Lorem ipsum dolor sit');
+
+        $entity
             ->shouldReceive('getNameNl')
             ->andReturn('Test Entity Name');
 
@@ -141,7 +150,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
         $this->logger
             ->shouldReceive('info')
-            ->times(2);
+            ->times(3);
 
         $this->logger
             ->shouldReceive('error')
@@ -155,6 +164,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('generate')
             ->andReturn($xml);
 
+        $this->mockHandler->append(new Response(200, [], '{"id": "d6f394b2-08b1-4882-8b32-81688c15c489"}'));
         $this->mockHandler->append(new Response(200, [], '{"id": "d6f394b2-08b1-4882-8b32-81688c15c489"}'));
         $this->mockHandler->append(new Response(418));
 
