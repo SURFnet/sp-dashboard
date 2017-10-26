@@ -19,8 +19,15 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
 interface PrivacyQuestionsRepository
 {
     public function save(PrivacyQuestions $questions);
+
+    /**
+     * @param Service $service
+     * @return null|PrivacyQuestions
+     */
+    public function findByService(Service $service);
 }

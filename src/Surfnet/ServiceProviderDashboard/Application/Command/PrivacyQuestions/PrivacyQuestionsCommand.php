@@ -355,8 +355,9 @@ class PrivacyQuestionsCommand implements Command
     public static function fromService(Service $service)
     {
         $command = new self;
-        $command->service = $service;
         $command->mode = self::MODE_CREATE;
+
+        $command->service = $service;
 
         return $command;
     }
@@ -364,13 +365,14 @@ class PrivacyQuestionsCommand implements Command
     public static function fromQuestions(PrivacyQuestions $questions)
     {
         $command = new self;
+        $command->mode = self::MODE_EDIT;
+
         $command->accessData = $questions->getAccessData();
         $command->certification = $questions->isCertified();
         $command->certificationLocation = $questions->getCertificationLocation();
         $command->certificationValidFrom = $questions->getCertificationValidFrom();
         $command->certificationValidTo = $questions->getCertificationValidTo();
         $command->country = $questions->getCountry();
-        $command->mode = self::MODE_CREATE;
         $command->otherInfo = $questions->getOtherInfo();
         $command->privacyPolicy = $questions->getPrivacyPolicy();
         $command->privacyPolicyUrl = $questions->getPrivacyPolicyUrl();

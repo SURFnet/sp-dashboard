@@ -24,8 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(
  *     repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository"
  * )
- * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class PrivacyQuestions
 {
@@ -262,5 +262,109 @@ class PrivacyQuestions
     public function getService()
     {
         return $this->service;
+    }
+
+    /**
+     * @param string $whatData
+     */
+    public function setWhatData($whatData)
+    {
+        $this->whatData = $whatData;
+    }
+
+    /**
+     * @param string $accessData
+     */
+    public function setAccessData($accessData)
+    {
+        $this->accessData = $accessData;
+    }
+
+    /**
+     * @param string $securityMeasures
+     */
+    public function setSecurityMeasures($securityMeasures)
+    {
+        $this->securityMeasures = $securityMeasures;
+    }
+
+    /**
+     * @param bool $certification
+     */
+    public function setCertification($certification)
+    {
+        $this->certification = $certification;
+    }
+
+    /**
+     * @param string $certificationLocation
+     */
+    public function setCertificationLocation($certificationLocation)
+    {
+        $this->certificationLocation = $certificationLocation;
+    }
+
+    /**
+     * @param string $certificationValidFrom
+     */
+    public function setCertificationValidFrom($certificationValidFrom)
+    {
+        $this->certificationValidFrom = $certificationValidFrom;
+    }
+
+    /**
+     * @param string $certificationValidTo
+     */
+    public function setCertificationValidTo($certificationValidTo)
+    {
+        $this->certificationValidTo = $certificationValidTo;
+    }
+
+    /**
+     * @param bool $surfmarketDpaAgreement
+     */
+    public function setSurfmarketDpaAgreement($surfmarketDpaAgreement)
+    {
+        $this->surfmarketDpaAgreement = $surfmarketDpaAgreement;
+    }
+
+    /**
+     * @param bool $surfnetDpaAgreement
+     */
+    public function setSurfnetDpaAgreement($surfnetDpaAgreement)
+    {
+        $this->surfnetDpaAgreement = $surfnetDpaAgreement;
+    }
+
+    /**
+     * @param string $snDpaWhyNot
+     */
+    public function setSnDpaWhyNot($snDpaWhyNot)
+    {
+        $this->snDpaWhyNot = $snDpaWhyNot;
+    }
+
+    /**
+     * @param string $privacyPolicy
+     */
+    public function setPrivacyPolicy($privacyPolicy)
+    {
+        $this->privacyPolicy = $privacyPolicy;
+    }
+
+    /**
+     * @param string $privacyPolicyUrl
+     */
+    public function setPrivacyPolicyUrl($privacyPolicyUrl)
+    {
+        $this->privacyPolicyUrl = $privacyPolicyUrl;
+    }
+
+    /**
+     * @param string $otherInfo
+     */
+    public function setOtherInfo($otherInfo)
+    {
+        $this->otherInfo = $otherInfo;
     }
 }

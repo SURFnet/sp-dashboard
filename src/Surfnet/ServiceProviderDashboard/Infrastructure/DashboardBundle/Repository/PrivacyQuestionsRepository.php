@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Reposi
 
 use Doctrine\ORM\EntityRepository as DoctrineEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository as PrivacyQuestionsRepositoryInterface;
 
 class PrivacyQuestionsRepository extends DoctrineEntityRepository implements PrivacyQuestionsRepositoryInterface
@@ -28,5 +29,12 @@ class PrivacyQuestionsRepository extends DoctrineEntityRepository implements Pri
     {
         $this->_em->persist($questions);
         $this->_em->flush($questions);
+    }
+
+    public function findByService(Service $service)
+    {
+        return parent::findOneBy([
+            'service' => $service,
+        ]);
     }
 }

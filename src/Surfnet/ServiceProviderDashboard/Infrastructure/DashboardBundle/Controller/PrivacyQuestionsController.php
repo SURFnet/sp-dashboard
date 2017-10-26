@@ -123,7 +123,7 @@ class PrivacyQuestionsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //$this->commandBus->handle($command);
+            $this->commandBus->handle($command);
             return $this->redirectToRoute('privacy_questions');
         }
 
