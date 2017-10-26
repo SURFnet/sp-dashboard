@@ -21,10 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\CreatePrivacyQuestionsCommand;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\CreatePrivacyQuestionsType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\PrivacyQuestions\PrivacyQuestionsType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,8 +59,9 @@ class PrivacyQuestionsController extends Controller
     }
 
     /**
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @Route("/service/privacy", name="privacy_questions")
+     * @Security("has_role('ROLE_USER')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
@@ -78,6 +80,7 @@ class PrivacyQuestionsController extends Controller
 
     /**
      * @Route("/service/privacy/create", name="privacy_questions_create")
+     * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
      *
@@ -89,26 +92,43 @@ class PrivacyQuestionsController extends Controller
             $this->authorizationService->getActiveServiceId()
         );
 
-        $command = CreatePrivacyQuestionsCommand::fromService($service);
+        $command = PrivacyQuestionsCommand::fromService($service);
 
-        $form = $this->createForm(CreatePrivacyQuestionsType::class, $command);
-        $form->handleRequest($request);
-
-        return $this->render('@Dashboard/Privacy/form.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->renderForm($request, $command);
     }
 
     /**
      * @Route("/service/privacy/edit", name="privacy_questions_edit")
+     * @Security("has_role('ROLE_USER')")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-//        $service = $this->serviceService->getServiceById(
-//            $this->authorizationService->getActiveServiceId()
-//        );
-//        $questions = $service->getPrivacyQuestions();
+        $service = $this->serviceService->getServiceById(
+            $this->authorizationService->getActiveServiceId()
+        );
+        $questions = $service->getPrivacyQuestions();
 
-        return $this->render('@Dashboard/Privacy/form.html.twig');
+        $command = PrivacyQuestionsCommand::fromQuestions($questions);
+
+        return $this->renderForm($request, $command);
+    }
+
+    private function renderForm(Request $request, PrivacyQuestionsCommand $command)
+    {
+        $form = $this->createForm(PrivacyQuestionsType::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //$this->commandBus->handle($command);
+            return $this->redirectToRoute('privacy_questions');
+        }
+
+        return $this->render('@Dashboard/Privacy/form.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 }

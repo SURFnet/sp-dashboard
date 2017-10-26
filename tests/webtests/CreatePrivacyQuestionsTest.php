@@ -25,16 +25,14 @@ class CreatePrivacyQuestionsTest extends WebTestCase
         $this->loadFixtures();
 
         $serviceRepository = $this->getServiceRepository();
+        $service = $serviceRepository->findByName('SURFnet');
 
-        $this->logIn(
-            'ROLE_USER',
-            [
-                $serviceRepository->findByName('SURFnet'),
-            ]
-        );
+        $this->logIn('ROLE_USER', [$service]);
 
         $crawler = $this->client->request('GET', '/service/privacy');
 
         $this->assertEquals('GDPR related questions', $crawler->filter('h1')->first()->text());
+        $formRows = $crawler->filter('div.form-row');
+        $this->assertCount(14, $formRows);
     }
 }

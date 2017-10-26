@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
+
 class EditPrivacyQuestionsTest extends WebTestCase
 {
     public function test_it_can_display_the_form()
@@ -25,16 +27,23 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $this->loadFixtures();
 
         $serviceRepository = $this->getServiceRepository();
+        $service = $serviceRepository->findByName('SURFnet');
 
-        $this->logIn(
-            'ROLE_USER',
-            [
-                $serviceRepository->findByName('SURFnet'),
-            ]
-        );
+        $questions = new PrivacyQuestions();
+        $questions->setService($service);
+        $questions->setCountry('Nederland');
+
+        $repo = $this->client->getContainer()->get('surfnet.dashboard.repository.privacy_questions');
+        $repo->save($questions);
+
+        $this->logIn('ROLE_USER', [$service]);
 
         $crawler = $this->client->request('GET', '/service/privacy');
 
         $this->assertEquals('GDPR related questions', $crawler->filter('h1')->first()->text());
+        $formRows = $crawler->filter('div.form-row');
+
+        $this->assertCount(14, $formRows);
+        $this->assertEquals('Nederland', $formRows->eq(2)->filter('textarea')->text());
     }
 }
