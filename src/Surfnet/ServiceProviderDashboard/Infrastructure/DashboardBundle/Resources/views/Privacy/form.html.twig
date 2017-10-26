@@ -1,0 +1,12 @@
+{#{% form_theme form 'form/fields.html.twig' %}#}
+
+{% extends '::base.html.twig' %}
+
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'privacy.edit.title'|trans }}{%endblock%}</h1>
+
+    <div class="fieldset card">
+        <div class="wysiwyg">{{ 'privacy.edit.introduction.html'|trans|raw }}</div>
+    </div>
+
+{% endblock %}

@@ -43,6 +43,10 @@ class Builder
             $menu->addChild('Add new entity', array(
                 'route' => 'entity_add',
             ));
+
+            $menu->addChild('GDPR questions', array(
+                'route' => 'privacy_questions',
+            ));
         }
 
         if ($this->authorizationService->isAdministrator()) {
