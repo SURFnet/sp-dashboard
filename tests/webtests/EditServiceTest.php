@@ -60,4 +60,73 @@ class EditServiceTest extends WebTestCase
         $this->assertEquals('The A Team', $service->getName());
         $this->assertEquals('team-a', $service->getTeamName());
     }
+
+    /**
+     * Admins can toggle the privacy question feature for Services. Effectively enabling/disabling the Privacy
+     * question form.
+     */
+    public function test_privacy_questions_admin_toggle()
+    {
+        $serviceRepository = $this->getServiceRepository();
+
+        $this->logIn('ROLE_ADMINISTRATOR');
+        $crawler = $this->client->request('GET', '/service/edit');
+
+        // Step 1: Admin sets privacy questions enabled to false
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'privacyQuestionsEnabled' => false,
+            ]
+        ];
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        // Step 2: Surfnet can't access the privacy questions
+        $surfNet = $serviceRepository->findByName('SURFnet');
+        $this->logIn('ROLE_USER', [$surfNet]);
+
+        $crawler = $this->client->request('GET', '/');
+        $navTexts = $crawler->filterXPath('//div[@class="navigation"]/ul/li/a/text()')->extract(['_text']);
+
+        $this->assertNotContains('Privacy', $navTexts, 'The Privacy Questions entry should not be in the navigation panel.');
+
+        $this->client->request('GET', '/service/privacy');
+
+        $this->assertEquals(
+            404,
+            $this->client->getResponse()->getStatusCode(),
+            'Privacy questions page is not visitable.'
+        );
+
+        // Step 3: Admin enables the Privacy questions
+        $this->logIn('ROLE_ADMINISTRATOR');
+        $crawler = $this->client->request('GET', '/service/edit');
+
+        $formData = [
+            'dashboard_bundle_edit_service_type' => [
+                'privacyQuestionsEnabled' => true,
+            ]
+        ];
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+
+        // Step 4: Surfnet can access the privacy questions
+        $this->logIn('ROLE_USER', [$surfNet]);
+        $crawler = $this->client->request('GET', '/');
+
+        $navTexts = $crawler->filterXPath('//div[@class="navigation"]/ul/li/a/text()')->extract(['_text']);
+        $this->assertContains('Privacy', $navTexts);
+
+        $this->client->request('GET', '/service/privacy');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
 }
