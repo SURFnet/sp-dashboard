@@ -39,7 +39,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  * }
  *
  */
-class PrivacyQuestionsMetadataFactory
+class PrivacyQuestionsMetadataFactory implements MetadataFactory
 {
     /**
      * @var AttributesMetadataRepository
@@ -51,13 +51,10 @@ class PrivacyQuestionsMetadataFactory
      */
     private $entity;
 
-    private $manageMetadataFieldsPrefix;
-
     public function __construct(AttributesMetadataRepository $repository, Entity $entity)
     {
         $this->entity = $entity;
         $this->repository = $repository;
-        $this->manageMetadataFieldsPrefix = 'metaDataFields.';
     }
 
     public function build()
@@ -69,14 +66,22 @@ class PrivacyQuestionsMetadataFactory
 
         if ($this->entity->getService()->isPrivacyQuestionsEnabled()) {
             foreach ($privacyQuestions as $question) {
-                // Build the associated getter
+                // Get the associated getter
                 $getterName = $question->getterName;
-                $answer = $privacyQuestionAnswers->$getterName();
-                if (!is_null($answer)) {
-                    if ($answer instanceof DateTime) {
-                        $answer = $answer->format('Y-m-d');
+                if (method_exists($privacyQuestionAnswers, $getterName)) {
+                    $answer = $privacyQuestionAnswers->$getterName();
+                    if (!is_null($answer)) {
+                        // Format DateTime to timestamp as manage requires a numeric representation of the date.
+                        if ($answer instanceof DateTime) {
+                            $answer = (string) $answer->getTimestamp();
+                        }
+                        // Manage expects booleans as strings.
+                        if (is_bool($answer)) {
+                            $answer = ($answer) ? '1' : '0';
+                        }
+
+                        $attributes[self::METADATA_PREFIX . $question->urns[0]] = $answer;
                     }
-                    $attributes[$this->manageMetadataFieldsPrefix . $question->urns[0]] = $answer;
                 }
             }
         }

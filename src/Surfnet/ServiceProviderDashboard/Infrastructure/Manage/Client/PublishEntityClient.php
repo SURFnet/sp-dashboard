@@ -54,11 +54,11 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     /**
      * @param Entity $entity
      *
+     * @param array $metadataFields
      * @return mixed
-     *
      * @throws PublishMetadataException
      */
-    public function publish(Entity $entity)
+    public function publish(Entity $entity, array $metadataFields)
     {
         // Once more generate the xml based on the latest values set on the entity
         $xmlMetadata = $this->generator->generate($entity);
@@ -79,9 +79,11 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             $update = json_encode([
                 'id' => $response['id'],
                 'type' => 'saml20_sp',
-                'pathUpdates' => [
-                    'revisionnote' => $entity->getComments(),
-                ],
+                'pathUpdates' =>
+                    array_merge(
+                        ['revisionnote' => $entity->getComments()],
+                        $metadataFields
+                    ),
             ]);
 
             $response = $this->client->put($update, 'manage/api/internal/merge');

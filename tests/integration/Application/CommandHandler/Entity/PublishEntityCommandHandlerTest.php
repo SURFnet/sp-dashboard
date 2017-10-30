@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCom
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
@@ -87,6 +88,8 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             $this->logger,
             $this->flashBag
         );
+
+        parent::setUp();
     }
 
     public function test_it_can_publish_to_manage()
@@ -211,4 +214,54 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
         $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
+
+    public function test_it_saves_privacy_questions()
+    {
+        $xml = file_get_contents(__DIR__.'/fixture/metadata.xml');
+
+        $service = m::mock(Service::class);
+
+        $service
+            ->shouldReceive('isPrivacyQuestionsEnabled')
+            ->once()
+            ->andReturn(true);
+
+        $entity = m::mock(Entity::class);
+        $entity
+            ->shouldReceive('getMetadataXml')
+            ->andReturn($xml);
+
+        $entity
+            ->shouldReceive('getNameNl')
+            ->andReturn('Test Entity Name');
+
+        $entity
+            ->shouldReceive('getComments')
+            ->andReturn('Lorem ipsum dolor sit');
+
+        $entity
+            ->shouldReceive('getService')
+            ->once()
+            ->andReturn($service);
+
+        $this->generator
+            ->shouldReceive('generate')
+            ->andReturn($xml);
+
+        $this->repository
+            ->shouldReceive('findById')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->andReturn($entity);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->times(2);
+
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
+
+        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $this->commandHandler->handle($command);
+    }
+
 }

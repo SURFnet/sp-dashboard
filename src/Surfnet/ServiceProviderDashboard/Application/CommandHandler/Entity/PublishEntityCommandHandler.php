@@ -22,6 +22,9 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -41,6 +44,11 @@ class PublishEntityCommandHandler implements CommandHandler
     private $publishClient;
 
     /**
+     * @var AttributesMetadataRepository
+     */
+    private $metadataRepository;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -50,15 +58,10 @@ class PublishEntityCommandHandler implements CommandHandler
      */
     private $flashBag;
 
-    /**
-     * @param EntityRepository $entityRepository
-     * @param PublishEntityRepository $publishClient
-     * @param LoggerInterface $logger
-     * @param FlashBagInterface $flashBag
-     */
     public function __construct(
         EntityRepository $entityRepository,
         PublishEntityRepository $publishClient,
+        AttributesMetadataRepository $metadataRepository,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
@@ -66,6 +69,7 @@ class PublishEntityCommandHandler implements CommandHandler
         $this->publishClient = $publishClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
+        $this->metadataRepository = $metadataRepository;
     }
 
     /**
@@ -78,7 +82,8 @@ class PublishEntityCommandHandler implements CommandHandler
         $entity = $this->repository->findById($command->getId());
         try {
             $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
-            $publishResponse = $this->publishClient->publish($entity);
+
+            $publishResponse = $this->publishClient->publish($entity, $this->buildMetadataFields($entity));
 
             if (array_key_exists('id', $publishResponse)) {
                 $this->logger->info(sprintf('Pushing entity "%s" to engineblock', $entity->getNameNl()));
@@ -97,5 +102,17 @@ class PublishEntityCommandHandler implements CommandHandler
             $this->logger->error(sprintf('Pushing to Engineblock failed with message: ', $e->getMessage()));
             $this->flashBag->add('error', 'entity.edit.error.push');
         }
+    }
+
+    /**
+     * Builds and merges the different types of metadata fields that are set on the entity.
+     *
+     * @param Entity $entity
+     * @return array
+     */
+    private function buildMetadataFields(Entity $entity)
+    {
+        $factory = new PrivacyQuestionsMetadataFactory($this->metadataRepository, $entity);
+        return $factory->build();
     }
 }

@@ -233,7 +233,7 @@ class PrivacyQuestions
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getPrivacyPolicy()
     {
@@ -345,7 +345,7 @@ class PrivacyQuestions
     }
 
     /**
-     * @param string $privacyPolicy
+     * @param bool $privacyPolicy
      */
     public function setPrivacyPolicy($privacyPolicy)
     {

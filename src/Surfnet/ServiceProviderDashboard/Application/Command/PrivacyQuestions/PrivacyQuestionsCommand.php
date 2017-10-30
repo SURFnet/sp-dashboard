@@ -202,7 +202,7 @@ class PrivacyQuestionsCommand implements Command
     }
 
     /**
-     * @param string $privacyPolicy
+     * @param bool $privacyPolicy
      */
     public function setPrivacyPolicy($privacyPolicy)
     {
@@ -314,7 +314,7 @@ class PrivacyQuestionsCommand implements Command
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getPrivacyPolicy()
     {

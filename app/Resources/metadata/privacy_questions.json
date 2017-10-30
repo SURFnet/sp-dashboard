@@ -2,6 +2,7 @@
   {
     "id": "whatData",
     "friendlyName": "WhatData",
+    "getterName": "getWhatData",
     "urns": [
       "coin:privacy:what_data"
     ]
@@ -9,6 +10,7 @@
   {
     "id": "accessData",
     "friendlyName": "AccessData",
+    "getterName": "getAccessData",
     "urns": [
       "coin:privacy:access_data"
     ]
@@ -16,6 +18,7 @@
   {
     "id": "country",
     "friendlyName": "Country",
+    "getterName": "getCountry",
     "urns": [
       "coin:privacy:country"
     ]
@@ -23,6 +26,7 @@
   {
     "id": "securityMeasures",
     "friendlyName": "SecurityMeasures",
+    "getterName": "getSecurityMeasures",
     "urns": [
       "coin:privacy:security_measures"
     ]
@@ -30,6 +34,7 @@
   {
     "id": "certification",
     "friendlyName": "Certification",
+    "getterName": "isCertified",
     "urns": [
       "coin:privacy:certification"
     ]
@@ -37,6 +42,7 @@
   {
     "id": "certificationLocation",
     "friendlyName": "certificationLocation",
+    "getterName": "getCertificationLocation",
     "urns": [
       "coin:privacy:certification_location"
     ]
@@ -44,6 +50,7 @@
   {
     "id": "certificationValidFrom",
     "friendlyName": "CertificationValidFrom",
+    "getterName": "getCertificationValidFrom",
     "urns": [
       "coin:privacy:certification_valid_from"
     ]
@@ -51,6 +58,7 @@
   {
     "id": "certificationValidTo",
     "friendlyName": "CertificationValidTo",
+    "getterName": "getCertificationValidTo",
     "urns": [
       "coin:privacy:certification_valid_to"
     ]
@@ -58,6 +66,7 @@
   {
     "id": "surfmarketDpaAgreement",
     "friendlyName": "SurfmarketDpaAgreement",
+    "getterName": "isSurfmarketDpaAgreement",
     "urns": [
       "coin:privacy:surfmarket_dpa_agreement"
     ]
@@ -65,6 +74,7 @@
   {
     "id": "surfnetDpaAgreement",
     "friendlyName": "SurfnetDpaAgreement",
+    "getterName": "isSurfnetDpaAgreement",
     "urns": [
       "coin:privacy:surfnet_dpa_agreement"
     ]
@@ -72,6 +82,7 @@
   {
     "id": "snDpaWhyNot",
     "friendlyName": "SnDpaWhyNot",
+    "getterName": "getSnDpaWhyNot",
     "urns": [
       "coin:privacy:sn_dpa_why_not"
     ]
@@ -79,6 +90,7 @@
   {
     "id": "privacyPolicy",
     "friendlyName": "PrivacyPolicy",
+    "getterName": "getPrivacyPolicy",
     "urns": [
       "coin:privacy:privacy_policy"
     ]
@@ -86,6 +98,7 @@
   {
     "id": "privacyPolicyUrl",
     "friendlyName": "PrivacyPolicyUrl",
+    "getterName": "getPrivacyPolicyUrl",
     "urns": [
       "coin:privacy:privacy_policy_url"
     ]
@@ -93,6 +106,7 @@
   {
     "id": "otherInfo",
     "friendlyName": "OtherInfo",
+    "getterName": "getOtherInfo",
     "urns": [
       "coin:privacy:other_info"
     ]

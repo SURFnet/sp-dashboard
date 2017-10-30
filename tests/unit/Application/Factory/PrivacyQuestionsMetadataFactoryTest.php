@@ -18,10 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
+use DateTime;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
@@ -41,8 +40,8 @@ class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
 
         $privacyQuestions->setWhatData('What data');
         $privacyQuestions->setSnDpaWhyNot('We can not comply.');
-        $privacyQuestions->setCertificationValidFrom('2018-06-04');
-        $privacyQuestions->setCertificationValidTo('2018-06-06');
+        $privacyQuestions->setCertificationValidFrom(new DateTime('2018-06-04'));
+        $privacyQuestions->setCertificationValidTo(new DateTime('2018-06-06'));
         $privacyQuestions->setCertification(false);
         $privacyQuestions->setCertificationLocation('https://www.google.com');
         $privacyQuestions->setPrivacyPolicy(true);
@@ -67,8 +66,9 @@ class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
 
         // Test some of the assertions
         $this->assertEquals('What data', $metadata['metaDataFields.coin:privacy:what_data']);
-        $this->assertEquals(false, $metadata['metaDataFields.coin:privacy:certification']);
-        $this->assertEquals('2018-06-06', $metadata['metaDataFields.coin:privacy:certification_valid_to']);
+        $this->assertFalse(is_bool($metadata['metaDataFields.coin:privacy:certification']));
+        $this->assertEquals('0', $metadata['metaDataFields.coin:privacy:certification']);
+        $this->assertEquals('1528236000', $metadata['metaDataFields.coin:privacy:certification_valid_to']);
     }
 
     public function test_it_retuns_empty_array_when_disabled()
