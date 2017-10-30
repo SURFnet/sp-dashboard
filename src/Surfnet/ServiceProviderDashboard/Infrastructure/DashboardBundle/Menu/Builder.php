@@ -44,7 +44,7 @@ class Builder
                 'route' => 'entity_add',
             ));
 
-            $menu->addChild('GDPR questions', array(
+            $menu->addChild('Privacy', array(
                 'route' => 'privacy_questions',
             ));
         }
