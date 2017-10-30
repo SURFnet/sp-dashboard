@@ -44,9 +44,14 @@ class Builder
                 'route' => 'entity_add',
             ));
 
-            $menu->addChild('Privacy', array(
-                'route' => 'privacy_questions',
-            ));
+            if ($this->authorizationService->hasActivatedPrivacyQuestions()) {
+                $menu->addChild(
+                    'Privacy',
+                    array(
+                        'route' => 'privacy_questions',
+                    )
+                );
+            }
         }
 
         if ($this->authorizationService->isAdministrator()) {
