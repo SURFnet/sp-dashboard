@@ -66,16 +66,64 @@ class QueryClient implements QueryEntityRepository
     {
         try {
             // Queries the SP registry and asks for the English name in addition to the regular data
-            $query = json_encode([
+            return $this->doSearchQuery([
                 'entityid' => $entityId,
-                "REQUESTED_ATTRIBUTES" => ['metaDataFields.name:en']
+                "REQUESTED_ATTRIBUTES" => ['metaDataFields.name:en'],
             ]);
-            $results = $this->client->post($query, '/manage/api/internal/search/saml20_sp');
-            return $results;
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
                 sprintf('Unable to find Service Provider with entityId: "%s"', $entityId)
             );
         }
+    }
+
+    /**
+     * Query manage for all test entities by given team name.
+     *
+     * @param string $teamName
+     *
+     * @return array|null
+     *
+     * @throws QueryServiceProviderException
+     */
+    public function findByTeamName($teamName)
+    {
+        try {
+            // Query manage to get the internal id of every SP entity with given team ID.
+            $searchResults = $this->doSearchQuery([
+                'metaDataFields.coin:service_team_id' => $teamName,
+                'state' => 'testaccepted'
+            ]);
+
+            // For each search result, query manage to get the full SP entity data.
+            return array_map(
+                function ($result) {
+                    return $this->client->read(
+                        sprintf('/manage/api/internal/metadata/saml20_sp/%s', $result['_id'])
+                    );
+                },
+                $searchResults
+            );
+        } catch (HttpException $e) {
+            throw new QueryServiceProviderException(
+                sprintf('Unable to find service providers with team ID: "%s"', $teamName)
+            );
+        }
+    }
+
+    /**
+     * @param array $params
+     * @param string $url
+     *
+     * @return array|null
+     *
+     * @throws HttpException
+     */
+    private function doSearchQuery(array $params)
+    {
+        return $this->client->post(
+            json_encode($params),
+            '/manage/api/internal/search/saml20_sp'
+        );
     }
 }

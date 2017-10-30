@@ -22,6 +22,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use GuzzleHttp\Handler\MockHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
@@ -42,6 +43,11 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected $client;
 
+    /**
+     * @var MockHandler
+     */
+    protected $mockHandler;
+
     public function setUp()
     {
         $this->client = static::createClient(
@@ -50,6 +56,8 @@ class WebTestCase extends SymfonyWebTestCase
             'HTTPS' => 'on',
             ]
         );
+
+        $this->mockHandler = $this->client->getContainer()->get('surfnet.manage.http.guzzle.mock_handler');
     }
 
     protected function loadFixtures()

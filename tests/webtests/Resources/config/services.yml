@@ -16,7 +16,16 @@ services:
             - '%kernel.cache_dir%/sessions/'
             - 'MOCKSESSID'
             - '@session.storage.metadata_bag'
+
     surfnet.dashboard.validator.logo:
         class: Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints\MockValidLogoValidator
         tags:
             - { name: validator.constraint_validator, alias: logo }
+
+    surfnet.manage.http.guzzle.mock_handler:
+        class: GuzzleHttp\Handler\MockHandler
+
+    surfnet.manage.http.guzzle.test_environement:
+        class: GuzzleHttp\Client
+        arguments:
+        - handler: '@surfnet.manage.http.guzzle.mock_handler'

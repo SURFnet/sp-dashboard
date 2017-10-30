@@ -18,14 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use GuzzleHttp\Psr7\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityListTest extends WebTestCase
 {
-    public function test_entity_list()
+    public function test_entity_list_shows_draft_entities()
     {
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
+
+        $this->mockHandler->append(new Response(200, [], '[]'));
 
         $this->getAuthorizationService()->setSelectedServiceId(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
@@ -42,6 +45,56 @@ class EntityListTest extends WebTestCase
         $this->assertEquals('SP1', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
         $this->assertEquals('SP1', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
         $this->assertEquals('John Doe (jdoe@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
+        $this->assertEquals('connect', $row->filter('td')->eq(3)->text(), 'Environment not found in entity list');
+
+        $row = $crawler->filter('table tr')->eq(2);
+        $this->assertEquals('SP2', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
+        $this->assertEquals('SP2', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
+    }
+
+    public function test_entity_list_shows_test_entities()
+    {
+        $this->loadFixtures();
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $searchResponse = json_encode([
+            (object)[
+                '_id' => '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            ],
+        ]);
+
+        $sp3QueryResponse = json_encode((object)[
+            'id' => '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'data' => (object)[
+                'entityid' => 'SP3',
+                'metaDataFields' => (object) [
+                    'name:en' => 'SP3',
+                    'contacts:0:contactType' => 'administrative',
+                    'contacts:0:givenName' => 'Test',
+                    'contacts:0:surName' => 'Test',
+                    'contacts:0:emailAddress' => 'test@example.org',
+                ],
+            ],
+        ]);
+
+        $this->mockHandler->append(new Response(200, [], $searchResponse));
+        $this->mockHandler->append(new Response(200, [], $sp3QueryResponse));
+
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $this->getServiceRepository()->findByName('SURFnet')->getId()
+        );
+
+        $crawler = $this->client->request('GET', '/');
+
+        $pageTitle = $crawler->filter('.page-container h1');
+
+        $this->assertEquals('My entities', $pageTitle->text());
+        $this->assertCount(4, $crawler->filter('table tr'), 'Expecting three rows (including header)');
+
+        $row = $crawler->filter('table tr')->eq(3);
+        $this->assertEquals('SP3', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
+        $this->assertEquals('SP3', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
+        $this->assertEquals('Test Test (test@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
         $this->assertEquals('connect', $row->filter('td')->eq(3)->text(), 'Environment not found in entity list');
     }
 

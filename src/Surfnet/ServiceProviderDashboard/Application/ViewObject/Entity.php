@@ -70,7 +70,7 @@ class Entity
         $formattedContact = '';
 
         if ($contact) {
-            $formattedContact = self::formatContact($contact);
+            $formattedContact = self::formatDashboardContact($contact);
         }
 
         return new self(
@@ -82,10 +82,46 @@ class Entity
         );
     }
 
+    public static function fromManageResult(array $result)
+    {
+        $metadata = $result['data']['metaDataFields'];
+
+        $formattedContact = self::formatManageContact($metadata);
+
+        return new self(
+            $result['id'],
+            $result['data']['entityid'],
+            $metadata['name:en'],
+            $formattedContact,
+            'connect'
+        );
+    }
+
     /**
      * @return string
      */
-    private static function formatContact(Contact $contact)
+    private static function formatManageContact(array $metadata)
+    {
+        for ($i=0; $i<=2; $i++) {
+            $attrPrefix = sprintf('contacts:%d:', $i);
+
+            if ($metadata[$attrPrefix . 'contactType'] === 'administrative') {
+                return sprintf(
+                    '%s %s (%s)',
+                    $metadata[$attrPrefix . 'givenName'],
+                    $metadata[$attrPrefix . 'surName'],
+                    $metadata[$attrPrefix . 'emailAddress']
+                );
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    private static function formatDashboardContact(Contact $contact)
     {
         return sprintf(
             '%s %s (%s)',
