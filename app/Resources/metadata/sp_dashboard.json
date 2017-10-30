@@ -1,0 +1,16 @@
+[
+  {
+    "id": "teamID",
+    "friendlyName": "TeamID",
+    "urns": [
+      "coin:service_team_id"
+    ]
+  },
+  {
+    "id": "originalMetadataUrl",
+    "friendlyName": "OriginalMetadataUrl",
+    "urns": [
+      "coin:original_metadata_url"
+    ]
+  }
+]

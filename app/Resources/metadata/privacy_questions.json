@@ -1,0 +1,100 @@
+[
+  {
+    "id": "whatData",
+    "friendlyName": "WhatData",
+    "urns": [
+      "coin:privacy:what_data"
+    ]
+  },
+  {
+    "id": "accessData",
+    "friendlyName": "AccessData",
+    "urns": [
+      "coin:privacy:access_data"
+    ]
+  },
+  {
+    "id": "country",
+    "friendlyName": "Country",
+    "urns": [
+      "coin:privacy:country"
+    ]
+  },
+  {
+    "id": "securityMeasures",
+    "friendlyName": "SecurityMeasures",
+    "urns": [
+      "coin:privacy:security_measures"
+    ]
+  },
+  {
+    "id": "certification",
+    "friendlyName": "Certification",
+    "urns": [
+      "coin:privacy:certification"
+    ]
+  },
+  {
+    "id": "certificationLocation",
+    "friendlyName": "certificationLocation",
+    "urns": [
+      "coin:privacy:certification_location"
+    ]
+  },
+  {
+    "id": "certificationValidFrom",
+    "friendlyName": "CertificationValidFrom",
+    "urns": [
+      "coin:privacy:certification_valid_from"
+    ]
+  },
+  {
+    "id": "certificationValidTo",
+    "friendlyName": "CertificationValidTo",
+    "urns": [
+      "coin:privacy:certification_valid_to"
+    ]
+  },
+  {
+    "id": "surfmarketDpaAgreement",
+    "friendlyName": "SurfmarketDpaAgreement",
+    "urns": [
+      "coin:privacy:surfmarket_dpa_agreement"
+    ]
+  },
+  {
+    "id": "surfnetDpaAgreement",
+    "friendlyName": "SurfnetDpaAgreement",
+    "urns": [
+      "coin:privacy:surfnet_dpa_agreement"
+    ]
+  },
+  {
+    "id": "snDpaWhyNot",
+    "friendlyName": "SnDpaWhyNot",
+    "urns": [
+      "coin:privacy:sn_dpa_why_not"
+    ]
+  },
+  {
+    "id": "privacyPolicy",
+    "friendlyName": "PrivacyPolicy",
+    "urns": [
+      "coin:privacy:privacy_policy"
+    ]
+  },
+  {
+    "id": "privacyPolicyUrl",
+    "friendlyName": "PrivacyPolicyUrl",
+    "urns": [
+      "coin:privacy:privacy_policy_url"
+    ]
+  },
+  {
+    "id": "otherInfo",
+    "friendlyName": "OtherInfo",
+    "urns": [
+      "coin:privacy:other_info"
+    ]
+  }
+]
