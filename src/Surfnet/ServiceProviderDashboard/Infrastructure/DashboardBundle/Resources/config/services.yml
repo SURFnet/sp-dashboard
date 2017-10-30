@@ -18,6 +18,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
+    surfnet.dashboard.command_handler.delete_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand }
+
     surfnet.dashboard.command_handler.edit_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EditEntityCommandHandler
         public: true
@@ -39,6 +45,12 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand }
+
+    surfnet.dashboard.command_handler.publish_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand }
 
     surfnet.dashboard.command_handler.select_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler
@@ -103,7 +115,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
 
     surfnet.dashboard.service.entity_service:
-        class: Surfnet\ServiceProviderDashboard\Application\Service\SamlEntityService
+        class: Surfnet\ServiceProviderDashboard\Application\Service\EntityService
 
     surfnet.dashboard.service.service_service:
         class: Surfnet\ServiceProviderDashboard\Application\Service\ServiceService
@@ -118,3 +130,37 @@ services:
     surfnet.dashboard.twig.identity_extension:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension
         tags: [twig.extension]
+
+    surfnet.dashboard.validator.entity_id:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator
+        arguments:  ['@surfnet.manage.client.query_entity.test_environment']
+        tags:
+            - { name: validator.constraint_validator, alias: entity_id }
+
+    surfnet.dashboard.validator.logo:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator
+        tags:
+            - { name: validator.constraint_validator, alias: logo }
+
+    surfnet.manage.client.publish_entity.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
+        arguments:
+            - '@surfnet.manage.http.client.test_environment'
+            - '@surfnet.dashboard.metadata.generator'
+            - '@logger'
+
+    surfnet.manage.client.query_entity.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient
+        arguments:
+            - '@surfnet.manage.http.client.test_environment'
+
+    surfnet.manage.http.client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
+        arguments:
+            - '@surfnet.manage.http.guzzle.test_environement'
+
+    surfnet.manage.http.guzzle.test_environement:
+        class: GuzzleHttp\Client
+        arguments:
+        - base_uri: "%manage_test_host%"
+          auth: ["%manage_test_username%", "%manage_test_password%", "Basic"]

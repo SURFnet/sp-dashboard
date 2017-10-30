@@ -23,10 +23,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
@@ -47,7 +49,6 @@ class EditEntityCommand implements Command
 
     /**
      * @var string
-     * @Assert\NotBlank
      */
     private $ticketNumber;
 
@@ -58,11 +59,16 @@ class EditEntityCommand implements Command
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank(groups={"creation"})
+     * @Assert\Choice(choices = {"production", "connect"}, groups={"creation"})
      */
     private $environment = Entity::ENVIRONMENT_CONNECT;
 
     /**
      * @var int
+     *
+     * @Assert\NotBlank()
      */
     private $status = Entity::STATE_DRAFT;
 
@@ -75,11 +81,19 @@ class EditEntityCommand implements Command
      * Metadata URL that import last happened from.
      *
      * @var string
+
      */
     private $importUrl;
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
+     * @Assert\Url(
+     *      protocols={"https"},
+     *      message = "url.notSecure",
+     *      groups={"finished"}
+     * )
      */
     private $metadataUrl;
 
@@ -90,21 +104,39 @@ class EditEntityCommand implements Command
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
+     * @Assert\Url(protocols={"https","http"})
+     * @Assert\Url(
+     *      protocols={"https"},
+     *      message = "url.notSecure",
+     *      groups={"finished"}
+     * )
      */
     private $acsLocation;
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
+     * @Assert\Url()
+     * @SpDashboardAssert\ValidEntityId()
      */
     private $entityId;
 
     /**
      * @var string
+     *
+     * @SpDashboardAssert\ValidSSLCertificate()
      */
     private $certificate;
 
     /**
      * @var string
+     *
+     * @Assert\Url()
+     * @SpDashboardAssert\ValidLogo()
+     * @Assert\NotBlank()
      */
     private $logoUrl;
 
@@ -120,111 +152,176 @@ class EditEntityCommand implements Command
 
     /**
      * @var string
+     *
+     * @Assert\Length(max = 300)
      */
     private $descriptionNl;
 
     /**
      * @var string
+     *
+     * @Assert\Length(max = 300)
      */
     private $descriptionEn;
 
     /**
      * @var string
+     *
+     * @Assert\Url()
      */
     private $applicationUrl;
 
     /**
      * @var string
+     *
+     * @Assert\Url()
      */
     private $eulaUrl;
 
     /**
      * @var Contact
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
+     * @Assert\NotBlank()
+     * @Assert\Valid()
      */
     private $administrativeContact;
 
     /**
      * @var Contact
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
+     * @Assert\NotBlank()
+     * @Assert\Valid()
      */
     private $technicalContact;
 
     /**
      * @var Contact
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
+     * @Assert\NotBlank()
+     * @Assert\Valid()
      */
     private $supportContact;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $givenNameAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $surNameAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $commonNameAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $displayNameAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $emailAddressAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $organizationAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $organizationTypeAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $affiliationAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $entitlementAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $principleNameAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $uidAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $preferredLanguageAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $personalCodeAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $scopedAffiliationAttribute;
 
     /**
      * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @Assert\Valid()
      */
     private $eduPersonTargetedIDAttribute;
 
@@ -964,5 +1061,15 @@ class EditEntityCommand implements Command
     public function setComments($comments)
     {
         $this->comments = $comments;
+    }
+
+    public function isDraft()
+    {
+        return $this->status === Entity::STATE_DRAFT;
+    }
+
+    public function isForProduction()
+    {
+        return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
     }
 }

@@ -23,8 +23,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
@@ -105,7 +108,7 @@ class EntityController extends Controller
         $entityId = $this->entityService->createEntityUuid();
         $ticketNumber = $this->ticketService->getTicketIdForService($entityId, $service);
         if (is_null($service)) {
-            $this->get('logger')->error('Unable to find selected service while creating a new service');
+            $this->get('logger')->error('Unable to find selected entity while creating a new entity');
             // Todo: show error page?
         }
 
@@ -128,14 +131,15 @@ class EntityController extends Controller
      */
     public function editAction(Request $request, Entity $entity)
     {
-        $this->get('session')->getFlashBag()->clear();
+        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag->clear();
 
         $command = $this->entityService->buildEditEntityCommand($entity);
 
         $form = $this->createForm(EditEntityType::class, $command);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             try {
                 switch ($form->getClickedButton()->getName()) {
                     case 'importButton':
@@ -143,6 +147,22 @@ class EntityController extends Controller
                         $metadataCommand = new LoadMetadataCommand($command);
                         $this->commandBus->handle($metadataCommand);
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                        break;
+                    case 'publishButton':
+                        // Only trigger form validation on publish
+                        if ($form->isValid()) {
+                            $metadataCommand = new PublishEntityCommand($entity->getId());
+                            $this->commandBus->handle($metadataCommand);
+
+                            if (!$flashBag->has('error')) {
+                                $this->get('session')->set('published.entity.clone', clone $entity);
+
+                                $deleteCommand = new DeletePublishedEntityCommand($entity->getId());
+                                $this->commandBus->handle($deleteCommand);
+
+                                return $this->redirectToRoute('service_published');
+                            }
+                        }
                         break;
                     default:
                         $this->commandBus->handle($command);
@@ -161,5 +181,20 @@ class EntityController extends Controller
         return $this->render('DashboardBundle:Entity:edit.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @Method("GET")
+     * @Route("/service/published", name="service_published")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function publishedAction()
+    {
+        /** @var Entity $entity */
+        $entity = $this->get('session')->get('published.entity.clone');
+        return $this->render('DashboardBundle:Entity:published.html.twig', ['entityName' => $entity->getNameEn()]);
     }
 }

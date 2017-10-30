@@ -15,6 +15,8 @@ entity.list.action.view: View
 entity.list.action.edit: Edit
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
+entity.edit.error.publish: "Unable to publish the Entity, try again later"
+entity.edit.error.push: "Unable to publish the Entity, try again later"
 entity.edit.title: Service Provider registration form
 entity.edit.info.title: Info
 entity.edit.info.html: "
@@ -105,5 +107,7 @@ entity.edit.information.personalCodeAttribute: Text should be set in web transla
 entity.edit.information.scopedAffiliationAttribute: Text should be set in web translations
 entity.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
+entity.published.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
+entity.published.title: "Successfully published the Entity"
 service.create.title: Add new service
 service.edit.title: Edit service

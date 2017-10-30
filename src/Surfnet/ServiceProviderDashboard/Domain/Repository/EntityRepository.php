@@ -23,9 +23,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 interface EntityRepository
 {
     /**
-     * @param Entity $service
+     * @param Entity $entity
      */
     public function save(Entity $entity);
+
+    public function delete(Entity $entity);
 
     /**
      * @param int $id

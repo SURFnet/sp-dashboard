@@ -294,7 +294,7 @@ class EditEntityType extends AbstractType
                     )
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
-            ->add('publish', SubmitType::class, ['attr' => ['class' => 'button']]);
+            ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
