@@ -47,10 +47,17 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_can_process_an_edit_service_command()
     {
-        $command = new EditServiceCommand('1', '30dd879c-ee2f-11db-8314-0800200c9a66', 'Foobar', 'team-foobar');
+        $command = new EditServiceCommand(
+            '1',
+            '30dd879c-ee2f-11db-8314-0800200c9a66',
+            'Foobar',
+            'team-foobar',
+            false
+        );
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
+        $command->setPrivacyQuestionsEnabled(false);
 
         $mockEntity = m::mock(Service::class)->makePartial();
         $mockEntity->shouldReceive('getId')->andReturn(1);
@@ -62,6 +69,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
                 $this->assertEquals('Foobar', $arg->getName());
                 $this->assertEquals('team-foobar', $arg->getTeamName());
                 $this->assertEquals('30dd879c-ee2f-11db-8314-0800200c9a66', $arg->getGuid());
+                $this->assertEquals(false, $arg->isPrivacyQuestionsEnabled());
 
                 return true;
             }))
@@ -82,7 +90,13 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_rejects_non_existing_service()
     {
-        $command = new EditServiceCommand(1, '30dd879c-ee2f-11db-8314-0800200c9a66', 'Foobar', 'team-foobar');
+        $command = new EditServiceCommand(
+            1,
+            '30dd879c-ee2f-11db-8314-0800200c9a66',
+            'Foobar',
+            'team-foobar',
+            true
+        );
 
         $this->repository->shouldReceive('findById')->andReturn(null)->once();
 
@@ -96,7 +110,13 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_rejects_non_unique_edit_service_command()
     {
-        $command = new EditServiceCommand(1, '30dd879c-ee2f-11db-8314-0800200c9a66', 'Foobar', 'team-foobar');
+        $command = new EditServiceCommand(
+            1,
+            '30dd879c-ee2f-11db-8314-0800200c9a66',
+            'Foobar',
+            'team-foobar',
+            false
+        );
 
         $mockEntity = m::mock(Service::class)->makePartial();
         $mockEntity->shouldReceive('getId')->andReturn(1);

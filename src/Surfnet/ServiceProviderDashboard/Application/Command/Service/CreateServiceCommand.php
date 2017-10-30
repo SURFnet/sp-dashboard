@@ -43,6 +43,11 @@ class CreateServiceCommand implements Command
     private $name;
 
     /**
+     * @var bool
+     */
+    private $privacyQuestionsEnabled = true;
+
+    /**
      * @param string $guid
      */
     public function setGuid($guid)
@@ -67,6 +72,14 @@ class CreateServiceCommand implements Command
     }
 
     /**
+     * @param bool $privacyQuestionsEnabled
+     */
+    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
+    {
+        $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
+    }
+
+    /**
      * @return string
      */
     public function getGuid()
@@ -88,5 +101,13 @@ class CreateServiceCommand implements Command
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivacyQuestionsEnabled()
+    {
+        return $this->privacyQuestionsEnabled;
     }
 }

@@ -49,6 +49,7 @@ class CreateServiceCommandHandler implements CommandHandler
         $service->setName($command->getName());
         $service->setGuid($command->getGuid());
         $service->setTeamName($command->getTeamName());
+        $service->setPrivacyQuestionsEnabled($command->isPrivacyQuestionsEnabled());
 
         $this->serviceRepository->isUnique($service);
 

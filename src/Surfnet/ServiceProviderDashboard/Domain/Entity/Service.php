@@ -61,6 +61,13 @@ class Service
     private $teamName;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $privacyQuestionsEnabled = true;
+
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Contact", mappedBy="services", cascade={"persist"}, orphanRemoval=true)
@@ -171,5 +178,21 @@ class Service
     public function getPrivacyQuestions()
     {
         return $this->privacyQuestions;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivacyQuestionsEnabled()
+    {
+        return $this->privacyQuestionsEnabled;
+    }
+
+    /**
+     * @param bool $privacyQuestionsEnabled
+     */
+    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
+    {
+        $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
 }

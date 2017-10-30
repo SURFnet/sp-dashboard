@@ -67,6 +67,10 @@ class PrivacyQuestionsController extends Controller
      */
     public function privacyAction()
     {
+        if (!$this->authorizationService->hasActivatedPrivacyQuestions()) {
+            throw $this->createNotFoundException('Privacy questions are disabled');
+        }
+
         $service = $this->serviceService->getServiceById(
             $this->authorizationService->getActiveServiceId()
         );

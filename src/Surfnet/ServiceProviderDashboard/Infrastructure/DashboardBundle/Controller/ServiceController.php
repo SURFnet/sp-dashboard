@@ -128,7 +128,8 @@ class ServiceController extends Controller
             $service->getId(),
             $service->getGuid(),
             $service->getName(),
-            $service->getTeamName()
+            $service->getTeamName(),
+            $service->isPrivacyQuestionsEnabled()
         );
 
         $form = $this->createForm(EditServiceType::class, $command);

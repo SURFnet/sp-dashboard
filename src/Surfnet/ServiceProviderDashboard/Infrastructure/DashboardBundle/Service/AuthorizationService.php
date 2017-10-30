@@ -129,6 +129,19 @@ class AuthorizationService
     }
 
     /**
+     * Tests if the currently active service has it's privacy questions enabled or not.
+     *
+     * @return bool
+     */
+    public function hasActivatedPrivacyQuestions()
+    {
+        $activeServiceId = $this->getActiveServiceId();
+        $service = $this->serviceService->getServiceById($activeServiceId);
+
+        return $service->isPrivacyQuestionsEnabled();
+    }
+
+    /**
      * Explicitly select a service for users that have access to multiple services.
      *
      * @param string $serviceId

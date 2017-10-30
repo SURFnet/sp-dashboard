@@ -50,11 +50,13 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setName('Foobar');
         $service->setTeamName('team-foobar');
         $service->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
+        $service->setPrivacyQuestionsEnabled(true);
 
         $command = new CreateServiceCommand();
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
+        $command->setPrivacyQuestionsEnabled(true);
 
         $this->repository->shouldReceive('save')->with(equalTo($service))->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
@@ -73,6 +75,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
+        $command->setPrivacyQuestionsEnabled(false);
 
         $this->repository
             ->shouldReceive('isUnique')
