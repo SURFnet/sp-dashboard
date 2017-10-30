@@ -25,7 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -157,7 +157,7 @@ class EntityController extends Controller
                             if (!$flashBag->has('error')) {
                                 $this->get('session')->set('published.entity.clone', clone $entity);
 
-                                $deleteCommand = new DeletePublishedEntityCommand($entity->getId());
+                                $deleteCommand = new DeleteEntityCommand($entity->getId());
                                 $this->commandBus->handle($deleteCommand);
 
                                 return $this->redirectToRoute('service_published');

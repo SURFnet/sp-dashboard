@@ -19,11 +19,11 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
-class DeletePublishedEntityCommandHandler implements CommandHandler
+class DeleteEntityCommandHandler implements CommandHandler
 {
     /**
      * @var EntityRepository
@@ -41,12 +41,12 @@ class DeletePublishedEntityCommandHandler implements CommandHandler
         $this->logger = $logger;
     }
 
-    public function handle(DeletePublishedEntityCommand $command)
+    public function handle(DeleteEntityCommand $command)
     {
         $entity = $this->entityRepository->findById($command->getId());
         $this->logger->info(
             sprintf(
-                'Removing entity "%s" after successfully publishing it to the service registry',
+                'Removing entity draft entity "%s"',
                 $entity->getNameEn()
             )
         );

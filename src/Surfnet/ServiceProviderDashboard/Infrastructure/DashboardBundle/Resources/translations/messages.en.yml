@@ -4,6 +4,9 @@ error.403.title: "Access denied"
 error.403.text: "You do not have access to this page."
 error.404.title:  "Page not found"
 error.404.text: "Oops, we were unable to find the page."
+entity.delete.title: "Delete entity"
+entity.delete.confirmation: "You are about to delete the entity %name%, are you sure?"
+entity.delete.success: "The entity has been removed"
 entity.list.title: My entities
 entity.list.empty: There are no entities configured
 entity.list.no_service_selected: Please select a service
