@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
@@ -74,6 +73,13 @@ class Service
      * @ORM\OneToMany(targetEntity="Entity", mappedBy="service", cascade={"persist"}, orphanRemoval=true)
      */
     private $entities;
+
+    /**
+     * @var privacyQuestions
+     *
+     * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service")
+     */
+    private $privacyQuestions;
 
     public function __construct()
     {
@@ -157,5 +163,13 @@ class Service
         $entity->setService($this);
 
         return $this;
+    }
+
+    /**
+     * @return PrivacyQuestions
+     */
+    public function getPrivacyQuestions()
+    {
+        return $this->privacyQuestions;
     }
 }

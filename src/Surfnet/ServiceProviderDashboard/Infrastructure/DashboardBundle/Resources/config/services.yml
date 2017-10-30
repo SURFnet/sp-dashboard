@@ -46,6 +46,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand }
 
+    surfnet.dashboard.command_handler.privacy_questions:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\PrivacyQuestions\PrivacyQuestionsCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand }
+
     surfnet.dashboard.command_handler.publish_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler
         public: true
@@ -105,6 +111,11 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Entity]
+
+    surfnet.dashboard.repository.privacy_questions:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository
+        factory: ['@doctrine', 'getRepository']
+        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions]
 
     surfnet.dashboard.repository.service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository
