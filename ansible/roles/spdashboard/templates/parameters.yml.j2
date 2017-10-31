@@ -22,6 +22,6 @@ parameters:
     saml_remote_idp_entity_id: "{{ spdashboard_saml_remote_idp_entity_id }}"
     saml_remote_idp_sso_url: "{{ spdashboard_saml_remote_idp_sso_url }}"
     saml_remote_idp_certificate: "{{ spdashboard_saml_remote_idp_certificate }}"
-    manage_test_host: {{ manage.base_url }}
-    manage_test_username: {{ manage.sp_dashboard_user }}
+    manage_test_host: https://manage.{{ base_domain }}
+    manage_test_username: sp-dashboard
     manage_test_password: {{ manage_sp_dashboard_secret }}
