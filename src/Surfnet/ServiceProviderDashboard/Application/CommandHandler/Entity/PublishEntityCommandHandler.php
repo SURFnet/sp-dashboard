@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Application\Factory\MotivationMetadataFacto
 use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Application\Factory\SpDashboardMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -46,9 +45,19 @@ class PublishEntityCommandHandler implements CommandHandler
     private $publishClient;
 
     /**
-     * @var AttributesMetadataRepository
+     * @var PrivacyQuestionsMetadataFactory
      */
-    private $metadataRepository;
+    private $privacyQuestionsMetadataFactory;
+
+    /**
+     * @var MotivationMetadataFactory
+     */
+    private $motivationMetadataFactory;
+
+    /**
+     * @var SpDashboardMetadataFactory
+     */
+    private $spDashboardMetadataFactory;
 
     /**
      * @var LoggerInterface
@@ -63,7 +72,9 @@ class PublishEntityCommandHandler implements CommandHandler
     public function __construct(
         EntityRepository $entityRepository,
         PublishEntityRepository $publishClient,
-        AttributesMetadataRepository $metadataRepository,
+        PrivacyQuestionsMetadataFactory $privacyQuestionsMetadataFactory,
+        MotivationMetadataFactory $motivationMetadataFactory,
+        SpDashboardMetadataFactory $spDashboardMetadataFactory,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
@@ -71,7 +82,10 @@ class PublishEntityCommandHandler implements CommandHandler
         $this->publishClient = $publishClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
-        $this->metadataRepository = $metadataRepository;
+
+        $this->privacyQuestionsMetadataFactory = $privacyQuestionsMetadataFactory;
+        $this->motivationMetadataFactory = $motivationMetadataFactory;
+        $this->spDashboardMetadataFactory = $spDashboardMetadataFactory;
     }
 
     /**
@@ -114,14 +128,10 @@ class PublishEntityCommandHandler implements CommandHandler
      */
     private function buildMetadataFields(Entity $entity)
     {
-        $privacyQuestionFactory = new PrivacyQuestionsMetadataFactory($this->metadataRepository, $entity);
-        $motivationFactory = new MotivationMetadataFactory($this->metadataRepository, $entity);
-        $spDashboardFactory = new SpDashboardMetadataFactory($this->metadataRepository, $entity);
-
         $mergedMetadata = array_merge(
-            $privacyQuestionFactory->build(),
-            $motivationFactory->build(),
-            $spDashboardFactory->build()
+            $this->privacyQuestionsMetadataFactory->build($entity),
+            $this->motivationMetadataFactory->build($entity),
+            $this->spDashboardMetadataFactory->build($entity)
         );
 
         return $mergedMetadata;

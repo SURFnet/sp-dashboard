@@ -18,9 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Factory;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+
 interface MetadataFactory
 {
     const METADATA_PREFIX = 'metaDataFields.';
 
-    public function build();
+    public function build(Entity $entity);
 }

@@ -46,25 +46,19 @@ class PrivacyQuestionsMetadataFactory implements MetadataFactory
      */
     private $repository;
 
-    /**
-     * @var Entity
-     */
-    private $entity;
-
-    public function __construct(AttributesMetadataRepository $repository, Entity $entity)
+    public function __construct(AttributesMetadataRepository $repository)
     {
-        $this->entity = $entity;
         $this->repository = $repository;
     }
 
-    public function build()
+    public function build(Entity $entity)
     {
-        $privacyQuestionAnswers = $this->entity->getService()->getPrivacyQuestions();
+        $privacyQuestionAnswers = $entity->getService()->getPrivacyQuestions();
         $privacyQuestions = $this->repository->findAllPrivacyQuestionsAttributes();
 
         $attributes = [];
 
-        if ($this->entity->getService()->isPrivacyQuestionsEnabled()) {
+        if ($entity->getService()->isPrivacyQuestionsEnabled()) {
             foreach ($privacyQuestions as $question) {
                 // Get the associated getter
                 $getterName = $question->getterName;

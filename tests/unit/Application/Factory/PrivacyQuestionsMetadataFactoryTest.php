@@ -58,9 +58,9 @@ class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
 
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
 
-        $factory = new PrivacyQuestionsMetadataFactory($metadataRepository, $entity);
+        $factory = new PrivacyQuestionsMetadataFactory($metadataRepository);
 
-        $metadata = $factory->build();
+        $metadata = $factory->build($entity);
 
         $this->assertCount(14, $metadata);
 
@@ -85,9 +85,9 @@ class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
 
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
 
-        $factory = new PrivacyQuestionsMetadataFactory($metadataRepository, $entity);
+        $factory = new PrivacyQuestionsMetadataFactory($metadataRepository);
 
-        $metadata = $factory->build();
+        $metadata = $factory->build($entity);
 
         $this->assertEmpty($metadata);
     }

@@ -33,18 +33,12 @@ class SpDashboardMetadataFactory implements MetadataFactory
      */
     private $repository;
 
-    /**
-     * @var Entity
-     */
-    private $entity;
-
-    public function __construct(AttributesMetadataRepository $repository, Entity $entity)
+    public function __construct(AttributesMetadataRepository $repository)
     {
-        $this->entity = $entity;
         $this->repository = $repository;
     }
 
-    public function build()
+    public function build(Entity $entity)
     {
         $spDashboardAttributes = $this->repository->findAllSpDashboardAttributes();
         $attributes = [];
@@ -55,14 +49,14 @@ class SpDashboardMetadataFactory implements MetadataFactory
 
             switch (true) {
                 case $attribute->id == 'teamID':
-                    $service = $this->entity->getService();
+                    $service = $entity->getService();
                     if (method_exists($service, $getterName) && !empty($service->$getterName())) {
                         $attributes[self::METADATA_PREFIX . $attribute->urns[0]] = $service->$getterName();
                     }
                     break;
                 case $attribute->id == 'originalMetadataUrl':
-                    if (method_exists($this->entity, $getterName) && !empty($this->entity->$getterName())) {
-                        $attributes[self::METADATA_PREFIX . $attribute->urns[0]] = $this->entity->$getterName();
+                    if (method_exists($entity, $getterName) && !empty($entity->$getterName())) {
+                        $attributes[self::METADATA_PREFIX . $attribute->urns[0]] = $entity->$getterName();
                     }
                     break;
             }

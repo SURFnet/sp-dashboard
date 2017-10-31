@@ -33,18 +33,12 @@ class MotivationMetadataFactory implements MetadataFactory
      */
     private $repository;
 
-    /**
-     * @var Entity
-     */
-    private $entity;
-
-    public function __construct(AttributesMetadataRepository $repository, Entity $entity)
+    public function __construct(AttributesMetadataRepository $repository)
     {
-        $this->entity = $entity;
         $this->repository = $repository;
     }
 
-    public function build()
+    public function build(Entity $entity)
     {
         $motivationInformation = $this->repository->findAllMotivationAttributes();
 
@@ -53,9 +47,9 @@ class MotivationMetadataFactory implements MetadataFactory
         foreach ($motivationInformation as $motivation) {
             // Get the associated getter
             $getterName = $motivation->getterName;
-            if (method_exists($this->entity, $getterName)) {
+            if (method_exists($entity, $getterName)) {
                 /** @var Attribute $attribute */
-                $attribute = $this->entity->$getterName();
+                $attribute = $entity->$getterName();
 
                 // Only requested attributes with a non empty motivation are added
                 if (!is_null($attribute) && $attribute->isRequested() && !empty($attribute->getMotivation())) {

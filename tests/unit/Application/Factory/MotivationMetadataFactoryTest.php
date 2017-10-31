@@ -20,12 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Factory\MotivationMetadataFactory;
-use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
@@ -49,9 +45,9 @@ class MotivationMetadataFactoryTest extends MockeryTestCase
 
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
 
-        $factory = new MotivationMetadataFactory($metadataRepository, $entity);
+        $factory = new MotivationMetadataFactory($metadataRepository);
 
-        $metadata = $factory->build();
+        $metadata = $factory->build($entity);
 
         $this->assertCount(4, $metadata);
 
