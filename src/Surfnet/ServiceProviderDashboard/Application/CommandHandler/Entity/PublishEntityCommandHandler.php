@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Factory\MotivationMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -112,7 +113,14 @@ class PublishEntityCommandHandler implements CommandHandler
      */
     private function buildMetadataFields(Entity $entity)
     {
-        $factory = new PrivacyQuestionsMetadataFactory($this->metadataRepository, $entity);
-        return $factory->build();
+        $privacyQuestionFactory = new PrivacyQuestionsMetadataFactory($this->metadataRepository, $entity);
+        $motivationFactory = new MotivationMetadataFactory($this->metadataRepository, $entity);
+
+        $mergedMetadata = array_merge(
+            $privacyQuestionFactory->build(),
+            $motivationFactory->build()
+        );
+
+        return $mergedMetadata;
     }
 }

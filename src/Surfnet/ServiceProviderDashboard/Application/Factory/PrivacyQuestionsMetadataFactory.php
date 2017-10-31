@@ -79,7 +79,6 @@ class PrivacyQuestionsMetadataFactory implements MetadataFactory
                         if (is_bool($answer)) {
                             $answer = ($answer) ? '1' : '0';
                         }
-
                         $attributes[self::METADATA_PREFIX . $question->urns[0]] = $answer;
                     }
                 }
