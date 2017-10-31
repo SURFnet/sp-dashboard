@@ -76,14 +76,19 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             // We have a valid response, set the comment as a revision note
             $this->logger->info('Update entity, set comment as revision note');
 
+            $pathUpdates = $metadataFields;
+
+            if ($entity->hasComments()) {
+                $pathUpdates = array_merge(
+                    ['revisionnote' => $entity->getComments()],
+                    $pathUpdates
+                );
+            }
+
             $update = json_encode([
                 'id' => $response['id'],
                 'type' => 'saml20_sp',
-                'pathUpdates' =>
-                    array_merge(
-                        ['revisionnote' => $entity->getComments()],
-                        $metadataFields
-                    ),
+                'pathUpdates' => $pathUpdates,
             ]);
 
             $response = $this->client->put($update, 'manage/api/internal/merge');
