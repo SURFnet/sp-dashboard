@@ -18,29 +18,20 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedEntityCommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class DeletePublishedEntityCommandHandlerTest extends MockeryTestCase
+class DeleteEntityCommandHandlerTest extends MockeryTestCase
 {
 
     /**
-     * @var DeletePublishedEntityCommandHandler
+     * @var DeleteEntityCommandHandler
      */
     private $commandHandler;
 
@@ -60,12 +51,12 @@ class DeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 
         $this->logger = m::mock(LoggerInterface::class);
 
-        $this->commandHandler = new DeletePublishedEntityCommandHandler($this->repository, $this->logger);
+        $this->commandHandler = new DeleteEntityCommandHandler($this->repository, $this->logger);
     }
 
     public function test_it_can_delete_an_entity()
     {
-        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new DeleteEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
 
         $entity = m::mock(Entity::class);
         $entity->shouldReceive('getNameEn');
