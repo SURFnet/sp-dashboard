@@ -22,7 +22,9 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityComman
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
 
 class EntityService
 {
@@ -37,15 +39,23 @@ class EntityService
     private $factory;
 
     /**
+     * @var ManageQueryClient
+     */
+    private $manageQueryClient;
+
+    /**
      * @param EntityRepository $entityRepository
      * @param EntityCommandFactory $factory
+     * @param ManageQueryClient $manageQueryClient
      */
     public function __construct(
         EntityRepository $entityRepository,
-        EntityCommandFactory $factory
+        EntityCommandFactory $factory,
+        ManageQueryClient $manageQueryClient
     ) {
         $this->entityRepository = $entityRepository;
         $this->factory = $factory;
+        $this->manageQueryClient = $manageQueryClient;
     }
 
     /**
@@ -77,16 +87,20 @@ class EntityService
     }
 
     /**
-     * @param int $serviceId
+     * @param Service $service
      *
      * @return ViewObject\EntityList
      */
-    public function getEntityListForService($serviceId)
+    public function getEntityListForService(Service $service)
     {
         $entities = [];
 
-        foreach ($this->entityRepository->findByServiceId($serviceId) as $entity) {
+        foreach ($this->entityRepository->findByServiceId($service->getId()) as $entity) {
             $entities[] = ViewObject\Entity::fromEntity($entity);
+        }
+
+        foreach ($this->manageQueryClient->findByTeamName($service->getTeamName()) as $result) {
+            $entities[] = ViewObject\Entity::fromManageResult($result);
         }
 
         return new ViewObject\EntityList($entities);

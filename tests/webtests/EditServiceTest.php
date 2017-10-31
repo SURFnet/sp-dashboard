@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use GuzzleHttp\Psr7\Response;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -118,12 +119,21 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
+        // Note: after a redirect response we do not have access to the container anymore.
+        // To work around this problem, we do the setup again and visit the redirection target.
+        //
+        // See: https://github.com/symfony/symfony/issues/8858
+        $this->setUp();
 
         // Step 4: Surfnet can access the privacy questions
         $this->logIn('ROLE_USER', [$surfNet]);
+
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
         $crawler = $this->client->request('GET', '/');
 
         $navTexts = $crawler->filterXPath('//div[@class="navigation"]/ul/li/a/text()')->extract(['_text']);
+
         $this->assertContains('Privacy', $navTexts);
 
         $this->client->request('GET', '/service/privacy');
