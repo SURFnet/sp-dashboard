@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Factory\MotivationMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
+use Surfnet\ServiceProviderDashboard\Application\Factory\SpDashboardMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
@@ -115,10 +116,12 @@ class PublishEntityCommandHandler implements CommandHandler
     {
         $privacyQuestionFactory = new PrivacyQuestionsMetadataFactory($this->metadataRepository, $entity);
         $motivationFactory = new MotivationMetadataFactory($this->metadataRepository, $entity);
+        $spDashboardFactory = new SpDashboardMetadataFactory($this->metadataRepository, $entity);
 
         $mergedMetadata = array_merge(
             $privacyQuestionFactory->build(),
-            $motivationFactory->build()
+            $motivationFactory->build(),
+            $spDashboardFactory->build()
         );
 
         return $mergedMetadata;
