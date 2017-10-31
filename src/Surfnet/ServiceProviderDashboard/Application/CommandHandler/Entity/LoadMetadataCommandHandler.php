@@ -163,10 +163,8 @@ class LoadMetadataCommandHandler implements CommandHandler
     private function map(array $map, Entity $entity, Metadata $metadata)
     {
         foreach ($map as $metadataFieldName => $entityMethods) {
-            $getter = $entityMethods[0];
             $setter = $entityMethods[1];
-            // Only update the value on the entity if the user didn't set it previously
-            if (!is_null($metadata->$metadataFieldName) && empty(call_user_func([$entity, $getter]))) {
+            if (!is_null($metadata->$metadataFieldName)) {
                 call_user_func([$entity, $setter], $metadata->$metadataFieldName);
             }
         }
