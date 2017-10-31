@@ -71,5 +71,4 @@ class MotivationMetadataFactoryTest extends MockeryTestCase
         $attr->setRequested($requested);
         return $attr;
     }
-
 }

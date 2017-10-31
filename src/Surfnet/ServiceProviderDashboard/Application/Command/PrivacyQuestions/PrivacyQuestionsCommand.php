@@ -315,6 +315,7 @@ class PrivacyQuestionsCommand implements Command
 
     /**
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getPrivacyPolicy()
     {

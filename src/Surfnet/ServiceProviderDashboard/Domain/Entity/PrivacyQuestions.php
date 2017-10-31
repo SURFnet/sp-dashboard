@@ -234,6 +234,7 @@ class PrivacyQuestions
 
     /**
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getPrivacyPolicy()
     {

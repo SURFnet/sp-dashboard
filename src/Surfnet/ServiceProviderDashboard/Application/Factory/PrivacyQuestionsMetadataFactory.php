@@ -31,11 +31,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  * Example (in json format for readability):
  *
  * {
- *	"coin:privacy:what_data": "All sorts of data will be accessed.",
- *	"coin:privacy:certification": false,
- *	"coin:privacy:certification_valid_from": "2018-06-04",
- *	"coin:privacy:certification_valid_to": "2018-06-06",
- *	"coin:privacy:sn_dpa_why_not": "We can not comply."
+ *   "coin:privacy:what_data": "All sorts of data will be accessed.",
+ *   "coin:privacy:certification": false,
+ *   "coin:privacy:certification_valid_from": "2018-06-04",
+ *   "coin:privacy:certification_valid_to": "2018-06-06",
+ *   "coin:privacy:sn_dpa_why_not": "We can not comply."
  * }
  *
  */
