@@ -81,6 +81,11 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('getComments')
             ->andReturn('Lorem ipsum dolor sit');
 
+        $entity
+            ->shouldReceive('hasComments')
+            ->once()
+            ->andReturn(true);
+
         $this->logger
             ->shouldReceive('info');
 

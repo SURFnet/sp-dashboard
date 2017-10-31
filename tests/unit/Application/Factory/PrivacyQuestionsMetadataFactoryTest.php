@@ -29,6 +29,11 @@ use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataReposit
 
 class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+    }
+
     public function test_it_can_build_privacy_question_metadata()
     {
         /** @var Entity $entity */

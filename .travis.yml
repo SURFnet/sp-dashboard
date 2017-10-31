@@ -10,7 +10,7 @@ cache:
     - ~/.composer/cache/files
 
 before_script:
-  - phpenv config-add .travis.php.ini
+  - echo 'date.timezone = "Europe/Amsterdam"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - composer install --no-interaction
 
 script:

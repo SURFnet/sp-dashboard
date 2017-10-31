@@ -141,6 +141,11 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getComments')
             ->andReturn('Lorem ipsum dolor sit');
 
+        $entity
+            ->shouldReceive('hasComments')
+            ->once()
+            ->andReturn(true);
+
         $this->generator
             ->shouldReceive('generate')
             ->andReturn($xml);
@@ -189,6 +194,11 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
         $entity
             ->shouldReceive('getNameNl')
             ->andReturn('Test Entity Name');
+
+        $entity
+            ->shouldReceive('hasComments')
+            ->once()
+            ->andReturn(true);
 
         $this->repository
             ->shouldReceive('findById')
