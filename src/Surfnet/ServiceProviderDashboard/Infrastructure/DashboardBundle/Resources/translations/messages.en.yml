@@ -85,7 +85,7 @@ entity.edit.attributes.html: "
 "
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
-entity.edit.information.ticketNumber:
+entity.edit.information.ticketNumber: Text should be set in web translations
 entity.edit.information.importUrl: Text should be set in web translations
 entity.edit.information.metadataUrl: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
