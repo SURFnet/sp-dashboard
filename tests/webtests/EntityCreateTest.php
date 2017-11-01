@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class CreateEntityTest extends WebTestCase
+class EntityCreateTest extends WebTestCase
 {
     public function setUp()
     {
@@ -61,7 +61,6 @@ class CreateEntityTest extends WebTestCase
         $this->assertNotEmpty($entity->getId());
 
         $this->assertEquals(Entity::ENVIRONMENT_CONNECT, $entity->getEnvironment());
-        $this->assertEquals(Entity::STATE_DRAFT, $entity->getStatus());
         $this->assertEquals('Ibuildings B.V.', $entity->getService()->getName());
     }
 }

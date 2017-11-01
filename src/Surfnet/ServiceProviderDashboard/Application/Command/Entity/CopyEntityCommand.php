@@ -19,62 +19,64 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class LoadMetadataCommand implements Command
+class CopyEntityCommand implements Command
 {
     /**
      * @var string
+     * @Assert\NotBlank
+     * @Assert\Uuid
      */
     private $dashboardId;
 
     /**
      * @var string
+     * @Assert\NotBlank
+     * @Assert\Uuid
      */
-    private $importUrl;
+    private $manageId;
 
     /**
-     * @var string
+     * @var Service
+     * @Assert\NotNull
      */
-    private $pastedMetadata;
+    private $service;
 
-    public function __construct($dashboardId, $importUrl, $pastedMetadata)
+    /**
+     * @param string $dashboardId
+     * @param string $manageId
+     * @param Service $service
+     */
+    public function __construct($dashboardId, $manageId, Service $service)
     {
         $this->dashboardId = $dashboardId;
-        $this->importUrl = $importUrl;
-        $this->pastedMetadata = $pastedMetadata;
+        $this->manageId = $manageId;
+        $this->service = $service;
     }
 
-    public static function fromEditCommand(EditEntityCommand $command)
-    {
-        return new self(
-            $command->getId(),
-            $command->getImportUrl(),
-            $command->getPastedMetadata()
-        );
-    }
-
+    /**
+     * @return string
+     */
     public function getDashboardId()
     {
         return $this->dashboardId;
     }
 
-    public function isUrlSet()
+    /**
+     * @return string
+     */
+    public function getManageId()
     {
-        return (bool) $this->getImportUrl();
+        return $this->manageId;
     }
 
-    public function isXmlSet()
+    /**
+     * @return Service
+     */
+    public function getService()
     {
-        return (bool) $this->getPastedMetadata();
-    }
-
-    public function getImportUrl()
-    {
-        return $this->importUrl;
-    }
-
-    public function getPastedMetadata()
-    {
-        return $this->pastedMetadata;
+        return $this->service;
     }
 }

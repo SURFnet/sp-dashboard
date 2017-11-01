@@ -223,6 +223,8 @@ class Generator implements GeneratorInterface
     /**
      * @param SimpleXMLElement $xml
      * @param Entity $entity
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function generateAttributes(SimpleXMLElement $xml, Entity $entity)
     {
@@ -240,17 +242,77 @@ class Generator implements GeneratorInterface
             array('md' => self::NS_SAML)
         );
 
-        if (null === $this->findNode($node, 'md:ServiceName', array(), array('md' => self::NS_SAML))) {
-            $this->setNode(
-                $node,
-                'md:ServiceName',
-                $entity->getNameEn(),
-                array('xml:lang' => 'en'),
-                array('md' => self::NS_SAML),
-                array('xml' => self::NS_LANG),
-                0
-            );
-        }
+        $this->removeNode(
+            $node,
+            'md:ServiceName',
+            array('xml:lang' => 'en'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG)
+        );
+
+        $this->removeNode(
+            $node,
+            'md:ServiceName',
+            array('xml:lang' => 'nl'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG)
+        );
+
+        $this->removeNode(
+            $node,
+            'md:ServiceDescription',
+            array('xml:lang' => 'en'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG)
+        );
+
+        $this->removeNode(
+            $node,
+            'md:ServiceDescription',
+            array('xml:lang' => 'nl'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG)
+        );
+
+        $this->setNode(
+            $node,
+            'md:ServiceName',
+            $entity->getNameEn(),
+            array('xml:lang' => 'en'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG),
+            0
+        );
+
+        $this->setNode(
+            $node,
+            'md:ServiceName',
+            $entity->getNameNl(),
+            array('xml:lang' => 'nl'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG),
+            1
+        );
+
+        $this->setNode(
+            $node,
+            'md:ServiceDescription',
+            $entity->getDescriptionEn(),
+            array('xml:lang' => 'en'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG),
+            2
+        );
+
+        $this->setNode(
+            $node,
+            'md:ServiceDescription',
+            $entity->getDescriptionNl(),
+            array('xml:lang' => 'nl'),
+            array('md' => self::NS_SAML),
+            array('xml' => self::NS_LANG),
+            3
+        );
 
         $attributesMetadata = $this->attributesMetadataRepository->findAll();
         foreach ($attributesMetadata as $attributeMetadata) {

@@ -23,7 +23,28 @@ interface QueryEntityRepository
     /**
      * @param string $entityId
      *
+     * @return string
+     */
+    public function findManageIdByEntityId($entityId);
+
+    /**
+     * @param string $manageId
+     *
      * @return array|null
      */
-    public function findByEntityId($entityId);
+    public function findByManageId($manageId);
+
+    /**
+     * @param string $manageId
+     *
+     * @return string
+     */
+    public function getMetadataXmlByManageId($manageId);
+
+    /**
+     * @param string $teamname
+     *
+     * @return array|null
+     */
+    public function findByTeamName($teamName);
 }

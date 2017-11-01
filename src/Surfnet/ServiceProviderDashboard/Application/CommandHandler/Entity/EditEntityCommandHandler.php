@@ -49,9 +49,8 @@ class EditEntityCommandHandler implements CommandHandler
         $entity->setService($command->getService());
         $entity->setArchived($command->isArchived());
         $entity->setEnvironment($command->getEnvironment());
-        $entity->setStatus($command->getStatus());
-        $entity->setJanusId($command->getJanusId());
         $entity->setImportUrl($command->getImportUrl());
+        $entity->setPastedMetadata($command->getPastedMetadata());
         $entity->setMetadataUrl($command->getMetadataUrl());
         $entity->setAcsLocation($command->getAcsLocation());
         $entity->setEntityId($command->getEntityId());

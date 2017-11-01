@@ -142,7 +142,7 @@ class GeneratorTest extends MockeryTestCase
         $this->assertContains('<md:SurName>Tester</md:SurName>', $xml);
         $this->assertContains('<md:EmailAddress>test@domain.org</md:EmailAddress>', $xml);
         $this->assertContains('<md:TelephoneNumber>123456789</md:TelephoneNumber>', $xml);
-        $this->assertContains('<md:ServiceName xml:lang="en">ServiceName</md:ServiceName>', $xml);
+        $this->assertContains('<md:ServiceName xml:lang="en">UNAMEEN</md:ServiceName>', $xml);
 
         // Created non existing attribute based on first key (including FriendlyName)
 

@@ -44,6 +44,13 @@ interface EntityRepository
     public function findById($id);
 
     /**
+     * @param string $manageId
+     *
+     * @return Entity[]
+     */
+    public function findByManageId($manageId);
+
+    /**
      * @param int $serviceId
      *
      * @return Entity[]

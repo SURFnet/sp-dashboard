@@ -57,6 +57,8 @@ class WebTestCase extends SymfonyWebTestCase
             ]
         );
 
+        $this->client->disableReboot();
+
         $this->mockHandler = $this->client->getContainer()->get('surfnet.manage.http.guzzle.mock_handler');
     }
 

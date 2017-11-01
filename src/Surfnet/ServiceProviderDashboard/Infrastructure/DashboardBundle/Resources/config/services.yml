@@ -12,6 +12,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand }
 
+    surfnet.dashboard.command_handler.copy_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand }
+
     surfnet.dashboard.command_handler.create_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
         public: true

@@ -284,6 +284,7 @@ class Parser implements ParserInterface
 
         $doc = new \DOMDocument();
         $doc->loadXml($xml);
+
         if (!$doc->schemaValidate($this->schemaLocation . '/schemas/surf.xsd')) {
             $errors = libxml_get_errors();
             libxml_clear_errors();

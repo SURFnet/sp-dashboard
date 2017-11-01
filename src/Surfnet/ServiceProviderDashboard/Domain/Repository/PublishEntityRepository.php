@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 interface PublishEntityRepository
 {
     /**
-     * Publishes the Entity to a Service registry (like Janus, Manage, ..) This action might also result in the
+     * Publishes the Entity to a Service registry (like Manage, ..) This action might also result in the
      * sending of a mail message to a service desk who in turn can publish the entity in the registry.
      *
      * @param Entity $entity

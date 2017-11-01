@@ -33,6 +33,8 @@ class EditServiceTest extends WebTestCase
         $this->getAuthorizationService()->setSelectedServiceId(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
+
+        $this->mockHandler->append(new Response(200, [], '[]'));
     }
 
     public function test_can_edit_existing_service()
@@ -119,18 +121,9 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        // Note: after a redirect response we do not have access to the container anymore.
-        // To work around this problem, we do the setup again and visit the redirection target.
-        //
-        // See: https://github.com/symfony/symfony/issues/8858
-        $this->setUp();
-
-        // Step 4: Surfnet can access the privacy questions
-        $this->logIn('ROLE_USER', [$surfNet]);
-
         $this->mockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->followRedirect();
 
         $navTexts = $crawler->filterXPath('//div[@class="navigation"]/ul/li/a/text()')->extract(['_text']);
 

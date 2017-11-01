@@ -23,6 +23,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
@@ -31,11 +32,15 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
 {
-
     /**
      * @var MockHandler
      */
     private $mockHandler;
+
+    /**
+     * @var EntityRepository
+     */
+    private $repository;
 
     protected function tearDown()
     {
@@ -46,10 +51,15 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
     protected function createValidator()
     {
         $this->mockHandler = new MockHandler();
+        $this->repository = m::mock(EntityRepository::class);
+
         $guzzle = new Client(['handler' => $this->mockHandler]);
         $client = new QueryClient(new HttpClient($guzzle));
 
-        return new ValidEntityIdValidator($client);
+        return new ValidEntityIdValidator(
+            $client,
+            $this->repository
+        );
     }
 
     public function test_success()
@@ -59,11 +69,14 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $this->mockHandler->append(new Response(200, [], '[]'));
 
         $entityCommand = m::mock(EditEntityCommand::class);
-        $entityCommand->shouldReceive('isDraft')->andReturn(true);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https://www.domain.org');
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
+        $entityCommand->shouldReceive('getId')->andReturn(1);
 
         $this->setRoot($entityCommand);
+
+        $this->repository->shouldReceive('findById')
+            ->andReturn(null);
 
         $this->validator->validate('https://sub.domain.org', new ValidEntityId());
 
@@ -73,7 +86,6 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
     public function test_empty_entity_id()
     {
         $entityCommand = m::mock(EditEntityCommand::class);
-        $entityCommand->shouldReceive('isDraft')->andReturn(true);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https://www.domain.org');
 
         $this->setRoot($entityCommand);
@@ -87,7 +99,6 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
     {
         $entityCommand = m::mock(EditEntityCommand::class);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('');
-        $entityCommand->shouldReceive('isDraft')->andReturn(true);
 
         $this->setRoot($entityCommand);
 
@@ -102,7 +113,6 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $domainB = 'domain.org';
 
         $entityCommand = m::mock(EditEntityCommand::class);
-        $entityCommand->shouldReceive('isDraft')->andReturn(true);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https:///www.' . $domainA);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
 
@@ -124,7 +134,6 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
     {
         $entityCommand = m::mock(EditEntityCommand::class);
 
-        $entityCommand->shouldReceive('isDraft')->andReturn(true);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('www.domain.org');
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
         $this->setRoot($entityCommand);
@@ -145,7 +154,6 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
     {
         $entityCommand = m::mock(EditEntityCommand::class);
 
-        $entityCommand->shouldReceive('isDraft')->andReturn(true);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('q$:\₪.3%$');
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
 

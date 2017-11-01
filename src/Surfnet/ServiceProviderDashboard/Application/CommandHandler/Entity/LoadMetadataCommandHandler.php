@@ -66,11 +66,15 @@ class LoadMetadataCommandHandler implements CommandHandler
      */
     public function handle(LoadMetadataCommand $command)
     {
-        $entity = $this->entityRepository->findById($command->getEntityId());
+        $entity = $this->entityRepository->findById($command->getDashboardId());
 
         switch (true) {
             case $command->isUrlSet():
-                $xml = $this->metadataFetcher->fetch($command->getImportUrl());
+                $url = $command->getImportUrl();
+
+                $entity->setImportUrl($url);
+
+                $xml = $this->metadataFetcher->fetch($url);
                 break;
             case $command->isXmlSet():
                 $xml = $command->getPastedMetadata();
@@ -81,7 +85,6 @@ class LoadMetadataCommandHandler implements CommandHandler
         }
 
         $entity->setMetadataXml($xml);
-        $entity->setPastedMetadata($xml);
 
         $metadata = $this->metadataParser->parseXml($xml);
 
