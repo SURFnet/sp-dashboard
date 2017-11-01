@@ -1,0 +1,138 @@
+[
+  {
+    "id": "eduPersonTargetedIDMotivation",
+    "getterName": "getEduPersonTargetedIDAttribute",
+    "friendlyName": "EduPersonTargetedIDMotivation",
+    "urns": [
+      "coin:attr_motivation:eduPersonTargetedID"
+    ]
+  },
+  {
+    "id": "eduPersonPrincipalNameMotivation",
+    "getterName": "getPrincipleNameAttribute",
+    "friendlyName": "EduPersonPrincipalNameMotivation",
+    "urns": [
+      "coin:attr_motivation:eduPersonPrincipalName"
+    ]
+  },
+  {
+    "id": "displayNameMotivation",
+    "getterName": "getDisplayNameAttribute",
+    "friendlyName": "DisplayNameMotivation",
+    "urns": [
+      "coin:attr_motivation:displayName"
+    ]
+  },
+  {
+    "id": "cnMotivation",
+    "getterName": "getCommonNameAttribute",
+    "friendlyName": "CnMotivation",
+    "urns": [
+      "coin:attr_motivation:cn"
+    ]
+  },
+  {
+    "id": "givenNameMotivation",
+    "getterName": "getGivenNameAttribute",
+    "friendlyName": "GivenNameMotivation",
+    "urns": [
+      "coin:attr_motivation:givenName"
+    ]
+  },
+  {
+    "id": "snMotivation",
+    "getterName": "getSurNameAttribute",
+    "friendlyName": "SnMotivation",
+    "urns": [
+      "coin:attr_motivation:sn"
+    ]
+  },
+  {
+    "id": "mailMotivation",
+    "getterName": "getEmailAddressAttribute",
+    "friendlyName": "MailMotivation",
+    "urns": [
+      "coin:attr_motivation:mail"
+    ]
+  },
+  {
+    "id": "schacHomeOrganizationMotivation",
+    "getterName": "getOrganizationAttribute",
+    "friendlyName": "SchacHomeOrganizationMotivation",
+    "urns": [
+      "coin:attr_motivation:schacHomeOrganization"
+    ]
+  },
+  {
+    "id": "schacHomeOrganizationTypeMotivation",
+    "getterName": "getOrganizationTypeAttribute",
+    "friendlyName": "SchacHomeOrganizationTypeMotivation",
+    "urns": [
+      "coin:attr_motivation:schacHomeOrganizationType"
+    ]
+  },
+  {
+    "id": "schacPersonalUniqueCodeMotivation",
+    "getterName": "getPersonalCodeAttribute",
+    "friendlyName": "SchacPersonalUniqueCodeMotivation",
+    "urns": [
+      "coin:attr_motivation:schacPersonalUniqueCode"
+    ]
+  },
+  {
+    "id": "eduPersonAffiliationMotivation",
+    "getterName": "getAffiliationAttribute",
+    "friendlyName": "EduPersonAffiliationMotivation",
+    "urns": [
+      "coin:attr_motivation:eduPersonAffiliation"
+    ]
+  },
+  {
+    "id": "eduPersonScopedAffiliationMotivation",
+    "getterName": "getScopedAffiliationAttribute",
+    "friendlyName": "EduPersonScopedAffiliationMotivation",
+    "urns": [
+      "coin:attr_motivation:eduPersonScopedAffiliation"
+    ]
+  },
+  {
+    "id": "eduPersonEntitlementMotivation",
+    "getterName": "getEntitlementAttribute",
+    "friendlyName": "EduPersonEntitlementMotivation",
+    "urns": [
+      "coin:attr_motivation:eduPersonEntitlement"
+    ]
+  },
+  {
+    "id": "uidMotivation",
+    "getterName": "getUidAttribute",
+    "friendlyName": "UidMotivation",
+    "urns": [
+      "coin:attr_motivation:uid"
+    ]
+  },
+  {
+    "id": "preferredLanguageMotivation",
+    "getterName": "getPreferredLanguageAttribute",
+    "friendlyName": "PreferredLanguageMotivation",
+    "urns": [
+      "coin:attr_motivation:preferredLanguage"
+    ]
+  },
+  {
+    "id": "eduPersonOrcidMotivation",
+    "getterName": "",
+    "friendlyName": "EduPersonOrcidMotivation",
+    "urns": [
+      "coin:attr_motivation:eduPersonOrcid"
+    ]
+  },
+  {
+    "id": "isMemberOfMotivation",
+    "getterName": "",
+    "friendlyName": "IsMemberOfMotivation",
+    "urns": [
+      "coin:attr_motivation:isMemberOf"
+    ]
+  }
+]

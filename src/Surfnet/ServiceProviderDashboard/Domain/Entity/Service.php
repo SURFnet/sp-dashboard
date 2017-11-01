@@ -82,7 +82,7 @@ class Service
     private $entities;
 
     /**
-     * @var privacyQuestions
+     * @var PrivacyQuestions
      *
      * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service")
      */
@@ -143,6 +143,14 @@ class Service
     }
 
     /**
+     * @param bool $privacyQuestionsEnabled
+     */
+    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
+    {
+        $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
+    }
+
+    /**
      * @param string $teamName
      */
     public function setTeamName($teamName)
@@ -181,18 +189,18 @@ class Service
     }
 
     /**
+     * @param PrivacyQuestions $privacyQuestions
+     */
+    public function setPrivacyQuestions(PrivacyQuestions $privacyQuestions)
+    {
+        $this->privacyQuestions = $privacyQuestions;
+    }
+
+    /**
      * @return bool
      */
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @param bool $privacyQuestionsEnabled
-     */
-    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
-    {
-        $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
 }

@@ -28,9 +28,10 @@ interface PublishEntityRepository
      *
      * @param Entity $entity
      *
+     * @param array $metadataFields
      * @return mixed
      */
-    public function publish(Entity $entity);
+    public function publish(Entity $entity, array $metadataFields);
 
     /**
      * Push the metadata from Manage to Engineblock

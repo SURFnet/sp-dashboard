@@ -981,4 +981,12 @@ class Entity
     {
         return ($this->status == self::STATE_DRAFT);
     }
+
+    /**
+     * @return bool
+     */
+    public function hasComments()
+    {
+        return !(empty($this->comments));
+    }
 }

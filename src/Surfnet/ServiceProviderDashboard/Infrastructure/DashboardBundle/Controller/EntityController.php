@@ -149,6 +149,9 @@ class EntityController extends Controller
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
                         break;
                     case 'publishButton':
+                        // Save the changes made on the form
+                        $this->commandBus->handle($command);
+
                         // Only trigger form validation on publish
                         if ($form->isValid()) {
                             $metadataCommand = new PublishEntityCommand($entity->getId());

@@ -42,4 +42,34 @@ class AttributesMetadataRepository implements AttributesMetadataRepositoryInterf
             file_get_contents($this->rootDir . '/metadata/attributes.json')
         );
     }
+
+    /**
+     * @return stdClass
+     */
+    public function findAllMotivationAttributes()
+    {
+        return json_decode(
+            file_get_contents($this->rootDir . '/metadata/attr_motivation.json')
+        );
+    }
+
+    /**
+     * @return stdClass
+     */
+    public function findAllPrivacyQuestionsAttributes()
+    {
+        return json_decode(
+            file_get_contents($this->rootDir . '/metadata/privacy_questions.json')
+        );
+    }
+
+    /**
+     * @return stdClass
+     */
+    public function findAllSpDashboardAttributes()
+    {
+        return json_decode(
+            file_get_contents($this->rootDir . '/metadata/sp_dashboard.json')
+        );
+    }
 }

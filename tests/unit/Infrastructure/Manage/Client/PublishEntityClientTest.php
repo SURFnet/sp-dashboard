@@ -81,6 +81,11 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('getComments')
             ->andReturn('Lorem ipsum dolor sit');
 
+        $entity
+            ->shouldReceive('hasComments')
+            ->once()
+            ->andReturn(true);
+
         $this->logger
             ->shouldReceive('info');
 
@@ -88,7 +93,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generate')
             ->andReturn($xml);
 
-        $response = $this->client->publish($entity);
+        $response = $this->client->publish($entity, []);
         $this->assertEquals('OK', $response['test']);
     }
 
@@ -111,7 +116,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generate')
             ->andReturn($xml);
 
-        $this->client->publish($entity);
+        $this->client->publish($entity, []);
     }
 
     public function test_it_can_push_to_engineblock()

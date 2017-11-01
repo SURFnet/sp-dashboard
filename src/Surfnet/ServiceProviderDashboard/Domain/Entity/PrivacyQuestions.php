@@ -233,7 +233,8 @@ class PrivacyQuestions
     }
 
     /**
-     * @return string
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getPrivacyPolicy()
     {
@@ -345,7 +346,7 @@ class PrivacyQuestions
     }
 
     /**
-     * @param string $privacyPolicy
+     * @param bool $privacyPolicy
      */
     public function setPrivacyPolicy($privacyPolicy)
     {

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "teamID",
+    "getterName": "getTeamName",
+    "friendlyName": "TeamID",
+    "urns": [
+      "coin:service_team_id"
+    ]
+  },
+  {
+    "id": "originalMetadataUrl",
+    "getterName": "getImportUrl",
+    "friendlyName": "OriginalMetadataUrl",
+    "urns": [
+      "coin:original_metadata_url"
+    ]
+  }
+]

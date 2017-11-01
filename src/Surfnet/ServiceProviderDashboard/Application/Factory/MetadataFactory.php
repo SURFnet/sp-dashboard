@@ -16,15 +16,13 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Application\Factory;
 
-interface AttributesMetadataRepository
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+
+interface MetadataFactory
 {
-    public function findAll();
+    const METADATA_PREFIX = 'metaDataFields.';
 
-    public function findAllMotivationAttributes();
-
-    public function findAllPrivacyQuestionsAttributes();
-
-    public function findAllSpDashboardAttributes();
+    public function build(Entity $entity);
 }
