@@ -16,21 +16,16 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\CommandHandler\Entity;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\CommandHandler\Entity;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 
-class CreateServiceCommandHandlerTest extends MockeryTestCase
+class CreateEntityCommandHandlerTest extends MockeryTestCase
 {
     /** @var CreateEntityCommandHandler */
     private $commandHandler;

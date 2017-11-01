@@ -59,7 +59,7 @@ class EntityMetadataController extends Controller
     }
 
     /**
-     * @Route("/entity/metadata/{entityId}", name="service_metadata")
+     * @Route("/entity/metadata/{entityId}", name="entity_metadata")
      *
      * @param int $entityId
      *

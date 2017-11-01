@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\CommandHandler\Entity;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\CommandHandler\PrivacyQuestions;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
