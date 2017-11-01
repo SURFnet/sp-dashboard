@@ -14,5 +14,21 @@
     "urns": [
       "coin:original_metadata_url"
     ]
+  },
+  {
+    "id": "applicationUrl",
+    "getterName": "getApplicationUrl",
+    "friendlyName": "ApplicationUrl",
+    "urns": [
+      "coin:application_url"
+    ]
+  },
+  {
+    "id": "eula",
+    "getterName": "getEulaUrl",
+    "friendlyName": "Eula",
+    "urns": [
+      "coin:eula"
+    ]
   }
 ]

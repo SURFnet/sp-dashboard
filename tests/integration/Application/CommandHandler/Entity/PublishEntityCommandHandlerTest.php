@@ -142,6 +142,10 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             ->andReturn('Lorem ipsum dolor sit');
 
         $entity
+            ->shouldReceive('getMetadataUrl')
+            ->andReturn('https://fobar.example.com');
+
+        $entity
             ->shouldReceive('hasComments')
             ->once()
             ->andReturn(true);
@@ -199,6 +203,10 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('hasComments')
             ->once()
             ->andReturn(true);
+
+        $entity
+            ->shouldReceive('getMetadataUrl')
+            ->andReturn('https://fobar.example.com');
 
         $this->repository
             ->shouldReceive('findById')

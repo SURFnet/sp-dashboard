@@ -38,6 +38,9 @@ class SpDashboardMetadataFactory implements MetadataFactory
         $this->repository = $repository;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     public function build(Entity $entity)
     {
         $spDashboardAttributes = $this->repository->findAllSpDashboardAttributes();
@@ -55,6 +58,8 @@ class SpDashboardMetadataFactory implements MetadataFactory
                     }
                     break;
                 case $attribute->id == 'originalMetadataUrl':
+                case $attribute->id == 'applicationUrl':
+                case $attribute->id == 'eula':
                     if (method_exists($entity, $getterName) && !empty($entity->$getterName())) {
                         $attributes[self::METADATA_PREFIX . $attribute->urns[0]] = $entity->$getterName();
                     }
