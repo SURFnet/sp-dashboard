@@ -46,6 +46,13 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand }
 
+    surfnet.dashboard.command_handler.mailer:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Mail\SendMailCommandHandler
+        public: true
+        arguments: ['@surfnet.dashboard.mailer']
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Mail\PublishToProductionMailCommand }
+
     surfnet.dashboard.command_handler.privacy_questions:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\PrivacyQuestions\PrivacyQuestionsCommandHandler
         public: true
@@ -66,6 +73,20 @@ services:
 
     surfnet.dashboard.factory.entity:
         class: Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory
+
+    surfnet.dashboard.mailer:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer
+        arguments: ['@mailer']
+
+    surfnet.dashboard.mailer_factory:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory
+        arguments:
+            - '%mail_from%'
+            - '%mail_receiver%'
+            - '%mail_no_reply%'
+            - '@translator'
+            - '@templating'
+
 
     surfnet.dashboard.menu.builder:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder
