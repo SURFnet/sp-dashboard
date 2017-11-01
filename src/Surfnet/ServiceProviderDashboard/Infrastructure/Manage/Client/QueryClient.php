@@ -106,7 +106,7 @@ class QueryClient implements QueryEntityRepository
             );
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
-                sprintf('Unable to find service providers with team ID: "%s"', $teamName)
+                sprintf('Unable to find entities with team ID: "%s"', $teamName)
             );
         }
     }
