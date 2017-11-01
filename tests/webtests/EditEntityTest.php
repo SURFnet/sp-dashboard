@@ -157,12 +157,12 @@ class EditEntityTest extends WebTestCase
 
         $entity = $this->getEntityRepository()->findById($this->entityId);
 
-        // Should not have overwritten existing fields
-        $this->assertEquals('SP1', $entity->getNameEn());
+        // Should have overwritten existing fields
+        $this->assertEquals('DNEN', $entity->getNameEn());
 
         // Administrative contact is also an existing field in the fixture
         $this->assertInstanceOf(Contact::class, $entity->getAdministrativeContact());
-        $this->assertEquals('John', $entity->getAdministrativeContact()->getFirstName());
+        $this->assertEquals('Test2', $entity->getAdministrativeContact()->getFirstName());
 
         $this->assertInstanceOf(Contact::class, $entity->getTechnicalContact());
         $this->assertEquals('Test', $entity->getTechnicalContact()->getFirstName());
@@ -199,8 +199,7 @@ class EditEntityTest extends WebTestCase
 
         $entity = $this->getEntityRepository()->findById($this->entityId);
 
-        // Explicitly not set with the value in post!
-        $this->assertEquals('SP1', $entity->getNameEn());
+        $this->assertEquals('DNEN', $entity->getNameEn());
 
         $this->assertNull($entity->getCommonNameAttribute());
         $this->assertNull($entity->getUidAttribute());
@@ -235,12 +234,12 @@ class EditEntityTest extends WebTestCase
 
         $entity = $this->getEntityRepository()->findById($this->entityId);
 
-        // Should not have overwritten existing fields
-        $this->assertEquals('SP1', $entity->getNameEn());
+        // Should have overwritten existing fields
+        $this->assertEquals('DNEN', $entity->getNameEn());
 
         // Administrative contact is also an existing field in the fixture
         $this->assertInstanceOf(Contact::class, $entity->getAdministrativeContact());
-        $this->assertEquals('John', $entity->getAdministrativeContact()->getFirstName());
+        $this->assertEquals('Test2', $entity->getAdministrativeContact()->getFirstName());
 
         $this->assertInstanceOf(Contact::class, $entity->getTechnicalContact());
         $this->assertEquals('Test', $entity->getTechnicalContact()->getFirstName());
