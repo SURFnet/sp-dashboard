@@ -89,6 +89,11 @@ class LoadMetadataCommandHandler implements CommandHandler
         $this->mapContacts($entity, $metadata);
         $this->mapAttributes($entity, $metadata);
 
+        // By default set the entityId as the metadataUrl but only when the metadataUrl is not set yet.
+        if (!empty($entity->getMetadataUrl())) {
+            $entity->setMetadataUrl($entity->getEntityId());
+        }
+
         $this->entityRepository->save($entity);
     }
 
