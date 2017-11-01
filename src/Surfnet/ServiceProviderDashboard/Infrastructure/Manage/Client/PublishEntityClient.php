@@ -78,6 +78,12 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
             $pathUpdates = $metadataFields;
 
+            // Send the metadata url (not imported in XML post)
+            $pathUpdates = array_merge(
+                $pathUpdates,
+                ['metadataurl' => $entity->getMetadataUrl()]
+            );
+
             if ($entity->hasComments()) {
                 $pathUpdates = array_merge(
                     ['revisionnote' => $entity->getComments()],

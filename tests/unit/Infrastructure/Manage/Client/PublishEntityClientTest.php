@@ -78,6 +78,10 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn($xml);
 
         $entity
+            ->shouldReceive('getMetadataUrl')
+            ->andReturn($xml);
+
+        $entity
             ->shouldReceive('getComments')
             ->andReturn('Lorem ipsum dolor sit');
 
@@ -111,6 +115,9 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getMetadataXml')
             ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
+        $entity
+            ->shouldReceive('getMetadataUrl')
+            ->andReturn('https://fobar.example.com');
 
         $this->generator
             ->shouldReceive('generate')

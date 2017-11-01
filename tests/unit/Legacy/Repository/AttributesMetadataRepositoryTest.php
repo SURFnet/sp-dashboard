@@ -132,13 +132,15 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
     public function test_it_has_all_sp_dashboard_attributes()
     {
         $expectedAttributes = [
+            "eula",
+            "applicationUrl",
             "teamID",
             "originalMetadataUrl",
         ];
 
         $attributes = $this->repository->findAllSpDashboardAttributes();
 
-        $this->assertCount(2, $attributes);
+        $this->assertCount(4, $attributes);
         foreach ($attributes as $attribute) {
             $this->assertContains($attribute->id, $expectedAttributes);
         }
