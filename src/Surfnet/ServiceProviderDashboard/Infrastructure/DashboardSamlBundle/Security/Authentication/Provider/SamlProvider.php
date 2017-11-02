@@ -137,7 +137,9 @@ class SamlProvider implements AuthenticationProviderInterface
         }
 
         foreach ($services as $service) {
-            $contact->addService($service);
+            if (!$contact->hasService($service)) {
+                $contact->addService($service);
+            }
         }
     }
 

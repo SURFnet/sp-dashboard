@@ -134,6 +134,22 @@ class Contact
      *
      * @return Contact
      */
+    public function hasService(Service $query)
+    {
+        foreach ($this->services as $service) {
+            if ($service->getId() === $query->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Service $service
+     *
+     * @return Contact
+     */
     public function addService(Service $service)
     {
         $this->services[] = $service;
