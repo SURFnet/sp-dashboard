@@ -37,7 +37,10 @@ class PrivacyQuestionsFormBuilder
             TextareaType::class,
             [
                 'label' => 'privacy.form.label.whatData',
-                'attr' => ['help' => 'privacy.information.whatData'],
+                'attr' => [
+                    'help' => 'privacy.information.whatData',
+                    'rows' => 8,
+                ],
             ]
         );
 
@@ -46,7 +49,10 @@ class PrivacyQuestionsFormBuilder
             TextareaType::class,
             [
                 'label' => 'privacy.form.label.accessData',
-                'attr' => ['help' => 'privacy.information.accessData'],
+                'attr' => [
+                    'help' => 'privacy.information.accessData',
+                    'rows' => 8,
+                ],
             ]
         );
 
@@ -55,7 +61,10 @@ class PrivacyQuestionsFormBuilder
             TextareaType::class,
             [
                 'label' => 'privacy.form.label.country',
-                'attr' => ['help' => 'privacy.information.country'],
+                'attr' => [
+                    'help' => 'privacy.information.country',
+                    'rows' => 8,
+                ],
             ]
         );
 
@@ -64,7 +73,10 @@ class PrivacyQuestionsFormBuilder
             TextareaType::class,
             [
                 'label' => 'privacy.form.label.securityMeasures',
-                'attr' => ['help' => 'privacy.information.securityMeasures'],
+                'attr' => [
+                    'help' => 'privacy.information.securityMeasures',
+                    'rows' => 8,
+                ],
             ]
         );
 
@@ -82,7 +94,10 @@ class PrivacyQuestionsFormBuilder
             TextareaType::class,
             [
                 'label' => 'privacy.form.label.certificationLocation',
-                'attr' => ['help' => 'privacy.information.certificationLocation'],
+                'attr' => [
+                    'help' => 'privacy.information.certificationLocation',
+                    'rows' => 8,
+                ],
             ]
         );
 
@@ -127,7 +142,10 @@ class PrivacyQuestionsFormBuilder
             TextareaType::class,
             [
                 'label' => 'privacy.form.label.snDpaWhyNot',
-                'attr' => ['help' => 'privacy.information.snDpaWhyNot'],
+                'attr' => [
+                    'help' => 'privacy.information.snDpaWhyNot',
+                    'rows' => 8,
+                ],
             ]
         );
 
@@ -154,7 +172,10 @@ class PrivacyQuestionsFormBuilder
             TextareaType::class,
             [
                 'label' => 'privacy.form.label.otherInfo',
-                'attr' => ['help' => 'privacy.information.otherInfo'],
+                'attr' => [
+                    'help' => 'privacy.information.otherInfo',
+                    'rows' => 8,
+                ],
             ]
         );
 
