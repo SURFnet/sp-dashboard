@@ -13,7 +13,15 @@ table {
     }
 
     td, th {
-      padding: 10px 0;
+      padding: 10px;
+    }
+
+    td:first-child, th:first-child {
+      padding-left: 0;
+    }
+
+    td:last-child, th:last-child {
+      padding-right: 0;
     }
   }
 
