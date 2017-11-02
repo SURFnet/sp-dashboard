@@ -204,6 +204,9 @@ class PublishEntityClientTest extends MockeryTestCase
      */
     public function test_it_handles_failing_push_action()
     {
+        $this->logger
+            ->shouldReceive('error')
+            ->once();
         // First call represents the 'xml to json' POST on the Manage endpoint
         $this->mockHandler->append(new Response(418));
         $this->client->pushMetadata();
@@ -217,6 +220,10 @@ class PublishEntityClientTest extends MockeryTestCase
     {
         // First call represents the 'xml to json' POST on the Manage endpoint
         $this->mockHandler->append(new Response(200, [], '{"status": "failed", "validation": "invalid enum"}'));
+
+        $this->logger
+            ->shouldReceive('error')
+            ->once();
 
         $service = m::mock(Service::class);
         $service
