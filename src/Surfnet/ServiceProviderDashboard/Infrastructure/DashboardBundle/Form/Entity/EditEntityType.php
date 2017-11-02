@@ -69,7 +69,10 @@ class EditEntityType extends AbstractType
                         'pastedMetadata',
                         TextareaType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.pastedMetadata'],
+                            'attr' => [
+                                'help' => 'entity.edit.information.pastedMetadata',
+                                'rows' => 10,
+                            ],
                         ]
                     )
                     ->add(
@@ -92,7 +95,10 @@ class EditEntityType extends AbstractType
                         'certificate',
                         TextareaType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.certificate'],
+                            'attr' => [
+                                'help' => 'entity.edit.information.certificate',
+                                'rows' => 10,
+                            ],
                         ]
                     )
                     ->add('logoUrl')
@@ -101,7 +107,10 @@ class EditEntityType extends AbstractType
                         'descriptionNl',
                         TextareaType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.descriptionNl'],
+                            'attr' => [
+                                'help' => 'entity.edit.information.descriptionNl',
+                                'rows' => 10,
+                            ],
                         ]
                     )
                     ->add('nameEn')
@@ -109,7 +118,10 @@ class EditEntityType extends AbstractType
                         'descriptionEn',
                         TextareaType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.descriptionEn'],
+                            'attr' => [
+                                'help' => 'entity.edit.information.descriptionEn',
+                                'rows' => 10,
+                            ],
                         ]
                     )
                     ->add('applicationUrl')
@@ -289,7 +301,10 @@ class EditEntityType extends AbstractType
                         'comments',
                         TextareaType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.comments'],
+                            'attr' => [
+                                'help' => 'entity.edit.information.comments',
+                                'rows' => 10,
+                            ],
                         ]
                     )
             )
