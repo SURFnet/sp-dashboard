@@ -6,14 +6,14 @@ error.404.title:  "Page not found"
 error.404.text: "Oops, we were unable to find the page."
 entity.delete.title: "Delete entity"
 entity.delete.confirmation: "You are about to delete the entity %name%, are you sure?"
-entity.delete.success: "The entity has been removed"
 entity.list.title: My entities
 entity.list.empty: There are no entities configured
 entity.list.no_service_selected: Please select a service
-entity.list.service: Entity
+entity.list.name: Entity
 entity.list.entity_id: Entity ID
 entity.list.primary_contact: Primary contact
 entity.list.environment: Environment
+entity.list.state: State
 entity.list.action.view: View
 entity.list.action.edit: Edit
 entity.list.action.copy: Copy

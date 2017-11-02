@@ -10,9 +10,10 @@
     <table>
         <thead>
             <tr>
-                <th>{{ 'entity.list.entity'|trans }}</th>
+                <th>{{ 'entity.list.name'|trans }}</th>
                 <th>{{ 'entity.list.entity_id'|trans }}</th>
                 <th>{{ 'entity.list.primary_contact'|trans }}</th>
+                <th>{{ 'entity.list.state'|trans }}</th>
                 <th>{{ 'entity.list.environment'|trans }}</th>
                 <th>{{ ''|trans }}</th>
             </tr>
@@ -23,6 +24,7 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.entityId }}</td>
                 <td>{{ entity.contact }}</td>
+                <td>{{ entity.state }}</td>
                 <td>{{ entity.environment }}</td>
                 <td>
                     <div class="actions">
@@ -38,16 +40,17 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ path('entity_edit', {id: entity.id}) }}">
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                    {{ 'entity.list.action.edit'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-copy" aria-hidden="true"></i>
-                                    {{ 'entity.list.action.copy'|trans }}
-                                </a>
+                                {% if entity.state == 'published' %}
+                                    <a href="{{ path('entity_copy', {manageId: entity.id}) }}">
+                                        <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                        {{ 'entity.list.action.edit'|trans }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('entity_edit', {id: entity.id}) }}">
+                                        <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                        {{ 'entity.list.action.edit'|trans }}
+                                    </a>
+                                {% endif %}
                             </li>
                             <li>
                                 <a href="{{ path('entity_delete', {id: entity.id}) }}">

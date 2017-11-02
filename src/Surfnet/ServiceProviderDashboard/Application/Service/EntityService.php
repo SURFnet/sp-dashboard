@@ -67,13 +67,28 @@ class EntityService
     }
 
     /**
-     * @param $entityId
+     * @param $id
      *
      * @return Entity|null
      */
-    public function getEntityById($entityId)
+    public function getEntityById($id)
     {
-        return $this->entityRepository->findById($entityId);
+        return $this->entityRepository->findById($id);
+    }
+
+    /**
+     * Find a draft entity stored in the dashboard by manage ID.
+     *
+     * @param $manageId
+     *
+     * @return Entity|null
+     */
+    public function findDraftEntityByManageId($manageId)
+    {
+        $entities = $this->entityRepository->findByManageId($manageId);
+        if (!empty($entities)) {
+            return reset($entities);
+        }
     }
 
     /**

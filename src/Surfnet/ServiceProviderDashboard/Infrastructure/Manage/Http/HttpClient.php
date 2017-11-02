@@ -74,12 +74,17 @@ final class HttpClient
             throw new UnreadableResourceException(sprintf('Resource could not be read (status code %d)', $statusCode));
         }
 
-        try {
-            $data = JsonResponseParser::parse((string) $response->getBody());
-        } catch (InvalidJsonException $e) {
-            throw new MalformedResponseException(
-                sprintf('Cannot read resource "%s": malformed JSON returned', $resource)
-            );
+        $data = (string) $response->getBody();
+
+        if ((isset($headers['Content-Type'])) &&
+            ($headers['Content-Type'] === 'application/json')) {
+            try {
+                $data = JsonResponseParser::parse($data);
+            } catch (InvalidJsonException $e) {
+                throw new MalformedResponseException(
+                    sprintf('Cannot read resource "%s": malformed JSON returned', $resource)
+                );
+            }
         }
 
         return $data;

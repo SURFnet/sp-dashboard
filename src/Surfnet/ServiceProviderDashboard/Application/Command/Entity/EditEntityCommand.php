@@ -66,18 +66,6 @@ class EditEntityCommand implements Command
     private $environment = Entity::ENVIRONMENT_CONNECT;
 
     /**
-     * @var int
-     *
-     * @Assert\NotBlank()
-     */
-    private $status = Entity::STATE_DRAFT;
-
-    /**
-     * @var string
-     */
-    private $janusId;
-
-    /**
      * Metadata URL that import last happened from.
      *
      * @var string
@@ -338,11 +326,9 @@ class EditEntityCommand implements Command
      * @param string $ticketNumber
      * @param bool $archived
      * @param string $environment
-     * @param int $status
-     * @param string $janusId
      * @param string $importUrl
-     * @param string $metadataUrl
      * @param string $pastedMetadata
+     * @param string $metadataUrl
      * @param string $acsLocation
      * @param string $entityId
      * @param string $certificate
@@ -379,11 +365,9 @@ class EditEntityCommand implements Command
         $ticketNumber,
         $archived,
         $environment,
-        $status,
-        $janusId,
         $importUrl,
-        $metadataUrl,
         $pastedMetadata,
+        $metadataUrl,
         $acsLocation,
         $entityId,
         $certificate,
@@ -419,11 +403,9 @@ class EditEntityCommand implements Command
         $this->ticketNumber = $ticketNumber;
         $this->archived = $archived;
         $this->environment = $environment;
-        $this->status = $status;
-        $this->janusId = $janusId;
         $this->importUrl = $importUrl;
-        $this->metadataUrl = $metadataUrl;
         $this->pastedMetadata = $pastedMetadata;
+        $this->metadataUrl = $metadataUrl;
         $this->acsLocation = $acsLocation;
         $this->entityId = $entityId;
         $this->certificate = $certificate;
@@ -512,43 +494,11 @@ class EditEntityCommand implements Command
     }
 
     /**
-     * @return int
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param int $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
      * @param string $ticketNo
      */
     public function setTicketNumber($ticketNo)
     {
         $this->ticketNumber = $ticketNo;
-    }
-
-    /**
-     * @return string
-     */
-    public function getJanusId()
-    {
-        return $this->janusId;
-    }
-
-    /**
-     * @param string $janusId
-     */
-    public function setJanusId($janusId)
-    {
-        $this->janusId = $janusId;
     }
 
     /**
@@ -592,11 +542,11 @@ class EditEntityCommand implements Command
     }
 
     /**
-     * @param string $metadataUrl
+     * @param string $pastedMetadata
      */
-    public function setPastedMetadata($metadataUrl)
+    public function setPastedMetadata($pastedMetadata)
     {
-        $this->pastedMetadata = $metadataUrl;
+        $this->pastedMetadata = $pastedMetadata;
     }
 
     /**
@@ -1061,11 +1011,6 @@ class EditEntityCommand implements Command
     public function setComments($comments)
     {
         $this->comments = $comments;
-    }
-
-    public function isDraft()
-    {
-        return $this->status === Entity::STATE_DRAFT;
     }
 
     public function isForProduction()

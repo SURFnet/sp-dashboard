@@ -45,6 +45,11 @@ class Entity
     /**
      * @var string
      */
+    private $state;
+
+    /**
+     * @var string
+     */
     private $environment;
 
     /**
@@ -52,14 +57,16 @@ class Entity
      * @param string $entityId
      * @param string $name
      * @param string $contact
+     * @param string $state
      * @param string $environment
      */
-    public function __construct($id, $entityId, $name, $contact, $environment)
+    public function __construct($id, $entityId, $name, $contact, $state, $environment)
     {
         $this->id = $id;
         $this->entityId = $entityId;
         $this->name = $name;
         $this->contact = $contact;
+        $this->state = $state;
         $this->environment = $environment;
     }
 
@@ -78,6 +85,7 @@ class Entity
             $entity->getEntityId(),
             $entity->getNameEn(),
             $formattedContact,
+            'draft',
             $entity->getEnvironment()
         );
     }
@@ -93,6 +101,7 @@ class Entity
             $result['data']['entityid'],
             $metadata['name:en'],
             $formattedContact,
+            'published',
             'connect'
         );
     }
@@ -161,6 +170,14 @@ class Entity
     public function getContact()
     {
         return $this->contact;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
     }
 
     /**

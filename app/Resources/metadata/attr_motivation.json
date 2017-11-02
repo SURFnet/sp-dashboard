@@ -2,6 +2,7 @@
   {
     "id": "eduPersonTargetedIDMotivation",
     "getterName": "getEduPersonTargetedIDAttribute",
+    "setterName": "setEduPersonTargetedIDAttribute",
     "friendlyName": "EduPersonTargetedIDMotivation",
     "urns": [
       "coin:attr_motivation:eduPersonTargetedID"
@@ -10,6 +11,7 @@
   {
     "id": "eduPersonPrincipalNameMotivation",
     "getterName": "getPrincipleNameAttribute",
+    "setterName": "setPrincipleNameAttribute",
     "friendlyName": "EduPersonPrincipalNameMotivation",
     "urns": [
       "coin:attr_motivation:eduPersonPrincipalName"
@@ -18,6 +20,7 @@
   {
     "id": "displayNameMotivation",
     "getterName": "getDisplayNameAttribute",
+    "setterName": "setDisplayNameAttribute",
     "friendlyName": "DisplayNameMotivation",
     "urns": [
       "coin:attr_motivation:displayName"
@@ -26,6 +29,7 @@
   {
     "id": "cnMotivation",
     "getterName": "getCommonNameAttribute",
+    "setterName": "setCommonNameAttribute",
     "friendlyName": "CnMotivation",
     "urns": [
       "coin:attr_motivation:cn"
@@ -34,6 +38,7 @@
   {
     "id": "givenNameMotivation",
     "getterName": "getGivenNameAttribute",
+    "setterName": "setGivenNameAttribute",
     "friendlyName": "GivenNameMotivation",
     "urns": [
       "coin:attr_motivation:givenName"
@@ -42,6 +47,7 @@
   {
     "id": "snMotivation",
     "getterName": "getSurNameAttribute",
+    "setterName": "setSurNameAttribute",
     "friendlyName": "SnMotivation",
     "urns": [
       "coin:attr_motivation:sn"
@@ -50,6 +56,7 @@
   {
     "id": "mailMotivation",
     "getterName": "getEmailAddressAttribute",
+    "setterName": "setEmailAddressAttribute",
     "friendlyName": "MailMotivation",
     "urns": [
       "coin:attr_motivation:mail"
@@ -58,6 +65,7 @@
   {
     "id": "schacHomeOrganizationMotivation",
     "getterName": "getOrganizationAttribute",
+    "setterName": "setOrganizationAttribute",
     "friendlyName": "SchacHomeOrganizationMotivation",
     "urns": [
       "coin:attr_motivation:schacHomeOrganization"
@@ -66,6 +74,7 @@
   {
     "id": "schacHomeOrganizationTypeMotivation",
     "getterName": "getOrganizationTypeAttribute",
+    "setterName": "setOrganizationTypeAttribute",
     "friendlyName": "SchacHomeOrganizationTypeMotivation",
     "urns": [
       "coin:attr_motivation:schacHomeOrganizationType"
@@ -74,6 +83,7 @@
   {
     "id": "schacPersonalUniqueCodeMotivation",
     "getterName": "getPersonalCodeAttribute",
+    "setterName": "setPersonalCodeAttribute",
     "friendlyName": "SchacPersonalUniqueCodeMotivation",
     "urns": [
       "coin:attr_motivation:schacPersonalUniqueCode"
@@ -82,6 +92,7 @@
   {
     "id": "eduPersonAffiliationMotivation",
     "getterName": "getAffiliationAttribute",
+    "setterName": "setAffiliationAttribute",
     "friendlyName": "EduPersonAffiliationMotivation",
     "urns": [
       "coin:attr_motivation:eduPersonAffiliation"
@@ -90,6 +101,7 @@
   {
     "id": "eduPersonScopedAffiliationMotivation",
     "getterName": "getScopedAffiliationAttribute",
+    "setterName": "setScopedAffiliationAttribute",
     "friendlyName": "EduPersonScopedAffiliationMotivation",
     "urns": [
       "coin:attr_motivation:eduPersonScopedAffiliation"
@@ -98,6 +110,7 @@
   {
     "id": "eduPersonEntitlementMotivation",
     "getterName": "getEntitlementAttribute",
+    "setterName": "setEntitlementAttribute",
     "friendlyName": "EduPersonEntitlementMotivation",
     "urns": [
       "coin:attr_motivation:eduPersonEntitlement"
@@ -106,6 +119,7 @@
   {
     "id": "uidMotivation",
     "getterName": "getUidAttribute",
+    "setterName": "setUidAttribute",
     "friendlyName": "UidMotivation",
     "urns": [
       "coin:attr_motivation:uid"
@@ -114,6 +128,7 @@
   {
     "id": "preferredLanguageMotivation",
     "getterName": "getPreferredLanguageAttribute",
+    "setterName": "setPreferredLanguageAttribute",
     "friendlyName": "PreferredLanguageMotivation",
     "urns": [
       "coin:attr_motivation:preferredLanguage"
@@ -122,6 +137,7 @@
   {
     "id": "eduPersonOrcidMotivation",
     "getterName": "",
+    "setterName": "",
     "friendlyName": "EduPersonOrcidMotivation",
     "urns": [
       "coin:attr_motivation:eduPersonOrcid"
@@ -130,6 +146,7 @@
   {
     "id": "isMemberOfMotivation",
     "getterName": "",
+    "setterName": "",
     "friendlyName": "IsMemberOfMotivation",
     "urns": [
       "coin:attr_motivation:isMemberOf"

@@ -24,6 +24,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceSwitcherTest extends WebTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->mockHandler->append(new Response(200, [], '[]'));
+    }
+
     public function test_switcher_is_not_displayed_when_there_is_only_one_option()
     {
         $this->loadFixtures();
@@ -110,24 +117,7 @@ class ServiceSwitcherTest extends WebTestCase
             'Expecting a redirect response after selecting a service'
         );
 
-        $location = $this->client->getResponse()->headers->get('location');
-
-        // Note: after a redirect response we do not have access to the container anymore.
-        // To work around this problem, we do the setup again and visit the redirection target.
-        //
-        // See: https://github.com/symfony/symfony/issues/8858
-        $this->setUp();
-
-        $this->logIn('ROLE_ADMINISTRATOR');
-        $this->loadFixtures();
-
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
-
-        $this->mockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->request('GET', $location);
+        $crawler = $this->client->followRedirect();
 
         $selectedService = $crawler->filter('select#service-switcher option:selected')->first();
 

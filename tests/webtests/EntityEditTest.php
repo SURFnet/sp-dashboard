@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class EditEntityTest extends WebTestCase
+class EntityEditTest extends WebTestCase
 {
     private $entityId;
 
@@ -201,8 +201,8 @@ class EditEntityTest extends WebTestCase
 
         $this->assertEquals('DNEN', $entity->getNameEn());
 
-        $this->assertNull($entity->getCommonNameAttribute());
-        $this->assertNull($entity->getUidAttribute());
+        $this->assertFalse($entity->getCommonNameAttribute()->isRequested());
+        $this->assertFalse($entity->getUidAttribute()->isRequested());
         $this->assertTrue($entity->getOrganizationTypeAttribute()->isRequested());
         $this->assertTrue($entity->getAffiliationAttribute()->isRequested());
 
@@ -253,7 +253,6 @@ class EditEntityTest extends WebTestCase
         $this->assertTrue($entity->getAffiliationAttribute()->isRequested());
 
         $this->assertEquals($xml, $entity->getPastedMetadata());
-        $this->assertEquals($xml, $entity->getMetadataXml());
     }
 
     public function test_it_shows_flash_message_on_exception()

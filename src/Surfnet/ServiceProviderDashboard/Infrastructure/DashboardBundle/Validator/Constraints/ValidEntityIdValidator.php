@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 use Pdp\Parser;
 use Pdp\PublicSuffixListManager;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -34,14 +35,23 @@ class ValidEntityIdValidator extends ConstraintValidator
     /**
      * @var QueryEntityRepository
      */
-    private $repository;
+    private $manageRepository;
 
     /**
-     * @param QueryEntityRepository $repository
+     * @var EntityRepository
      */
-    public function __construct(QueryEntityRepository $repository)
-    {
-        $this->repository = $repository;
+    private $doctrineRepository;
+
+    /**
+     * @param QueryEntityRepository $manageRepository
+     * @param DoctrineEntityRepository $doctrineRepository
+     */
+    public function __construct(
+        QueryEntityRepository $manageRepository,
+        DoctrineRepository $doctrineRepository
+    ) {
+        $this->manageRepository = $manageRepository;
+        $this->doctrineRepository = $doctrineRepository;
     }
 
     /**
@@ -58,10 +68,6 @@ class ValidEntityIdValidator extends ConstraintValidator
             $entityCommand = $root;
         } else {
             $entityCommand = $root->getData();
-        }
-
-        if (!$entityCommand->isDraft()) {
-            return;
         }
 
         $metadataUrl = $entityCommand->getMetadataUrl();
@@ -91,17 +97,19 @@ class ValidEntityIdValidator extends ConstraintValidator
             return;
         }
 
+        $entity = $this->doctrineRepository->findById($entityCommand->getId());
+
         try {
-            $entity = $this->repository->findByEntityId($value);
+            $manageId = $this->manageRepository->findManageIdByEntityId($value);
         } catch (\Exception $e) {
             $this->context->addViolation('Failed checking registry.');
             return;
         }
 
-        if (empty($entity)) {
-            return;
+        // Add a violation if the entity ID already exists, except when it is
+        // used for the entity we are editing.
+        if ($manageId && $manageId !== $entity->getManageId()) {
+            $this->context->addViolation('Entity has already been registered.');
         }
-
-        $this->context->addViolation('Entity has already been registered.');
     }
 }

@@ -43,7 +43,6 @@ class EntityMetadataTest extends WebTestCase
         $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
         $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp');
         $entity->setCertificate('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds');
-        $entity->setStatus(1);
         $entity->setService(
             $this->getServiceRepository()->findByName('SURFnet')
         );
@@ -65,26 +64,5 @@ class EntityMetadataTest extends WebTestCase
         $this->assertContains('MyService', $nodeEn->text());
         $this->assertContains('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds', $certificate->text());
         $this->assertContains('https://domain.org/saml/sp/saml2-post/default-sp', $acsLocation);
-    }
-
-    public function test_entity_must_be_out_of_draft()
-    {
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $entity = new Entity();
-        $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
-        $entity->setStatus(Entity::STATE_DRAFT);
-        $entity->setService(
-            $this->getServiceRepository()->findByName('SURFnet')
-        );
-
-        $this->getEntityRepository()->save($entity);
-
-        $crawler = $this->client->request('GET', '/entity/metadata/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
-        $this->assertContains(
-            'Entity cannot be in draft when generating the Metadata (400 Bad Request)',
-            $crawler->text()
-        );
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 }

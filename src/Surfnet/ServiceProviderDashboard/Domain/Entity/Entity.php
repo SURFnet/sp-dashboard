@@ -35,9 +35,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Entity
 {
-    const STATE_DRAFT = 0;
-    const STATE_PUBLISHED = 1;
-    const STATE_FINISHED = 2;
     const ENVIRONMENT_CONNECT = 'connect';
     const ENVIRONMENT_PRODUCTION = 'production';
 
@@ -60,12 +57,6 @@ class Entity
      * @ORM\Column(type="string")
      */
     private $environment = self::ENVIRONMENT_CONNECT;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     */
-    private $status = self::STATE_DRAFT;
 
     /**
      * @var \DateTime $created
@@ -93,7 +84,7 @@ class Entity
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    private $janusId;
+    private $manageId;
 
     /**
      * Metadata URL that import last happened from.
@@ -350,19 +341,11 @@ class Entity
     }
 
     /**
-     * @param int $status
+     * @param string $manageId
      */
-    public function setStatus($status)
+    public function setManageId($manageId)
     {
-        $this->status = $status;
-    }
-
-    /**
-     * @param string $janusId
-     */
-    public function setJanusId($janusId)
-    {
-        $this->janusId = $janusId;
+        $this->manageId = $manageId;
     }
 
     /**
@@ -654,14 +637,6 @@ class Entity
     }
 
     /**
-     * @return int
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
      * @return string
      */
     public function getEnvironment()
@@ -696,9 +671,9 @@ class Entity
     /**
      * @return string
      */
-    public function getJanusId()
+    public function getManageId()
     {
-        return $this->janusId;
+        return $this->manageId;
     }
 
     /**
@@ -972,14 +947,6 @@ class Entity
     public function getComments()
     {
         return $this->comments;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDraft()
-    {
-        return ($this->status == self::STATE_DRAFT);
     }
 
     /**

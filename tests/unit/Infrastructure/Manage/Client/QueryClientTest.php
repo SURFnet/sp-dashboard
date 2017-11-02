@@ -44,6 +44,17 @@ class QueryClientTest extends MockeryTestCase
         $this->client = new QueryClient(new HttpClient($guzzle));
     }
 
+    public function test_it_can_see_if_entity_id_exists()
+    {
+        // When the queried entityId is found
+        $this->mockHandler
+            ->append(
+                new Response(200, [], file_get_contents(__DIR__ . '/fixture/query_response.json'))
+            );
+        $id = $this->client->findManageIdByEntityId('https://example.com/metadata');
+        $this->assertEquals('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $id);
+    }
+
     public function test_it_can_query_existing_data()
     {
         // When the queried entityId is found
@@ -51,7 +62,7 @@ class QueryClientTest extends MockeryTestCase
             ->append(
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/query_response.json'))
             );
-        $response = $this->client->findByEntityId('https://example.com/metadata');
+        $response = $this->client->findByManageId('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33');
         $this->assertEquals('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $response[0]['_id']);
 
         $this->assertEquals(
@@ -68,17 +79,24 @@ class QueryClientTest extends MockeryTestCase
     {
         // When the queried entityId does not exist, an empty array is returned
         $this->mockHandler->append(new Response(200, [], json_encode([])));
-        $response = $this->client->findByEntityId('https://example.com/metadata');
+        $response = $this->client->findByManageId('does-not-exists');
         $this->assertEmpty($response);
+    }
+
+    public function test_it_can_query_xml_metadata()
+    {
+        $this->mockHandler->append(new Response(200, [], '<xml></xml>'));
+        $response = $this->client->getMetadataXmlByManageId('manageid');
+        $this->assertEquals($response, '<xml></xml>');
     }
 
     /**
      * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
-     * @expectedExceptionMessage Unable to find Service Provider with entityId: "xyz"
+     * @expectedExceptionMessage Unable to find entity with internal manage ID: "xyz"
      */
     public function test_it_handles_failing_query_action()
     {
         $this->mockHandler->append(new Response(418));
-        $this->client->findByEntityId('xyz');
+        $this->client->findByManageId('xyz');
     }
 }

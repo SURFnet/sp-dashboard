@@ -58,21 +58,72 @@ class QueryClient implements QueryEntityRepository
     /**
      * @param string $entityId
      *
+     * @return string|null
+     *
+     * @throws QueryServiceProviderException
+     */
+    public function findManageIdByEntityId($entityId)
+    {
+        try {
+            $result = $this->doSearchQuery([
+                'entityid' => $entityId,
+                "REQUESTED_ATTRIBUTES" => ['metaDataFields.name:en'],
+            ]);
+
+            if (isset($result[0]['_id'])) {
+                return $result[0]['_id'];
+            }
+        } catch (HttpException $e) {
+            throw new QueryServiceProviderException(
+                sprintf('Unable to find entity with entityId: "%s"', $entityId),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param string $manageId
+     *
+     * @return string
+     *
+     * @throws QueryServiceProviderException
+     */
+    public function getMetadataXmlByManageId($manageId)
+    {
+        try {
+            return $this->client->read(
+                sprintf('/manage/api/internal/sp-metadata/%s', $manageId),
+                [],
+                ['Content-Type' => 'application/xml']
+            );
+        } catch (HttpException $e) {
+            throw new QueryServiceProviderException(
+                sprintf('Unable to find entity metadata with entityId: "%s"', $manageId),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param string $manageId
+     *
      * @return array|null
      *
      * @throws QueryServiceProviderException
      */
-    public function findByEntityId($entityId)
+    public function findByManageId($manageId)
     {
         try {
-            // Queries the SP registry and asks for the English name in addition to the regular data
-            return $this->doSearchQuery([
-                'entityid' => $entityId,
-                "REQUESTED_ATTRIBUTES" => ['metaDataFields.name:en'],
-            ]);
+            return $this->client->read(
+                sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId)
+            );
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
-                sprintf('Unable to find Service Provider with entityId: "%s"', $entityId)
+                sprintf('Unable to find entity with internal manage ID: "%s"', $manageId),
+                0,
+                $e
             );
         }
     }
@@ -98,15 +149,15 @@ class QueryClient implements QueryEntityRepository
             // For each search result, query manage to get the full SP entity data.
             return array_map(
                 function ($result) {
-                    return $this->client->read(
-                        sprintf('/manage/api/internal/metadata/saml20_sp/%s', $result['_id'])
-                    );
+                    return $this->findByManageId($result['_id']);
                 },
                 $searchResults
             );
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
-                sprintf('Unable to find entities with team ID: "%s"', $teamName)
+                sprintf('Unable to find entities with team ID: "%s"', $teamName),
+                0,
+                $e
             );
         }
     }

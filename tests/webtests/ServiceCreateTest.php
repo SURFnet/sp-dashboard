@@ -22,7 +22,7 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class CreateServiceTest extends WebTestCase
+class ServiceCreateTest extends WebTestCase
 {
     public function setUp()
     {

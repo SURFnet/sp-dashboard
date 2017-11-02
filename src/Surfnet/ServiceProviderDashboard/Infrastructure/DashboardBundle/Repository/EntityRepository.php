@@ -72,6 +72,17 @@ class EntityRepository extends DoctrineEntityRepository implements EntityReposit
         ]);
     }
 
+    /**
+     * @param string $manageId
+     * @return Entity[]
+     */
+    public function findByManageId($manageId)
+    {
+        return parent::findBy([
+            'manageId' => $manageId,
+        ]);
+    }
+
     public function delete(Entity $entity)
     {
         $this->_em->remove($entity);

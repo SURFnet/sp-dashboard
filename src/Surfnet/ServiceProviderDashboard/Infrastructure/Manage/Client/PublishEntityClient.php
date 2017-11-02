@@ -65,7 +65,27 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         $json = json_encode(['xml' => $xmlMetadata]);
 
         try {
-            $response = $this->client->post($json, '/manage/api/internal/new-sp');
+            $manageId = $entity->getManageId();
+
+            // Create a new entity
+            if (empty($manageId)) {
+                $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getEntityId()));
+                $response = $this->client->post($json, '/manage/api/internal/new-sp');
+            }
+
+            // Update existing entity
+            if (!empty($manageId)) {
+                $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
+
+                $manageData = $this->client->read(
+                    sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId)
+                );
+
+                $response = $this->client->post(
+                    $json,
+                    sprintf('/manage/api/internal/update-sp/%s/%s', $manageId, $manageData['version'])
+                );
+            }
 
             // Validation fails with response code 400
             if (isset($response['status']) && $response['status'] == 400) {
@@ -124,10 +144,18 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 ['Content-Type' => 'application/json']
             );
         } catch (HttpException $e) {
+            $this->logger->error(
+                'Unable to push to Engineblock',
+                (isset($response)) ? $response : []
+            );
             throw new PushMetadataException('Unable to push the metadata to Engineblock', 0, $e);
         }
 
         if ($response['status'] != "OK") {
+            $this->logger->error(
+                'Manage rejected the push to Engineblock',
+                (isset($response)) ? $response : []
+            );
             throw new PushMetadataException('Pushing did not succeed.');
         }
         return $response;

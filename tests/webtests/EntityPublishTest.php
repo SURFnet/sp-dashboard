@@ -18,19 +18,22 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DashboardBundle;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class PublishEntityTest extends WebTestCase
+class EntityPublishTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp($loadFixtures = true)
     {
         parent::setUp();
 
         $this->loadFixtures();
+
         $serviceRepository = $this->getServiceRepository();
 
         $surfNet = $serviceRepository->findByName('SURFnet');
@@ -45,6 +48,8 @@ class PublishEntityTest extends WebTestCase
         $this->getAuthorizationService()->setSelectedServiceId(
             $surfNet->getId()
         );
+
+        $this->mockHandler->append(new Response(200, [], '[]'));
     }
 
     private function buildEntity(Service $service)
@@ -56,7 +61,6 @@ class PublishEntityTest extends WebTestCase
         $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp/acs');
         $entity->setCertificate(file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'));
         $entity->setLogoUrl('http://localhost/img.png');
-        $entity->setStatus(1);
         $entity->setService($service);
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
@@ -86,6 +90,7 @@ class PublishEntityTest extends WebTestCase
         );
 
         $crawler = $this->client->followRedirect();
+
         $selectedService = $crawler->filter('div.card')->first();
 
         $this->assertEquals(
@@ -115,6 +120,7 @@ class PublishEntityTest extends WebTestCase
 
         $errors = $crawler->filter('div.form-row.error');
         $error = $errors->first()->filter('li.error')->first()->text();
+
         $this->assertCount(1, $errors);
         $this->assertEquals('The certificate is not valid.', $error);
     }

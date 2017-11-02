@@ -23,18 +23,21 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityDeleteTest extends WebTestCase
 {
-    public function test_delete_returns_to_entity_list()
+    public function setUp()
     {
-        $this->loadFixtures();
+        parent::setUp();
 
+        $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $service = $this->getServiceRepository()->findByName('SURFnet');
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $service->getId()
-        );
+        $this->service = $this->getServiceRepository()->findByName('SURFnet');
 
-        $entity = $service->getEntities()->first();
+        $this->getAuthorizationService()->setSelectedServiceId($this->service->getId());
+    }
+
+    public function test_delete_returns_to_entity_list()
+    {
+        $entity = $this->service->getEntities()->first();
 
         $crawler = $this->client->request('GET', "/entity/delete/{$entity->getId()}");
 
@@ -53,21 +56,7 @@ class EntityDeleteTest extends WebTestCase
             'Expecting a redirect response after editing an entity'
         );
 
-        $location = $this->client->getResponse()->headers->get('location');
-
-        // Note: after a redirect response we do not have access to the container anymore.
-        // To work around this problem, we do the setup again and visit the redirection target.
-        //
-        // See: https://github.com/symfony/symfony/issues/8858
-        $this->setUp();
-
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $this->getAuthorizationService()->setSelectedServiceId($service->getId());
-
-        $this->mockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->request('GET', $location);
+        $crawler = $this->client->followRedirect();
 
         $row = $crawler->filter('table tr')->eq(1);
 
@@ -76,15 +65,7 @@ class EntityDeleteTest extends WebTestCase
 
     public function test_cancel_returns_to_entity_list()
     {
-        $this->loadFixtures();
-
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $service = $this->getServiceRepository()->findByName('SURFnet');
-
-        $this->getAuthorizationService()->setSelectedServiceId($service->getId());
-
-        $entity = $service->getEntities()->first();
+        $entity = $this->service->getEntities()->first();
 
         $crawler = $this->client->request('GET', "/entity/delete/{$entity->getId()}");
 
@@ -103,23 +84,9 @@ class EntityDeleteTest extends WebTestCase
             'Expecting a redirect response after editing an entity'
         );
 
-        $location = $this->client->getResponse()->headers->get('location');
-
-        // Note: after a redirect response we do not have access to the container anymore.
-        // To work around this problem, we do the setup again and visit the redirection target.
-        //
-        // See: https://github.com/symfony/symfony/issues/8858
-        $this->setUp();
-
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $service = $this->getServiceRepository()->findByName('SURFnet');
-
-        $this->getAuthorizationService()->setSelectedServiceId($service->getId());
-
         $this->mockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', $location);
+        $crawler = $this->client->followRedirect();
 
         $row = $crawler->filter('table tr')->eq(1);
 
