@@ -1,7 +1,7 @@
 $(document).ready(function() {
     function initTinyMceTextarea(event) {
         var targetRow = $(event.target).parents('tr');
-        if (targetRow.find('td:contains(".help"),td:contains(".html"),td:contains(".information.")').length) {
+        if (targetRow.find('td:contains(".html"),td:contains(".information.")').length) {
             var textarea = targetRow.find('textarea');
             if (!textarea.hasClass('tinymce')) {
                 textarea.addClass('tinymce');
