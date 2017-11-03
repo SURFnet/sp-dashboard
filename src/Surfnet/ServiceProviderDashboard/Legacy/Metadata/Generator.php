@@ -316,7 +316,7 @@ class Generator implements GeneratorInterface
 
         $attributesMetadata = $this->attributesMetadataRepository->findAll();
         foreach ($attributesMetadata as $attributeMetadata) {
-            $getterName = 'get' . ucfirst($attributeMetadata->id) . 'Attribute';
+            $getterName = $attributeMetadata->getterName;
 
             // Skip attributes we know about but don't have registered.
             if (!method_exists($entity, $getterName)) {
@@ -343,7 +343,7 @@ class Generator implements GeneratorInterface
         $attributesMetadata = $this->attributesMetadataRepository->findAll();
 
         foreach ($attributesMetadata as $attributeMetadata) {
-            $getterName = 'get' . ucfirst($attributeMetadata->id) . 'Attribute';
+            $getterName = $attributeMetadata->getterName;
 
             // Skip attributes we know about but don't have registered.
             if (!method_exists($entity, $getterName)) {
