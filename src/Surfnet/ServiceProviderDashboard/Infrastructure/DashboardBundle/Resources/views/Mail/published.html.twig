@@ -1,3 +1,4 @@
+<style type="text/css">.dl-horizontal dt{float:left;width:160px;overflow:hidden;clear:left;text-align:right;text-overflow:ellipsis;white-space:nowrap}.dl-horizontal dd{margin-left:180px}</style>
 Hi,<br/>
 
 <p>
@@ -9,6 +10,36 @@ Hi,<br/>
     </a>
 </p>
 
+<dl class="dl-horizontal">
+    <dt>{{ 'mail.confirmation.publish_production.team_id'|trans }}</dt>
+    <dd>
+        {{ entity.service.teamName }}
+    </dd>
+    <dt>{{ 'mail.confirmation.publish_production.service_name'|trans }}</dt>
+    <dd>
+        {{ entity.service.name }}
+    </dd>
+    <dt>{{ 'mail.confirmation.publish_production.entity_name_en'|trans }}</dt>
+    <dd>
+        {{ entity.nameEn }}
+    </dd>
+    <dt>{{ 'mail.confirmation.publish_production.entity_id'|trans }}</dt>
+    <dd>
+        {{ entity.entityId }}
+    </dd>
+    <dt>{{ 'mail.confirmation.publish_production.publish_date'|trans }}</dt>
+    <dd>
+        {{ entity.updated|date('Y-m-d H:i:s') }}
+    </dd>
+
+    {% if entity.comments is not empty %}
+    <dt>{{ 'mail.confirmation.publish_production.comment'|trans }}</dt>
+    <dd>
+        {{ entity.comments|nl2br }}
+    </dd>
+    {% endif %}
+
+</dl>
 
 <p>
     Kind regards,

@@ -145,4 +145,10 @@ privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF 
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
 service.create.title: Add new service
 service.edit.title: Edit service
+mail.confirmation.publish_production.comment: Comments
+mail.confirmation.publish_production.entity_id: EntityID
+mail.confirmation.publish_production.entity_name_en: Entity name (en)
+mail.confirmation.publish_production.service_name: Service name
+mail.confirmation.publish_production.publish_date: Publish date
+mail.confirmation.publish_production.team_id: Team id
 mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'
