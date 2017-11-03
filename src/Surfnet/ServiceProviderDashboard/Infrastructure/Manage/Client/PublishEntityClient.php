@@ -118,6 +118,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             ]);
 
             $response = $this->client->put($update, 'manage/api/internal/merge');
+
             // Validation fails with response code 400
             if (isset($response['status']) && $response['status'] == 400) {
                 $this->logger->error('Schema violations returned from Manage while updating data', $response);
@@ -126,6 +127,11 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
             return $response;
         } catch (HttpException $e) {
+            $this->logger->error(
+                sprintf('Error publishing \'%s\' to manage', $entity->getEntityId()),
+                ['exception' => $e]
+            );
+
             throw new PublishMetadataException('Unable to publish the metadata to Manage', 0, $e);
         }
     }

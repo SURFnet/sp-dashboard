@@ -183,6 +183,9 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
+        $this->logger
+            ->shouldReceive('error');
+
         $this->generator
             ->shouldReceive('generate')
             ->andReturn($xml);
