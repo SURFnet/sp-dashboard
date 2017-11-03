@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -60,7 +61,7 @@ class Contact
     private $emailAddress;
 
     /**
-     * @var Service[]
+     * @var ArrayCollection<Service>
      *
      * @ORM\ManyToMany(targetEntity="Service", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)
@@ -77,6 +78,8 @@ class Contact
         $this->nameId = $nameId;
         $this->emailAddress = $emailAddress;
         $this->displayName = $displayName;
+
+        $this->services = new ArrayCollection();
     }
 
     /**
@@ -118,47 +121,41 @@ class Contact
     }
 
     /**
-     * @param Service[] $services
-     *
-     * @return Contact
-     */
-    public function setServices(array $services)
-    {
-        $this->services = $services;
-
-        return $this;
-    }
-
-    /**
-     * @param Service $service
-     *
-     * @return Contact
-     */
-    public function hasService(Service $query)
-    {
-        foreach ($this->services as $service) {
-            if ($service->getId() === $query->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param Service $service
      *
      * @return Contact
      */
     public function addService(Service $service)
     {
-        $this->services[] = $service;
+        $this->services->add($service);
 
         return $this;
     }
 
     /**
-     * @return Service[]
+     * @param Service $service
+     *
+     * @return Contact
+     */
+    public function removeService(Service $service)
+    {
+        $this->services->removeElement($service);
+
+        return $this;
+    }
+
+    /**
+     * @param Service $service
+     *
+     * @return bool
+     */
+    public function hasService(Service $service)
+    {
+        return $this->services->contains($service);
+    }
+
+    /**
+     * @return ArrayCollection<Service>
      */
     public function getServices()
     {

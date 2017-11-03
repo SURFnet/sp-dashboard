@@ -105,7 +105,9 @@ class WebTestCase extends SymfonyWebTestCase
             $services[] = new Service();
         }
 
-        $contact->setServices($services);
+        foreach ($services as $service) {
+            $contact->addService($service);
+        }
 
         $authenticatedToken = new SamlToken([$role]);
         $authenticatedToken->setUser(
