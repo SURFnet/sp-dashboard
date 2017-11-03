@@ -289,7 +289,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
         $entity
             ->shouldReceive('getEntityId')
-            ->once()
+            ->twice()
             ->andReturn('1');
 
         $entity
@@ -303,7 +303,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
         $this->logger
             ->shouldReceive('error')
-            ->times(1);
+            ->times(2);
 
         $this->flashBag
             ->shouldReceive('add')

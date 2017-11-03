@@ -73,6 +73,9 @@ class CopyEntityCommandHandler implements CommandHandler
      * @param CopyEntityCommand $command
      *
      * @throws InvalidArgumentException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function handle(CopyEntityCommand $command)
     {
@@ -121,10 +124,34 @@ class CopyEntityCommandHandler implements CommandHandler
         );
 
         $entity = $this->entityRepository->findById($entity->getId());
-        $entity->setNameEn($manageMetadata['name:en']);
-        $entity->setNameNl($manageMetadata['name:nl']);
-        $entity->setDescriptionEn($manageMetadata['description:en']);
-        $entity->setDescriptionNl($manageMetadata['description:nl']);
+
+        if (isset($manageMetadata['name:en'])) {
+            $entity->setNameEn($manageMetadata['name:en']);
+        }
+
+        if (isset($manageMetadata['name:nl'])) {
+            $entity->setNameNl($manageMetadata['name:nl']);
+        }
+
+        if (isset($manageMetadata['description:en'])) {
+            $entity->setDescriptionEn($manageMetadata['description:en']);
+        }
+
+        if (isset($manageMetadata['description:nl'])) {
+            $entity->setDescriptionNl($manageMetadata['description:nl']);
+        }
+
+        if (isset($manageMetadata['coin:original_metadata_url'])) {
+            $entity->setImportUrl($manageMetadata['coin:original_metadata_url']);
+        }
+
+        if (isset($manageMetadata['logo:0:url'])) {
+            $entity->setLogoUrl($manageMetadata['logo:0:url']);
+        }
+
+        if (isset($manageEntity['data']['metadataurl'])) {
+            $entity->setMetadataUrl($manageEntity['data']['metadataurl']);
+        }
 
         foreach ($this->attributeMetadataRepository->findAllMotivationAttributes() as $attributeDefinition) {
             $urn = reset($attributeDefinition->urns);

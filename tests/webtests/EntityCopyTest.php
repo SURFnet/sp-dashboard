@@ -105,10 +105,21 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
-            'UID motivation',
-            $form->get('dashboard_bundle_edit_entity_type[attributes][uidAttribute][motivation]')->getValue()
+            'http://www.example.org/logo.png',
+            $form->get('dashboard_bundle_edit_entity_type[metadata][logoUrl]')->getValue()
+        );
+
+        $this->assertEquals(
+            'http://www.example.org/metadata',
+            $form->get('dashboard_bundle_edit_entity_type[metadata][metadataUrl]')->getValue()
+        );
+
+        $this->assertEquals(
+            'https://engine.dev.support.surfconext.nl/authentication/sp/metadata',
+            $form->get('dashboard_bundle_edit_entity_type[metadata][importUrl]')->getValue()
         );
     }
+
     public function test_copy_to_production_creates_new_entity()
     {
         $response = file_get_contents(
