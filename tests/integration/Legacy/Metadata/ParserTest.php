@@ -149,7 +149,7 @@ CER
      */
     public function test_it_rejects_missing_acs_metadata()
     {
-        $this->logger->shouldReceive('info');
+        $this->logger->shouldReceive('error');
 
         $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_acs_metadata.xml'));
     }
@@ -160,7 +160,7 @@ CER
      */
     public function test_it_rejects_to_many_acs_entries()
     {
-        $this->logger->shouldReceive('info');
+        $this->logger->shouldReceive('error');
         $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_index_metadata.xml'));
     }
 }

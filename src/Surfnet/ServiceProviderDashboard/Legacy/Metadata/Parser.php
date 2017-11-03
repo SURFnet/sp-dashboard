@@ -289,7 +289,7 @@ class Parser implements ParserInterface
             $errors = libxml_get_errors();
             libxml_clear_errors();
 
-            $this->logger->info('Metadata XML validation errors:', $errors);
+            $this->logger->error('Metadata XML validation errors:', $errors);
 
             $ex = new ParserException('The metadata XML is invalid considering the associated XSD');
             $ex->setParserErrors($errors);
