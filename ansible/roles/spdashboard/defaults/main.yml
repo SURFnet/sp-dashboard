@@ -11,3 +11,4 @@ spdashboard_saml_sp_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-
 spdashboard_saml_sp_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
 spdashboard_saml_metadata_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer"
 spdashboard_saml_metadata_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
+spdashboard_support_email: coin-logs-dev@list.surfnet.nl
