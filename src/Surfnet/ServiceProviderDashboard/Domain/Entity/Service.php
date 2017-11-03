@@ -203,4 +203,15 @@ class Service
     {
         return $this->privacyQuestionsEnabled;
     }
+
+    /**
+     * @param Contact $contact
+     * @return Service
+     */
+    public function removeContact(Contact $contact)
+    {
+        $this->contacts->removeElement($contact);
+
+        return $this;
+    }
 }

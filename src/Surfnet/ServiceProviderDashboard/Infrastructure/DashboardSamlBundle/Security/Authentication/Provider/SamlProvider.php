@@ -23,6 +23,7 @@ use RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
@@ -136,11 +137,33 @@ class SamlProvider implements AuthenticationProviderInterface
             );
         }
 
+        foreach ($contact->getServices() as $existingService) {
+            if (!$this->serviceListContainsService($services, $existingService)) {
+                $contact->removeService($existingService);
+            }
+        }
+
         foreach ($services as $service) {
             if (!$contact->hasService($service)) {
                 $contact->addService($service);
             }
         }
+    }
+
+    /**
+     * @param array<Service> $list
+     * @param Service $Service
+     * @return bool
+     */
+    private function serviceListContainsService(array $list, Service $service)
+    {
+        foreach ($list as $serviceFromList) {
+            if ($serviceFromList->getId() === $service->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function supports(TokenInterface $token)
