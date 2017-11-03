@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DashboardBundle;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class EntityPublishTest extends WebTestCase
+class EntityPublishToTestTest extends WebTestCase
 {
     public function setUp($loadFixtures = true)
     {
@@ -48,8 +48,6 @@ class EntityPublishTest extends WebTestCase
         $this->getAuthorizationService()->setSelectedServiceId(
             $surfNet->getId()
         );
-
-        $this->mockHandler->append(new Response(200, [], '[]'));
     }
 
     private function buildEntity(Service $service)
@@ -65,6 +63,7 @@ class EntityPublishTest extends WebTestCase
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
         $entity->setTicketNumber('IID-9');
+        $entity->setEnvironment(Entity::ENVIRONMENT_CONNECT);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
 
         return $entity;
@@ -72,6 +71,15 @@ class EntityPublishTest extends WebTestCase
 
     public function test_it_published_metadata_to_manage()
     {
+        // Entity id validation
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        // Push xml
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        // Put inner json
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        // Push to Manage
+        $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
+
         // Build and save an entity to work with
         $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));
         $this->getEntityRepository()->save($entity);
@@ -106,6 +114,9 @@ class EntityPublishTest extends WebTestCase
 
     public function test_it_validates_the_from_on_publish()
     {
+        // Entity id validation
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+
         $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));
         $entity->setCertificate('-----BEGIN CERTIFICATE-----THIS IS NOT A VALID CERTIFICATE-----END CERTIFICATE-----');
         $this->getEntityRepository()->save($entity);

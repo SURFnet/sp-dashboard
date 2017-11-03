@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
@@ -38,6 +39,7 @@ use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -120,17 +122,7 @@ class EntityEditController extends Controller
                     case 'publishButton':
                         // Only trigger form validation on publish
                         if ($form->isValid()) {
-                            $metadataCommand = new PublishEntityCommand($entity->getId());
-                            $this->commandBus->handle($metadataCommand);
-
-                            if (!$flashBag->has('error')) {
-                                $this->get('session')->set('published.entity.clone', clone $entity);
-
-                                $deleteCommand = new DeleteEntityCommand($entity->getId());
-                                $this->commandBus->handle($deleteCommand);
-
-                                return $this->redirectToRoute('service_published');
-                            }
+                            return $this->publishEnity($entity, $flashBag);
                         }
                         break;
                     default:
@@ -168,5 +160,30 @@ class EntityEditController extends Controller
         return [
             'entityName' => $entity->getNameEn(),
         ];
+    }
+
+    private function publishEnity(Entity $entity, FlashBagInterface $flashBag)
+    {
+        switch ($entity->getEnvironment()) {
+
+            case Entity::ENVIRONMENT_CONNECT:
+                $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
+                $this->commandBus->handle($publishEntityCommand);
+
+                if (!$flashBag->has('error')) {
+                    $this->get('session')->set('published.entity.clone', clone $entity);
+
+                    // Connect (test) entities are removed after they've been published to Manage
+                    $deleteCommand = new DeleteEntityCommand($entity->getId());
+                    $this->commandBus->handle($deleteCommand);
+
+                    return $this->redirectToRoute('service_published');
+                }
+                break;
+
+            case Entity::ENVIRONMENT_PRODUCTION:
+
+                break;
+        }
     }
 }
