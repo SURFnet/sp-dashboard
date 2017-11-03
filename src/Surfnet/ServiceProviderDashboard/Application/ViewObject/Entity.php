@@ -85,7 +85,7 @@ class Entity
             $entity->getEntityId(),
             $entity->getNameEn(),
             $formattedContact,
-            'draft',
+            $entity->getStatus(),
             $entity->getEnvironment()
         );
     }

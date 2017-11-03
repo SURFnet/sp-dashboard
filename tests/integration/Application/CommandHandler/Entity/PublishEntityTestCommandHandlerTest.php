@@ -26,7 +26,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Factory\MotivationMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
 use Surfnet\ServiceProviderDashboard\Application\Factory\SpDashboardMetadataFactory;
@@ -37,11 +38,11 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityC
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class PublishEntityCommandHandlerTest extends MockeryTestCase
+class PublishEntityTestCommandHandlerTest extends MockeryTestCase
 {
 
     /**
-     * @var PublishEntityCommandHandler
+     * @var PublishEntityTestCommandHandler
      */
     private $commandHandler;
 
@@ -110,7 +111,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
         $this->motivationMetadataFactory = m::mock(MotivationMetadataFactory::class);
         $this->spDashboardMetadataFactory = m::mock(SpDashboardMetadataFactory::class);
 
-        $this->commandHandler = new PublishEntityCommandHandler(
+        $this->commandHandler = new PublishEntityTestCommandHandler(
             $this->repository,
             $this->client,
             $this->privacyQuestionsFactory,
@@ -188,7 +189,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
         $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
-        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
 
@@ -265,7 +266,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
         $this->mockHandler->append(new Response(200, [], '{"id": "d6f394b2-08b1-4882-8b32-81688c15c489"}'));
         $this->mockHandler->append(new Response(418));
 
-        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
 
@@ -327,7 +328,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
         $this->mockHandler->append(new Response(418));
 
-        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
 
@@ -409,7 +410,7 @@ class PublishEntityCommandHandlerTest extends MockeryTestCase
 
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
-        $command = new PublishEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
     }
 }

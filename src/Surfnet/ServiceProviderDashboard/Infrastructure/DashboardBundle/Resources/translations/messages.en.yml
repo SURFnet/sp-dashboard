@@ -19,8 +19,8 @@ entity.list.action.edit: Edit
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
-entity.edit.error.publish: "Unable to publish the Entity, try again later"
-entity.edit.error.push: "Unable to publish the Entity, try again later"
+entity.edit.error.publish: "Unable to publish the entity, try again later"
+entity.edit.error.push: "Unable to publish the entity, try again later"
 entity.edit.title: Service Provider registration form
 entity.edit.info.title: Info
 entity.edit.info.html: "
@@ -111,8 +111,10 @@ entity.edit.information.personalCodeAttribute: Text should be set in web transla
 entity.edit.information.scopedAffiliationAttribute: Text should be set in web translations
 entity.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
-entity.published.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
-entity.published.title: "Successfully published the Entity"
+entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
+entity.published_production.title: "Successfully published the entity to production"
+entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
+entity.published_test.title: "Successfully published the entity to test"
 privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 privacy.form.label.accessData: What (kind of) data is processed?
@@ -143,4 +145,10 @@ privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF 
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
 service.create.title: Add new service
 service.edit.title: Edit service
+mail.confirmation.publish_production.comment: Comments
+mail.confirmation.publish_production.entity_id: EntityID
+mail.confirmation.publish_production.entity_name_en: Entity name (en)
+mail.confirmation.publish_production.service_name: Service name
+mail.confirmation.publish_production.publish_date: Publish date
+mail.confirmation.publish_production.team_id: Team id
 mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'

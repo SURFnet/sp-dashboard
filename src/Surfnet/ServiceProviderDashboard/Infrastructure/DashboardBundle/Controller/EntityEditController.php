@@ -27,10 +27,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityStatusCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EditEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
@@ -38,6 +42,7 @@ use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -65,21 +70,29 @@ class EntityEditController extends Controller
     private $authorizationService;
 
     /**
+     * @var MailMessageFactory
+     */
+    private $mailMessageFactory;
+
+    /**
      * @param CommandBus $commandBus
      * @param EntityService $entityService
      * @param ServiceService $serviceService
      * @param AuthorizationService $authorizationService
+     * @param MailMessageFactory $mailMessageFactory
      */
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         ServiceService $serviceService,
-        AuthorizationService $authorizationService
+        AuthorizationService $authorizationService,
+        MailMessageFactory $mailMessageFactory
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->serviceService = $serviceService;
         $this->authorizationService = $authorizationService;
+        $this->mailMessageFactory = $mailMessageFactory;
     }
 
     /**
@@ -93,11 +106,18 @@ class EntityEditController extends Controller
      * @param Entity $entity
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function editAction(Request $request, Entity $entity)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
+
+        if ($entity->isPublished() && $entity->isProduction()) {
+            $updateStatusCommand = new UpdateEntityStatusCommand($entity->getId(), Entity::STATE_DRAFT);
+            $this->commandBus->handle($updateStatusCommand);
+        }
 
         $command = $this->entityService->buildEditEntityCommand($entity);
 
@@ -120,17 +140,7 @@ class EntityEditController extends Controller
                     case 'publishButton':
                         // Only trigger form validation on publish
                         if ($form->isValid()) {
-                            $metadataCommand = new PublishEntityCommand($entity->getId());
-                            $this->commandBus->handle($metadataCommand);
-
-                            if (!$flashBag->has('error')) {
-                                $this->get('session')->set('published.entity.clone', clone $entity);
-
-                                $deleteCommand = new DeleteEntityCommand($entity->getId());
-                                $this->commandBus->handle($deleteCommand);
-
-                                return $this->redirectToRoute('service_published');
-                            }
+                            return $this->publishEntity($entity, $flashBag);
                         }
                         break;
                     default:
@@ -152,21 +162,30 @@ class EntityEditController extends Controller
         ];
     }
 
-    /**
-     * @Method("GET")
-     * @Route("/service/published", name="service_published")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
-    public function publishedAction()
+    private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
     {
-        /** @var Entity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
+        switch ($entity->getEnvironment()) {
+            case Entity::ENVIRONMENT_CONNECT:
+                $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
+                $this->commandBus->handle($publishEntityCommand);
 
-        return [
-            'entityName' => $entity->getNameEn(),
-        ];
+                if (!$flashBag->has('error')) {
+                    $this->get('session')->set('published.entity.clone', clone $entity);
+
+                    // Connect (test) entities are removed after they've been published to Manage
+                    $deleteCommand = new DeleteEntityCommand($entity->getId());
+                    $this->commandBus->handle($deleteCommand);
+
+                    return $this->redirectToRoute('service_published_test');
+                }
+                break;
+
+            case Entity::ENVIRONMENT_PRODUCTION:
+                $message = $this->mailMessageFactory->buildPublishToProductionMessage($entity);
+                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $message);
+                $this->commandBus->handle($publishEntityCommand);
+                return $this->redirectToRoute('service_published_production', ['id' => $entity->getId()]);
+                break;
+        }
     }
 }

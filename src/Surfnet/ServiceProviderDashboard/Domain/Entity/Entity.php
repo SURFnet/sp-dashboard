@@ -38,6 +38,9 @@ class Entity
     const ENVIRONMENT_CONNECT = 'connect';
     const ENVIRONMENT_PRODUCTION = 'production';
 
+    const STATE_DRAFT = 'draft';
+    const STATE_PUBLISHED = 'published';
+
     /**
      * @var string
      *
@@ -57,6 +60,13 @@ class Entity
      * @ORM\Column(type="string")
      */
     private $environment = self::ENVIRONMENT_CONNECT;
+
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $status = self::STATE_DRAFT;
 
     /**
      * @var \DateTime $created
@@ -613,6 +623,14 @@ class Entity
     }
 
     /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
      * @return Service
      */
     public function getService()
@@ -955,5 +973,23 @@ class Entity
     public function hasComments()
     {
         return !(empty($this->comments));
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function isPublished()
+    {
+        return ($this->status == self::STATE_PUBLISHED);
+    }
+
+    public function isProduction()
+    {
+        return ($this->environment == self::ENVIRONMENT_PRODUCTION);
     }
 }

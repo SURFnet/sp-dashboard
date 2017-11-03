@@ -65,11 +65,23 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand }
 
-    surfnet.dashboard.command_handler.publish_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityCommandHandler
+    surfnet.dashboard.command_handler.publish_test_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
+
+    surfnet.dashboard.command_handler.publish_production_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
+
+    surfnet.dashboard.command_handler.update_entity_status:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityStatusCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityStatusCommand }
 
     surfnet.dashboard.command_handler.select_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler

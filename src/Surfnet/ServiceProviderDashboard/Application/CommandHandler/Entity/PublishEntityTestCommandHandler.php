@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Factory\MotivationMetadataFactory;
@@ -32,7 +33,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMeta
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class PublishEntityCommandHandler implements CommandHandler
+class PublishEntityTestCommandHandler implements CommandHandler
 {
     /**
      * @var EntityRepository
@@ -89,11 +90,11 @@ class PublishEntityCommandHandler implements CommandHandler
     }
 
     /**
-     * @param PublishEntityCommand $command
+     * @param PublishEntityTestCommand $command
      *
      * @throws InvalidArgumentException
      */
-    public function handle(PublishEntityCommand $command)
+    public function handle(PublishEntityTestCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
         try {
