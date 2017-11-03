@@ -144,6 +144,9 @@ class CopyEntityCommandHandler implements CommandHandler
             $entity->{$setter}($attribute);
         }
 
+        // Set the target environment
+        $entity->setEnvironment($command->getEnvironment());
+
         $this->entityRepository->save($entity);
     }
 }

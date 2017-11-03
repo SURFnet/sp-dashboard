@@ -33,6 +33,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * The Entity is copied from the manage test environment to become either a SP Dashboard test-draft or
+ * production-draft entity.
+ */
 class EntityCopyController extends Controller
 {
     /**
@@ -75,15 +79,15 @@ class EntityCopyController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/entity/copy/{manageId}", name="entity_copy")
+     * @Route("/entity/copy/{manageId}/{environment}", defaults={"environment" = "connect"}, name="entity_copy")
      * @Template()
      *
-     * @param Request $request
      * @param string $manageId
+     * @param string $environment
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function copyAction(Request $request, $manageId)
+    public function copyAction($manageId, $environment)
     {
         $service = $this->serviceService->getServiceById(
             $this->authorizationService->getActiveServiceId()
@@ -103,7 +107,7 @@ class EntityCopyController extends Controller
         }
 
         $this->commandBus->handle(
-            new CopyEntityCommand($entityId, $manageId, $service)
+            new CopyEntityCommand($entityId, $manageId, $service, $environment)
         );
 
         return $this->redirectToRoute('entity_edit', ['id' => $entityId]);

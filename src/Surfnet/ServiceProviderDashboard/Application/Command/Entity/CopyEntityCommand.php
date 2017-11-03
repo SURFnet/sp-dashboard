@@ -45,15 +45,23 @@ class CopyEntityCommand implements Command
     private $service;
 
     /**
+     * @var Service
+     * @Assert\NotNull
+     */
+    private $environment;
+
+    /**
      * @param string $dashboardId
      * @param string $manageId
      * @param Service $service
+     * @param string $environment
      */
-    public function __construct($dashboardId, $manageId, Service $service)
+    public function __construct($dashboardId, $manageId, Service $service, $environment)
     {
         $this->dashboardId = $dashboardId;
         $this->manageId = $manageId;
         $this->service = $service;
+        $this->environment = $environment;
     }
 
     /**
@@ -78,5 +86,13 @@ class CopyEntityCommand implements Command
     public function getService()
     {
         return $this->service;
+    }
+
+    /**
+     * @return Service
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
     }
 }

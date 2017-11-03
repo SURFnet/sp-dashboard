@@ -97,7 +97,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->andReturn(false);
 
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service)
+            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_CONNECT)
         );
     }
 
@@ -116,7 +116,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->andReturn([]);
 
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service)
+            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_CONNECT)
         );
     }
 
@@ -141,7 +141,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ]);
 
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service)
+            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_PRODUCTION)
         );
     }
 
@@ -219,7 +219,7 @@ JSON
             ));
 
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service)
+            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_CONNECT)
         );
 
         $this->assertTrue($entity->getEduPersonTargetedIDAttribute()->isRequested());
