@@ -95,7 +95,9 @@ class Contact
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        // Managa adds a mailto: prefix to the contact email address in the
+        // metadata XML, we strip it as a workaround.
+        $this->email = preg_replace('/^mailto:/', '', $email);
 
         return $this;
     }
