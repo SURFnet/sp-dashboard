@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityStatusCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
@@ -105,11 +106,18 @@ class EntityEditController extends Controller
      * @param Entity $entity
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function editAction(Request $request, Entity $entity)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
+
+        if ($entity->isPublished() && $entity->isProduction()) {
+            $updateStatusCommand = new UpdateEntityStatusCommand($entity->getId(), Entity::STATE_DRAFT);
+            $this->commandBus->handle($updateStatusCommand);
+        }
 
         $command = $this->entityService->buildEditEntityCommand($entity);
 
@@ -132,7 +140,7 @@ class EntityEditController extends Controller
                     case 'publishButton':
                         // Only trigger form validation on publish
                         if ($form->isValid()) {
-                            return $this->publishEnity($entity, $flashBag);
+                            return $this->publishEntity($entity, $flashBag);
                         }
                         break;
                     default:
@@ -154,7 +162,7 @@ class EntityEditController extends Controller
         ];
     }
 
-    private function publishEnity(Entity $entity, FlashBagInterface $flashBag)
+    private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
     {
         switch ($entity->getEnvironment()) {
             case Entity::ENVIRONMENT_CONNECT:

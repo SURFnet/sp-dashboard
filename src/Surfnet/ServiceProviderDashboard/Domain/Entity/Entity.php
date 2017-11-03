@@ -982,4 +982,14 @@ class Entity
     {
         return $this->status;
     }
+
+    public function isPublished()
+    {
+        return ($this->status == self::STATE_PUBLISHED);
+    }
+
+    public function isProduction()
+    {
+        return ($this->environment == self::ENVIRONMENT_PRODUCTION);
+    }
 }
