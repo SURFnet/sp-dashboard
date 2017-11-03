@@ -983,6 +983,11 @@ class Entity
         return $this->status;
     }
 
+    public function isDraft()
+    {
+        return ($this->status == self::STATE_DRAFT);
+    }
+
     public function isPublished()
     {
         return ($this->status == self::STATE_PUBLISHED);

@@ -71,6 +71,12 @@ class EntityMetadataController extends Controller
     {
         $entity = $this->entityService->getEntityById($entityId);
 
+        if ($entity->isDraft()) {
+            throw new BadRequestHttpException(
+                'Service cannot be in draft when generating the Metadata'
+            );
+        }
+
         $xml = $this->generator->generate($entity);
 
         // Perform a sanity check on the generated metadata

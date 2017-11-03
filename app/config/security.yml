@@ -20,6 +20,10 @@ security:
             pattern:    ^/saml/metadata
             anonymous:  ~
 
+        published_metadata:
+            pattern:    ^/entity/metadata/*
+            anonymous:  ~
+
         saml_based:
             saml: true
             logout:
@@ -32,4 +36,5 @@ security:
 
     access_control:
         - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/entity/metadata, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
