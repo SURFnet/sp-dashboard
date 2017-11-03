@@ -18,6 +18,7 @@ entity.list.action.view: View
 entity.list.action.edit: Edit
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
+entity.list.action.copy_to_production: Copy to production
 entity.edit.error.publish: "Unable to publish the Entity, try again later"
 entity.edit.error.push: "Unable to publish the Entity, try again later"
 entity.edit.title: Service Provider registration form

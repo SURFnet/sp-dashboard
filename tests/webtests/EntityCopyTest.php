@@ -37,8 +37,6 @@ class EntityCopyTest extends WebTestCase
 
     public function test_copy_creates_new_entity()
     {
-        $entity = $this->service->getEntities()->first();
-
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
         );
@@ -49,7 +47,7 @@ class EntityCopyTest extends WebTestCase
         );
         $this->mockHandler->append(new Response(200, [], json_decode($response)));
 
-        $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
+        $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
         $this->assertTrue(
             $this->client->getResponse() instanceof RedirectResponse,
@@ -59,8 +57,6 @@ class EntityCopyTest extends WebTestCase
         $this->mockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
-
-        $content = $this->client->getResponse()->getContent();
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -113,6 +109,29 @@ class EntityCopyTest extends WebTestCase
             $form->get('dashboard_bundle_edit_entity_type[attributes][uidAttribute][motivation]')->getValue()
         );
     }
+    public function test_copy_to_production_creates_new_entity()
+    {
+        $response = file_get_contents(
+            __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
+        );
+        $this->mockHandler->append(new Response(200, [], $response));
+
+        $response = file_get_contents(
+            __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
+        );
+        $this->mockHandler->append(new Response(200, [], json_decode($response)));
+
+        $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
+
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after copy to production'
+        );
+
+        // Assert that the newly created entity is indeed a production entity.
+        $entity = $this->getEntityRepository()->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
+        $this->assertEquals('production', $entity[0]->getEnvironment());
+    }
 
     public function test_copy_redirects_to_existing_entity()
     {
@@ -120,7 +139,7 @@ class EntityCopyTest extends WebTestCase
         $entity->setManageid('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
         $this->getEntityRepository()->save($entity);
 
-        $crawler = $this->client->request('GET', '/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad');
+        $this->client->request('GET', '/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad');
 
         $this->assertTrue(
             $this->client->getResponse() instanceof RedirectResponse,
