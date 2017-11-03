@@ -34,12 +34,6 @@
                         </a>
                         <ul>
                             <li>
-                                <a href="#">
-                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                    {{ 'entity.list.action.view'|trans }}
-                                </a>
-                            </li>
-                            <li>
                                 {% if entity.state == 'published' %}
                                     <a href="{{ path('entity_copy', {manageId: entity.id}) }}">
                                         <i class="fa fa-pencil-square" aria-hidden="true"></i>
