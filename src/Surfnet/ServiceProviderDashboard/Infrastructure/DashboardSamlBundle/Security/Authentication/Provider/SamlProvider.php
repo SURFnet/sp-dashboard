@@ -19,7 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
 use Psr\Log\LoggerInterface;
-use RuntimeException;
+use RuntimeException as CoreRuntimeException;
+use Surfnet\SamlBundle\Exception\RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
@@ -33,6 +34,9 @@ use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProvid
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SamlProvider implements AuthenticationProviderInterface
 {
     /**
@@ -90,7 +94,13 @@ class SamlProvider implements AuthenticationProviderInterface
         // Default to the ROLE_USER role for services.
         $role = 'ROLE_USER';
 
-        $teamNames = $translatedAssertion->getAttributeValue('isMemberOf');
+        try {
+            // An exception is thrown when isMemberOf is empty.
+            $teamNames = $translatedAssertion->getAttributeValue('isMemberOf');
+        } catch (RuntimeException $e) {
+            $teamNames = [];
+        }
+
         if (in_array($this->administratorTeam, $teamNames)) {
             $role = 'ROLE_ADMINISTRATOR';
         }
