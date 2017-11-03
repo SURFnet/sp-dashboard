@@ -49,6 +49,7 @@ class EntityMetadataTest extends WebTestCase
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
         $entity->setTicketNumber('IID-9');
+        $entity->setStatus(Entity::STATE_PUBLISHED);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'));
 
         $this->getEntityRepository()->save($entity);
@@ -64,5 +65,29 @@ class EntityMetadataTest extends WebTestCase
         $this->assertContains('MyService', $nodeEn->text());
         $this->assertContains('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds', $certificate->text());
         $this->assertContains('https://domain.org/saml/sp/saml2-post/default-sp', $acsLocation);
+    }
+
+    public function test_it_only_shows_published_metadata()
+    {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $entity = new Entity();
+        $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp');
+        $entity->setCertificate('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds');
+        $entity->setService(
+            $this->getServiceRepository()->findByName('SURFnet')
+        );
+        $entity->setNameEn('MyService');
+        $entity->setNameNl('MijnService');
+        $entity->setTicketNumber('IID-9');
+        $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'));
+        $entity->setStatus(Entity::STATE_DRAFT);
+
+        $this->getEntityRepository()->save($entity);
+
+        $this->client->request('GET', '/entity/metadata/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 }
