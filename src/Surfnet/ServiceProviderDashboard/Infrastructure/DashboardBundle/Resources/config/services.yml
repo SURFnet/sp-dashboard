@@ -71,6 +71,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
 
+    surfnet.dashboard.command_handler.publish_production_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
+
     surfnet.dashboard.command_handler.select_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler
         public: true

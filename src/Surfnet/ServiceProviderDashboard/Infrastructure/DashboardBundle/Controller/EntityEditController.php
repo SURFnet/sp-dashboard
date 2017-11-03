@@ -27,11 +27,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EditEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
@@ -67,21 +69,29 @@ class EntityEditController extends Controller
     private $authorizationService;
 
     /**
+     * @var MailMessageFactory
+     */
+    private $mailMessageFactory;
+
+    /**
      * @param CommandBus $commandBus
      * @param EntityService $entityService
      * @param ServiceService $serviceService
      * @param AuthorizationService $authorizationService
+     * @param MailMessageFactory $mailMessageFactory
      */
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         ServiceService $serviceService,
-        AuthorizationService $authorizationService
+        AuthorizationService $authorizationService,
+        MailMessageFactory $mailMessageFactory
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->serviceService = $serviceService;
         $this->authorizationService = $authorizationService;
+        $this->mailMessageFactory = $mailMessageFactory;
     }
 
     /**
@@ -144,28 +154,9 @@ class EntityEditController extends Controller
         ];
     }
 
-    /**
-     * @Method("GET")
-     * @Route("/service/published", name="service_published")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
-    public function publishedAction()
-    {
-        /** @var Entity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
-
-        return [
-            'entityName' => $entity->getNameEn(),
-        ];
-    }
-
     private function publishEnity(Entity $entity, FlashBagInterface $flashBag)
     {
         switch ($entity->getEnvironment()) {
-
             case Entity::ENVIRONMENT_CONNECT:
                 $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
                 $this->commandBus->handle($publishEntityCommand);
@@ -177,12 +168,15 @@ class EntityEditController extends Controller
                     $deleteCommand = new DeleteEntityCommand($entity->getId());
                     $this->commandBus->handle($deleteCommand);
 
-                    return $this->redirectToRoute('service_published');
+                    return $this->redirectToRoute('service_published_test');
                 }
                 break;
 
             case Entity::ENVIRONMENT_PRODUCTION:
-
+                $message = $this->mailMessageFactory->buildPublishToProductionMessage($entity);
+                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $message);
+                $this->commandBus->handle($publishEntityCommand);
+                return $this->redirectToRoute('service_published_production', ['id' => $entity->getId()]);
                 break;
         }
     }
