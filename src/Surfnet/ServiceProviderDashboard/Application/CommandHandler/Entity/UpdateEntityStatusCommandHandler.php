@@ -42,6 +42,7 @@ class UpdateEntityStatusCommandHandler implements CommandHandler
         $entity = $this->repository->findById($command->getId());
 
         $entity->setStatus($command->getStatus());
+        $entity->setComments('');
 
         $this->repository->save($entity);
     }
