@@ -46,12 +46,14 @@
                                     </a>
                                 {% endif %}
                             </li>
+                            {% if entity.state != 'published' %}
                             <li>
                                 <a href="{{ path('entity_delete', {id: entity.id}) }}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     {{ 'entity.list.action.delete'|trans }}
                                 </a>
                             </li>
+                            {% endif %}
                             {% if entity.state == 'published' and entity.environment == 'test' %}
                             <li>
                                 <a href="{{ path('entity_copy', {manageId: entity.id, environment: 'production'}) }}">
