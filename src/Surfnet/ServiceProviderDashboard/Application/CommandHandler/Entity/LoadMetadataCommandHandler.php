@@ -93,7 +93,7 @@ class LoadMetadataCommandHandler implements CommandHandler
         $this->mapAttributes($entity, $metadata);
 
         // By default set the import url as the metadataUrl but only when the metadataUrl is not set yet.
-        if (!empty($entity->getMetadataUrl()) && $command->isUrlSet()) {
+        if (empty($entity->getMetadataUrl()) && $command->isUrlSet()) {
             $entity->setMetadataUrl($entity->getImportUrl());
         }
 
