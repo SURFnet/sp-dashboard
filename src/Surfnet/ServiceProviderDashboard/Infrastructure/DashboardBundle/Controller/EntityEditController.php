@@ -140,7 +140,10 @@ class EntityEditController extends Controller
                     case 'publishButton':
                         // Only trigger form validation on publish
                         if ($form->isValid()) {
-                            return $this->publishEntity($entity, $flashBag);
+                            $response = $this->publishEntity($entity, $flashBag);
+                            if ($response instanceof Response) {
+                                return $response;
+                            }
                         }
                         break;
                     default:
