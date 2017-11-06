@@ -61,9 +61,9 @@ class EditEntityCommand implements Command
      * @var string
      *
      * @Assert\NotBlank(groups={"creation"})
-     * @Assert\Choice(choices = {"production", "connect"}, groups={"creation"})
+     * @Assert\Choice(choices = {"production", "test"}, groups={"creation"})
      */
-    private $environment = Entity::ENVIRONMENT_CONNECT;
+    private $environment = Entity::ENVIRONMENT_TEST;
 
     /**
      * Metadata URL that import last happened from.

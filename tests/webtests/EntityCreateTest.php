@@ -60,7 +60,7 @@ class EntityCreateTest extends WebTestCase
         // The Id and TicketNumber fields are Uuids
         $this->assertNotEmpty($entity->getId());
 
-        $this->assertEquals(Entity::ENVIRONMENT_CONNECT, $entity->getEnvironment());
+        $this->assertEquals(Entity::ENVIRONMENT_TEST, $entity->getEnvironment());
         $this->assertEquals('Ibuildings B.V.', $entity->getService()->getName());
     }
 }
