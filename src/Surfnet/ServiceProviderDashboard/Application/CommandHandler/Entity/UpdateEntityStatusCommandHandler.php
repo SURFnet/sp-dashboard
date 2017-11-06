@@ -18,16 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
-use League\Tactician\CommandBus;
-use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityStatusCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Mail\PublishToProductionMailCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
+/**
+ * Updates the entity status and clears the comments set on the entity.
+ */
 class UpdateEntityStatusCommandHandler implements CommandHandler
 {
     /**
@@ -44,7 +41,8 @@ class UpdateEntityStatusCommandHandler implements CommandHandler
     {
         $entity = $this->repository->findById($command->getId());
 
-        $entity->setStatus(Entity::STATE_DRAFT);
+        $entity->setStatus($command->getStatus());
+        $entity->setComments('');
 
         $this->repository->save($entity);
     }
