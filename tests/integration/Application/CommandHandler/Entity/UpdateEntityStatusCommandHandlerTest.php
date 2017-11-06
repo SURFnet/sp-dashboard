@@ -56,6 +56,11 @@ class UpdateEntityStatusCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('setStatus')
             ->with(Entity::STATE_DRAFT);
 
+        $entity
+            ->shouldReceive('setComments')
+            ->with('')
+            ->once();
+
         $this->entityRepository
             ->shouldReceive('findById')
             ->with('my-entity-id')
