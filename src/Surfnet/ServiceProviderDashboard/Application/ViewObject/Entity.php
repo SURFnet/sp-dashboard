@@ -102,7 +102,7 @@ class Entity
             $metadata['name:en'],
             $formattedContact,
             'published',
-            'connect'
+            'test'
         );
     }
 

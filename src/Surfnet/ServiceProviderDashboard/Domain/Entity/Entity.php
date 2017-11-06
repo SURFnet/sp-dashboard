@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Entity
 {
-    const ENVIRONMENT_CONNECT = 'connect';
+    const ENVIRONMENT_TEST = 'test';
     const ENVIRONMENT_PRODUCTION = 'production';
 
     const STATE_DRAFT = 'draft';
@@ -59,7 +59,7 @@ class Entity
      * @var string
      * @ORM\Column(type="string")
      */
-    private $environment = self::ENVIRONMENT_CONNECT;
+    private $environment = self::ENVIRONMENT_TEST;
 
 
     /**

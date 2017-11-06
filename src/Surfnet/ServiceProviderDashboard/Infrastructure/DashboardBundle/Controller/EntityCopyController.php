@@ -79,7 +79,7 @@ class EntityCopyController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/entity/copy/{manageId}/{environment}", defaults={"environment" = "connect"}, name="entity_copy")
+     * @Route("/entity/copy/{manageId}/{environment}", defaults={"environment" = "test"}, name="entity_copy")
      * @Template()
      *
      * @param string $manageId

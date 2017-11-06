@@ -168,14 +168,14 @@ class EntityEditController extends Controller
     private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
     {
         switch ($entity->getEnvironment()) {
-            case Entity::ENVIRONMENT_CONNECT:
+            case Entity::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
                 $this->commandBus->handle($publishEntityCommand);
 
                 if (!$flashBag->has('error')) {
                     $this->get('session')->set('published.entity.clone', clone $entity);
 
-                    // Connect (test) entities are removed after they've been published to Manage
+                    // Test entities are removed after they've been published to Manage
                     $deleteCommand = new DeleteEntityCommand($entity->getId());
                     $this->commandBus->handle($deleteCommand);
 
