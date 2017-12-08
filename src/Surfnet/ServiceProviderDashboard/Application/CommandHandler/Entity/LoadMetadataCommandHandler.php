@@ -107,6 +107,8 @@ class LoadMetadataCommandHandler implements CommandHandler
             'acsLocation' => ['getAcsLocation', 'setAcsLocation'],
             'entityId' => ['getEntityId', 'setEntityId'],
             'logoUrl' => ['getLogoUrl', 'setLogoUrl'],
+            'logoWidth' => ['getLogoWidth', 'setLogoWidth'],
+            'logoHeight' => ['getLogoHeight', 'setLogoHeight'],
             'nameNl' => ['getNameNl', 'setNameNl'],
             'nameEn' => ['getNameEn', 'setNameEn'],
             'descriptionNl' => ['getDescriptionNl', 'setDescriptionNl'],

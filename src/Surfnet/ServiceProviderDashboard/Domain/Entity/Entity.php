@@ -32,6 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
 class Entity
 {
@@ -149,6 +150,18 @@ class Entity
      * @ORM\Column(type="string", nullable=true)
      */
     private $logoUrl;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $logoWidth;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $logoHeight;
 
     /**
      * @var string
@@ -420,6 +433,22 @@ class Entity
     public function setLogoUrl($logoUrl)
     {
         $this->logoUrl = $logoUrl;
+    }
+
+    /**
+     * @param int $logoWidth
+     */
+    public function setLogoWidth($logoWidth)
+    {
+        $this->logoWidth = $logoWidth;
+    }
+
+    /**
+     * @param int $logoHeight
+     */
+    public function setLogoHeight($logoHeight)
+    {
+        $this->logoHeight = $logoHeight;
     }
 
     /**
@@ -756,6 +785,22 @@ class Entity
     public function getLogoUrl()
     {
         return $this->logoUrl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLogoWidth()
+    {
+        return (int) $this->logoWidth;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLogoHeight()
+    {
+        return (int) $this->logoHeight;
     }
 
     /**
