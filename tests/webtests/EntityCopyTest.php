@@ -110,6 +110,16 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
+            'https://appurl',
+            $form->get('dashboard_bundle_edit_entity_type[metadata][applicationUrl]')->getValue()
+        );
+
+        $this->assertEquals(
+            'https://eulaurl',
+            $form->get('dashboard_bundle_edit_entity_type[metadata][eulaUrl]')->getValue()
+        );
+
+        $this->assertEquals(
             'http://www.example.org/metadata',
             $form->get('dashboard_bundle_edit_entity_type[metadata][metadataUrl]')->getValue()
         );
