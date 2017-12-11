@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "jquery": "^3.2.1",
-    "select2": "^4.0.3"
+    "select2": "^4.0.3",
+    "tippy.js": "^2.0.2"
   }
 }

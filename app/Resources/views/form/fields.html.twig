@@ -1,12 +1,10 @@
 {%- block help_block -%}
     {% for attrname,attrvalue in attr %}
         {% if attrname == 'help' %}
-            <span class="help-button">
+            <span title="{{ attrvalue|trans }}" class="help-button">
                 <i class="fa fa-question-circle"></i>
-                <div class="balloon">
-                    {{ attrvalue|trans|raw }}
-                </div>
-            </span>{% endif %}
+            </span>
+        {% endif %}
     {% endfor %}
 {%- endblock -%}
 
