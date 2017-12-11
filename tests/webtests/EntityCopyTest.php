@@ -105,7 +105,7 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
-            'http://www.example.org/logo.png',
+            'https://spdashboard.dev.support.surfconext.nl/images/surfconext-logo.png',
             $form->get('dashboard_bundle_edit_entity_type[metadata][logoUrl]')->getValue()
         );
 

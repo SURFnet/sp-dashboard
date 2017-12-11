@@ -170,6 +170,9 @@ class Parser implements ParserInterface
 
         $metadata->logoUrl = (string)$ui->Logo;
 
+        $metadata->logoWidth = (int)$ui->Logo['width'];
+        $metadata->logoHeight = (int)$ui->Logo['height'];
+
         if (!empty($ui->Description)) {
             foreach ($ui->Description as $description) {
                 $lang = $description->attributes(static::NS_LANG);

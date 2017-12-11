@@ -44,6 +44,16 @@ class Metadata
     public $logoUrl;
 
     /**
+     * @var int
+     */
+    public $logoWidth;
+
+    /**
+     * @var int
+     */
+    public $logoHeight;
+
+    /**
      * @var string
      */
     public $nameEn;

@@ -59,6 +59,8 @@ class EntityPublishToTestTest extends WebTestCase
         $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp/acs');
         $entity->setCertificate(file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'));
         $entity->setLogoUrl('http://localhost/img.png');
+        $entity->setLogoWidth(50);
+        $entity->setLogoHeight(50);
         $entity->setService($service);
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
