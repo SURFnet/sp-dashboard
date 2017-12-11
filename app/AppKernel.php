@@ -15,6 +15,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new OpenConext\MonitorBundle\OpenConextMonitorBundle(),
             new Surfnet\SamlBundle\SurfnetSamlBundle(),
             new Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DashboardBundle(),
             new Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\DashboardSamlBundle(),
