@@ -96,7 +96,7 @@ class SamlProvider implements AuthenticationProviderInterface
 
         try {
             // An exception is thrown when isMemberOf is empty.
-            $teamNames = $translatedAssertion->getAttributeValue('isMemberOf');
+            $teamNames = (array) $translatedAssertion->getAttributeValue('isMemberOf');
         } catch (RuntimeException $e) {
             $teamNames = [];
         }
@@ -131,7 +131,7 @@ class SamlProvider implements AuthenticationProviderInterface
      * @param Contact $contact
      * @param array $teamNames
      */
-    private function assignServicesToContact(Contact $contact, $teamNames)
+    private function assignServicesToContact(Contact $contact, array $teamNames)
     {
         $services = $this->services->findByTeamNames($teamNames);
 
