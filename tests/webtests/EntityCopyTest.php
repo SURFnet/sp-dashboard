@@ -105,8 +105,18 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
-            'http://www.example.org/logo.png',
+            'https://spdashboard.dev.support.surfconext.nl/images/surfconext-logo.png',
             $form->get('dashboard_bundle_edit_entity_type[metadata][logoUrl]')->getValue()
+        );
+
+        $this->assertEquals(
+            'https://appurl',
+            $form->get('dashboard_bundle_edit_entity_type[metadata][applicationUrl]')->getValue()
+        );
+
+        $this->assertEquals(
+            'https://eulaurl',
+            $form->get('dashboard_bundle_edit_entity_type[metadata][eulaUrl]')->getValue()
         );
 
         $this->assertEquals(

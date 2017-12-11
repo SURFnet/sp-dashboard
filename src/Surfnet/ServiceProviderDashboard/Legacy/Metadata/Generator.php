@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 
 use InvalidArgumentException;
+use RuntimeException;
 use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -99,13 +100,13 @@ class Generator implements GeneratorInterface
     private function generateUi(SimpleXMLElement $xml, Entity $entity)
     {
         $extensions = $this->setNode($xml, 'md:Extensions', null, array(), array('md' => self::NS_SAML), array(), 0);
-        $ui = $this->setNode($extensions, 'ui:UIInfo', null, array(), array('ui' => self::NS_UI));
+        $ui = $this->setNode($extensions, 'mdui:UIInfo', null, array(), array('mdui' => self::NS_UI));
 
         $this->generateLogo($ui, $entity);
 
         $this->setNode(
             $ui,
-            'ui:Description',
+            'mdui:Description',
             $entity->getDescriptionEn(),
             array('xml:lang' => 'en'),
             array('ui' => self::NS_UI),
@@ -114,7 +115,7 @@ class Generator implements GeneratorInterface
 
         $this->setNode(
             $ui,
-            'ui:Description',
+            'mdui:Description',
             $entity->getDescriptionNl(),
             array('xml:lang' => 'nl'),
             array('ui' => self::NS_UI),
@@ -123,7 +124,7 @@ class Generator implements GeneratorInterface
 
         $this->setNode(
             $ui,
-            'ui:DisplayName',
+            'mdui:DisplayName',
             $entity->getNameEn(),
             array('xml:lang' => 'en'),
             array('ui' => self::NS_UI),
@@ -132,7 +133,7 @@ class Generator implements GeneratorInterface
 
         $this->setNode(
             $ui,
-            'ui:DisplayName',
+            'mdui:DisplayName',
             $entity->getNameNl(),
             array('xml:lang' => 'nl'),
             array('ui' => self::NS_UI),
@@ -141,7 +142,7 @@ class Generator implements GeneratorInterface
 
         $this->setNode(
             $ui,
-            'ui:InformationURL',
+            'mdui:InformationURL',
             $entity->getApplicationUrl(),
             array('xml:lang' => 'en'),
             array('ui' => self::NS_UI),
@@ -157,22 +158,48 @@ class Generator implements GeneratorInterface
     {
         $logo = $entity->getLogoUrl();
         if (empty($logo)) {
-            $this->removeNode($xml, 'ui:Logo', array(), array('ui' => self::NS_UI));
+            $this->removeNode($xml, 'mdui:Logo', array(), array('mdui' => self::NS_UI));
 
             return;
         }
 
         $node = $this->setNode(
             $xml,
-            'ui:Logo',
+            'mdui:Logo',
             $logo,
             array(),
-            array('ui' => self::NS_UI)
+            array('mdui' => self::NS_UI)
         );
 
-        $logoData = @getimagesize($logo);
+        $this->generateLogoHeight($node, $entity);
+    }
 
-        if ($logoData !== false) {
+    /**
+     * Determine the width and height of the logo.
+     *
+     * Logo dimensions are required in the SAML spec. They are always present,
+     * except when the user just created the entity in the interface. We
+     * determine the dimensions in those situations.
+     *
+     * @param SimpleXMLElement $xml
+     * @param Entity $entity
+     */
+    private function generateLogoHeight(SimpleXMLElement $node, Entity $entity)
+    {
+        $node['width'] = $entity->getLogoWidth();
+        $node['height'] = $entity->getLogoHeight();
+
+        if (empty($node['width']) || empty($node['height'])) {
+            $logoData = getimagesize(
+                $entity->getLogoUrl()
+            );
+
+            if ($logoData === false) {
+                throw new RuntimeException(
+                    'Unable to determine logo dimensions'
+                );
+            }
+
             list($width, $height) = $logoData;
 
             $node['width'] = $width;

@@ -125,28 +125,16 @@ class CopyEntityCommandHandler implements CommandHandler
 
         $entity = $this->entityRepository->findById($entity->getId());
 
-        if (isset($manageMetadata['name:en'])) {
-            $entity->setNameEn($manageMetadata['name:en']);
+        if (isset($manageMetadata['coin:application_url'])) {
+            $entity->setApplicationUrl($manageMetadata['coin:application_url']);
         }
 
-        if (isset($manageMetadata['name:nl'])) {
-            $entity->setNameNl($manageMetadata['name:nl']);
-        }
-
-        if (isset($manageMetadata['description:en'])) {
-            $entity->setDescriptionEn($manageMetadata['description:en']);
-        }
-
-        if (isset($manageMetadata['description:nl'])) {
-            $entity->setDescriptionNl($manageMetadata['description:nl']);
+        if (isset($manageMetadata['coin:eula'])) {
+            $entity->setEulaUrl($manageMetadata['coin:eula']);
         }
 
         if (isset($manageMetadata['coin:original_metadata_url'])) {
             $entity->setImportUrl($manageMetadata['coin:original_metadata_url']);
-        }
-
-        if (isset($manageMetadata['logo:0:url'])) {
-            $entity->setLogoUrl($manageMetadata['logo:0:url']);
         }
 
         if (isset($manageEntity['data']['metadataurl'])) {

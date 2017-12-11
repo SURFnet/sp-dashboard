@@ -78,6 +78,8 @@ class GeneratorTest extends MockeryTestCase
         $service->setDescriptionEn('UPDATEDDESCREN');
         $service->setApplicationUrl('http://www.google.nl');
         $service->setLogoUrl('http://www.google.com');
+        $service->setLogoWidth(1006);
+        $service->setLogoHeight(1006);
         $service->setMetadataXml($metadataXml);
         return $service;
     }
@@ -120,7 +122,7 @@ class GeneratorTest extends MockeryTestCase
         $this->assertContains('<mdui:Description xml:lang="en">UPDATEDDESCREN</mdui:Description>', $xml);
         $this->assertContains('<mdui:InformationURL xml:lang="en">http://www.google.nl</mdui:InformationURL>', $xml);
         $this->assertContains('<mdui:InformationURL xml:lang="nl">URLNL</mdui:InformationURL>', $xml);
-        $this->assertContains('<mdui:Logo>http://www.google.com</mdui:Logo>', $xml);
+        $this->assertContains('<mdui:Logo width="1006" height="1006">http://www.google.com</mdui:Logo>', $xml);
 
         // Created
         $this->assertContains('<md:ContactPerson contactType="support">', $xml);
@@ -195,12 +197,12 @@ class GeneratorTest extends MockeryTestCase
 
         $xml = $this->generator->generate($service);
 
-        $this->assertContains('<ui:DisplayName xml:lang="nl">UNAMENL</ui:DisplayName>', $xml);
-        $this->assertContains('<ui:DisplayName xml:lang="en">UNAMEEN</ui:DisplayName>', $xml);
-        $this->assertContains('<ui:Description xml:lang="nl">UPDATEDDESCRNL</ui:Description>', $xml);
-        $this->assertContains('<ui:Description xml:lang="en">UPDATEDDESCREN</ui:Description>', $xml);
-        $this->assertContains('<ui:InformationURL xml:lang="en">http://www.google.nl</ui:InformationURL>', $xml);
-        $this->assertContains('<ui:Logo>http://www.google.com</ui:Logo>', $xml);
+        $this->assertContains('<mdui:DisplayName xml:lang="nl">UNAMENL</mdui:DisplayName>', $xml);
+        $this->assertContains('<mdui:DisplayName xml:lang="en">UNAMEEN</mdui:DisplayName>', $xml);
+        $this->assertContains('<mdui:Description xml:lang="nl">UPDATEDDESCRNL</mdui:Description>', $xml);
+        $this->assertContains('<mdui:Description xml:lang="en">UPDATEDDESCREN</mdui:Description>', $xml);
+        $this->assertContains('<mdui:InformationURL xml:lang="en">http://www.google.nl</mdui:InformationURL>', $xml);
+        $this->assertContains('<mdui:Logo width="1006" height="1006">http://www.google.com</mdui:Logo>', $xml);
 
         // Make sure the generated metadata is valid
         $this->assertInstanceOf(Metadata::class, $this->parser->parseXml($xml));
@@ -252,7 +254,7 @@ class GeneratorTest extends MockeryTestCase
 
         $xml = $this->generator->generate($service);
 
-        $this->assertContains('<ui:Logo width="1006" height="1006">' . $logoUrl . '</ui:Logo>', $xml);
+        $this->assertContains('<mdui:Logo width="1006" height="1006">' . $logoUrl . '</mdui:Logo>', $xml);
 
         // Make sure the generated metadata is valid
         $this->assertInstanceOf(Metadata::class, $this->parser->parseXml($xml));
