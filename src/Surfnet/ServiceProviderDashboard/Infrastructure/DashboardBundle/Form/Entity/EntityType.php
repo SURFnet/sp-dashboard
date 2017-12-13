@@ -27,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EditEntityType extends AbstractType
+class EntityType extends AbstractType
 {
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -309,7 +309,8 @@ class EditEntityType extends AbstractType
                     )
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
-            ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']]);
+            ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']])
+            ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -321,6 +322,6 @@ class EditEntityType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'dashboard_bundle_edit_entity_type';
+        return 'dashboard_bundle_entity_type';
     }
 }

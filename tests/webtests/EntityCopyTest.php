@@ -66,67 +66,67 @@ class EntityCopyTest extends WebTestCase
 
         $this->assertEquals(
             'https://engine.dev.support.surfconext.nl/authentication/sp/consume-assertion',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][acsLocation]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][acsLocation]')->getValue()
         );
 
         $this->assertEquals(
             'https://engine.dev.support.surfconext.nl/authentication/sp/metadata/1430',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][entityId]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][entityId]')->getValue()
         );
 
         $this->assertEquals(
             'OpenConext Engine EN',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][nameEn]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][nameEn]')->getValue()
         );
 
         $this->assertEquals(
             'OpenConext SSO Proxy EN',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][descriptionEn]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][descriptionEn]')->getValue()
         );
 
         $this->assertEquals(
             'OpenConext Engine',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][nameNl]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][nameNl]')->getValue()
         );
 
         $this->assertEquals(
             'OpenConext SSO Proxy',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][descriptionNl]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][descriptionNl]')->getValue()
         );
 
         $this->assertEquals(
             'Support1430',
-            $form->get('dashboard_bundle_edit_entity_type[contactInformation][administrativeContact][firstName]')->getValue()
+            $form->get('dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]')->getValue()
         );
 
         $this->assertEquals(
             'OpenConext1430',
-            $form->get('dashboard_bundle_edit_entity_type[contactInformation][administrativeContact][lastName]')->getValue()
+            $form->get('dashboard_bundle_entity_type[contactInformation][administrativeContact][lastName]')->getValue()
         );
 
         $this->assertEquals(
             'https://spdashboard.dev.support.surfconext.nl/images/surfconext-logo.png',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][logoUrl]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][logoUrl]')->getValue()
         );
 
         $this->assertEquals(
             'https://appurl',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][applicationUrl]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][applicationUrl]')->getValue()
         );
 
         $this->assertEquals(
             'https://eulaurl',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][eulaUrl]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][eulaUrl]')->getValue()
         );
 
         $this->assertEquals(
             'http://www.example.org/metadata',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][metadataUrl]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][metadataUrl]')->getValue()
         );
 
         $this->assertEquals(
             'https://engine.dev.support.surfconext.nl/authentication/sp/metadata',
-            $form->get('dashboard_bundle_edit_entity_type[metadata][importUrl]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][importUrl]')->getValue()
         );
     }
 

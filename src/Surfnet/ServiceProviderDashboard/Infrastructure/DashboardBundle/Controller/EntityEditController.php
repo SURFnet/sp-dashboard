@@ -35,7 +35,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EditEntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
@@ -121,7 +121,7 @@ class EntityEditController extends Controller
 
         $command = $this->entityService->buildEditEntityCommand($entity);
 
-        $form = $this->createForm(EditEntityType::class, $command);
+        $form = $this->createForm(EntityType::class, $command);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {

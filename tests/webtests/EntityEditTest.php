@@ -49,7 +49,7 @@ class EntityEditTest extends WebTestCase
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
-        $nameEnfield = $form->get('dashboard_bundle_edit_entity_type[metadata][nameEn]');
+        $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
         $this->assertEquals(
             'SP1',
             $nameEnfield->getValue(),
@@ -73,7 +73,7 @@ class EntityEditTest extends WebTestCase
     public function test_it_updates_form_submissions_to_an_entity()
     {
         $formData = [
-            'dashboard_bundle_edit_entity_type' => [
+            'dashboard_bundle_entity_type' => [
                 'metadata' => [
                     'importUrl' => 'https://www.google.com',
                     'nameEn' => 'The A Team',
@@ -139,7 +139,7 @@ class EntityEditTest extends WebTestCase
     public function test_it_loads_xml_from_url()
     {
         $formData = [
-            'dashboard_bundle_edit_entity_type' => [
+            'dashboard_bundle_entity_type' => [
                 'metadata' => [
                     'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
                     'nameEn' => 'The A Team',
@@ -182,7 +182,7 @@ class EntityEditTest extends WebTestCase
     public function test_it_handles_valid_but_incomplete_metadata()
     {
         $formData = [
-            'dashboard_bundle_edit_entity_type' => [
+            'dashboard_bundle_entity_type' => [
                 'metadata' => [
                     'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata-valid-incomplete',
                 ],
@@ -216,7 +216,7 @@ class EntityEditTest extends WebTestCase
     {
         $xml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml');
         $formData = [
-            'dashboard_bundle_edit_entity_type' => [
+            'dashboard_bundle_entity_type' => [
                 'metadata' => [
                     'importUrl' => '',
                     'pastedMetadata' => $xml,
@@ -258,7 +258,7 @@ class EntityEditTest extends WebTestCase
     public function test_it_shows_flash_message_on_exception()
     {
         $formData = [
-            'dashboard_bundle_edit_entity_type' => [
+            'dashboard_bundle_entity_type' => [
                 'metadata' => [
                     'importUrl' => 'https://this.does.not/exist',
                 ],
@@ -285,7 +285,7 @@ class EntityEditTest extends WebTestCase
     {
         $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata.xml');
         $formData = [
-            'dashboard_bundle_edit_entity_type' => [
+            'dashboard_bundle_entity_type' => [
                 'metadata' => [
                     'importUrl' => '',
                     'pastedMetadata' => $xml,
