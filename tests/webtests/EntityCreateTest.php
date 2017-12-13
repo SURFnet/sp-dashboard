@@ -30,37 +30,24 @@ class EntityCreateTest extends WebTestCase
 
         $this->loadFixtures();
 
+        $this->logIn('ROLE_ADMINISTRATOR');
+
         $this->getAuthorizationService()->setSelectedServiceId(
             $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
         );
     }
 
-    public function test_entity_can_be_created()
+    public function test_it_renders_the_form()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $this->client->request('GET', '/entity/create');
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after creating an entity'
+        $crawler = $this->client->request('GET', "/entity/create");
+        $form = $crawler->filter('.page-container')
+            ->selectButton('Save')
+            ->form();
+        $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
+        $this->assertEquals(
+            '',
+            $nameEnfield->getValue(),
+            'Expect the NameEN field to be empty'
         );
-
-        $this->client->followRedirect();
-
-        $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
-        $entities = $service->getEntities();
-
-        // One Service has been created
-        $this->assertCount(1, $entities);
-
-        /** @var Entity $entity */
-        $entity = $entities->last();
-
-        // The Id and TicketNumber fields are Uuids
-        $this->assertNotEmpty($entity->getId());
-
-        $this->assertEquals(Entity::ENVIRONMENT_TEST, $entity->getEnvironment());
-        $this->assertEquals('Ibuildings B.V.', $entity->getService()->getName());
     }
 }

@@ -20,16 +20,19 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,28 +89,63 @@ class EntityCreateController extends Controller
     }
 
     /**
-     * @Method("GET")
+     * @Method({"GET", "POST"})
      * @Route("/entity/create", name="entity_add")
      * @Security("has_role('ROLE_USER')")
+     * @Template("@Dashboard/EntityEdit/edit.html.twig")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
+        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag->clear();
 
-        $entityId = $this->entityService->createEntityUuid();
-        $ticketNumber = $this->ticketService->getTicketIdForService($entityId, $service);
-        if (is_null($service)) {
-            $this->get('logger')->error('Unable to find selected entity while creating a new entity');
-            // Todo: show error page?
+        $command = SaveEntityCommand::forCreateAction();
+
+        $form = $this->createForm(EntityType::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            // Save the changes made on the form
+            $this->commandBus->handle($command);
+
+            try {
+                switch ($form->getClickedButton()->getName()) {
+                    case 'importButton':
+                        // Handle an import action based on the posted xml or import url.
+                        $metadataCommand = LoadMetadataCommand::fromSaveEntityCommand($command);
+                        $this->commandBus->handle($metadataCommand);
+                        return $this->redirectToRoute('entity_add');
+                        break;
+
+                    case 'publishButton':
+                        // Only trigger form validation on publish
+                        if ($form->isValid()) {
+                            die('publishing not yet supported');
+                        }
+                        break;
+                    default:
+                        $this->commandBus->handle($command);
+                        return $this->redirectToRoute('entity_list');
+                        break;
+                }
+            } catch (MetadataFetchException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.fetch.exception');
+            } catch (ParserException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.parse.exception');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
+            }
         }
 
-        $command = new CreateEntityCommand($entityId, $service, $ticketNumber);
-        $this->commandBus->handle($command);
-
-        return $this->redirectToRoute('entity_edit', ['id' => $entityId]);
+        return [
+            'form' => $form->createView(),
+        ];
     }
+
 }

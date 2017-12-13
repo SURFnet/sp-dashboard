@@ -133,7 +133,7 @@ class EntityEditController extends Controller
                 switch ($form->getClickedButton()->getName()) {
                     case 'importButton':
                         // Handle an import action based on the posted xml or import url.
-                        $metadataCommand = LoadMetadataCommand::fromEditCommand($command);
+                        $metadataCommand = LoadMetadataCommand::fromSaveEntityCommand($command);
                         $this->commandBus->handle($metadataCommand);
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
                         break;
