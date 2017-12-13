@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Pdp\Parser;
 use Pdp\PublicSuffixListManager;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Symfony\Component\Validator\Constraint;
@@ -64,7 +64,7 @@ class ValidEntityIdValidator extends ConstraintValidator
     {
         $root = $this->context->getRoot();
 
-        if ($root instanceof EditEntityCommand) {
+        if ($root instanceof SaveEntityCommand) {
             $entityCommand = $root;
         } else {
             $entityCommand = $root->getData();

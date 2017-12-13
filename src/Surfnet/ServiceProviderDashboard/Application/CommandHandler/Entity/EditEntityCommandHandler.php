@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
@@ -38,7 +38,7 @@ class EditEntityCommandHandler implements CommandHandler
         $this->repository = $repository;
     }
 
-    public function handle(EditEntityCommand $command)
+    public function handle(SaveEntityCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
 

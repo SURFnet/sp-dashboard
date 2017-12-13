@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -54,7 +54,7 @@ class EntityCommandFactoryTest extends MockeryTestCase
         $entity->setTicketNumber('0766b312-36b2-47f7-a7da-4704b5581192');
 
         $command = $this->factory->build($entity);
-        $this->assertInstanceOf(EditEntityCommand::class, $command);
+        $this->assertInstanceOf(SaveEntityCommand::class, $command);
         $this->assertEquals('4e7d5872-3a58-4832-a0b4-d5df61d808f9', $command->getId());
         $this->assertEquals('0766b312-36b2-47f7-a7da-4704b5581192', $command->getTicketNumber());
         $this->assertEquals('Ibuildings', $command->getService()->getName());

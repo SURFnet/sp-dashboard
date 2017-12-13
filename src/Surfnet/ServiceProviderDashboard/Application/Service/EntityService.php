@@ -18,7 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Ramsey\Uuid\Uuid;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -94,7 +94,7 @@ class EntityService
     /**
      * @param Entity $entity
      *
-     * @return EditEntityCommand
+     * @return SaveEntityCommand
      */
     public function buildEditEntityCommand(Entity $entity)
     {

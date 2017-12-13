@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class EditEntityCommand implements Command
+class SaveEntityCommand implements Command
 {
     /**
      * @var string

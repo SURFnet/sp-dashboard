@@ -18,14 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Factory;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 class EntityCommandFactory
 {
     public function build(Entity $entity)
     {
-        return new EditEntityCommand(
+        return new SaveEntityCommand(
             $entity->getId(),
             $entity->getService(),
             $entity->getTicketNumber(),

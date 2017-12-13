@@ -44,7 +44,7 @@ class LoadMetadataCommand implements Command
         $this->pastedMetadata = $pastedMetadata;
     }
 
-    public static function fromEditCommand(EditEntityCommand $command)
+    public static function fromEditCommand(SaveEntityCommand $command)
     {
         return new self(
             $command->getId(),
