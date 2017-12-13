@@ -318,123 +318,65 @@ class SaveEntityCommand implements Command
      */
     private $comments;
 
+    private function __construct()
+    {
+    }
+
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     *
-     * @param string $id
-     * @param Service $service
-     * @param string $ticketNumber
-     * @param bool $archived
-     * @param string $environment
-     * @param string $importUrl
-     * @param string $pastedMetadata
-     * @param string $metadataUrl
-     * @param string $acsLocation
-     * @param string $entityId
-     * @param string $certificate
-     * @param string $logoUrl
-     * @param string $nameNl
-     * @param string $nameEn
-     * @param string $descriptionNl
-     * @param string $descriptionEn
-     * @param string $applicationUrl
-     * @param string $eulaUrl
-     * @param Contact $administrativeContact
-     * @param Contact $technicalContact
-     * @param Contact $supportContact
-     * @param Attribute $givenNameAttribute
-     * @param Attribute $surNameAttribute
-     * @param Attribute $commonNameAttribute
-     * @param Attribute $displayNameAttribute
-     * @param Attribute $emailAddressAttribute
-     * @param Attribute $organizationAttribute
-     * @param Attribute $organizationTypeAttribute
-     * @param Attribute $affiliationAttribute
-     * @param Attribute $entitlementAttribute
-     * @param Attribute $principleNameAttribute
-     * @param Attribute $uidAttribute
-     * @param Attribute $preferredLanguageAttribute
-     * @param Attribute $personalCodeAttribute
-     * @param Attribute $scopedAffiliationAttribute
-     * @param Attribute $eduPersonTargetedIDAttribute
-     * @param string $comments
+     * @return SaveEntityCommand
      */
-    public function __construct(
-        $id,
-        Service $service,
-        $ticketNumber,
-        $archived,
-        $environment,
-        $importUrl,
-        $pastedMetadata,
-        $metadataUrl,
-        $acsLocation,
-        $entityId,
-        $certificate,
-        $logoUrl,
-        $nameNl,
-        $nameEn,
-        $descriptionNl,
-        $descriptionEn,
-        $applicationUrl,
-        $eulaUrl,
-        $administrativeContact,
-        $technicalContact,
-        $supportContact,
-        $givenNameAttribute,
-        $surNameAttribute,
-        $commonNameAttribute,
-        $displayNameAttribute,
-        $emailAddressAttribute,
-        $organizationAttribute,
-        $organizationTypeAttribute,
-        $affiliationAttribute,
-        $entitlementAttribute,
-        $principleNameAttribute,
-        $uidAttribute,
-        $preferredLanguageAttribute,
-        $personalCodeAttribute,
-        $scopedAffiliationAttribute,
-        $eduPersonTargetedIDAttribute,
-        $comments
-    ) {
-        $this->id = $id;
-        $this->service = $service;
-        $this->ticketNumber = $ticketNumber;
-        $this->archived = $archived;
-        $this->environment = $environment;
-        $this->importUrl = $importUrl;
-        $this->pastedMetadata = $pastedMetadata;
-        $this->metadataUrl = $metadataUrl;
-        $this->acsLocation = $acsLocation;
-        $this->entityId = $entityId;
-        $this->certificate = $certificate;
-        $this->logoUrl = $logoUrl;
-        $this->nameNl = $nameNl;
-        $this->nameEn = $nameEn;
-        $this->descriptionNl = $descriptionNl;
-        $this->descriptionEn = $descriptionEn;
-        $this->applicationUrl = $applicationUrl;
-        $this->eulaUrl = $eulaUrl;
-        $this->administrativeContact = $administrativeContact;
-        $this->technicalContact = $technicalContact;
-        $this->supportContact = $supportContact;
-        $this->givenNameAttribute = $givenNameAttribute;
-        $this->surNameAttribute = $surNameAttribute;
-        $this->commonNameAttribute = $commonNameAttribute;
-        $this->displayNameAttribute = $displayNameAttribute;
-        $this->emailAddressAttribute = $emailAddressAttribute;
-        $this->organizationAttribute = $organizationAttribute;
-        $this->organizationTypeAttribute = $organizationTypeAttribute;
-        $this->affiliationAttribute = $affiliationAttribute;
-        $this->entitlementAttribute = $entitlementAttribute;
-        $this->principleNameAttribute = $principleNameAttribute;
-        $this->uidAttribute = $uidAttribute;
-        $this->preferredLanguageAttribute = $preferredLanguageAttribute;
-        $this->personalCodeAttribute = $personalCodeAttribute;
-        $this->scopedAffiliationAttribute = $scopedAffiliationAttribute;
-        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
-        $this->comments = $comments;
+    public static function forCreateAction()
+    {
+        return new self();
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return SaveEntityCommand
+     */
+    public static function fromEntity(Entity $entity)
+    {
+        $command = new self();
+        $command->id = $entity->getId();
+        $command->service = $entity->getService();
+        $command->ticketNumber = $entity->getTicketNumber();
+        $command->archived = $entity->isArchived();
+        $command->environment = $entity->getEnvironment();
+        $command->importUrl = $entity->getImportUrl();
+        $command->pastedMetadata = $entity->getPastedMetadata();
+        $command->metadataUrl = $entity->getMetadataUrl();
+        $command->acsLocation = $entity->getAcsLocation();
+        $command->entityId = $entity->getEntityId();
+        $command->certificate = $entity->getCertificate();
+        $command->logoUrl = $entity->getLogoUrl();
+        $command->nameNl = $entity->getNameNl();
+        $command->nameEn = $entity->getNameEn();
+        $command->descriptionNl = $entity->getDescriptionNl();
+        $command->descriptionEn = $entity->getDescriptionEn();
+        $command->applicationUrl = $entity->getApplicationUrl();
+        $command->eulaUrl = $entity->getEulaUrl();
+        $command->administrativeContact = $entity->getAdministrativeContact();
+        $command->technicalContact = $entity->getTechnicalContact();
+        $command->supportContact = $entity->getSupportContact();
+        $command->givenNameAttribute = $entity->getGivenNameAttribute();
+        $command->surNameAttribute = $entity->getSurNameAttribute();
+        $command->commonNameAttribute = $entity->getCommonNameAttribute();
+        $command->displayNameAttribute = $entity->getDisplayNameAttribute();
+        $command->emailAddressAttribute = $entity->getEmailAddressAttribute();
+        $command->organizationAttribute = $entity->getOrganizationAttribute();
+        $command->organizationTypeAttribute = $entity->getOrganizationTypeAttribute();
+        $command->affiliationAttribute = $entity->getAffiliationAttribute();
+        $command->entitlementAttribute = $entity->getEntitlementAttribute();
+        $command->principleNameAttribute = $entity->getPrincipleNameAttribute();
+        $command->uidAttribute = $entity->getUidAttribute();
+        $command->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
+        $command->personalCodeAttribute = $entity->getPersonalCodeAttribute();
+        $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
+        $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
+        $command->comments = $entity->getComments();
+
+        return $command;
     }
 
     /**

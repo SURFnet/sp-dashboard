@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityStatusCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
@@ -119,7 +120,7 @@ class EntityEditController extends Controller
             $this->commandBus->handle($updateStatusCommand);
         }
 
-        $command = $this->entityService->buildEditEntityCommand($entity);
+        $command = SaveEntityCommand::fromEntity($entity);
 
         $form = $this->createForm(EntityType::class, $command);
         $form->handleRequest($request);

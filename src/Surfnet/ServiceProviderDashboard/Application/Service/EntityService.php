@@ -18,8 +18,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Ramsey\Uuid\Uuid;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -34,27 +32,19 @@ class EntityService
     private $entityRepository;
 
     /**
-     * @var EntityCommandFactory
-     */
-    private $factory;
-
-    /**
      * @var ManageQueryClient
      */
     private $manageQueryClient;
 
     /**
      * @param EntityRepository $entityRepository
-     * @param EntityCommandFactory $factory
      * @param ManageQueryClient $manageQueryClient
      */
     public function __construct(
         EntityRepository $entityRepository,
-        EntityCommandFactory $factory,
         ManageQueryClient $manageQueryClient
     ) {
         $this->entityRepository = $entityRepository;
-        $this->factory = $factory;
         $this->manageQueryClient = $manageQueryClient;
     }
 
@@ -89,16 +79,6 @@ class EntityService
         if (!empty($entities)) {
             return reset($entities);
         }
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return SaveEntityCommand
-     */
-    public function buildEditEntityCommand(Entity $entity)
-    {
-        return $this->factory->build($entity);
     }
 
     /**
