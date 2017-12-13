@@ -23,58 +23,45 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 class LoadMetadataCommand implements Command
 {
     /**
-     * @var string
+     * @var SaveEntityCommand
      */
-    private $dashboardId;
+    private $saveEntityCommand;
 
-    /**
-     * @var string
-     */
-    private $importUrl;
-
-    /**
-     * @var string
-     */
-    private $pastedMetadata;
-
-    public function __construct($dashboardId, $importUrl, $pastedMetadata)
+    public function __construct(SaveEntityCommand $command)
     {
-        $this->dashboardId = $dashboardId;
-        $this->importUrl = $importUrl;
-        $this->pastedMetadata = $pastedMetadata;
+        $this->saveEntityCommand = $command;
     }
 
-    public static function fromEditCommand(SaveEntityCommand $command)
+    /**
+     * @return SaveEntityCommand
+     */
+    public function getSaveEntityCommand()
     {
-        return new self(
-            $command->getId(),
-            $command->getImportUrl(),
-            $command->getPastedMetadata()
-        );
+        return $this->saveEntityCommand;
     }
 
     public function getDashboardId()
     {
-        return $this->dashboardId;
+        return $this->saveEntityCommand->getId();
     }
 
     public function isUrlSet()
     {
-        return (bool) $this->getImportUrl();
+        return (bool) $this->saveEntityCommand->getImportUrl();
     }
 
     public function isXmlSet()
     {
-        return (bool) $this->getPastedMetadata();
+        return (bool) $this->saveEntityCommand->getPastedMetadata();
     }
 
     public function getImportUrl()
     {
-        return $this->importUrl;
+        return $this->saveEntityCommand->getImportUrl();
     }
 
     public function getPastedMetadata()
     {
-        return $this->pastedMetadata;
+        return $this->saveEntityCommand->getPastedMetadata();
     }
 }

@@ -45,7 +45,6 @@ services:
     surfnet.dashboard.command_handler.load_metadata:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\LoadMetadataCommandHandler
         arguments:
-            - '@surfnet.dashboard.repository.entity'
             - '@surfnet.dashboard.metadata.fetcher'
             - '@surfnet.dashboard.metadata.parser'
         public: true

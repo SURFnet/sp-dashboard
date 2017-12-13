@@ -41,6 +41,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -48,7 +51,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityEditController extends Controller
+class EntityEditController extends Controller implements EventSubscriberInterface
 {
     /**
      * @var CommandBus
@@ -97,6 +100,17 @@ class EntityEditController extends Controller
     }
 
     /**
+     * Subscribe to the PRE_SUBMIT form event to be able to import the metadata
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            FormEvents::PRE_SUBMIT => 'onPreSubmit',
+        );
+    }
+
+    /**
      * @Method({"GET", "POST"})
      * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
      * @Route("/entity/edit/{id}", name="entity_edit")
@@ -133,9 +147,10 @@ class EntityEditController extends Controller
                 switch ($form->getClickedButton()->getName()) {
                     case 'importButton':
                         // Handle an import action based on the posted xml or import url.
-                        $metadataCommand = LoadMetadataCommand::fromSaveEntityCommand($command);
+                        $metadataCommand = new LoadMetadataCommand($command);
                         $this->commandBus->handle($metadataCommand);
-                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                        $form->setData($command);
+//                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
                         break;
 
                     case 'publishButton':
@@ -190,6 +205,13 @@ class EntityEditController extends Controller
                 $this->commandBus->handle($publishEntityCommand);
                 return $this->redirectToRoute('service_published_production', ['id' => $entity->getId()]);
                 break;
+        }
+    }
+
+    public function onPreSubmit(FormEvent $event)
+    {
+        if ($event->getForm()->has('importButton')){
+            die('import');
         }
     }
 }

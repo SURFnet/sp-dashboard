@@ -34,13 +34,16 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityCreateController extends Controller
+class EntityCreateController extends Controller implements EventSubscriberInterface
 {
     /**
      * @var CommandBus
@@ -118,7 +121,7 @@ class EntityCreateController extends Controller
                 switch ($form->getClickedButton()->getName()) {
                     case 'importButton':
                         // Handle an import action based on the posted xml or import url.
-                        $metadataCommand = LoadMetadataCommand::fromSaveEntityCommand($command);
+                        $metadataCommand = new LoadMetadataCommand($command);
                         $this->commandBus->handle($metadataCommand);
                         return $this->redirectToRoute('entity_add');
                         break;
@@ -148,4 +151,17 @@ class EntityCreateController extends Controller
         ];
     }
 
+    public static function getSubscribedEvents()
+    {
+        return array(
+            FormEvents::PRE_SUBMIT => 'onPreSubmit',
+        );
+    }
+
+    public function onPreSubmit(FormEvent $event)
+    {
+        if ($event->getForm()->has('importButton')){
+            die('import');
+        }
+    }
 }
