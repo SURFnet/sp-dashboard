@@ -99,52 +99,52 @@ class Generator implements GeneratorInterface
     private function generateUi(SimpleXMLElement $xml, Entity $entity)
     {
         $extensions = $this->setNode($xml, 'md:Extensions', null, array(), array('md' => self::NS_SAML), array(), 0);
-        $ui = $this->setNode($extensions, 'ui:UIInfo', null, array(), array('ui' => self::NS_UI));
+        $ui = $this->setNode($extensions, 'mdui:UIInfo', null, array(), array('mdui' => self::NS_UI));
 
         $this->generateLogo($ui, $entity);
 
         $this->setNode(
             $ui,
-            'ui:Description',
+            'mdui:Description',
             $entity->getDescriptionEn(),
             array('xml:lang' => 'en'),
-            array('ui' => self::NS_UI),
+            array('mdui' => self::NS_UI),
             array('xml' => self::NS_LANG)
         );
 
         $this->setNode(
             $ui,
-            'ui:Description',
+            'mdui:Description',
             $entity->getDescriptionNl(),
             array('xml:lang' => 'nl'),
-            array('ui' => self::NS_UI),
+            array('mdui' => self::NS_UI),
             array('xml' => self::NS_LANG)
         );
 
         $this->setNode(
             $ui,
-            'ui:DisplayName',
+            'mdui:DisplayName',
             $entity->getNameEn(),
             array('xml:lang' => 'en'),
-            array('ui' => self::NS_UI),
+            array('mdui' => self::NS_UI),
             array('xml' => self::NS_LANG)
         );
 
         $this->setNode(
             $ui,
-            'ui:DisplayName',
+            'mdui:DisplayName',
             $entity->getNameNl(),
             array('xml:lang' => 'nl'),
-            array('ui' => self::NS_UI),
+            array('mdui' => self::NS_UI),
             array('xml' => self::NS_LANG)
         );
 
         $this->setNode(
             $ui,
-            'ui:InformationURL',
+            'mdui:InformationURL',
             $entity->getApplicationUrl(),
             array('xml:lang' => 'en'),
-            array('ui' => self::NS_UI),
+            array('mdui' => self::NS_UI),
             array('xml' => self::NS_LANG)
         );
     }
@@ -157,17 +157,17 @@ class Generator implements GeneratorInterface
     {
         $logo = $entity->getLogoUrl();
         if (empty($logo)) {
-            $this->removeNode($xml, 'ui:Logo', array(), array('ui' => self::NS_UI));
+            $this->removeNode($xml, 'mdui:Logo', array(), array('mdui' => self::NS_UI));
 
             return;
         }
 
         $node = $this->setNode(
             $xml,
-            'ui:Logo',
+            'mdui:Logo',
             $logo,
             array(),
-            array('ui' => self::NS_UI)
+            array('mdui' => self::NS_UI)
         );
 
         $logoData = @getimagesize($logo);
