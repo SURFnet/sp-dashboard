@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Factory;
+namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use DateTime;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -31,15 +31,15 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  * Example (in json format for readability):
  *
  * {
- *   "coin:privacy:what_data": "All sorts of data will be accessed.",
- *   "coin:privacy:certification": false,
- *   "coin:privacy:certification_valid_from": "2018-06-04",
- *   "coin:privacy:certification_valid_to": "2018-06-06",
- *   "coin:privacy:sn_dpa_why_not": "We can not comply."
+ *   "what_data": "All sorts of data will be accessed.",
+ *   "certification": false,
+ *   "certification_valid_from": "2018-06-04",
+ *   "certification_valid_to": "2018-06-06",
+ *   "sn_dpa_why_not": "We can not comply."
  * }
  *
  */
-class PrivacyQuestionsMetadataFactory implements MetadataFactory
+class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 {
     /**
      * @var AttributesMetadataRepository
@@ -73,7 +73,7 @@ class PrivacyQuestionsMetadataFactory implements MetadataFactory
                         if (is_bool($answer)) {
                             $answer = ($answer) ? '1' : '0';
                         }
-                        $attributes[self::METADATA_PREFIX . $question->urns[0]] = $answer;
+                        $attributes[$question->urns[0]] = $answer;
                     }
                 }
             }

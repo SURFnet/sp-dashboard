@@ -41,6 +41,11 @@ class Metadata
     /**
      * @var string
      */
+    public $nameIdFormat;
+
+    /**
+     * @var string
+     */
     public $logoUrl;
 
     /**

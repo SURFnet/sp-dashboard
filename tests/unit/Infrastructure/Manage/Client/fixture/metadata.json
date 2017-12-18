@@ -1,47 +1,96 @@
 {
-  "arp": {
-    "attributes": {
-      "urn:mace:dir:attribute-def:displayName": [{
-        "source": "idp",
-        "value": "*"
-      }],
-      "urn:mace:dir:attribute-def:mail": [{
-        "source": "idp",
-        "value": "*"
-      }],
-      "urn:mace:dir:attribute-def:uid": [{
-        "source": "idp",
-        "value": "*"
-      }],
-      "urn:mace:terena.org:attribute-def:schacHomeOrganization": [{
-        "source": "idp",
-        "value": "*"
-      }]
+  "active" : true,
+  "allowedEntities" : [ ],
+  "allowedall" : true,
+  "arp" : {
+    "attributes" : {
+      "urn:mace:dir:attribute-def:displayName" : [ {
+        "source" : "idp",
+        "value" : "*"
+      } ],
+      "urn:mace:dir:attribute-def:mail" : [ {
+        "source" : "idp",
+        "value" : "*"
+      } ],
+      "urn:mace:dir:attribute-def:uid" : [ {
+        "source" : "idp",
+        "value" : "*"
+      } ],
+      "urn:mace:terena.org:attribute-def:schacHomeOrganization" : [ {
+        "source" : "idp",
+        "value" : "*"
+      } ]
     },
-    "enabled": true
+    "enabled" : true
   },
-  "entityid": "https://engine.test2.surfconext.nl/authentication/sp/metadata",
-  "metaDataFields": {
-    "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-    "AssertionConsumerService:0:Location": "https://engine.test2.surfconext.nl/authentication/sp/consume-assertion",
-    "AssertionConsumerService:0:index": "0",
-    "certData": "\nMIIC+zCCAmSgAwIBAgIJAPJvLjQsRR4iMA0GCSqGSIb3DQEBBQUAMF0xCzAJBgNVBAYTAk5MMRAwDgYDVQQIEwdVdHJlY2h0MRAwDgYDVQQHEwdVdHJlY2h0MRAwDgYDVQQKEwdTVVJGbmV0MRgwFgYDVQQDEw90ZXN0MiBzYW1sIGNlcnQwHhcNMTUwMzI0MTQwMzE3WhcNMjUwMzIxMTQwMzE3WjBdMQswCQYDVQQGEwJOTDEQMA4GA1UECBMHVXRyZWNodDEQMA4GA1UEBxMHVXRyZWNodDEQMA4GA1UEChMHU1VSRm5ldDEYMBYGA1UEAxMPdGVzdDIgc2FtbCBjZXJ0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxKYrnW8NwqdRwRwaHulueL69gQFTJbdfoASLhYie2bOioJyJw1f+cAvpjsl4SVYpvEseIetXH8Lgpk7K73PkDJL8dFg4sEjFF6jgmjrOES3ox/gtTd9d/VwPHI/vPIcGy1sbVJ4pEMFl5d8GOAzoJkNWdPj9wV4rv4uv35May8wIDAQABo4HCMIG/MB0GA1UdDgQWBBTTIaPwpKpJlY8eIMSzNRZUjStbijCBjwYDVR0jBIGHMIGEgBTTIaPwpKpJlY8eIMSzNRZUjStbiqFhpF8wXTELMAkGA1UEBhMCTkwxEDAOBgNVBAgTB1V0cmVjaHQxEDAOBgNVBAcTB1V0cmVjaHQxEDAOBgNVBAoTB1NVUkZuZXQxGDAWBgNVBAMTD3Rlc3QyIHNhbWwgY2VydIIJAPJvLjQsRR4iMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAK8EvTU0LgHJsSugorOemgRlppMfJAeOmuuZNhSMY2QhumFOZpaAb8NFIwUKUVyyJnSo7k6ktHCKI94sQs976242hTDDYEwWJD9HhAsAqOo21Ua8gZT38/wm62e3KgrKXvnljAbKPXDXJM4akz7y6H6wvvIGT6f0f0iJWHq34jww=\n",
-    "contacts:0:contactType": "technical",
-    "contacts:0:emailAddress": "support@openconext.org",
-    "contacts:0:givenName": "Support",
-    "contacts:0:surName": "OpenConext",
-    "contacts:1:contactType": "support",
-    "contacts:1:emailAddress": "support@openconext.org",
-    "contacts:1:givenName": "Support",
-    "contacts:1:surName": "OpenConext",
-    "contacts:2:contactType": "administrative",
-    "contacts:2:emailAddress": "support@openconext.org",
-    "contacts:2:givenName": "Support",
-    "contacts:2:surName": "OpenConext",
-    "description:en": "OpenConext SSO Proxy",
-    "description:nl": "OpenConext SSO Proxy",
-    "name:en": "OpenConext Engine",
-    "name:nl": "OpenConext Engine"
+  "entityid" : "https://engine.surfconext.nl/authentication/sp/metadata",
+  "metaDataFields" : {
+    "AssertionConsumerService" : {
+      "0" : {
+        "Binding" : "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+        "Location" : "https://engine.surfconext.nl/authentication/sp/consume-assertion"
+      }
+    },
+    "NameIDFormat" : "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+    "certData" : "MIID3zCCAsegAwIBAgIJAMVC9xn1ZfsuMA0GCSqGSIb3DQEBCwUAMIGFMQswCQYD\r\nVQQGEwJOTDEQMA4GA1UECAwHVXRyZWNodDEQMA4GA1UEBwwHVXRyZWNodDEVMBMG\r\nA1UECgwMU1VSRm5ldCBCLlYuMRMwEQYDVQQLDApTVVJGY29uZXh0MSYwJAYDVQQD\r\nDB1lbmdpbmUuc3VyZmNvbmV4dC5ubCAyMDE0MDUwNTAeFw0xNDA1MDUxNDIyMzVa\r\nFw0xOTA1MDUxNDIyMzVaMIGFMQswCQYDVQQGEwJOTDEQMA4GA1UECAwHVXRyZWNo\r\ndDEQMA4GA1UEBwwHVXRyZWNodDEVMBMGA1UECgwMU1VSRm5ldCBCLlYuMRMwEQYD\r\nVQQLDApTVVJGY29uZXh0MSYwJAYDVQQDDB1lbmdpbmUuc3VyZmNvbmV4dC5ubCAy\r\nMDE0MDUwNTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKthMDbB0jKH\r\nefPzmRu9t2h7iLP4wAXr42bHpjzTEk6gttHFb4l/hFiz1YBI88TjiH6hVjnozo/Y\r\nHA2c51us+Y7g0XoS7653lbUN/EHzvDMuyis4Xi2Ijf1A/OUQfH1iFUWttIgtWK9+\r\nfatXoGUS6tirQvrzVh6ZstEp1xbpo1SF6UoVl+fh7tM81qz+Crr/Kroan0UjpZOF\r\nTwxPoK6fdLgMAieKSCRmBGpbJHbQ2xxbdykBBrBbdfzIX4CDepfjE9h/40ldw5jR\r\nn3e392jrS6htk23N9BWWrpBT5QCk0kH3h/6F1Dm6TkyG9CDtt73/anuRkvXbeygI\r\n4wml9bL3rE8CAwEAAaNQME4wHQYDVR0OBBYEFD+Ac7akFxaMhBQAjVfvgGfY8hNK\r\nMB8GA1UdIwQYMBaAFD+Ac7akFxaMhBQAjVfvgGfY8hNKMAwGA1UdEwQFMAMBAf8w\r\nDQYJKoZIhvcNAQELBQADggEBAC8L9D67CxIhGo5aGVu63WqRHBNOdo/FAGI7LURD\r\nFeRmG5nRw/VXzJLGJksh4FSkx7aPrxNWF1uFiDZ80EuYQuIv7bDLblK31ZEbdg1R\r\n9LgiZCdYSr464I7yXQY9o6FiNtSKZkQO8EsscJPPy/Zp4uHAnADWACkOUHiCbcKi\r\nUUFu66dX0Wr/v53Gekz487GgVRs8HEeT9MU1reBKRgdENR8PNg4rbQfLc3YQKLWK\r\n7yWnn/RenjDpuCiePj8N8/80tGgrNgK/6fzM3zI18sSywnXLswxqDb/J+jgVxnQ6\r\nMrsTf1urM8MnfcxG/82oHIwfMh/sXPCZpo+DTLkhQxctJ3M=",
+    "coin" : {
+      "attr_motivation" : {
+        "displayName" : "A",
+        "mail" : "B",
+        "schacHomeOrganization" : "C",
+        "uid" : "Yes."
+      },
+      "original_metadata_url" : "https://engine.surfconext.nl/authentication/sp/metadata",
+      "privacy" : {
+        "access_data" : "dida",
+        "certification" : "0",
+        "certification_valid_from" : "1450393200",
+        "certification_valid_to" : "1545087600",
+        "country" : "do",
+        "privacy_policy" : "0",
+        "surfmarket_dpa_agreement" : "0",
+        "surfnet_dpa_agreement" : "0",
+        "what_data" : "lala"
+      },
+      "service_team_id" : "urn:collab:org:dev.support.surfconext.nl"
+    },
+    "contacts" : {
+      "0" : {
+        "contactType" : "support",
+        "emailAddress" : "help@surfconext.nl",
+        "givenName" : "SURFconext",
+        "surName" : "Helpdesk"
+      },
+      "1" : {
+        "contactType" : "administrative",
+        "emailAddress" : "support@surfconext.nl",
+        "givenName" : "SURFconext",
+        "surName" : "Administrative Contact"
+      },
+      "2" : {
+        "contactType" : "technical",
+        "emailAddress" : "support@surfconext.nl",
+        "givenName" : "SURFconext",
+        "surName" : "Technical Support"
+      }
+    },
+    "description" : {
+      "en" : "SURFconext is a collaboration infrastructure that creates new opportunities to collaborate online based on a combination of applications from different providers.",
+      "nl" : "SURFconext is een samenwerkingsinfrastructuur die nieuwe vormen van samenwerken mogelijk maakt door diensten van verschillende aanbieders te combineren."
+    },
+    "logo" : {
+      "0" : {
+        "height" : "160",
+        "url" : "https://static.surfconext.nl/media/idp/surfnet.png",
+        "width" : "200"
+      }
+    },
+    "name" : {
+      "en" : "SURFconext | SURFnet",
+      "nl" : "SURFconext | SURFnet"
+    }
   },
-  "type": "saml20-sp"
+  "metadataurl" : "https://engine.surfconext.nl/authentication/sp/metadata",
+  "state" : "testaccepted",
+  "type" : "saml20-sp"
 }

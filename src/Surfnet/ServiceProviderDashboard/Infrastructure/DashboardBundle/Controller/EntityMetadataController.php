@@ -19,17 +19,17 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Generator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class EntityMetadataController extends Controller
 {
     /**
-     * @var Generator
+     * @var JsonGenerator
      */
     private $generator;
 
@@ -44,12 +44,12 @@ class EntityMetadataController extends Controller
     private $entityService;
 
     /**
-     * @param Generator $generator
+     * @param JsonGenerator $generator
      * @param ParserInterface $parser
      * @param EntityService $entityService
      */
     public function __construct(
-        Generator $generator,
+        JsonGenerator $generator,
         ParserInterface $parser,
         EntityService $entityService
     ) {
@@ -77,20 +77,8 @@ class EntityMetadataController extends Controller
             );
         }
 
-        $xml = $this->generator->generate($entity);
-
-        // Perform a sanity check on the generated metadata
-        try {
-            $this->parser->parseXml($xml);
-        } catch (\Exception $e) {
-            // TODO #151907601: This feature was put on the backlog
-            //$this->get('mail.manager')->sendErrorNotification($entity, $xml, $e);
-            //throw $e;
-        }
-
-        $response = new Response($xml);
-        $response->headers->set('Content-Type', 'text/xml');
-
-        return $response;
+        return new JsonResponse(
+            $this->generator->generate($entity)
+        );
     }
 }

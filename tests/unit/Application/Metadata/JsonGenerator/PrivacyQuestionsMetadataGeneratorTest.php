@@ -16,18 +16,18 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonGenerator;
 
 use DateTime;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Factory\PrivacyQuestionsMetadataFactory;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
-class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
+class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 {
     protected function setUp()
     {
@@ -61,19 +61,19 @@ class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
         $service->setPrivacyQuestions($privacyQuestions);
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
-        $factory = new PrivacyQuestionsMetadataFactory($metadataRepository);
+        $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
 
         $metadata = $factory->build($entity);
 
         $this->assertCount(14, $metadata);
 
         // Test some of the assertions
-        $this->assertEquals('What data', $metadata['metaDataFields.coin:privacy:what_data']);
-        $this->assertFalse(is_bool($metadata['metaDataFields.coin:privacy:certification']));
-        $this->assertEquals('0', $metadata['metaDataFields.coin:privacy:certification']);
-        $this->assertEquals('1528236000', $metadata['metaDataFields.coin:privacy:certification_valid_to']);
+        $this->assertEquals('What data', $metadata['coin:privacy:what_data']);
+        $this->assertFalse(is_bool($metadata['coin:privacy:certification']));
+        $this->assertEquals('0', $metadata['coin:privacy:certification']);
+        $this->assertEquals('1528236000', $metadata['coin:privacy:certification_valid_to']);
     }
 
     public function test_it_retuns_empty_array_when_disabled()
@@ -88,9 +88,9 @@ class PrivacyQuestionsMetadataFactoryTest extends MockeryTestCase
 
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
-        $factory = new PrivacyQuestionsMetadataFactory($metadataRepository);
+        $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
 
         $metadata = $factory->build($entity);
 

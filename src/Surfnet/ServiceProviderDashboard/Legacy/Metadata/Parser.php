@@ -43,6 +43,8 @@ class Parser implements ParserInterface
 
     const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
 
+    const NAMEID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+
     /**
      * @var CertificateParser
      */
@@ -101,6 +103,7 @@ class Parser implements ParserInterface
         $contactPersons = $children->ContactPerson;
 
         $this->parseAssertionConsumerService($descriptor, $metadata);
+        $this->parseNameIdFormat($descriptor, $metadata);
 
         if (isset($descriptor->KeyDescriptor)) {
             $this->parseCertificate($descriptor, $metadata);
@@ -117,6 +120,19 @@ class Parser implements ParserInterface
         }
 
         return $metadata;
+    }
+
+    /**
+     * @param \SimpleXMLElement $descriptor
+     * @param Metadata          $metadata
+     */
+    private function parseNameIdFormat($descriptor, Metadata $metadata)
+    {
+        $metadata->nameIdFormat = self::NAMEID_FORMAT_TRANSIENT;
+
+        if (isset($descriptor->NameIDFormat)) {
+            $metadata->nameIdFormat = (string) $descriptor->NameIDFormat;
+        }
     }
 
     /**

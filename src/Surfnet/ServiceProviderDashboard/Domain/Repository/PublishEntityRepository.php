@@ -27,11 +27,9 @@ interface PublishEntityRepository
      * sending of a mail message to a service desk who in turn can publish the entity in the registry.
      *
      * @param Entity $entity
-     *
-     * @param array $metadataFields
      * @return mixed
      */
-    public function publish(Entity $entity, array $metadataFields);
+    public function publish(Entity $entity);
 
     /**
      * Push the metadata from Manage to Engineblock

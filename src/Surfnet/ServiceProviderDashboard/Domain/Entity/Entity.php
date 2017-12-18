@@ -32,9 +32,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
 class Entity
 {
+    const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
+
     const ENVIRONMENT_TEST = 'test';
     const ENVIRONMENT_PRODUCTION = 'production';
 
@@ -125,6 +128,12 @@ class Entity
      * @ORM\Column(type="text", nullable=true)
      */
     private $metadataXml;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $nameIdFormat;
 
     /**
      * @var string
@@ -732,6 +741,39 @@ class Entity
     public function getAcsLocation()
     {
         return $this->acsLocation;
+    }
+
+    /**
+     * The binding of the ACS URL is always POST.
+     *
+     * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
+     * imports the POST ACS URL. Other formats are not supported by manage or
+     * the dashboard.
+     *
+     * @return string
+     */
+    public function getAcsBinding()
+    {
+        return self::BINDING_HTTP_POST;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameIdFormat()
+    {
+        return $this->nameIdFormat;
+    }
+
+    /**
+     * @param string $format
+     * @return Entity
+     */
+    public function setNameIdFormat($format)
+    {
+        $this->nameIdFormat = $format;
+
+        return $this;
     }
 
     /**

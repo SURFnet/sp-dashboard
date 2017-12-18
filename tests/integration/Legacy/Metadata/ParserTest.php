@@ -67,6 +67,7 @@ class ParserTest extends MockeryTestCase
         $this->assertEquals($metadata->descriptionEn, 'DESCREN');
         $this->assertEquals($metadata->applicationUrlNl, 'URLNL');
         $this->assertEquals($metadata->applicationUrlEn, 'URLEN');
+        $this->assertEquals($metadata->nameIdFormat, 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified');
 
         $this->assertEquals($metadata->technicalContact->getFirstName(), 'Test');
         $this->assertEquals($metadata->technicalContact->getLastName(), 'Tester');

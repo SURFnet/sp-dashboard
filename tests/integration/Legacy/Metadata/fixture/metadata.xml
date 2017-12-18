@@ -62,6 +62,7 @@
                                 Location="https://domain.org/saml/sp/saml2-logout.php/default-sp"/>
         <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
                                 Location="https://domain.org/saml/sp/saml2-logout.php/default-sp"/>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
         <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                                      Location="https://domain.org/saml/sp/saml2-post/default-sp" index="0"/>
         <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"

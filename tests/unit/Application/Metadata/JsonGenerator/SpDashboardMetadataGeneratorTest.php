@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonGenerator;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Factory\SpDashboardMetadataFactory;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
-class SpDashboardMetadataFactoryTest extends MockeryTestCase
+class SpDashboardMetadataGeneratorTest extends MockeryTestCase
 {
     public function test_it_can_build_sp_dashboard_metadata()
     {
@@ -38,16 +38,16 @@ class SpDashboardMetadataFactoryTest extends MockeryTestCase
 
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
-        $factory = new SpDashboardMetadataFactory($metadataRepository);
+        $factory = new SpDashboardMetadataGenerator($metadataRepository);
 
         $metadata = $factory->build($entity);
 
         $this->assertCount(2, $metadata);
 
         // Test some of the assertions
-        $this->assertEquals('The A Team', $metadata['metaDataFields.coin:service_team_id']);
-        $this->assertEquals('http://the-a-team.com/saml/metadata', $metadata['metaDataFields.coin:original_metadata_url']);
+        $this->assertEquals('The A Team', $metadata['coin:service_team_id']);
+        $this->assertEquals('http://the-a-team.com/saml/metadata', $metadata['coin:original_metadata_url']);
     }
 }

@@ -97,6 +97,8 @@ class LoadMetadataCommandHandler implements CommandHandler
             $entity->setMetadataUrl($entity->getImportUrl());
         }
 
+        $entity->setNameIdFormat($metadata->nameIdFormat);
+
         $this->entityRepository->save($entity);
     }
 
