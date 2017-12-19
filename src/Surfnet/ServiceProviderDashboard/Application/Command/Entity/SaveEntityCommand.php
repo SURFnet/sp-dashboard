@@ -318,6 +318,41 @@ class SaveEntityCommand implements Command
      */
     private $comments;
 
+    /**
+     * @var string
+     */
+    private $nameIdFormat;
+
+    /**
+     * @var string
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     */
+    private $organizationNameEn;
+
+    /**
+     * @var string
+     */
+    private $organizationDisplayNameNl;
+
+    /**
+     * @var string
+     */
+    private $organizationDisplayNameEn;
+
+    /**
+     * @var string
+     */
+    private $organizationUrlNl;
+
+    /**
+     * @var string
+     */
+    private $organizationUrlEn;
+
     private function __construct()
     {
     }
@@ -375,6 +410,13 @@ class SaveEntityCommand implements Command
         $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
         $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
         $command->comments = $entity->getComments();
+        $command->nameIdFormat = $entity->getNameIdFormat();
+        $command->organizationNameNl = $entity->getOrganizationNameNl();
+        $command->organizationNameEn = $entity->getOrganizationNameEn();
+        $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
+        $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
+        $command->organizationUrlNl = $entity->getOrganizationUrlNl();
+        $command->organizationUrlEn = $entity->getOrganizationUrlEn();
 
         return $command;
     }
@@ -953,6 +995,118 @@ class SaveEntityCommand implements Command
     public function setComments($comments)
     {
         $this->comments = $comments;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameIdFormat()
+    {
+        return $this->nameIdFormat;
+    }
+
+    /**
+     * @param string $nameIdFormat
+     */
+    public function setNameIdFormat($nameIdFormat)
+    {
+        $this->nameIdFormat = $nameIdFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl()
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $organizationNameNl
+     */
+    public function setOrganizationNameNl($organizationNameNl)
+    {
+        $this->organizationNameNl = $organizationNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn()
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $organizationNameEn
+     */
+    public function setOrganizationNameEn($organizationNameEn)
+    {
+        $this->organizationNameEn = $organizationNameEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameNl()
+    {
+        return $this->organizationDisplayNameNl;
+    }
+
+    /**
+     * @param string $organizationDisplayNameNl
+     */
+    public function setOrganizationDisplayNameNl($organizationDisplayNameNl)
+    {
+        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameEn()
+    {
+        return $this->organizationDisplayNameEn;
+    }
+
+    /**
+     * @param string $organizationDisplayNameEn
+     */
+    public function setOrganizationDisplayNameEn($organizationDisplayNameEn)
+    {
+        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationUrlNl()
+    {
+        return $this->organizationUrlNl;
+    }
+
+    /**
+     * @param string $organizationUrlNl
+     */
+    public function setOrganizationUrlNl($organizationUrlNl)
+    {
+        $this->organizationUrlNl = $organizationUrlNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationUrlEn()
+    {
+        return $this->organizationUrlEn;
+    }
+
+    /**
+     * @param string $organizationUrlEn
+     */
+    public function setOrganizationUrlEn($organizationUrlEn)
+    {
+        $this->organizationUrlEn = $organizationUrlEn;
     }
 
     public function isForProduction()

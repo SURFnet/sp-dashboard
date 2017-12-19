@@ -64,4 +64,9 @@ class LoadMetadataCommand implements Command
     {
         return $this->saveEntityCommand->getPastedMetadata();
     }
+
+    public function setNameIdFormat($nameIdFormat)
+    {
+        $this->saveEntityCommand->setNameIdFormat($nameIdFormat);
+    }
 }

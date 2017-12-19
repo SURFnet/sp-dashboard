@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use League\Tactician\CommandBus;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
@@ -115,11 +116,11 @@ class CopyEntityCommandHandler implements CommandHandler
 
         $this->entityRepository->save($entity);
 
+        $saveEntityCommand = SaveEntityCommand::fromEntity($entity);
+
         $this->commandBus->handle(
             new LoadMetadataCommand(
-                $dashboardId,
-                '',
-                $this->manageClient->getMetadataXmlByManageId($manageId)
+                $saveEntityCommand
             )
         );
 
