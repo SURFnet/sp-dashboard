@@ -90,6 +90,14 @@
             <md:RequestedAttribute Name="urn:schac:attribute-def:schacPersonalUniqueCode" isRequired="true"/>
         </md:AttributeConsumingService>
     </md:SPSSODescriptor>
+    <md:Organization>
+        <md:OrganizationName xml:lang="en">orgen</md:OrganizationName>
+        <md:OrganizationName xml:lang="nl">orgnl</md:OrganizationName>
+        <md:OrganizationDisplayName xml:lang="en">orgdisen</md:OrganizationDisplayName>
+        <md:OrganizationDisplayName xml:lang="nl">orgdisnl</md:OrganizationDisplayName>
+        <md:OrganizationURL xml:lang="en">http://orgen</md:OrganizationURL>
+        <md:OrganizationURL xml:lang="nl">http://orgnl</md:OrganizationURL>
+    </md:Organization>
     <md:ContactPerson contactType="technical">
         <md:GivenName>Test</md:GivenName>
         <md:SurName>Tester</md:SurName>

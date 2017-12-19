@@ -94,6 +94,13 @@ certdata
 CERT
         );
 
+        $entity->setOrganizationNameEn('orgen');
+        $entity->setOrganizationDisplayNameEn('orgdisen');
+        $entity->setOrganizationUrlEn('http://orgen');
+        $entity->setOrganizationNameNl('orgnl');
+        $entity->setOrganizationDisplayNameNl('orgdisnl');
+        $entity->setOrganizationUrlNl('http://orgnl');
+
         $contact = new Contact();
         $contact->setFirstName('givenname');
         $contact->setLastName('surname');
@@ -135,6 +142,13 @@ CERT
         $this->assertEquals('description en', $fields['description:en']);
         $this->assertEquals('description nl', $fields['description:nl']);
         $this->assertEquals('certdata', $fields['certData']);
+
+        $this->assertEquals('orgen', $fields['OrganizationName:en']);
+        $this->assertEquals('orgdisen', $fields['OrganizationDisplayName:en']);
+        $this->assertEquals('http://orgen', $fields['OrganizationURL:en']);
+        $this->assertEquals('orgnl', $fields['OrganizationName:nl']);
+        $this->assertEquals('orgdisnl', $fields['OrganizationDisplayName:nl']);
+        $this->assertEquals('http://orgnl', $fields['OrganizationURL:nl']);
 
         $this->assertEquals('support', $fields['contacts:0:contactType']);
         $this->assertEquals('givenname', $fields['contacts:0:givenName']);

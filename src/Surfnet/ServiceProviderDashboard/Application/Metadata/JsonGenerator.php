@@ -108,6 +108,7 @@ class JsonGenerator implements GeneratorInterface
                 'name:nl' => $entity->getNameNl(),
             ],
             $this->generateAllContactsMetadata($entity),
+            $this->generateOrganizationMetadata($entity),
             $this->motivationMetadataGenerator->build($entity),
             $this->privacyQuestionsMetadataGenerator->build($entity),
             $this->spDashboardMetadataGenerator->build($entity)
@@ -140,7 +141,6 @@ class JsonGenerator implements GeneratorInterface
         return trim($certData);
     }
 
-
     /**
      * @param Entity $entity
      * @return array
@@ -163,6 +163,24 @@ class JsonGenerator implements GeneratorInterface
         }
 
         return $metadata;
+    }
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    private function generateOrganizationMetadata(Entity $entity)
+    {
+        $metadata = [
+            'OrganizationName:en' => $entity->getOrganizationNameEn(),
+            'OrganizationDisplayName:en' => $entity->getOrganizationDisplayNameEn(),
+            'OrganizationURL:en' => $entity->getOrganizationUrlEn(),
+            'OrganizationName:nl' => $entity->getOrganizationNameNl(),
+            'OrganizationDisplayName:nl' => $entity->getOrganizationDisplayNameNl(),
+            'OrganizationURL:nl' => $entity->getOrganizationUrlNl(),
+        ];
+
+        return array_filter($metadata);
     }
 
     /**

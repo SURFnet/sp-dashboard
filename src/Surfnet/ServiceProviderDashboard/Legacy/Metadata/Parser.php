@@ -102,6 +102,10 @@ class Parser implements ParserInterface
         $descriptor = $children->SPSSODescriptor;
         $contactPersons = $children->ContactPerson;
 
+        if (isset($children->Organization)) {
+            $this->parseOrganization($children->Organization, $metadata);
+        }
+
         $this->parseAssertionConsumerService($descriptor, $metadata);
         $this->parseNameIdFormat($descriptor, $metadata);
 
@@ -266,6 +270,39 @@ class Parser implements ParserInterface
                     break;
             }
         }
+    }
+
+    /**
+     * @param \SimpleXMLElement $organization
+     * @param Metadata          $metadata
+     */
+    private function parseOrganization($organization, Metadata $metadata)
+    {
+        foreach ($organization->OrganizationName as $element) {
+            $this->setMultilingualMetadataProperty($metadata, $element, 'organizationName');
+        }
+
+        foreach ($organization->OrganizationDisplayName as $element) {
+            $this->setMultilingualMetadataProperty($metadata, $element, 'organizationDisplayName');
+        }
+
+        foreach ($organization->OrganizationURL as $element) {
+            $this->setMultilingualMetadataProperty($metadata, $element, 'organizationUrl');
+        }
+    }
+
+    /**
+     * @param Metadata $metadata
+     * @param \SimpleXMLElement $element
+     * @param string $propertyName
+     */
+    private function setMultilingualMetadataProperty(Metadata $metadata, $element, $propertyName)
+    {
+        $lang = $element->attributes(static::NS_LANG);
+        $lang = $lang['lang'];
+
+        $propertyNameWithLanguage = $propertyName . ucfirst(strtolower($lang));
+        $metadata->{$propertyNameWithLanguage} = (string) $element;
     }
 
     /**
