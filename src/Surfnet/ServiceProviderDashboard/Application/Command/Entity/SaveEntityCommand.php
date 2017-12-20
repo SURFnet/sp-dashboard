@@ -419,7 +419,6 @@ class SaveEntityCommand implements Command
         $command->organizationUrlNl = $entity->getOrganizationUrlNl();
         $command->organizationUrlEn = $entity->getOrganizationUrlEn();
 
-
         return $command;
     }
 

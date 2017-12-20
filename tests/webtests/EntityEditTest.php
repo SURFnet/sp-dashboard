@@ -142,7 +142,6 @@ class EntityEditTest extends WebTestCase
             'dashboard_bundle_entity_type' => [
                 'metadata' => [
                     'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
-                    'nameEn' => 'The A Team',
                 ],
             ],
         ];
@@ -153,8 +152,13 @@ class EntityEditTest extends WebTestCase
             ->selectButton('Import')
             ->form();
 
-        $this->client->submit($form, $formData);
+        $crawler = $this->client->submit($form, $formData);
 
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form);
         $entity = $this->getEntityRepository()->findById($this->entityId);
 
         // Should have overwritten existing fields
@@ -174,9 +178,6 @@ class EntityEditTest extends WebTestCase
         $this->assertTrue($entity->getUidAttribute()->isRequested());
         $this->assertTrue($entity->getOrganizationTypeAttribute()->isRequested());
         $this->assertTrue($entity->getAffiliationAttribute()->isRequested());
-
-        $expectedXml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml');
-        $this->assertEquals($expectedXml, $entity->getMetadataXml());
     }
 
     public function test_it_handles_valid_but_incomplete_metadata()
@@ -195,7 +196,13 @@ class EntityEditTest extends WebTestCase
             ->selectButton('Import')
             ->form();
 
-        $this->client->submit($form, $formData);
+        $crawler = $this->client->submit($form, $formData);
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form);
 
         $entity = $this->getEntityRepository()->findById($this->entityId);
 
@@ -230,7 +237,13 @@ class EntityEditTest extends WebTestCase
             ->selectButton('Import')
             ->form();
 
-        $this->client->submit($form, $formData);
+        $crawler = $this->client->submit($form, $formData);
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form);
 
         $entity = $this->getEntityRepository()->findById($this->entityId);
 

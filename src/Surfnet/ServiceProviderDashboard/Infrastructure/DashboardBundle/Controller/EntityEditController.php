@@ -123,6 +123,7 @@ class EntityEditController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function editAction(Request $request, Entity $entity)
     {
@@ -143,22 +144,32 @@ class EntityEditController extends Controller
         $form = $this->createForm(EntityType::class, $command);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            // Save the changes made on the form
-            $this->commandBus->handle($command);
+        // Import metadata before loading data into the form
+        if ($this->importButtonClicked($request)) {
+            // Handle an import action based on the posted xml or import url.
+            $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
+            try {
+                $this->commandBus->handle($metadataCommand);
+            } catch (MetadataFetchException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.fetch.exception');
+            } catch (ParserException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.parse.exception');
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
+            }
+            $form = $this->createForm(EntityType::class, $command);
+        }
 
+        if ($form->isSubmitted()) {
             try {
                 switch ($form->getClickedButton()->getName()) {
-                    case 'importButton':
-                        // Handle an import action based on the posted xml or import url.
-                        $metadataCommand = new LoadMetadataCommand($command);
-                        $this->commandBus->handle($metadataCommand);
-                        $form->setData($command);
-//                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                    case 'save':
+                        $this->commandBus->handle($command);
+                        return $this->redirectToRoute('entity_list');
                         break;
-
                     case 'publishButton':
                         // Only trigger form validation on publish
+                        $this->commandBus->handle($command);
                         if ($form->isValid()) {
                             $response = $this->publishEntity($entity, $flashBag);
                             if ($response instanceof Response) {
@@ -166,15 +177,11 @@ class EntityEditController extends Controller
                             }
                         }
                         break;
-                    default:
-                        $this->commandBus->handle($command);
+                    case 'cancel':
+                        // Simply return to entity list, no entity was saved
                         return $this->redirectToRoute('entity_list');
                         break;
                 }
-            } catch (MetadataFetchException $e) {
-                $this->addFlash('error', 'entity.edit.metadata.fetch.exception');
-            } catch (ParserException $e) {
-                $this->addFlash('error', 'entity.edit.metadata.parse.exception');
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
             }
@@ -210,6 +217,15 @@ class EntityEditController extends Controller
                 return $this->redirectToRoute('service_published_production', ['id' => $entity->getId()]);
                 break;
         }
+    }
+
+    private function importButtonClicked(Request $request)
+    {
+        $data = $request->get('dashboard_bundle_entity_type', false);
+        if ($data && isset($data['metadata']) && isset($data['metadata']['importButton'])) {
+            return true;
+        }
+        return false;
     }
 
     /**

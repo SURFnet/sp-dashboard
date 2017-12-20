@@ -41,6 +41,13 @@ class SaveEntityCommandHandler implements CommandHandler
         $this->repository = $repository;
     }
 
+    /**
+     * @param SaveEntityCommand $command
+     * @throws EntityNotFoundException
+     * @throws InvalidArgumentException
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     */
     public function handle(SaveEntityCommand $command)
     {
         // If the entity does not exist yet, create it on the fly
