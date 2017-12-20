@@ -25,14 +25,16 @@
 
 - name: Make release
   command: "./makeRelease.sh {{ spdashboard_branch }}"
+  environment:
+    HOME: "{{ openconext_builds_dir }}"
   args:
     chdir: "{{ spdashboard_branch_dir }}"
 
 - name: Unpack current version
-  unarchive: src="/root/Releases/sp-dashboard-{{ spdashboard_branch }}.tar.gz" dest="{{ spdashboard_data_dir}}/releases" copy=no
+  unarchive: src="{{openconext_builds_dir }}/Releases/sp-dashboard-{{ spdashboard_branch | replace('/', '_') }}.tar.gz" dest="{{ spdashboard_data_dir}}/releases" copy=no
 
 - name: Create current symlink
-  file: src="{{ spdashboard_data_dir}}/releases/sp-dashboard-{{ spdashboard_branch }}" dest="{{ spdashboard_data_dir}}/current"  state=link
+  file: src="{{ spdashboard_data_dir}}/releases/sp-dashboard-{{ spdashboard_branch | replace('/', '_') }}" dest="{{ spdashboard_data_dir}}/current"  state=link
 
 - name: Delete config
   file: path={{spdashboard_data_dir}}/current/app/{{ item }} state=absent
@@ -47,7 +49,7 @@
      - cache
 
 - name: Create symlink to logs,sessions and cache
-  file: src={{spdashboard_data_dir}}/shared/{{ item }} dest={{ spdashboard_data_dir}}/releases/sp-dashboard-{{ spdashboard_branch }}/var/{{item}} owner=root group=root state=link
+  file: src={{spdashboard_data_dir}}/shared/{{ item }} dest={{ spdashboard_data_dir}}/releases/sp-dashboard-{{ spdashboard_branch | replace('/', '_') }}/var/{{item}} owner=root group=root state=link
   with_items: 
      - logs
      - sessions
