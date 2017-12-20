@@ -38,6 +38,7 @@
         "knplabs/knp-menu-bundle": "^2.1",
         "league/tactician-bundle": "^0.4.1",
         "lexik/translation-bundle": "dev-feature/fix-url-encode-issue",
+        "openconext/monitor-bundle": "^1.0",
         "ramsey/uuid": "^3.7",
         "sensio/framework-extra-bundle": "^3.0",
         "stfalcon/tinymce-bundle": "^2.1",

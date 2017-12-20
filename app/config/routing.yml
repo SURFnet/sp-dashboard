@@ -6,6 +6,10 @@ dashboard_saml:
     type:     annotation
     prefix:   /
 
+openconext_monitor:
+    resource: "@OpenConextMonitorBundle/Resources/config/routing.yml"
+    prefix: /
+
 lexik_translation_edition:
     resource: "@LexikTranslationBundle/Resources/config/routing.yml"
     prefix:   /translations
