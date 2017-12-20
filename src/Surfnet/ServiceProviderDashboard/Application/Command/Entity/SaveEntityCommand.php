@@ -1119,4 +1119,12 @@ class SaveEntityCommand implements Command
     {
         $this->id = $id;
     }
+
+    /**
+     * @param Service $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
 }

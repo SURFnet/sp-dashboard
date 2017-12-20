@@ -50,12 +50,12 @@ class LoadMetadataCommand implements Command
 
     public function isUrlSet()
     {
-        return (bool) $this->requestData['metadata']['importUrl'];
+        return !empty($this->requestData['metadata']['importUrl']);
     }
 
     public function isXmlSet()
     {
-        return (bool) $this->requestData['metadata']['pastedMetadata'];
+        return !empty($this->requestData['metadata']['pastedMetadata']);
     }
 
     public function getImportUrl()

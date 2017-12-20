@@ -35,7 +35,7 @@ class EntityCopyTest extends WebTestCase
         $this->getAuthorizationService()->setSelectedServiceId($this->service->getId());
     }
 
-    public function test_copy_creates_new_entity()
+    public function test_copy_does_not_create_new_entity()
     {
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
@@ -47,16 +47,9 @@ class EntityCopyTest extends WebTestCase
         );
         $this->mockHandler->append(new Response(200, [], json_decode($response)));
 
-        $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after editing an entity'
-        );
+        $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
         $this->mockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->followRedirect();
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -130,7 +123,7 @@ class EntityCopyTest extends WebTestCase
         );
     }
 
-    public function test_copy_to_production_creates_new_entity()
+    public function test_copy_to_production_does_not_create_new_entity()
     {
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
@@ -144,14 +137,9 @@ class EntityCopyTest extends WebTestCase
 
         $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
 
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after copy to production'
-        );
-
         // Assert that the newly created entity is indeed a production entity.
         $entity = $this->getEntityRepository()->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
-        $this->assertEquals('production', $entity[0]->getEnvironment());
+        $this->assertEmpty($entity, 'Entity is not saved, but loaded on the form');
     }
 
     public function test_copy_redirects_to_existing_entity()

@@ -77,16 +77,6 @@ class EntityCopyController extends Controller
         $this->authorizationService = $authorizationService;
     }
 
-    /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/copy/{manageId}/{environment}", defaults={"environment" = "test"}, name="entity_copy")
-     * @Template()
-     *
-     * @param string $manageId
-     * @param string $environment
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
     public function copyAction($manageId, $environment)
     {
         $service = $this->serviceService->getServiceById(
