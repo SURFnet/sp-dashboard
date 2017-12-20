@@ -27,9 +27,12 @@ class LoadMetadataCommand implements Command
      */
     private $saveEntityCommand;
 
-    public function __construct(SaveEntityCommand $command)
+    private $requestData;
+
+    public function __construct(SaveEntityCommand $command, array $requestData)
     {
         $this->saveEntityCommand = $command;
+        $this->requestData = $requestData;
     }
 
     /**
@@ -47,22 +50,22 @@ class LoadMetadataCommand implements Command
 
     public function isUrlSet()
     {
-        return (bool) $this->saveEntityCommand->getImportUrl();
+        return (bool) $this->requestData['metadata']['importUrl'];
     }
 
     public function isXmlSet()
     {
-        return (bool) $this->saveEntityCommand->getPastedMetadata();
+        return (bool) $this->requestData['metadata']['pastedMetadata'];
     }
 
     public function getImportUrl()
     {
-        return $this->saveEntityCommand->getImportUrl();
+        return $this->requestData['metadata']['importUrl'];
     }
 
     public function getPastedMetadata()
     {
-        return $this->saveEntityCommand->getPastedMetadata();
+        return $this->requestData['metadata']['pastedMetadata'];
     }
 
     public function setNameIdFormat($nameIdFormat)

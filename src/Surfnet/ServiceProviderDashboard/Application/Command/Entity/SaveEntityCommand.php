@@ -36,14 +36,12 @@ class SaveEntityCommand implements Command
 {
     /**
      * @var string
-     * @Assert\NotBlank
      * @Assert\Uuid
      */
     private $id;
 
     /**
      * @var Service
-     * @Assert\NotNull
      */
     private $service;
 
@@ -358,11 +356,14 @@ class SaveEntityCommand implements Command
     }
 
     /**
+     * @param Service $service
      * @return SaveEntityCommand
      */
-    public static function forCreateAction()
+    public static function forCreateAction(Service $service)
     {
-        return new self();
+        $command = new self();
+        $command->service = $service;
+        return $command;
     }
 
     /**
@@ -417,6 +418,7 @@ class SaveEntityCommand implements Command
         $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
         $command->organizationUrlNl = $entity->getOrganizationUrlNl();
         $command->organizationUrlEn = $entity->getOrganizationUrlEn();
+
 
         return $command;
     }
@@ -1112,5 +1114,10 @@ class SaveEntityCommand implements Command
     public function isForProduction()
     {
         return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 }

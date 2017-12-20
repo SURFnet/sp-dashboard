@@ -69,13 +69,12 @@ class LoadMetadataCommandHandler implements CommandHandler
                 break;
             case $command->isXmlSet():
                 $xml = $command->getPastedMetadata();
+                $targetCommand->setPastedMetadata($xml);
                 break;
             default:
                 throw new InvalidArgumentException('Unable to load XML from the LoadMetadataCommand');
                 break;
         }
-
-        $targetCommand->setPastedMetadata($xml);
 
         $metadata = $this->metadataParser->parseXml($xml);
 
@@ -90,7 +89,6 @@ class LoadMetadataCommandHandler implements CommandHandler
 
         $command->setNameIdFormat($metadata->nameIdFormat);
     }
-
 
     private function mapTextFields(SaveEntityCommand $command, $metadata)
     {

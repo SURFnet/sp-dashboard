@@ -51,7 +51,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityEditController extends Controller implements EventSubscriberInterface
+class EntityEditController extends Controller
 {
     /**
      * @var CommandBus
@@ -127,7 +127,11 @@ class EntityEditController extends Controller implements EventSubscriberInterfac
     public function editAction(Request $request, Entity $entity)
     {
         $flashBag = $this->get('session')->getFlashBag();
-        $flashBag->clear();
+
+        // Only clear the flash bag when this request did not come from the 'entity_add' action.
+        if (!$this->requestFromCreateAction($request)) {
+            $flashBag->clear();
+        }
 
         if ($entity->isPublished() && $entity->isProduction()) {
             $updateStatusCommand = new UpdateEntityStatusCommand($entity->getId(), Entity::STATE_DRAFT);
@@ -208,10 +212,22 @@ class EntityEditController extends Controller implements EventSubscriberInterfac
         }
     }
 
-    public function onPreSubmit(FormEvent $event)
+    /**
+     * When the create action (entity_add) unsuccessfully published an entity. The entity_edit action is loaded and the
+     * manage error message (publication failed) message should be shown on the edit form.
+     *
+     * This method tests if the referer is set in the request headers, if so, it tests if the previous request
+     * originated from the entity_add action.
+     *
+     * @param Request $request
+     * @return bool
+     */
+    private function requestFromCreateAction(Request $request)
     {
-        if ($event->getForm()->has('importButton')){
-            die('import');
+        $requestUri = $request->headers->get('referer', false);
+        if ($requestUri && preg_match('/\/entity\/create/', $requestUri)) {
+            return true;
         }
+        return false;
     }
 }

@@ -31,7 +31,7 @@ services:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand }
 
     surfnet.dashboard.command_handler.edit_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EditEntityCommandHandler
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveEntityCommandHandler
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand }

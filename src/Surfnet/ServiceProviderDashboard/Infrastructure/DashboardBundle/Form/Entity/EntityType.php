@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -80,6 +81,7 @@ class EntityType extends AbstractType
                         SubmitType::class,
                         [
                             'label' => 'Import',
+                            'attr' => ['class' => 'button'],
                         ]
                     )
                     ->add(
@@ -308,6 +310,15 @@ class EntityType extends AbstractType
                         ]
                     )
             )
+
+            ->add('nameIdFormat', HiddenType::class)
+            ->add('organizationNameNl', HiddenType::class)
+            ->add('organizationNameEn', HiddenType::class)
+            ->add('organizationDisplayNameNl', HiddenType::class)
+            ->add('organizationDisplayNameEn', HiddenType::class)
+            ->add('organizationUrlNl', HiddenType::class)
+            ->add('organizationUrlEn', HiddenType::class)
+
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
             ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);

@@ -97,8 +97,6 @@ class ValidEntityIdValidator extends ConstraintValidator
             return;
         }
 
-        $entity = $this->doctrineRepository->findById($entityCommand->getId());
-
         try {
             $manageId = $this->manageRepository->findManageIdByEntityId($value);
         } catch (\Exception $e) {
@@ -106,9 +104,15 @@ class ValidEntityIdValidator extends ConstraintValidator
             return;
         }
 
-        // Add a violation if the entity ID already exists, except when it is
-        // used for the entity we are editing.
-        if ($manageId && $manageId !== $entity->getManageId()) {
+        // When the entity is not yet persisted, do not check for entity id violations
+        if (!is_null($entityCommand->getId())) {
+            $entity = $this->doctrineRepository->findById($entityCommand->getId());
+            // Add a violation if the entity ID already exists, except when it is
+            // used for the entity we are editing.
+            if ($manageId && $manageId !== $entity->getManageId()) {
+                $this->context->addViolation('Entity has already been registered.');
+            }
+        } else if ($manageId) {
             $this->context->addViolation('Entity has already been registered.');
         }
     }
