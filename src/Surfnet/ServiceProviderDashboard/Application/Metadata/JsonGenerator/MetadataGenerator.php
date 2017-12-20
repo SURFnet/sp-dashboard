@@ -16,13 +16,11 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Factory;
+namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
-interface MetadataFactory
+interface MetadataGenerator
 {
-    const METADATA_PREFIX = 'metaDataFields.';
-
     public function build(Entity $entity);
 }

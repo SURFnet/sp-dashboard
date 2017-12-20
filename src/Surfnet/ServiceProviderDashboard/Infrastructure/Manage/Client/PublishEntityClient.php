@@ -53,76 +53,39 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
     /**
      * @param Entity $entity
-     *
-     * @param array $metadataFields
      * @return mixed
      * @throws PublishMetadataException
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function publish(Entity $entity, array $metadataFields)
+    public function publish(Entity $entity)
     {
-        // Once more generate the xml based on the latest values set on the entity
-        $xmlMetadata = $this->generator->generate($entity);
-        $json = json_encode(['xml' => $xmlMetadata]);
-
         try {
-            $manageId = $entity->getManageId();
-
-            // Create a new entity
-            if (empty($manageId)) {
+            if (empty($entity->getManageId())) {
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getEntityId()));
-                $response = $this->client->post($json, '/manage/api/internal/new-sp');
-            }
-
-            // Update existing entity
-            if (!empty($manageId)) {
-                $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
-
-                $manageData = $this->client->read(
-                    sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId)
-                );
 
                 $response = $this->client->post(
-                    $json,
-                    sprintf('/manage/api/internal/update-sp/%s/%s', $manageId, $manageData['version'])
+                    json_encode([
+                        'data' => $this->generator->generate($entity),
+                        'type' => 'saml20_sp',
+                    ]),
+                    '/manage/api/internal/metadata'
+                );
+            } else {
+                $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
+
+                $response = $this->client->put(
+                    json_encode([
+                        'pathUpdates' => $this->generator->generate($entity),
+                        'type' => 'saml20_sp',
+                        'id' => $entity->getManageId(),
+                    ]),
+                    '/manage/api/internal/merge'
                 );
             }
 
-            // Validation fails with response code 400
             if (isset($response['status']) && $response['status'] == 400) {
-                $this->logger->error('Schema violations returned from Manage', $response);
                 throw new PublishMetadataException('Unable to publish the metadata to Manage');
-            }
-
-            // We have a valid response, set the comment as a revision note
-            $this->logger->info('Update entity, set comment as revision note');
-
-            $pathUpdates = $metadataFields;
-
-            // Send the metadata url (not imported in XML post)
-            $pathUpdates = array_merge(
-                $pathUpdates,
-                ['metadataurl' => $entity->getMetadataUrl()]
-            );
-
-            if ($entity->hasComments()) {
-                $pathUpdates = array_merge(
-                    ['revisionnote' => $entity->getComments()],
-                    $pathUpdates
-                );
-            }
-
-            $update = json_encode([
-                'id' => $response['id'],
-                'type' => 'saml20_sp',
-                'pathUpdates' => $pathUpdates,
-            ]);
-
-            $response = $this->client->put($update, 'manage/api/internal/merge');
-
-            // Validation fails with response code 400
-            if (isset($response['status']) && $response['status'] == 400) {
-                $this->logger->error('Schema violations returned from Manage while updating data', $response);
-                throw new PublishMetadataException('Unable to update data of the entity in Manage');
             }
 
             return $response;

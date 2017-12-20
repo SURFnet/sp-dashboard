@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Factory;
+namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use DateTime;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -24,9 +24,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 
 /**
- * Builds motivation attributes for the requested attributes.
+ * Builds ARP metadata for the JSON export.
  */
-class MotivationMetadataFactory implements MetadataFactory
+class ArpGenerator implements MetadataGenerator
 {
     /**
      * @var AttributesMetadataRepository
@@ -40,24 +40,32 @@ class MotivationMetadataFactory implements MetadataFactory
 
     public function build(Entity $entity)
     {
-        $motivationInformation = $this->repository->findAllMotivationAttributes();
-
         $attributes = [];
 
-        foreach ($motivationInformation as $motivation) {
-            // Get the associated getter
-            $getterName = $motivation->getterName;
-            if (method_exists($entity, $getterName)) {
-                /** @var Attribute $attribute */
-                $attribute = $entity->$getterName();
+        foreach ($this->repository->findAll() as $definition) {
+            $getterName = $definition->getterName;
 
-                // Only requested attributes with a non empty motivation are added
-                if (!is_null($attribute) && $attribute->isRequested() && !empty($attribute->getMotivation())) {
-                    $attributes[self::METADATA_PREFIX . $motivation->urns[0]] = $attribute->getMotivation();
-                }
+            // Skip attributes we know about but don't have registered.
+            if (!method_exists($entity, $getterName)) {
+                continue;
+            }
+
+            $attr = $entity->$getterName();
+
+            if ($attr instanceof Attribute && $attr->isRequested()) {
+                $urn = reset($definition->urns);
+                $attributes[$urn] = [
+                    [
+                        'source' => 'idp',
+                        'value' => '*',
+                    ],
+                ];
             }
         }
 
-        return $attributes;
+        return [
+            'attributes' => $attributes,
+            'enabled' => true,
+        ];
     }
 }

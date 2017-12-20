@@ -67,10 +67,9 @@ class PublishEntityClientTest extends MockeryTestCase
 
     public function test_it_can_publish_to_manage()
     {
-        $this->mockHandler->append(new Response(200, [], json_encode(['id' => '25055635-8c2c-4f54-95a6-68891a554e95'])));
         $this->mockHandler->append(new Response(200, [], json_encode(['test' => 'OK'])));
 
-        $xml = file_get_contents(__DIR__ . '/fixture/metadata.xml');
+        $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
         $entity = m::mock(Entity::class);
         $entity
@@ -78,25 +77,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn('http://test');
 
         $entity
-            ->shouldReceive('getMetadataXml')
-            ->andReturn($xml);
-
-        $entity
-            ->shouldReceive('getMetadataUrl')
-            ->andReturn($xml);
-
-        $entity
-            ->shouldReceive('getComments')
-            ->andReturn('Lorem ipsum dolor sit');
-
-        $entity
-            ->shouldReceive('hasComments')
-            ->once()
-            ->andReturn(true);
-
-        $entity
             ->shouldReceive('getManageId')
-            ->once()
             ->andReturn(null);
 
         $this->logger
@@ -104,19 +85,17 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator
             ->shouldReceive('generate')
-            ->andReturn($xml);
+            ->andReturn($json);
 
-        $response = $this->client->publish($entity, []);
+        $response = $this->client->publish($entity);
         $this->assertEquals('OK', $response['test']);
     }
 
     public function test_it_can_update_to_manage()
     {
-        $this->mockHandler->append(new Response(200, [], json_encode(['version' => '123'])));
-        $this->mockHandler->append(new Response(200, [], json_encode(['id' => '25055635-8c2c-4f54-95a6-68891a554e95'])));
         $this->mockHandler->append(new Response(200, [], json_encode(['test' => 'OK'])));
 
-        $xml = file_get_contents(__DIR__ . '/fixture/metadata.xml');
+        $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
         $entity = m::mock(Entity::class);
         $entity
@@ -124,25 +103,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn('http://test');
 
         $entity
-            ->shouldReceive('getMetadataXml')
-            ->andReturn($xml);
-
-        $entity
-            ->shouldReceive('getMetadataUrl')
-            ->andReturn($xml);
-
-        $entity
-            ->shouldReceive('getComments')
-            ->andReturn('Lorem ipsum dolor sit');
-
-        $entity
-            ->shouldReceive('hasComments')
-            ->once()
-            ->andReturn(true);
-
-        $entity
             ->shouldReceive('getManageId')
-            ->once()
             ->andReturn('25055635-8c2c-4f54-95a6-68891a554e95');
 
         $this->logger
@@ -150,9 +111,9 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator
             ->shouldReceive('generate')
-            ->andReturn($xml);
+            ->andReturn($json);
 
-        $response = $this->client->publish($entity, []);
+        $response = $this->client->publish($entity);
         $this->assertEquals('OK', $response['test']);
     }
 
@@ -164,15 +125,12 @@ class PublishEntityClientTest extends MockeryTestCase
     {
         $this->mockHandler->append(new Response(418));
 
-        $xml = file_get_contents(__DIR__ . '/fixture/metadata.xml');
+        $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getEntityId')
             ->andReturn('http://test');
-        $entity
-            ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
         $entity
             ->shouldReceive('getMetadataUrl')
             ->andReturn('https://fobar.example.com');
@@ -188,9 +146,9 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator
             ->shouldReceive('generate')
-            ->andReturn($xml);
+            ->andReturn($json);
 
-        $this->client->publish($entity, []);
+        $this->client->publish($entity);
     }
 
     public function test_it_can_push_to_engineblock()
@@ -228,10 +186,6 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('error')
             ->once();
 
-        $service = m::mock(Service::class);
-        $service
-            ->shouldReceive('getMetadataXml')
-            ->andReturn(file_get_contents(__DIR__ . '/fixture/metadata.xml'));
-        $this->client->pushMetadata($service);
+        $this->client->pushMetadata();
     }
 }

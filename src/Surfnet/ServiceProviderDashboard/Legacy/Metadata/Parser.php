@@ -43,6 +43,8 @@ class Parser implements ParserInterface
 
     const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
 
+    const NAMEID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+
     /**
      * @var CertificateParser
      */
@@ -100,7 +102,12 @@ class Parser implements ParserInterface
         $descriptor = $children->SPSSODescriptor;
         $contactPersons = $children->ContactPerson;
 
+        if (isset($children->Organization)) {
+            $this->parseOrganization($children->Organization, $metadata);
+        }
+
         $this->parseAssertionConsumerService($descriptor, $metadata);
+        $this->parseNameIdFormat($descriptor, $metadata);
 
         if (isset($descriptor->KeyDescriptor)) {
             $this->parseCertificate($descriptor, $metadata);
@@ -117,6 +124,19 @@ class Parser implements ParserInterface
         }
 
         return $metadata;
+    }
+
+    /**
+     * @param \SimpleXMLElement $descriptor
+     * @param Metadata          $metadata
+     */
+    private function parseNameIdFormat($descriptor, Metadata $metadata)
+    {
+        $metadata->nameIdFormat = self::NAMEID_FORMAT_TRANSIENT;
+
+        if (isset($descriptor->NameIDFormat)) {
+            $metadata->nameIdFormat = (string) $descriptor->NameIDFormat;
+        }
     }
 
     /**
@@ -250,6 +270,39 @@ class Parser implements ParserInterface
                     break;
             }
         }
+    }
+
+    /**
+     * @param \SimpleXMLElement $organization
+     * @param Metadata          $metadata
+     */
+    private function parseOrganization($organization, Metadata $metadata)
+    {
+        foreach ($organization->OrganizationName as $element) {
+            $this->setMultilingualMetadataProperty($metadata, $element, 'organizationName');
+        }
+
+        foreach ($organization->OrganizationDisplayName as $element) {
+            $this->setMultilingualMetadataProperty($metadata, $element, 'organizationDisplayName');
+        }
+
+        foreach ($organization->OrganizationURL as $element) {
+            $this->setMultilingualMetadataProperty($metadata, $element, 'organizationUrl');
+        }
+    }
+
+    /**
+     * @param Metadata $metadata
+     * @param \SimpleXMLElement $element
+     * @param string $propertyName
+     */
+    private function setMultilingualMetadataProperty(Metadata $metadata, $element, $propertyName)
+    {
+        $lang = $element->attributes(static::NS_LANG);
+        $lang = $lang['lang'];
+
+        $propertyNameWithLanguage = $propertyName . ucfirst(strtolower($lang));
+        $metadata->{$propertyNameWithLanguage} = (string) $element;
     }
 
     /**

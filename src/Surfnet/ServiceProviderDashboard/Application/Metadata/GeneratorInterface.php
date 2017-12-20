@@ -23,8 +23,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 interface GeneratorInterface
 {
     /**
+     * Convert an entity to json-serializable array.
+     *
      * @param Entity $entity
-     * @return string
+     * @return array
      */
     public function generate(Entity $entity);
 }

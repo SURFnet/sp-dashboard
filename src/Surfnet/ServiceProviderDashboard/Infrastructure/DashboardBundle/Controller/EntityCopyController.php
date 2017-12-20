@@ -93,7 +93,7 @@ class EntityCopyController extends Controller
             $this->authorizationService->getActiveServiceId()
         );
 
-        $existingEntity = $this->entityService->findDraftEntityByManageId($manageId);
+        $existingEntity = $this->entityService->findTestEntityByManageId($manageId);
         if ($existingEntity) {
             return $this->redirectToRoute('entity_edit', ['id' => $existingEntity->getId()]);
         }

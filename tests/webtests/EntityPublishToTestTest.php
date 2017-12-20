@@ -73,9 +73,7 @@ class EntityPublishToTestTest extends WebTestCase
     {
         // Entity id validation
         $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Push xml
-        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Put inner json
+        // Publish json
         $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));

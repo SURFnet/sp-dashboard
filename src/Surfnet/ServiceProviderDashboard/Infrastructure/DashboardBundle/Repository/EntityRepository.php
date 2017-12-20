@@ -76,10 +76,11 @@ class EntityRepository extends DoctrineEntityRepository implements EntityReposit
      * @param string $manageId
      * @return Entity[]
      */
-    public function findByManageId($manageId)
+    public function findTestEntityByManageId($manageId)
     {
         return parent::findBy([
             'manageId' => $manageId,
+            'environment' => 'test',
         ]);
     }
 

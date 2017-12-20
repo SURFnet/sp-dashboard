@@ -83,9 +83,9 @@ class EntityService
      *
      * @return Entity|null
      */
-    public function findDraftEntityByManageId($manageId)
+    public function findTestEntityByManageId($manageId)
     {
-        $entities = $this->entityRepository->findByManageId($manageId);
+        $entities = $this->entityRepository->findTestEntityByManageId($manageId);
         if (!empty($entities)) {
             return reset($entities);
         }

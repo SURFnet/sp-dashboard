@@ -67,6 +67,7 @@ class ParserTest extends MockeryTestCase
         $this->assertEquals($metadata->descriptionEn, 'DESCREN');
         $this->assertEquals($metadata->applicationUrlNl, 'URLNL');
         $this->assertEquals($metadata->applicationUrlEn, 'URLEN');
+        $this->assertEquals($metadata->nameIdFormat, 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified');
 
         $this->assertEquals($metadata->technicalContact->getFirstName(), 'Test');
         $this->assertEquals($metadata->technicalContact->getLastName(), 'Tester');
@@ -82,6 +83,13 @@ class ParserTest extends MockeryTestCase
         $this->assertEquals($metadata->supportContact->getLastName(), 'Tester3');
         $this->assertEquals($metadata->supportContact->getEmail(), 'test3@domain.org');
         $this->assertEquals($metadata->supportContact->getPhone(), '456789123');
+
+        $this->assertEquals($metadata->organizationNameEn, 'orgen');
+        $this->assertEquals($metadata->organizationDisplayNameEn, 'orgdisen');
+        $this->assertEquals($metadata->organizationUrlEn, 'http://orgen');
+        $this->assertEquals($metadata->organizationNameNl, 'orgnl');
+        $this->assertEquals($metadata->organizationDisplayNameNl, 'orgdisnl');
+        $this->assertEquals($metadata->organizationUrlNl, 'http://orgnl');
 
         $this->assertEquals(
             $metadata->certificate,

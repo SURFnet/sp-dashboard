@@ -97,6 +97,8 @@ class LoadMetadataCommandHandler implements CommandHandler
             $entity->setMetadataUrl($entity->getImportUrl());
         }
 
+        $entity->setNameIdFormat($metadata->nameIdFormat);
+
         $this->entityRepository->save($entity);
     }
 
@@ -113,6 +115,12 @@ class LoadMetadataCommandHandler implements CommandHandler
             'descriptionEn' => ['getDescriptionEn', 'setDescriptionEn'],
             'applicationUrlEn' => ['getApplicationUrl', 'setApplicationUrl'],
             'certificate' => ['getCertificate', 'setCertificate'],
+            'organizationNameEn' => ['getOrganizationNameEn', 'setOrganizationNameEn'],
+            'organizationDisplayNameEn' => ['getOrganizationDisplayNameEn', 'setOrganizationDisplayNameEn'],
+            'organizationUrlEn' => ['getOrganizationUrlEn', 'setOrganizationUrlEn'],
+            'organizationNameNl' => ['getOrganizationNameNl', 'setOrganizationNameNl'],
+            'organizationDisplayNameNl' => ['getOrganizationDisplayNameNl', 'setOrganizationDisplayNameNl'],
+            'organizationUrlNl' => ['getOrganizationUrlNl', 'setOrganizationUrlNl'],
         ];
 
         $this->map($map, $entity, $metadata);

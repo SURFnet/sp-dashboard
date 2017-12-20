@@ -41,6 +41,11 @@ class Metadata
     /**
      * @var string
      */
+    public $nameIdFormat;
+
+    /**
+     * @var string
+     */
     public $logoUrl;
 
     /**
@@ -162,4 +167,34 @@ class Metadata
      * @var Attribute
      */
     public $eduPersonTargetedIDAttribute;
+
+    /**
+     * @var string
+     */
+    public $organizationNameEn;
+
+    /**
+     * @var string
+     */
+    public $organizationDisplayNameEn;
+
+    /**
+     * @var string
+     */
+    public $organizationUrlEn;
+
+    /**
+     * @var string
+     */
+    public $organizationNameNl;
+
+    /**
+     * @var string
+     */
+    public $organizationDisplayNameNl;
+
+    /**
+     * @var string
+     */
+    public $organizationUrlNl;
 }

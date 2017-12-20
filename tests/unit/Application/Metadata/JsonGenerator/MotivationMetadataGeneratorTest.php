@@ -16,17 +16,17 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonGenerator;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Factory\MotivationMetadataFactory;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\MotivationMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
-class MotivationMetadataFactoryTest extends MockeryTestCase
+class MotivationMetadataGeneratorTest extends MockeryTestCase
 {
     public function test_it_can_build_motivation_metadata()
     {
@@ -43,19 +43,19 @@ class MotivationMetadataFactoryTest extends MockeryTestCase
 
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
-        $factory = new MotivationMetadataFactory($metadataRepository);
+        $factory = new MotivationMetadataGenerator($metadataRepository);
 
         $metadata = $factory->build($entity);
 
         $this->assertCount(4, $metadata);
 
         // Test some of the assertions
-        $this->assertEquals('Motivation 1', $metadata['metaDataFields.coin:attr_motivation:eduPersonAffiliation']);
-        $this->assertEquals('Motivation 2', $metadata['metaDataFields.coin:attr_motivation:eduPersonTargetedID']);
-        $this->assertEquals('Motivation 3', $metadata['metaDataFields.coin:attr_motivation:uid']);
-        $this->assertEquals('Motivation 4', $metadata['metaDataFields.coin:attr_motivation:sn']);
+        $this->assertEquals('Motivation 1', $metadata['coin:attr_motivation:eduPersonAffiliation']);
+        $this->assertEquals('Motivation 2', $metadata['coin:attr_motivation:eduPersonTargetedID']);
+        $this->assertEquals('Motivation 3', $metadata['coin:attr_motivation:uid']);
+        $this->assertEquals('Motivation 4', $metadata['coin:attr_motivation:sn']);
     }
 
     /**

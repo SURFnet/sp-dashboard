@@ -62,6 +62,7 @@
                                 Location="https://domain.org/saml/sp/saml2-logout.php/default-sp"/>
         <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
                                 Location="https://domain.org/saml/sp/saml2-logout.php/default-sp"/>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
         <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                                      Location="https://domain.org/saml/sp/saml2-post/default-sp" index="0"/>
         <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
@@ -89,6 +90,14 @@
             <md:RequestedAttribute Name="urn:schac:attribute-def:schacPersonalUniqueCode" isRequired="true"/>
         </md:AttributeConsumingService>
     </md:SPSSODescriptor>
+    <md:Organization>
+        <md:OrganizationName xml:lang="en">orgen</md:OrganizationName>
+        <md:OrganizationName xml:lang="nl">orgnl</md:OrganizationName>
+        <md:OrganizationDisplayName xml:lang="en">orgdisen</md:OrganizationDisplayName>
+        <md:OrganizationDisplayName xml:lang="nl">orgdisnl</md:OrganizationDisplayName>
+        <md:OrganizationURL xml:lang="en">http://orgen</md:OrganizationURL>
+        <md:OrganizationURL xml:lang="nl">http://orgnl</md:OrganizationURL>
+    </md:Organization>
     <md:ContactPerson contactType="technical">
         <md:GivenName>Test</md:GivenName>
         <md:SurName>Tester</md:SurName>

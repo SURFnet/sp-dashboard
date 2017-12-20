@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Factory;
+namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use DateTime;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 /**
  * Adds the team name original metadata url to a list of attributes that can be stored in the serivce registry (Manage)
  */
-class SpDashboardMetadataFactory implements MetadataFactory
+class SpDashboardMetadataGenerator implements MetadataGenerator
 {
     /**
      * @var AttributesMetadataRepository
@@ -54,14 +54,14 @@ class SpDashboardMetadataFactory implements MetadataFactory
                 case $attribute->id == 'teamID':
                     $service = $entity->getService();
                     if (method_exists($service, $getterName) && !empty($service->$getterName())) {
-                        $attributes[self::METADATA_PREFIX . $attribute->urns[0]] = $service->$getterName();
+                        $attributes[$attribute->urns[0]] = $service->$getterName();
                     }
                     break;
                 case $attribute->id == 'originalMetadataUrl':
                 case $attribute->id == 'applicationUrl':
                 case $attribute->id == 'eula':
                     if (method_exists($entity, $getterName) && !empty($entity->$getterName())) {
-                        $attributes[self::METADATA_PREFIX . $attribute->urns[0]] = $entity->$getterName();
+                        $attributes[$attribute->urns[0]] = $entity->$getterName();
                     }
                     break;
             }

@@ -32,9 +32,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  */
 class Entity
 {
+    const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
+
     const ENVIRONMENT_TEST = 'test';
     const ENVIRONMENT_PRODUCTION = 'production';
 
@@ -125,6 +128,12 @@ class Entity
      * @ORM\Column(type="text", nullable=true)
      */
     private $metadataXml;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $nameIdFormat;
 
     /**
      * @var string
@@ -295,6 +304,42 @@ class Entity
      * @ORM\Column(type="object", nullable=true)
      */
     private $eduPersonTargetedIDAttribute;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $organizationNameEn;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $organizationDisplayNameEn;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $organizationUrlEn;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $organizationDisplayNameNl;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $organizationUrlNl;
 
     /**
      * @var string
@@ -735,6 +780,39 @@ class Entity
     }
 
     /**
+     * The binding of the ACS URL is always POST.
+     *
+     * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
+     * imports the POST ACS URL. Other formats are not supported by manage or
+     * the dashboard.
+     *
+     * @return string
+     */
+    public function getAcsBinding()
+    {
+        return self::BINDING_HTTP_POST;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameIdFormat()
+    {
+        return $this->nameIdFormat;
+    }
+
+    /**
+     * @param string $format
+     * @return Entity
+     */
+    public function setNameIdFormat($format)
+    {
+        $this->nameIdFormat = $format;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getEntityId()
@@ -973,6 +1051,120 @@ class Entity
     public function hasComments()
     {
         return !(empty($this->comments));
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn()
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $value
+     * @return Entity
+     */
+    public function setOrganizationNameEn($value)
+    {
+        $this->organizationNameEn = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameEn()
+    {
+        return $this->organizationDisplayNameEn;
+    }
+
+    /**
+     * @param string $value
+     * @return Entity
+     */
+    public function setOrganizationDisplayNameEn($value)
+    {
+        $this->organizationDisplayNameEn = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationUrlEn()
+    {
+        return $this->organizationUrlEn;
+    }
+
+    /**
+     * @param string $value
+     * @return Entity
+     */
+    public function setOrganizationUrlEn($value)
+    {
+        $this->organizationUrlEn = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl()
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $value
+     * @return Entity
+     */
+    public function setOrganizationNameNl($value)
+    {
+        $this->organizationNameNl = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameNl()
+    {
+        return $this->organizationDisplayNameNl;
+    }
+
+    /**
+     * @param string $value
+     * @return Entity
+     */
+    public function setOrganizationDisplayNameNl($value)
+    {
+        $this->organizationDisplayNameNl = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationUrlNl()
+    {
+        return $this->organizationUrlNl;
+    }
+
+    /**
+     * @param string $value
+     * @return Entity
+     */
+    public function setOrganizationUrlNl($value)
+    {
+        $this->organizationUrlNl = (string) $value;
+
+        return $this;
     }
 
     /**

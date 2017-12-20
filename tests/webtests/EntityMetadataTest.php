@@ -50,21 +50,17 @@ class EntityMetadataTest extends WebTestCase
         $entity->setNameNl('MijnService');
         $entity->setTicketNumber('IID-9');
         $entity->setStatus(Entity::STATE_PUBLISHED);
-        $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'));
 
         $this->getEntityRepository()->save($entity);
 
-        $crawler = $this->client->request('GET', '/entity/metadata/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $this->client->request('GET', '/entity/metadata/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
 
-        $nodeNl = $crawler->filterXPath('//mdui:DisplayName[@xml:lang="nl"]');
-        $nodeEn = $crawler->filterXPath('//mdui:DisplayName[@xml:lang="en"]');
-        $certificate = $crawler->filterXPath('//ds:X509Certificate');
-        $acsLocation = $crawler->filterXPath('//md:AssertionConsumerService')->first()->attr('Location');
+        $json = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertContains('MijnService', $nodeNl->text());
-        $this->assertContains('MyService', $nodeEn->text());
-        $this->assertContains('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds', $certificate->text());
-        $this->assertContains('https://domain.org/saml/sp/saml2-post/default-sp', $acsLocation);
+        $this->assertEquals('MijnService', $json['metaDataFields']['name:nl']);
+        $this->assertEquals('MyService', $json['metaDataFields']['name:en']);
+        $this->assertEquals('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds', $json['metaDataFields']['certData']);
+        $this->assertEquals('https://domain.org/saml/sp/saml2-post/default-sp', $json['metaDataFields']['AssertionConsumerService:0:Location']);
     }
 
     public function test_it_only_shows_published_metadata()
@@ -81,7 +77,6 @@ class EntityMetadataTest extends WebTestCase
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
         $entity->setTicketNumber('IID-9');
-        $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml'));
         $entity->setStatus(Entity::STATE_DRAFT);
 
         $this->getEntityRepository()->save($entity);
