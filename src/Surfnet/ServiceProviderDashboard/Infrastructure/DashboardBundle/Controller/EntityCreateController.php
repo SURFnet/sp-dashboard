@@ -18,94 +18,28 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
-use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class EntityCreateController extends Controller
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var TicketService
-     */
-    private $ticketService;
-
-    /**
-     * @var MailMessageFactory
-     */
-    private $mailMessageFactory;
-
-    /**
-     * @param CommandBus $commandBus
-     * @param EntityService $entityService
-     * @param ServiceService $serviceService
-     * @param AuthorizationService $authorizationService
-     * @param TicketService $ticketService
-     * @param MailMessageFactory $mailMessageFactory
-     */
-    public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        TicketService $ticketService,
-        MailMessageFactory $mailMessageFactory
-    ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->ticketService = $ticketService;
-        $this->mailMessageFactory = $mailMessageFactory;
-    }
+    use EntityControllerTrait;
 
     /**
      * The create action serves two routes.
@@ -190,15 +124,6 @@ class EntityCreateController extends Controller
         ];
     }
 
-    private function isImportButtonClicked(Request $request)
-    {
-        $data = $request->get('dashboard_bundle_entity_type', false);
-        if ($data && isset($data['metadata']) && isset($data['metadata']['importButton'])) {
-            return true;
-        }
-        return false;
-    }
-
     private function isCopyAction(Request $request)
     {
         $currentRoute = $request->get('_route', false);
@@ -209,38 +134,6 @@ class EntityCreateController extends Controller
             return true;
         }
         return false;
-    }
-
-    /**
-     * @param Entity $entity
-     * @param FlashBagInterface $flashBag
-     * @return RedirectResponse
-     */
-    private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
-    {
-        switch ($entity->getEnvironment()) {
-            case Entity::ENVIRONMENT_TEST:
-                $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
-                $this->commandBus->handle($publishEntityCommand);
-
-                if (!$flashBag->has('error')) {
-                    $this->get('session')->set('published.entity.clone', clone $entity);
-
-                    // Test entities are removed after they've been published to Manage
-                    $deleteCommand = new DeleteEntityCommand($entity->getId());
-                    $this->commandBus->handle($deleteCommand);
-
-                    return $this->redirectToRoute('service_published_test');
-                }
-                break;
-
-            case Entity::ENVIRONMENT_PRODUCTION:
-                $message = $this->mailMessageFactory->buildPublishToProductionMessage($entity);
-                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $message);
-                $this->commandBus->handle($publishEntityCommand);
-                return $this->redirectToRoute('service_published_production', ['id' => $entity->getId()]);
-                break;
-        }
     }
 
     /**
@@ -256,28 +149,6 @@ class EntityCreateController extends Controller
             );
         }
         throw new ServiceNotFoundException('Please select a service before adding/copying an entity.');
-    }
-
-    /**
-     * @param Request $request
-     * @param SaveEntityCommand $command
-     *
-     * @return FormInterface
-     */
-    private function handleImport(Request $request, SaveEntityCommand $command)
-    {
-        // Handle an import action based on the posted xml or import url.
-        $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
-        try {
-            $this->commandBus->handle($metadataCommand);
-        } catch (MetadataFetchException $e) {
-            $this->addFlash('error', 'entity.edit.metadata.fetch.exception');
-        } catch (ParserException $e) {
-            $this->addFlash('error', 'entity.edit.metadata.parse.exception');
-        } catch (InvalidArgumentException $e) {
-            $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
-        }
-        return $this->createForm(EntityType::class, $command);
     }
 
     /**
