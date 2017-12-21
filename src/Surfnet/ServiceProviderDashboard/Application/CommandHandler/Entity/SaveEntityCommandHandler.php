@@ -18,12 +18,15 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
-class EditEntityCommandHandler implements CommandHandler
+class SaveEntityCommandHandler implements CommandHandler
 {
     /**
      * @var EntityRepository
@@ -38,15 +41,39 @@ class EditEntityCommandHandler implements CommandHandler
         $this->repository = $repository;
     }
 
-    public function handle(EditEntityCommand $command)
+    /**
+     * @param SaveEntityCommand $command
+     * @throws EntityNotFoundException
+     * @throws InvalidArgumentException
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     */
+    public function handle(SaveEntityCommand $command)
     {
-        $entity = $this->repository->findById($command->getId());
+        // If the entity does not exist yet, create it on the fly
+        if (is_null($command->getId())) {
+            $id = (string) Uuid::uuid1();
+            if (!$this->repository->isUnique($id)) {
+                throw new InvalidArgumentException(
+                    'The id that was generated for the entity was not unique, please try again'
+                );
+            }
+
+            $entity = new Entity();
+            $entity->setId($id);
+            $entity->setService($command->getService());
+            $entity->setTicketNumber($command->getTicketNumber());
+            $command->setId($id);
+        } else {
+            $entity = $this->repository->findById($command->getId());
+        }
 
         if (is_null($entity)) {
             throw new EntityNotFoundException('The requested Service cannot be found');
         }
 
         $entity->setService($command->getService());
+        $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());
         $entity->setEnvironment($command->getEnvironment());
         $entity->setImportUrl($command->getImportUrl());
@@ -81,6 +108,14 @@ class EditEntityCommandHandler implements CommandHandler
         $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
         $entity->setEduPersonTargetedIDAttribute($command->getEduPersonTargetedIDAttribute());
         $entity->setComments($command->getComments());
+
+        $entity->setNameIdFormat($command->getNameIdFormat());
+        $entity->setOrganizationNameNl($command->getOrganizationNameNl());
+        $entity->setOrganizationNameEn($command->getOrganizationNameEn());
+        $entity->setOrganizationDisplayNameNl($command->getOrganizationDisplayNameNl());
+        $entity->setOrganizationDisplayNameEn($command->getOrganizationDisplayNameEn());
+        $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
+        $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
 
         $this->repository->save($entity);
     }

@@ -18,19 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,75 +39,141 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class EntityCreateController extends Controller
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
+    use EntityControllerTrait;
 
     /**
-     * @var EntityService
+     * The create action serves two routes.
+     *
+     *  1. entity_add to create new entities.
+     *
+     *  2. entity_copy to copy entities from Manage into the SP Dashboard.
+     *     The Entity is copied from the manage test environment to become either a SP Dashboard test-draft or
+     *     production-draft entity.
+     *
+     * @Method({"GET", "POST"})
+     * @Route("/entity/create", defaults={"manageId" = null, "environment" = null}, name="entity_add")
+     * @Route("/entity/copy/{manageId}/{environment}", defaults={"manageId" = null, "environment" = "test"}, name="entity_copy")
+     * @Security("has_role('ROLE_USER')")
+     * @Template("@Dashboard/EntityEdit/edit.html.twig")
+     *
+     * @param Request $request
+     *
+     * @param null|string $manageId set from the entity_copy route
+     * @param null|string $environment set from the entity_copy route
+     *
+     * @return RedirectResponse|Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private $entityService;
+    public function createAction(Request $request, $manageId, $environment)
+    {
+        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag->clear();
 
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
+        $service = $this->getService();
+        $command = SaveEntityCommand::forCreateAction($service);
 
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
+        $form = $this->createForm(EntityType::class, $command);
+        $form->handleRequest($request);
 
-    /**
-     * @var TicketService
-     */
-    private $ticketService;
+        if ($this->isCopyAction($request)) {
+            $result = $form = $this->handleCopy($command, $service, $manageId, $environment);
+            // The result of the copy handle method can either be a redirect response or a FormInterface.
+            if ($result instanceof RedirectResponse) {
+                return $result;
+            }
+        } elseif ($this->isImportButtonClicked($request)) {
+            // Import metadata before loading data into the form. Rebuild the form with the imported data
+            $form = $this->handleImport($request, $command);
+        }
 
-    /**
-     * @param CommandBus $commandBus
-     * @param EntityService $entityService
-     * @param ServiceService $serviceService
-     * @param AuthorizationService $authorizationService
-     * @param \Surfnet\ServiceProviderDashboard\Application\Service\TicketService $ticketService
-     */
-    public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        TicketService $ticketService
-    ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->ticketService = $ticketService;
+        if ($form->isSubmitted()) {
+            try {
+                switch ($form->getClickedButton()->getName()) {
+                    case 'save':
+                        // Only trigger form validation on publish
+                        $this->commandBus->handle($command);
+                        return $this->redirectToRoute('entity_list');
+                        break;
+                    case 'publishButton':
+                        // Only trigger form validation on publish
+                        if ($form->isValid()) {
+                            $this->commandBus->handle($command);
+                            $entity = $this->entityService->getEntityById($command->getId());
+                            $response = $this->publishEntity($entity, $flashBag);
+                            // When a response is returned, publishing was a success
+                            if ($response instanceof Response) {
+                                return $response;
+                            }
+                            // When publishing failed, forward to the edit action and show the error messages there
+                            return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                        }
+                        break;
+                    case 'cancel':
+                        // Simply return to entity list, no entity was saved
+                        return $this->redirectToRoute('entity_list');
+                        break;
+                }
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    private function isCopyAction(Request $request)
+    {
+        $currentRoute = $request->get('_route', false);
+        // When the form is posted to the entity_copy endpoint, do NOT copy the data from manage. The user is about
+        // to persist changes to manage.
+        $isPostRequest = $request->getMethod() === 'POST';
+        if ($currentRoute && $currentRoute === 'entity_copy' && !$isPostRequest) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * @Method("GET")
-     * @Route("/entity/create", name="entity_add")
-     * @Security("has_role('ROLE_USER')")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Service
+     * @throws ServiceNotFoundException
      */
-    public function createAction()
+    private function getService()
     {
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
+        $activeServiceId = $this->authorizationService->getActiveServiceId();
+        if ($activeServiceId) {
+            return $this->serviceService->getServiceById(
+                $this->authorizationService->getActiveServiceId()
+            );
+        }
+        throw new ServiceNotFoundException('Please select a service before adding/copying an entity.');
+    }
 
-        $entityId = $this->entityService->createEntityUuid();
-        $ticketNumber = $this->ticketService->getTicketIdForService($entityId, $service);
-        if (is_null($service)) {
-            $this->get('logger')->error('Unable to find selected entity while creating a new entity');
-            // Todo: show error page?
+    /**
+     * @param SaveEntityCommand $command
+     * @param Service $service
+     * @param $manageId
+     * @param $environment
+     *
+     * @return FormInterface|RedirectResponse
+     *
+     * @throws InvalidArgumentException
+     */
+    private function handleCopy(SaveEntityCommand $command, Service $service, $manageId, $environment)
+    {
+        $existingEntity = $this->entityService->findTestEntityByManageId($manageId);
+        if ($existingEntity) {
+            return $this->redirectToRoute('entity_edit', ['id' => $existingEntity->getId()]);
         }
 
-        $command = new CreateEntityCommand($entityId, $service, $ticketNumber);
-        $this->commandBus->handle($command);
+        $entityId = $this->entityService->createEntityUuid();
 
-        return $this->redirectToRoute('entity_edit', ['id' => $entityId]);
+        $this->commandBus->handle(
+            new CopyEntityCommand($command, $entityId, $manageId, $service, $environment)
+        );
+
+        return $this->createForm(EntityType::class, $command);
     }
 }

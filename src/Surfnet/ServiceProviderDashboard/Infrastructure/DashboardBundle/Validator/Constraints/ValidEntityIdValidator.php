@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Pdp\Parser;
 use Pdp\PublicSuffixListManager;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Symfony\Component\Validator\Constraint;
@@ -64,7 +64,7 @@ class ValidEntityIdValidator extends ConstraintValidator
     {
         $root = $this->context->getRoot();
 
-        if ($root instanceof EditEntityCommand) {
+        if ($root instanceof SaveEntityCommand) {
             $entityCommand = $root;
         } else {
             $entityCommand = $root->getData();
@@ -97,8 +97,6 @@ class ValidEntityIdValidator extends ConstraintValidator
             return;
         }
 
-        $entity = $this->doctrineRepository->findById($entityCommand->getId());
-
         try {
             $manageId = $this->manageRepository->findManageIdByEntityId($value);
         } catch (\Exception $e) {
@@ -106,9 +104,8 @@ class ValidEntityIdValidator extends ConstraintValidator
             return;
         }
 
-        // Add a violation if the entity ID already exists, except when it is
-        // used for the entity we are editing.
-        if ($manageId && $manageId !== $entity->getManageId()) {
+        // Prevent publishing entities with existing entityId in Manage.
+        if ($manageId && (!$entityCommand->getManageId() || $manageId !== $entityCommand->getManageId())) {
             $this->context->addViolation('Entity has already been registered.');
         }
     }

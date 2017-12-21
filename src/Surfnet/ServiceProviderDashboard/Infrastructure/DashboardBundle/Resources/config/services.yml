@@ -6,12 +6,6 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    surfnet.dashboard.command_handler.create_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand }
-
     surfnet.dashboard.command_handler.copy_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
         public: true
@@ -31,10 +25,10 @@ services:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand }
 
     surfnet.dashboard.command_handler.edit_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EditEntityCommandHandler
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveEntityCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand }
 
     surfnet.dashboard.command_handler.edit_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
@@ -45,7 +39,6 @@ services:
     surfnet.dashboard.command_handler.load_metadata:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\LoadMetadataCommandHandler
         arguments:
-            - '@surfnet.dashboard.repository.entity'
             - '@surfnet.dashboard.metadata.fetcher'
             - '@surfnet.dashboard.metadata.parser'
         public: true
@@ -88,9 +81,6 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand }
-
-    surfnet.dashboard.factory.entity:
-        class: Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory
 
     surfnet.dashboard.mailer:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer

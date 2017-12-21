@@ -21,17 +21,14 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Command
 use League\Tactician\CommandBus;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery\Mock;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 
 class CopyEntityCommandHandlerTest extends MockeryTestCase
@@ -96,8 +93,16 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('dashboardid')
             ->andReturn(false);
 
+        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_TEST)
+            new CopyEntityCommand(
+                $saveCommand,
+                'dashboardid',
+                'manageid',
+                $this->service,
+                Entity::ENVIRONMENT_TEST
+            )
         );
     }
 
@@ -115,8 +120,16 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn([]);
 
+        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_TEST)
+            new CopyEntityCommand(
+                $saveCommand,
+                'dashboardid',
+                'manageid',
+                $this->service,
+                Entity::ENVIRONMENT_TEST
+            )
         );
     }
 
@@ -140,8 +153,15 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
                 ]
             ]);
 
+        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_PRODUCTION)
+            new CopyEntityCommand(
+                $saveCommand,
+                'dashboardid',
+                'manageid',
+                $this->service,
+                Entity::ENVIRONMENT_PRODUCTION
+            )
         );
     }
 
@@ -168,8 +188,6 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
                 ]
             ]);
 
-        $this->entityRepository->shouldReceive('save')->twice();
-
         $this->manageClient->shouldReceive('getMetadataXmlByManageId')
             ->with('manageid')
             ->andReturn('xml');
@@ -177,12 +195,6 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
         $this->commandBus->shouldReceive('handle')
             ->with(m::type(LoadMetadataCommand::class))
             ->andReturn('xml');
-
-        $entity = new Entity();
-
-        $this->entityRepository->shouldReceive('findById')
-            ->with('dashboardid')
-            ->andReturn($entity);
 
         $this->attributesMetadataRepository->shouldReceive('findAllMotivationAttributes')
             ->andReturn(json_decode(<<<JSON
@@ -218,15 +230,17 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
 JSON
             ));
 
+        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+
         $this->commandHandler->handle(
-            new CopyEntityCommand('dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_TEST)
+            new CopyEntityCommand($saveCommand, 'dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_TEST)
         );
 
-        $this->assertTrue($entity->getEduPersonTargetedIDAttribute()->isRequested());
-        $this->assertTrue($entity->getPrincipleNameAttribute()->isRequested());
-        $this->assertTrue($entity->getDisplayNameAttribute()->isRequested());
-        $this->assertEquals('test1', $entity->getEduPersonTargetedIDAttribute()->getMotivation());
-        $this->assertEquals('test2', $entity->getPrincipleNameAttribute()->getMotivation());
-        $this->assertEquals('test3', $entity->getDisplayNameAttribute()->getMotivation());
+        $this->assertTrue($saveCommand->getEduPersonTargetedIDAttribute()->isRequested());
+        $this->assertTrue($saveCommand->getPrincipleNameAttribute()->isRequested());
+        $this->assertTrue($saveCommand->getDisplayNameAttribute()->isRequested());
+        $this->assertEquals('test1', $saveCommand->getEduPersonTargetedIDAttribute()->getMotivation());
+        $this->assertEquals('test2', $saveCommand->getPrincipleNameAttribute()->getMotivation());
+        $this->assertEquals('test3', $saveCommand->getDisplayNameAttribute()->getMotivation());
     }
 }

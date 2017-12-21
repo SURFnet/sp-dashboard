@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use League\Tactician\CommandBus;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
@@ -81,6 +82,7 @@ class CopyEntityCommandHandler implements CommandHandler
     {
         $dashboardId = $command->getDashboardId();
         $manageId = $command->getManageId();
+        $saveEntityCommand = $command->getSaveEntityCommand();
 
         if (!$this->entityRepository->isUnique($dashboardId)) {
             throw new InvalidArgumentException(
@@ -108,37 +110,32 @@ class CopyEntityCommandHandler implements CommandHandler
             );
         }
 
-        $entity = new Entity();
-        $entity->setId($dashboardId);
-        $entity->setService($command->getService());
-        $entity->setManageId($manageId);
 
-        $this->entityRepository->save($entity);
+        $saveEntityCommand->setId($dashboardId);
+        $saveEntityCommand->setService($command->getService());
+        $saveEntityCommand->setManageId($command->getManageId());
 
         $this->commandBus->handle(
             new LoadMetadataCommand(
-                $dashboardId,
-                '',
-                $this->manageClient->getMetadataXmlByManageId($manageId)
+                $saveEntityCommand,
+                ['metadata' => ['pastedMetadata' => $this->manageClient->getMetadataXmlByManageId($manageId)]]
             )
         );
 
-        $entity = $this->entityRepository->findById($entity->getId());
-
         if (isset($manageMetadata['coin:application_url'])) {
-            $entity->setApplicationUrl($manageMetadata['coin:application_url']);
+            $saveEntityCommand->setApplicationUrl($manageMetadata['coin:application_url']);
         }
 
         if (isset($manageMetadata['coin:eula'])) {
-            $entity->setEulaUrl($manageMetadata['coin:eula']);
+            $saveEntityCommand->setEulaUrl($manageMetadata['coin:eula']);
         }
 
         if (isset($manageMetadata['coin:original_metadata_url'])) {
-            $entity->setImportUrl($manageMetadata['coin:original_metadata_url']);
+            $saveEntityCommand->setImportUrl($manageMetadata['coin:original_metadata_url']);
         }
 
         if (isset($manageEntity['data']['metadataurl'])) {
-            $entity->setMetadataUrl($manageEntity['data']['metadataurl']);
+            $saveEntityCommand->setMetadataUrl($manageEntity['data']['metadataurl']);
         }
 
         foreach ($this->attributeMetadataRepository->findAllMotivationAttributes() as $attributeDefinition) {
@@ -156,12 +153,10 @@ class CopyEntityCommandHandler implements CommandHandler
             $attribute->setRequested(true);
             $attribute->setMotivation($manageMetadata[$urn]);
 
-            $entity->{$setter}($attribute);
+            $saveEntityCommand->{$setter}($attribute);
         }
 
         // Set the target environment
-        $entity->setEnvironment($command->getEnvironment());
-
-        $this->entityRepository->save($entity);
+        $saveEntityCommand->setEnvironment($command->getEnvironment());
     }
 }

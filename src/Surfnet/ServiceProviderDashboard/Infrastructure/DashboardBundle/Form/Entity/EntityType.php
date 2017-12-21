@@ -18,16 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EditEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EditEntityType extends AbstractType
+class EntityType extends AbstractType
 {
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -80,6 +81,7 @@ class EditEntityType extends AbstractType
                         SubmitType::class,
                         [
                             'label' => 'Import',
+                            'attr' => ['class' => 'button'],
                         ]
                     )
                     ->add(
@@ -308,19 +310,31 @@ class EditEntityType extends AbstractType
                         ]
                     )
             )
+
+            ->add('manageId', HiddenType::class)
+            ->add('environment', HiddenType::class)
+            ->add('nameIdFormat', HiddenType::class)
+            ->add('organizationNameNl', HiddenType::class)
+            ->add('organizationNameEn', HiddenType::class)
+            ->add('organizationDisplayNameNl', HiddenType::class)
+            ->add('organizationDisplayNameEn', HiddenType::class)
+            ->add('organizationUrlNl', HiddenType::class)
+            ->add('organizationUrlEn', HiddenType::class)
+
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
-            ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']]);
+            ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']])
+            ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => EditEntityCommand::class,
+            'data_class' => SaveEntityCommand::class,
         ));
     }
 
     public function getBlockPrefix()
     {
-        return 'dashboard_bundle_edit_entity_type';
+        return 'dashboard_bundle_entity_type';
     }
 }

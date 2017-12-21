@@ -23,58 +23,53 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 class LoadMetadataCommand implements Command
 {
     /**
-     * @var string
+     * @var SaveEntityCommand
      */
-    private $dashboardId;
+    private $saveEntityCommand;
 
-    /**
-     * @var string
-     */
-    private $importUrl;
+    private $requestData;
 
-    /**
-     * @var string
-     */
-    private $pastedMetadata;
-
-    public function __construct($dashboardId, $importUrl, $pastedMetadata)
+    public function __construct(SaveEntityCommand $command, array $requestData)
     {
-        $this->dashboardId = $dashboardId;
-        $this->importUrl = $importUrl;
-        $this->pastedMetadata = $pastedMetadata;
+        $this->saveEntityCommand = $command;
+        $this->requestData = $requestData;
     }
 
-    public static function fromEditCommand(EditEntityCommand $command)
+    /**
+     * @return SaveEntityCommand
+     */
+    public function getSaveEntityCommand()
     {
-        return new self(
-            $command->getId(),
-            $command->getImportUrl(),
-            $command->getPastedMetadata()
-        );
+        return $this->saveEntityCommand;
     }
 
     public function getDashboardId()
     {
-        return $this->dashboardId;
+        return $this->saveEntityCommand->getId();
     }
 
     public function isUrlSet()
     {
-        return (bool) $this->getImportUrl();
+        return !empty($this->requestData['metadata']['importUrl']);
     }
 
     public function isXmlSet()
     {
-        return (bool) $this->getPastedMetadata();
+        return !empty($this->requestData['metadata']['pastedMetadata']);
     }
 
     public function getImportUrl()
     {
-        return $this->importUrl;
+        return $this->requestData['metadata']['importUrl'];
     }
 
     public function getPastedMetadata()
     {
-        return $this->pastedMetadata;
+        return $this->requestData['metadata']['pastedMetadata'];
+    }
+
+    public function setNameIdFormat($nameIdFormat)
+    {
+        $this->saveEntityCommand->setNameIdFormat($nameIdFormat);
     }
 }

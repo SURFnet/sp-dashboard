@@ -32,18 +32,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class EditEntityCommand implements Command
+class SaveEntityCommand implements Command
 {
     /**
      * @var string
-     * @Assert\NotBlank
      * @Assert\Uuid
      */
     private $id;
 
     /**
      * @var Service
-     * @Assert\NotNull
      */
     private $service;
 
@@ -319,122 +317,115 @@ class EditEntityCommand implements Command
     private $comments;
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     *
-     * @param string $id
-     * @param Service $service
-     * @param string $ticketNumber
-     * @param bool $archived
-     * @param string $environment
-     * @param string $importUrl
-     * @param string $pastedMetadata
-     * @param string $metadataUrl
-     * @param string $acsLocation
-     * @param string $entityId
-     * @param string $certificate
-     * @param string $logoUrl
-     * @param string $nameNl
-     * @param string $nameEn
-     * @param string $descriptionNl
-     * @param string $descriptionEn
-     * @param string $applicationUrl
-     * @param string $eulaUrl
-     * @param Contact $administrativeContact
-     * @param Contact $technicalContact
-     * @param Contact $supportContact
-     * @param Attribute $givenNameAttribute
-     * @param Attribute $surNameAttribute
-     * @param Attribute $commonNameAttribute
-     * @param Attribute $displayNameAttribute
-     * @param Attribute $emailAddressAttribute
-     * @param Attribute $organizationAttribute
-     * @param Attribute $organizationTypeAttribute
-     * @param Attribute $affiliationAttribute
-     * @param Attribute $entitlementAttribute
-     * @param Attribute $principleNameAttribute
-     * @param Attribute $uidAttribute
-     * @param Attribute $preferredLanguageAttribute
-     * @param Attribute $personalCodeAttribute
-     * @param Attribute $scopedAffiliationAttribute
-     * @param Attribute $eduPersonTargetedIDAttribute
-     * @param string $comments
+     * @var string
      */
-    public function __construct(
-        $id,
-        Service $service,
-        $ticketNumber,
-        $archived,
-        $environment,
-        $importUrl,
-        $pastedMetadata,
-        $metadataUrl,
-        $acsLocation,
-        $entityId,
-        $certificate,
-        $logoUrl,
-        $nameNl,
-        $nameEn,
-        $descriptionNl,
-        $descriptionEn,
-        $applicationUrl,
-        $eulaUrl,
-        $administrativeContact,
-        $technicalContact,
-        $supportContact,
-        $givenNameAttribute,
-        $surNameAttribute,
-        $commonNameAttribute,
-        $displayNameAttribute,
-        $emailAddressAttribute,
-        $organizationAttribute,
-        $organizationTypeAttribute,
-        $affiliationAttribute,
-        $entitlementAttribute,
-        $principleNameAttribute,
-        $uidAttribute,
-        $preferredLanguageAttribute,
-        $personalCodeAttribute,
-        $scopedAffiliationAttribute,
-        $eduPersonTargetedIDAttribute,
-        $comments
-    ) {
-        $this->id = $id;
-        $this->service = $service;
-        $this->ticketNumber = $ticketNumber;
-        $this->archived = $archived;
-        $this->environment = $environment;
-        $this->importUrl = $importUrl;
-        $this->pastedMetadata = $pastedMetadata;
-        $this->metadataUrl = $metadataUrl;
-        $this->acsLocation = $acsLocation;
-        $this->entityId = $entityId;
-        $this->certificate = $certificate;
-        $this->logoUrl = $logoUrl;
-        $this->nameNl = $nameNl;
-        $this->nameEn = $nameEn;
-        $this->descriptionNl = $descriptionNl;
-        $this->descriptionEn = $descriptionEn;
-        $this->applicationUrl = $applicationUrl;
-        $this->eulaUrl = $eulaUrl;
-        $this->administrativeContact = $administrativeContact;
-        $this->technicalContact = $technicalContact;
-        $this->supportContact = $supportContact;
-        $this->givenNameAttribute = $givenNameAttribute;
-        $this->surNameAttribute = $surNameAttribute;
-        $this->commonNameAttribute = $commonNameAttribute;
-        $this->displayNameAttribute = $displayNameAttribute;
-        $this->emailAddressAttribute = $emailAddressAttribute;
-        $this->organizationAttribute = $organizationAttribute;
-        $this->organizationTypeAttribute = $organizationTypeAttribute;
-        $this->affiliationAttribute = $affiliationAttribute;
-        $this->entitlementAttribute = $entitlementAttribute;
-        $this->principleNameAttribute = $principleNameAttribute;
-        $this->uidAttribute = $uidAttribute;
-        $this->preferredLanguageAttribute = $preferredLanguageAttribute;
-        $this->personalCodeAttribute = $personalCodeAttribute;
-        $this->scopedAffiliationAttribute = $scopedAffiliationAttribute;
-        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
-        $this->comments = $comments;
+    private $nameIdFormat;
+
+    /**
+     * @var string
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     */
+    private $organizationNameEn;
+
+    /**
+     * @var string
+     */
+    private $organizationDisplayNameNl;
+
+    /**
+     * @var string
+     */
+    private $organizationDisplayNameEn;
+
+    /**
+     * @var string
+     */
+    private $organizationUrlNl;
+
+    /**
+     * @var string
+     */
+    private $organizationUrlEn;
+
+    /**
+     * @var string
+     */
+    private $manageId;
+
+    private function __construct()
+    {
+    }
+
+    /**
+     * @param Service $service
+     * @return SaveEntityCommand
+     */
+    public static function forCreateAction(Service $service)
+    {
+        $command = new self();
+        $command->service = $service;
+        return $command;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return SaveEntityCommand
+     */
+    public static function fromEntity(Entity $entity)
+    {
+        $command = new self();
+        $command->id = $entity->getId();
+        $command->manageId = $entity->getManageId();
+        $command->service = $entity->getService();
+        $command->ticketNumber = $entity->getTicketNumber();
+        $command->archived = $entity->isArchived();
+        $command->environment = $entity->getEnvironment();
+        $command->importUrl = $entity->getImportUrl();
+        $command->pastedMetadata = $entity->getPastedMetadata();
+        $command->metadataUrl = $entity->getMetadataUrl();
+        $command->acsLocation = $entity->getAcsLocation();
+        $command->entityId = $entity->getEntityId();
+        $command->certificate = $entity->getCertificate();
+        $command->logoUrl = $entity->getLogoUrl();
+        $command->nameNl = $entity->getNameNl();
+        $command->nameEn = $entity->getNameEn();
+        $command->descriptionNl = $entity->getDescriptionNl();
+        $command->descriptionEn = $entity->getDescriptionEn();
+        $command->applicationUrl = $entity->getApplicationUrl();
+        $command->eulaUrl = $entity->getEulaUrl();
+        $command->administrativeContact = $entity->getAdministrativeContact();
+        $command->technicalContact = $entity->getTechnicalContact();
+        $command->supportContact = $entity->getSupportContact();
+        $command->givenNameAttribute = $entity->getGivenNameAttribute();
+        $command->surNameAttribute = $entity->getSurNameAttribute();
+        $command->commonNameAttribute = $entity->getCommonNameAttribute();
+        $command->displayNameAttribute = $entity->getDisplayNameAttribute();
+        $command->emailAddressAttribute = $entity->getEmailAddressAttribute();
+        $command->organizationAttribute = $entity->getOrganizationAttribute();
+        $command->organizationTypeAttribute = $entity->getOrganizationTypeAttribute();
+        $command->affiliationAttribute = $entity->getAffiliationAttribute();
+        $command->entitlementAttribute = $entity->getEntitlementAttribute();
+        $command->principleNameAttribute = $entity->getPrincipleNameAttribute();
+        $command->uidAttribute = $entity->getUidAttribute();
+        $command->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
+        $command->personalCodeAttribute = $entity->getPersonalCodeAttribute();
+        $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
+        $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
+        $command->comments = $entity->getComments();
+        $command->nameIdFormat = $entity->getNameIdFormat();
+        $command->organizationNameNl = $entity->getOrganizationNameNl();
+        $command->organizationNameEn = $entity->getOrganizationNameEn();
+        $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
+        $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
+        $command->organizationUrlNl = $entity->getOrganizationUrlNl();
+        $command->organizationUrlEn = $entity->getOrganizationUrlEn();
+
+        return $command;
     }
 
     /**
@@ -1013,8 +1004,149 @@ class EditEntityCommand implements Command
         $this->comments = $comments;
     }
 
+    /**
+     * @return string
+     */
+    public function getNameIdFormat()
+    {
+        return $this->nameIdFormat;
+    }
+
+    /**
+     * @param string $nameIdFormat
+     */
+    public function setNameIdFormat($nameIdFormat)
+    {
+        $this->nameIdFormat = $nameIdFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl()
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $organizationNameNl
+     */
+    public function setOrganizationNameNl($organizationNameNl)
+    {
+        $this->organizationNameNl = $organizationNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn()
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $organizationNameEn
+     */
+    public function setOrganizationNameEn($organizationNameEn)
+    {
+        $this->organizationNameEn = $organizationNameEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameNl()
+    {
+        return $this->organizationDisplayNameNl;
+    }
+
+    /**
+     * @param string $organizationDisplayNameNl
+     */
+    public function setOrganizationDisplayNameNl($organizationDisplayNameNl)
+    {
+        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameEn()
+    {
+        return $this->organizationDisplayNameEn;
+    }
+
+    /**
+     * @param string $organizationDisplayNameEn
+     */
+    public function setOrganizationDisplayNameEn($organizationDisplayNameEn)
+    {
+        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationUrlNl()
+    {
+        return $this->organizationUrlNl;
+    }
+
+    /**
+     * @param string $organizationUrlNl
+     */
+    public function setOrganizationUrlNl($organizationUrlNl)
+    {
+        $this->organizationUrlNl = $organizationUrlNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationUrlEn()
+    {
+        return $this->organizationUrlEn;
+    }
+
+    /**
+     * @param string $organizationUrlEn
+     */
+    public function setOrganizationUrlEn($organizationUrlEn)
+    {
+        $this->organizationUrlEn = $organizationUrlEn;
+    }
+
     public function isForProduction()
     {
         return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param Service $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManageId()
+    {
+        return $this->manageId;
+    }
+
+    /**
+     * @param string $manageId
+     */
+    public function setManageId($manageId)
+    {
+        $this->manageId = $manageId;
     }
 }

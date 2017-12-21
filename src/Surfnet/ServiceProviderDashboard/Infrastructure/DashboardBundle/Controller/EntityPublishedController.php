@@ -35,7 +35,7 @@ class EntityPublishedController extends Controller
     /**
      * @Method("GET")
      * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
-     * @Route("/service/published/{id}", name="service_published_production")
+     * @Route("/entity/published/{id}", name="entity_published_production")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
@@ -48,7 +48,7 @@ class EntityPublishedController extends Controller
 
     /**
      * @Method("GET")
-     * @Route("/service/published", name="service_published_test")
+     * @Route("/entity/published", name="entity_published_test")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
