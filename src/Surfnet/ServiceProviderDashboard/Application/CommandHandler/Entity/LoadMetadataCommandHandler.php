@@ -69,7 +69,6 @@ class LoadMetadataCommandHandler implements CommandHandler
                 break;
             case $command->isXmlSet():
                 $xml = $command->getPastedMetadata();
-                $targetCommand->setPastedMetadata($xml);
                 break;
             default:
                 throw new InvalidArgumentException('Unable to load XML from the LoadMetadataCommand');
