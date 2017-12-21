@@ -6,12 +6,6 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    surfnet.dashboard.command_handler.create_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateEntityCommand }
-
     surfnet.dashboard.command_handler.copy_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
         public: true
@@ -87,9 +81,6 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand }
-
-    surfnet.dashboard.factory.entity:
-        class: Surfnet\ServiceProviderDashboard\Application\Factory\EntityCommandFactory
 
     surfnet.dashboard.mailer:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer
