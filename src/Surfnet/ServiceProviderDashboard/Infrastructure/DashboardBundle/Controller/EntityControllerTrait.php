@@ -130,7 +130,7 @@ trait EntityControllerTrait
                     $deleteCommand = new DeleteEntityCommand($entity->getId());
                     $this->commandBus->handle($deleteCommand);
 
-                    return $this->redirectToRoute('service_published_test');
+                    return $this->redirectToRoute('entity_published_test');
                 }
                 break;
 
@@ -138,7 +138,7 @@ trait EntityControllerTrait
                 $message = $this->mailMessageFactory->buildPublishToProductionMessage($entity);
                 $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $message);
                 $this->commandBus->handle($publishEntityCommand);
-                return $this->redirectToRoute('service_published_production', ['id' => $entity->getId()]);
+                return $this->redirectToRoute('entity_published_production', ['id' => $entity->getId()]);
                 break;
         }
     }
