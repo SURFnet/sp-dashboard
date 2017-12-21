@@ -311,6 +311,7 @@ class EntityType extends AbstractType
                     )
             )
 
+            ->add('manageId', HiddenType::class)
             ->add('nameIdFormat', HiddenType::class)
             ->add('organizationNameNl', HiddenType::class)
             ->add('organizationNameEn', HiddenType::class)

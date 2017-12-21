@@ -113,6 +113,7 @@ class CopyEntityCommandHandler implements CommandHandler
 
         $saveEntityCommand->setId($dashboardId);
         $saveEntityCommand->setService($command->getService());
+        $saveEntityCommand->setManageId($command->getManageId());
 
         $this->commandBus->handle(
             new LoadMetadataCommand(

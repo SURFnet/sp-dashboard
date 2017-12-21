@@ -351,6 +351,11 @@ class SaveEntityCommand implements Command
      */
     private $organizationUrlEn;
 
+    /**
+     * @var string
+     */
+    private $manageId;
+
     private function __construct()
     {
     }
@@ -375,6 +380,7 @@ class SaveEntityCommand implements Command
     {
         $command = new self();
         $command->id = $entity->getId();
+        $command->manageId = $entity->getManageId();
         $command->service = $entity->getService();
         $command->ticketNumber = $entity->getTicketNumber();
         $command->archived = $entity->isArchived();
@@ -1126,5 +1132,21 @@ class SaveEntityCommand implements Command
     public function setService($service)
     {
         $this->service = $service;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManageId()
+    {
+        return $this->manageId;
+    }
+
+    /**
+     * @param string $manageId
+     */
+    public function setManageId($manageId)
+    {
+        $this->manageId = $manageId;
     }
 }

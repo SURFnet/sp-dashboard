@@ -73,6 +73,7 @@ class SaveEntityCommandHandler implements CommandHandler
         }
 
         $entity->setService($command->getService());
+        $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());
         $entity->setEnvironment($command->getEnvironment());
         $entity->setImportUrl($command->getImportUrl());
