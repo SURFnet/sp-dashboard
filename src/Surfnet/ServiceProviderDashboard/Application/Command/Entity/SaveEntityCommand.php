@@ -41,6 +41,11 @@ class SaveEntityCommand implements Command
     private $id;
 
     /**
+     * @var string
+     */
+    private $status;
+
+    /**
      * @var Service
      */
     private $service;
@@ -380,6 +385,7 @@ class SaveEntityCommand implements Command
     {
         $command = new self();
         $command->id = $entity->getId();
+        $command->status = $entity->getStatus();
         $command->manageId = $entity->getManageId();
         $command->service = $entity->getService();
         $command->ticketNumber = $entity->getTicketNumber();
@@ -434,6 +440,14 @@ class SaveEntityCommand implements Command
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -1124,6 +1138,11 @@ class SaveEntityCommand implements Command
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
     /**

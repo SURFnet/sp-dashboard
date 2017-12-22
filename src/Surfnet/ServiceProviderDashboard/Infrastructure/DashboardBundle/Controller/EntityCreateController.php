@@ -64,6 +64,7 @@ class EntityCreateController extends Controller
      * @return RedirectResponse|Response
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function createAction(Request $request, $manageId, $environment)
     {
@@ -72,17 +73,15 @@ class EntityCreateController extends Controller
 
         $service = $this->getService();
         $command = SaveEntityCommand::forCreateAction($service);
-
         $form = $this->createForm(EntityType::class, $command);
-        $form->handleRequest($request);
 
-        if ($this->isCopyAction($request)) {
-            $result = $form = $this->handleCopy($command, $service, $manageId, $environment);
-            // The result of the copy handle method can either be a redirect response or a FormInterface.
-            if ($result instanceof RedirectResponse) {
-                return $result;
-            }
-        } elseif ($this->isImportButtonClicked($request)) {
+        if ($this->isCopyAction($request) && !$request->isMethod('post')) {
+            $form = $this->handleCopy($command, $service, $manageId, $environment);
+        } else {
+            $form->handleRequest($request);
+        }
+
+        if ($this->isImportButtonClicked($request)) {
             // Import metadata before loading data into the form. Rebuild the form with the imported data
             $form = $this->handleImport($request, $command);
         }
@@ -126,14 +125,7 @@ class EntityCreateController extends Controller
 
     private function isCopyAction(Request $request)
     {
-        $currentRoute = $request->get('_route', false);
-        // When the form is posted to the entity_copy endpoint, do NOT copy the data from manage. The user is about
-        // to persist changes to manage.
-        $isPostRequest = $request->getMethod() === 'POST';
-        if ($currentRoute && $currentRoute === 'entity_copy' && !$isPostRequest) {
-            return true;
-        }
-        return false;
+        return 'entity_copy' === $request->get('_route', false);
     }
 
     /**
@@ -163,17 +155,15 @@ class EntityCreateController extends Controller
      */
     private function handleCopy(SaveEntityCommand $command, Service $service, $manageId, $environment)
     {
-        $existingEntity = $this->entityService->findTestEntityByManageId($manageId);
-        if ($existingEntity) {
-            return $this->redirectToRoute('entity_edit', ['id' => $existingEntity->getId()]);
-        }
-
         $entityId = $this->entityService->createEntityUuid();
 
         $this->commandBus->handle(
             new CopyEntityCommand($command, $entityId, $manageId, $service, $environment)
         );
 
-        return $this->createForm(EntityType::class, $command);
+        $form = $this->createForm(EntityType::class, $command);
+        $form->remove('save');
+
+        return $form;
     }
 }
