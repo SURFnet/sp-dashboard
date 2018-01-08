@@ -141,24 +141,4 @@ class EntityCopyTest extends WebTestCase
         $entity = $this->getEntityRepository()->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
         $this->assertEmpty($entity, 'Entity is not saved, but loaded on the form');
     }
-
-    public function test_copy_redirects_to_existing_entity()
-    {
-        $entity = $this->service->getEntities()->first();
-        $entity->setManageid('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
-        $this->getEntityRepository()->save($entity);
-
-        $this->client->request('GET', '/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad');
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after copying an entity'
-        );
-
-        $this->assertEquals(
-            $this->client->getResponse()->headers->get('location'),
-            '/entity/edit/' . $entity->getId(),
-            'Expecting a redirect response to existing entity after copying'
-        );
-    }
 }

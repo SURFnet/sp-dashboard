@@ -110,7 +110,7 @@ class CopyEntityCommandHandler implements CommandHandler
             );
         }
 
-
+        $saveEntityCommand->setStatus(Entity::STATE_PUBLISHED);
         $saveEntityCommand->setId($dashboardId);
         $saveEntityCommand->setService($command->getService());
         $saveEntityCommand->setManageId($command->getManageId());

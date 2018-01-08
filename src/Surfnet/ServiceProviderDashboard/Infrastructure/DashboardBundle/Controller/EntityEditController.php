@@ -24,7 +24,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityStatusCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
@@ -75,14 +74,14 @@ class EntityEditController extends Controller
             $flashBag->clear();
         }
 
-        if ($entity->isPublished() && $entity->isProduction()) {
-            $updateStatusCommand = new UpdateEntityStatusCommand($entity->getId(), Entity::STATE_DRAFT);
-            $this->commandBus->handle($updateStatusCommand);
-        }
-
         $command = SaveEntityCommand::fromEntity($entity);
 
         $form = $this->createForm(EntityType::class, $command);
+
+        if ($entity->isProduction()) {
+            $form->remove('save');
+        }
+
         $form->handleRequest($request);
 
         // Import metadata before loading data into the form

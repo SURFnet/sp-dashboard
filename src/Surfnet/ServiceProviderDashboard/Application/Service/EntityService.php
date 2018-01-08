@@ -67,21 +67,6 @@ class EntityService
     }
 
     /**
-     * Find a draft entity stored in the dashboard by manage ID.
-     *
-     * @param $manageId
-     *
-     * @return Entity|null
-     */
-    public function findTestEntityByManageId($manageId)
-    {
-        $entities = $this->entityRepository->findTestEntityByManageId($manageId);
-        if (!empty($entities)) {
-            return reset($entities);
-        }
-    }
-
-    /**
      * @param Service $service
      *
      * @return ViewObject\EntityList
