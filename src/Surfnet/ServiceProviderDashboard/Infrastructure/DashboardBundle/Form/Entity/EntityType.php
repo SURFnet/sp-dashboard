@@ -39,6 +39,14 @@ class EntityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            // The first button in a form defines the default behaviour when
+            // submitting the form by pressing ENTER. We add a 'default
+            // action' button on top of the form so the controller action
+            // handling the form submission can choose what action to
+            // perform. This is to prevent the import action when submitting
+            // the form (the import button is now the second button on the
+            // form).
+            ->add('default', SubmitType::class, ['attr' => ['style' => 'display: none']])
             ->add(
                 $builder->create(
                     'general',
@@ -311,6 +319,7 @@ class EntityType extends AbstractType
                     )
             )
 
+            ->add('status', HiddenType::class)
             ->add('manageId', HiddenType::class)
             ->add('environment', HiddenType::class)
             ->add('nameIdFormat', HiddenType::class)

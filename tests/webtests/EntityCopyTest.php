@@ -55,6 +55,10 @@ class EntityCopyTest extends WebTestCase
 
         $this->assertEquals('Service Provider registration form', $pageTitle->text());
 
+        // The form for a published entities should not contain a save button
+        $this->assertEquals(1, $crawler->selectButton('Publish')->count());
+        $this->assertEquals(0, $crawler->selectButton('Save')->count());
+
         $form = $crawler->selectButton('Publish')->form();
 
         $this->assertEquals(
@@ -140,5 +144,37 @@ class EntityCopyTest extends WebTestCase
         // Assert that the newly created entity is indeed a production entity.
         $entity = $this->getEntityRepository()->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
         $this->assertEmpty($entity, 'Entity is not saved, but loaded on the form');
+    }
+
+    public function test_no_save_button_after_import()
+    {
+        $response = file_get_contents(
+            __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
+        );
+        $this->mockHandler->append(new Response(200, [], $response));
+
+        $response = file_get_contents(
+            __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
+        );
+        $this->mockHandler->append(new Response(200, [], json_decode($response)));
+
+        $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
+
+        $formData = [
+            'dashboard_bundle_entity_type' => [
+                'metadata' => [
+                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
+                ],
+            ],
+        ];
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+
+        $this->assertEquals(1, $crawler->selectButton('Publish')->count());
+        $this->assertEquals(0, $crawler->selectButton('Save')->count());
     }
 }

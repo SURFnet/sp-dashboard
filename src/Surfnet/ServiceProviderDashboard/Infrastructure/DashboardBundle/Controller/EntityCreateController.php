@@ -75,43 +75,50 @@ class EntityCreateController extends Controller
         $command = SaveEntityCommand::forCreateAction($service);
         $form = $this->createForm(EntityType::class, $command);
 
-        if ($this->isCopyAction($request) && !$request->isMethod('post')) {
-            $form = $this->handleCopy($command, $service, $manageId, $environment);
-        } else {
+        if ($this->isCopyRoute($request)) {
+            if (!$request->isMethod('post')) {
+                $form = $this->handleCopy($command, $service, $manageId, $environment);
+            }
+
+            // A copy can never be saved as draft: changes are published directly to manage.
+            $form->remove('save');
+        }
+
+        if ($request->isMethod('post')) {
             $form->handleRequest($request);
         }
 
-        if ($this->isImportButtonClicked($request)) {
+        if ($this->isImportAction($form)) {
             // Import metadata before loading data into the form. Rebuild the form with the imported data
             $form = $this->handleImport($request, $command);
         }
 
         if ($form->isSubmitted()) {
             try {
-                switch ($form->getClickedButton()->getName()) {
-                    case 'save':
-                        // Only trigger form validation on publish
+                if ($this->isSaveAction($form)) {
+                    // Only trigger form validation on publish
+                    $this->commandBus->handle($command);
+
+                    return $this->redirectToRoute('entity_list');
+                } elseif ($this->isPublishAction($form)) {
+                    // Only trigger form validation on publish
+                    if ($form->isValid()) {
                         $this->commandBus->handle($command);
-                        return $this->redirectToRoute('entity_list');
-                        break;
-                    case 'publishButton':
-                        // Only trigger form validation on publish
-                        if ($form->isValid()) {
-                            $this->commandBus->handle($command);
-                            $entity = $this->entityService->getEntityById($command->getId());
-                            $response = $this->publishEntity($entity, $flashBag);
-                            // When a response is returned, publishing was a success
-                            if ($response instanceof Response) {
-                                return $response;
-                            }
-                            // When publishing failed, forward to the edit action and show the error messages there
-                            return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+
+                        $entity = $this->entityService->getEntityById($command->getId());
+                        $response = $this->publishEntity($entity, $flashBag);
+
+                        // When a response is returned, publishing was a success
+                        if ($response instanceof Response) {
+                            return $response;
                         }
-                        break;
-                    case 'cancel':
-                        // Simply return to entity list, no entity was saved
-                        return $this->redirectToRoute('entity_list');
-                        break;
+
+                        // When publishing failed, forward to the edit action and show the error messages there
+                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                    }
+                } elseif ($this->isCancelAction($form)) {
+                    // Simply return to entity list, no entity was saved
+                    return $this->redirectToRoute('entity_list');
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
@@ -123,7 +130,7 @@ class EntityCreateController extends Controller
         ];
     }
 
-    private function isCopyAction(Request $request)
+    private function isCopyRoute(Request $request)
     {
         return 'entity_copy' === $request->get('_route', false);
     }

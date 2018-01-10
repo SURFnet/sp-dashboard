@@ -33,7 +33,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -93,7 +93,7 @@ trait EntityControllerTrait
      * @param Request $request
      * @param SaveEntityCommand $command
      *
-     * @return FormInterface
+     * @return Form
      */
     private function handleImport(Request $request, SaveEntityCommand $command)
     {
@@ -108,13 +108,20 @@ trait EntityControllerTrait
         } catch (InvalidArgumentException $e) {
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
         }
-        return $this->createForm(EntityType::class, $command);
+
+        $form = $this->createForm(EntityType::class, $command);
+
+        if ($command->getStatus() === Entity::STATE_PUBLISHED) {
+            $form->remove('save');
+        }
+
+        return $form;
     }
 
     /**
      * @param Entity $entity
      * @param FlashBagInterface $flashBag
-     * @return RedirectResponse|FormInterface
+     * @return RedirectResponse|Form
      */
     private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
     {
@@ -143,12 +150,76 @@ trait EntityControllerTrait
         }
     }
 
-    private function isImportButtonClicked(Request $request)
+    /**
+     * Check if the form was submitted using the given button name.
+     *
+     * @param Form $form
+     * @param string $expectedButtonName
+     * @return bool
+     */
+    private function assertUsedSubmitButton(Form $form, $expectedButtonName)
     {
-        $data = $request->get('dashboard_bundle_entity_type', false);
-        if ($data && isset($data['metadata']) && isset($data['metadata']['importButton'])) {
+        $button = $form->getClickedButton();
+
+        if ($button === null) {
+            return false;
+        }
+
+        return $button->getName() === $expectedButtonName;
+    }
+
+    /**
+     * @param Form $form
+     * @return bool
+     */
+    private function isImportAction(Form $form)
+    {
+        return $this->assertUsedSubmitButton($form, 'importButton');
+    }
+
+    /**
+     * The default action occurs when the user presses ENTER in a form.
+     *
+     * @param Form $form
+     * @return bool
+     */
+    private function isDefaultAction(Form $form)
+    {
+        return $this->assertUsedSubmitButton($form, 'default');
+    }
+
+    /**
+     * @param Form $form
+     * @return bool
+     */
+    private function isSaveAction(Form $form)
+    {
+        if ($this->assertUsedSubmitButton($form, 'save')) {
             return true;
         }
-        return false;
+
+        return $form->has('save') && $this->isDefaultAction($form);
+    }
+
+    /**
+     * @param Form $form
+     * @return bool
+     */
+    private function isPublishAction(Form $form)
+    {
+        if ($this->assertUsedSubmitButton($form, 'publishButton')) {
+            return true;
+        }
+
+        return !$form->has('save') && $this->isDefaultAction($form);
+    }
+
+    /**
+     * @param Form $form
+     * @return bool
+     */
+    private function isCancelAction(Form $form)
+    {
+        return $this->assertUsedSubmitButton($form, 'cancel');
     }
 }
