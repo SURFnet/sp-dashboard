@@ -63,6 +63,7 @@ entity.edit.general.html: "<p>Enter/edit your contact information below. We will
 entity.edit.metadata.fetch.exception: "Unable to load the metadata from the provided import url."
 entity.edit.metadata.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>.</p>"
 entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
+entity.edit.metadata.validation-failed: "Warning! Some entries are missing or incorrect. Please review and fix those entries below."
 entity.edit.metadata.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
 entity.edit.contact_information.title: Contact information

@@ -107,6 +107,7 @@ class EntityEditController extends Controller
                             return $response;
                         }
                     }
+                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     return $this->redirectToRoute('entity_list');
