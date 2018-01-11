@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class ValidLogo extends Constraint
 {
-    public $message = 'Logo is not a valid image.';
+    public $message = 'validator.logo.not_an_image';
 
     /**
      * @return string

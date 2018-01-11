@@ -25,5 +25,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class ValidSSLCertificate extends Constraint
 {
-    public $message = 'The certificate is not valid.';
+    public $message = 'validator.ssl_certificate.not_valid';
 }

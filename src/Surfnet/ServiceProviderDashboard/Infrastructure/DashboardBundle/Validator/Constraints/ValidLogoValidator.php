@@ -44,7 +44,7 @@ class ValidLogoValidator extends ConstraintValidator
         $type = $imgData[2];
 
         if ($type !== IMAGETYPE_PNG && $type !== IMAGETYPE_GIF) {
-            $this->context->addViolation('Logo should be a PNG or GIF.');
+            $this->context->addViolation('validator.logo.wrong_type');
 
             return;
         }

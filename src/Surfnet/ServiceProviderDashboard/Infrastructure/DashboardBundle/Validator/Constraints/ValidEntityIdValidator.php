@@ -82,14 +82,14 @@ class ValidEntityIdValidator extends ConstraintValidator
         try {
             $parser->parseUrl($metadataUrl);
         } catch (\Exception $e) {
-            $this->context->addViolation('Invalid metadataUrl.');
+            $this->context->addViolation('validator.entity_id.invalid_url');
             return;
         }
 
         try {
             $parser->parseUrl($value);
         } catch (\Exception $e) {
-            $this->context->addViolation('Invalid entityId.');
+            $this->context->addViolation('validator.entity_id.invalid_entity_id');
             return;
         }
 
@@ -100,13 +100,13 @@ class ValidEntityIdValidator extends ConstraintValidator
         try {
             $manageId = $this->manageRepository->findManageIdByEntityId($value);
         } catch (\Exception $e) {
-            $this->context->addViolation('Failed checking registry.');
+            $this->context->addViolation('validator.entity_id.registry_failure');
             return;
         }
 
         // Prevent publishing entities with existing entityId in Manage.
         if ($manageId && (!$entityCommand->getManageId() || $manageId !== $entityCommand->getManageId())) {
-            $this->context->addViolation('Entity has already been registered.');
+            $this->context->addViolation('validator.entity_id.already_exists');
         }
     }
 }
