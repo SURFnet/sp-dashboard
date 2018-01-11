@@ -50,6 +50,11 @@ class EditServiceCommand implements Command
     /**
      * @var bool
      */
+    private $productionEntitiesEnabled = true;
+
+    /**
+     * @var bool
+     */
     private $privacyQuestionsEnabled = true;
 
     /**
@@ -57,14 +62,16 @@ class EditServiceCommand implements Command
      * @param string $guid
      * @param string $name
      * @param string $teamName
-     * @param $privacyQuestionsEnabled
+     * @param bool $productionEntitiesEnabled
+     * @param bool $privacyQuestionsEnabled
      */
-    public function __construct($id, $guid, $name, $teamName, $privacyQuestionsEnabled)
+    public function __construct($id, $guid, $name, $teamName, $productionEntitiesEnabled, $privacyQuestionsEnabled)
     {
         $this->id = $id;
         $this->guid = $guid;
         $this->name = $name;
         $this->teamName = $teamName;
+        $this->productionEntitiesEnabled = $productionEntitiesEnabled;
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
 
@@ -90,6 +97,14 @@ class EditServiceCommand implements Command
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @param bool $productionEntitiesEnabled
+     */
+    public function setProductionEntitiesEnabled($enabled)
+    {
+        $this->productionEntitiesEnabled = $enabled;
     }
 
     /**
@@ -130,6 +145,14 @@ class EditServiceCommand implements Command
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProductionEntitiesEnabled()
+    {
+        return $this->productionEntitiesEnabled;
     }
 
     /**

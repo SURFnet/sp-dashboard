@@ -29,19 +29,20 @@ class WebTestFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $manager->persist(
-            $this->createService('SURFnet', 'urn:collab:org:surf.nl')
-                ->addEntity(
-                    $this->createEntity('SP1')
-                )
-                ->addEntity(
-                    $this->createEntity('SP2')
-                )
-        );
+        $service = $this->createService('SURFnet', 'urn:collab:org:surf.nl')
+            ->addEntity(
+                $this->createEntity('SP1')
+            )
+            ->addEntity(
+                $this->createEntity('SP2')
+            );
 
-        $manager->persist(
-            $this->createService('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl')
-        );
+        $service->setProductionEntitiesEnabled(false);
+        $manager->persist($service);
+
+        $service =  $this->createService('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl');
+        $service->setProductionEntitiesEnabled(true);
+        $manager->persist($service);
 
         $manager->flush();
     }

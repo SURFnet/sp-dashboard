@@ -55,6 +55,7 @@ class EditServiceCommandHandler implements CommandHandler
         $service->setName($command->getName());
         $service->setGuid($command->getGuid());
         $service->setTeamName($command->getTeamName());
+        $service->setProductionEntitiesEnabled($command->isProductionEntitiesEnabled());
         $service->setPrivacyQuestionsEnabled($command->isPrivacyQuestionsEnabled());
 
         $this->serviceRepository->isUnique($service);

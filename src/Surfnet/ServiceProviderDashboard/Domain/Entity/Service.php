@@ -65,6 +65,13 @@ class Service
      *
      * @ORM\Column(type="boolean")
      */
+    private $productionEntitiesEnabled = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
     private $privacyQuestionsEnabled = true;
 
     /**
@@ -143,6 +150,14 @@ class Service
     }
 
     /**
+     * @param bool $enabled
+     */
+    public function setProductionEntitiesEnabled($enabled)
+    {
+        $this->productionEntitiesEnabled = $enabled;
+    }
+
+    /**
      * @param bool $privacyQuestionsEnabled
      */
     public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
@@ -194,6 +209,14 @@ class Service
     public function setPrivacyQuestions(PrivacyQuestions $privacyQuestions)
     {
         $this->privacyQuestions = $privacyQuestions;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProductionEntitiesEnabled()
+    {
+        return $this->productionEntitiesEnabled;
     }
 
     /**

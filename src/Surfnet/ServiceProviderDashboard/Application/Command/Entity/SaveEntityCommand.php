@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -495,6 +496,15 @@ class SaveEntityCommand implements Command
      */
     public function setEnvironment($environment)
     {
+        if (!in_array($environment, [
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_PRODUCTION,
+        ])) {
+            throw new InvalidArgumentException(
+                "Unknown environment '{$environment}'"
+            );
+        }
+
         $this->environment = $environment;
     }
 

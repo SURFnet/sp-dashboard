@@ -52,6 +52,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             '30dd879c-ee2f-11db-8314-0800200c9a66',
             'Foobar',
             'team-foobar',
+            false,
             false
         );
         $command->setName('Foobar');
@@ -95,6 +96,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             '30dd879c-ee2f-11db-8314-0800200c9a66',
             'Foobar',
             'team-foobar',
+            false,
             true
         );
 
@@ -115,6 +117,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             '30dd879c-ee2f-11db-8314-0800200c9a66',
             'Foobar',
             'team-foobar',
+            false,
             false
         );
 

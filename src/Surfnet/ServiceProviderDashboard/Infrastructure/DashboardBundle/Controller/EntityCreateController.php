@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityComman
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -51,7 +52,7 @@ class EntityCreateController extends Controller
      *     production-draft entity.
      *
      * @Method({"GET", "POST"})
-     * @Route("/entity/create", defaults={"manageId" = null, "environment" = null}, name="entity_add")
+     * @Route("/entity/create/{environment}", defaults={"manageId" = null, "environment" = "test"}, name="entity_add")
      * @Route("/entity/copy/{manageId}/{environment}", defaults={"manageId" = null, "environment" = "test"}, name="entity_copy")
      * @Security("has_role('ROLE_USER')")
      * @Template("@Dashboard/EntityEdit/edit.html.twig")
@@ -63,6 +64,7 @@ class EntityCreateController extends Controller
      *
      * @return RedirectResponse|Response
      *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
@@ -72,7 +74,16 @@ class EntityCreateController extends Controller
         $flashBag->clear();
 
         $service = $this->getService();
+
+        if (!$service->isProductionEntitiesEnabled() && $environment !== Entity::ENVIRONMENT_TEST) {
+            throw $this->createAccessDeniedException(
+                'You do not have access to create entities without publishing to the test environment first'
+            );
+        }
+
         $command = SaveEntityCommand::forCreateAction($service);
+        $command->setEnvironment($environment);
+
         $form = $this->createForm(EntityType::class, $command);
 
         if ($this->isCopyAction($request) && !$request->isMethod('post')) {

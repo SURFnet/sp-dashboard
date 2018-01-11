@@ -40,10 +40,6 @@ class Builder
         if ($this->authorizationService->hasActiveServiceId()) {
             $menu->addChild('My entities', array('route' => 'entity_list'));
 
-            $menu->addChild('Add new entity', array(
-                'route' => 'entity_add',
-            ));
-
             if ($this->authorizationService->hasActivatedPrivacyQuestions()) {
                 $menu->addChild(
                     'Privacy',

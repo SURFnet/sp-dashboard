@@ -9,6 +9,8 @@ entity.delete.confirmation: "You are about to delete the entity %name%, are you 
 entity.list.title: My entities
 entity.list.empty: There are no entities configured
 entity.list.no_service_selected: Please select a service
+entity.list.add_to_test: Add for test
+entity.list.add_to_production: Add for production
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
 entity.list.primary_contact: Primary contact

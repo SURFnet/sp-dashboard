@@ -129,6 +129,7 @@ class ServiceController extends Controller
             $service->getGuid(),
             $service->getName(),
             $service->getTeamName(),
+            $service->isProductionEntitiesEnabled(),
             $service->isPrivacyQuestionsEnabled()
         );
 

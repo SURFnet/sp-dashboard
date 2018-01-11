@@ -100,6 +100,50 @@ class EntityListTest extends WebTestCase
         $this->assertEquals('test', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
     }
 
+    public function test_entity_list_shows_add_to_test_link()
+    {
+        $this->loadFixtures();
+
+        // Surfnet is not allowed to create production entities.
+        $service = $this->getServiceRepository()->findByName('SURFnet');
+        $this->logIn('ROLE_USER', [$service]);
+
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $service->getId()
+        );
+
+        $crawler = $this->client->request('GET', '/');
+
+        $actions = $crawler->filter('div.add-entity-actions a');
+
+        $this->assertContains('Add for test', $actions->eq(0)->text(), 'Add for test link not found');
+        $this->assertEquals(1, $actions->count(), 'There should be only one add link');
+    }
+
+    public function test_entity_list_shows_add_to_production_link()
+    {
+        $this->loadFixtures();
+
+        // Ibuildings is allowed to create production entities.
+        $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+        $this->logIn('ROLE_USER', [$service]);
+
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $service->getId()
+        );
+
+        $crawler = $this->client->request('GET', '/');
+
+        $actions = $crawler->filter('div.add-entity-actions a');
+
+        $this->assertContains('Add for test', $actions->eq(0)->text(), 'Add for test link not found');
+        $this->assertContains('Add for production', $actions->eq(1)->text(), 'Add for production link not found');
+    }
+
     public function test_entity_list_redirects_to_service_add_when_no_service_exists()
     {
         $this->clearFixtures();
