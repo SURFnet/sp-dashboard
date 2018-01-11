@@ -7,6 +7,8 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
+    {{ form_widget(form.default) }}
+
     <div class="fieldset card">
 
         {% for message in app.flashes('error') %}

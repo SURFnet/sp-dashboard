@@ -78,39 +78,38 @@ class EntityEditController extends Controller
 
         $form = $this->createForm(EntityType::class, $command);
 
-        if ($entity->isProduction()) {
+        if ($entity->isPublished()) {
             $form->remove('save');
         }
 
         $form->handleRequest($request);
 
         // Import metadata before loading data into the form
-        if ($this->isImportButtonClicked($request)) {
+        if ($this->isImportAction($form)) {
             // Import metadata before loading data into the form. Rebuild the form with the imported data
             $form = $this->handleImport($request, $command);
         }
 
         if ($form->isSubmitted()) {
             try {
-                switch ($form->getClickedButton()->getName()) {
-                    case 'save':
-                        $this->commandBus->handle($command);
-                        return $this->redirectToRoute('entity_list');
-                        break;
-                    case 'publishButton':
-                        // Only trigger form validation on publish
-                        $this->commandBus->handle($command);
-                        if ($form->isValid()) {
-                            $response = $this->publishEntity($entity, $flashBag);
-                            if ($response instanceof Response) {
-                                return $response;
-                            }
+                if ($this->isSaveAction($form)) {
+                    $this->commandBus->handle($command);
+
+                    return $this->redirectToRoute('entity_list');
+                } elseif ($this->isPublishAction($form)) {
+                    // Only trigger form validation on publish
+                    $this->commandBus->handle($command);
+
+                    if ($form->isValid()) {
+                        $response = $this->publishEntity($entity, $flashBag);
+
+                        if ($response instanceof Response) {
+                            return $response;
                         }
-                        break;
-                    case 'cancel':
-                        // Simply return to entity list, no entity was saved
-                        return $this->redirectToRoute('entity_list');
-                        break;
+                    }
+                } elseif ($this->isCancelAction($form)) {
+                    // Simply return to entity list, no entity was saved
+                    return $this->redirectToRoute('entity_list');
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
