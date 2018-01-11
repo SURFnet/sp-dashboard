@@ -2,11 +2,27 @@
 
 {% block page_heading %}{{ 'entity.list.title'|trans }}{%endblock%}
 {% block body %}
+    {% if not no_service_selected %}
+    <div class="add-entity-actions">
+        <a href="{{ path('entity_add') }}">
+            <i class="fa fa-plus"></i>
+            {{ 'entity.list.add_to_test'|trans}}
+        </a>
+        {% if production_entities_enabled %}
+            <a href="{{ path('entity_add', {environment: "production"}) }}">
+                <i class="fa fa-plus"></i>
+                {{ 'entity.list.add_to_production'|trans}}
+            </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
     {% if no_service_selected %}
         {{ 'entity.list.no_service_selected'|trans }}
     {% elseif entity_list.entities is empty %}
         {{ 'entity.list.empty'|trans }}
     {% else %}
+
     <table>
         <thead>
             <tr>

@@ -103,7 +103,7 @@ class EntityCreateTest extends WebTestCase
         $message = $crawler->filter('.page-container .card')->first()->text();
 
         $this->assertEquals('My entities', $pageTitle);
-        $this->assertEquals('There are no entities configured', trim($message));
+        $this->assertContains('There are no entities configured', $message);
     }
 
     public function test_it_can_save_the_form()
@@ -227,6 +227,53 @@ class EntityCreateTest extends WebTestCase
             trim($message->text()),
             'Expected an error message for this invalid importUrl'
         );
+    }
+
+    public function test_creating_draft_for_production_is_not_allowed()
+    {
+        // SURFnet is not allowed to create production entities.
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $this->getServiceRepository()->findByName('SURFnet')->getId()
+        );
+
+        $crawler = $this->client->request('GET', '/entity/create/production');
+
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function test_a_privileged_user_can_create_a_production_draft()
+    {
+        // Ibuildings is allowed to create production entities.
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
+        );
+
+        $formData = $this->buildValidFormData();
+
+        $crawler = $this->client->request('GET', '/entity/create/production');
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        // The form is now redirected to the list view
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after saving an entity'
+        );
+
+        // The entity list queries manage for published entities
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
+        $crawler = $this->client->followRedirect();
+
+        // Assert the entity is saved for the production environment.
+        $row = $crawler->filter('table tbody tr')->eq(0);
+
+        $this->assertEquals('https://entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
+        $this->assertEquals('production', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
     }
 
     private function buildValidFormData()

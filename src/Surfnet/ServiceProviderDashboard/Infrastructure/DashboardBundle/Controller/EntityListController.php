@@ -76,6 +76,7 @@ class EntityListController extends Controller
 
         $service = null;
         $entityList = [];
+        $productionEntitiesEnabled = false;
 
         $activeServiceId = $this->authorizationService->getActiveServiceId();
         if ($activeServiceId) {
@@ -86,10 +87,12 @@ class EntityListController extends Controller
 
         if ($service) {
             $entityList = $this->entityService->getEntityListForService($service);
+            $productionEntitiesEnabled = $service->isProductionEntitiesEnabled();
         }
 
         return [
             'no_service_selected' => empty($service),
+            'production_entities_enabled' => $productionEntitiesEnabled,
             'entity_list' => $entityList,
         ];
     }

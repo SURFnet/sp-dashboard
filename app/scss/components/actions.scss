@@ -1,3 +1,18 @@
+div.add-entity-actions {
+  text-align: right;
+
+  a {
+    color: $blue;
+
+    &:visited, &:hover {
+      text-decoration: none;
+    }
+    text-decoration: none;
+
+    padding-left: 1rem;
+  }
+}
+
 div.actions {
   min-width: 50px;
   text-align: right;

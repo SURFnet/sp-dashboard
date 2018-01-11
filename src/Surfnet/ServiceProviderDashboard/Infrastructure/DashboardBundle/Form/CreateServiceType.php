@@ -33,6 +33,7 @@ class CreateServiceType extends AbstractType
             ->add('guid')
             ->add('name')
             ->add('teamName')
+            ->add('productionEntitiesEnabled', CheckboxType::class)
             ->add('privacyQuestionsEnabled', CheckboxType::class)
             ->add('save', SubmitType::class, ['attr' => ['class'=>'button']]);
     }
