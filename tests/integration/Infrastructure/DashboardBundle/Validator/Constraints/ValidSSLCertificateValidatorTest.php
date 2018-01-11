@@ -54,7 +54,7 @@ class ValidSSLCertificateValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
 
         $this->assertNotEmpty($violations);
-        $this->assertEquals('The certificate is not valid.', $violations->get(0)->getMessageTemplate());
+        $this->assertEquals('validator.ssl_certificate.not_valid', $violations->get(0)->getMessageTemplate());
     }
 
     public function test_invalid_key_length()
@@ -66,7 +66,7 @@ class ValidSSLCertificateValidatorTest extends ConstraintValidatorTestCase
 
         $this->assertNotEmpty($violations);
         $this->assertEquals(
-            'Key length is %length% bit, it should be 2048 bit or more.',
+            'validator.ssl_certificate.wrong_key_length',
             $violations->get(0)->getMessageTemplate()
         );
     }

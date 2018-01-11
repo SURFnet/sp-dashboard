@@ -45,14 +45,14 @@ class ValidSSLCertificateValidator extends ConstraintValidator
         openssl_x509_export($value, $cert, false);
 
         if (!preg_match('~(\d+) bit~', $cert, $matches)) {
-            $this->context->addViolation('Cannot determine key length');
+            $this->context->addViolation('validator.ssl_certificate.unknown_key_length');
 
             return;
         }
 
         if ($matches[1] < 2048) {
             $this->context->addViolation(
-                'Key length is %length% bit, it should be 2048 bit or more.',
+                'validator.ssl_certificate.wrong_key_length',
                 array(
                     '%length%' => $matches[1]
                 )

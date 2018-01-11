@@ -124,7 +124,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $this->assertCount(1, $violations);
         $this->assertEquals(
-            'Invalid metadataUrl.',
+            'validator.entity_id.invalid_url',
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );
@@ -144,7 +144,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $this->assertCount(1, $violations);
         $this->assertEquals(
-            'Invalid entityId.',
+            'validator.entity_id.invalid_entity_id',
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );
@@ -165,7 +165,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $this->assertCount(1, $violations);
         $this->assertEquals(
-            'Invalid metadataUrl.',
+            'validator.entity_id.invalid_url',
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );

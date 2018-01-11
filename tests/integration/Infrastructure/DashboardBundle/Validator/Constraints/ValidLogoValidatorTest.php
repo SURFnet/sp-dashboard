@@ -61,7 +61,7 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
 
-        $this->assertEquals('Logo is not a valid image.', $violation->getMessageTemplate());
+        $this->assertEquals('validator.logo.not_an_image', $violation->getMessageTemplate());
     }
 
     public function test_invalid_type()
@@ -72,6 +72,6 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
 
-        $this->assertEquals('Logo should be a PNG or GIF.', $violation->getMessageTemplate());
+        $this->assertEquals('validator.logo.wrong_type', $violation->getMessageTemplate());
     }
 }
