@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler;
 
 use Exception;
-use SAML2_Response_Exception_PreconditionNotMetException as PreconditionNotMetException;
+use SAML2\Response\Exception\PreconditionNotMetException;
 use Surfnet\SamlBundle\Http\Exception\AuthnFailedSamlResponseException;
 use Surfnet\SamlBundle\Monolog\SamlAuthenticationLogger;
 use Surfnet\SamlBundle\SAML2\Response\Assertion\InResponseTo;
