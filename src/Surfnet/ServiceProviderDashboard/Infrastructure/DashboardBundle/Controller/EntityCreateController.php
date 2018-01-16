@@ -75,7 +75,10 @@ class EntityCreateController extends Controller
 
         $service = $this->getService();
 
-        if (!$service->isProductionEntitiesEnabled() && $environment !== Entity::ENVIRONMENT_TEST) {
+        if (!$service->isProductionEntitiesEnabled() &&
+            $environment !== Entity::ENVIRONMENT_TEST &&
+            !$this->isCopyRoute($request)
+        ) {
             throw $this->createAccessDeniedException(
                 'You do not have access to create entities without publishing to the test environment first'
             );
