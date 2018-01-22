@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "448976cb853267e2d00d14692b959e08",
+    "content-hash": "9354d813e455b4c795920a5ed490ae17",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2304,30 +2304,29 @@
         },
         {
             "name": "robrichards/xmlseclibs",
-            "version": "1.4.2",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robrichards/xmlseclibs.git",
-                "reference": "79fb5e03c4ee4dc3ec77e4b2628231374364a017"
+                "reference": "d937712f70f93a584eb0299ccd87dc6374003781"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/79fb5e03c4ee4dc3ec77e4b2628231374364a017",
-                "reference": "79fb5e03c4ee4dc3ec77e4b2628231374364a017",
+                "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/d937712f70f93a584eb0299ccd87dc6374003781",
+                "reference": "d937712f70f93a584eb0299ccd87dc6374003781",
                 "shasum": ""
             },
             "require": {
-                "php": ">= 5.2"
+                "php": ">= 5.4"
             },
             "suggest": {
-                "ext/mcrypt": "MCrypt extension",
-                "ext/openssl": "OpenSSL extension"
+                "ext-openssl": "OpenSSL extension"
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "src/"
-                ]
+                "psr-4": {
+                    "RobRichards\\XMLSecLibs\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2341,7 +2340,7 @@
                 "xml",
                 "xmldsig"
             ],
-            "time": "2016-09-08T13:31:44+00:00"
+            "time": "2017-08-31T09:27:07+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -2415,39 +2414,47 @@
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v1.10.3",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "3f268c25ca5e9748652834faad04525746227ef7"
+                "reference": "1b93d1fa49abaf99ffa78aef5358224e3a6b29b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/3f268c25ca5e9748652834faad04525746227ef7",
-                "reference": "3f268c25ca5e9748652834faad04525746227ef7",
+                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/1b93d1fa49abaf99ffa78aef5358224e3a6b29b2",
+                "reference": "1b93d1fa49abaf99ffa78aef5358224e3a6b29b2",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-openssl": "*",
-                "php": ">=5.3.3",
+                "ext-zlib": "*",
+                "php": ">=5.4",
                 "psr/log": "~1.0",
-                "robrichards/xmlseclibs": "^1.3"
+                "robrichards/xmlseclibs": "^3.0"
             },
             "require-dev": {
                 "mockery/mockery": "~0.9",
                 "phpmd/phpmd": "~1.5",
                 "phpunit/phpunit": "~3.7",
-                "satooshi/php-coveralls": "~0.6.1",
                 "sebastian/phpcpd": "~1.4",
                 "sensiolabs/security-checker": "~1.1",
                 "squizlabs/php_codesniffer": "~1.4"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "v3.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
-                    "SAML2_": "src/"
-                }
+                    "SAML2\\": "src/"
+                },
+                "files": [
+                    "src/_autoload.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2460,7 +2467,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2016-12-02T12:15:53+00:00"
+            "time": "2017-12-06T15:57:23+00:00"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -2585,23 +2592,23 @@
         },
         {
             "name": "surfnet/stepup-saml-bundle",
-            "version": "2.11.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Stepup-saml-bundle.git",
-                "reference": "d686d2154e72fa1e234fb08a63d4245e6163e6e7"
+                "reference": "67e24599a6402fdf602304851bfff915c0c4609c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/d686d2154e72fa1e234fb08a63d4245e6163e6e7",
-                "reference": "d686d2154e72fa1e234fb08a63d4245e6163e6e7",
+                "url": "https://api.github.com/repos/OpenConext/Stepup-saml-bundle/zipball/67e24599a6402fdf602304851bfff915c0c4609c",
+                "reference": "67e24599a6402fdf602304851bfff915c0c4609c",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
-                "php": ">=5.4,<8.0-dev",
-                "robrichards/xmlseclibs": "^1.4.0",
-                "simplesamlphp/saml2": "^1.8",
+                "php": ">=5.6,<8.0-dev",
+                "robrichards/xmlseclibs": "^3.0",
+                "simplesamlphp/saml2": "^3.0",
                 "symfony/dependency-injection": ">=2.7,<4",
                 "symfony/framework-bundle": ">=2.7,<4"
             },
@@ -2629,7 +2636,7 @@
                 "stepup",
                 "surfnet"
             ],
-            "time": "2017-11-30T09:29:53+00:00"
+            "time": "2018-01-17T12:59:03+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

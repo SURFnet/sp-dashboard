@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication;
 
+use SAML2\Assertion;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Http\PostBinding;
@@ -92,11 +93,11 @@ class SamlInteractionProvider
 
     /**
      * @param Request $request
-     * @return \SAML2_Assertion
+     * @return Assertion
      */
     public function processSamlResponse(Request $request)
     {
-        /** @var \SAML2_Assertion $assertion */
+        /** @var Assertion $assertion */
         $assertion = $this->postBinding->processResponse(
             $request,
             $this->identityProvider,
