@@ -10,6 +10,11 @@ label {
   text-transform: uppercase;
   color: $medium-grey;
   display: block;
+
+  a {
+    color: #4DB2CF;
+  }
+
 }
 
 em, div.message {

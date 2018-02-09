@@ -120,20 +120,20 @@ entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our 
 entity.published_test.title: "Successfully published the entity to test"
 privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
-privacy.form.label.accessData: 2. Who can access the data?
-privacy.form.label.certification: "5. Can you supply a Third Party Memorandum? If not: skip to question 9"
-privacy.form.label.certificationValidFrom: 7. Valid from:
-privacy.form.label.certificationLocation: 6. Where can an institution find/request it?
-privacy.form.label.certificationValidTo: 8. Valid to:
-privacy.form.label.country: 3. In what country is the data stored?
-privacy.form.label.otherInfo: 14. Other data privacy and security information
-privacy.form.label.privacyPolicy: "12. Do you publish your privacy policy? If not: skip to question 14"
-privacy.form.label.privacyPolicyUrl: 13. What is the URL?
-privacy.form.label.securityMeasures: 4. What security measures have you taken?
-privacy.form.label.snDpaWhyNot: 11. What articles pose a problem & why?
-privacy.form.label.surfmarketDpaAgreement: "9. Did you agree a DPA with SURFmarket? If yes: skip to question 12"
-privacy.form.label.surfnetDpaAgreement: 10. Are you willing to sign the SURF model DPA? If “Yes” skip to question 12
-privacy.form.label.whatData: 1. What (kind of) data is processed?
+privacy.form.label.accessData.html: 2. Who can access the data?
+privacy.form.label.certification.html: "5. Can you supply a Third Party Memorandum? If not: skip to question 9"
+privacy.form.label.certificationValidFrom.html: 7. Valid from:
+privacy.form.label.certificationLocation.html: 6. Where can an institution find/request it?
+privacy.form.label.certificationValidTo.html: 8. Valid to:
+privacy.form.label.country.html: 3. In what country is the data stored?
+privacy.form.label.otherInfo.html: 14. Other data privacy and security information
+privacy.form.label.privacyPolicy.html: "12. Do you publish your privacy policy? If not: skip to question 14"
+privacy.form.label.privacyPolicyUrl.html: 13. What is the URL?
+privacy.form.label.securityMeasures.html: 4. What security measures have you taken?
+privacy.form.label.snDpaWhyNot.html: 11. What articles pose a problem & why?
+privacy.form.label.surfmarketDpaAgreement.html: "9. Did you agree a DPA with SURFmarket? If yes: skip to question 12"
+privacy.form.label.surfnetDpaAgreement.html: 10. Are you willing to sign the SURF model DPA? If “Yes” skip to question 12
+privacy.form.label.whatData.html: 1. What (kind of) data is processed?
 privacy.information.accessData: Specify which organizations, including your own, and per organization what roles / (groups of) individuals have access to the data (including backups etc). Explain why they need access, and what access exactly each one has (like read only of certain specified data).
 privacy.information.certification: Is there an active valid certification, like ISO27001, ISO27002, ISAE3402 etc?
 privacy.information.certificationLocation: Where can an institution find (URL) or requestion the certifications and third party memorandum?

@@ -36,7 +36,7 @@ class PrivacyQuestionsFormBuilder
             'whatData',
             TextareaType::class,
             [
-                'label' => 'privacy.form.label.whatData',
+                'label' => 'privacy.form.label.whatData.html',
                 'attr' => [
                     'help' => 'privacy.information.whatData',
                     'rows' => 8,
@@ -48,7 +48,7 @@ class PrivacyQuestionsFormBuilder
             'accessData',
             TextareaType::class,
             [
-                'label' => 'privacy.form.label.accessData',
+                'label' => 'privacy.form.label.accessData.html',
                 'attr' => [
                     'help' => 'privacy.information.accessData',
                     'rows' => 8,
@@ -60,7 +60,7 @@ class PrivacyQuestionsFormBuilder
             'country',
             TextareaType::class,
             [
-                'label' => 'privacy.form.label.country',
+                'label' => 'privacy.form.label.country.html',
                 'attr' => [
                     'help' => 'privacy.information.country',
                     'rows' => 8,
@@ -72,7 +72,7 @@ class PrivacyQuestionsFormBuilder
             'securityMeasures',
             TextareaType::class,
             [
-                'label' => 'privacy.form.label.securityMeasures',
+                'label' => 'privacy.form.label.securityMeasures.html',
                 'attr' => [
                     'help' => 'privacy.information.securityMeasures',
                     'rows' => 8,
@@ -84,7 +84,7 @@ class PrivacyQuestionsFormBuilder
             'certification',
             CheckboxType::class,
             [
-                'label' => 'privacy.form.label.certification',
+                'label' => 'privacy.form.label.certification.html',
                 'attr' => ['help' => 'privacy.information.certification'],
             ]
         );
@@ -93,7 +93,7 @@ class PrivacyQuestionsFormBuilder
             'certificationLocation',
             TextareaType::class,
             [
-                'label' => 'privacy.form.label.certificationLocation',
+                'label' => 'privacy.form.label.certificationLocation.html',
                 'attr' => [
                     'help' => 'privacy.information.certificationLocation',
                     'rows' => 8,
@@ -105,7 +105,7 @@ class PrivacyQuestionsFormBuilder
             'certificationValidFrom',
             DateType::class,
             [
-                'label' => 'privacy.form.label.certificationValidFrom',
+                'label' => 'privacy.form.label.certificationValidFrom.html',
                 'widget' => 'single_text',
             ]
         );
@@ -114,7 +114,7 @@ class PrivacyQuestionsFormBuilder
             'certificationValidTo',
             DateType::class,
             [
-                'label' => 'privacy.form.label.certificationValidTo',
+                'label' => 'privacy.form.label.certificationValidTo.html',
                 'widget' => 'single_text',
             ]
         );
@@ -123,7 +123,7 @@ class PrivacyQuestionsFormBuilder
             'surfmarketDpaAgreement',
             CheckboxType::class,
             [
-                'label' => 'privacy.form.label.surfmarketDpaAgreement',
+                'label' => 'privacy.form.label.surfmarketDpaAgreement.html',
                 'attr' => ['help' => 'privacy.information.surfmarketDpaAgreement'],
             ]
         );
@@ -132,7 +132,7 @@ class PrivacyQuestionsFormBuilder
             'surfnetDpaAgreement',
             CheckboxType::class,
             [
-                'label' => 'privacy.form.label.surfnetDpaAgreement',
+                'label' => 'privacy.form.label.surfnetDpaAgreement.html',
                 'attr' => ['help' => 'privacy.information.surfnetDpaAgreement'],
             ]
         );
@@ -141,7 +141,7 @@ class PrivacyQuestionsFormBuilder
             'snDpaWhyNot',
             TextareaType::class,
             [
-                'label' => 'privacy.form.label.snDpaWhyNot',
+                'label' => 'privacy.form.label.snDpaWhyNot.html',
                 'attr' => [
                     'help' => 'privacy.information.snDpaWhyNot',
                     'rows' => 8,
@@ -153,7 +153,7 @@ class PrivacyQuestionsFormBuilder
             'privacyPolicy',
             CheckboxType::class,
             [
-                'label' => 'privacy.form.label.privacyPolicy',
+                'label' => 'privacy.form.label.privacyPolicy.html',
                 'attr' => ['help' => 'privacy.information.privacyPolicy'],
             ]
         );
@@ -162,7 +162,7 @@ class PrivacyQuestionsFormBuilder
             'privacyPolicyUrl',
             TextType::class,
             [
-                'label' => 'privacy.form.label.privacyPolicyUrl',
+                'label' => 'privacy.form.label.privacyPolicyUrl.html',
                 'attr' => ['help' => 'privacy.information.privacyPolicyUrl'],
             ]
         );
@@ -171,7 +171,7 @@ class PrivacyQuestionsFormBuilder
             'otherInfo',
             TextareaType::class,
             [
-                'label' => 'privacy.form.label.otherInfo',
+                'label' => 'privacy.form.label.otherInfo.html',
                 'attr' => [
                     'help' => 'privacy.information.otherInfo',
                     'rows' => 8,
