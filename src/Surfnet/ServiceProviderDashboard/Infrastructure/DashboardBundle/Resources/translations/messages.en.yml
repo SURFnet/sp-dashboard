@@ -98,6 +98,7 @@ entity.edit.information.descriptionNl: Text should be set in web translations
 entity.edit.information.descriptionEn: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
+entity.edit.information.technicalContact: Text should be set in web translations
 entity.edit.information.givenNameAttribute: Text should be set in web translations
 entity.edit.information.surNameAttribute: Text should be set in web translations
 entity.edit.information.commonNameAttribute: Text should be set in web translations

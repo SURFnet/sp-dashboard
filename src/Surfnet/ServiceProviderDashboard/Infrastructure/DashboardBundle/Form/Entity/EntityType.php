@@ -152,7 +152,7 @@ class EntityType extends AbstractType
                         ContactType::class,
                         [
                             'by_reference' => false,
-                            'attr' => ['help' => 'entity.edit.information.administrativeContact'],
+                            'attr' => ['help' => 'entity.edit.information.technicalContact'],
                         ]
                     )
                     ->add(
