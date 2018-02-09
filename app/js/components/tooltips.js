@@ -10,7 +10,8 @@ $(document).ready(
            arrow: true,
            duration: 200,
            placement: 'left',
-           theme: 'light'
+           theme: 'light',
+           trigger: 'click'
        }
     )
 );
