@@ -75,6 +75,7 @@ class EntityListController extends Controller
         }
 
         $service = null;
+        $serviceName = '';
         $entityList = [];
         $productionEntitiesEnabled = false;
 
@@ -88,12 +89,14 @@ class EntityListController extends Controller
         if ($service) {
             $entityList = $this->entityService->getEntityListForService($service);
             $productionEntitiesEnabled = $service->isProductionEntitiesEnabled();
+            $serviceName = $service->getName();
         }
 
         return [
             'no_service_selected' => empty($service),
             'production_entities_enabled' => $productionEntitiesEnabled,
             'entity_list' => $entityList,
+            'serviceName' => $serviceName,
         ];
     }
 }

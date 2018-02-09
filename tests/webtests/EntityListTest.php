@@ -38,7 +38,7 @@ class EntityListTest extends WebTestCase
 
         $pageTitle = $crawler->filter('.page-container h1');
 
-        $this->assertEquals('My entities', $pageTitle->text());
+        $this->assertEquals("Entities of service 'SURFnet'", $pageTitle->text());
         $this->assertCount(3, $crawler->filter('table tr'), 'Expecting three rows (including header)');
 
         $row = $crawler->filter('table tr')->eq(1);
@@ -89,7 +89,7 @@ class EntityListTest extends WebTestCase
 
         $pageTitle = $crawler->filter('.page-container h1');
 
-        $this->assertEquals('My entities', $pageTitle->text());
+        $this->assertEquals("Entities of service 'SURFnet'", $pageTitle->text());
         $this->assertCount(4, $crawler->filter('table tr'), 'Expecting three rows (including header)');
 
         $row = $crawler->filter('table tr')->eq(3);
