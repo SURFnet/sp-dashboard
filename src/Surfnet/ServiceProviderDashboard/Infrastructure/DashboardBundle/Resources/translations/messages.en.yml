@@ -7,6 +7,7 @@ error.404.text: "Oops, we were unable to find the page."
 entity.delete.title: "Delete entity"
 entity.delete.confirmation: "You are about to delete the entity %name%, are you sure?"
 entity.list.title: Entities of service '%serviceName%'
+entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
 entity.list.no_service_selected: Please select a service
 entity.list.add_to_test: Add for test

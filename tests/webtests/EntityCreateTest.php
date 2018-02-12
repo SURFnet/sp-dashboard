@@ -102,7 +102,7 @@ class EntityCreateTest extends WebTestCase
         $pageTitle = $crawler->filter('h1')->first()->text();
         $message = $crawler->filter('.page-container .card')->first()->text();
 
-        $this->assertEquals("Entities of service 'Ibuildings B.V.'", $pageTitle);
+        $this->assertContains("Entities of service 'Ibuildings B.V.'", $pageTitle);
         $this->assertContains('There are no entities configured', $message);
     }
 

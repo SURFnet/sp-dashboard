@@ -75,8 +75,8 @@ class EntityListController extends Controller
         }
 
         $service = null;
-        $serviceName = '';
         $entityList = [];
+        $serviceName = false;
         $productionEntitiesEnabled = false;
 
         $activeServiceId = $this->authorizationService->getActiveServiceId();
