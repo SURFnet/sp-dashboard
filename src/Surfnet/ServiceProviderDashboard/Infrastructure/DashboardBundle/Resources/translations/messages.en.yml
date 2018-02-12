@@ -92,10 +92,17 @@ entity.edit.comments.html: "<p>If there are any questions regarding your SURFcon
 entity.edit.information.ticketNumber: Text should be set in web translations
 entity.edit.information.importUrl: Text should be set in web translations
 entity.edit.information.metadataUrl: Text should be set in web translations
+entity.edit.information.acsLocation: Text should be set in web translations
+entity.edit.information.entityId: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations
+entity.edit.information.logoUrl: Text should be set in web translations
+entity.edit.information.nameNl: Text should be set in web translations
 entity.edit.information.descriptionNl: Text should be set in web translations
+entity.edit.information.nameEn: Text should be set in web translations
 entity.edit.information.descriptionEn: Text should be set in web translations
+entity.edit.information.applicationUrl: Text should be set in web translations
+entity.edit.information.eulaUrl: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
 entity.edit.information.givenNameAttribute: Text should be set in web translations
