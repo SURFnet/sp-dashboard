@@ -99,8 +99,20 @@ class EntityType extends AbstractType
                             'attr' => ['help' => 'entity.edit.information.metadataUrl'],
                         ]
                     )
-                    ->add('acsLocation')
-                    ->add('entityId')
+                    ->add(
+                        'acsLocation',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'entity.edit.information.acsLocation'],
+                        ]
+                    )
+                    ->add(
+                        'entityId',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'entity.edit.information.entityId'],
+                        ]
+                    )
                     ->add(
                         'certificate',
                         TextareaType::class,
@@ -111,8 +123,20 @@ class EntityType extends AbstractType
                             ],
                         ]
                     )
-                    ->add('logoUrl')
-                    ->add('nameNl')
+                    ->add(
+                        'logoUrl',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'entity.edit.information.logoUrl'],
+                        ]
+                    )
+                    ->add(
+                        'nameNl',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'entity.edit.information.nameNl'],
+                        ]
+                    )
                     ->add(
                         'descriptionNl',
                         TextareaType::class,
@@ -123,7 +147,13 @@ class EntityType extends AbstractType
                             ],
                         ]
                     )
-                    ->add('nameEn')
+                    ->add(
+                        'nameEn',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'entity.edit.information.nameEn'],
+                        ]
+                    )
                     ->add(
                         'descriptionEn',
                         TextareaType::class,
@@ -134,8 +164,20 @@ class EntityType extends AbstractType
                             ],
                         ]
                     )
-                    ->add('applicationUrl')
-                    ->add('eulaUrl')
+                    ->add(
+                        'applicationUrl',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'entity.edit.information.applicationUrl'],
+                        ]
+                    )
+                    ->add(
+                        'eulaUrl',
+                        TextType::class,
+                        [
+                            'attr' => ['help' => 'entity.edit.information.eulaUrl'],
+                        ]
+                    )
             )
             ->add(
                 $builder->create('contactInformation', FormType::class, ['inherit_data' => true])
