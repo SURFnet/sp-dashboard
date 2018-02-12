@@ -1,6 +1,13 @@
 {% extends '::base.html.twig' %}
 
-{% block page_heading %}{{ 'entity.list.title'|trans }}{%endblock%}
+{% block page_heading %}
+    {% if not serviceName %}
+        {{ 'entity.list.title_no_service_selected'|trans }}
+    {% else %}
+        {{ 'entity.list.title'|trans({'%serviceName%': serviceName }) }}
+    {% endif %}
+{%endblock%}
+
 {% block body %}
     {% if not no_service_selected %}
     <div class="add-entity-actions">

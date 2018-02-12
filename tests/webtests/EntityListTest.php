@@ -38,7 +38,7 @@ class EntityListTest extends WebTestCase
 
         $pageTitle = $crawler->filter('.page-container h1');
 
-        $this->assertEquals('My entities', $pageTitle->text());
+        $this->assertContains("Entities of service 'SURFnet'", $pageTitle->text());
         $this->assertCount(3, $crawler->filter('table tr'), 'Expecting three rows (including header)');
 
         $row = $crawler->filter('table tr')->eq(1);
@@ -89,7 +89,7 @@ class EntityListTest extends WebTestCase
 
         $pageTitle = $crawler->filter('.page-container h1');
 
-        $this->assertEquals('My entities', $pageTitle->text());
+        $this->assertContains("Entities of service 'SURFnet'", $pageTitle->text());
         $this->assertCount(4, $crawler->filter('table tr'), 'Expecting three rows (including header)');
 
         $row = $crawler->filter('table tr')->eq(3);
@@ -149,7 +149,7 @@ class EntityListTest extends WebTestCase
         $this->clearFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $crawler = $this->client->request('GET', '/');
+        $this->client->request('GET', '/');
         $response = $this->client->getResponse();
 
         $this->assertTrue(
@@ -165,9 +165,10 @@ class EntityListTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $crawler = $this->client->request('GET', '/');
+        $this->client->request('GET', '/');
         $response = $this->client->getResponse();
 
+        $this->assertContains('No service selected', $response->getContent());
         $this->assertContains('Please select a service', $response->getContent());
     }
 }
