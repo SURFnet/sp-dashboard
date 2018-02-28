@@ -15,8 +15,8 @@ parameters:
     secret: {{ spdashboard_symfony_secret }}
     administrator_team: {{ spdashboard_administrator_team }}
     metadata_url_timeout: 30
-    session_max_absolute_lifetime: 3600
-    session_max_relative_lifetime: 600
+    session_max_absolute_lifetime: 172800
+    session_max_relative_lifetime: 28800
     logout_redirect_url: https://www.surf.nl/over-surf/werkmaatschappijen/surfnet
     saml_sp_publickey: "{{ spdashboard_saml_sp_publickey }}"
     saml_sp_privatekey: "{{ spdashboard_saml_sp_privatekey }}"
