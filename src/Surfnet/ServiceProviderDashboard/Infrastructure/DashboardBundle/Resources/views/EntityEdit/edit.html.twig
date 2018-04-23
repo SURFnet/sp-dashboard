@@ -11,10 +11,10 @@
 
     <div class="fieldset card">
 
-        {% for message in app.flashes('error') %}
-            <div class="message error">
-                {{ message|trans }}
-            </div>
+        {% for type, messages in app.session.flashbag.all %}
+            {% for message in messages %}
+                <div class="message {{ type }}">{{ message|trans }}</div>
+            {% endfor %}
         {% endfor %}
 
         <h2>{{ 'entity.edit.info.title'|trans }}</h2>

@@ -316,9 +316,23 @@ class EntityEditTest extends WebTestCase
         $message = $crawler->filter('.message.error')->first();
 
         $this->assertEquals(
-            'An error occurred while importing the metadata.',
+            'The provided metadata is invalid.',
             trim($message->text()),
             'Expected an error message for this invalid importUrl'
+        );
+
+        $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(0);
+        $missingMessage = $crawler->filter('.message.preformatted')->eq(1);
+
+        $this->assertContains(
+            "EntityDescriptor', attribute 'entityED': The attribute 'entityED' is not allowed.",
+            $notAllowedMessage->text(),
+            'Expected an XML parse error.'
+        );
+        $this->assertContains(
+            "EntityDescriptor': The attribute 'entityID' is required but missing.",
+            $missingMessage->text(),
+            'Expected an XML parse error.'
         );
     }
 }

@@ -335,6 +335,11 @@ class Parser implements ParserInterface
     {
         libxml_use_internal_errors(true);
 
+        // Web tests use the dom crawler, if any xml errors are encountered by using the crawler they are stored in the
+        // error buffer. Clearing the buffer before validating the schema prevents the showing of irrelevant messages to
+        //the end user.
+        libxml_clear_errors();
+
         $doc = new \DOMDocument();
         $doc->loadXml($xml);
 
