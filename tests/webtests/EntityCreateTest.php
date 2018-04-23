@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCreateTest extends WebTestCase
@@ -132,6 +133,34 @@ class EntityCreateTest extends WebTestCase
         // Assert the entity id is in one of the td's of the first table row.
         $entityTr = $crawler->filter('.page-container table tbody tr')->first();
         $this->assertRegexp('/https:\/\/entity-id/', $entityTr->text());
+    }
+
+    public function test_it_can_save_the_form_without_name_id_format()
+    {
+        $formData = $this->buildValidFormData();
+        // Unset the name id format for this test, this is the case when the SP Dashboard user fills in the form
+        // manually (not using the import feature).
+        unset($formData['dashboard_bundle_entity_type']['nameIdFormat']);
+
+        $crawler = $this->client->request('GET', "/entity/create");
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        // The form is now redirected to the list view
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after saving an entity'
+        );
+
+        // Test if the entity has got the correct default name id format by loading it from the repository
+        $entities = $this->getEntityRepository()->findAll();
+        /** @var Entity $entity */
+        $entity = end($entities);
+        $this->assertEquals(Entity::NAME_ID_FORMAT_DEFAULT, $entity->getNameIdFormat());
     }
 
     public function test_it_can_publish_the_form()
