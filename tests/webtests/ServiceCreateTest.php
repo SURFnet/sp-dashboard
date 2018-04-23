@@ -60,6 +60,33 @@ class ServiceCreateTest extends WebTestCase
         $this->assertEquals('This is not a valid UUID.', $nodes->first()->text());
     }
 
+    public function test_it_validates_guid_correctly()
+    {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        // This UUID is not compliant to the RFC-4122 spec, but is a valid GUID
+        $formData = [
+            'dashboard_bundle_service_type' => [
+                'guid' => '1234abcd-146e-e711-80e8-005056956c1e',
+                'name' => 'The A Team',
+                'teamName' => 'team-a',
+            ]
+        ];
+
+        $crawler = $this->client->request('GET', '/service/create');
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after adding a service'
+        );
+    }
+
     public function test_it_rejects_duplicate_teamnames()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
