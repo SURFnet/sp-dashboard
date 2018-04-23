@@ -97,6 +97,17 @@ div.checkbox {
   }
 }
 
+div.radio-container {
+  label {
+    display: inline-block;
+  }
+  .help-button {
+    display: inline-block;
+    position: relative;
+    float: right;
+  }
+}
+
 @include phone {
   section.buttons {
     .button {

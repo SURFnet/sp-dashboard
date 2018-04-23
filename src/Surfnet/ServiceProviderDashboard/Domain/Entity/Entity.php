@@ -37,7 +37,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Entity
 {
     const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
+
+    // When adding valid name id formats, don't forget to add them to self::getValidNameIdFormats()
     const NAME_ID_FORMAT_DEFAULT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+    const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
 
     const ENVIRONMENT_TEST = 'test';
     const ENVIRONMENT_PRODUCTION = 'production';
@@ -1189,5 +1192,13 @@ class Entity
     public function isProduction()
     {
         return ($this->environment == self::ENVIRONMENT_PRODUCTION);
+    }
+
+    public static function getValidNameIdFormats()
+    {
+        return [
+            static::NAME_ID_FORMAT_DEFAULT,
+            static::NAME_ID_FORMAT_PERSISTENT,
+        ];
     }
 }

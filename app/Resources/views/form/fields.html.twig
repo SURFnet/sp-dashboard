@@ -66,6 +66,11 @@
     <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget -%}
 
+{%- block radio_widget -%}
+    {{ block('help_block') }}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock radio_widget -%}
+
 {%- block datetime_widget -%}
     {{ block('help_block') }}
     {% if widget == 'single_text' %}
@@ -79,6 +84,18 @@
         </div>
     {%- endif -%}
 {%- endblock datetime_widget -%}
+
+{# The radiogroup is styled to be able to receive help popups #}
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div class="radio-container">
+            {{- form_widget(child) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+            </div>
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
 
 {# Override the form_label to enable us to output anchors in form labels. #}
 {%- block form_label -%}

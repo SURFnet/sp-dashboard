@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCreateTest extends WebTestCase
@@ -43,14 +44,22 @@ class EntityCreateTest extends WebTestCase
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
+
         $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
+        $nameIdFormat = $form->get('dashboard_bundle_entity_type[metadata][nameIdFormat]');
+
         $this->assertEquals(
             '',
             $nameEnfield->getValue(),
             'Expect the NameEN field to be empty'
         );
-    }
 
+        $this->assertInstanceOf(
+            ChoiceFormField::class,
+            $nameIdFormat,
+            'Expect the NameIdFormat to be a radio group'
+        );
+    }
     public function test_it_imports_metadata()
     {
         $formData = [
@@ -323,8 +332,8 @@ class EntityCreateTest extends WebTestCase
     {
         return [
             'dashboard_bundle_entity_type' => [
-                'nameIdFormat' => 'transient',
                 'metadata' => [
+                    'nameIdFormat' => Entity::NAME_ID_FORMAT_DEFAULT,
                     'descriptionNl' => 'Description NL',
                     'descriptionEn' => 'Description EN',
                     'nameEn' => 'The A Team',

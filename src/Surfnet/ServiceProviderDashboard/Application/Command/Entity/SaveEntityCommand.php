@@ -324,6 +324,13 @@ class SaveEntityCommand implements Command
 
     /**
      * @var string
+     * @Assert\Choice(
+     *     callback={
+     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Entity",
+     *         "getValidNameIdFormats"
+     *     },
+     *     strict=true
+     * )
      */
     private $nameIdFormat;
 
