@@ -38,7 +38,7 @@ class PrivacyQuestionsFormBuilder
             [
                 'label' => 'privacy.form.label.whatData.html',
                 'attr' => [
-                    'help' => 'privacy.information.whatData',
+                    'data-help' => 'privacy.information.whatData',
                     'rows' => 8,
                 ],
             ]
@@ -50,7 +50,7 @@ class PrivacyQuestionsFormBuilder
             [
                 'label' => 'privacy.form.label.accessData.html',
                 'attr' => [
-                    'help' => 'privacy.information.accessData',
+                    'data-help' => 'privacy.information.accessData',
                     'rows' => 8,
                 ],
             ]
@@ -62,7 +62,7 @@ class PrivacyQuestionsFormBuilder
             [
                 'label' => 'privacy.form.label.country.html',
                 'attr' => [
-                    'help' => 'privacy.information.country',
+                    'data-help' => 'privacy.information.country',
                     'rows' => 8,
                 ],
             ]
@@ -74,7 +74,7 @@ class PrivacyQuestionsFormBuilder
             [
                 'label' => 'privacy.form.label.securityMeasures.html',
                 'attr' => [
-                    'help' => 'privacy.information.securityMeasures',
+                    'data-help' => 'privacy.information.securityMeasures',
                     'rows' => 8,
                 ],
             ]
@@ -85,7 +85,7 @@ class PrivacyQuestionsFormBuilder
             CheckboxType::class,
             [
                 'label' => 'privacy.form.label.certification.html',
-                'attr' => ['help' => 'privacy.information.certification'],
+                'attr' => ['data-help' => 'privacy.information.certification'],
             ]
         );
 
@@ -95,7 +95,7 @@ class PrivacyQuestionsFormBuilder
             [
                 'label' => 'privacy.form.label.certificationLocation.html',
                 'attr' => [
-                    'help' => 'privacy.information.certificationLocation',
+                    'data-help' => 'privacy.information.certificationLocation',
                     'rows' => 8,
                 ],
             ]
@@ -124,7 +124,7 @@ class PrivacyQuestionsFormBuilder
             CheckboxType::class,
             [
                 'label' => 'privacy.form.label.surfmarketDpaAgreement.html',
-                'attr' => ['help' => 'privacy.information.surfmarketDpaAgreement'],
+                'attr' => ['data-help' => 'privacy.information.surfmarketDpaAgreement'],
             ]
         );
 
@@ -133,7 +133,7 @@ class PrivacyQuestionsFormBuilder
             CheckboxType::class,
             [
                 'label' => 'privacy.form.label.surfnetDpaAgreement.html',
-                'attr' => ['help' => 'privacy.information.surfnetDpaAgreement'],
+                'attr' => ['data-help' => 'privacy.information.surfnetDpaAgreement'],
             ]
         );
 
@@ -143,7 +143,7 @@ class PrivacyQuestionsFormBuilder
             [
                 'label' => 'privacy.form.label.snDpaWhyNot.html',
                 'attr' => [
-                    'help' => 'privacy.information.snDpaWhyNot',
+                    'data-help' => 'privacy.information.snDpaWhyNot',
                     'rows' => 8,
                 ],
             ]
@@ -154,7 +154,7 @@ class PrivacyQuestionsFormBuilder
             CheckboxType::class,
             [
                 'label' => 'privacy.form.label.privacyPolicy.html',
-                'attr' => ['help' => 'privacy.information.privacyPolicy'],
+                'attr' => ['data-help' => 'privacy.information.privacyPolicy'],
             ]
         );
 
@@ -163,7 +163,7 @@ class PrivacyQuestionsFormBuilder
             TextType::class,
             [
                 'label' => 'privacy.form.label.privacyPolicyUrl.html',
-                'attr' => ['help' => 'privacy.information.privacyPolicyUrl'],
+                'attr' => ['data-help' => 'privacy.information.privacyPolicyUrl'],
             ]
         );
 
@@ -173,7 +173,7 @@ class PrivacyQuestionsFormBuilder
             [
                 'label' => 'privacy.form.label.otherInfo.html',
                 'attr' => [
-                    'help' => 'privacy.information.otherInfo',
+                    'data-help' => 'privacy.information.otherInfo',
                     'rows' => 8,
                 ],
             ]

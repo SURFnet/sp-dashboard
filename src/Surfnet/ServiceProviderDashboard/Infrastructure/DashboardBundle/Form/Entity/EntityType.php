@@ -61,7 +61,7 @@ class EntityType extends AbstractType
                         TextType::class,
                         [
                             'disabled' => true,
-                            'attr' => ['help' => 'entity.edit.information.ticketNumber'],
+                            'attr' => ['data-help' => 'entity.edit.information.ticketNumber'],
                         ]
                     )
             )
@@ -71,7 +71,7 @@ class EntityType extends AbstractType
                         'importUrl',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.importUrl'],
+                            'attr' => ['data-help' => 'entity.edit.information.importUrl'],
                         ]
                     )
                     ->add(
@@ -79,7 +79,7 @@ class EntityType extends AbstractType
                         TextareaType::class,
                         [
                             'attr' => [
-                                'help' => 'entity.edit.information.pastedMetadata',
+                                'data-help' => 'entity.edit.information.pastedMetadata',
                                 'rows' => 10,
                             ],
                         ]
@@ -96,21 +96,21 @@ class EntityType extends AbstractType
                         'metadataUrl',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.metadataUrl'],
+                            'attr' => ['data-help' => 'entity.edit.information.metadataUrl'],
                         ]
                     )
                     ->add(
                         'acsLocation',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.acsLocation'],
+                            'attr' => ['data-help' => 'entity.edit.information.acsLocation'],
                         ]
                     )
                     ->add(
                         'entityId',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.entityId'],
+                            'attr' => ['data-help' => 'entity.edit.information.entityId'],
                         ]
                     )
                     ->add(
@@ -118,7 +118,7 @@ class EntityType extends AbstractType
                         TextareaType::class,
                         [
                             'attr' => [
-                                'help' => 'entity.edit.information.certificate',
+                                'data-help' => 'entity.edit.information.certificate',
                                 'rows' => 10,
                             ],
                         ]
@@ -127,14 +127,14 @@ class EntityType extends AbstractType
                         'logoUrl',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.logoUrl'],
+                            'attr' => ['data-help' => 'entity.edit.information.logoUrl'],
                         ]
                     )
                     ->add(
                         'nameNl',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.nameNl'],
+                            'attr' => ['data-help' => 'entity.edit.information.nameNl'],
                         ]
                     )
                     ->add(
@@ -142,7 +142,7 @@ class EntityType extends AbstractType
                         TextareaType::class,
                         [
                             'attr' => [
-                                'help' => 'entity.edit.information.descriptionNl',
+                                'data-help' => 'entity.edit.information.descriptionNl',
                                 'rows' => 10,
                             ],
                         ]
@@ -151,7 +151,7 @@ class EntityType extends AbstractType
                         'nameEn',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.nameEn'],
+                            'attr' => ['data-help' => 'entity.edit.information.nameEn'],
                         ]
                     )
                     ->add(
@@ -159,7 +159,7 @@ class EntityType extends AbstractType
                         TextareaType::class,
                         [
                             'attr' => [
-                                'help' => 'entity.edit.information.descriptionEn',
+                                'data-help' => 'entity.edit.information.descriptionEn',
                                 'rows' => 10,
                             ],
                         ]
@@ -168,14 +168,14 @@ class EntityType extends AbstractType
                         'applicationUrl',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.applicationUrl'],
+                            'attr' => ['data-help' => 'entity.edit.information.applicationUrl'],
                         ]
                     )
                     ->add(
                         'eulaUrl',
                         TextType::class,
                         [
-                            'attr' => ['help' => 'entity.edit.information.eulaUrl'],
+                            'attr' => ['data-help' => 'entity.edit.information.eulaUrl'],
                         ]
                     )
             )
@@ -186,7 +186,7 @@ class EntityType extends AbstractType
                         ContactType::class,
                         [
                             'by_reference' => false,
-                            'attr' => ['help' => 'entity.edit.information.administrativeContact'],
+                            'attr' => ['data-help' => 'entity.edit.information.administrativeContact'],
                         ]
                     )
                     ->add(
@@ -194,7 +194,7 @@ class EntityType extends AbstractType
                         ContactType::class,
                         [
                             'by_reference' => false,
-                            'attr' => ['help' => 'entity.edit.information.technicalContact'],
+                            'attr' => ['data-help' => 'entity.edit.information.technicalContact'],
                         ]
                     )
                     ->add(
@@ -202,7 +202,7 @@ class EntityType extends AbstractType
                         ContactType::class,
                         [
                             'by_reference' => false,
-                            'attr' => ['help' => 'entity.edit.information.supportContact'],
+                            'attr' => ['data-help' => 'entity.edit.information.supportContact'],
                         ]
                     )
             )
@@ -217,7 +217,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.givenNameAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.givenNameAttribute'],
                         ]
                     )
                     ->add(
@@ -226,7 +226,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.surNameAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.surNameAttribute'],
                         ]
                     )
                     ->add(
@@ -235,7 +235,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.commonNameAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.commonNameAttribute'],
                         ]
                     )
                     ->add(
@@ -244,7 +244,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.displayNameAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.displayNameAttribute'],
                         ]
                     )
                     ->add(
@@ -253,7 +253,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.emailAddressAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.emailAddressAttribute'],
                         ]
                     )
                     ->add(
@@ -262,7 +262,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.organizationAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.organizationAttribute'],
                         ]
                     )
                     ->add(
@@ -271,7 +271,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.organizationTypeAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.organizationTypeAttribute'],
                         ]
                     )
                     ->add(
@@ -280,7 +280,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.affiliationAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.affiliationAttribute'],
                         ]
                     )
                     ->add(
@@ -289,7 +289,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.entitlementAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.entitlementAttribute'],
                         ]
                     )
                     ->add(
@@ -298,7 +298,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.principleNameAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.principleNameAttribute'],
                         ]
                     )
                     ->add(
@@ -307,7 +307,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.uidAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.uidAttribute'],
                         ]
                     )
                     ->add(
@@ -316,7 +316,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.preferredLanguageAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.preferredLanguageAttribute'],
                         ]
                     )
                     ->add(
@@ -325,7 +325,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.personalCodeAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.personalCodeAttribute'],
                         ]
                     )
                     ->add(
@@ -334,7 +334,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.scopedAffiliationAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.scopedAffiliationAttribute'],
                         ]
                     )
                     ->add(
@@ -343,7 +343,7 @@ class EntityType extends AbstractType
                         [
                             'by_reference' => false,
                             'required' => false,
-                            'attr' => ['help' => 'entity.edit.information.eduPersonTargetedIDAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.eduPersonTargetedIDAttribute'],
                         ]
                     )
             )
@@ -354,7 +354,7 @@ class EntityType extends AbstractType
                         TextareaType::class,
                         [
                             'attr' => [
-                                'help' => 'entity.edit.information.comments',
+                                'data-help' => 'entity.edit.information.comments',
                                 'rows' => 10,
                             ],
                         ]

@@ -1,6 +1,6 @@
 {%- block help_block -%}
     {% for attrname,attrvalue in attr %}
-        {% if attrname == 'help' %}
+        {% if attrname == 'data-help' %}
             <span title="{{ attrvalue|trans }}" class="help-button">
                 <i class="fa fa-question-circle"></i>
             </span>
