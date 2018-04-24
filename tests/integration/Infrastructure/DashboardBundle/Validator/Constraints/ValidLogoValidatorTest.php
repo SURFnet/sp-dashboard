@@ -18,21 +18,38 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Mockery as m;
+use Mockery\Mock;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoInvalidTypeException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoNotFoundException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\LogoValidationHelperInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogo;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class ValidLogoValidatorTest extends ConstraintValidatorTestCase
 {
+    /**
+     * @var LogoValidationHelperInterface|Mock
+     */
+    private $validationHelper;
+
     protected function createValidator()
     {
-        return new ValidLogoValidator();
+        $this->validationHelper = m::mock(LogoValidationHelperInterface::class);
+
+        return new ValidLogoValidator($this->validationHelper);
     }
 
     public function test_success_png()
     {
         $constraint = new ValidLogo();
-        $this->validator->validate('file://' .__DIR__ . '/fixture/logo_validator/small.png', $constraint);
+
+        $this->validationHelper
+            ->shouldReceive('validateLogo')
+            ->andReturn(null);
+
+        $this->validator->validate('file://'.__DIR__.'/fixture/logo_validator/small.png', $constraint);
 
         $this->assertNoViolation();
     }
@@ -40,7 +57,12 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
     public function test_success_gif()
     {
         $constraint = new ValidLogo();
-        $this->validator->validate('file://' . __DIR__ . '/fixture/logo_validator/small.gif', $constraint);
+
+        $this->validationHelper
+            ->shouldReceive('validateLogo')
+            ->andReturn(null);
+
+        $this->validator->validate('file://'.__DIR__.'/fixture/logo_validator/small.gif', $constraint);
 
         $this->assertNoViolation();
     }
@@ -56,6 +78,11 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_image()
     {
         $constraint = new ValidLogo();
+
+        $this->validationHelper
+            ->shouldReceive('validateLogo')
+            ->andReturn(null);
+
         $this->validator->validate('ufjd', $constraint);
 
         $violations = $this->context->getViolations();
@@ -67,11 +94,32 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_type()
     {
         $constraint = new ValidLogo();
-        $this->validator->validate(__DIR__ . '/fixture/logo_validator/image.jpg', $constraint);
+
+        $this->validationHelper
+            ->shouldReceive('validateLogo')
+            ->andThrow(LogoInvalidTypeException::class);
+
+        $this->validator->validate(__DIR__.'/fixture/logo_validator/image.jpg', $constraint);
 
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
 
         $this->assertEquals('validator.logo.wrong_type', $violation->getMessageTemplate());
+    }
+
+    public function test_unable_to_download()
+    {
+        $constraint = new ValidLogo();
+
+        $this->validationHelper
+            ->shouldReceive('validateLogo')
+            ->andThrow(LogoNotFoundException::class);
+
+        $this->validator->validate('https://example.com/foobar.jpg', $constraint);
+
+        $violations = $this->context->getViolations();
+        $violation = $violations->get(0);
+
+        $this->assertEquals('validator.logo.download_failed', $violation->getMessageTemplate());
     }
 }
