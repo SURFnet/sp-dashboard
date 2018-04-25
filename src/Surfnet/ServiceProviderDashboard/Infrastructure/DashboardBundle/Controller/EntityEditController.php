@@ -76,7 +76,7 @@ class EntityEditController extends Controller
 
         $command = SaveEntityCommand::fromEntity($entity);
 
-        $form = $this->createForm(EntityType::class, $command);
+        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
 
         if ($entity->isPublished()) {
             $form->remove('save');

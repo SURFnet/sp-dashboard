@@ -227,4 +227,13 @@ trait EntityControllerTrait
     {
         return $this->assertUsedSubmitButton($form, 'cancel');
     }
+
+    private function buildOptions($environment)
+    {
+        $options = [];
+        if ($environment === Entity::ENVIRONMENT_PRODUCTION) {
+            $options = ['validation_groups' => ['Default', 'production']];
+        }
+        return $options;
+    }
 }

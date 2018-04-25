@@ -398,8 +398,7 @@ class EntityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => SaveEntityCommand::class,
-            'validation_groups' => ['Default', 'production']
+            'data_class' => SaveEntityCommand::class
         ));
     }
 
