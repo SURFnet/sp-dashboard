@@ -65,7 +65,7 @@ class SaveEntityCommand implements Command
      * @var string
      *
      * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"production", "test"})
+     * @Assert\Choice(choices = {"production", "test"}, strict=true)
      */
     private $environment = Entity::ENVIRONMENT_TEST;
 
