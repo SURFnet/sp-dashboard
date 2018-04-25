@@ -64,8 +64,8 @@ class SaveEntityCommand implements Command
     /**
      * @var string
      *
-     * @Assert\NotBlank(groups={"creation"})
-     * @Assert\Choice(choices = {"production", "test"}, groups={"creation"})
+     * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"production", "test"})
      */
     private $environment = Entity::ENVIRONMENT_TEST;
 
@@ -80,11 +80,9 @@ class SaveEntityCommand implements Command
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @Assert\Url(
      *      protocols={"https"},
-     *      message = "url.notSecure",
-     *      groups={"finished"}
+     *      message = "url.notSecure"
      * )
      */
     private $metadataUrl;
@@ -101,8 +99,7 @@ class SaveEntityCommand implements Command
      * @Assert\Url(protocols={"https","http"})
      * @Assert\Url(
      *      protocols={"https"},
-     *      message = "url.notSecure",
-     *      groups={"finished"}
+     *      message = "url.notSecure"
      * )
      */
     private $acsLocation;
