@@ -134,17 +134,20 @@ class SaveEntityCommand implements Command
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $nameNl;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $nameEn;
 
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @Assert\Length(max = 300)
      */
     private $descriptionNl;
@@ -152,6 +155,7 @@ class SaveEntityCommand implements Command
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @Assert\Length(max = 300)
      */
     private $descriptionEn;
