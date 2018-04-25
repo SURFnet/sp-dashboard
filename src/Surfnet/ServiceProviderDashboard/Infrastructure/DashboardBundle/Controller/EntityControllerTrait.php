@@ -105,6 +105,10 @@ trait EntityControllerTrait
             $this->addFlash('error', 'entity.edit.metadata.fetch.exception');
         } catch (ParserException $e) {
             $this->addFlash('error', 'entity.edit.metadata.parse.exception');
+            // Also show the parser messages
+            foreach ($e->getParserErrors() as $error) {
+                $this->addFlash('preformatted', $error->message);
+            }
         } catch (InvalidArgumentException $e) {
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
         }

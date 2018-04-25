@@ -29,6 +29,21 @@ em, div.message {
       margin-bottom: 15px;
     }
   }
+
+  &.preformatted {
+    background: $light-grey;
+    color: $dark-grey;
+    padding: 0.5em 1em;
+    font-family: monospace;
+    font-size: 95%;
+    line-height: 140%;
+    white-space: pre;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    overflow: auto;
+    max-height: 12em;
+  }
 }
 
 div.form-row.error {
