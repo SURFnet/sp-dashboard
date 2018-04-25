@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns0:EntitiesDescriptor xmlns:ns0="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ns1="http://www.w3.org/2000/09/xmldsig#" xmlns:ns2="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:ns3="urn:oasis:names:tc:SAML:metadata:ui" ID="id-TzWYoqkDNNl60sbKQ">
+    <ns1:Signature Id="Signature1">
+        <ns1:SignedInfo>
+            <ns1:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <ns1:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <ns1:Reference URI="#id-TzWYoqkDNNl60sbKQ">
+                <ns1:Transforms>
+                    <ns1:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <ns1:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                </ns1:Transforms>
+                <ns1:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <ns1:DigestValue>L2bVAzzipqt/8ueHWEuYk6D1ysY=</ns1:DigestValue>
+            </ns1:Reference>
+        </ns1:SignedInfo>
+        <ns1:SignatureValue>eAUSR79r8anL9k2yJ8/HSGguE6F6///7RhNvlQQplg4gY/Ey81HW2txzYLbDFEIq
+            YDSHdCFveay4ZqJmR1HxIGOq7aiRsWow0tH3UHICSdBc7z0l5T9/65qxzEAbDG4i
+            DFOYShPryKC8BvFZ3S4x4EkNnx1ENE7Z7JeIyP77BIr5OoaA7s15JgI2Gb+WKck8
+            ec5tmQbUr8s39W8JFLu9705uwBwxfHXuZGTb+9TJU3iQxkIfXYiIM1xowVJfKsgc
+            V0oJ28KHdIVZjbnBU/hq2J1qJUubw3uZ9HxWscoWYuwrCsYgb75MhvPcQjNDjMR9
+            p3X5Nl1QO1GPMaWWDLheUA==</ns1:SignatureValue>
+        <ns1:KeyInfo>
+            <ns1:X509Data>
+                <ns1:X509Certificate>MIIDFDCCAfygAwIBAgIJAK/RlU5jI0i1MA0GCSqGSIb3DQEBCwUAMB8xCzAJBgNVBAYTAk5MMRAwDgYDVQQDDAdzaWduaW5nMB4XDTE3MDkxNTEzMTk0N1oXDTI3MDkxMzEzMTk0N1owHzELMAkGA1UEBhMCTkwxEDAOBgNVBAMMB3NpZ25pbmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDG/ipjEdHRGGgT8sCLvRwUHrVp3BDnBBjw2LSE5qEjabVR6lrOcytpgNQ/XaApdt6Qm3vLOE2pvE83cwGCCUHgdEpJiIsbHttRYa0H6NnBOU/FohTmKqOZGJhCaBH+WFaFAewIXooTGeI08VAVIFuisH3sf0jKT70ccjFKyezT3hrT8WqG5neJcbC6sN4FeN7Gz0jf4COlJ59i0tpObGC4xfM3PxoFJP5frXAZmBRrzy82Nv1cta6+WNljLPoR1WrgWSCPUCpD7uvo/OLHBtPbE7wt9+1J+ZoYUFa7qGtpGl5imUaumS1Tru0UvtPqjwOxyrzuzavG52VDoeQJo9/BAgMBAAGjUzBRMB0GA1UdDgQWBBT84NrILi5+tAmc/te2Z2YAbn2waDAfBgNVHSMEGDAWgBT84NrILi5+tAmc/te2Z2YAbn2waDAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQCZsOGy+v8vTXK9U0TFH7ndfoS62VqOldDoMw3oWnYN8Y2FyYTQqXwiQEFgHo7GJWFjwVsvBV0Bgke4oR2DMMMk3rV/AmdDCbnjUG9pkjhRDMT6xzq6P1eydUYwGe2UOPDMyeHZcjEyTk/+z2Kiwrs4I0RRGiuc2Z5oxu5xs2e0VZusNSn8bCme50+Zh1UKwKv94mEtEqm6kt8eNGDT7hKhCJyMf6gQHjAaTkaCc3vls1+X92Tbitpq+st5ct2AcHSo3HwMdiC3iA72IggwQS5SIMC8Rm3NSyWBEcvSNm9SQtrNRguds6g5bKrpmteFTJuS5JTiR5G2BgAW1DQPJDI1</ns1:X509Certificate>
+            </ns1:X509Data>
+        </ns1:KeyInfo>
+    </ns1:Signature>
+    <ns0:EntityDescriptor entityID="https://test.foo.bar.com/SamlSP/proxy.xml">
+        <ns0:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+            <ns0:Extensions>
+                <ns2:DiscoveryResponse Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://test.foo.bar.com/SamlSP/disco" index="1" />
+                <ns3:UIInfo>
+                    <ns3:DisplayName xml:lang="en">FooBar: test instance</ns3:DisplayName>
+                    <ns3:Description xml:lang="en">Th FooBar offers a platform for Federated Identity and Access Management which is specially aimed at research collaborations. This is our test instance.</ns3:Description>
+                    <ns3:Keywords xml:lang="nl">FooBar onderzoek research samenwerking lorem ipsum dolor sit FOOBAR</ns3:Keywords>
+                    <ns3:Keywords xml:lang="en">FooBar science research collaboration lorem ipsum dolor sit FOOBAR</ns3:Keywords>
+                    <ns3:Logo height="150" width="150">https://meta.test.scz.lab.foobar.nl/Light-Bulb_icon_by_Till_Teenck.svg</ns3:Logo>
+                    <ns3:InformationURL xml:lang="en">https://wiki.bar.com/display/SCZ</ns3:InformationURL>
+                    <ns3:PrivacyStatementURL xml:lang="en">http://idp.privacy.url/</ns3:PrivacyStatementURL>
+                </ns3:UIInfo>
+            </ns0:Extensions>
+            <ns0:KeyDescriptor use="signing">
+                <ns1:KeyInfo>
+                    <ns1:X509Data>
+                        <ns1:X509Certificate>MIIDFjCCAf6gAwIBAgIJAJu/wbpXSWIkMA0GCSqGSIb3DQEBCwUAMCAxCzAJBgNV
+                            BAYTAk5MMREwDwYDVQQDDAhmcm9udGVuZDAeFw0xNzA5MTUxMzI0NDhaFw0yNzA5
+                            MTMxMzI0NDhaMCAxCzAJBgNVBAYTAk5MMREwDwYDVQQDDAhmcm9udGVuZDCCASIw
+                            DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJhCjoFAM/dPZSD6LuDuo5BFn6uq
+                            P8PIoS0ntHFqUhXHx9835H+HoriOgdHH3EXgKzI/QQUHsNZTKTpYF/W+QohaqHAE
+                            ifMQyH8ETGIGaHw8oAa2i/K6EGLhmFNdqeKej4b3guUlX76oZI5tJCPcyNgFPvDN
+                            mlI5K/pCmdMkiiecon4IK/zNrwcVJVgmFIbqTw/FxtX7iUaPp+9BCYP060GX5Zlf
+                            3SoPn5q9f86NC5YoyeSswnz7ICPB8hYCSOfljtfUr7oI3KaSXoWsiBlMt9O8QEj0
+                            Ha1sthbI8QABq6cdxa6KaBrBD+Q9gWn2IemPwp/sAt5EIFEkRKDYMm0udK8CAwEA
+                            AaNTMFEwHQYDVR0OBBYEFKakhc+JxFmNEh+B22DuEMWoh1TaMB8GA1UdIwQYMBaA
+                            FKakhc+JxFmNEh+B22DuEMWoh1TaMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcN
+                            AQELBQADggEBAB6l6KLL7hQKhVM4VvaFG5jzwGHzMiLjiOlAOtCcVPmo4rHjI5do
+                            5qjf2ZRm+GRaKDVt351M27rvt5sQJFLN8AwlsYAgzWYx7G+/asHxFSi8bJm1RT1y
+                            6bWQSDehmG1330izElcrv1LDHIAifFohYiTgxt5le8WL6tx9EG4b8cOhZf0PpVHU
+                            6vb0UwFtLTGz4xhwy9QyZec8lNZV56SyrTj46Ymmxrv887ha0apgHcjSuA28kfb1
+                            a1mKjhP3pHOEWF+dKKnF8Gb4c3r8HkiIrwKh9vkr/n2nbatHVxtqwsBCA2YWBlUf
+                            SiHilQJo1ItURBohZS51TrRJtxuKgg/rGio=</ns1:X509Certificate>
+                    </ns1:X509Data>
+                </ns1:KeyInfo>
+            </ns0:KeyDescriptor>
+            <ns0:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</ns0:NameIDFormat>
+            <ns0:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://test.foo.bar.com/SamlSP/acs/post" index="1" />
+            <ns0:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://test.foo.bar.com/SamlSP/acs/redirect" index="2" />
+        </ns0:SPSSODescriptor>
+        <ns0:Organization>
+            <ns0:OrganizationName xml:lang="en">FOOBAR</ns0:OrganizationName>
+            <ns0:OrganizationDisplayName xml:lang="en">FOOBAR</ns0:OrganizationDisplayName>
+            <ns0:OrganizationURL xml:lang="en">https://www.foobar.nl/</ns0:OrganizationURL>
+        </ns0:Organization>
+        <ns0:ContactPerson contactType="technical">
+            <ns0:GivenName>Foo Baz</ns0:GivenName>
+            <ns0:EmailAddress>baz@bar.com</ns0:EmailAddress>
+        </ns0:ContactPerson>
+        <ns0:ContactPerson contactType="support">
+            <ns0:GivenName>Foo Bar</ns0:GivenName>
+            <ns0:EmailAddress>far@list.bar.com</ns0:EmailAddress>
+        </ns0:ContactPerson>
+        <ns0:ContactPerson contactType="administrative">
+            <ns0:GivenName>Foo Bat</ns0:GivenName>
+            <ns0:EmailAddress>foo@bar.com</ns0:EmailAddress>
+        </ns0:ContactPerson>
+    </ns0:EntityDescriptor>
+</ns0:EntitiesDescriptor>

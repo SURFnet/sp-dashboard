@@ -228,9 +228,15 @@ class EntityCreateTest extends WebTestCase
             'Expected an error message for this invalid importUrl'
         );
 
-        $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(0);
-        $missingMessage = $crawler->filter('.message.preformatted')->eq(1);
+        $genericMessage = $crawler->filter('.message.preformatted')->eq(0);
+        $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(1);
+        $missingMessage = $crawler->filter('.message.preformatted')->eq(2);
 
+        $this->assertContains(
+            "The metadata XML is invalid considering the associated XSD",
+            $genericMessage->text(),
+            'Expected an XML parse error.'
+        );
         $this->assertContains(
             "EntityDescriptor', attribute 'entityED': The attribute 'entityED' is not allowed.",
             $notAllowedMessage->text(),
@@ -290,6 +296,60 @@ class EntityCreateTest extends WebTestCase
         $this->assertEquals('production', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
     }
 
+    public function test_it_imports_multiple_entity_descriptor_metadata_with_a_single_entity()
+    {
+        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata_entities_descriptor.xml');
+        $formData = [
+            'dashboard_bundle_entity_type' => [
+                'metadata' => [
+                    'importUrl' => '',
+                    'pastedMetadata' => $xml,
+                ],
+            ],
+        ];
+        $crawler = $this->client->request('GET', "/entity/create");
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+
+        $form = $crawler->selectButton('Publish')->form();
+
+        // The imported metadata is loaded in the form (see: /fixtures/metadata/valid_metadata_entities_descriptor.xml)
+        $this->assertEquals(
+            'FooBar: test instance',
+            $form->get('dashboard_bundle_entity_type[metadata][nameEn]')->getValue()
+        );
+    }
+
+    public function test_it_does_not_import_multiple_entity_descriptor_metadata_with_a_multiple_entities()
+    {
+        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata_entities_descriptor.xml');
+        $formData = [
+            'dashboard_bundle_entity_type' => [
+                'metadata' => [
+                    'importUrl' => '',
+                    'pastedMetadata' => $xml,
+                ],
+            ],
+        ];
+        $crawler = $this->client->request('GET', "/entity/create");
+
+        $form = $crawler
+            ->selectButton('Import')
+            ->form();
+
+        $crawler = $this->client->submit($form, $formData);
+        $notSupportedMultipleEntitiesMessage = $crawler->filter('.message.preformatted')->first();
+
+        $this->assertContains(
+            'Using metadata that describes multiple entities is not supported. Please provide metadata describing a single SP entity.',
+            $notSupportedMultipleEntitiesMessage->text(),
+            'Expected an error message for unsupported multiple entities in metadata.'
+        );
+    }
     private function buildValidFormData()
     {
         return [
