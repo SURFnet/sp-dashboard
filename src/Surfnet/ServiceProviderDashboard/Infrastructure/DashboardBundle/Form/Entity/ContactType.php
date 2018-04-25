@@ -37,6 +37,7 @@ class ContactType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Contact::class,
+            'error_bubbling' => false,
         ));
     }
 

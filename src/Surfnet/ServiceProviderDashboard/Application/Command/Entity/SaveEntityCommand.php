@@ -175,8 +175,7 @@ class SaveEntityCommand implements Command
      * @var Contact
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\NotBlank()
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidContact(groups={"production"})
      */
     private $administrativeContact;
 
@@ -184,8 +183,7 @@ class SaveEntityCommand implements Command
      * @var Contact
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\NotBlank()
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidContact()
      */
     private $technicalContact;
 
@@ -193,8 +191,7 @@ class SaveEntityCommand implements Command
      * @var Contact
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\NotBlank()
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidContact(groups={"production"})
      */
     private $supportContact;
 
