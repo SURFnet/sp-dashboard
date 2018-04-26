@@ -1045,6 +1045,14 @@ class SaveEntityCommand implements Command
     }
 
     /**
+     * @return bool
+     */
+    public function hasNameIdFormat()
+    {
+        return !empty($this->nameIdFormat);
+    }
+
+    /**
      * @return string
      */
     public function getOrganizationNameNl()

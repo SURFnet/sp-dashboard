@@ -109,7 +109,14 @@ class SaveEntityCommandHandler implements CommandHandler
         $entity->setEduPersonTargetedIDAttribute($command->getEduPersonTargetedIDAttribute());
         $entity->setComments($command->getComments());
 
-        $entity->setNameIdFormat($command->getNameIdFormat());
+        // Set the name id format, fall back on the most sensible default (transient). This is only for users not
+        // utilizing the import feature.
+        if ($command->hasNameIdFormat()) {
+            $entity->setNameIdFormat($command->getNameIdFormat());
+        } else {
+            $entity->setNameIdFormat(Entity::NAME_ID_FORMAT_DEFAULT);
+        }
+
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());
         $entity->setOrganizationNameEn($command->getOrganizationNameEn());
         $entity->setOrganizationDisplayNameNl($command->getOrganizationDisplayNameNl());
