@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 
 use Psr\Log\LoggerInterface;
+use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\CertificateParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
@@ -88,17 +89,37 @@ class Parser implements ParserInterface
     /**
      * @param string $xml
      * @return Metadata
+     * @throws InvalidArgumentException
+     * @throws ParserException
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function parseXml($xml)
     {
         $this->validate($xml);
-
         $xml = simplexml_load_string($xml);
-
         $metadata = new Metadata();
-        $metadata->entityId = (string)$xml['entityID'];
 
-        $children = $xml->children(self::NS_MD);
+        if ($this->describesMultipleEntities($xml)) {
+            $count = $this->countEntities($xml);
+            $this->logger->info(
+                sprintf('The metadata describes %d entities (has EntitiesDescriptor container)', $count)
+            );
+            if ($count > 1) {
+                throw new ParserException(
+                    'Using metadata that describes multiple entities is not supported. Please provide metadata ' .
+                    'describing a single SP entity.'
+                );
+            }
+            // Metadata uses EntitiesDescriptor but describes only one entity, using that entity for import.
+            $children = $xml->children(self::NS_MD)->EntityDescriptor;
+            $entityDescriptorAttributes = $children->attributes();
+            $metadata->entityId = (string)$entityDescriptorAttributes['entityID'];
+        } else {
+            $metadata->entityId = (string)$xml['entityID'];
+            $children = $xml->children(self::NS_MD);
+        }
+
         $descriptor = $children->SPSSODescriptor;
         $contactPersons = $children->ContactPerson;
 
@@ -127,20 +148,20 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param \SimpleXMLElement $descriptor
-     * @param Metadata          $metadata
+     * @param SimpleXMLElement $descriptor
+     * @param Metadata $metadata
      */
     private function parseNameIdFormat($descriptor, Metadata $metadata)
     {
         $metadata->nameIdFormat = self::NAMEID_FORMAT_TRANSIENT;
 
         if (isset($descriptor->NameIDFormat)) {
-            $metadata->nameIdFormat = (string) $descriptor->NameIDFormat;
+            $metadata->nameIdFormat = (string)$descriptor->NameIDFormat;
         }
     }
 
     /**
-     * @param \SimpleXMLElement $descriptor
+     * @param SimpleXMLElement $descriptor
      * @param Metadata $metadata
      *
      * @throws InvalidArgumentException
@@ -167,8 +188,8 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param \SimpleXMLElement $descriptor
-     * @param Metadata          $metadata
+     * @param SimpleXMLElement $descriptor
+     * @param Metadata $metadata
      */
     private function parseCertificate($descriptor, Metadata $metadata)
     {
@@ -179,8 +200,8 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param \SimpleXMLElement $descriptor
-     * @param Metadata          $metadata
+     * @param SimpleXMLElement $descriptor
+     * @param Metadata $metadata
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -243,8 +264,8 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param \SimpleXMLElement $persons
-     * @param Metadata          $metadata
+     * @param SimpleXMLElement $persons
+     * @param Metadata $metadata
      */
     private function parseContactPersons($persons, Metadata $metadata)
     {
@@ -273,8 +294,8 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param \SimpleXMLElement $organization
-     * @param Metadata          $metadata
+     * @param SimpleXMLElement $organization
+     * @param Metadata $metadata
      */
     private function parseOrganization($organization, Metadata $metadata)
     {
@@ -293,7 +314,7 @@ class Parser implements ParserInterface
 
     /**
      * @param Metadata $metadata
-     * @param \SimpleXMLElement $element
+     * @param SimpleXMLElement $element
      * @param string $propertyName
      */
     private function setMultilingualMetadataProperty(Metadata $metadata, $element, $propertyName)
@@ -301,13 +322,13 @@ class Parser implements ParserInterface
         $lang = $element->attributes(static::NS_LANG);
         $lang = $lang['lang'];
 
-        $propertyNameWithLanguage = $propertyName . ucfirst(strtolower($lang));
-        $metadata->{$propertyNameWithLanguage} = (string) $element;
+        $propertyNameWithLanguage = $propertyName.ucfirst(strtolower($lang));
+        $metadata->{$propertyNameWithLanguage} = (string)$element;
     }
 
     /**
-     * @param \SimpleXMLElement $descriptor
-     * @param Metadata          $metadata
+     * @param SimpleXMLElement $descriptor
+     * @param Metadata $metadata
      */
     private function parseAttributes($descriptor, Metadata $metadata)
     {
@@ -320,7 +341,7 @@ class Parser implements ParserInterface
 
             foreach ($this->attributesMetadataRepository->findAll() as $attributeMetadata) {
                 if (in_array($attributes['Name'], $attributeMetadata->urns)) {
-                    $metadata->{$attributeMetadata->id . 'Attribute'} = $attr;
+                    $metadata->{$attributeMetadata->id.'Attribute'} = $attr;
                 }
             }
         }
@@ -343,7 +364,7 @@ class Parser implements ParserInterface
         $doc = new \DOMDocument();
         $doc->loadXml($xml);
 
-        if (!$doc->schemaValidate($this->schemaLocation . '/schemas/surf.xsd')) {
+        if (!$doc->schemaValidate($this->schemaLocation.'/schemas/surf.xsd')) {
             $errors = libxml_get_errors();
             libxml_clear_errors();
 
@@ -353,5 +374,29 @@ class Parser implements ParserInterface
             $ex->setParserErrors($errors);
             throw $ex;
         }
+    }
+
+    /**
+     * Tests if the metadata describes a single or multiple entities.
+     *
+     * Excerpt from https://docs.oasis-open.org/security/saml/v2.0/saml-metadata-2.0-os.pdf
+     *
+     * 2.3 Root Elements
+     * A SAML meta data instance describes either a single entity or
+     * multiple entities. In the former case, the root element MUST be
+     * <EntityDescriptor>. In the latter case, the root element MUST
+     * be <EntitiesDescriptor>.
+     *
+     * @param SimpleXMLElement $xml
+     * @return bool
+     */
+    private function describesMultipleEntities(SimpleXMLElement $xml)
+    {
+        return $xml->getName() === 'EntitiesDescriptor';
+    }
+
+    private function countEntities(SimpleXMLElement $xml)
+    {
+        return $xml->children(self::NS_MD)->count();
     }
 }

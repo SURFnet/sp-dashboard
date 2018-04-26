@@ -28,7 +28,7 @@ class ParserException extends InvalidArgumentException
     /**
      * @var \LibXMLError[]
      */
-    private $parserErrors;
+    private $parserErrors = [];
 
     /**
      * @param \LibXMLError[] $errors

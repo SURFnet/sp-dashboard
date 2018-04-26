@@ -321,9 +321,15 @@ class EntityEditTest extends WebTestCase
             'Expected an error message for this invalid importUrl'
         );
 
-        $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(0);
-        $missingMessage = $crawler->filter('.message.preformatted')->eq(1);
+        $genericMessage = $crawler->filter('.message.preformatted')->eq(0);
+        $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(1);
+        $missingMessage = $crawler->filter('.message.preformatted')->eq(2);
 
+        $this->assertContains(
+            "The metadata XML is invalid considering the associated XSD",
+            $genericMessage->text(),
+            'Expected an XML parse error.'
+        );
         $this->assertContains(
             "EntityDescriptor', attribute 'entityED': The attribute 'entityED' is not allowed.",
             $notAllowedMessage->text(),

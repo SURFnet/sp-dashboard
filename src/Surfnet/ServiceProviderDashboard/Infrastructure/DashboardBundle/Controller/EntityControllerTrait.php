@@ -106,6 +106,7 @@ trait EntityControllerTrait
         } catch (ParserException $e) {
             $this->addFlash('error', 'entity.edit.metadata.parse.exception');
             // Also show the parser messages
+            $this->addFlash('preformatted', $e->getMessage());
             foreach ($e->getParserErrors() as $error) {
                 $this->addFlash('preformatted', $error->message);
             }
