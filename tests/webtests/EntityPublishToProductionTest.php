@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DashboardBundle;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityPublishToProductionTest extends WebTestCase
@@ -62,11 +62,27 @@ class EntityPublishToProductionTest extends WebTestCase
         $entity->setService($service);
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
+        $entity->setDescriptionEn('MijnService description');
+        $entity->setDescriptionNl('MijnService description');
         $entity->setTicketNumber('IID-9');
+        $entity->setAdministrativeContact($this->buildContact());
+        $entity->setTechnicalContact($this->buildContact());
+        $entity->setSupportContact($this->buildContact());
         $entity->setEnvironment(Entity::ENVIRONMENT_PRODUCTION);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
 
         return $entity;
+    }
+
+    private function buildContact($firstName = 'John', $lastName = 'Doe', $email = 'foobar@exaple.com', $phone = null)
+    {
+        $contact = new Contact();
+        $contact
+            ->setFirstName($firstName)
+            ->setLastName($lastName)
+            ->setEmail($email)
+            ->setPhone($phone);
+        return $contact;
     }
 
     public function test_it_publishes_to_production()

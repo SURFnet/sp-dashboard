@@ -46,6 +46,7 @@ class AttributeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Attribute::class,
+            'error_bubbling' => false,
         ));
     }
 

@@ -87,7 +87,7 @@ class EntityCreateController extends Controller
         $command = SaveEntityCommand::forCreateAction($service);
         $command->setEnvironment($environment);
 
-        $form = $this->createForm(EntityType::class, $command);
+        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($environment));
 
         if ($this->isCopyRoute($request)) {
             if (!$request->isMethod('post')) {
@@ -183,7 +183,7 @@ class EntityCreateController extends Controller
             new CopyEntityCommand($command, $entityId, $manageId, $service, $environment)
         );
 
-        $form = $this->createForm(EntityType::class, $command);
+        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($environment));
         $form->remove('save');
 
         return $form;
