@@ -19,7 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -32,6 +34,7 @@ class EntityType extends AbstractType
 {
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
      *
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -111,6 +114,22 @@ class EntityType extends AbstractType
                         TextType::class,
                         [
                             'attr' => ['data-help' => 'entity.edit.information.entityId'],
+                        ]
+                    )
+                    ->add(
+                        'nameIdFormat',
+                        ChoiceType::class,
+                        [
+                            'expanded' => true,
+                            'multiple' => false,
+                            'choices'  => [
+                                'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_DEFAULT,
+                                'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
+                            ],
+                            'choice_attr' => function ($val, $key) {
+                                return ['help' => 'entity.edit.information.for.' . $key];
+                            },
+                            'attr' => ['class' => 'nameidformat-container'],
                         ]
                     )
                     ->add(
@@ -364,7 +383,6 @@ class EntityType extends AbstractType
             ->add('status', HiddenType::class)
             ->add('manageId', HiddenType::class)
             ->add('environment', HiddenType::class)
-            ->add('nameIdFormat', HiddenType::class)
             ->add('organizationNameNl', HiddenType::class)
             ->add('organizationNameEn', HiddenType::class)
             ->add('organizationDisplayNameNl', HiddenType::class)

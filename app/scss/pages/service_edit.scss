@@ -76,6 +76,51 @@ form {
     }
   }
 
+  .nameidformat-container {
+    @include clearfix;
+
+    width: 100%;
+  }
+
+  .form-row {
+    .radio-container {
+      border: 1px solid $lighter-grey;
+      border-radius: $br;
+      clear: both;
+      float: left;
+      margin: 5px 0;
+      width: 40%;
+
+      @media (max-width: #{$maxSmallPhone}) {
+        width: 100%;
+      }
+
+      label {
+        color: $dark-grey;
+        text-transform: none;
+        padding-left: 9px;
+      }
+
+      .help-button {
+        left: -9px;
+        top: 9px;
+      }
+    }
+
+    .input-container {
+      background-color: $light-blue;
+      display: inline-block;
+      height: 40px;
+      margin-bottom: 0;
+      padding: 10px;
+      width: 40px;
+    }
+
+    input[type="radio"] {
+      margin: 0;
+    }
+  }
+
   .fieldset.contact .form-row {
     // Header: "Administrative contact", "..."
     & > label {
