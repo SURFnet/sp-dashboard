@@ -129,6 +129,7 @@ class EntityType extends AbstractType
                             'choice_attr' => function ($val, $key) {
                                 return ['help' => 'entity.edit.information.for.' . $key];
                             },
+                            'attr' => ['class' => 'nameidformat-container'],
                         ]
                     )
                     ->add(
