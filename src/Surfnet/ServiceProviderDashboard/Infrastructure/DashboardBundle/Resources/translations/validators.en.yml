@@ -1,3 +1,4 @@
+validator.attribute.not_valid: 'Please provide a reason as to why you need this attribute.'
 validator.logo.wrong_type: 'Logo should be a PNG or GIF image.'
 validator.logo.not_an_image: 'Logo is not a valid image. Press question mark for details.'
 validator.logo.download_failed: 'The logo could not be downloaded to the server.'

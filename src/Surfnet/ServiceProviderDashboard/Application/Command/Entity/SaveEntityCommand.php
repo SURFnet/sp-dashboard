@@ -199,7 +199,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $givenNameAttribute;
 
@@ -207,7 +207,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $surNameAttribute;
 
@@ -215,7 +215,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $commonNameAttribute;
 
@@ -223,7 +223,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $displayNameAttribute;
 
@@ -231,7 +231,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $emailAddressAttribute;
 
@@ -239,7 +239,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $organizationAttribute;
 
@@ -247,7 +247,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $organizationTypeAttribute;
 
@@ -255,7 +255,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $affiliationAttribute;
 
@@ -263,7 +263,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $entitlementAttribute;
 
@@ -271,7 +271,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $principleNameAttribute;
 
@@ -279,7 +279,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $uidAttribute;
 
@@ -287,7 +287,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $preferredLanguageAttribute;
 
@@ -295,7 +295,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $personalCodeAttribute;
 
@@ -303,7 +303,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $scopedAffiliationAttribute;
 
@@ -311,7 +311,7 @@ class SaveEntityCommand implements Command
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @Assert\Valid()
+     * @SpDashboardAssert\ValidAttribute(groups={"production"})
      */
     private $eduPersonTargetedIDAttribute;
 

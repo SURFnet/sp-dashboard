@@ -184,6 +184,11 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: contact }
 
+    surfnet.dashboard.validator.attribute:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator
+        tags:
+            - { name: validator.constraint_validator, alias: attribute }
+
     surfnet.manage.client.publish_entity.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
         arguments:
