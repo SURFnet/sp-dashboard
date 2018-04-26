@@ -332,7 +332,7 @@ class SaveEntityCommand implements Command
      *     strict=true
      * )
      */
-    private $nameIdFormat;
+    private $nameIdFormat = Entity::NAME_ID_FORMAT_DEFAULT;
 
     /**
      * @var string
