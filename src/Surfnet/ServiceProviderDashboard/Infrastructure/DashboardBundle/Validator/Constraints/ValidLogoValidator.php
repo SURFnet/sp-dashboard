@@ -18,34 +18,62 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoInvalidTypeException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoNotFoundException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\LogoValidationHelperInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class ValidLogoValidator extends ConstraintValidator
 {
     /**
-     * @param string     $value
-     * @param Constraint $constraint
+     * The status code used when the download of the logo failed.
      */
+    const STATUS_DOWNLOAD_FAILED = 'validator.logo.download_failed';
+
+    /**
+     * The status code used when an invalid type is requested as logo
+     */
+    const STATUS_INVALID_TYPE = 'validator.logo.wrong_type';
+
+    /**
+     * @var LogoValidationHelperInterface
+     */
+    private $logoValidationHelper;
+
+    public function __construct(LogoValidationHelperInterface $logoValidationHelper)
+    {
+        $this->logoValidationHelper = $logoValidationHelper;
+    }
+
     public function validate($value, Constraint $constraint)
     {
         if (empty($value)) {
             return;
         }
 
-        $imgData = @getimagesize($value);
-
-        if ($imgData === false) {
-            $this->context->addViolation($constraint->message);
-
+        try {
+            $this->logoValidationHelper->validateLogo($value);
+            $this->getImageSizeValidation($value, $constraint);
+        } catch (LogoNotFoundException $e) {
+            $this->context->addViolation(self::STATUS_DOWNLOAD_FAILED);
+            return;
+        } catch (LogoInvalidTypeException $e) {
+            $this->context->addViolation(self::STATUS_INVALID_TYPE);
             return;
         }
+    }
 
-        $type = $imgData[2];
-
-        if ($type !== IMAGETYPE_PNG && $type !== IMAGETYPE_GIF) {
-            $this->context->addViolation('validator.logo.wrong_type');
-
+    /**
+     * Using getimagesize we can test if PHP can handle the resource as an image
+     * @param $value
+     * @param Constraint $constraint
+     */
+    private function getImageSizeValidation($value, Constraint $constraint)
+    {
+        $imgData = @getimagesize($value);
+        if ($imgData === false) {
+            $this->context->addViolation($constraint->message);
             return;
         }
     }

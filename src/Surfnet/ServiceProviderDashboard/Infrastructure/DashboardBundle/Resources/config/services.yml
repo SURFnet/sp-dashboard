@@ -171,8 +171,13 @@ services:
 
     surfnet.dashboard.validator.logo:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator
+        arguments:  ['@surfnet.dashboard.validator.logo_validation_helper']
         tags:
             - { name: validator.constraint_validator, alias: logo }
+
+    surfnet.dashboard.validator.logo_validation_helper:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper
+        arguments:  ['@logger']
 
     surfnet.manage.client.publish_entity.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
