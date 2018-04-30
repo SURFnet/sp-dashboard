@@ -114,7 +114,7 @@ class Entity
         for ($i=0; $i<=2; $i++) {
             $attrPrefix = sprintf('contacts:%d:', $i);
 
-            if ($metadata[$attrPrefix . 'contactType'] === 'administrative') {
+            if (isset($metadata[$attrPrefix . 'contactType']) && $metadata[$attrPrefix . 'contactType'] === 'administrative') {
                 return sprintf(
                     '%s %s (%s)',
                     $metadata[$attrPrefix . 'givenName'],
