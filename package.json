@@ -11,5 +11,8 @@
     "parsleyjs": "^2.8.1",
     "select2": "^4.0.3",
     "tippy.js": "^2.0.2"
+  },
+  "resolutions": {
+    "jquery": "3.3.1"
   }
 }

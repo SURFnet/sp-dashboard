@@ -1,8 +1,8 @@
 'use strict';
 
-require('../../node_modules/jquery/dist/jquery.js');
-require('./components/service_switcher.js');
-require('./components/service_edit_attribute.js');
-require('./components/translation_ui.js');
-require('./components/tooltips.js');
-
+import 'jquery';
+import './components/service_switcher.js';
+import './components/validation.js';
+import './components/service_edit_attribute.js';
+import './components/translation_ui.js';
+import './components/tooltips.js';
