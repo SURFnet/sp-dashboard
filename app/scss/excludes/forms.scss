@@ -57,6 +57,18 @@ div.form-row.error {
   }
 }
 
+div.form-row.warning {
+
+  input, textarea {
+    background-color: $lighter-orange;
+  }
+
+  p.parsley-errors {
+    color: $orange;
+    margin-bottom: .5em;
+  }
+}
+
 .validity-input-wrapper {
   position: relative;
 
