@@ -68,7 +68,7 @@ div.form-row.error {
   }
 }
 
-input[type=text], input[type=email], textarea {
+input[type=text], input[type=email], input[type=url], textarea {
   display: block;
   width: 100%;
   border: 1px solid $lighter-grey;

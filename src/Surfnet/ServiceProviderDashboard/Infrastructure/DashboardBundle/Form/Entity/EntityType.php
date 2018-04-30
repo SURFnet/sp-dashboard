@@ -27,9 +27,13 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class EntityType extends AbstractType
 {
     /**
@@ -64,6 +68,7 @@ class EntityType extends AbstractType
                         TextType::class,
                         [
                             'disabled' => true,
+                            'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.ticketNumber'],
                         ]
                     )
@@ -72,15 +77,20 @@ class EntityType extends AbstractType
                 $builder->create('metadata', FormType::class, ['inherit_data' => true])
                     ->add(
                         'importUrl',
-                        TextType::class,
+                        UrlType::class,
                         [
-                            'attr' => ['data-help' => 'entity.edit.information.importUrl'],
+                            'required' => false,
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.importUrl',
+                                'data-parsley-trigger' => 'blur',
+                            ],
                         ]
                     )
                     ->add(
                         'pastedMetadata',
                         TextareaType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.pastedMetadata',
                                 'rows' => 10,
@@ -97,23 +107,32 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'metadataUrl',
-                        TextType::class,
+                        UrlType::class,
                         [
-                            'attr' => ['data-help' => 'entity.edit.information.metadataUrl'],
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.metadataUrl',
+                                'data-parsley-trigger' => 'blur',
+                            ],
                         ]
                     )
                     ->add(
                         'acsLocation',
-                        TextType::class,
+                        UrlType::class,
                         [
-                            'attr' => ['data-help' => 'entity.edit.information.acsLocation'],
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.acsLocation',
+                                'data-parsley-trigger' => 'blur',
+                            ],
                         ]
                     )
                     ->add(
                         'entityId',
-                        TextType::class,
+                        UrlType::class,
                         [
-                            'attr' => ['data-help' => 'entity.edit.information.entityId'],
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.entityId',
+                                'data-parsley-trigger' => 'blur',
+                            ],
                         ]
                     )
                     ->add(
@@ -136,6 +155,7 @@ class EntityType extends AbstractType
                         'certificate',
                         TextareaType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.certificate',
                                 'rows' => 10,
@@ -144,9 +164,12 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'logoUrl',
-                        TextType::class,
+                        UrlType::class,
                         [
-                            'attr' => ['data-help' => 'entity.edit.information.logoUrl'],
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.logoUrl',
+                                'data-parsley-trigger' => 'blur',
+                            ],
                         ]
                     )
                     ->add(
@@ -185,16 +208,22 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'applicationUrl',
-                        TextType::class,
+                        UrlType::class,
                         [
-                            'attr' => ['data-help' => 'entity.edit.information.applicationUrl'],
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.applicationUrl',
+                                'data-parsley-trigger' => 'blur',
+                            ],
                         ]
                     )
                     ->add(
                         'eulaUrl',
-                        TextType::class,
+                        UrlType::class,
                         [
-                            'attr' => ['data-help' => 'entity.edit.information.eulaUrl'],
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.eulaUrl',
+                                'data-parsley-trigger' => 'blur',
+                            ],
                         ]
                     )
             )
@@ -372,6 +401,7 @@ class EntityType extends AbstractType
                         'comments',
                         TextareaType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.comments',
                                 'rows' => 10,
