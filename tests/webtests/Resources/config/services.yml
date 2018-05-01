@@ -1,17 +1,18 @@
 # This DI configuration file containes overrides on the DashboardBundle configuration,
 # typically to replace doctrine repositories with in-memory repositories.
 services:
-    surfnet.dashboard.command_handler.publish_entity:
+
+    Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler:
         class: Surfnet\ServiceProviderDashboard\Webtests\CommandHandler\MockPublishEntityCommandHandler
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand }
 
-    surfnet.dashboard.mailer:
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer:
         class: Surfnet\ServiceProviderDashboard\Webtests\Mailer\FakeMailer
         public: true
 
-    surfnet.dashboard.metadata.fetcher:
+    Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
         class: Surfnet\ServiceProviderDashboard\Webtests\Metadata\FakeFetcher
 
     surfnet.dashboard.session.storage.mock_file:
@@ -21,12 +22,12 @@ services:
             - 'MOCKSESSID'
             - '@session.storage.metadata_bag'
 
-    surfnet.dashboard.validator.logo:
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
         class: Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints\MockValidLogoValidator
         tags:
             - { name: validator.constraint_validator, alias: logo }
 
-    surfnet.dashboard.validator.entity_id:
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator:
         class: Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints\MockEntityIdValidator
         tags:
             - { name: validator.constraint_validator, alias: entity_id }
@@ -44,28 +45,7 @@ services:
     #
     # > The "logger" service is private, getting it from the container is
     # > deprecated since Symfony 3.2 and will fail in 4.0.
-    logger:
-        alias: 'monolog.logger'
+    surfnet_saml.saml2.bridge_container:
+        class: Surfnet\SamlBundle\SAML2\BridgeContainer
         public: true
-
-    surfnet.dashboard.repository.entity:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Entity]
-        public: true
-
-    surfnet.dashboard.repository.privacy_questions:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions]
-        public: true
-
-    surfnet.dashboard.repository.service:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
-        public: true
-
-    surfnet.dashboard.service.authorization:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
-        public: true
+        arguments: ['@logger']

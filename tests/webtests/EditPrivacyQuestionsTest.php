@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EditPrivacyQuestionsTest extends WebTestCase
@@ -34,7 +35,7 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $questions->setService($service);
         $questions->setCountry('Nederland');
 
-        $repo = $this->client->getContainer()->get('surfnet.dashboard.repository.privacy_questions');
+        $repo = $this->client->getContainer()->get(PrivacyQuestionsRepository::class);
         $repo->save($questions);
 
         $this->logIn('ROLE_USER', [$service]);
@@ -59,7 +60,7 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $questions->setService($service);
         $questions->setCountry('Nederland');
 
-        $repo = $this->client->getContainer()->get('surfnet.dashboard.repository.privacy_questions');
+        $repo = $this->client->getContainer()->get(PrivacyQuestionsRepository::class);
         $repo->save($questions);
 
         $this->logIn('ROLE_USER', [$service]);
