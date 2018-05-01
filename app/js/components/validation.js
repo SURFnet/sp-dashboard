@@ -22,12 +22,13 @@ if (form.length) {
     // Custom validation is added to show the attribute motivation warnings
     $('input.motivation').on('keyup', function () {
 
-        let parent = $(this).closest('.form-row');
-        let errorContainer = parent.parents('.form-row').find('.parsley-errors').first();
+        const parent = $(this).closest('.form-row');
+        const errorContainer = parent.parents('.form-row').find('.parsley-errors').first();
+        const translatedValidationText = $(this).data('motivation-keep-talking');
 
         if ($(this).val().length <= 10) {
             errorContainer.parent('.form-row').addClass('warning');
-            errorContainer.text('Please provide a more detailed motivation.');
+            errorContainer.text(translatedValidationText);
         } else {
             errorContainer.parent('.form-row').removeClass('warning');
             errorContainer.text('');
