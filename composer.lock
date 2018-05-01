@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "af1bd3e11b7e39de52d0c7581c236277",
+    "content-hash": "ea5373567334b44f681bbe27593fdfa4",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1623,21 +1623,21 @@
         },
         {
             "name": "lexik/translation-bundle",
-            "version": "dev-feature/fix-url-encode-issue",
+            "version": "v4.0.9",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ibuildingsnl/LexikTranslationBundle.git",
-                "reference": "950d106daf6c6cbf364e58efb2f8c56d3004ea18"
+                "url": "https://github.com/lexik/LexikTranslationBundle.git",
+                "reference": "0135ac63a168e736e68abacf9aeccc618c146dcd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ibuildingsnl/LexikTranslationBundle/zipball/950d106daf6c6cbf364e58efb2f8c56d3004ea18",
-                "reference": "950d106daf6c6cbf364e58efb2f8c56d3004ea18",
+                "url": "https://api.github.com/repos/lexik/LexikTranslationBundle/zipball/0135ac63a168e736e68abacf9aeccc618c146dcd",
+                "reference": "0135ac63a168e736e68abacf9aeccc618c146dcd",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6 || ^7.0",
-                "symfony/framework-bundle": "~2.8|~3.0"
+                "symfony/framework-bundle": "~2.8|~3.0|~4.0"
             },
             "require-dev": {
                 "doctrine/data-fixtures": "~1.1",
@@ -1645,12 +1645,12 @@
                 "doctrine/mongodb-odm-bundle": "~3.0",
                 "doctrine/orm": "^2.2.3",
                 "phpunit/phpunit": "^5.7",
-                "propel/propel-bundle": "~1.5|3.0.0-alpha1@dev"
+                "propel/propel": "@dev",
+                "propel/propel-bundle": "^3.0@dev|^4.0@dev"
             },
             "suggest": {
                 "doctrine/mongodb-odm-bundle": "~3.0",
-                "doctrine/orm": ">=2.4",
-                "propel/propel-bundle": "~1.5"
+                "doctrine/orm": ">=2.4"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -1663,17 +1663,18 @@
                     "Lexik\\Bundle\\TranslationBundle\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "name": "Cedric Girard",
-                    "email": "c.girard@lexik.fr"
-                },
-                {
                     "name": "Dev Lexik",
                     "email": "dev@lexik.fr"
+                },
+                {
+                    "name": "Cedric Girard",
+                    "email": "c.girard@lexik.fr"
                 }
             ],
             "description": "This bundle allows to import translation files content into the database and provide a GUI to edit translations.",
@@ -1684,10 +1685,7 @@
                 "i18n",
                 "translation"
             ],
-            "support": {
-                "source": "https://github.com/ibuildingsnl/LexikTranslationBundle/tree/feature/fix-url-encode-issue"
-            },
-            "time": "2017-10-06T06:50:09+00:00"
+            "time": "2018-03-27T11:29:23+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -5700,9 +5698,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "lexik/translation-bundle": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
