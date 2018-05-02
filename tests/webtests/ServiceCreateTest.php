@@ -60,6 +60,35 @@ class ServiceCreateTest extends WebTestCase
         $this->assertEquals('This is not a valid UUID.', $nodes->first()->text());
     }
 
+    public function test_empty_guid_field_is_allowed()
+    {
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $formData = [
+            'dashboard_bundle_service_type' => [
+                'guid' => '',
+                'name' => 'The A Team',
+                'teamName' => 'team-a',
+            ]
+        ];
+
+        $crawler = $this->client->request('GET', '/service/create');
+
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after adding a service'
+        );
+
+        $services = $this->getServiceRepository()->findAll();
+        $this->assertCount(3, $services);
+    }
+
     public function test_it_validates_guid_correctly()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
