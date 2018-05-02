@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityPublishToProductionTest extends WebTestCase
@@ -90,7 +91,7 @@ class EntityPublishToProductionTest extends WebTestCase
         // Entity id validation
         $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
 
-        $mailer = $this->client->getContainer()->get('surfnet.dashboard.mailer');
+        $mailer = $this->client->getContainer()->get(Mailer::class);
 
         // Build and save an entity to work with
         $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));

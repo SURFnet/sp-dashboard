@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Factory;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Firewall\SamlListener;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -30,13 +32,13 @@ class SamlFactory implements SecurityFactoryInterface
         $providerId = 'security.authentication.provider.saml.' . $id;
         $container->setDefinition(
             $providerId,
-            new ChildDefinition('surfnet.dashboard.security.authentication.provider.saml')
+            new ChildDefinition(SamlProvider::class)
         );
 
         $listenerId = 'security.authentication.listener.saml.' . $id;
         $container->setDefinition(
             $listenerId,
-            new ChildDefinition('surfnet.dashboard.security.authentication.listener')
+            new ChildDefinition(SamlListener::class)
         );
 
         $cookieHandlerId = 'security.logout.handler.cookie_clearing.' . $id;

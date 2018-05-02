@@ -38,17 +38,17 @@ services:
 
     surfnet.dashboard.command_handler.load_metadata:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\LoadMetadataCommandHandler
-        arguments:
-            - '@surfnet.dashboard.metadata.fetcher'
-            - '@surfnet.dashboard.metadata.parser'
         public: true
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher'
+            - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand }
 
     surfnet.dashboard.command_handler.mailer:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Mail\SendMailCommandHandler
         public: true
-        arguments: ['@surfnet.dashboard.mailer']
+        arguments: ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer']
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Mail\PublishToProductionMailCommand }
 
@@ -76,12 +76,10 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand }
 
-    surfnet.dashboard.mailer:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer:
         arguments: ['@mailer']
 
-    surfnet.dashboard.mailer_factory:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory:
         arguments:
             - '%mail_from%'
             - '%mail_receiver%'
@@ -90,119 +88,92 @@ services:
             - '@templating'
 
 
-    surfnet.dashboard.menu.builder:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder:
         tags:
             - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
 
-    surfnet.dashboard.metadata.certificate_parser:
+    Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser:
         class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser
 
     surfnet.dashboard.metadata.client:
         class: GuzzleHttp\Client
 
-    surfnet.dashboard.metadata.fetcher:
-        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher
+    Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
         arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%metadata_url_timeout%']
 
-    surfnet.dashboard.metadata.generator:
+    Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator
 
-    surfnet.dashboard.metadata.parser:
-        class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser
+    Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
-            - '@surfnet.dashboard.metadata.certificate_parser'
-            - '@surfnet.dashboard.repository.attributes_metadata'
+            - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
+            - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
             - '%kernel.root_dir%/Resources'
             - '@logger'
 
-    surfnet.dashboard.monolog.json_formatter:
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
-    surfnet.dashboard.repository.contact:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Contact]
 
-    surfnet.dashboard.repository.attributes_metadata:
-        class: Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository
+    Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
         arguments:  ['%kernel.root_dir%/Resources']
 
-    surfnet.dashboard.repository.entity:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Entity]
 
-    surfnet.dashboard.repository.privacy_questions:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions]
 
-    surfnet.dashboard.repository.service:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
 
-    surfnet.dashboard.service.authorization:
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
 
-    surfnet.dashboard.service.entity_service:
-        class: Surfnet\ServiceProviderDashboard\Application\Service\EntityService
-
-    surfnet.dashboard.service.service_service:
-        class: Surfnet\ServiceProviderDashboard\Application\Service\ServiceService
-
-    surfnet.dashboard.service.ticket:
-        class: Surfnet\ServiceProviderDashboard\Application\Service\TicketService
-
-    surfnet.dashboard.twig.service_switcher_extension:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension:
         tags: [twig.extension]
 
-    surfnet.dashboard.twig.identity_extension:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension:
         tags: [twig.extension]
 
-    surfnet.dashboard.validator.entity_id:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator
-        arguments:  ['@surfnet.manage.client.query_entity.test_environment']
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator:
+        arguments:  ['@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient']
         tags:
             - { name: validator.constraint_validator, alias: entity_id }
 
-    surfnet.dashboard.validator.logo:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator
-        arguments:  ['@surfnet.dashboard.validator.logo_validation_helper']
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
+        arguments:  ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper']
         tags:
             - { name: validator.constraint_validator, alias: logo }
 
-    surfnet.dashboard.validator.logo_validation_helper:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper:
         arguments:  ['@logger']
 
-    surfnet.dashboard.validator.contact:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidContactValidator
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidContactValidator:
         tags:
             - { name: validator.constraint_validator, alias: contact }
 
-    surfnet.dashboard.validator.attribute:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator:
         tags:
             - { name: validator.constraint_validator, alias: attribute }
 
-    surfnet.manage.client.publish_entity.test_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:
-            - '@surfnet.manage.http.client.test_environment'
-            - '@surfnet.dashboard.metadata.generator'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator'
             - '@logger'
 
-    surfnet.manage.client.query_entity.test_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
         arguments:
-            - '@surfnet.manage.http.client.test_environment'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
 
-    surfnet.manage.http.client.test_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environement'
 

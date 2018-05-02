@@ -25,16 +25,15 @@ use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Handler\MockHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Debug\Debug;
 
 class WebTestCase extends SymfonyWebTestCase
 {
@@ -50,10 +49,13 @@ class WebTestCase extends SymfonyWebTestCase
 
     public function setUp()
     {
+        // Disable notices, strict and deprecated warnings. Many Symfony 3.4 deprecation warnings are still to be fixed.
+        Debug::enable(E_RECOVERABLE_ERROR & ~E_DEPRECATED, false);
+
         $this->client = static::createClient(
             [],
             [
-            'HTTPS' => 'on',
+                'HTTPS' => 'on',
             ]
         );
 
@@ -127,7 +129,7 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function getServiceRepository()
     {
-        return $this->client->getContainer()->get('surfnet.dashboard.repository.service');
+        return $this->client->getContainer()->get(ServiceRepository::class);
     }
 
     /**
@@ -135,7 +137,7 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function getEntityRepository()
     {
-        return $this->client->getContainer()->get('surfnet.dashboard.repository.entity');
+        return $this->client->getContainer()->get(EntityRepository::class);
     }
 
     /**
@@ -143,6 +145,6 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function getAuthorizationService()
     {
-        return $this->client->getContainer()->get('surfnet.dashboard.service.authorization');
+        return $this->client->getContainer()->get(AuthorizationService::class);
     }
 }
