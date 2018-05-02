@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,7 +30,7 @@ class ContactType extends AbstractType
     {
         $builder->add('firstName');
         $builder->add('lastName');
-        $builder->add('email');
+        $builder->add('email', EmailType::class, ['required' => true]);
         $builder->add('phone');
     }
 
