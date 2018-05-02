@@ -127,7 +127,7 @@ class EntityType extends AbstractType
                                 'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
                             ],
                             'choice_attr' => function ($val, $key) {
-                                return ['help' => 'entity.edit.information.for.' . $key];
+                                return ['data-help' => 'entity.edit.information.for.' . $key];
                             },
                             'attr' => ['class' => 'nameidformat-container'],
                         ]
