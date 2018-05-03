@@ -60,22 +60,22 @@ class SamlProvider implements AuthenticationProviderInterface
     private $logger;
 
     /**
-     * @var string
+     * @var array
      */
-    private $administratorTeam;
+    private $administratorTeams;
 
     public function __construct(
         ContactRepository $contacts,
         ServiceRepository $services,
         AttributeDictionary $attributeDictionary,
         LoggerInterface $logger,
-        $administratorTeam
+        array $administratorTeams
     ) {
         $this->contacts = $contacts;
         $this->services = $services;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
-        $this->administratorTeam = $administratorTeam;
+        $this->administratorTeams = $administratorTeams;
     }
 
     /**
@@ -87,22 +87,24 @@ class SamlProvider implements AuthenticationProviderInterface
     {
         $translatedAssertion = $this->attributeDictionary->translate($token->assertion);
 
-        $nameId         = $translatedAssertion->getNameID();
-        $email          = $this->getSingleStringValue('mail', $translatedAssertion);
-        $commonName     = $this->getSingleStringValue('commonName', $translatedAssertion);
+        $nameId = $translatedAssertion->getNameID();
+        $email = $this->getSingleStringValue('mail', $translatedAssertion);
+        $commonName = $this->getSingleStringValue('commonName', $translatedAssertion);
 
         // Default to the ROLE_USER role for services.
         $role = 'ROLE_USER';
 
         try {
             // An exception is thrown when isMemberOf is empty.
-            $teamNames = (array) $translatedAssertion->getAttributeValue('isMemberOf');
+            $teamNames = (array)$translatedAssertion->getAttributeValue('isMemberOf');
         } catch (RuntimeException $e) {
             $teamNames = [];
         }
 
-        if (in_array($this->administratorTeam, $teamNames)) {
-            $role = 'ROLE_ADMINISTRATOR';
+        foreach ($this->administratorTeams as $teamName) {
+            if (in_array($teamName, $teamNames)) {
+                $role = 'ROLE_ADMINISTRATOR';
+            }
         }
 
         $contact = $this->contacts->findByNameId($nameId);
