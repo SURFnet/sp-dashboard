@@ -25,7 +25,7 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
             - '@surfnet_saml.saml.attribute_dictionary'
             - '@logger'
-            - '%surfnet.dashboard.security.authentication.administrator_team%'
+            - '%surfnet.dashboard.security.authentication.administrator_teams%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlInteractionProvider:
         arguments:

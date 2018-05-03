@@ -23,8 +23,9 @@ parameters:
 
     logout_redirect_url: https://www.surf.nl/over-surf/werkmaatschappijen/surfnet
 
-    # All users in this team get the administrator role
-    administrator_team: 'urn:collab:org:surf.nl'
+    # All users in these teams get the administrator role
+    administrator_teams:
+        - 'urn:collab:org:surf.nl'
 
     saml_sp_publickey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer'
     saml_sp_privatekey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem'
