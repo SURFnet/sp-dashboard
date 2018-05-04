@@ -155,10 +155,6 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper:
         arguments:  ['@logger']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidContactValidator:
-        tags:
-            - { name: validator.constraint_validator, alias: contact }
-
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator:
         tags:
             - { name: validator.constraint_validator, alias: attribute }

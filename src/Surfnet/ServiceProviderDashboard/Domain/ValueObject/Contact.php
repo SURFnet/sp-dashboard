@@ -18,19 +18,24 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Contact
 {
     /**
+     * @Assert\NotBlank(groups={"Default", "production"})
      * @var string
      */
     private $firstName;
 
     /**
+     * @Assert\NotBlank(groups={"Default", "production"})
      * @var string
      */
     private $lastName;
 
     /**
+     * @Assert\NotBlank(groups={"Default", "production"})
      * @var string
      */
     private $email;
