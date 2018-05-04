@@ -105,10 +105,8 @@ class SamlProvider implements AuthenticationProviderInterface
             $teamNames = [];
         }
 
-        foreach ($this->administratorTeams as $teamName) {
-            if (in_array($teamName, $teamNames)) {
-                $role = 'ROLE_ADMINISTRATOR';
-            }
+        if (!empty(array_intersect($this->administratorTeams, $teamNames))) {
+            $role = 'ROLE_ADMINISTRATOR';
         }
 
         $contact = $this->contacts->findByNameId($nameId);
