@@ -5,7 +5,7 @@
 {% block body_container %}
     <h1>{% block page_heading %}{{ 'entity.edit.title'|trans }}{%endblock%}</h1>
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
 
     {{ form_widget(form.default) }}
 

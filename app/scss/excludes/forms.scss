@@ -57,6 +57,18 @@ div.form-row.error {
   }
 }
 
+div.form-row.warning {
+
+  input, textarea {
+    background-color: $lighter-orange;
+  }
+
+  p.parsley-errors {
+    color: $orange;
+    margin-bottom: .5em;
+  }
+}
+
 .validity-input-wrapper {
   position: relative;
 
@@ -68,7 +80,7 @@ div.form-row.error {
   }
 }
 
-input[type=text], input[type=email], textarea {
+input[type=text], input[type=email], input[type=url], textarea {
   display: block;
   width: 100%;
   border: 1px solid $lighter-grey;

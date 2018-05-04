@@ -30,7 +30,16 @@ class ContactType extends AbstractType
     {
         $builder->add('firstName');
         $builder->add('lastName');
-        $builder->add('email', EmailType::class, ['required' => true]);
+        $builder->add(
+            'email',
+            EmailType::class,
+            [
+                'required' => true,
+                'attr' => [
+                    'data-parsley-trigger' => 'blur',
+                ],
+            ]
+        );
         $builder->add('phone');
     }
 

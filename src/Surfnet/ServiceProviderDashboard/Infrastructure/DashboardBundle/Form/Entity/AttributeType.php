@@ -37,6 +37,7 @@ class AttributeType extends AbstractType
                 'attr' => [
                     'class' => 'motivation',
                     'placeholder' => 'entity.edit.attribute_input_placeholder',
+                    'data-motivation-keep-talking' => 'entity.edit.motivation.keep_talking'
                 ],
             ]
         );
