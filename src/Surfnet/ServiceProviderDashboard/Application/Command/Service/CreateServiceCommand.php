@@ -25,7 +25,6 @@ class CreateServiceCommand implements Command
 {
     /**
      * @var string
-     * @Assert\NotBlank
      * @Assert\Uuid(strict=false)
      */
     private $guid;

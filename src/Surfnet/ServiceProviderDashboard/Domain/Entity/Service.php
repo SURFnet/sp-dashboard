@@ -42,7 +42,7 @@ class Service
     /**
      * @var string
      *
-     * @ORM\Column(type="guid")
+     * @ORM\Column(type="guid", nullable=true)
      */
     private $guid;
 
