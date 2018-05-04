@@ -82,6 +82,7 @@ class EntityType extends AbstractType
                             'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.importUrl',
+                                'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
@@ -111,6 +112,7 @@ class EntityType extends AbstractType
                         [
                             'attr' => [
                                 'data-help' => 'entity.edit.information.metadataUrl',
+                                'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
@@ -121,6 +123,7 @@ class EntityType extends AbstractType
                         [
                             'attr' => [
                                 'data-help' => 'entity.edit.information.acsLocation',
+                                'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
@@ -131,6 +134,7 @@ class EntityType extends AbstractType
                         [
                             'attr' => [
                                 'data-help' => 'entity.edit.information.entityId',
+                                'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
@@ -168,6 +172,7 @@ class EntityType extends AbstractType
                         [
                             'attr' => [
                                 'data-help' => 'entity.edit.information.logoUrl',
+                                'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
@@ -212,6 +217,7 @@ class EntityType extends AbstractType
                         [
                             'attr' => [
                                 'data-help' => 'entity.edit.information.applicationUrl',
+                                'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
@@ -222,6 +228,7 @@ class EntityType extends AbstractType
                         [
                             'attr' => [
                                 'data-help' => 'entity.edit.information.eulaUrl',
+                                'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
