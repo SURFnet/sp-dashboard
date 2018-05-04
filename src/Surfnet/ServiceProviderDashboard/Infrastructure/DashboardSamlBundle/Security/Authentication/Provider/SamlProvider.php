@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
 use Psr\Log\LoggerInterface;
-use RuntimeException as CoreRuntimeException;
 use Surfnet\SamlBundle\Exception\RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
@@ -33,6 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Webmozart\Assert\Assert;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -60,7 +60,7 @@ class SamlProvider implements AuthenticationProviderInterface
     private $logger;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $administratorTeams;
 
@@ -75,6 +75,10 @@ class SamlProvider implements AuthenticationProviderInterface
         $this->services = $services;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
+        Assert::allStringNotEmpty(
+            $administratorTeams,
+            'All entries in the `administrator_teams` config parameter should be string.'
+        );
         $this->administratorTeams = $administratorTeams;
     }
 
