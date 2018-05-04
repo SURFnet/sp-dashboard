@@ -45,10 +45,10 @@ class Configuration implements ConfigurationInterface
     private function appendSessionConfiguration(NodeBuilder $childNodes)
     {
         $childNodes
-            ->scalarNode('administrator_team')
+            ->arrayNode('administrator_teams')
+                ->info('All users in these teams get the administrator role')
                 ->isRequired()
-                ->defaultValue('urn:collab:org:surf.nl')
-                ->info('All users in this team get the administrator role')
+                ->scalarPrototype()->end()
             ->end()
             ->arrayNode('session_lifetimes')
                 ->isRequired()

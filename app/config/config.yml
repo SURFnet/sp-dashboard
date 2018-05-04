@@ -139,5 +139,5 @@ dashboard_saml:
     session_lifetimes:
         max_absolute_lifetime: "%session_max_absolute_lifetime%"
         max_relative_lifetime: "%session_max_relative_lifetime%"
-    administrator_team: "%administrator_team%"
+    administrator_teams: "%administrator_teams%"
 

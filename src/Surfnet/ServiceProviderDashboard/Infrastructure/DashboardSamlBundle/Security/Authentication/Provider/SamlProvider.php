@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
 use Psr\Log\LoggerInterface;
-use RuntimeException as CoreRuntimeException;
 use Surfnet\SamlBundle\Exception\RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
@@ -33,6 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Webmozart\Assert\Assert;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -60,22 +60,26 @@ class SamlProvider implements AuthenticationProviderInterface
     private $logger;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $administratorTeam;
+    private $administratorTeams;
 
     public function __construct(
         ContactRepository $contacts,
         ServiceRepository $services,
         AttributeDictionary $attributeDictionary,
         LoggerInterface $logger,
-        $administratorTeam
+        array $administratorTeams
     ) {
         $this->contacts = $contacts;
         $this->services = $services;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
-        $this->administratorTeam = $administratorTeam;
+        Assert::allStringNotEmpty(
+            $administratorTeams,
+            'All entries in the `administrator_teams` config parameter should be string.'
+        );
+        $this->administratorTeams = $administratorTeams;
     }
 
     /**
@@ -87,21 +91,21 @@ class SamlProvider implements AuthenticationProviderInterface
     {
         $translatedAssertion = $this->attributeDictionary->translate($token->assertion);
 
-        $nameId         = $translatedAssertion->getNameID();
-        $email          = $this->getSingleStringValue('mail', $translatedAssertion);
-        $commonName     = $this->getSingleStringValue('commonName', $translatedAssertion);
+        $nameId = $translatedAssertion->getNameID();
+        $email = $this->getSingleStringValue('mail', $translatedAssertion);
+        $commonName = $this->getSingleStringValue('commonName', $translatedAssertion);
 
         // Default to the ROLE_USER role for services.
         $role = 'ROLE_USER';
 
         try {
             // An exception is thrown when isMemberOf is empty.
-            $teamNames = (array) $translatedAssertion->getAttributeValue('isMemberOf');
+            $teamNames = (array)$translatedAssertion->getAttributeValue('isMemberOf');
         } catch (RuntimeException $e) {
             $teamNames = [];
         }
 
-        if (in_array($this->administratorTeam, $teamNames)) {
+        if (!empty(array_intersect($this->administratorTeams, $teamNames))) {
             $role = 'ROLE_ADMINISTRATOR';
         }
 
