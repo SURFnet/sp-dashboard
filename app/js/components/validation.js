@@ -1,4 +1,4 @@
-import 'parsleyjs/src/parsley';
+import 'parsleyjs';
 
 // Configure Parsley
 const parsleyConfig = {
