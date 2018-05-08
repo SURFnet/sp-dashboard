@@ -34,6 +34,13 @@ if (form.length) {
             errorContainer.text('');
         }
     });
+
+    // When clicking import, save or cancel, do not validate the form using frontend validation, so disable parsley and
+    // submit the form.
+    $('#dashboard_bundle_entity_type_metadata_importButton, #dashboard_bundle_entity_type_save, #dashboard_bundle_entity_type_cancel').click(function(){
+        $(form).parsley().destroy();
+        $(form).submit();
+    });
 }
 
 // Add a stricter url validator, this one ensures the protocol is set on the input value
