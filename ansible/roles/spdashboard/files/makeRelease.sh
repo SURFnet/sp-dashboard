@@ -52,7 +52,7 @@ echo "Running Composer Install";
 curl -sS https://getcomposer.org/installer | php
 php ./composer.phar install -n --prefer-dist -o --ignore-platform-reqs&&
 yarn install &&
-yarn run encore dev &&
+yarn run encore production &&
 
 
 echo "Tagging the release in RELEASE file" &&
