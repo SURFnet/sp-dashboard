@@ -1,4 +1,4 @@
-# This file is auto-generated during the composer install
+#jinja2:lstrip_blocks: True
 parameters:
     database_host: {{ mariadb_host }}
     database_port: 3306
@@ -13,7 +13,10 @@ parameters:
     mail_receiver: {{ spdashboard_support_email }}
     mail_no_reply: {{ noreply_email }}
     secret: {{ spdashboard_symfony_secret }}
-    administrator_teams: {{ spdashboard_administrator_team }}
+    administrator_teams: 
+    {% for team in spdashboard.adminteams %}
+        - "{{ team }}"
+    {% endfor %}
     metadata_url_timeout: 30
     session_max_absolute_lifetime: 172800
     session_max_relative_lifetime: 28800

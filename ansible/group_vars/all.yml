@@ -29,7 +29,9 @@ database_clients: [ "{{ mysql_host }}" ]
 support_simplesaml_secret: secret
 mongo_primary: True
 
-spdashboard_administrator_team: 'urn:collab:org:dev.support.surfconext.nl'
+spdashboard:
+  adminteams:
+    - 'urn:collab:org:dev.support.surfconext.nl'
 
 janus_database_name: sr
 janus_database_host: "{{ mariadb_host }}"
