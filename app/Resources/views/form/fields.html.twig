@@ -104,6 +104,7 @@
 
 {# The radiogroup is styled to be able to receive help popups #}
 {%- block choice_widget_expanded -%}
+    {{ block('help_block') }}
     <div {{ block('widget_container_attributes') }}>
         {%- for child in form %}
             <div class="radio-container">

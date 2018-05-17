@@ -149,10 +149,10 @@ class EntityType extends AbstractType
                                 'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_DEFAULT,
                                 'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
                             ],
-                            'choice_attr' => function ($val, $key) {
-                                return ['data-help' => 'entity.edit.information.for.' . $key];
-                            },
-                            'attr' => ['class' => 'nameidformat-container'],
+                            'attr' => [
+                                'class' => 'nameidformat-container',
+                                'data-help' => 'entity.edit.information.nameIdFormat',
+                            ],
                         ]
                     )
                     ->add(
