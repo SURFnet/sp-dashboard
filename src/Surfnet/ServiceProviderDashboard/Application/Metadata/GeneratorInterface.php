@@ -23,10 +23,23 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 interface GeneratorInterface
 {
     /**
-     * Convert an entity to json-serializable array.
+     * Convert an new, unpublished entity to json-serializable array.
      *
      * @param Entity $entity
      * @return array
      */
-    public function generate(Entity $entity);
+    public function generateForNewEntity(Entity $entity);
+
+    /**
+     * Convert entity to an array for the manage merge-write API call.
+     *
+     * The resulting array is almost identical to the one created by
+     * generateNew(), but only contains fields stored in SP-dashboard, and
+     * never overwrites fields not managed by the dashboard (such as allowed
+     * entities).
+     *
+     * @param Entity $entity
+     * @return array
+     */
+    public function generateForExistingEntity(Entity $entity);
 }

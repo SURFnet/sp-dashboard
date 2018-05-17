@@ -74,41 +74,8 @@ class JsonGeneratorTest extends MockeryTestCase
             ->andReturn(['sp' => 'sp']);
     }
 
-    public function test_it_can_build_entity_metadata()
+    public function test_it_can_build_entity_metadata_for_new_entities()
     {
-        /** @var Entity $entity */
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->setMetadataUrl('http://metadata');
-        $entity->setEntityId('http://entityid');
-        $entity->setComments('revisionnote');
-        $entity->setAcsLocation('http://acs');
-        $entity->setNameEn('name en');
-        $entity->setNameNl('name nl');
-        $entity->setNameIdFormat('nameidformat');
-        $entity->setDescriptionEn('description en');
-        $entity->setDescriptionNl('description nl');
-        $entity->setCertificate(<<<CERT
------BEGIN CERTIFICATE-----
-certdata
------END CERTIFICATE-----
-CERT
-        );
-
-        $entity->setOrganizationNameEn('orgen');
-        $entity->setOrganizationDisplayNameEn('orgdisen');
-        $entity->setOrganizationUrlEn('http://orgen');
-        $entity->setOrganizationNameNl('orgnl');
-        $entity->setOrganizationDisplayNameNl('orgdisnl');
-        $entity->setOrganizationUrlNl('http://orgnl');
-
-        $contact = new Contact();
-        $contact->setFirstName('givenname');
-        $contact->setLastName('surname');
-        $contact->setEmail('emailaddress');
-        $contact->setPhone('telephonenumber');
-
-        $entity->setSupportContact($contact);
-
         $generator = new JsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
@@ -116,7 +83,9 @@ CERT
             $this->spDashboardMetadataGenerator
         );
 
-        $metadata = $generator->generate($entity);
+        $metadata = $generator->generateForNewEntity(
+            $this->createEntity()
+        );
 
         $this->assertTrue($metadata['active']);
         $this->assertTrue($metadata['allowedall']);
@@ -155,5 +124,95 @@ CERT
         $this->assertEquals('surname', $fields['contacts:0:surName']);
         $this->assertEquals('emailaddress', $fields['contacts:0:emailAddress']);
         $this->assertEquals('telephonenumber', $fields['contacts:0:telephoneNumber']);
+    }
+
+    public function test_it_can_build_metadata_for_existing_entities()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->motivationMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+
+        $metadata = $generator->generateForExistingEntity(
+            $this->createEntity()
+        );
+
+        $this->assertArrayNotHasKey('active', $metadata);
+        $this->assertArrayNotHasKey('allowedall', $metadata);
+        $this->assertArrayNotHasKey('allowedEntities', $metadata);
+        $this->assertArrayNotHasKey('state', $metadata);
+        $this->assertArrayNotHasKey('type', $metadata);
+
+        $this->assertEquals('http://entityid', $metadata['entityid']);
+        $this->assertEquals('http://metadata', $metadata['metadataurl']);
+        $this->assertEquals('revisionnote', $metadata['revisionnote']);
+        $this->assertEquals(['arp' => 'arp'], $metadata['arp']);
+
+        $this->assertEquals('privacy', $metadata['metaDataFields.privacy']);
+        $this->assertEquals('motivation', $metadata['metaDataFields.motivation']);
+        $this->assertEquals('sp', $metadata['metaDataFields.sp']);
+        $this->assertEquals('http://acs', $metadata['metaDataFields.AssertionConsumerService:0:Location']);
+        $this->assertEquals(Entity::BINDING_HTTP_POST, $metadata['metaDataFields.AssertionConsumerService:0:Binding']);
+        $this->assertEquals('nameidformat', $metadata['metaDataFields.NameIDFormat']);
+        $this->assertEquals('name en', $metadata['metaDataFields.name:en']);
+        $this->assertEquals('name nl', $metadata['metaDataFields.name:nl']);
+        $this->assertEquals('description en', $metadata['metaDataFields.description:en']);
+        $this->assertEquals('description nl', $metadata['metaDataFields.description:nl']);
+        $this->assertEquals('certdata', $metadata['metaDataFields.certData']);
+
+        $this->assertEquals('orgen', $metadata['metaDataFields.OrganizationName:en']);
+        $this->assertEquals('orgdisen', $metadata['metaDataFields.OrganizationDisplayName:en']);
+        $this->assertEquals('http://orgen', $metadata['metaDataFields.OrganizationURL:en']);
+        $this->assertEquals('orgnl', $metadata['metaDataFields.OrganizationName:nl']);
+        $this->assertEquals('orgdisnl', $metadata['metaDataFields.OrganizationDisplayName:nl']);
+        $this->assertEquals('http://orgnl', $metadata['metaDataFields.OrganizationURL:nl']);
+
+        $this->assertEquals('support', $metadata['metaDataFields.contacts:0:contactType']);
+        $this->assertEquals('givenname', $metadata['metaDataFields.contacts:0:givenName']);
+        $this->assertEquals('surname', $metadata['metaDataFields.contacts:0:surName']);
+        $this->assertEquals('emailaddress', $metadata['metaDataFields.contacts:0:emailAddress']);
+        $this->assertEquals('telephonenumber', $metadata['metaDataFields.contacts:0:telephoneNumber']);
+    }
+
+    /**
+     * @return Entity
+     */
+    private function createEntity()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setMetadataUrl('http://metadata');
+        $entity->setEntityId('http://entityid');
+        $entity->setComments('revisionnote');
+        $entity->setAcsLocation('http://acs');
+        $entity->setNameEn('name en');
+        $entity->setNameNl('name nl');
+        $entity->setNameIdFormat('nameidformat');
+        $entity->setDescriptionEn('description en');
+        $entity->setDescriptionNl('description nl');
+        $entity->setCertificate(<<<CERT
+-----BEGIN CERTIFICATE-----
+certdata
+-----END CERTIFICATE-----
+CERT
+        );
+
+        $entity->setOrganizationNameEn('orgen');
+        $entity->setOrganizationDisplayNameEn('orgdisen');
+        $entity->setOrganizationUrlEn('http://orgen');
+        $entity->setOrganizationNameNl('orgnl');
+        $entity->setOrganizationDisplayNameNl('orgdisnl');
+        $entity->setOrganizationUrlNl('http://orgnl');
+
+        $contact = new Contact();
+        $contact->setFirstName('givenname');
+        $contact->setLastName('surname');
+        $contact->setEmail('emailaddress');
+        $contact->setPhone('telephonenumber');
+
+        $entity->setSupportContact($contact);
+
+        return $entity;
     }
 }

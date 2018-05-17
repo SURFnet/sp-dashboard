@@ -66,7 +66,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
                 $response = $this->client->post(
                     json_encode([
-                        'data' => $this->generator->generate($entity),
+                        'data' => $this->generator->generateForNewEntity($entity),
                         'type' => 'saml20_sp',
                     ]),
                     '/manage/api/internal/metadata'
@@ -76,7 +76,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
                 $response = $this->client->put(
                     json_encode([
-                        'pathUpdates' => $this->generator->generate($entity),
+                        'pathUpdates' => $this->generator->generateForExistingEntity($entity),
                         'type' => 'saml20_sp',
                         'id' => $entity->getManageId(),
                     ]),

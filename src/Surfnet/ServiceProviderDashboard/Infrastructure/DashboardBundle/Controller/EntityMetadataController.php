@@ -78,7 +78,7 @@ class EntityMetadataController extends Controller
         }
 
         return new JsonResponse(
-            $this->generator->generate($entity)
+            $this->generator->generateForNewEntity($entity)
         );
     }
 }

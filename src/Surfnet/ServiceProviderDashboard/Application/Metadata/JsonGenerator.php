@@ -70,18 +70,18 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    public function generate(Entity $entity)
+    public function generateForNewEntity(Entity $entity)
     {
         $metadata = [
+            'arp'             => $this->arpMetadataGenerator->build($entity),
+            'entityid'        => $entity->getEntityId(),
+            'metadataurl'     => $entity->getMetadataUrl(),
             'active'          => true,
             'allowedEntities' => [],
             'allowedall'      => true,
-            'arp'             => $this->arpMetadataGenerator->build($entity),
-            'entityid'        => $entity->getEntityId(),
-            'metaDataFields'  => $this->generateMetadataFields($entity),
-            'metadataurl'     => $entity->getMetadataUrl(),
             'state'           => 'testaccepted',
             'type'            => 'saml20-sp',
+            'metaDataFields'  => $this->generateMetadataFields($entity),
         ];
 
         if ($entity->hasComments()) {
@@ -89,6 +89,58 @@ class JsonGenerator implements GeneratorInterface
         }
 
         return $metadata;
+    }
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    public function generateForExistingEntity(Entity $entity)
+    {
+        $metadata = [
+            'arp'             => $this->arpMetadataGenerator->build($entity),
+            'entityid'        => $entity->getEntityId(),
+            'metadataurl'     => $entity->getMetadataUrl(),
+        ];
+
+        $metadata += $this->flattenMetadataFields(
+            $this->generateMetadataFields($entity)
+        );
+
+        if ($entity->hasComments()) {
+            $metadata['revisionnote'] = $entity->getComments();
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * Convert a list fields to a flat array expected by the merge-write API.
+     *
+     * Manage always returns metadata fields like this:
+     *
+     *     [ metaDataFields => [ description:en => ..., description:nl => ..., ...] ]
+     *
+     * But when using the merge-write API, sending a 'metaDataFields' property
+     * will overwrite all existing metadata fields. To prevent this, we only
+     * send the metadata fields we actually want to update by using the flat
+     * format:
+     *
+     *     [ metaDataFields.description:en => ..., metaDataFields.description:nl => ..., ...] ]
+     *
+     *
+     * @param array $fields
+     * @return array
+     */
+    private function flattenMetadataFields(array $fields)
+    {
+        $flatFields = [];
+
+        foreach ($fields as $name => $value) {
+            $flatFields['metaDataFields.' . $name] = $value;
+        }
+
+        return $flatFields;
     }
 
     /**
