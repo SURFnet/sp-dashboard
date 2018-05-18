@@ -171,10 +171,10 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
         arguments:
-            - '@surfnet.manage.http.guzzle.test_environement'
+            - '@surfnet.manage.http.guzzle.test_environment'
             - '@logger'
 
-    surfnet.manage.http.guzzle.test_environement:
+    surfnet.manage.http.guzzle.test_environment:
         class: GuzzleHttp\Client
         arguments:
         - base_uri: "%manage_test_host%"
