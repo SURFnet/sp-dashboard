@@ -99,7 +99,7 @@ class QueryClient implements QueryEntityRepository
             );
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
-                sprintf('Unable to find entity metadata with entityId: "%s"', $manageId),
+                sprintf('Unable to find entity metadata with manage ID: "%s"', $manageId),
                 0,
                 $e
             );
