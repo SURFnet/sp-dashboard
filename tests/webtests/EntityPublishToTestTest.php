@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -68,6 +69,12 @@ class EntityPublishToTestTest extends WebTestCase
         $entity->setTechnicalContact($this->buildContact());
         $entity->setEnvironment(Entity::ENVIRONMENT_TEST);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
+
+        $givenName = new Attribute();
+        $givenName->setRequested(true);
+        $givenName->setMotivation('test');
+
+        $entity->setGivenNameAttribute($givenName);
 
         return $entity;
     }

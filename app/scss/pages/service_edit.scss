@@ -1,4 +1,10 @@
 form {
+  .fieldset.card {
+    li.error {
+      color: $red;
+    }
+  }
+
   .attributes .form-row {
     width: 100%;
 

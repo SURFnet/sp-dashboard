@@ -159,6 +159,10 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: attribute }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\HasAttributesValidator:
+        tags:
+            - { name: validator.constraint_validator, alias: has_attributes }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
