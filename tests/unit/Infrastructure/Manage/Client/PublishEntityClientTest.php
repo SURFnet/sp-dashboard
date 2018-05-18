@@ -84,7 +84,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('info');
 
         $this->generator
-            ->shouldReceive('generate')
+            ->shouldReceive('generateForNewEntity')
             ->andReturn($json);
 
         $response = $this->client->publish($entity);
@@ -110,7 +110,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('info');
 
         $this->generator
-            ->shouldReceive('generate')
+            ->shouldReceive('generateForExistingEntity')
             ->andReturn($json);
 
         $response = $this->client->publish($entity);
@@ -145,7 +145,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('error');
 
         $this->generator
-            ->shouldReceive('generate')
+            ->shouldReceive('generateForNewEntity')
             ->andReturn($json);
 
         $this->client->publish($entity);
