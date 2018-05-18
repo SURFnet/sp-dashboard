@@ -22,6 +22,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
@@ -41,7 +42,12 @@ class QueryClientTest extends MockeryTestCase
     {
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
-        $this->client = new QueryClient(new HttpClient($guzzle));
+        $this->client = new QueryClient(
+            new HttpClient(
+                $guzzle,
+                new NullLogger()
+            )
+        );
     }
 
     public function test_it_can_see_if_entity_id_exists()

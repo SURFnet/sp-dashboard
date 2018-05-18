@@ -22,6 +22,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit_Framework_TestCase as UnitTest;
+use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\MalformedResponseException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
@@ -38,7 +39,7 @@ class HttpClientTest extends UnitTest
             ]
         );
         $guzzle = new Client(['handler' => $mockHandler]);
-        $client = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $response = $client->read('/give-me/resource');
 
@@ -53,7 +54,7 @@ class HttpClientTest extends UnitTest
             new Response(200, [], $malformedJson)
         ]);
         $guzzle = new Client(['handler' => $mockHandler]);
-        $client = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $this->expectException(MalformedResponseException::class);
 
@@ -66,7 +67,7 @@ class HttpClientTest extends UnitTest
             new Response(404, [])
         ]);
         $guzzle = new Client(['handler' => $mockHandler]);
-        $client = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $response = $client->read('give-me/404');
 
@@ -82,7 +83,7 @@ class HttpClientTest extends UnitTest
             new Response(403, [])
         ]);
         $guzzle = new Client(['handler' => $mockHandler]);
-        $client = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $this->expectException(AccessDeniedException::class);
 
@@ -98,7 +99,7 @@ class HttpClientTest extends UnitTest
             ]
         );
         $guzzle      = new Client(['handler' => $mockHandler]);
-        $client      = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $response = $client->post('/resource', 'Post body');
 
@@ -113,7 +114,7 @@ class HttpClientTest extends UnitTest
             new Response(200, [], $malformedJson)
         ]);
         $guzzle = new Client(['handler' => $mockHandler]);
-        $client = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $this->expectException(MalformedResponseException::class);
 
@@ -126,7 +127,7 @@ class HttpClientTest extends UnitTest
             new Response(404, [])
         ]);
         $guzzle = new Client(['handler' => $mockHandler]);
-        $client = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $response = $client->post('post-and-give-me/404', 'Post body');
 
@@ -142,7 +143,7 @@ class HttpClientTest extends UnitTest
             new Response(403, [])
         ]);
         $guzzle = new Client(['handler' => $mockHandler]);
-        $client = new HttpClient($guzzle);
+        $client = new HttpClient($guzzle, new NullLogger());
 
         $this->expectException(AccessDeniedException::class);
 

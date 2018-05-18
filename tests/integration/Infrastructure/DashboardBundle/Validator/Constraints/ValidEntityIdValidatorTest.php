@@ -22,6 +22,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityId;
@@ -54,7 +55,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $this->repository = m::mock(EntityRepository::class);
 
         $guzzle = new Client(['handler' => $this->mockHandler]);
-        $client = new QueryClient(new HttpClient($guzzle));
+        $client = new QueryClient(new HttpClient($guzzle, new NullLogger()));
 
         return new ValidEntityIdValidator(
             $client,

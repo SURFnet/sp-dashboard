@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http;
 
 use GuzzleHttp\ClientInterface;
+use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidJsonException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\MalformedResponseException;
@@ -32,11 +33,18 @@ final class HttpClient
     private $httpClient;
 
     /**
-     * @param ClientInterface $httpClient
+     * @var LoggerInterface
      */
-    public function __construct(ClientInterface $httpClient)
+    private $logger;
+
+    /**
+     * @param ClientInterface $httpClient
+     * @param LoggerInterface $logger
+     */
+    public function __construct(ClientInterface $httpClient, LoggerInterface $logger)
     {
         $this->httpClient = $httpClient;
+        $this->logger = $logger;
     }
 
     /**
@@ -55,11 +63,22 @@ final class HttpClient
     public function read($path, array $parameters = [], array $headers = ['Content-Type' => 'application/json'])
     {
         $resource = ResourcePathFormatter::format($path, $parameters);
+
+        $this->logger->debug(
+            sprintf('Getting resource %s from manage', $resource)
+        );
+
         $response = $this->httpClient->request('GET', $resource, [
             'exceptions' => false,
             'headers' => $headers
         ]);
         $statusCode = $response->getStatusCode();
+        $body = (string) $response->getBody();
+
+        $this->logger->debug(
+            sprintf('Received %d response from manage', $statusCode),
+            ['body' => $body]
+        );
 
         // 404 is considered a valid response, the resource may not be there (yet?) intentionally.
         if ($statusCode == 404) {
@@ -74,12 +93,10 @@ final class HttpClient
             throw new UnreadableResourceException(sprintf('Resource could not be read (status code %d)', $statusCode));
         }
 
-        $data = (string) $response->getBody();
-
         if ((isset($headers['Content-Type'])) &&
             ($headers['Content-Type'] === 'application/json')) {
             try {
-                $data = JsonResponseParser::parse($data);
+                $body = JsonResponseParser::parse($body);
             } catch (InvalidJsonException $e) {
                 throw new MalformedResponseException(
                     sprintf('Cannot read resource "%s": malformed JSON returned', $resource)
@@ -87,7 +104,7 @@ final class HttpClient
             }
         }
 
-        return $data;
+        return $body;
     }
 
     /**
@@ -105,12 +122,24 @@ final class HttpClient
     public function post($data, $path, $parameters = [], array $headers = ['Content-Type' => 'application/json'])
     {
         $resource = ResourcePathFormatter::format($path, $parameters);
+
+        $this->logger->debug(
+            sprintf('Posting data to manage on path %s', $resource),
+            ['data' => $data]
+        );
+
         $response = $this->httpClient->request('POST', $resource, [
             'exceptions' => false,
             'body' => $data,
             'headers' => $headers
         ]);
         $statusCode = $response->getStatusCode();
+        $body = (string) $response->getBody();
+
+        $this->logger->debug(
+            sprintf('Received %d response from manage', $statusCode),
+            ['body' => $body]
+        );
 
         // 404 is considered a valid response, the resource may not be there (yet?) intentionally.
         if ($statusCode == 404) {
@@ -126,7 +155,7 @@ final class HttpClient
         }
 
         try {
-            $data = JsonResponseParser::parse((string) $response->getBody());
+            $data = JsonResponseParser::parse($body);
         } catch (InvalidJsonException $e) {
             throw new MalformedResponseException(
                 sprintf('Cannot read resource "%s": malformed JSON returned', $resource)
@@ -151,12 +180,24 @@ final class HttpClient
     public function put($data, $path, $parameters = [], array $headers = ['Content-Type' => 'application/json'])
     {
         $resource = ResourcePathFormatter::format($path, $parameters);
+
+        $this->logger->debug(
+            sprintf('Putting data to manage on path %s', $resource),
+            ['data' => $data]
+        );
+
         $response = $this->httpClient->request('PUT', $resource, [
             'exceptions' => false,
             'body' => $data,
             'headers' => $headers
         ]);
         $statusCode = $response->getStatusCode();
+        $body = (string) $response->getBody();
+
+        $this->logger->debug(
+            sprintf('Received %d response from manage', $statusCode),
+            ['body' => $body]
+        );
 
         // 404 is considered a valid response, the resource may not be there (yet?) intentionally.
         if ($statusCode == 404) {
