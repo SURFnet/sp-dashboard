@@ -90,11 +90,6 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
             return $response;
         } catch (HttpException $e) {
-            $this->logger->error(
-                sprintf('Error publishing \'%s\' to manage', $entity->getEntityId()),
-                ['exception' => $e]
-            );
-
             throw new PublishMetadataException('Unable to publish the metadata to Manage', 0, $e);
         }
     }

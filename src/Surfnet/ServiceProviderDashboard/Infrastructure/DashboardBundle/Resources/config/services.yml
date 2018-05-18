@@ -172,6 +172,7 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environement'
+            - '@logger'
 
     surfnet.manage.http.guzzle.test_environement:
         class: GuzzleHttp\Client
