@@ -6,6 +6,23 @@ doctrine:
         driver: pdo_sqlite
         path: "/tmp/spdashboard-webtests.sqlite"
 
+# The monolog configuration below overwrites the in logging.yml that
+# is normally used for production.
+monolog:
+    handlers:
+        prod-signaler:
+            type: fingers_crossed
+            action_level: ERROR
+            passthru_level: DEBUG # DEV setting: this means that all message of level DEBUG or higher are always logged
+            #passthru_level: NOTICE # PROD setting this means that all message of level NOTICE or higher are always logged
+            handler: main_logfile
+            bubble: false
+        main_logfile:
+            type: stream
+            handler: logfile
+            level: NOTICE
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+
 framework:
     test: ~
     session:
