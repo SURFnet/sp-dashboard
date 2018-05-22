@@ -51,7 +51,20 @@ class EntityPublishToTestTest extends WebTestCase
         );
     }
 
-    private function buildEntity(Service $service)
+    private function buildEntityWithAttribute(Service $service)
+    {
+        $entity = $this->buildEntityWithoutAttribute($service);
+
+        $givenName = new Attribute();
+        $givenName->setRequested(true);
+        $givenName->setMotivation('test');
+
+        $entity->setGivenNameAttribute($givenName);
+
+        return $entity;
+    }
+
+    private function buildEntityWithoutAttribute(Service $service)
     {
         $entity = new Entity();
         $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
@@ -69,12 +82,6 @@ class EntityPublishToTestTest extends WebTestCase
         $entity->setTechnicalContact($this->buildContact());
         $entity->setEnvironment(Entity::ENVIRONMENT_TEST);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
-
-        $givenName = new Attribute();
-        $givenName->setRequested(true);
-        $givenName->setMotivation('test');
-
-        $entity->setGivenNameAttribute($givenName);
 
         return $entity;
     }
@@ -98,7 +105,7 @@ class EntityPublishToTestTest extends WebTestCase
         $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         // Build and save an entity to work with
-        $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));
+        $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
         $this->getEntityRepository()->save($entity);
 
         $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
@@ -133,7 +140,7 @@ class EntityPublishToTestTest extends WebTestCase
         // Entity id validation
         $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
 
-        $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));
+        $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
         $entity->setCertificate('-----BEGIN CERTIFICATE-----THIS IS NOT A VALID CERTIFICATE-----END CERTIFICATE-----');
         $this->getEntityRepository()->save($entity);
 
@@ -150,5 +157,28 @@ class EntityPublishToTestTest extends WebTestCase
 
         $this->assertCount(1, $errors);
         $this->assertEquals('The certificate is not valid.', $error);
+    }
+
+    public function test_it_validates_at_least_one_attribute_present()
+    {
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+
+        $entity = $this->buildEntityWithoutAttribute($this->getServiceRepository()->findByName('SURFnet'));
+
+        $this->getEntityRepository()->save($entity);
+
+        $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $crawler = $this->client->submit($form);
+
+        $errors = $crawler->filter('li.error');
+        $error = $errors->first()->text();
+
+        $this->assertCount(1, $errors);
+        $this->assertEquals('At least one attribute must be enabled.', $error);
     }
 }

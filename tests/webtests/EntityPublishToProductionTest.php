@@ -52,7 +52,20 @@ class EntityPublishToProductionTest extends WebTestCase
         );
     }
 
-    private function buildEntity(Service $service)
+    private function buildEntityWithAttribute(Service $service)
+    {
+        $entity = $this->buildEntityWithoutAttribute($service);
+
+        $givenName = new Attribute();
+        $givenName->setRequested(true);
+        $givenName->setMotivation('test');
+
+        $entity->setGivenNameAttribute($givenName);
+
+        return $entity;
+    }
+
+    private function buildEntityWithoutAttribute(Service $service)
     {
         $entity = new Entity();
         $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
@@ -72,12 +85,6 @@ class EntityPublishToProductionTest extends WebTestCase
         $entity->setSupportContact($this->buildContact());
         $entity->setEnvironment(Entity::ENVIRONMENT_PRODUCTION);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
-
-        $givenName = new Attribute();
-        $givenName->setRequested(true);
-        $givenName->setMotivation('test');
-
-        $entity->setGivenNameAttribute($givenName);
 
         return $entity;
     }
@@ -101,7 +108,7 @@ class EntityPublishToProductionTest extends WebTestCase
         $mailer = $this->client->getContainer()->get(Mailer::class);
 
         // Build and save an entity to work with
-        $entity = $this->buildEntity($this->getServiceRepository()->findByName('SURFnet'));
+        $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
         $this->getEntityRepository()->save($entity);
 
         $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
@@ -126,5 +133,30 @@ class EntityPublishToProductionTest extends WebTestCase
             'Production connection has been requested (https://domain.org/saml/sp/saml2-post/default-sp/metadata)',
             $sentMail[0]->getSubject()
         );
+    }
+
+    public function test_it_validates_at_least_one_attribute_present()
+    {
+        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+
+        $mailer = $this->client->getContainer()->get(Mailer::class);
+
+        // Build and save an entity to work with
+        $entity = $this->buildEntityWithoutAttribute($this->getServiceRepository()->findByName('SURFnet'));
+        $this->getEntityRepository()->save($entity);
+
+        $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $crawler = $this->client->submit($form);
+
+        $errors = $crawler->filter('li.error');
+        $error = $errors->first()->text();
+
+        $this->assertCount(1, $errors);
+        $this->assertEquals('At least one attribute must be enabled.', $error);
     }
 }
