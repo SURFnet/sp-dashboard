@@ -32,6 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ *
+ * @SpDashboardAssert\HasAttributes()
  */
 class SaveEntityCommand implements Command
 {

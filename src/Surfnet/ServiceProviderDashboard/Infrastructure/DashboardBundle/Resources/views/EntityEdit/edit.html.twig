@@ -17,6 +17,8 @@
             {% endfor %}
         {% endfor %}
 
+        {{ form_errors(form) }}
+
         <h2>{{ 'entity.edit.info.title'|trans }}</h2>
         <div class="wysiwyg">{{ 'entity.edit.info.html'|trans|raw }}</div>
     </div>
