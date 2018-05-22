@@ -110,6 +110,7 @@ class EntityType extends AbstractType
                         'metadataUrl',
                         UrlType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.metadataUrl',
                                 'data-parsley-urlstrict' => null,
@@ -121,6 +122,7 @@ class EntityType extends AbstractType
                         'acsLocation',
                         UrlType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.acsLocation',
                                 'data-parsley-urlstrict' => null,
@@ -132,6 +134,7 @@ class EntityType extends AbstractType
                         'entityId',
                         UrlType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.entityId',
                                 'data-parsley-urlstrict' => null,
@@ -170,6 +173,7 @@ class EntityType extends AbstractType
                         'logoUrl',
                         UrlType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.logoUrl',
                                 'data-parsley-urlstrict' => null,
@@ -181,6 +185,7 @@ class EntityType extends AbstractType
                         'nameNl',
                         TextType::class,
                         [
+                            'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.nameNl'],
                         ]
                     )
@@ -188,6 +193,7 @@ class EntityType extends AbstractType
                         'descriptionNl',
                         TextareaType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.descriptionNl',
                                 'rows' => 10,
@@ -198,6 +204,7 @@ class EntityType extends AbstractType
                         'nameEn',
                         TextType::class,
                         [
+                            'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.nameEn'],
                         ]
                     )
@@ -205,6 +212,7 @@ class EntityType extends AbstractType
                         'descriptionEn',
                         TextareaType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.descriptionEn',
                                 'rows' => 10,
@@ -215,6 +223,7 @@ class EntityType extends AbstractType
                         'applicationUrl',
                         UrlType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.applicationUrl',
                                 'data-parsley-urlstrict' => null,
@@ -226,6 +235,7 @@ class EntityType extends AbstractType
                         'eulaUrl',
                         UrlType::class,
                         [
+                            'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.eulaUrl',
                                 'data-parsley-urlstrict' => null,
