@@ -26,10 +26,9 @@
     - ../OpenConext-deploy/roles/httpd
     - ../OpenConext-deploy/roles/php56fpm
     - { role: ../OpenConext-deploy/roles/mysql,             tags: ['mysql'] }
-    - { role: ../OpenConext-deploy/roles/vm_only_provision_eb_sr, tags: ['prov'] }
-    - { role: ../OpenConext-deploy/roles/janus,             tags: ['janus'] }
     - { role: ../OpenConext-deploy/roles/engineblock,       tags: ['eb'] }
     - { role: ../OpenConext-deploy/roles/java,              tags: ['java' ] }
+    - { role: spdashboard,                                  tags: ['spdashboard'] } 
     - { role: ../OpenConext-deploy/roles/mujina-idp,        tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/shibboleth,        tags: ['shib' ] }
@@ -43,4 +42,4 @@
     - { role: ../OpenConext-deploy/roles/teams-server,                 tags: ['teams', 'teams-server'  ] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-gui,    tags: ['attribute-aggregation', 'attribute-aggregation-gui'] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-server, tags: ['attribute-aggregation', 'attribute-aggregation-server'] }
-    - { role: spdashboard,                                  tags: ['spdashboard'] } 
+    - { role: ../OpenConext-deploy/roles/vm_only_provision_manage_eb, tags: ['vm_only_provision_manage_eb'] }

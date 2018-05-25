@@ -18,8 +18,11 @@
 
 - name: Copy ca file
   copy: src=files/certs/star.{{ base_domain}}_ca.pem dest={{tls.cert_path_ca}}/star.{{ base_domain}}_ca.pem
-  register: copy ca_file
-  notify: update_ca_trust
+  register: ca_update
+
+- name: Run update-ca-trust
+  command: update-ca-trust
+  when: ca_update.changed
 
 - name: Install PHP Xdebug extension
   yum: name={{ item }} state=present
