@@ -20,7 +20,7 @@ if (form.length) {
     $(form).parsley(parsleyConfig);
 
     // Custom validation is added to show the attribute motivation warnings
-    $('input.motivation').on('keyup', function () {
+    $('input.motivation').on('keyup blur', function () {
 
         const parent = $(this).closest('.form-row');
         const errorContainer = parent.parents('.form-row').find('.parsley-errors').first();
