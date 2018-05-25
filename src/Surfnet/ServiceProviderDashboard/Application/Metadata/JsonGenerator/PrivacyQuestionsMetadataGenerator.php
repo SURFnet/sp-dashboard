@@ -65,9 +65,8 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
                 if (method_exists($privacyQuestionAnswers, $getterName)) {
                     $answer = $privacyQuestionAnswers->$getterName();
                     if (!is_null($answer)) {
-                        // Format DateTime to timestamp as manage requires a numeric representation of the date.
                         if ($answer instanceof DateTime) {
-                            $answer = (string) $answer->getTimestamp();
+                            $answer = (string) $answer->format(DateTime::RFC3339);
                         }
                         // Manage expects booleans as strings.
                         if (is_bool($answer)) {

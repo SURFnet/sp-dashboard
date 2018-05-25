@@ -45,8 +45,8 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 
         $privacyQuestions->setWhatData('What data');
         $privacyQuestions->setSnDpaWhyNot('We can not comply.');
-        $privacyQuestions->setCertificationValidFrom(new DateTime('2018-06-04'));
-        $privacyQuestions->setCertificationValidTo(new DateTime('2018-06-06'));
+        $privacyQuestions->setCertificationValidFrom(new DateTime('2018-06-04 00:00:00+02:00'));
+        $privacyQuestions->setCertificationValidTo(new DateTime('2018-06-06 00:00:00+02:00'));
         $privacyQuestions->setCertification(false);
         $privacyQuestions->setCertificationLocation('https://www.google.com');
         $privacyQuestions->setPrivacyPolicy(true);
@@ -73,7 +73,8 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $this->assertEquals('What data', $metadata['coin:privacy:what_data']);
         $this->assertFalse(is_bool($metadata['coin:privacy:certification']));
         $this->assertEquals('0', $metadata['coin:privacy:certification']);
-        $this->assertEquals('1528236000', $metadata['coin:privacy:certification_valid_to']);
+        $this->assertEquals('2018-06-04T00:00:00+02:00', $metadata['coin:privacy:certification_valid_from']);
+        $this->assertEquals('2018-06-06T00:00:00+02:00', $metadata['coin:privacy:certification_valid_to']);
     }
 
     public function test_it_retuns_empty_array_when_disabled()
