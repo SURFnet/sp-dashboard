@@ -25,8 +25,9 @@ if (form.length) {
         const parent = $(this).closest('.form-row');
         const errorContainer = parent.parents('.form-row').find('.parsley-errors').first();
         const translatedValidationText = $(this).data('motivation-keep-talking');
+        const words = $(this).val().split(' ').filter(v => v !== "");
 
-        if ($(this).val().length <= 10) {
+        if (words.length < 10) {
             errorContainer.parent('.form-row').addClass('warning');
             errorContainer.text(translatedValidationText);
         } else {
