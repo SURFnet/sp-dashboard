@@ -21,21 +21,61 @@ if (form.length) {
 
     // Custom validation is added to show the attribute motivation warnings
     $('input.motivation').on('keyup blur', function () {
+        validateDescriptionForMotivationInput($(this));
+    });
 
-        const parent = $(this).closest('.form-row');
-        const errorContainer = parent.parents('.form-row').find('.parsley-errors').first();
-        const translatedValidationText = $(this).data('motivation-keep-talking');
-        const val = $(this).val();
-        const words = val.split(' ').filter(v => v !== "");
+    $('input.requested').on('change', function () {
+        const checkboxInput = $(this);
+        const wrapper = $(this).closest('.attribute-row-wrapper').parents('.form-row');
+        const errorContainer = wrapper.find('.parsley-errors').first();
 
-        if (val !== '' && words.length < 10) {
-            errorContainer.parent('.form-row').addClass('warning');
-            errorContainer.text(translatedValidationText);
+        if (checkboxInput.is(':checked')) {
+            validateDescriptionForMotivationInput(
+                wrapper.find('input.motivation')
+            );
         } else {
-            errorContainer.parent('.form-row').removeClass('warning');
-            errorContainer.text('');
+            hideWarning(errorContainer);
         }
     });
+
+    function validateDescriptionForMotivationInput(motivationInput) {
+        const wrapper = motivationInput.closest('.attribute-row-wrapper').parents('.form-row');
+        const errorContainer = wrapper.find('.parsley-errors').first();
+
+        if (!descriptionHasEnoughWords(motivationInput)) {
+            showWarning(
+                errorContainer,
+                motivationInput.data('motivation-keep-talking')
+            );
+        } else {
+            hideWarning(errorContainer);
+        }
+    }
+
+    function descriptionHasEnoughWords(motivationInput) {
+        let val = motivationInput.val();
+
+        // See service_edit_attribute.js, it stores the value of a
+        // disabled attribute in 'data-old-value', and restoring that
+        // value might happen after the description validation.
+        if (val.length === 0) {
+            val = motivationInput.data('old-value');
+        }
+
+        const words = val.split(' ').filter(v => v !== "");
+
+        return (val === '' || words.length >= 10);
+    }
+
+    function showWarning(errorContainer, warning) {
+        errorContainer.parent('.form-row').addClass('warning');
+        errorContainer.text(warning);
+    }
+
+    function hideWarning(errorContainer) {
+        errorContainer.parent('.form-row').removeClass('warning');
+        errorContainer.text('');
+    }
 
     // When clicking import, save or cancel, do not validate the form using frontend validation, so disable parsley and
     // submit the form.
