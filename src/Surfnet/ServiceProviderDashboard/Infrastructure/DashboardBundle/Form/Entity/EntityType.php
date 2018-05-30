@@ -25,9 +25,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -77,7 +76,7 @@ class EntityType extends AbstractType
                 $builder->create('metadata', FormType::class, ['inherit_data' => true])
                     ->add(
                         'importUrl',
-                        UrlType::class,
+                        TextType::class,
                         [
                             'required' => false,
                             'attr' => [
@@ -108,7 +107,7 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'metadataUrl',
-                        UrlType::class,
+                        TextType::class,
                         [
                             'required' => false,
                             'attr' => [
@@ -120,7 +119,7 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'acsLocation',
-                        UrlType::class,
+                        TextType::class,
                         [
                             'required' => false,
                             'attr' => [
@@ -132,12 +131,12 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'entityId',
-                        UrlType::class,
+                        TextType::class,
                         [
                             'required' => false,
                             'attr' => [
                                 'data-help' => 'entity.edit.information.entityId',
-                                'data-parsley-urlstrict' => null,
+                                'data-parsley-uri' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
@@ -171,7 +170,7 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'logoUrl',
-                        UrlType::class,
+                        TextType::class,
                         [
                             'required' => false,
                             'attr' => [
@@ -221,7 +220,7 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'applicationUrl',
-                        UrlType::class,
+                        TextType::class,
                         [
                             'required' => false,
                             'attr' => [
@@ -233,7 +232,7 @@ class EntityType extends AbstractType
                     )
                     ->add(
                         'eulaUrl',
-                        UrlType::class,
+                        TextType::class,
                         [
                             'required' => false,
                             'attr' => [
