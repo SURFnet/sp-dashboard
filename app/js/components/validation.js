@@ -19,47 +19,59 @@ if (form.length) {
     // Use parsley for url and email verification
     $(form).parsley(parsleyConfig);
 
-    // Custom validation is added to show the attribute motivation warnings
+    // Show a warning when less than 10 words are typed in attribute descriptions or description text areas.
     $('input.motivation').on('keyup blur', function () {
-        validateDescriptionForMotivationInput($(this));
+        const motivationInput = $(this);
+
+        validateDescription(
+            motivationInput,
+            motivationInput.closest('.attribute-row-wrapper').parents('.form-row').find('.parsley-errors').first(),
+            motivationInput.data('motivation-keep-talking')
+        );
     });
 
     $('input.requested').on('change', function () {
         const checkboxInput = $(this);
-        const wrapper = $(this).closest('.attribute-row-wrapper').parents('.form-row');
+        const wrapper = checkboxInput.closest('.attribute-row-wrapper').parents('.form-row');
+        const motivationInput = wrapper.find('input.motivation');
         const errorContainer = wrapper.find('.parsley-errors').first();
 
         if (checkboxInput.is(':checked')) {
-            validateDescriptionForMotivationInput(
-                wrapper.find('input.motivation')
+            validateDescription(
+                motivationInput,
+                motivationInput.closest('.attribute-row-wrapper').parents('.form-row').find('.parsley-errors').first(),
+                motivationInput.data('motivation-keep-talking')
+
             );
         } else {
             hideWarning(errorContainer);
         }
     });
 
-    function validateDescriptionForMotivationInput(motivationInput) {
-        const wrapper = motivationInput.closest('.attribute-row-wrapper').parents('.form-row');
-        const errorContainer = wrapper.find('.parsley-errors').first();
+    $('textarea#dashboard_bundle_entity_type_metadata_descriptionNl,textarea#dashboard_bundle_entity_type_metadata_descriptionEn').on('keyup blur', function () {
+        validateDescription(
+            $(this),
+            $(this).siblings('.parsley-errors'),
+            'Please describe the entity in ten or more words.'
+        );
+    });
 
-        if (!descriptionHasEnoughWords(motivationInput)) {
-            showWarning(
-                errorContainer,
-                motivationInput.data('motivation-keep-talking')
-            );
+    function validateDescription(inputElement, errorContainer, warningText) {
+        if (!descriptionHasEnoughWords(inputElement)) {
+            showWarning(errorContainer, warningText);
         } else {
             hideWarning(errorContainer);
         }
     }
 
-    function descriptionHasEnoughWords(motivationInput) {
-        let val = motivationInput.val();
+    function descriptionHasEnoughWords(input) {
+        let val = input.val();
 
         // See service_edit_attribute.js, it stores the value of a
         // disabled attribute in 'data-old-value', and restoring that
         // value might happen after the description validation.
-        if (val.length === 0) {
-            val = motivationInput.data('old-value');
+        if (val.length === 0 && input.data('old-value') !== undefined) {
+            val = input.data('old-value');
         }
 
         const words = val.split(' ').filter(v => v !== "");
