@@ -107,7 +107,7 @@ window.Parsley.addValidator('urlstrict', function (value, requirement) {
 // must be empty or be a valid URN  or URL (with protocol).
 window.Parsley.addValidator('uri', function (value, requirement) {
     return validateEmpty(value) || validateUrl(value) || validateUrn(value);
-}, 32).addMessage('en', 'uri', 'This value should be a valid URI.');
+}, 32).addMessage('en', 'uri', 'This value should be a valid URL or URN.');
 
 function validateEmpty(value) {
     return value === '';
