@@ -66,6 +66,13 @@ if (form.length) {
 
     function descriptionHasEnoughWords(input) {
         let val = input.val();
+        let wordThreshold = 10;
+
+        const configuredThreshold = input.data('word-threshold');
+
+        if (configuredThreshold && Number.isInteger(configuredThreshold)) {
+            wordThreshold = input.data('word-threshold');
+        }
 
         // See service_edit_attribute.js, it stores the value of a
         // disabled attribute in 'data-old-value', and restoring that
@@ -76,7 +83,7 @@ if (form.length) {
 
         const words = val.split(' ').filter(v => v !== "");
 
-        return (val === '' || words.length >= 10);
+        return (val === '' || words.length >= wordThreshold);
     }
 
     function showWarning(errorContainer, warning) {
