@@ -18,8 +18,11 @@
 
 - name: Copy ca file
   copy: src=files/certs/star.{{ base_domain}}_ca.pem dest={{tls.cert_path_ca}}/star.{{ base_domain}}_ca.pem
-  register: copy ca_file
-  notify: update_ca_trust
+  register: ca_update
+
+- name: Run update-ca-trust
+  command: update-ca-trust
+  when: ca_update.changed
 
 - name: Install PHP Xdebug extension
   yum: name={{ item }} state=present
@@ -35,4 +38,4 @@
   lineinfile:
     dest: /etc/hosts
     state: present
-    line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl serviceregistry.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl aa.dev.support.surfconext.nl authz.dev.support.surfconext.nl teams.dev.support.surfconext.nl voot.dev.support.surfconext.nl'
+    line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl aa.dev.support.surfconext.nl authz.dev.support.surfconext.nl teams.dev.support.surfconext.nl voot.dev.support.surfconext.nl manage.dev.support.surfconext.nl'

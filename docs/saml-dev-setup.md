@@ -8,17 +8,14 @@ In order to actually login onto the dashboard you must first configure
 the openconext components on the VM. Below steps will guide you trough
 the process.
 
-## Configure the dashboard as SP in service registry
+## Configure the dashboard as SP in manage
 
- 1. Visit https://serviceregistry.dev.support.surfconext.nl/
- 2. Enter username 'admin' on the mujina IDP login form (empty password)
- 3. Click 'Create connection'
- 4. Enter connection ID: 'https://spdashboard.dev.support.surfconext.nl/saml/metadata'
- 5. Fill out 'Create entity fromURL': https://spdashboard.dev.support.surfconext.nl/saml/metadata'
- 6. Set the type to 'SAML 2.0 SP'
- 7. Click 'Create'
- 8. Then set the state to 'Production'
- 9. Repeat steps 4 to 8 with Connection ID and entity url: `https://spdashboard.dev.support.surfconext.nl/app_dev.php/saml/metadata`
+ 1. Login into the guest (vagrant ssh)
+ 2. Add `127.0.0.1 spdashboard.dev.support.surfconext.nl` to /etc/hosts
+ 3. Visit `https://manage.dev.support.surfconext.nl/` in your browser
+ 4. Import the metadata from this URL: `http://spdashboard.dev.support.surfconext.nl/saml/metadata`
+ 5. Click 'Push metadata'
+ 6. Repeat steps 4 and 5 for the development-mode: `https://spdashboard.dev.support.surfconext.nl/app_dev.php/saml/metadata`
  
 You should now be able to successfully login!
 

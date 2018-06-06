@@ -33,19 +33,6 @@ spdashboard:
   adminteams:
     - 'urn:collab:org:dev.support.surfconext.nl'
 
-janus_database_name: sr
-janus_database_host: "{{ mariadb_host }}"
-janus_database_user: srrw
-janus_database_password: "{{ mysql_passwords.sr }}"
-janus_version: 1.22.1
-janus_ssp_version: 1.14.8
-janus_ssp_auth_admin_password: secret
-janus_ssp_secretsalt: salt
-janus_ssp_technicalcontact_name: "Technical Contact"
-janus_ssp_technicalcontact_email: "{{ support_email }}"
-janus_ssp_managingcontact_name: "Managing Contact"
-janus_ssp_managingcontact_email: "{{ support_email }}"
-
 engine_janus_secret: secret
 engine_api_janus_user: serviceregistry
 engine_api_janus_password: secret

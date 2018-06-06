@@ -52,3 +52,5 @@
     - branch_installed.stat.exists == false
     - not develop_spd
 
+- meta: flush_handlers
+
