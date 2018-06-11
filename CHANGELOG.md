@@ -1,3 +1,7 @@
+## 1.2.0
+
+This release includes various improvements to the UI, mostly better warning and error messages.
+
 ## 1.1.0
 New features:
  - NameId format can now be configured in the entity forms
