@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityProductionCommand implements Command
@@ -32,18 +31,11 @@ class PublishEntityProductionCommand implements Command
     private $id;
 
     /**
-     * @var Message
-     */
-    private $message;
-
-    /**
      * @param string $id
-     * @param Message $message
      */
-    public function __construct($id, Message $message)
+    public function __construct($id)
     {
         $this->id = $id;
-        $this->message = $message;
     }
 
     /**
@@ -52,13 +44,5 @@ class PublishEntityProductionCommand implements Command
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return Message
-     */
-    public function getMessage()
-    {
-        return $this->message;
     }
 }

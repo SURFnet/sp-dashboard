@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
 use Symfony\Component\Templating\EngineInterface;
@@ -77,7 +78,7 @@ class MailMessageFactory
         $this->templating = $templating;
     }
 
-    public function buildPublishToProductionMessage(Entity $entity)
+    public function buildPublishToProductionMessage(Entity $entity, Contact $contact)
     {
         $message = $this->createNewMessage();
         $message->setSubject(
@@ -89,7 +90,10 @@ class MailMessageFactory
 
         $template = $this->renderView(
             '@Dashboard/Mail/published.html.twig',
-            ['entity' => $entity]
+            [
+                'entity' => $entity,
+                'contact' => $contact,
+            ]
         );
 
         $message->setBody($template, 'text/html');

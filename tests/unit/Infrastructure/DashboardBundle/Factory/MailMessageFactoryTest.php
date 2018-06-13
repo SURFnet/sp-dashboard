@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
@@ -71,7 +72,11 @@ class MailMessageFactoryTest extends MockeryTestCase
         $this->templateEngine
             ->shouldReceive('render');
 
-        $message = $this->factory->buildPublishToProductionMessage($entity);
+        $message = $this->factory->buildPublishToProductionMessage(
+            $entity,
+            new Contact('nameid', 'name@example.org', 'display name')
+        );
+
         $this->assertInstanceOf(Message::class, $message);
     }
 }
