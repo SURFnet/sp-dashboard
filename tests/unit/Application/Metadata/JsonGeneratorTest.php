@@ -100,6 +100,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $fields = $metadata['metaDataFields'];
 
+        $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $fields['coin:signature_method']);
         $this->assertEquals('privacy', $fields['privacy']);
         $this->assertEquals('motivation', $fields['motivation']);
         $this->assertEquals('sp', $fields['sp']);
@@ -150,6 +151,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('revisionnote', $metadata['revisionnote']);
         $this->assertEquals(['arp' => 'arp'], $metadata['arp']);
 
+        $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $metadata['metaDataFields.coin:signature_method']);
         $this->assertEquals('privacy', $metadata['metaDataFields.privacy']);
         $this->assertEquals('motivation', $metadata['metaDataFields.motivation']);
         $this->assertEquals('sp', $metadata['metaDataFields.sp']);

@@ -159,6 +159,7 @@ class JsonGenerator implements GeneratorInterface
                 'name:en' => $entity->getNameEn(),
                 'name:nl' => $entity->getNameNl(),
             ],
+            $this->generateSecurityMetadata($entity),
             $this->generateAllContactsMetadata($entity),
             $this->generateOrganizationMetadata($entity),
             $this->motivationMetadataGenerator->build($entity),
@@ -166,14 +167,25 @@ class JsonGenerator implements GeneratorInterface
             $this->spDashboardMetadataGenerator->build($entity)
         );
 
+        if (!empty($entity->getLogoUrl())) {
+            $metadata += $this->generateLogoMetadata($entity);
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    private function generateSecurityMetadata(Entity $entity)
+    {
+        $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+
         if (!empty($entity->getCertificate())) {
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getCertificate()
             );
-        }
-
-        if (!empty($entity->getLogoUrl())) {
-            $metadata += $this->generateLogoMetadata($entity);
         }
 
         return $metadata;
