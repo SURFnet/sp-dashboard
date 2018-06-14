@@ -64,11 +64,6 @@ trait EntityControllerTrait
     private $authorizationService;
 
     /**
-     * @var MailMessageFactory
-     */
-    private $mailMessageFactory;
-
-    /**
      * @param CommandBus $commandBus
      * @param EntityService $entityService
      * @param ServiceService $serviceService
@@ -79,14 +74,12 @@ trait EntityControllerTrait
         CommandBus $commandBus,
         EntityService $entityService,
         ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        MailMessageFactory $mailMessageFactory
+        AuthorizationService $authorizationService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->serviceService = $serviceService;
         $this->authorizationService = $authorizationService;
-        $this->mailMessageFactory = $mailMessageFactory;
     }
 
     /**
@@ -147,8 +140,7 @@ trait EntityControllerTrait
                 break;
 
             case Entity::ENVIRONMENT_PRODUCTION:
-                $message = $this->mailMessageFactory->buildPublishToProductionMessage($entity);
-                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $message);
+                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId());
                 $this->commandBus->handle($publishEntityCommand);
                 return $this->redirectToRoute('entity_published_production', ['id' => $entity->getId()]);
                 break;

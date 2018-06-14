@@ -24,8 +24,14 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityPro
 use Surfnet\ServiceProviderDashboard\Application\Command\Mail\PublishToProductionMailCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\NotAuthenticatedException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
@@ -40,6 +46,16 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $commandBus;
 
     /**
+     * @var MailMessageFactory
+     */
+    private $mailMessageFactory;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -47,10 +63,14 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     public function __construct(
         EntityRepository $entityRepository,
         CommandBus $commandBus,
+        MailMessageFactory $mailMessageFactory,
+        TokenStorageInterface $tokenStorage,
         LoggerInterface $logger
     ) {
         $this->repository = $entityRepository;
         $this->commandBus = $commandBus;
+        $this->mailMessageFactory = $mailMessageFactory;
+        $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
     }
 
@@ -65,12 +85,44 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         $this->logger->info(sprintf('Sending publish request mail to servicedesk for "%s".', $entity->getNameEn()));
 
         // Send the confirmation mail
-        $mailCommand = new PublishToProductionMailCommand($command->getMessage());
+        $mailCommand = new PublishToProductionMailCommand(
+            $this->buildMailMessage($entity)
+        );
         $this->commandBus->handle($mailCommand);
 
         // Set entity status to published even though it is not realy published to manage
         $entity->setStatus(Entity::STATE_PUBLISHED);
         $this->logger->info(sprintf('Updating status of "%s" to published.', $entity->getNameEn()));
         $this->repository->save($entity);
+    }
+
+    /**
+     * @param Entity $entity
+     * @return \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message
+     */
+    private function buildMailMessage(Entity $entity)
+    {
+        $token = $this->tokenStorage->getToken();
+        if (!$token instanceof TokenInterface) {
+            throw new NotAuthenticatedException(
+                'No authentication token found'
+            );
+        }
+
+        $user = $token->getUser();
+        if (!$user instanceof Identity) {
+            throw new NotAuthenticatedException(
+                'No user found in authentication token'
+            );
+        }
+
+        $contact = $user->getContact();
+        if (!$contact instanceof Contact) {
+            throw new NotAuthenticatedException(
+                'Unable to determine contact information of authenticated user'
+            );
+        }
+
+        return $this->mailMessageFactory->buildPublishToProductionMessage($entity, $contact);
     }
 }

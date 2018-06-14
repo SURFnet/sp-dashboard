@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\MessageInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
@@ -72,7 +73,7 @@ class EntityPublishToProductionTest extends WebTestCase
         $entity->setEntityId('https://domain.org/saml/sp/saml2-post/default-sp/metadata');
         $entity->setMetadataUrl('https://domain.org/saml/sp/saml2-post/default-sp/metadata');
         $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp/acs');
-        $entity->setCertificate(file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'));
+        $entity->setCertificate(file_get_contents(__DIR__.'/fixtures/publish/valid.cer'));
         $entity->setLogoUrl('http://localhost/img.png');
         $entity->setService($service);
         $entity->setNameEn('MyService');
@@ -84,7 +85,7 @@ class EntityPublishToProductionTest extends WebTestCase
         $entity->setTechnicalContact($this->buildContact());
         $entity->setSupportContact($this->buildContact());
         $entity->setEnvironment(Entity::ENVIRONMENT_PRODUCTION);
-        $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
+        $entity->setMetadataXml(file_get_contents(__DIR__.'/fixtures/publish/metadata.xml'));
 
         return $entity;
     }
@@ -97,6 +98,7 @@ class EntityPublishToProductionTest extends WebTestCase
             ->setLastName($lastName)
             ->setEmail($email)
             ->setPhone($phone);
+
         return $contact;
     }
 
@@ -132,6 +134,13 @@ class EntityPublishToProductionTest extends WebTestCase
         $this->assertEquals(
             'Production connection has been requested (https://domain.org/saml/sp/saml2-post/default-sp/metadata)',
             $sentMail[0]->getSubject()
+        );
+
+        // @see \Surfnet\ServiceProviderDashboard\Webtests\WebTestCase::logIn
+        $this->assertContains(
+            'Published by: John Doe &lt;johndoe@localhost&gt;',
+            $sentMail[0]->getBody(),
+            'The message should contain the contacts of the publisher (currently logged in user)'
         );
     }
 

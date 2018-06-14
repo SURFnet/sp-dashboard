@@ -2,12 +2,15 @@
 Hi,<br/>
 
 <p>
-    A {{ entity.environment }} SP Dashboard registration has just been finished. <br />
-
+    A {{ entity.environment }} SP Dashboard registration has just been finished.
+</p>
+<p>
     Link to Metadata:
     <a href="{{ url('entity_metadata', {entityId: entity.id} ) }}">
         {{ url('entity_metadata', {entityId: entity.id} ) }}
     </a>
+    <br>
+    Published by: {{ contact.displayName }} &lt;{{ contact.emailAddress }}&gt;
 </p>
 
 <dl class="dl-horizontal">
