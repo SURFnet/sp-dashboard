@@ -18,16 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Legacy\Metadata;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Generator;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class AttributesMetadataRepositoryTest extends MockeryTestCase
@@ -94,36 +86,6 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
         $attributes = $this->repository->findAllPrivacyQuestionsAttributes();
 
         $this->assertCount(14, $attributes);
-        foreach ($attributes as $attribute) {
-            $this->assertContains($attribute->id, $expectedAttributes);
-        }
-    }
-
-    public function test_it_has_all_metadata_motivation_attributes()
-    {
-        $expectedAttributes = [
-            "eduPersonTargetedIDMotivation",
-            "eduPersonPrincipalNameMotivation",
-            "displayNameMotivation",
-            "cnMotivation",
-            "givenNameMotivation",
-            "snMotivation",
-            "mailMotivation",
-            "schacHomeOrganizationMotivation",
-            "schacHomeOrganizationTypeMotivation",
-            "schacPersonalUniqueCodeMotivation",
-            "eduPersonAffiliationMotivation",
-            "eduPersonScopedAffiliationMotivation",
-            "eduPersonEntitlementMotivation",
-            "eduPersonOrcidMotivation",
-            "isMemberOfMotivation",
-            "uidMotivation",
-            "preferredLanguageMotivation",
-        ];
-
-        $attributes = $this->repository->findAllMotivationAttributes();
-
-        $this->assertCount(17, $attributes);
         foreach ($attributes as $attribute) {
             $this->assertContains($attribute->id, $expectedAttributes);
         }

@@ -70,6 +70,11 @@ class Attribute
         return $this;
     }
 
+    public function hasMotivation()
+    {
+        return !empty(trim($this->motivation));
+    }
+
     /**
      * @return string
      */

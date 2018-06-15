@@ -19,12 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\MotivationMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 /**
@@ -45,11 +42,6 @@ class JsonGenerator implements GeneratorInterface
     private $privacyQuestionsMetadataGenerator;
 
     /**
-     * @var MotivationMetadataGenerator
-     */
-    private $motivationMetadataGenerator;
-
-    /**
      * @var SpDashboardMetadataGenerator
      */
     private $spDashboardMetadataGenerator;
@@ -57,12 +49,10 @@ class JsonGenerator implements GeneratorInterface
     public function __construct(
         ArpGenerator $arpMetadataGenerator,
         PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        MotivationMetadataGenerator $motivationMetadataGenerator,
         SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
         $this->arpMetadataGenerator = $arpMetadataGenerator;
         $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
-        $this->motivationMetadataGenerator = $motivationMetadataGenerator;
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
     }
 
@@ -162,7 +152,6 @@ class JsonGenerator implements GeneratorInterface
             $this->generateSecurityMetadata($entity),
             $this->generateAllContactsMetadata($entity),
             $this->generateOrganizationMetadata($entity),
-            $this->motivationMetadataGenerator->build($entity),
             $this->privacyQuestionsMetadataGenerator->build($entity),
             $this->spDashboardMetadataGenerator->build($entity)
         );

@@ -46,16 +46,6 @@ class AttributesMetadataRepository implements AttributesMetadataRepositoryInterf
     /**
      * @return stdClass
      */
-    public function findAllMotivationAttributes()
-    {
-        return json_decode(
-            file_get_contents($this->rootDir . '/metadata/attr_motivation.json')
-        );
-    }
-
-    /**
-     * @return stdClass
-     */
     public function findAllPrivacyQuestionsAttributes()
     {
         return json_decode(

@@ -19,10 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use League\Tactician\CommandBus;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -93,13 +92,13 @@ class CopyEntityCommandHandler implements CommandHandler
         $manageEntity = $this->manageClient->findByManageId($manageId);
         if (empty($manageEntity)) {
             throw new InvalidArgumentException(
-                'Could not find entity in manage: ' . $manageId
+                'Could not find entity in manage: '.$manageId
             );
         }
 
         $manageMetadata = $manageEntity['data']['metaDataFields'];
         $manageTeamName = $manageMetadata['coin:service_team_id'];
-
+        $arp = isset($manageEntity['data']['arp']['attributes']) ? $manageEntity['data']['arp']['attributes'] : [];
         if ($manageTeamName !== $command->getService()->getTeamName()) {
             throw new InvalidArgumentException(
                 sprintf(
@@ -138,9 +137,11 @@ class CopyEntityCommandHandler implements CommandHandler
             $saveEntityCommand->setMetadataUrl($manageEntity['data']['metadataurl']);
         }
 
-        foreach ($this->attributeMetadataRepository->findAllMotivationAttributes() as $attributeDefinition) {
+        // Copy the ARP attributes to the new entity based on the data from manage.
+        foreach ($this->attributeMetadataRepository->findAll() as $attributeDefinition) {
             $urn = reset($attributeDefinition->urns);
-            if (empty($manageMetadata[$urn])) {
+
+            if (!isset($arp[$urn])) {
                 continue;
             }
 
@@ -149,9 +150,14 @@ class CopyEntityCommandHandler implements CommandHandler
                 continue;
             }
 
+            $motivation = isset($arp[$urn][0]['motivation']) ? $arp[$urn][0]['motivation'] : false;
+
             $attribute = new Attribute();
             $attribute->setRequested(true);
-            $attribute->setMotivation($manageMetadata[$urn]);
+
+            if ($motivation) {
+                $attribute->setMotivation($motivation);
+            }
 
             $saveEntityCommand->{$setter}($attribute);
         }

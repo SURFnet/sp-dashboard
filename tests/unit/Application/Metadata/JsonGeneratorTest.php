@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\MotivationMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
@@ -41,11 +40,6 @@ class JsonGeneratorTest extends MockeryTestCase
     private $privacyQuestionsMetadataGenerator;
 
     /**
-     * @var MotivationMetadataGenerator
-     */
-    private $motivationMetadataGenerator;
-
-    /**
      * @var SpDashboardMetadataGenerator
      */
     private $spDashboardMetadataGenerator;
@@ -54,7 +48,6 @@ class JsonGeneratorTest extends MockeryTestCase
     {
         $this->arpMetadataGenerator = m::mock(ArpGenerator::class);
         $this->privacyQuestionsMetadataGenerator = m::mock(PrivacyQuestionsMetadataGenerator::class);
-        $this->motivationMetadataGenerator = m::mock(MotivationMetadataGenerator::class);
         $this->spDashboardMetadataGenerator = m::mock(SpDashboardMetadataGenerator::class);
 
         $this->arpMetadataGenerator
@@ -64,10 +57,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->privacyQuestionsMetadataGenerator
             ->shouldReceive('build')
             ->andReturn(['privacy' => 'privacy']);
-
-        $this->motivationMetadataGenerator
-            ->shouldReceive('build')
-            ->andReturn(['motivation' => 'motivation']);
 
         $this->spDashboardMetadataGenerator
             ->shouldReceive('build')
@@ -79,7 +68,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $generator = new JsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->motivationMetadataGenerator,
             $this->spDashboardMetadataGenerator
         );
 
@@ -102,7 +90,6 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $fields['coin:signature_method']);
         $this->assertEquals('privacy', $fields['privacy']);
-        $this->assertEquals('motivation', $fields['motivation']);
         $this->assertEquals('sp', $fields['sp']);
         $this->assertEquals('http://acs', $fields['AssertionConsumerService:0:Location']);
         $this->assertEquals(Entity::BINDING_HTTP_POST, $fields['AssertionConsumerService:0:Binding']);
@@ -132,7 +119,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $generator = new JsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->motivationMetadataGenerator,
             $this->spDashboardMetadataGenerator
         );
 
@@ -153,7 +139,6 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $metadata['metaDataFields.coin:signature_method']);
         $this->assertEquals('privacy', $metadata['metaDataFields.privacy']);
-        $this->assertEquals('motivation', $metadata['metaDataFields.motivation']);
         $this->assertEquals('sp', $metadata['metaDataFields.sp']);
         $this->assertEquals('http://acs', $metadata['metaDataFields.AssertionConsumerService:0:Location']);
         $this->assertEquals(Entity::BINDING_HTTP_POST, $metadata['metaDataFields.AssertionConsumerService:0:Binding']);
