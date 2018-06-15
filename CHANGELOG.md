@@ -1,3 +1,11 @@
+## 1.3.0
+
+Not that there now is a requirement on Manage version >= 2.0.18. 
+
+New feature:
+ - Contact details of the publisher are added to the 'publish to production' mail message.
+ - Attribute motivations are pushed in the new format to Manage
+
 ## 1.2.0
 
 This release includes various improvements to the UI, mostly better warning and error messages.
