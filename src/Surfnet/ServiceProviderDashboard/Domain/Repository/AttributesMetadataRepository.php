@@ -22,8 +22,6 @@ interface AttributesMetadataRepository
 {
     public function findAll();
 
-    public function findAllMotivationAttributes();
-
     public function findAllPrivacyQuestionsAttributes();
 
     public function findAllSpDashboardAttributes();
