@@ -125,6 +125,11 @@ class EntityCopyTest extends WebTestCase
             'https://engine.dev.support.surfconext.nl/authentication/sp/metadata',
             $form->get('dashboard_bundle_entity_type[metadata][importUrl]')->getValue()
         );
+
+        $this->assertEquals(
+            'UID motivation',
+            $form->get('dashboard_bundle_entity_type[attributes][uidAttribute][motivation]')->getValue()
+        );
     }
 
     public function test_copy_to_production_does_not_create_new_entity()

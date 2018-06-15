@@ -175,15 +175,31 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn([
                 'data' => [
+                    'arp' => [
+                        'attributes' => [
+                            'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
+                                'source' => 'idp',
+                                'value' => '*',
+                                'motivation' => 'test1',
+                            ]],
+                            'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
+                                'source' => 'idp',
+                                'value' => '*',
+                                'motivation' => 'test2',
+                            ]],
+                            'urn:mace:dir:attribute-def:displayName' => [[
+                                'source' => 'idp',
+                                'value' => '*',
+                                'motivation' => 'test3',
+                            ]],
+                        ],
+                    ],
                     'metaDataFields' => [
                         'name:en' => 'name en',
                         'name:nl' => 'name nl',
                         'description:en' => 'description en',
                         'description:nl' => 'description nl',
                         'coin:service_team_id' => 'testteam',
-                        'coin:attr_motivation:eduPersonTargetedID' => 'test1',
-                        'coin:attr_motivation:eduPersonPrincipalName' => 'test2',
-                        'coin:attr_motivation:displayName' => 'test3',
                     ]
                 ]
             ]);
@@ -196,34 +212,37 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with(m::type(LoadMetadataCommand::class))
             ->andReturn('xml');
 
-        $this->attributesMetadataRepository->shouldReceive('findAllMotivationAttributes')
+        $this->attributesMetadataRepository->shouldReceive('findAll')
             ->andReturn(json_decode(<<<JSON
 [
   {
-    "id": "eduPersonTargetedIDMotivation",
+    "id": "eduPersonTargetedID",
     "getterName": "getEduPersonTargetedIDAttribute",
     "setterName": "setEduPersonTargetedIDAttribute",
-    "friendlyName": "EduPersonTargetedIDMotivation",
+    "friendlyName": "eduPersonTargetedID",
     "urns": [
-      "coin:attr_motivation:eduPersonTargetedID"
+      "urn:mace:dir:attribute-def:eduPersonTargetedID",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.10"
     ]
   },
   {
-    "id": "eduPersonPrincipalNameMotivation",
+    "id": "principleName",
     "getterName": "getPrincipleNameAttribute",
     "setterName": "setPrincipleNameAttribute",
-    "friendlyName": "EduPersonPrincipalNameMotivation",
+    "friendlyName": "eduPersonPrincipalName",
     "urns": [
-      "coin:attr_motivation:eduPersonPrincipalName"
+      "urn:mace:dir:attribute-def:eduPersonPrincipalName",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.6"
     ]
   },
   {
-    "id": "displayNameMotivation",
+    "id": "displayName",
     "getterName": "getDisplayNameAttribute",
     "setterName": "setDisplayNameAttribute",
-    "friendlyName": "DisplayNameMotivation",
+    "friendlyName": "displayName",
     "urns": [
-      "coin:attr_motivation:displayName"
+      "urn:mace:dir:attribute-def:displayName",
+      "urn:oid:2.16.840.1.113730.3.1.241"
     ]
   }
 ]
