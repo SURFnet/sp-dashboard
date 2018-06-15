@@ -60,6 +60,10 @@ class ArpGenerator implements MetadataGenerator
                         'value' => '*',
                     ],
                 ];
+
+                if ($attr->hasMotivation()) {
+                    $attributes[$urn][0]['motivation'] = $attr->getMotivation();
+                }
             }
         }
 
