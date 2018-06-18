@@ -7,6 +7,7 @@ Vagrant.configure(2) do |config|
   config.hostsupdater.aliases = ["aa.dev.support.surfconext.nl","engine.dev.support.surfconext.nl","teams.dev.support.surfconext.nl","voot.dev.support.surfconext.nl","authz.dev.support.surfconext.nl","authz-admin.dev.support.surfconext.nl","aa.dev.support.surfconext.nl","mujina-idp.dev.support.surfconext.nl","manage.dev.support.surfconext.nl","spdashboard.dev.support.surfconext.nl"]
   config.vm.synced_folder ".", "/vagrant", :nfs => true
   config.vm.provider "virtualbox" do |v|
+    v.customize ["modifyvm", :id, "--ioapic", "on"]
     v.customize ["modifyvm", :id, "--memory", "3072"]
   end
   
