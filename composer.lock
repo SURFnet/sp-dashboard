@@ -1830,16 +1830,16 @@
         },
         {
             "name": "openconext/monitor-bundle",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenConext/Monitor-bundle.git",
-                "reference": "12803aaf3084966e41876ebe6da63bce245aca07"
+                "reference": "1455a292376a03e28465195202c572aa243f0ddb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/12803aaf3084966e41876ebe6da63bce245aca07",
-                "reference": "12803aaf3084966e41876ebe6da63bce245aca07",
+                "url": "https://api.github.com/repos/OpenConext/Monitor-bundle/zipball/1455a292376a03e28465195202c572aa243f0ddb",
+                "reference": "1455a292376a03e28465195202c572aa243f0ddb",
                 "shasum": ""
             },
             "require": {
@@ -1871,7 +1871,7 @@
             "license": [
                 "Apache-2.0"
             ],
-            "description": "A Symfony2 bundle that facilitates health and info endpoints to a Symfony application",
+            "description": "A Symfony 3 bundle that facilitates health and info endpoints to a Symfony application. The bundle is backwards compatible with Symfony 2 projects.",
             "keywords": [
                 "OpenConext",
                 "health",
@@ -1879,7 +1879,7 @@
                 "stepup",
                 "surfnet"
             ],
-            "time": "2017-12-11T10:22:11+00:00"
+            "time": "2018-08-16T13:07:30+00:00"
         },
         {
             "name": "paragonie/random_compat",
