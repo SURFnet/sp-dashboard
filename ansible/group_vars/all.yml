@@ -1,5 +1,6 @@
 certs_sp_dashboard: yes
 engine_crt_not_in_inventory: true
+shibd_sp_crt_not_in_inventory: true
 develop: false
 minimal_install: false
 haproxy_backend_tls: false
@@ -117,4 +118,14 @@ engineblock_private_key: |
 maven_repo: https://build.openconext.org/repository/public/releases
 maven_snapshot_repo: https://build.openconext.org/repository/public/snapshots
 error_subject_prefix: "[{{ ansible_hostname }}] "
+
+# Some engineblock variables are shared between applications
+engine_api_domain: engine-api.{{ base_domain }}
+engine_api_metadata_push_user: serviceregistry
+
+# Some deprovision variables are shared between applications
+authz_server_api_lifecycle_username: authz_server_api_lifecycle_user
+teams_api_lifecycle_username: teams_api_lifecycle_user
+attribute_aggregator_api_lifecycle_username: attribute_aggregator_api_lifecycle_user
+engine_api_deprovision_user: lifecycle
 
