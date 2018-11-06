@@ -30,6 +30,33 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Service
 {
+    // Reflect the type of service either an institute or a 'non institute'
+    const SERVICE_TYPE_INSTITUTE = 'institute';
+    const SERVICE_TYPE_NON_INSTITUTE = 'non-institute';
+
+    // Has the intake been taken yet?
+    const INTAKE_STATUS_YES = 'yes';
+    const INTAKE_STATUS_NO = 'no';
+    const INTAKE_STATUS_NOT_APPLICABLE = 'not-applicable';
+
+    // For service type: institute: was the contract signed? Yes/No (or null if non institute)
+    const CONTRACT_SIGNED_YES = 'yes';
+    const CONTRACT_SIGNED_NO = 'no';
+
+    // For service type: institute: did the SURFconext representative approve (null if non institute)
+    const SURFCONEXT_APPROVED_YES = 'yes';
+    const SURFCONEXT_APPROVED_NO = 'no';
+
+    // If privacyQuestionsEnabled: have privacy questions been filled? (null if disabled)
+    const PRIVACY_QUESTIONS_ANSWERED_YES = 'yes';
+    const PRIVACY_QUESTIONS_ANSWERED_NO = 'no';
+
+    // Production connection status: (not-requested|requested|active|surfconext-informed)
+    const CONNECTION_STATUS_NOT_REQUESTED = 'not-requested';
+    const CONNECTION_STATUS_REQUESTED = 'requested';
+    const CONNECTION_STATUS_SURFCONEXT_INFORMED = 'surfconext-informed';
+    const CONNECTION_STATUS_ACTIVE = 'active';
+
     /**
      * @var int
      *
@@ -73,6 +100,42 @@ class Service
      * @ORM\Column(type="boolean")
      */
     private $privacyQuestionsEnabled = true;
+
+    /**
+     * @var string
+     * @ORM\Column(length=50)
+     */
+    private $serviceType = self::SERVICE_TYPE_INSTITUTE;
+
+    /**
+     * @var string
+     * @ORM\Column(length=50)
+     */
+    private $intakeStatus = self::INTAKE_STATUS_NO;
+
+    /**
+     * @var string
+     * @ORM\Column(length=50, nullable=true)
+     */
+    private $contractSigned;
+
+    /**
+     * @var string
+     * @ORM\Column(length=50, nullable=true)
+     */
+    private $surfconextRepresentativeApproved;
+
+    /**
+     * @var string
+     * @ORM\Column(length=50, nullable=true)
+     */
+    private $privacyQuestionsAnswered;
+
+    /**
+     * @var string
+     * @ORM\Column(length=50)
+     */
+    private $connectionStatus = self::CONNECTION_STATUS_NOT_REQUESTED;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -236,5 +299,101 @@ class Service
         $this->contacts->removeElement($contact);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceType()
+    {
+        return $this->serviceType;
+    }
+
+    /**
+     * @param string $serviceType
+     */
+    public function setServiceType($serviceType)
+    {
+        $this->serviceType = $serviceType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIntakeStatus()
+    {
+        return $this->intakeStatus;
+    }
+
+    /**
+     * @param string $intakeStatus
+     */
+    public function setIntakeStatus($intakeStatus)
+    {
+        $this->intakeStatus = $intakeStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContractSigned()
+    {
+        return $this->contractSigned;
+    }
+
+    /**
+     * @param string $contractSigned
+     */
+    public function setContractSigned($contractSigned)
+    {
+        $this->contractSigned = $contractSigned;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSurfconextRepresentativeApproved()
+    {
+        return $this->surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @param string $surfconextRepresentativeApproved
+     */
+    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
+    {
+        $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrivacyQuestionsAnswered()
+    {
+        return $this->privacyQuestionsAnswered;
+    }
+
+    /**
+     * @param string $privacyQuestionsAnswered
+     */
+    public function setPrivacyQuestionsAnswered($privacyQuestionsAnswered)
+    {
+        $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectionStatus()
+    {
+        return $this->connectionStatus;
+    }
+
+    /**
+     * @param string $connectionStatus
+     */
+    public function setConnectionStatus($connectionStatus)
+    {
+        $this->connectionStatus = $connectionStatus;
     }
 }
