@@ -34,7 +34,7 @@ class PrivacyQuestionAnsweredType extends AbstractType
                 'service.form.label.privacy_question_answered_no' => Service::PRIVACY_QUESTIONS_ANSWERED_NO,
                 'service.form.label.privacy_question_answered_yes' => Service::PRIVACY_QUESTIONS_ANSWERED_YES,
             ],
-            'attr' => ['class' => 'radio-container'],
+            'attr' => ['class' => 'service-status-container'],
         ]);
     }
 

@@ -37,7 +37,7 @@ class ConnectionStatusType extends AbstractType
                     'service.form.label.connection_status_informed' => Service::CONNECTION_STATUS_SURFCONEXT_INFORMED,
                     'service.form.label.connection_status_active' => Service::CONNECTION_STATUS_ACTIVE,
                 ],
-                'attr' => ['class' => 'radio-container'],
+                'attr' => ['class' => 'service-status-container'],
             ]
         );
     }
