@@ -19,6 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ConnectionStatusType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ContractSignedType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\IntakeStatusType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\PrivacyQuestionAnsweredType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\RepresentativeApprovedType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceTypeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -35,6 +41,16 @@ class CreateServiceType extends AbstractType
             ->add('teamName')
             ->add('productionEntitiesEnabled', CheckboxType::class)
             ->add('privacyQuestionsEnabled', CheckboxType::class)
+
+            ->add('productionEntitiesEnabled', CheckboxType::class)
+            ->add('privacyQuestionsEnabled', CheckboxType::class)
+            ->add('serviceType', ServiceTypeType::class)
+            ->add('intakeStatus', IntakeStatusType::class)
+            ->add('contractSigned', ContractSignedType::class)
+            ->add('surfconextRepresentativeApproved', RepresentativeApprovedType::class)
+            ->add('privacyQuestionsAnswered', PrivacyQuestionAnsweredType::class)
+            ->add('connectionStatus', ConnectionStatusType::class)
+
             ->add('guid', TextType::class, ['label' => 'CRM ID'])
             ->add('save', SubmitType::class, ['attr' => ['class'=>'button']]);
     }
