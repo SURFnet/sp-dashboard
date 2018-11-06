@@ -34,7 +34,7 @@ class ServiceTypeType extends AbstractType
                 'service.form.label.service_type_institute' => Service::SERVICE_TYPE_INSTITUTE,
                 'service.form.label.service_type_non_institute' => Service::SERVICE_TYPE_NON_INSTITUTE,
             ],
-            'attr' => ['class' => 'radio-container'],
+            'attr' => ['class' => 'service-status-container'],
         ]);
     }
 

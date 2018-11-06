@@ -35,7 +35,7 @@ class IntakeStatusType extends AbstractType
                 'service.form.label.intake_status_yes' => Service::INTAKE_STATUS_YES,
                 'service.form.label.intake_status_not_applicable' => Service::INTAKE_STATUS_NOT_APPLICABLE,
             ],
-            'attr' => ['class' => 'radio-container'],
+            'attr' => ['class' => 'service-status-container'],
         ]);
     }
 
