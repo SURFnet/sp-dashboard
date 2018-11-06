@@ -53,11 +53,13 @@ class CreateServiceCommand implements Command
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $serviceType;
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $intakeStatus;
 
@@ -78,6 +80,7 @@ class CreateServiceCommand implements Command
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $connectionStatus;
     /**
