@@ -28,6 +28,7 @@ class ContractSignedType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'label' => 'service.form.label.contract_signed',
             'expanded' => true,
             'multiple' => false,
             'choices' => [

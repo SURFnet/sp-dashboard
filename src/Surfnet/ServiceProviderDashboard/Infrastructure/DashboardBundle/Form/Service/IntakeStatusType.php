@@ -28,6 +28,7 @@ class IntakeStatusType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'label' => 'service.form.label.intake_status',
             'expanded' => true,
             'multiple' => false,
             'choices' => [

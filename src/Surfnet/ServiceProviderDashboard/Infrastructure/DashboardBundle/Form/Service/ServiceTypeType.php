@@ -28,6 +28,7 @@ class ServiceTypeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'label' => 'service.form.label.service_type',
             'expanded' => true,
             'multiple' => false,
             'choices' => [
