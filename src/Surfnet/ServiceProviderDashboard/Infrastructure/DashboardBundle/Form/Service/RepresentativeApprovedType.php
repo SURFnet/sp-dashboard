@@ -28,6 +28,7 @@ class RepresentativeApprovedType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'label' => 'service.form.label.representative_approved',
             'expanded' => true,
             'multiple' => false,
             'choices' => [

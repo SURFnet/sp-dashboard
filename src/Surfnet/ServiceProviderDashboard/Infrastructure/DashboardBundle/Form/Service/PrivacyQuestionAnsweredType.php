@@ -28,6 +28,7 @@ class PrivacyQuestionAnsweredType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'label' => 'service.form.label.privacy_question_answered',
             'expanded' => true,
             'multiple' => false,
             'choices' => [

@@ -29,6 +29,7 @@ class ConnectionStatusType extends AbstractType
     {
         $resolver->setDefaults(
             [
+                'label' => 'service.form.label.connection_status',
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => [
