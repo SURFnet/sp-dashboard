@@ -58,11 +58,13 @@ class EditServiceCommand implements Command
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $serviceType;
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $intakeStatus;
 
@@ -83,11 +85,13 @@ class EditServiceCommand implements Command
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $connectionStatus;
 
     /**
-     * EditServiceCommand constructor.
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
+     *
      * @param int $id
      * @param string $guid
      * @param string $teamName
