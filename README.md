@@ -39,7 +39,14 @@ Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add
 
 Install database migrations
 ```
-bin console doctrine:migrations:migrate
+bin/console doctrine:migrations:migrate
+```
+
+Or alternatively do:
+
+```
+bin/console doctrine:schema:create
+bin/console doctrine:migrations:version --add --all
 ```
 
 Now follow the instructions in [SAML configuration for development](docs/saml-dev-setup.md) to setup authentication.

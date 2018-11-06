@@ -14,8 +14,9 @@ the process.
  2. Add `127.0.0.1 spdashboard.dev.support.surfconext.nl` to /etc/hosts
  3. Visit `https://manage.dev.support.surfconext.nl/` in your browser
  4. Import the metadata from this URL: `http://spdashboard.dev.support.surfconext.nl/saml/metadata`
- 5. Click 'Push metadata'
- 6. Repeat steps 4 and 5 for the development-mode: `https://spdashboard.dev.support.surfconext.nl/app_dev.php/saml/metadata`
+ 5. In order to be usable in EngineBlock: update the SP entities to have the `prodaccepted` state
+ 6. Click 'Push metadata'
+ 7. Repeat steps 4 and 5 for the development-mode: `https://spdashboard.dev.support.surfconext.nl/app_dev.php/saml/metadata`
  
 You should now be able to successfully login!
 
