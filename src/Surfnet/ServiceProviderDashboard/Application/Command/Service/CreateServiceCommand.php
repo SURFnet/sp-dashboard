@@ -52,6 +52,35 @@ class CreateServiceCommand implements Command
     private $privacyQuestionsEnabled = true;
 
     /**
+     * @var string
+     */
+    private $serviceType;
+
+    /**
+     * @var string
+     */
+    private $intakeStatus;
+
+    /**
+     * @var string
+     */
+    private $contractSigned;
+
+    /**
+     * @var string
+     */
+    private $surfconextRepresentativeApproved;
+
+    /**
+     * @var string
+     */
+    private $privacyQuestionsAnswered;
+
+    /**
+     * @var string
+     */
+    private $connectionStatus;
+    /**
      * @param string $guid
      */
     public function setGuid($guid)
@@ -92,6 +121,54 @@ class CreateServiceCommand implements Command
     }
 
     /**
+     * @param string $serviceType
+     */
+    public function setServiceType($serviceType)
+    {
+        $this->serviceType = $serviceType;
+    }
+
+    /**
+     * @param string $intakeStatus
+     */
+    public function setIntakeStatus($intakeStatus)
+    {
+        $this->intakeStatus = $intakeStatus;
+    }
+
+    /**
+     * @param string $contractSigned
+     */
+    public function setContractSigned($contractSigned)
+    {
+        $this->contractSigned = $contractSigned;
+    }
+
+    /**
+     * @param string $surfconextRepresentativeApproved
+     */
+    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
+    {
+        $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @param string $privacyQuestionsAnswered
+     */
+    public function setPrivacyQuestionsAnswered($privacyQuestionsAnswered)
+    {
+        $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
+    }
+
+    /**
+     * @param string $connectionStatus
+     */
+    public function setConnectionStatus($connectionStatus)
+    {
+        $this->connectionStatus = $connectionStatus;
+    }
+
+    /**
      * @return string
      */
     public function getGuid()
@@ -129,5 +206,53 @@ class CreateServiceCommand implements Command
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceType()
+    {
+        return $this->serviceType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIntakeStatus()
+    {
+        return $this->intakeStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContractSigned()
+    {
+        return $this->contractSigned;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSurfconextRepresentativeApproved()
+    {
+        return $this->surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrivacyQuestionsAnswered()
+    {
+        return $this->privacyQuestionsAnswered;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectionStatus()
+    {
+        return $this->connectionStatus;
     }
 }
