@@ -40,10 +40,8 @@ class CreateServiceType extends AbstractType
             ->add('name')
             ->add('teamName')
             ->add('productionEntitiesEnabled', CheckboxType::class)
-            ->add('privacyQuestionsEnabled', CheckboxType::class)
+            ->add('privacyQuestionsEnabled', CheckboxType::class, ['attr' => ['class' => 'privacy-questions-toggle']])
 
-            ->add('productionEntitiesEnabled', CheckboxType::class)
-            ->add('privacyQuestionsEnabled', CheckboxType::class)
             ->add('serviceType', ServiceTypeType::class)
             ->add('intakeStatus', IntakeStatusType::class)
             ->add('contractSigned', ContractSignedType::class)
