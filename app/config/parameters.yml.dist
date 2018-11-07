@@ -26,6 +26,7 @@ parameters:
     # All users in these teams get the administrator role
     administrator_teams:
         - 'urn:collab:org:surf.nl'
+        - 'urn:collab:org:dev.support.surfconext.nl'
 
     saml_sp_publickey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer'
     saml_sp_privatekey: '%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem'
