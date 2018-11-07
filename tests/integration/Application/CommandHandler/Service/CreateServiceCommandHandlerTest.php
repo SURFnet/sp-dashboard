@@ -53,7 +53,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setPrivacyQuestionsEnabled(true);
         $service->setProductionEntitiesEnabled(true);
 
-        $service->setPrivacyQuestionsAnswered('yes');
         $service->setServiceType('institution');
         $service->setIntakeStatus('yes');
         $service->setSurfconextRepresentativeApproved('yes');
@@ -67,7 +66,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setPrivacyQuestionsEnabled($service->isPrivacyQuestionsEnabled());
         $command->setProductionEntitiesEnabled($service->isProductionEntitiesEnabled());
 
-        $command->setPrivacyQuestionsAnswered($service->getPrivacyQuestionsAnswered());
         $command->setServiceType($service->getServiceType());
         $command->setIntakeStatus($service->getIntakeStatus());
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
@@ -94,7 +92,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setProductionEntitiesEnabled(true);
         $command->setPrivacyQuestionsEnabled(false);
 
-        $command->setPrivacyQuestionsAnswered('yes');
         $command->setServiceType('institution');
         $command->setIntakeStatus('yes');
         $command->setSurfconextRepresentativeApproved('yes');
