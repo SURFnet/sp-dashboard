@@ -215,7 +215,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @param string $privacyQuestionsAnswered
+     * @param bool $privacyQuestionsAnswered
      */
     public function setPrivacyQuestionsAnswered($privacyQuestionsAnswered)
     {
@@ -295,9 +295,9 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getPrivacyQuestionsAnswered()
+    public function isPrivacyQuestionsAnswered()
     {
         return $this->privacyQuestionsAnswered;
     }
