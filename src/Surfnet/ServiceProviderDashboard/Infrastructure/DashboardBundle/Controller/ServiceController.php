@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceComm
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\CreateServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\EditServiceType;
@@ -57,18 +58,26 @@ class ServiceController extends Controller
     private $serviceService;
 
     /**
+     * @var ServiceStatusService
+     */
+    private $serviceStatusService;
+
+    /**
      * @param CommandBus $commandBus
      * @param AuthorizationService $authorizationService
      * @param ServiceService $serviceService
+     * @param ServiceStatusService $serviceStatusService
      */
     public function __construct(
         CommandBus $commandBus,
         AuthorizationService $authorizationService,
-        ServiceService $serviceService
+        ServiceService $serviceService,
+        ServiceStatusService $serviceStatusService
     ) {
         $this->commandBus = $commandBus;
         $this->authorizationService = $authorizationService;
         $this->serviceService = $serviceService;
+        $this->serviceStatusService = $serviceStatusService;
     }
 
     /**
@@ -135,7 +144,7 @@ class ServiceController extends Controller
             $service->getIntakeStatus(),
             $service->getContractSigned(),
             $service->getSurfconextRepresentativeApproved(),
-            $service->getPrivacyQuestionsAnswered(),
+            $this->serviceStatusService->hasPrivacyQuestions($service),
             $service->getConnectionStatus()
         );
 
