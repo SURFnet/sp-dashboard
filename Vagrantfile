@@ -8,7 +8,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder ".", "/vagrant", :nfs => true
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--ioapic", "on"]
-    v.customize ["modifyvm", :id, "--memory", "3072"]
+    v.customize ["modifyvm", :id, "--memory", "6072"]
   end
   
   config.vm.provision "ansible" do |ansible|
