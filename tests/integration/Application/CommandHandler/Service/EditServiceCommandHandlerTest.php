@@ -58,7 +58,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'not-applicable',
             'no',
             'no',
-            'yes',
+            true,
             'active'
         );
         $command->setName('Foobar');
@@ -120,7 +120,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'not-applicable',
             'no',
             'no',
-            'yes',
+            true,
             'active'
         );
 
@@ -147,7 +147,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'not-applicable',
             'no',
             'no',
-            'yes',
+            true,
             'active'
         );
 
