@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateServiceCommand implements Command
@@ -55,34 +56,34 @@ class CreateServiceCommand implements Command
      * @var string
      * @Assert\NotBlank
      */
-    private $serviceType;
+    private $serviceType = Service::SERVICE_TYPE_NON_INSTITUTE;
 
     /**
      * @var string
      * @Assert\NotBlank
      */
-    private $intakeStatus;
+    private $intakeStatus = Service::INTAKE_STATUS_NO;
 
     /**
      * @var string
      */
-    private $contractSigned;
+    private $contractSigned = Service::CONTRACT_SIGNED_NO;
 
     /**
      * @var string
      */
-    private $surfconextRepresentativeApproved;
+    private $surfconextRepresentativeApproved = Service::SURFCONEXT_APPROVED_NO;
 
     /**
      * @var string
      */
-    private $privacyQuestionsAnswered;
+    private $privacyQuestionsAnswered = Service::PRIVACY_QUESTIONS_ANSWERED_NO;
 
     /**
      * @var string
      * @Assert\NotBlank
      */
-    private $connectionStatus;
+    private $connectionStatus = Service::CONNECTION_STATUS_NOT_REQUESTED;
     /**
      * @param string $guid
      */
