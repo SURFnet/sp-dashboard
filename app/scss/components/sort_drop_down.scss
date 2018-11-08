@@ -1,3 +1,5 @@
+/* The stylint specificty rule is disabled because this stylint rule was added after the initial scss was set up and now will cost to much time to refactor, feel free to do so! */
+/* stylelint-disable no-descending-specificity */
 section.sort-drop-down {
 
   position: relative;
@@ -68,3 +70,5 @@ section.sort-drop-down {
     }
   }
 }
+
+/* stylelint-enable */
