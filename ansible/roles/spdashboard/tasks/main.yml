@@ -14,11 +14,9 @@
 
 - name: Install n in order to upgrade node
   command: yarn global add n --prefix /usr/local
-  become: yes
 
 - name: Upgrade node to the configured version
   command: /usr/local/bin/n {{ spdashboard_node_version }}
-  become: yes
 
 - name: Add group {{ spdashboard_fpm_user }}
   group: name={{ spdashboard_fpm_user }} state=present
