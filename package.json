@@ -1,10 +1,10 @@
 {
   "devDependencies": {
-    "@symfony/webpack-encore": "^0.15.1",
+    "@symfony/webpack-encore": "^0.21.0",
     "compass-mixins": "^0.12.10",
     "import-glob-loader": "^1.1.0",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6"
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0"
   },
   "dependencies": {
     "jquery": "^3.2.1",
