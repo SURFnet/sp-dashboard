@@ -17,9 +17,9 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class ServiceStatusService
 {
@@ -28,9 +28,15 @@ class ServiceStatusService
      */
     private $privacyStatusRepository;
 
-    public function __construct(PrivacyQuestionsRepository $privacyQuestionsRepository)
+    /**
+     * @var EntityService
+     */
+    private $entityService;
+
+    public function __construct(PrivacyQuestionsRepository $privacyQuestionsRepository, EntityService $entityService)
     {
         $this->privacyStatusRepository = $privacyQuestionsRepository;
+        $this->entityService = $entityService;
     }
 
     /**
@@ -46,5 +52,43 @@ class ServiceStatusService
             return true;
         }
         return false;
+    }
+
+    /**
+     * - Status: "No" when no test entity, not production entity and no draft is present
+     * - Status: "In progress" when there is no entity on test or production but a draft entity is present
+     * - Status: "Yes" when either:
+     *   - A test entity is published
+     *   - A production entity is published
+     * @param Service $service
+     * @return string
+     */
+    public function getEntityStatus(Service $service)
+    {
+        $entities = $this->entityService->getEntityListForService($service);
+
+        $inProgressList = [];
+        $publishedList = [];
+
+        foreach ($entities->getEntities() as $entity) {
+            if ($entity->getState() == Entity::STATE_PUBLISHED) {
+                $publishedList[] = $entity;
+            }
+            if ($entity->getState() == Entity::STATE_DRAFT) {
+                $inProgressList[] = $entity;
+            }
+        }
+        // Was one of the entities published?
+        if (count($publishedList) > 0) {
+            return Service::ENTITY_PUBLISHED_YES;
+        }
+
+        // Was one of the entities drafted?
+        if (count($inProgressList) > 0) {
+            return Service::ENTITY_PUBLISHED_IN_PROGRESS;
+        }
+
+        // No published or drafted entities discovered, state "No"
+        return Service::ENTITY_PUBLISHED_NO;
     }
 }

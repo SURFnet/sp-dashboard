@@ -59,7 +59,8 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            'active'
+            'active',
+            'in-progress'
         );
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
@@ -121,7 +122,8 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            'active'
+            'active',
+            'no'
         );
 
         $this->repository->shouldReceive('findById')->andReturn(null)->once();
@@ -148,7 +150,8 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            'active'
+            'active',
+            'yes'
         );
 
         $mockEntity = m::mock(Service::class)->makePartial();
