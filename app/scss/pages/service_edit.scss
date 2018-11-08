@@ -82,7 +82,7 @@ form {
     }
   }
 
-  .nameidformat-container {
+  .nameidformat-container, .service-status-container {
     @include clearfix;
 
     width: 100%;

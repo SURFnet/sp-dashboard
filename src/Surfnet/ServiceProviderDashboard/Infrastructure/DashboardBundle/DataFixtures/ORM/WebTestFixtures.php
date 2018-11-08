@@ -22,6 +22,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
@@ -42,7 +43,12 @@ class WebTestFixtures extends Fixture
 
         $service =  $this->createService('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl');
         $service->setProductionEntitiesEnabled(true);
+        $service->setPrivacyQuestionsEnabled(true);
         $manager->persist($service);
+
+        // Service Ibuildings B.V. also has privacy questions
+        $privacyQuestions = $this->createPrivacyQuestions($service);
+        $manager->persist($privacyQuestions);
 
         $manager->flush();
     }
@@ -97,5 +103,14 @@ class WebTestFixtures extends Fixture
         $contact->setEmail($email);
 
         return $contact;
+    }
+
+    private function createPrivacyQuestions(Service $service)
+    {
+        $privacyQuestions = new PrivacyQuestions();
+        $privacyQuestions->setService($service);
+        $privacyQuestions->setWhatData('All your data are belong to us');
+
+        return $privacyQuestions;
     }
 }

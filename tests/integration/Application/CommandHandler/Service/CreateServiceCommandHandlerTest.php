@@ -51,12 +51,26 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setTeamName('team-foobar');
         $service->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
         $service->setPrivacyQuestionsEnabled(true);
+        $service->setProductionEntitiesEnabled(true);
+
+        $service->setServiceType('institution');
+        $service->setIntakeStatus('yes');
+        $service->setSurfconextRepresentativeApproved('yes');
+        $service->setConnectionStatus('requested');
+        $service->setContractSigned('yes');
 
         $command = new CreateServiceCommand();
-        $command->setName('Foobar');
-        $command->setTeamName('team-foobar');
-        $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
-        $command->setPrivacyQuestionsEnabled(true);
+        $command->setName($service->getName());
+        $command->setTeamName($service->getTeamName());
+        $command->setGuid($service->getGuid());
+        $command->setPrivacyQuestionsEnabled($service->isPrivacyQuestionsEnabled());
+        $command->setProductionEntitiesEnabled($service->isProductionEntitiesEnabled());
+
+        $command->setServiceType($service->getServiceType());
+        $command->setIntakeStatus($service->getIntakeStatus());
+        $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
+        $command->setConnectionStatus($service->getConnectionStatus());
+        $command->setContractSigned($service->getContractSigned());
 
         $this->repository->shouldReceive('save')->with(equalTo($service))->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
@@ -75,7 +89,14 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
+        $command->setProductionEntitiesEnabled(true);
         $command->setPrivacyQuestionsEnabled(false);
+
+        $command->setServiceType('institution');
+        $command->setIntakeStatus('yes');
+        $command->setSurfconextRepresentativeApproved('yes');
+        $command->setConnectionStatus('requested');
+        $command->setContractSigned('yes');
 
         $this->repository
             ->shouldReceive('isUnique')

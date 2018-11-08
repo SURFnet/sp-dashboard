@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateServiceCommand implements Command
@@ -51,6 +52,33 @@ class CreateServiceCommand implements Command
      */
     private $privacyQuestionsEnabled = true;
 
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $serviceType = Service::SERVICE_TYPE_NON_INSTITUTE;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $intakeStatus = Service::INTAKE_STATUS_NO;
+
+    /**
+     * @var string
+     */
+    private $contractSigned = Service::CONTRACT_SIGNED_NO;
+
+    /**
+     * @var string
+     */
+    private $surfconextRepresentativeApproved = Service::SURFCONEXT_APPROVED_NO;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $connectionStatus = Service::CONNECTION_STATUS_NOT_REQUESTED;
     /**
      * @param string $guid
      */
@@ -92,6 +120,46 @@ class CreateServiceCommand implements Command
     }
 
     /**
+     * @param string $serviceType
+     */
+    public function setServiceType($serviceType)
+    {
+        $this->serviceType = $serviceType;
+    }
+
+    /**
+     * @param string $intakeStatus
+     */
+    public function setIntakeStatus($intakeStatus)
+    {
+        $this->intakeStatus = $intakeStatus;
+    }
+
+    /**
+     * @param string $contractSigned
+     */
+    public function setContractSigned($contractSigned)
+    {
+        $this->contractSigned = $contractSigned;
+    }
+
+    /**
+     * @param string $surfconextRepresentativeApproved
+     */
+    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
+    {
+        $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @param string $connectionStatus
+     */
+    public function setConnectionStatus($connectionStatus)
+    {
+        $this->connectionStatus = $connectionStatus;
+    }
+
+    /**
      * @return string
      */
     public function getGuid()
@@ -129,5 +197,54 @@ class CreateServiceCommand implements Command
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceType()
+    {
+        return $this->serviceType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIntakeStatus()
+    {
+        return $this->intakeStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContractSigned()
+    {
+        return $this->contractSigned;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSurfconextRepresentativeApproved()
+    {
+        return $this->surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectionStatus()
+    {
+        return $this->connectionStatus;
+    }
+
+    /**
+     * New services have no privacy questions answers yet.
+     * @return bool
+     */
+    public function hasPrivacyQuestionsAnswered()
+    {
+        return false;
     }
 }

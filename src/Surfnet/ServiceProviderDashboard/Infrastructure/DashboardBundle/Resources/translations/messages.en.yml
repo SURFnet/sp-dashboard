@@ -161,6 +161,27 @@ privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF 
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
 service.create.title: Add new service
 service.edit.title: Edit service
+service.form.label.connection_status: Connection status
+service.form.label.connection_status_not_requested: Not requested
+service.form.label.connection_status_requested: Requested
+service.form.label.connection_status_informed: Informed
+service.form.label.connection_status_active: Active
+service.form.label.contract_signed: Contract signed
+service.form.label.contract_signed_no: No
+service.form.label.contract_signed_yes: Yes
+service.form.label.intake_status: Intake finished
+service.form.label.intake_status_no: No
+service.form.label.intake_status_yes: Yes
+service.form.label.intake_status_not_applicable: Not applicable
+service.form.label.privacy_question_answered: Privacy questions answered
+service.form.label.privacy_question_answered_no: No
+service.form.label.privacy_question_answered_yes: Yes
+service.form.label.representative_approved: SURFconext representative approved
+service.form.label.representative_approved_no: No
+service.form.label.representative_approved_yes: Yes
+service.form.label.service_type: Type of service
+service.form.label.service_type_institute: Institute
+service.form.label.service_type_non_institute: Not an institute
 mail.confirmation.publish_production.comment: Comments
 mail.confirmation.publish_production.entity_id: EntityID
 mail.confirmation.publish_production.entity_name_en: Entity name (en)

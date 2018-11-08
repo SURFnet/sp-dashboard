@@ -57,22 +57,82 @@ class EditServiceCommand implements Command
     private $privacyQuestionsEnabled = true;
 
     /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $serviceType;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $intakeStatus;
+
+    /**
+     * @var string
+     */
+    private $contractSigned;
+
+    /**
+     * @var string
+     */
+    private $surfconextRepresentativeApproved;
+
+    /**
+     * @var string
+     */
+    private $privacyQuestionsAnswered;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $connectionStatus;
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
+     *
      * @param int $id
      * @param string $guid
-     * @param string $name
      * @param string $teamName
+     * @param string $name
      * @param bool $productionEntitiesEnabled
      * @param bool $privacyQuestionsEnabled
+     * @param string $serviceType
+     * @param string $intakeStatus
+     * @param string $contractSigned
+     * @param string $surfconextRepresentativeApproved
+     * @param string $privacyQuestionsAnswered
+     * @param string $connectionStatus
      */
-    public function __construct($id, $guid, $name, $teamName, $productionEntitiesEnabled, $privacyQuestionsEnabled)
-    {
+    public function __construct(
+        $id,
+        $guid,
+        $name,
+        $teamName,
+        $productionEntitiesEnabled,
+        $privacyQuestionsEnabled,
+        $serviceType,
+        $intakeStatus,
+        $contractSigned,
+        $surfconextRepresentativeApproved,
+        $privacyQuestionsAnswered,
+        $connectionStatus
+    ) {
         $this->id = $id;
         $this->guid = $guid;
         $this->name = $name;
         $this->teamName = $teamName;
         $this->productionEntitiesEnabled = $productionEntitiesEnabled;
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
+        $this->serviceType = $serviceType;
+        $this->intakeStatus = $intakeStatus;
+        $this->contractSigned = $contractSigned;
+        $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
+        $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
+        $this->connectionStatus = $connectionStatus;
     }
+
 
     /**
      * @param string $guid
@@ -115,6 +175,62 @@ class EditServiceCommand implements Command
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param string $serviceType
+     */
+    public function setServiceType($serviceType)
+    {
+        $this->serviceType = $serviceType;
+    }
+
+    /**
+     * @param string $intakeStatus
+     */
+    public function setIntakeStatus($intakeStatus)
+    {
+        $this->intakeStatus = $intakeStatus;
+    }
+
+    /**
+     * @param string $contractSigned
+     */
+    public function setContractSigned($contractSigned)
+    {
+        $this->contractSigned = $contractSigned;
+    }
+
+    /**
+     * @param string $surfconextRepresentativeApproved
+     */
+    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
+    {
+        $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @param bool $privacyQuestionsAnswered
+     */
+    public function setPrivacyQuestionsAnswered($privacyQuestionsAnswered)
+    {
+        $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
+    }
+
+    /**
+     * @param string $connectionStatus
+     */
+    public function setConnectionStatus($connectionStatus)
+    {
+        $this->connectionStatus = $connectionStatus;
+    }
+
+    /**
      * @return string
      */
     public function getId()
@@ -144,6 +260,54 @@ class EditServiceCommand implements Command
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceType()
+    {
+        return $this->serviceType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIntakeStatus()
+    {
+        return $this->intakeStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContractSigned()
+    {
+        return $this->contractSigned;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSurfconextRepresentativeApproved()
+    {
+        return $this->surfconextRepresentativeApproved;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivacyQuestionsAnswered()
+    {
+        return $this->privacyQuestionsAnswered;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectionStatus()
+    {
+        return $this->connectionStatus;
     }
 
     /**

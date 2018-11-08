@@ -47,10 +47,6 @@ class Service
     const SURFCONEXT_APPROVED_YES = 'yes';
     const SURFCONEXT_APPROVED_NO = 'no';
 
-    // If privacyQuestionsEnabled: have privacy questions been filled? (null if disabled)
-    const PRIVACY_QUESTIONS_ANSWERED_YES = 'yes';
-    const PRIVACY_QUESTIONS_ANSWERED_NO = 'no';
-
     // Production connection status: (not-requested|requested|active|surfconext-informed)
     const CONNECTION_STATUS_NOT_REQUESTED = 'not-requested';
     const CONNECTION_STATUS_REQUESTED = 'requested';
@@ -124,12 +120,6 @@ class Service
      * @ORM\Column(length=50, nullable=true)
      */
     private $surfconextRepresentativeApproved;
-
-    /**
-     * @var string
-     * @ORM\Column(length=50, nullable=true)
-     */
-    private $privacyQuestionsAnswered;
 
     /**
      * @var string
@@ -363,22 +353,6 @@ class Service
     public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrivacyQuestionsAnswered()
-    {
-        return $this->privacyQuestionsAnswered;
-    }
-
-    /**
-     * @param string $privacyQuestionsAnswered
-     */
-    public function setPrivacyQuestionsAnswered($privacyQuestionsAnswered)
-    {
-        $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
     }
 
     /**

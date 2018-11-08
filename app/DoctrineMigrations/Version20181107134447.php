@@ -6,9 +6,18 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Add required service status columns for better status tracking
+ * Add required service status columns for better status tracking.
+ * And fill the existing records with sensible default values.
+ *
+ * The following default are set for:
+ *
+ *  | Column           | Value          | Matching Service entity constant
+ *  |==================|================|====================================
+ *  | service_type     | non-institute  | Service::SERVICE_TYPE_NON_INSTITUTE
+ *  | intake_status    | yes            | Service::INTAKE_STATUS_YES
+ *  | contract_signed  | yes            | Service::CONTRACT_SIGNED_YES
  */
-class Version20181106121253 extends AbstractMigration
+class Version20181107134447 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -27,8 +36,19 @@ class Version20181106121253 extends AbstractMigration
             ADD intake_status VARCHAR(50) NOT NULL, 
             ADD contract_signed VARCHAR(50) DEFAULT NULL, 
             ADD surfconext_representative_approved VARCHAR(50) DEFAULT NULL, 
-            ADD privacy_questions_answered VARCHAR(50) DEFAULT NULL, 
             ADD connection_status VARCHAR(50) NOT NULL'
+        );
+
+        $this->addSql(
+            sprintf(
+                'UPDATE service SET 
+                service_type = "%s",
+                intake_status = "%s",
+                contract_signed = "%s"',
+                'non-institute',
+                'yes',
+                'yes'
+            )
         );
     }
 
@@ -49,7 +69,6 @@ class Version20181106121253 extends AbstractMigration
             DROP intake_status, 
             DROP contract_signed, 
             DROP surfconext_representative_approved, 
-            DROP privacy_questions_answered, 
             DROP connection_status'
         );
     }
