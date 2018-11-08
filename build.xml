@@ -52,6 +52,8 @@
         <exec executable="vendor/bin/phpcs" failonerror="true">
             <arg line="--runtime-set ignore_warnings_on_exit 1" />
             <arg line="--standard=phpcs.xml" />
+            <arg line="--error-severity=1" />
+            <arg line="--warning-severity=6" />
             <arg path="src" />
         </exec>
 
@@ -59,6 +61,8 @@
         <exec executable="vendor/bin/phpcs" failonerror="true">
             <arg line="--runtime-set ignore_warnings_on_exit 1" />
             <arg line="--standard=phpcs_tests.xml" />
+            <arg line="--error-severity=1" />
+            <arg line="--warning-severity=6" />
             <arg path="tests" />
         </exec>
 
