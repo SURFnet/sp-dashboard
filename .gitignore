@@ -1,6 +1,7 @@
 /.vagrant/
 /ansible/*.retry
 /app/config/parameters.yml
+app/js/coverage
 /build/
 /var/*
 !/var/cache
