@@ -1,6 +1,7 @@
 // Base Class Definition
 // -------------------------
 
+/* stylelint-disable font-family-no-missing-generic-family-keyword */
 .#{$fa-css-prefix} {
   display: inline-block;
   font: normal normal normal #{$fa-font-size-base}/#{$fa-line-height-base} FontAwesome; // shortening font declaration
@@ -10,3 +11,5 @@
   -moz-osx-font-smoothing: grayscale;
 
 }
+/* stylelint-enable */
+

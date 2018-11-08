@@ -1,6 +1,15 @@
+/* The stylint specificty rule is disabled because this stylint rule was added after the initial scss was set up and now will cost to much time to refactor, feel free to do so! */
+/* stylelint-disable no-descending-specificity */
 .navigation-container {
 
   background-color: $blue;
+
+  a {
+    color: lighten($light-blue, 5);
+    margin-right: 50px;
+    padding-bottom: 12px;
+    @include no-text-decoration;
+  }
 
   .navigation {
     max-width: $medium;
@@ -22,18 +31,7 @@
         }
       }
     }
-
-    a {
-      color: lighten($light-blue, 5);
-      margin-right: 50px;
-      padding-bottom: 12px;
-      @include no-text-decoration;
-    }
-
   }
 }
 
-
-
-
-
+/* stylelint-enable */

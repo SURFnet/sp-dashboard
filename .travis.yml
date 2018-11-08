@@ -12,6 +12,7 @@ cache:
 before_script:
   - phpenv config-add travis.php.ini
   - composer install --no-interaction
+  - yarn install
 
 script:
   - ant

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SURFnet Service Provider Dashboard" default="test">
-    <target name="test" depends="lint,static-analysis,phpunit-no-coverage,security-tests" />
+    <target name="test" depends="lint,static-analysis,phpunit-no-coverage,jest,security-tests" />
 
     <target name="lint">
+        <echo message="parallel-lint:" />
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
             <arg path="app" />
             <arg path="src" />
@@ -10,40 +11,67 @@
             <arg path="web" />
         </exec>
 
+        <echo message="${line.separator}yamllint:" />
         <exec executable="bin/console" failonerror="true">
             <arg line="lint:yaml" />
             <arg path="app/config" />
         </exec>
 
+        <echo message="${line.separator}composer validate:" />
         <exec executable="composer" failonerror="true">
             <arg line="validate" />
         </exec>
+
+        <echo message="${line.separator}tslint:" />
+        <exec executable="node_modules/tslint/bin/tslint" failonerror="true">
+            <arg line="--project tsconfig.json" />
+        </exec>
+
+        <echo message="${line.separator}stylelint:" />
+        <exec executable="node_modules/stylelint/bin/stylelint.js" failonerror="true">
+            <arg line="app/scss/**/*.scss" />
+            <arg line="-f unix" />
+        </exec>
+
     </target>
 
     <target name="static-analysis">
-        <echo message="Checking for missing license headers..." />
+        <echo message="docheader:" />
         <exec executable="vendor/bin/docheader" failonerror="true">
             <arg line="check src/ tests/" />
         </exec>
 
+        <echo message="${line.separator}phpmd:" />
         <exec executable="vendor/bin/phpmd" failonerror="true">
             <arg path="src" />
             <arg value="text" />
             <arg path="phpmd.xml" />
         </exec>
 
+        <echo message="${line.separator}phpcs:" />
         <exec executable="vendor/bin/phpcs" failonerror="true">
             <arg line="--runtime-set ignore_warnings_on_exit 1" />
             <arg line="--standard=phpcs.xml" />
+            <arg line="--error-severity=1" />
+            <arg line="--warning-severity=6" />
             <arg path="src" />
         </exec>
 
+        <echo message="${line.separator}phpcs for tests:" />
         <exec executable="vendor/bin/phpcs" failonerror="true">
             <arg line="--runtime-set ignore_warnings_on_exit 1" />
             <arg line="--standard=phpcs_tests.xml" />
+            <arg line="--error-severity=1" />
+            <arg line="--warning-severity=6" />
             <arg path="tests" />
         </exec>
 
+        <echo message="${line.separator}jscpd:" />
+        <exec executable="node_modules/jscpd/bin/jscpd" failonerror="true">
+            <arg line="--limit=-1" />
+        </exec>
+
+        <echo message="${line.separator}phpcpd:" />
         <exec executable="vendor/bin/phpcpd" failonerror="false">
             <arg path="src" />
         </exec>
@@ -110,6 +138,12 @@
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite webtests" />
             <arg line="--coverage-php /tmp/sp-dashboard-coverage/webtests.cov" />
+        </exec>
+    </target>
+
+    <target name="jest">
+        <exec executable="node_modules/jest/bin/jest.js" failonerror="true">
+            <arg line="--passWithNoTests" />
         </exec>
     </target>
 

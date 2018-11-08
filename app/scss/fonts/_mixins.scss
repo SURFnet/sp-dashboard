@@ -1,6 +1,7 @@
 // Mixins
 // --------------------------
 
+/* stylelint-disable font-family-no-missing-generic-family-keyword */
 @mixin fa-icon() {
   display: inline-block;
   font: normal normal normal #{$fa-font-size-base}/#{$fa-line-height-base} FontAwesome; // shortening font declaration
@@ -8,8 +9,9 @@
   text-rendering: auto; // optimizelegibility throws things off #1094
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
+/* stylelint-enable */
+
 
 @mixin fa-icon-rotate($degrees, $rotation) {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=#{$rotation})";
