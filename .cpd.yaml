@@ -1,0 +1,7 @@
+#.cpd.yaml
+languages:
+- javascript
+- typescript
+files:
+- "app/js/**/*"
+reporter: json
