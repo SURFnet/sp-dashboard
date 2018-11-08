@@ -3,6 +3,7 @@
     <target name="test" depends="lint,static-analysis,phpunit-no-coverage,security-tests" />
 
     <target name="lint">
+        <echo message="parallel-lint:" />
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
             <arg path="app" />
             <arg path="src" />
@@ -10,14 +11,28 @@
             <arg path="web" />
         </exec>
 
+        <echo message="${line.separator}yamllint:" />
         <exec executable="bin/console" failonerror="true">
             <arg line="lint:yaml" />
             <arg path="app/config" />
         </exec>
 
+        <echo message="${line.separator}composer validate:" />
         <exec executable="composer" failonerror="true">
             <arg line="validate" />
         </exec>
+
+        <echo message="${line.separator}tslint:" />
+        <exec executable="node_modules/tslint/bin/tslint" failonerror="true">
+            <arg line="--project tsconfig.json" />
+        </exec>
+
+        <echo message="${line.separator}stylelint:" />
+        <exec executable="node_modules/stylelint/bin/stylelint.js" failonerror="true">
+            <arg line="app/scss/**/*.scss" />
+            <arg line="-f unix" />
+        </exec>
+
     </target>
 
     <target name="static-analysis">
