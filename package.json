@@ -1,10 +1,26 @@
 {
   "devDependencies": {
     "@symfony/webpack-encore": "^0.21.0",
+    "@types/jest": "^23.3.2",
     "compass-mixins": "^0.12.10",
+    "css-loader": "^1.0.0",
+    "extract-loader": "^3.0.0",
+    "file-loader": "^2.0.0",
     "import-glob-loader": "^1.1.0",
+    "jest": "^23.6.0",
+    "jscpd": "^0.6.23",
     "node-sass": "^4.9.3",
-    "sass-loader": "^7.1.0"
+    "sass-loader": "^7.1.0",
+    "stylelint": "^9.5.0",
+    "stylelint-config-recommended": "^2.1.0",
+    "ts-jest": "^23.10.0",
+    "ts-loader": "^3.5",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.0.3",
+    "webpack": "^4.0",
+    "webpack-dev-server": "3"
   },
   "dependencies": {
     "jquery": "^3.2.1",
@@ -14,5 +30,11 @@
   },
   "resolutions": {
     "jquery": "3.3.1"
+  },
+  "scripts": {
+    "build": "encore production",
+    "watch": "encore dev --watch",
+    "start": "webpack-dev-server",
+    "tslint": "./node_modules/tslint/bin/tslint --project tsconfig.json"
   }
 }
