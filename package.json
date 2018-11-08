@@ -1,4 +1,8 @@
 {
+  "name": "sp-dashboard",
+  "description": "Dashboard application for SURFconext Service Providers",
+  "license": "Apache-2.0",
+  "private": true,
   "devDependencies": {
     "@symfony/webpack-encore": "^0.21.0",
     "@types/jest": "^23.3.2",
@@ -14,12 +18,11 @@
     "stylelint": "^9.5.0",
     "stylelint-config-recommended": "^2.1.0",
     "ts-jest": "^23.10.0",
-    "ts-loader": "^3.5",
+    "ts-loader": "^4.3.0",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.0.3",
-    "webpack": "^4.0",
     "webpack-dev-server": "3"
   },
   "dependencies": {
