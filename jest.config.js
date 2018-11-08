@@ -25,7 +25,7 @@ module.exports = {
     modulePathIgnorePatterns: [
         "\\.snap$",
         "<rootDir>/node_modules",
-        "<rootDir>/frontend/build",
+        "<rootDir>/web/build"
     ],
     transform: {
         "\\.(ts|tsx)$": "ts-jest"

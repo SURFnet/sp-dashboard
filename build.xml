@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SURFnet Service Provider Dashboard" default="test">
-    <target name="test" depends="lint,static-analysis,phpunit-no-coverage,security-tests" />
+    <target name="test" depends="lint,static-analysis,phpunit-no-coverage,jest,security-tests" />
 
     <target name="lint">
         <echo message="parallel-lint:" />
@@ -138,6 +138,12 @@
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite webtests" />
             <arg line="--coverage-php /tmp/sp-dashboard-coverage/webtests.cov" />
+        </exec>
+    </target>
+
+    <target name="jest">
+        <exec executable="node_modules/jest/bin/jest.js" failonerror="true">
+            <arg line="--passWithNoTests" />
         </exec>
     </target>
 
