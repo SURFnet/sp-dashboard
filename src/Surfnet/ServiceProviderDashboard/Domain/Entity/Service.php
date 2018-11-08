@@ -53,6 +53,10 @@ class Service
     const CONNECTION_STATUS_SURFCONEXT_INFORMED = 'surfconext-informed';
     const CONNECTION_STATUS_ACTIVE = 'active';
 
+    const ENTITY_PUBLISHED_NO = 'no';
+    const ENTITY_PUBLISHED_IN_PROGRESS = 'in-progress';
+    const ENTITY_PUBLISHED_YES = 'yes';
+
     /**
      * @var int
      *

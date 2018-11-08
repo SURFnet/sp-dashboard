@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ConnectionStatusType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ContractSignedType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EntityPublishedType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\IntakeStatusType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\PrivacyQuestionAnsweredType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\RepresentativeApprovedType;
@@ -45,6 +46,7 @@ class EditServiceType extends AbstractType
 
             ->add('serviceType', ServiceTypeType::class)
             ->add('intakeStatus', IntakeStatusType::class)
+            ->add('entityPublished', EntityPublishedType::class)
             ->add('contractSigned', ContractSignedType::class)
             ->add('surfconextRepresentativeApproved', RepresentativeApprovedType::class)
             ->add('privacyQuestionsAnswered', PrivacyQuestionAnsweredType::class)
