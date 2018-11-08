@@ -34,6 +34,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Debug\Debug;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class WebTestCase extends SymfonyWebTestCase
 {
@@ -122,6 +123,32 @@ class WebTestCase extends SymfonyWebTestCase
         $cookie = new Cookie($session->getName(), $session->getId());
 
         $this->client->getCookieJar()->set($cookie);
+    }
+
+    /**
+     * @param $serviceName
+     * @return \Symfony\Component\DomCrawler\Crawler
+     * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     */
+    protected function switchToService($serviceName)
+    {
+        $crawler = $this->client->request('GET', '/service/create');
+        $form = $crawler->filter('.service-switcher')
+            ->selectButton('Select')
+            ->form();
+
+        $form['service']->select(
+            $this->getServiceRepository()->findByName($serviceName)->getId()
+        );
+
+        $this->client->submit($form);
+
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after selecting a service'
+        );
+
+        return $this->client->followRedirect();
     }
 
     /**

@@ -62,7 +62,6 @@ class EditServiceCommandHandler implements CommandHandler
         $service->setConnectionStatus($command->getConnectionStatus());
         $service->setContractSigned($command->getContractSigned());
         $service->setIntakeStatus($command->getIntakeStatus());
-        $service->setPrivacyQuestionsAnswered($command->getPrivacyQuestionsAnswered());
         $service->setSurfconextRepresentativeApproved($command->getSurfconextRepresentativeApproved());
 
         $this->serviceRepository->isUnique($service);

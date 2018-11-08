@@ -31,9 +31,10 @@ class PrivacyQuestionAnsweredType extends AbstractType
             'label' => 'service.form.label.privacy_question_answered',
             'expanded' => true,
             'multiple' => false,
+            'disabled' => true,
             'choices' => [
-                'service.form.label.privacy_question_answered_no' => Service::PRIVACY_QUESTIONS_ANSWERED_NO,
-                'service.form.label.privacy_question_answered_yes' => Service::PRIVACY_QUESTIONS_ANSWERED_YES,
+                'service.form.label.privacy_question_answered_no' => false,
+                'service.form.label.privacy_question_answered_yes' => true,
             ],
             'attr' => ['class' => 'service-status-container privacy-questions-container'],
         ]);

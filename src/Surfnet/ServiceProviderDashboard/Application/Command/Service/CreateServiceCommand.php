@@ -76,11 +76,6 @@ class CreateServiceCommand implements Command
 
     /**
      * @var string
-     */
-    private $privacyQuestionsAnswered = Service::PRIVACY_QUESTIONS_ANSWERED_NO;
-
-    /**
-     * @var string
      * @Assert\NotBlank
      */
     private $connectionStatus = Service::CONNECTION_STATUS_NOT_REQUESTED;
@@ -154,14 +149,6 @@ class CreateServiceCommand implements Command
     public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
-    }
-
-    /**
-     * @param string $privacyQuestionsAnswered
-     */
-    public function setPrivacyQuestionsAnswered($privacyQuestionsAnswered)
-    {
-        $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
     }
 
     /**
@@ -247,16 +234,17 @@ class CreateServiceCommand implements Command
     /**
      * @return string
      */
-    public function getPrivacyQuestionsAnswered()
-    {
-        return $this->privacyQuestionsAnswered;
-    }
-
-    /**
-     * @return string
-     */
     public function getConnectionStatus()
     {
         return $this->connectionStatus;
+    }
+
+    /**
+     * New services have no privacy questions answers yet.
+     * @return bool
+     */
+    public function hasPrivacyQuestionsAnswered()
+    {
+        return false;
     }
 }
