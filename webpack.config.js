@@ -7,9 +7,16 @@ Encore
     .addEntry('app', './app/js/application.js')
     .addStyleEntry('global', './app/scss/application.scss')
     .addLoader({ test: /\.scss$/, loader: 'import-glob-loader' })
-    .enableSassLoader()
+    .cleanupOutputBeforeBuild()
     .autoProvidejQuery()
     .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(Encore.isProduction())
+    .enableTypeScriptLoader()
+    .enableSassLoader((options) => {
+        // https://github.com/sass/node-sass#options.
+        options.includePaths = ['./node_modules'];
+    })
+    .disableSingleRuntimeChunk()
 ;
 
 module.exports = Encore.getWebpackConfig();
