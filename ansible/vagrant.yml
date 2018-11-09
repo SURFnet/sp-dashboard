@@ -7,11 +7,12 @@
      include_vars: "../../OpenConext-deploy/environments/vm/secrets/vm.yml"
    - name: "Include extra vars to override the vm vars"
      include_vars: "group_vars/override.yml"
+   - name: "Include OpenConext-deploy all group vars"
+     include_vars: "../../OpenConext-deploy/group_vars/all.yml"
    - name: Set base_domain  
      set_fact: 
        base_domain: dev.support.surfconext.nl
        engine_feature_ldap_integration: 0
-
   tags: always
 
 - hosts: all
@@ -22,9 +23,6 @@
     spdashboard_domain: spdashboard.dev.support.surfconext.nl
     spdashboard_data_dir: /vagrant
     spdashboard_fpm_user: vagrant
-    #  tasks:
-    #- name: "Include extra vars to override the vm vars"
-    #  include_vars: "group_vars/override.yml"
   roles:
     - ../OpenConext-deploy/roles/common
     - ../OpenConext-deploy/roles/openconext-common
@@ -41,7 +39,7 @@
     - { role: ../OpenConext-deploy/roles/manage-gui,        tags: ['manage', 'manage-gui'] }
     - { role: ../OpenConext-deploy/roles/manage-server,     tags: ['manage', 'manage-server'] }
     - { role: manage-gui-prod,                              tags: ['manage', 'manage-gui'] }
-    - { role: manage-server-prod,                            tags: ['manage', 'manage-server'] }
+    - { role: manage-server-prod,                           tags: ['manage', 'manage-server'] }
     - { role: ../OpenConext-deploy/roles/authz-server,      tags: ['oauth', 'authz' ] }
     - { role: ../OpenConext-deploy/roles/authz-admin,       tags: ['oauth', 'authz-admin' ] }
     - { role: ../OpenConext-deploy/roles/voot,              tags: ['oauth', 'voot' ] }
