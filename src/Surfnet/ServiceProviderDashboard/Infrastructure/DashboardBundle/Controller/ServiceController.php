@@ -172,7 +172,7 @@ class ServiceController extends Controller
     /**
      * @Method("POST")
      * @Route("/service/select", name="select_service")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      */
     public function selectAction(Request $request)
     {

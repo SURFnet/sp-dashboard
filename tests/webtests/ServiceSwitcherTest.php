@@ -19,9 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+/**
+ * The service switcher was used for both the USER and ADMINISTRATOR roles. The users later stopped having this feature
+ * in favour of a more user friendly service overview page.
+ */
 class ServiceSwitcherTest extends WebTestCase
 {
     public function setUp()
@@ -49,7 +52,7 @@ class ServiceSwitcherTest extends WebTestCase
         $this->assertEmpty($crawler->filter('select#service-switcher'));
     }
 
-    public function test_switcher_is_displayed_when_user_has_access_to_multiple_services()
+    public function test_switcher_is_not_displayed_even_when_user_has_access_to_multiple_services()
     {
         $this->loadFixtures();
 
@@ -65,8 +68,7 @@ class ServiceSwitcherTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
-        $options = $crawler->filter('select#service-switcher option');
-        $this->assertCount(3, $options, 'Expecting 2 services in service switcher (excluding empty option)');
+        $this->assertEmpty($crawler->filter('select#service-switcher'));
     }
 
     public function test_no_service_is_selected_when_session_is_empty()
