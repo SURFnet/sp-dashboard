@@ -49,6 +49,9 @@ class EditServiceTest extends WebTestCase
             ]
         ];
 
+        // EntityService::getEntityListForService -> findByTeamName
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
         $crawler = $this->client->request('GET', '/service/edit');
 
         $form = $crawler
@@ -73,6 +76,10 @@ class EditServiceTest extends WebTestCase
         $serviceRepository = $this->getServiceRepository();
 
         $this->logIn('ROLE_ADMINISTRATOR');
+
+        // EntityService::getEntityListForService -> findByTeamName
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
         $crawler = $this->client->request('GET', '/service/edit');
 
         // Step 1: Admin sets privacy questions enabled to false
@@ -107,6 +114,11 @@ class EditServiceTest extends WebTestCase
 
         // Step 3: Admin enables the Privacy questions
         $this->logIn('ROLE_ADMINISTRATOR');
+
+        // EntityService::getEntityListForService -> findByTeamName (is called twice)
+        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
         $crawler = $this->client->request('GET', '/service/edit');
 
         $formData = [
@@ -139,6 +151,9 @@ class EditServiceTest extends WebTestCase
         $this->logIn('ROLE_ADMINISTRATOR');
         $this->loadFixtures();
         $this->switchToService('Ibuildings B.V.');
+
+        // EntityService::getEntityListForService -> findByTeamName
+        $this->mockHandler->append(new Response(200, [], '{}'));
 
         $crawler = $this->client->request('GET', '/service/edit');
 
