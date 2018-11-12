@@ -37,6 +37,8 @@ class Builder
             return $menu;
         }
 
+        $menu->addChild('Services', ['route' => 'service_overview']);
+
         if ($this->authorizationService->hasActiveServiceId()) {
             $menu->addChild('My entities', array('route' => 'entity_list'));
 
