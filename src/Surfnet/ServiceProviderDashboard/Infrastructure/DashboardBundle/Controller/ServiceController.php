@@ -81,6 +81,22 @@ class ServiceController extends Controller
     }
 
     /**
+     * @Method({"GET"})
+     * @Route("/", name="service_overview")
+     * @Template()
+     */
+    public function overviewAction()
+    {
+        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
+
+        if (empty($serviceOptions)) {
+            return $this->redirectToRoute('service_add');
+        }
+
+        return $this->render('DashboardBundle:Service:overview.html.twig');
+    }
+    
+    /**
      * @Method({"GET", "POST"})
      * @Route("/service/create", name="service_add")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
