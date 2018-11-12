@@ -73,7 +73,7 @@ class ServiceService
             }
         }
 
-        asort($services);
+        ksort($services);
 
         return $services;
     }

@@ -188,14 +188,15 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method("POST")
+     * @Method({"GET", "POST"})
      * @Route("/service/select", name="select_service")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Security("has_role('ROLE_USER')")
      */
     public function selectAction(Request $request)
     {
+        $serviceId = $request->get('service', $request->query->get('service'));
         $command = new SelectServiceCommand(
-            $request->request->get('service')
+            $serviceId
         );
 
         $this->commandBus->handle($command);
