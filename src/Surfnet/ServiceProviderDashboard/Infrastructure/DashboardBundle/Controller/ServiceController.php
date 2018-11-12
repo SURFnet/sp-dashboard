@@ -88,12 +88,15 @@ class ServiceController extends Controller
     public function overviewAction()
     {
         $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
+        $services = $this->serviceService->getServicesByCurrentServiceIds($serviceOptions);
 
         if (empty($serviceOptions)) {
             return $this->redirectToRoute('service_add');
         }
 
-        return $this->render('DashboardBundle:Service:overview.html.twig');
+        return $this->render('DashboardBundle:Service:overview.html.twig', [
+            'services' => $services
+        ]);
     }
     
     /**

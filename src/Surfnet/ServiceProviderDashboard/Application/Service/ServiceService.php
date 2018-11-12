@@ -55,6 +55,30 @@ class ServiceService
     }
 
     /**
+     * Retrieve service entities based on an array keyed by service id
+     *
+     * Format [ '<service name>' => '<service entity>' ]
+     *
+     * @param $serviceIds
+     * @return array
+     */
+    public function getServicesByCurrentServiceIds($serviceIds)
+    {
+        $services = [];
+
+        foreach ($serviceIds as $serviceId => $serviceName) {
+            $service = $this->getServiceById($serviceId);
+            if ($service) {
+                $services[$service->getName()] = $service;
+            }
+        }
+
+        asort($services);
+
+        return $services;
+    }
+
+    /**
      * @param int $id
      *
      * @return Service|null
