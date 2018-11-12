@@ -182,6 +182,7 @@ service.form.label.representative_approved_yes: Yes
 service.form.label.service_type: Type of service
 service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
+service.overview.title: My services
 mail.confirmation.publish_production.comment: Comments
 mail.confirmation.publish_production.entity_id: EntityID
 mail.confirmation.publish_production.entity_name_en: Entity name (en)
