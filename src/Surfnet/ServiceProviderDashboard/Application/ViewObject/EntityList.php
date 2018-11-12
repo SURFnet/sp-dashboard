@@ -17,7 +17,9 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-class EntityList
+use JsonSerializable;
+
+class EntityList implements JsonSerializable
 {
     /**
      * @var Entity[]
@@ -36,6 +38,11 @@ class EntityList
      * @return Entity[]
      */
     public function getEntities()
+    {
+        return $this->entities;
+    }
+
+    public function jsonSerialize()
     {
         return $this->entities;
     }
