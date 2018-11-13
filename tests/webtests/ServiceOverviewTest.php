@@ -50,12 +50,17 @@ class ServiceOverviewTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
+        // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
         $nodes = $crawler->filter('.card h1');
         $serviceNode = $nodes->first();
+
         $this->assertEquals('SURFnet', $serviceNode->text());
+
         $link = $serviceNode->filter('a')->first()->link();
 
+        // Clicking on the anchor, swithces the service context to clicked service.
         $this->client->click($link);
+        // The my entities page should now be open.
         $this->assertRegExp('#entities$#', $this->client->getResponse()->headers->get('location'));
     }
 
@@ -71,15 +76,17 @@ class ServiceOverviewTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
+        // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
         $nodes = $crawler->filter('.card h1');
 
+        // Two services should be on page: surf and ibuildings.
         $this->assertEquals(2, $nodes->count());
 
         // The two nodes are sorted alphabetically.
         $serviceNode = $nodes->first();
-        $this->assertEquals('Ibuildings B.V.', $serviceNode->text());
-
         $service2 = $nodes->eq(1);
+
+        $this->assertEquals('Ibuildings B.V.', $serviceNode->text());
         $this->assertEquals('SURFnet', $service2->text());
     }
 }
