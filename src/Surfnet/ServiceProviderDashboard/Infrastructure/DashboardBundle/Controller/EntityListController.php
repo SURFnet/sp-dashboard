@@ -60,7 +60,7 @@ class EntityListController extends Controller
 
     /**
      * @Method("GET")
-     * @Route("/", name="entity_list")
+     * @Route("/entities", name="entity_list")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      *

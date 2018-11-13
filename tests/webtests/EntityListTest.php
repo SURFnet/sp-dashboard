@@ -34,7 +34,7 @@ class EntityListTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/entities');
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -85,7 +85,7 @@ class EntityListTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/entities');
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -114,7 +114,7 @@ class EntityListTest extends WebTestCase
             $service->getId()
         );
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/entities');
 
         $actions = $crawler->filter('div.add-entity-actions a');
 
@@ -136,39 +136,11 @@ class EntityListTest extends WebTestCase
             $service->getId()
         );
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/entities');
 
         $actions = $crawler->filter('div.add-entity-actions a');
 
         $this->assertContains('Add for test', $actions->eq(0)->text(), 'Add for test link not found');
         $this->assertContains('Add for production', $actions->eq(1)->text(), 'Add for production link not found');
-    }
-
-    public function test_entity_list_redirects_to_service_add_when_no_service_exists()
-    {
-        $this->clearFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $this->client->request('GET', '/');
-        $response = $this->client->getResponse();
-
-        $this->assertTrue(
-            $response instanceof RedirectResponse,
-            'Expecting a redirect response to add form when no service exists'
-        );
-
-        $this->assertRegExp('#service/create$#', $response->headers->get('location'));
-    }
-
-    public function test_entity_list_shows_message_when_no_service_selected()
-    {
-        $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $this->client->request('GET', '/');
-        $response = $this->client->getResponse();
-
-        $this->assertContains('No service selected', $response->getContent());
-        $this->assertContains('Please select a service', $response->getContent());
     }
 }

@@ -55,6 +55,32 @@ class ServiceService
     }
 
     /**
+     * Retrieve service entities based on an array keyed by service id
+     *
+     * Format [ '<service name>' => '<service entity>' ]
+     *
+     * @param array $allowedServices The input should be service names keyed by service id.
+     *                               As provided by: AuthorizationService::getAllowedServiceNamesById
+     * @return array
+     */
+    public function getServicesByAllowedServices(array $allowedServices)
+    {
+        $services = [];
+        $serviceIds = array_keys($allowedServices);
+
+        foreach ($serviceIds as $serviceId) {
+            $service = $this->getServiceById($serviceId);
+            if ($service) {
+                $services[$service->getName()] = $service;
+            }
+        }
+
+        ksort($services);
+
+        return $services;
+    }
+
+    /**
      * @param int $id
      *
      * @return Service|null
