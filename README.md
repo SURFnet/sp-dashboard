@@ -42,13 +42,6 @@ Install database migrations
 bin/console doctrine:migrations:migrate
 ```
 
-Or alternatively do:
-
-```
-bin/console doctrine:schema:create
-bin/console doctrine:migrations:version --add --all
-```
-
 Now follow the instructions in [SAML configuration for development](docs/saml-dev-setup.md) to setup authentication.
  
 The application is now up and running and can be accessed at
