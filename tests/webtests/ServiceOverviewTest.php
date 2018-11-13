@@ -89,4 +89,34 @@ class ServiceOverviewTest extends WebTestCase
         $this->assertEquals('Ibuildings B.V.', $serviceNode->text());
         $this->assertEquals('SURFnet', $service2->text());
     }
+
+    public function test_service_overview_redirects_to_service_add_when_no_service_exists()
+    {
+        $this->clearFixtures();
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $this->client->request('GET', '/');
+        $response = $this->client->getResponse();
+
+        $this->assertTrue(
+            $response instanceof RedirectResponse,
+            'Expecting a redirect response to add form when no service exists'
+        );
+
+        $this->assertRegExp('#service/create$#', $response->headers->get('location'));
+    }
+
+    public function test_service_overview_shows_message_when_no_service_selected()
+    {
+        $this->markTestSkipped('TODO: Determine what the Administrator should see when authenticated');
+
+        $this->loadFixtures();
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $this->client->request('GET', '/');
+        $response = $this->client->getResponse();
+
+        $this->assertContains('No service selected', $response->getContent());
+        $this->assertContains('Please select a service', $response->getContent());
+    }
 }
