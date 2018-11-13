@@ -35,7 +35,7 @@ class ContractSignedType extends AbstractType
                 'service.form.label.contract_signed_no' => Service::CONTRACT_SIGNED_NO,
                 'service.form.label.contract_signed_yes' => Service::CONTRACT_SIGNED_YES,
             ],
-            'attr' => ['class' => 'service-status-container'],
+            'attr' => ['class' => 'service-status-container contract-signed-container'],
         ]);
     }
 

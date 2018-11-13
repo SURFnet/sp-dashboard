@@ -1,0 +1,74 @@
+<form name="dashboard_bundle_service_type" method="post" novalidate="novalidate">
+    <div id="dashboard_bundle_service_type" novalidate="novalidate"><div class="form-row"><label for="dashboard_bundle_service_type_name" class="required">Name</label><p class="parsley-errors"></p>
+        <input type="text" id="dashboard_bundle_service_type_name" name="dashboard_bundle_service_type[name]" required="required"  /></div><div class="form-row"><label for="dashboard_bundle_service_type_teamName" class="required">Team name</label><p class="parsley-errors"></p>
+        <input type="text" id="dashboard_bundle_service_type_teamName" name="dashboard_bundle_service_type[teamName]" required="required"  /></div><div class="form-row"><label for="dashboard_bundle_service_type_productionEntitiesEnabled" class="required">Production entities enabled</label><p class="parsley-errors"></p>
+        <input type="checkbox" id="dashboard_bundle_service_type_productionEntitiesEnabled" name="dashboard_bundle_service_type[productionEntitiesEnabled]" required="required" value="1" /></div><div class="form-row"><label for="dashboard_bundle_service_type_privacyQuestionsEnabled" class="required">Privacy questions enabled</label><p class="parsley-errors"></p>
+        <input type="checkbox" id="dashboard_bundle_service_type_privacyQuestionsEnabled" name="dashboard_bundle_service_type[privacyQuestionsEnabled]" required="required" class="privacy-questions-toggle" value="1" checked="checked" /></div><div class="form-row"><label class="required">Type of service</label><p class="parsley-errors"></p>
+        <div id="dashboard_bundle_service_type_serviceType" class="service-status-container contract-signed-toggle">            <div class="radio-container">
+            <div class="input-container">
+                <input type="radio" id="dashboard_bundle_service_type_serviceType_0" name="dashboard_bundle_service_type[serviceType]" required="required" value="institute" />
+            </div><label for="dashboard_bundle_service_type_serviceType_0" class="required">Institute</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_serviceType_1" name="dashboard_bundle_service_type[serviceType]" required="required" value="non-institute" checked="checked" />
+                </div><label for="dashboard_bundle_service_type_serviceType_1" class="required">Not an institute</label></div>
+        </div></div><div class="form-row"><label class="required">Intake finished</label><p class="parsley-errors"></p>
+        <div id="dashboard_bundle_service_type_intakeStatus" class="service-status-container">            <div class="radio-container">
+            <div class="input-container">
+                <input type="radio" id="dashboard_bundle_service_type_intakeStatus_0" name="dashboard_bundle_service_type[intakeStatus]" required="required" value="no" checked="checked" />
+            </div><label for="dashboard_bundle_service_type_intakeStatus_0" class="required">No</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_intakeStatus_1" name="dashboard_bundle_service_type[intakeStatus]" required="required" value="yes" />
+                </div><label for="dashboard_bundle_service_type_intakeStatus_1" class="required">Yes</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_intakeStatus_2" name="dashboard_bundle_service_type[intakeStatus]" required="required" value="not-applicable" />
+                </div><label for="dashboard_bundle_service_type_intakeStatus_2" class="required">Not applicable</label></div>
+        </div></div><div class="form-row"><label class="required">Contract signed</label><p class="parsley-errors"></p>
+        <div id="dashboard_bundle_service_type_contractSigned" class="service-status-container contract-signed-container">            <div class="radio-container">
+            <div class="input-container">
+                <input type="radio" id="dashboard_bundle_service_type_contractSigned_0" name="dashboard_bundle_service_type[contractSigned]" required="required" value="no" checked="checked" />
+            </div><label for="dashboard_bundle_service_type_contractSigned_0" class="required">No</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_contractSigned_1" name="dashboard_bundle_service_type[contractSigned]" required="required" value="yes" />
+                </div><label for="dashboard_bundle_service_type_contractSigned_1" class="required">Yes</label></div>
+        </div></div><div class="form-row"><label class="required">SURFconext representative approved</label><p class="parsley-errors"></p>
+        <div id="dashboard_bundle_service_type_surfconextRepresentativeApproved" class="service-status-container">            <div class="radio-container">
+            <div class="input-container">
+                <input type="radio" id="dashboard_bundle_service_type_surfconextRepresentativeApproved_0" name="dashboard_bundle_service_type[surfconextRepresentativeApproved]" required="required" value="no" checked="checked" />
+            </div><label for="dashboard_bundle_service_type_surfconextRepresentativeApproved_0" class="required">No</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_surfconextRepresentativeApproved_1" name="dashboard_bundle_service_type[surfconextRepresentativeApproved]" required="required" value="yes" />
+                </div><label for="dashboard_bundle_service_type_surfconextRepresentativeApproved_1" class="required">Yes</label></div>
+        </div></div><div class="form-row"><label class="required">Privacy questions answered</label><p class="parsley-errors"></p>
+        <div id="dashboard_bundle_service_type_privacyQuestionsAnswered" class="service-status-container privacy-questions-container">            <div class="radio-container">
+            <div class="input-container">
+                <input type="radio" id="dashboard_bundle_service_type_privacyQuestionsAnswered_0" name="dashboard_bundle_service_type[privacyQuestionsAnswered]" disabled="disabled" required="required" value="0" checked="checked" />
+            </div><label for="dashboard_bundle_service_type_privacyQuestionsAnswered_0" class="required">No</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_privacyQuestionsAnswered_1" name="dashboard_bundle_service_type[privacyQuestionsAnswered]" disabled="disabled" required="required" value="1" />
+                </div><label for="dashboard_bundle_service_type_privacyQuestionsAnswered_1" class="required">Yes</label></div>
+        </div></div><div class="form-row"><label class="required">Connection status</label><p class="parsley-errors"></p>
+        <div id="dashboard_bundle_service_type_connectionStatus" class="service-status-container">            <div class="radio-container">
+            <div class="input-container">
+                <input type="radio" id="dashboard_bundle_service_type_connectionStatus_0" name="dashboard_bundle_service_type[connectionStatus]" required="required" value="not-requested" checked="checked" />
+            </div><label for="dashboard_bundle_service_type_connectionStatus_0" class="required">Not requested</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_connectionStatus_1" name="dashboard_bundle_service_type[connectionStatus]" required="required" value="requested" />
+                </div><label for="dashboard_bundle_service_type_connectionStatus_1" class="required">Requested</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_connectionStatus_2" name="dashboard_bundle_service_type[connectionStatus]" required="required" value="surfconext-informed" />
+                </div><label for="dashboard_bundle_service_type_connectionStatus_2" class="required">Informed</label></div>
+            <div class="radio-container">
+                <div class="input-container">
+                    <input type="radio" id="dashboard_bundle_service_type_connectionStatus_3" name="dashboard_bundle_service_type[connectionStatus]" required="required" value="active" />
+                </div><label for="dashboard_bundle_service_type_connectionStatus_3" class="required">Active</label></div>
+        </div></div><div class="form-row"><label for="dashboard_bundle_service_type_guid" class="required">CRM ID</label><p class="parsley-errors"></p>
+        <input type="text" id="dashboard_bundle_service_type_guid" name="dashboard_bundle_service_type[guid]" required="required"  /></div><div><button type="submit" id="dashboard_bundle_service_type_save" name="dashboard_bundle_service_type[save]" class="button">Save</button></div>
+        <input type="hidden" id="dashboard_bundle_service_type__token" name="dashboard_bundle_service_type[_token]" value="0Ldnz2aDpzNaJI2zbN_KIFlyXKkeeCdfo1X7kH7tyu4"  /></div></form>
