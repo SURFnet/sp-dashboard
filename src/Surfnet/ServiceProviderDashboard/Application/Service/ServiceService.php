@@ -59,14 +59,15 @@ class ServiceService
      *
      * Format [ '<service name>' => '<service entity>' ]
      *
-     * @param $serviceIds
+     * @param array $serviceNames The input should be service names keyed by service id.
+     *                            As provided by: AuthorizationService::getAllowedServiceNamesById
      * @return array
      */
-    public function getServicesByCurrentServiceIds($serviceIds)
+    public function getServicesByCurrentServiceIds(array $serviceNames)
     {
         $services = [];
 
-        foreach ($serviceIds as $serviceId => $serviceName) {
+        foreach ($serviceNames as $serviceId => $serviceName) {
             $service = $this->getServiceById($serviceId);
             if ($service) {
                 $services[$service->getName()] = $service;
