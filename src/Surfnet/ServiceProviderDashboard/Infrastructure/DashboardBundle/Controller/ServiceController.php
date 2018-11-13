@@ -87,10 +87,10 @@ class ServiceController extends Controller
      */
     public function overviewAction()
     {
-        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        $services = $this->serviceService->getServicesByCurrentServiceIds($serviceOptions);
+        $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
+        $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
 
-        if (empty($serviceOptions)) {
+        if (empty($services)) {
             return $this->redirectToRoute('service_add');
         }
 
