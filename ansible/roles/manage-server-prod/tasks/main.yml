@@ -24,7 +24,7 @@
     dest: "/etc/systemd/system/{{ springapp_service_name }}.service"
   notify:
     - "systemctl daemon-reload"
-    - "restart manage-server-prd"
+    - "restart manage-prd"
 
 - name: enable service
   service:
@@ -68,7 +68,7 @@
     group: manage
     mode: 0740
   notify:
-    - "restart manage"
+    - "restart manage-prd"
 
 - name: copy application config
   template:
@@ -78,7 +78,7 @@
     group: manage
     mode: 0740
   notify:
-    - "restart manage"
+    - "restart manage-prd"
 
 - name: copy api users
   template:
@@ -88,7 +88,7 @@
     group: manage
     mode: 0740
   notify:
-    - "restart manage"
+    - "restart manage-prd"
 
 - name: Create metadata configuration directory
   file:
@@ -107,7 +107,7 @@
     mode: 0640
   tags: deploy
   notify:
-    - "restart manage"
+    - "restart manage-prd"
 
 - name: Create metadata export directory
   file:
@@ -127,7 +127,7 @@
   tags:
     - deploy
   notify:
-    - "restart manage"
+    - "restart manage-prd"
 
 - name: Create metadata templates directory
   file:
@@ -147,7 +147,7 @@
   tags:
     - deploy
   notify:
-    - "restart manage"
+    - "restart manage-prd"
 
 - name: start the manage service
   service:
