@@ -33,7 +33,7 @@
 
 - name: Create logging directory
   file:
-    path: "/var/log/{{ springapp_service_name }}"
+    path: "/var/log/manage-prd"
     state: directory
     owner: manage
     group: manage
