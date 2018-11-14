@@ -189,6 +189,7 @@ services:
         arguments:
            - '@surfnet.manage.http.guzzle.prod_environment'
            - '@logger'
+           - 'production'
 
     surfnet.manage.http.guzzle.prod_environment:
         class: GuzzleHttp\Client
