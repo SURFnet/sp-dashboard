@@ -22,3 +22,19 @@ You should now be able to successfully login!
 
 To get access as admin. Login with Mujinja IdP. Using username: admin password: '' (none). Or use another user that
 belongs to the admin team (set in the `parameters.yml` config file defaults to: 'urn:collab:org:surf.nl').
+
+## Configure the second Manage instance as SP in Manage
+
+A Second Manage instance is installed when deploying the VM. This instance is meant to simulate the production Manage instace.
+It needs to be added as an SP in the other manage instance so that it can be access:
+
+ 1. Login to manage (https://manage.dev.support.surfconext.nl)
+ 2. Go to the manage sp
+ 3. Go to the export tab and copy the metadata xml or json
+ 4. Go to the import page via the main menu Import button
+ 5. Import the metadata you have on your clipboard and update all https://manage.dev.support.surfconext.nl with https://manage-prod.dev.support.surfconext.nl
+ 6. Make sure that the nameID is set to unspecified
+ 7. Save the changes, and push to Enineblock
+
+You should now be able to login to https://manage-prod.dev.support.surfconext.nl
+
