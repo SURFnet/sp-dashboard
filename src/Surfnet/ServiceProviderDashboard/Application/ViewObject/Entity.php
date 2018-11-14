@@ -17,10 +17,12 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
+use JsonSerializable;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
+use Symfony\Component\Routing\RouterInterface;
 
-class Entity
+class Entity implements JsonSerializable
 {
     /**
      * @var string
@@ -51,6 +53,10 @@ class Entity
      * @var string
      */
     private $environment;
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
     /**
      * @param string $id
@@ -59,8 +65,9 @@ class Entity
      * @param string $contact
      * @param string $state
      * @param string $environment
+     * @param RouterInterface $router
      */
-    public function __construct($id, $entityId, $name, $contact, $state, $environment)
+    public function __construct($id, $entityId, $name, $contact, $state, $environment, RouterInterface $router)
     {
         $this->id = $id;
         $this->entityId = $entityId;
@@ -68,9 +75,10 @@ class Entity
         $this->contact = $contact;
         $this->state = $state;
         $this->environment = $environment;
+        $this->router = $router;
     }
 
-    public static function fromEntity(DomainEntity $entity)
+    public static function fromEntity(DomainEntity $entity, RouterInterface $router)
     {
         $contact = $entity->getAdministrativeContact();
 
@@ -86,11 +94,12 @@ class Entity
             $entity->getNameEn(),
             $formattedContact,
             $entity->getStatus(),
-            $entity->getEnvironment()
+            $entity->getEnvironment(),
+            $router
         );
     }
 
-    public static function fromManageResult(array $result)
+    public static function fromManageResult(array $result, RouterInterface $router)
     {
         $metadata = $result['data']['metaDataFields'];
 
@@ -102,7 +111,8 @@ class Entity
             $metadata['name:en'],
             $formattedContact,
             'published',
-            'test'
+            'test',
+            $router
         );
     }
 
@@ -186,5 +196,22 @@ class Entity
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink()
+    {
+        return $this->router->generate('entity_edit', ['id' => $this->getId()]);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->name,
+            'environment' => $this->environment,
+            'link' => $this->getLink(),
+        ];
     }
 }

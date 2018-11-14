@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
+use Symfony\Component\Routing\RouterInterface;
 
 class EntityService
 {
@@ -35,17 +36,24 @@ class EntityService
      * @var ManageQueryClient
      */
     private $manageQueryClient;
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
     /**
      * @param EntityRepository $entityRepository
      * @param ManageQueryClient $manageQueryClient
+     * @param RouterInterface $router
      */
     public function __construct(
         EntityRepository $entityRepository,
-        ManageQueryClient $manageQueryClient
+        ManageQueryClient $manageQueryClient,
+        RouterInterface $router
     ) {
         $this->entityRepository = $entityRepository;
         $this->manageQueryClient = $manageQueryClient;
+        $this->router = $router;
     }
 
     /**
@@ -76,11 +84,11 @@ class EntityService
         $entities = [];
 
         foreach ($this->entityRepository->findByServiceId($service->getId()) as $entity) {
-            $entities[] = ViewObject\Entity::fromEntity($entity);
+            $entities[] = ViewObject\Entity::fromEntity($entity, $this->router);
         }
 
         foreach ($this->manageQueryClient->findByTeamName($service->getTeamName()) as $result) {
-            $entities[] = ViewObject\Entity::fromManageResult($result);
+            $entities[] = ViewObject\Entity::fromManageResult($result, $this->router);
         }
 
         return new ViewObject\EntityList($entities);
