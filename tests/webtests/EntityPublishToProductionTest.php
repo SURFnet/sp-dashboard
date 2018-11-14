@@ -107,8 +107,6 @@ class EntityPublishToProductionTest extends WebTestCase
         // Entity id validation
         $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
 
-        $mailer = $this->client->getContainer()->get(Mailer::class);
-
         // Build and save an entity to work with
         $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
         $this->getEntityRepository()->save($entity);
@@ -126,29 +124,13 @@ class EntityPublishToProductionTest extends WebTestCase
             'Expecting a redirect response after publishing to production'
         );
 
-        $sentMail = $mailer->getSent();
-
         $entity = $this->getEntityRepository()->findById('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
         $this->assertEquals('production', $entity->getEnvironment());
-        $this->assertEquals('published', $entity->getStatus());
-        $this->assertEquals(
-            'Production connection has been requested (https://domain.org/saml/sp/saml2-post/default-sp/metadata)',
-            $sentMail[0]->getSubject()
-        );
-
-        // @see \Surfnet\ServiceProviderDashboard\Webtests\WebTestCase::logIn
-        $this->assertContains(
-            'Published by: John Doe &lt;johndoe@localhost&gt;',
-            $sentMail[0]->getBody(),
-            'The message should contain the contacts of the publisher (currently logged in user)'
-        );
     }
 
     public function test_it_validates_at_least_one_attribute_present()
     {
         $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-
-        $mailer = $this->client->getContainer()->get(Mailer::class);
 
         // Build and save an entity to work with
         $entity = $this->buildEntityWithoutAttribute($this->getServiceRepository()->findByName('SURFnet'));
