@@ -71,6 +71,14 @@ services:
 
     surfnet.dashboard.command_handler.publish_production_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+            - '@surfnet.manage.client.publish_client.prod_environment'
+            - '@tactician.commandbus.default'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
+            - '@security.token_storage'
+            - '@session.flash_bag'
+            - '@logger'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }

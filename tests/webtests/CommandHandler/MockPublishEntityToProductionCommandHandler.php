@@ -19,16 +19,17 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\CommandHandler;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 
 /**
  * Publishing to an actual service registry is out of scope for the web tests.
  *
- * The correct functioning of the PublishEntityTestCommandHandler is verified using integration tests.
+ * The correct functioning of the PublishEntityProductionCommandHandler is verified using integration tests.
  */
-class MockPublishEntityCommandHandler implements CommandHandler
+class MockPublishEntityToProductionCommandHandler implements CommandHandler
 {
-    public function handle(PublishEntityCommand $command)
+    public function handle(PublishEntityProductionCommand $command)
     {
     }
 }

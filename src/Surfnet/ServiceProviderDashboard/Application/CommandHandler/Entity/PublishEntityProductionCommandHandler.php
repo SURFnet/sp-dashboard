@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,12 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\NotAuthenticatedExcep
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -39,6 +43,11 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      * @var EntityRepository
      */
     private $repository;
+
+    /**
+     * @var PublishEntityRepository
+     */
+    private $publishClient;
 
     /**
      * @var CommandBus
@@ -56,49 +65,88 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $tokenStorage;
 
     /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
         EntityRepository $entityRepository,
+        PublishEntityRepository $publishClient,
         CommandBus $commandBus,
         MailMessageFactory $mailMessageFactory,
         TokenStorageInterface $tokenStorage,
+        FlashBagInterface $flashBag,
         LoggerInterface $logger
     ) {
         $this->repository = $entityRepository;
+        $this->publishClient = $publishClient;
         $this->commandBus = $commandBus;
         $this->mailMessageFactory = $mailMessageFactory;
         $this->tokenStorage = $tokenStorage;
+        $this->flashBag = $flashBag;
         $this->logger = $logger;
     }
 
     /**
-     * @param PublishEntityProductionCommand $command
+     * Publishes the entity to production
      *
-     * @throws InvalidArgumentException
+     * Some remarks:
+     *  - The production manage connection is used to publish to production
+     *  - In addition to a test publish; the coin:exclude_from_push attribute is passed with value 1
+     *  - The mail message is still sent to the service desk.
+     *
+     * @param PublishEntityProductionCommand $command
+     * @throws NotAuthenticatedException
      */
     public function handle(PublishEntityProductionCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
-        $this->logger->info(sprintf('Sending publish request mail to servicedesk for "%s".', $entity->getNameEn()));
 
-        // Send the confirmation mail
-        $mailCommand = new PublishToProductionMailCommand(
-            $this->buildMailMessage($entity)
-        );
-        $this->commandBus->handle($mailCommand);
+        try {
+            $this->logger->info(
+                sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameNl())
+            );
 
-        // Set entity status to published even though it is not realy published to manage
+            $publishResponse = $this->publishClient->publish($entity);
+
+            if (array_key_exists('id', $publishResponse)) {
+                // Send the confirmation mail
+                $this->logger->info(
+                    sprintf('Sending publish request mail to service desk for "%s".', $entity->getNameNl())
+                );
+                $mailCommand = new PublishToProductionMailCommand(
+                    $this->buildMailMessage($entity)
+                );
+                $this->commandBus->handle($mailCommand);
+            }
+        } catch (PublishMetadataException $e) {
+            $this->logger->error(
+                sprintf(
+                    'Publishing to Manage failed for: "%s". Message: "%s"',
+                    $entity->getNameNl(),
+                    $e->getMessage()
+                )
+            );
+            $this->flashBag->add('error', 'entity.edit.error.publish');
+        }
+
+        // Set entity status to published
         $entity->setStatus(Entity::STATE_PUBLISHED);
-        $this->logger->info(sprintf('Updating status of "%s" to published.', $entity->getNameEn()));
+        $this->logger->info(sprintf('Updating status of "%s" to published.', $entity->getNameNl()));
+
+        // Save changes made to entity
         $this->repository->save($entity);
     }
 
     /**
      * @param Entity $entity
-     * @return \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message
+     * @return Message
+     * @throws NotAuthenticatedException
      */
     private function buildMailMessage(Entity $entity)
     {

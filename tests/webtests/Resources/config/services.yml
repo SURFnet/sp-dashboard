@@ -8,6 +8,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand }
 
+    surfnet.dashboard.command_handler.publish_production_entity:
+        class: Surfnet\ServiceProviderDashboard\Webtests\CommandHandler\MockPublishEntityToProductionCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer:
         class: Surfnet\ServiceProviderDashboard\Webtests\Mailer\FakeMailer
         public: true

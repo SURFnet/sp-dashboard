@@ -156,6 +156,12 @@ class JsonGenerator implements GeneratorInterface
             $this->spDashboardMetadataGenerator->build($entity)
         );
 
+        // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
+        // entity from being pushed to engineblock.
+        if ($entity->isProduction()) {
+            $metadata['coin:exclude_from_push'] = 1;
+        }
+
         if (!empty($entity->getLogoUrl())) {
             $metadata += $this->generateLogoMetadata($entity);
         }
