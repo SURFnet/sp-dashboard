@@ -40,9 +40,16 @@ parameters:
     metadata_url_timeout: 30
 
     # Manage defaults
+
+    ## Manage test instance
     manage_test_host: 'https://manage.dev.support.surfconext.nl'
     manage_test_username: sp-dashboard
     manage_test_password: secret
+
+    ## Manage production instance
+    manage_prod_host: 'https://manage-prod.dev.support.surfconext.nl'
+    manage_prod_username: sp-dashboard
+    manage_prod_password: secret
 
     # Mail default settings
     mail_from: support@surfconext.nl
