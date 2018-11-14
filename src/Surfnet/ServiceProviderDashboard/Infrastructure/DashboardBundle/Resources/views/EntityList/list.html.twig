@@ -57,7 +57,7 @@
                         </a>
                         <ul>
                             <li>
-                                {% if entity.state == 'published' and entity.environment == 'test' %}
+                                {% if entity.allowEditAction %}
                                     <a href="{{ path('entity_copy', {manageId: entity.id}) }}">
                                         <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                         {{ 'entity.list.action.edit'|trans }}

@@ -53,6 +53,7 @@ class Entity implements JsonSerializable
      * @var string
      */
     private $environment;
+
     /**
      * @var RouterInterface
      */
@@ -99,7 +100,7 @@ class Entity implements JsonSerializable
         );
     }
 
-    public static function fromManageResult(array $result, RouterInterface $router)
+    public static function fromManageTestResult(array $result, RouterInterface $router)
     {
         $metadata = $result['data']['metaDataFields'];
 
@@ -112,6 +113,31 @@ class Entity implements JsonSerializable
             $formattedContact,
             'published',
             'test',
+            $router
+        );
+    }
+
+    public static function fromManageProductionResult(array $result, RouterInterface $router)
+    {
+        $metadata = $result['data']['metaDataFields'];
+
+        $formattedContact = self::formatManageContact($metadata);
+
+        // As long as the coin:exclude_from_push metadata is present, allow modifications to the entity by
+        // copying it from manage and merging the changes. The view status text: requested is set when an entity
+        // can still be edited.
+        $status = 'published';
+        if (isset($metadata['coin:exclude_from_push']) && $metadata['coin:exclude_from_push'] == 1) {
+            $status = 'requested';
+        }
+
+        return new self(
+            $result['id'],
+            $result['data']['entityid'],
+            $metadata['name:en'],
+            $formattedContact,
+            $status,
+            'production',
             $router
         );
     }
@@ -199,6 +225,20 @@ class Entity implements JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function allowEditAction()
+    {
+        $isPublishedTestEntity = ($this->state == 'published' && $this->environment == 'test');
+        $isPublishedProdEntity = ($this->state == 'requested' && $this->environment == 'test');
+        if ($isPublishedTestEntity || $isPublishedProdEntity) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return string
      */
     public function getLink()
@@ -206,6 +246,9 @@ class Entity implements JsonSerializable
         return $this->router->generate('entity_edit', ['id' => $this->getId()]);
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return [
