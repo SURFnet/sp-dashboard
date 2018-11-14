@@ -183,3 +183,15 @@ services:
         arguments:
         - base_uri: "%manage_test_host%"
           auth: ["%manage_test_username%", "%manage_test_password%", "Basic"]
+
+    surfnet.manage.http.http_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
+        arguments:
+           - '@surfnet.manage.http.guzzle.prod_environment'
+           - '@logger'
+
+    surfnet.manage.http.guzzle.prod_environment:
+        class: GuzzleHttp\Client
+        arguments:
+        - base_uri: "%manage_prod_host%"
+          auth: ["%manage_prod_username%", "%manage_prod_password%", "Basic"]
