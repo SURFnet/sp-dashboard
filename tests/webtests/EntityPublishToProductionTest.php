@@ -124,8 +124,9 @@ class EntityPublishToProductionTest extends WebTestCase
             'Expecting a redirect response after publishing to production'
         );
 
-        $entity = $this->getEntityRepository()->findById('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
-        $this->assertEquals('production', $entity->getEnvironment());
+        // After publishing the entity, it should no longer be accessible
+        $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_it_validates_at_least_one_attribute_present()

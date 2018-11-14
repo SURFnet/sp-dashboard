@@ -126,24 +126,27 @@ trait EntityControllerTrait
         switch ($entity->getEnvironment()) {
             case Entity::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
-                $this->commandBus->handle($publishEntityCommand);
-
-                if (!$flashBag->has('error')) {
-                    $this->get('session')->set('published.entity.clone', clone $entity);
-
-                    // Test entities are removed after they've been published to Manage
-                    $deleteCommand = new DeleteEntityCommand($entity->getId());
-                    $this->commandBus->handle($deleteCommand);
-
-                    return $this->redirectToRoute('entity_published_test');
-                }
+                $destination = 'entity_published_test';
                 break;
 
             case Entity::ENVIRONMENT_PRODUCTION:
                 $publishEntityCommand = new PublishEntityProductionCommand($entity->getId());
-                $this->commandBus->handle($publishEntityCommand);
-                return $this->redirectToRoute('entity_published_production', ['id' => $entity->getId()]);
+                $destination = 'entity_published_test';
                 break;
+        }
+
+        $this->commandBus->handle($publishEntityCommand);
+
+        if (!$flashBag->has('error')) {
+            // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
+            // page we will be redirecting to in a moment.
+            $this->get('session')->set('published.entity.clone', clone $entity);
+
+            // Test entities are removed after they've been published to Manage
+            $deleteCommand = new DeleteEntityCommand($entity->getId());
+            $this->commandBus->handle($deleteCommand);
+
+            return $this->redirectToRoute($destination);
         }
     }
 
