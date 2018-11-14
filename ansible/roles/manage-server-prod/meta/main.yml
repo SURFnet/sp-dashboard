@@ -1,0 +1,3 @@
+---
+dependencies:
+  - role: ../../OpenConext-deploy/roles/maven_artifact_requirements

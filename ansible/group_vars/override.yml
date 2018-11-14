@@ -1,0 +1,33 @@
+# shibboleth
+shibboleth_apps:
+  teams:
+    entityID: "https://teams.{{ base_domain }}/shibboleth"
+    baseurl: ""
+  authz:
+    entityID: "https://authz.{{ base_domain }}/shibboleth"
+    baseurl: ""
+  "authz-admin":
+    entityID: "https://authz-admin.{{ base_domain }}/shibboleth"
+    baseurl: ""
+  pdp:
+    entityID: "https://pdp.{{ base_domain }}/shibboleth"
+    baseurl: ""
+  "attribute-aggregation":
+    entityID: "https://aa.{{ base_domain }}/shibboleth"
+    baseurl: ""
+  "attribute-aggregation-link":
+    entityID: "https://link.{{ base_domain }}/shibboleth"
+    baseurl: ""
+  "manage":
+    entityID: "https://manage.{{ base_domain }}/shibboleth"
+    baseurl: ""
+  "manage-prod":
+    entityID: "https://manage-prod.{{ base_domain }}/shibboleth"
+    baseurl: ""
+
+mongo:
+  manage_user: managerw
+  manage_password: "{{ mongo_passwords.manage }}" 
+  manage_database: manage
+  manage_database_prod: manage-prod
+  manage_prod_user: manage-prod

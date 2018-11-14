@@ -5,11 +5,14 @@
      include_vars: "../../OpenConext-deploy/environments/vm/group_vars/vm.yml"
    - name: "Include OpenConext-deploy secrets"
      include_vars: "../../OpenConext-deploy/environments/vm/secrets/vm.yml"
+   - name: "Include extra vars to override the vm vars"
+     include_vars: "group_vars/override.yml"
+   - name: "Include OpenConext-deploy all group vars"
+     include_vars: "../../OpenConext-deploy/group_vars/all.yml"
    - name: Set base_domain  
      set_fact: 
        base_domain: dev.support.surfconext.nl
        engine_feature_ldap_integration: 0
-
   tags: always
 
 - hosts: all
@@ -35,6 +38,8 @@
     - { role: ../OpenConext-deploy/roles/mongo,             tags: ['mongo'] }
     - { role: ../OpenConext-deploy/roles/manage-gui,        tags: ['manage', 'manage-gui'] }
     - { role: ../OpenConext-deploy/roles/manage-server,     tags: ['manage', 'manage-server'] }
+    - { role: manage-gui-prod,                              tags: ['manage', 'manage-gui'] }
+    - { role: manage-server-prod,                           tags: ['manage', 'manage-server'] }
     - { role: ../OpenConext-deploy/roles/authz-server,      tags: ['oauth', 'authz' ] }
     - { role: ../OpenConext-deploy/roles/authz-admin,       tags: ['oauth', 'authz-admin' ] }
     - { role: ../OpenConext-deploy/roles/voot,              tags: ['oauth', 'voot' ] }
@@ -42,4 +47,4 @@
     - { role: ../OpenConext-deploy/roles/teams-server,                 tags: ['teams', 'teams-server'  ] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-gui,    tags: ['attribute-aggregation', 'attribute-aggregation-gui'] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-server, tags: ['attribute-aggregation', 'attribute-aggregation-server'] }
-    - { role: ../OpenConext-deploy/roles/vm_only_provision_manage_eb, tags: ['vm_only_provision_manage_eb'] }
+    - { role: ../OpenConext-deploy/roles/vm_only_provision_manage_eb,  tags: ['vm_only_provision_manage_eb'] }

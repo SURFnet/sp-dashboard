@@ -120,7 +120,6 @@ maven_snapshot_repo: https://build.openconext.org/repository/public/snapshots
 error_subject_prefix: "[{{ ansible_hostname }}] "
 
 # Some engineblock variables are shared between applications
-engine_api_domain: engine-api.{{ base_domain }}
 engine_api_metadata_push_user: serviceregistry
 
 # Some deprovision variables are shared between applications
@@ -128,4 +127,3 @@ authz_server_api_lifecycle_username: authz_server_api_lifecycle_user
 teams_api_lifecycle_username: teams_api_lifecycle_user
 attribute_aggregator_api_lifecycle_username: attribute_aggregator_api_lifecycle_user
 engine_api_deprovision_user: lifecycle
-
