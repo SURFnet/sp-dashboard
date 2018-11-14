@@ -173,6 +173,18 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
 
+    surfnet.manage.client.publish_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
+        arguments:
+        - '@surfnet.manage.http.http_client.prod_environment'
+        - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator'
+        - '@logger'
+
+    surfnet.manage.client.query_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient
+        arguments:
+        - '@surfnet.manage.http.http_client.prod_environment'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
