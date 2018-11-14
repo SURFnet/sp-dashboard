@@ -27,6 +27,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\Unread
 
 final class HttpClient
 {
+    const MODE_TEST = 'test';
+    const MODE_PROD = 'production';
+
     /**
      * @var ClientInterface
      */
@@ -38,13 +41,20 @@ final class HttpClient
     private $logger;
 
     /**
+     * @var string
+     */
+    private $mode;
+
+    /**
      * @param ClientInterface $httpClient
      * @param LoggerInterface $logger
+     * @param string $mode The mode is used mainly for logging purposes, stating which environment was targeted.
      */
-    public function __construct(ClientInterface $httpClient, LoggerInterface $logger)
+    public function __construct(ClientInterface $httpClient, LoggerInterface $logger, $mode = self::MODE_TEST)
     {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
+        $this->mode = $mode;
     }
 
     /**
@@ -65,7 +75,7 @@ final class HttpClient
         $resource = ResourcePathFormatter::format($path, $parameters);
 
         $this->logger->debug(
-            sprintf('Getting resource %s from manage', $resource)
+            sprintf('Getting resource %s from manage (%s)', $resource, $this->mode)
         );
 
         $response = $this->httpClient->request('GET', $resource, [
@@ -76,7 +86,7 @@ final class HttpClient
         $body = (string) $response->getBody();
 
         $this->logger->debug(
-            sprintf('Received %d response from manage', $statusCode),
+            sprintf('Received %d response from manage (%s)', $statusCode, $this->mode),
             ['body' => $body]
         );
 
@@ -124,7 +134,7 @@ final class HttpClient
         $resource = ResourcePathFormatter::format($path, $parameters);
 
         $this->logger->debug(
-            sprintf('Posting data to manage on path %s', $resource),
+            sprintf('Posting data to manage (%s) on path %s', $this->mode, $resource),
             ['data' => $data]
         );
 
@@ -137,7 +147,7 @@ final class HttpClient
         $body = (string) $response->getBody();
 
         $this->logger->debug(
-            sprintf('Received %d response from manage', $statusCode),
+            sprintf('Received %d response from manage (%s)', $statusCode, $this->mode),
             ['body' => $body]
         );
 
@@ -182,7 +192,7 @@ final class HttpClient
         $resource = ResourcePathFormatter::format($path, $parameters);
 
         $this->logger->debug(
-            sprintf('Putting data to manage on path %s', $resource),
+            sprintf('Putting data to manage (%s) on path %s', $this->mode, $resource),
             ['data' => $data]
         );
 
@@ -195,7 +205,7 @@ final class HttpClient
         $body = (string) $response->getBody();
 
         $this->logger->debug(
-            sprintf('Received %d response from manage', $statusCode),
+            sprintf('Received %d response from manage (%s)', $statusCode, $this->mode),
             ['body' => $body]
         );
 

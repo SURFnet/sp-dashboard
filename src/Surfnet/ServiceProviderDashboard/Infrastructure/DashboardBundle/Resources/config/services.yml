@@ -60,12 +60,25 @@ services:
 
     surfnet.dashboard.command_handler.publish_test_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+            - '@logger'
+            - '@session.flash_bag'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
 
     surfnet.dashboard.command_handler.publish_production_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+            - '@surfnet.manage.client.publish_client.prod_environment'
+            - '@tactician.commandbus.default'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
+            - '@security.token_storage'
+            - '@session.flash_bag'
+            - '@logger'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
@@ -173,6 +186,18 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
 
+    surfnet.manage.client.publish_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
+        arguments:
+        - '@surfnet.manage.http.http_client.prod_environment'
+        - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator'
+        - '@logger'
+
+    surfnet.manage.client.query_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient
+        arguments:
+        - '@surfnet.manage.http.http_client.prod_environment'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
@@ -183,3 +208,16 @@ services:
         arguments:
         - base_uri: "%manage_test_host%"
           auth: ["%manage_test_username%", "%manage_test_password%", "Basic"]
+
+    surfnet.manage.http.http_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
+        arguments:
+           - '@surfnet.manage.http.guzzle.prod_environment'
+           - '@logger'
+           - 'production'
+
+    surfnet.manage.http.guzzle.prod_environment:
+        class: GuzzleHttp\Client
+        arguments:
+        - base_uri: "%manage_prod_host%"
+          auth: ["%manage_prod_username%", "%manage_prod_password%", "Basic"]

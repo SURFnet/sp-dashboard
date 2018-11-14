@@ -23,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -39,8 +38,10 @@ class EntityPublishedController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function publishedProductionAction(Entity $entity)
+    public function publishedProductionAction()
     {
+        /** @var Entity $entity */
+        $entity = $this->get('session')->get('published.entity.clone');
         return [
             'entityName' => $entity->getNameEn(),
         ];
