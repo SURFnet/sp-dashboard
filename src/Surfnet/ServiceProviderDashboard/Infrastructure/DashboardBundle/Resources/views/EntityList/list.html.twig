@@ -58,18 +58,18 @@
                         <ul>
                             <li>
                                 {% if entity.allowEditAction %}
-                                    <a href="{{ path('entity_copy', {manageId: entity.id}) }}">
+                                    <a href="{{ path('entity_edit', {id: entity.id, environment: entity.environment}) }}">
                                         <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                         {{ 'entity.list.action.edit'|trans }}
                                     </a>
-                                {% else %}
-                                    <a href="{{ path('entity_edit', {id: entity.id}) }}">
+                                {% elseif entity.allowCopyAction %}
+                                    <a href="{{ path('entity_copy', {manageId: entity.id, environment: entity.environment}) }}">
                                         <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                         {{ 'entity.list.action.edit'|trans }}
                                     </a>
                                 {% endif %}
                             </li>
-                            {% if entity.state != 'published' %}
+                            {% if entity.allowDeleteAction %}
                             <li>
                                 <a href="{{ path('entity_delete', {id: entity.id}) }}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
@@ -77,13 +77,23 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if entity.state == 'published' and entity.environment == 'test' %}
+
+                            {% if entity.allowCopyToProductionAction %}
                             <li>
                                 <a href="{{ path('entity_copy', {manageId: entity.id, environment: 'production'}) }}">
                                     <i class="fa fa-copy" aria-hidden="true"></i>
                                     {{ 'entity.list.action.copy_to_production'|trans }}
                                 </a>
                             </li>
+                            {% endif %}
+
+                            {% if entity.allowCloneAction %}
+                                <li>
+                                    <a href="{{ path('entity_copy', {manageId: entity.id, environment: 'production'}) }}">
+                                        <i class="fa fa-copy" aria-hidden="true"></i>
+                                        {{ 'entity.list.action.copy'|trans }}
+                                    </a>
+                                </li>
                             {% endif %}
                         </ul>
                     </div>

@@ -51,7 +51,12 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
     /**
      * @var ManageClient
      */
-    private $manageClient;
+    private $manageTestClient;
+
+    /**
+     * @var ManageClient
+     */
+    private $manageProdClient;
 
     /**
      * @var AttributesMetadataRepository
@@ -69,7 +74,8 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
 
         $this->commandBus = m::mock(CommandBus::class);
         $this->entityRepository = m::mock(EntityRepository::class);
-        $this->manageClient = m::mock(ManageClient::class);
+        $this->manageTestClient = m::mock(ManageClient::class);
+        $this->manageProdClient = m::mock(ManageClient::class);
         $this->attributesMetadataRepository = m::mock(AttributesMetadataRepository::class);
 
         $this->service = new Service();
@@ -78,7 +84,8 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
         $this->commandHandler = new CopyEntityCommandHandler(
             $this->commandBus,
             $this->entityRepository,
-            $this->manageClient,
+            $this->manageTestClient,
+            $this->manageProdClient,
             $this->attributesMetadataRepository
         );
     }
@@ -116,7 +123,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('dashboardid')
             ->andReturn(true);
 
-        $this->manageClient->shouldReceive('findByManageId')
+        $this->manageTestClient->shouldReceive('findByManageId')
             ->with('manageid')
             ->andReturn([]);
 
@@ -143,7 +150,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('dashboardid')
             ->andReturn(true);
 
-        $this->manageClient->shouldReceive('findByManageId')
+        $this->manageProdClient->shouldReceive('findByManageId')
             ->with('manageid')
             ->andReturn([
                 'data' => [
@@ -165,13 +172,13 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
         );
     }
 
-    public function test_handler_loads_metadata_onto_new_entity()
+    public function test_handler_loads_metadata_onto_new_entity_test()
     {
         $this->entityRepository->shouldReceive('isUnique')
             ->with('dashboardid')
             ->andReturn(true);
 
-        $this->manageClient->shouldReceive('findByManageId')
+        $this->manageTestClient->shouldReceive('findByManageId')
             ->with('manageid')
             ->andReturn([
                 'data' => [
@@ -204,7 +211,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
                 ]
             ]);
 
-        $this->manageClient->shouldReceive('getMetadataXmlByManageId')
+        $this->manageTestClient->shouldReceive('getMetadataXmlByManageId')
             ->with('manageid')
             ->andReturn('xml');
 
@@ -253,6 +260,104 @@ JSON
 
         $this->commandHandler->handle(
             new CopyEntityCommand($saveCommand, 'dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_TEST)
+        );
+
+        $this->assertTrue($saveCommand->getEduPersonTargetedIDAttribute()->isRequested());
+        $this->assertTrue($saveCommand->getPrincipleNameAttribute()->isRequested());
+        $this->assertTrue($saveCommand->getDisplayNameAttribute()->isRequested());
+        $this->assertEquals('test1', $saveCommand->getEduPersonTargetedIDAttribute()->getMotivation());
+        $this->assertEquals('test2', $saveCommand->getPrincipleNameAttribute()->getMotivation());
+        $this->assertEquals('test3', $saveCommand->getDisplayNameAttribute()->getMotivation());
+    }
+
+    public function test_handler_loads_metadata_onto_new_entity_prod()
+    {
+        $this->entityRepository->shouldReceive('isUnique')
+            ->with('dashboardid')
+            ->andReturn(true);
+
+        $this->manageProdClient->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn([
+                'data' => [
+                    'arp' => [
+                        'attributes' => [
+                            'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
+                                'source' => 'idp',
+                                'value' => '*',
+                                'motivation' => 'test1',
+                            ]],
+                            'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
+                                'source' => 'idp',
+                                'value' => '*',
+                                'motivation' => 'test2',
+                            ]],
+                            'urn:mace:dir:attribute-def:displayName' => [[
+                                'source' => 'idp',
+                                'value' => '*',
+                                'motivation' => 'test3',
+                            ]],
+                        ],
+                    ],
+                    'metaDataFields' => [
+                        'name:en' => 'name en',
+                        'name:nl' => 'name nl',
+                        'description:en' => 'description en',
+                        'description:nl' => 'description nl',
+                        'coin:service_team_id' => 'testteam',
+                    ]
+                ]
+            ]);
+
+        $this->manageProdClient->shouldReceive('getMetadataXmlByManageId')
+            ->with('manageid')
+            ->andReturn('xml');
+
+        $this->commandBus->shouldReceive('handle')
+            ->with(m::type(LoadMetadataCommand::class))
+            ->andReturn('xml');
+
+        $this->attributesMetadataRepository->shouldReceive('findAll')
+            ->andReturn(json_decode(<<<JSON
+[
+  {
+    "id": "eduPersonTargetedID",
+    "getterName": "getEduPersonTargetedIDAttribute",
+    "setterName": "setEduPersonTargetedIDAttribute",
+    "friendlyName": "eduPersonTargetedID",
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonTargetedID",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.10"
+    ]
+  },
+  {
+    "id": "principleName",
+    "getterName": "getPrincipleNameAttribute",
+    "setterName": "setPrincipleNameAttribute",
+    "friendlyName": "eduPersonPrincipalName",
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonPrincipalName",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.6"
+    ]
+  },
+  {
+    "id": "displayName",
+    "getterName": "getDisplayNameAttribute",
+    "setterName": "setDisplayNameAttribute",
+    "friendlyName": "displayName",
+    "urns": [
+      "urn:mace:dir:attribute-def:displayName",
+      "urn:oid:2.16.840.1.113730.3.1.241"
+    ]
+  }
+]
+JSON
+            ));
+
+        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+
+        $this->commandHandler->handle(
+            new CopyEntityCommand($saveCommand, 'dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_PRODUCTION)
         );
 
         $this->assertTrue($saveCommand->getEduPersonTargetedIDAttribute()->isRequested());

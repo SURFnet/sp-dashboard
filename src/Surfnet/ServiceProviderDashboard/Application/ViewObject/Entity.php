@@ -229,13 +229,58 @@ class Entity implements JsonSerializable
      */
     public function allowEditAction()
     {
+        return $this->state == 'draft';
+    }
+
+    /**
+     * @return bool
+     */
+    public function allowCopyAction()
+    {
         $isPublishedTestEntity = ($this->state == 'published' && $this->environment == 'test');
-        $isPublishedProdEntity = ($this->state == 'requested' && $this->environment == 'test');
+        $isPublishedProdEntity = ($this->state == 'requested' && $this->environment == 'production');
         if ($isPublishedTestEntity || $isPublishedProdEntity) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function allowCopyToProductionAction()
+    {
+        if ($this->state == 'published' && $this->environment == 'test') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function allowCloneAction()
+    {
+        if ($this->state == 'published' && $this->environment == 'production') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function allowDeleteAction()
+    {
+
+        if ($this->state != 'published' && $this->state != 'requested') {
+            return true;
+        }
+
+        return false;
     }
 
     /**

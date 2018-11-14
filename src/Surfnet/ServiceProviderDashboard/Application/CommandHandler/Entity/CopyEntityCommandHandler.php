@@ -44,7 +44,12 @@ class CopyEntityCommandHandler implements CommandHandler
     /**
      * @var ManageClient
      */
-    private $manageClient;
+    private $manageTestClient;
+
+    /**
+     * @var ManageClient
+     */
+    private $manageProductionClient;
 
     /**
      * @var AttributesMetadataRepository
@@ -54,18 +59,21 @@ class CopyEntityCommandHandler implements CommandHandler
     /**
      * @param CommandBus $commandBus
      * @param EntityRepository $entityRepository
-     * @param ManageClient $manageClient
+     * @param ManageClient $manageTestClient
+     * @param ManageClient $manageProductionClient
      * @param AttributesMetadataRepository $attributeMetadataRepository
      */
     public function __construct(
         CommandBus $commandBus,
         EntityRepository $entityRepository,
-        ManageClient $manageClient,
+        ManageClient $manageTestClient,
+        ManageClient $manageProductionClient,
         AttributesMetadataRepository $attributeMetadataRepository
     ) {
         $this->commandBus = $commandBus;
         $this->entityRepository = $entityRepository;
-        $this->manageClient = $manageClient;
+        $this->manageTestClient = $manageTestClient;
+        $this->manageProductionClient = $manageProductionClient;
         $this->attributeMetadataRepository = $attributeMetadataRepository;
     }
 
@@ -89,7 +97,13 @@ class CopyEntityCommandHandler implements CommandHandler
             );
         }
 
-        $manageEntity = $this->manageClient->findByManageId($manageId);
+        $manageClient = $this->manageProductionClient;
+        if ($command->getEnvironment() === 'test') {
+            $manageClient = $this->manageTestClient;
+        }
+
+        $manageEntity = $manageClient->findByManageId($manageId);
+
         if (empty($manageEntity)) {
             throw new InvalidArgumentException(
                 'Could not find entity in manage: '.$manageId
@@ -117,7 +131,7 @@ class CopyEntityCommandHandler implements CommandHandler
         $this->commandBus->handle(
             new LoadMetadataCommand(
                 $saveEntityCommand,
-                ['metadata' => ['pastedMetadata' => $this->manageClient->getMetadataXmlByManageId($manageId)]]
+                ['metadata' => ['pastedMetadata' => $manageClient->getMetadataXmlByManageId($manageId)]]
             )
         );
 

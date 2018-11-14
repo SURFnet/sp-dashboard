@@ -8,6 +8,13 @@ services:
 
     surfnet.dashboard.command_handler.copy_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
+        arguments:
+           - '@tactician.commandbus.default'
+           - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+           - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+           - '@surfnet.manage.client.query_client.prod_environment'
+           - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand }

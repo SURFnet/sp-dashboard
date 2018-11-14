@@ -45,7 +45,7 @@ class CopyEntityCommand implements Command
     private $service;
 
     /**
-     * @var Service
+     * @var string
      * @Assert\NotNull
      */
     private $environment;
@@ -101,7 +101,7 @@ class CopyEntityCommand implements Command
     }
 
     /**
-     * @return Service
+     * @return string
      */
     public function getEnvironment()
     {
