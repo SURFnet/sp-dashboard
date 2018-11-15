@@ -47,6 +47,11 @@ services:
         arguments:
         - handler: '@surfnet.manage.http.guzzle.mock_handler'
 
+    surfnet.manage.http.guzzle.prod_environment:
+        class: GuzzleHttp\Client
+        arguments:
+        - handler: '@surfnet.manage.http.guzzle.mock_handler'
+
     # These services are overloaded for functional tests and have been made public to prevent:
     #
     # > The "logger" service is private, getting it from the container is
