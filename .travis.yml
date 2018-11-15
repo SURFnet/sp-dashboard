@@ -15,6 +15,10 @@ before_script:
   - yarn install
   - yarn encore production
 
+after_failure:
+  - cat /home/travis/build/SURFnet/sp-dashboard/var/logs/test.log
+  - cat /home/travis/build/SURFnet/sp-dashboard/var/logs/prod.log
+
 script:
   - ant
 
