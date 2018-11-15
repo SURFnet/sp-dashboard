@@ -35,7 +35,12 @@ class ValidEntityIdValidator extends ConstraintValidator
     /**
      * @var QueryEntityRepository
      */
-    private $manageRepository;
+    private $manageTestRepository;
+
+    /**
+     * @var QueryEntityRepository
+     */
+    private $manageProductionRepository;
 
     /**
      * @var EntityRepository
@@ -43,14 +48,17 @@ class ValidEntityIdValidator extends ConstraintValidator
     private $doctrineRepository;
 
     /**
-     * @param QueryEntityRepository $manageRepository
-     * @param DoctrineEntityRepository $doctrineRepository
+     * @param QueryEntityRepository $manageTestRepository
+     * @param QueryEntityRepository $manageProductionRepository
+     * @param DoctrineRepository $doctrineRepository
      */
     public function __construct(
-        QueryEntityRepository $manageRepository,
+        QueryEntityRepository $manageTestRepository,
+        QueryEntityRepository $manageProductionRepository,
         DoctrineRepository $doctrineRepository
     ) {
-        $this->manageRepository = $manageRepository;
+        $this->manageTestRepository = $manageTestRepository;
+        $this->manageProductionRepository = $manageProductionRepository;
         $this->doctrineRepository = $doctrineRepository;
     }
 
@@ -93,12 +101,13 @@ class ValidEntityIdValidator extends ConstraintValidator
             return;
         }
 
+        $manage = $this->manageTestRepository;
         if ($entityCommand->isForProduction()) {
-            return;
+            $manage = $this->manageProductionRepository;
         }
 
         try {
-            $manageId = $this->manageRepository->findManageIdByEntityId($value);
+            $manageId = $manage->findManageIdByEntityId($value);
         } catch (\Exception $e) {
             $this->context->addViolation('validator.entity_id.registry_failure');
             return;

@@ -59,6 +59,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
 
         return new ValidEntityIdValidator(
             $client,
+            $client,
             $this->repository
         );
     }
@@ -72,6 +73,27 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $entityCommand = m::mock(SaveEntityCommand::class);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https://www.domain.org');
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
+        $entityCommand->shouldReceive('getId')->andReturn(1);
+
+        $this->setRoot($entityCommand);
+
+        $this->repository->shouldReceive('findById')
+            ->andReturn(null);
+
+        $this->validator->validate('https://sub.domain.org', new ValidEntityId());
+
+        $this->assertNoViolation();
+    }
+
+    public function test_success_for_production()
+    {
+        // An empty array response is Manage's way of telling you there where no results, in this case there is no
+        // record in the service registry with the given entityId.
+        $this->mockHandler->append(new Response(200, [], '[]'));
+
+        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https://www.domain.org');
+        $entityCommand->shouldReceive('isForProduction')->andReturn(true);
         $entityCommand->shouldReceive('getId')->andReturn(1);
 
         $this->setRoot($entityCommand);
