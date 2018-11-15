@@ -82,6 +82,8 @@ class CopyEntityCommandHandler implements CommandHandler
     /**
      * @param CopyEntityCommand $command
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) - The different copy actions should be broken into different
+     *                                                 commands.
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
      */
@@ -98,7 +100,7 @@ class CopyEntityCommandHandler implements CommandHandler
         }
 
         $manageClient = $this->manageProductionClient;
-        if ($command->getEnvironment() === 'test') {
+        if ($command->getSourceEnvironment() == 'test') {
             $manageClient = $this->manageTestClient;
         }
 
@@ -131,7 +133,10 @@ class CopyEntityCommandHandler implements CommandHandler
         $saveEntityCommand->setManageId($command->getManageId());
 
         // Published production entities must be cloned, not copied
-        if ($command->getEnvironment() == 'production' && $manageStagingState === 0) {
+        $isProductionClone = $command->getEnvironment() == 'production' && $manageStagingState === 0;
+        // Entities copied from test to prod should not have a manage id either
+        $isCopyToProduction = $command->getEnvironment() == 'production' && $command->getSourceEnvironment() == 'test';
+        if ($isProductionClone || $isCopyToProduction) {
             $saveEntityCommand->setManageId(null);
         }
 

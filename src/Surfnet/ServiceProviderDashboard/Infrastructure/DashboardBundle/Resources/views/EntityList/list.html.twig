@@ -16,7 +16,7 @@
             {{ 'entity.list.add_to_test'|trans}}
         </a>
         {% if production_entities_enabled %}
-            <a href="{{ path('entity_add', {environment: "production"}) }}">
+            <a href="{{ path('entity_add', {targetEnvironment: "production"}) }}">
                 <i class="fa fa-plus"></i>
                 {{ 'entity.list.add_to_production'|trans}}
             </a>
@@ -63,7 +63,7 @@
                                         {{ 'entity.list.action.edit'|trans }}
                                     </a>
                                 {% elseif entity.allowCopyAction %}
-                                    <a href="{{ path('entity_copy', {manageId: entity.id, environment: entity.environment}) }}">
+                                    <a href="{{ path('entity_copy', {manageId: entity.id, targetEnvironment: entity.environment, sourceEnvironment: entity.environment}) }}">
                                         <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                         {{ 'entity.list.action.edit'|trans }}
                                     </a>
@@ -80,7 +80,7 @@
 
                             {% if entity.allowCopyToProductionAction %}
                             <li>
-                                <a href="{{ path('entity_copy', {manageId: entity.id, environment: 'production'}) }}">
+                                <a href="{{ path('entity_copy', {manageId: entity.id, targetEnvironment: 'production'}) }}">
                                     <i class="fa fa-copy" aria-hidden="true"></i>
                                     {{ 'entity.list.action.copy_to_production'|trans }}
                                 </a>
@@ -89,7 +89,7 @@
 
                             {% if entity.allowCloneAction %}
                                 <li>
-                                    <a href="{{ path('entity_copy', {manageId: entity.id, environment: 'production'}) }}">
+                                    <a href="{{ path('entity_copy', {manageId: entity.id, targetEnvironment: 'production', sourceEnvironment: 'production'}) }}">
                                         <i class="fa fa-copy" aria-hidden="true"></i>
                                         {{ 'entity.list.action.copy'|trans }}
                                     </a>

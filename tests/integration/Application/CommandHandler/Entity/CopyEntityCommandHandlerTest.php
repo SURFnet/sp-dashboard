@@ -108,6 +108,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
                 'dashboardid',
                 'manageid',
                 $this->service,
+                Entity::ENVIRONMENT_TEST,
                 Entity::ENVIRONMENT_TEST
             )
         );
@@ -135,6 +136,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
                 'dashboardid',
                 'manageid',
                 $this->service,
+                Entity::ENVIRONMENT_TEST,
                 Entity::ENVIRONMENT_TEST
             )
         );
@@ -167,6 +169,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
                 'dashboardid',
                 'manageid',
                 $this->service,
+                Entity::ENVIRONMENT_PRODUCTION,
                 Entity::ENVIRONMENT_PRODUCTION
             )
         );
@@ -259,7 +262,14 @@ JSON
         $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
-            new CopyEntityCommand($saveCommand, 'dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_TEST)
+            new CopyEntityCommand(
+                $saveCommand,
+                'dashboardid',
+                'manageid',
+                $this->service,
+                Entity::ENVIRONMENT_TEST,
+                Entity::ENVIRONMENT_TEST
+            )
         );
 
         $this->assertTrue($saveCommand->getEduPersonTargetedIDAttribute()->isRequested());
@@ -357,7 +367,14 @@ JSON
         $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
-            new CopyEntityCommand($saveCommand, 'dashboardid', 'manageid', $this->service, Entity::ENVIRONMENT_PRODUCTION)
+            new CopyEntityCommand(
+                $saveCommand,
+                'dashboardid',
+                'manageid',
+                $this->service,
+                Entity::ENVIRONMENT_PRODUCTION,
+                Entity::ENVIRONMENT_PRODUCTION
+            )
         );
 
         $this->assertTrue($saveCommand->getEduPersonTargetedIDAttribute()->isRequested());

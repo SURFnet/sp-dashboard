@@ -51,6 +51,12 @@ class CopyEntityCommand implements Command
     private $environment;
 
     /**
+     * @var string
+     * @Assert\NotNull
+     */
+    private $sourceEnvironment;
+
+    /**
      * @var SaveEntityCommand
      */
     private $saveEntityCommand;
@@ -61,19 +67,22 @@ class CopyEntityCommand implements Command
      * @param string $manageId
      * @param Service $service
      * @param string $environment
+     * @param string $sourceEnvironment
      */
     public function __construct(
         SaveEntityCommand $saveEntityCommand,
         $dashboardId,
         $manageId,
         Service $service,
-        $environment
+        $environment,
+        $sourceEnvironment
     ) {
         $this->saveEntityCommand = $saveEntityCommand;
         $this->dashboardId = $dashboardId;
         $this->manageId = $manageId;
         $this->service = $service;
         $this->environment = $environment;
+        $this->sourceEnvironment = $sourceEnvironment;
     }
 
     /**
@@ -106,6 +115,14 @@ class CopyEntityCommand implements Command
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSourceEnvironment()
+    {
+        return $this->sourceEnvironment;
     }
 
     public function getSaveEntityCommand()

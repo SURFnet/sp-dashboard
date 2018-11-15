@@ -52,15 +52,30 @@ class EntityCreateController extends Controller
      *     production-draft entity.
      *
      * @Method({"GET", "POST"})
-     * @Route("/entity/create/{environment}", defaults={"manageId" = null, "environment" = "test"}, name="entity_add")
-     * @Route("/entity/copy/{manageId}/{environment}", defaults={"manageId" = null, "environment" = "test"}, name="entity_copy")
+     * @Route("/entity/create/{targetEnvironment}",
+     *      defaults={
+     *          "manageId" = null,
+     *          "targetEnvironment" = "test",
+     *          "sourceEnvironment" = "test"
+     *      },
+     *      name="entity_add"
+     * )
+     * @Route("/entity/copy/{manageId}/{targetEnvironment}/{sourceEnvironment}",
+     *      defaults={
+     *          "manageId" = null,
+     *          "targetEnvironment" = "test",
+     *          "sourceEnvironment" = "test"
+     *      },
+     *      name="entity_copy"
+     * )
      * @Security("has_role('ROLE_USER')")
      * @Template("@Dashboard/EntityEdit/edit.html.twig")
      *
      * @param Request $request
      *
      * @param null|string $manageId set from the entity_copy route
-     * @param null|string $environment set from the entity_copy route
+     * @param null|string $targetEnvironment set from the entity_copy route
+     * @param null|string $sourceEnvironment indicates where the copy command originated from
      *
      * @return RedirectResponse|Response
      *
@@ -68,7 +83,7 @@ class EntityCreateController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function createAction(Request $request, $manageId, $environment)
+    public function createAction(Request $request, $manageId, $targetEnvironment, $sourceEnvironment)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
@@ -76,7 +91,7 @@ class EntityCreateController extends Controller
         $service = $this->getService();
 
         if (!$service->isProductionEntitiesEnabled() &&
-            $environment !== Entity::ENVIRONMENT_TEST &&
+            $targetEnvironment !== Entity::ENVIRONMENT_TEST &&
             !$this->isCopyRoute($request)
         ) {
             throw $this->createAccessDeniedException(
@@ -85,13 +100,13 @@ class EntityCreateController extends Controller
         }
 
         $command = SaveEntityCommand::forCreateAction($service);
-        $command->setEnvironment($environment);
+        $command->setEnvironment($targetEnvironment);
 
-        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($environment));
+        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($targetEnvironment));
 
         if ($this->isCopyRoute($request)) {
             if (!$request->isMethod('post')) {
-                $form = $this->handleCopy($command, $service, $manageId, $environment);
+                $form = $this->handleCopy($command, $service, $manageId, $targetEnvironment, $sourceEnvironment);
             }
 
             // A copy can never be saved as draft: changes are published directly to manage.
@@ -169,21 +184,27 @@ class EntityCreateController extends Controller
      * @param SaveEntityCommand $command
      * @param Service $service
      * @param $manageId
-     * @param $environment
+     * @param string $targetEnvironment
+     * @param string $sourceEnvironment the env where the copy command originated from
      *
      * @return FormInterface|RedirectResponse
      *
      * @throws InvalidArgumentException
      */
-    private function handleCopy(SaveEntityCommand $command, Service $service, $manageId, $environment)
-    {
+    private function handleCopy(
+        SaveEntityCommand $command,
+        Service $service,
+        $manageId,
+        $targetEnvironment,
+        $sourceEnvironment
+    ) {
         $entityId = $this->entityService->createEntityUuid();
 
         $this->commandBus->handle(
-            new CopyEntityCommand($command, $entityId, $manageId, $service, $environment)
+            new CopyEntityCommand($command, $entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment)
         );
 
-        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($environment));
+        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($targetEnvironment));
         $form->remove('save');
 
         return $form;
