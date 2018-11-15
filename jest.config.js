@@ -35,5 +35,8 @@ module.exports = {
         "ts-jest": {
             tsConfig: "tsconfig.json",
         }
-    }
+    },
+    "setupFiles": [
+        "jest-canvas-mock",
+    ]
 };

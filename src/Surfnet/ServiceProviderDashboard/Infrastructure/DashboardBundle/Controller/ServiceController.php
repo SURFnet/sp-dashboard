@@ -83,6 +83,7 @@ class ServiceController extends Controller
     /**
      * @Method({"GET"})
      * @Route("/", name="service_overview")
+     * @Security("has_role('ROLE_USER')")
      * @Template()
      */
     public function overviewAction()

@@ -1,4 +1,4 @@
-'use strict';
+import * as $ from 'jquery';
 
 class ServiceForm {
   private $privacyQuestionsEnabledToggle: JQuery;
@@ -85,7 +85,7 @@ class ServiceForm {
   }
 }
 
-function loadServiceForm() {
+export function loadServiceForm() {
   if ($('#dashboard_bundle_edit_service_type').length > 0 || $('#dashboard_bundle_service_type').length > 0) {
     const serviceForm = new ServiceForm(
       $('.privacy-questions-toggle'),
@@ -98,5 +98,3 @@ function loadServiceForm() {
 }
 
 $(document).ready(loadServiceForm);
-
-module.exports = loadServiceForm;

@@ -1,0 +1,28 @@
+{
+  "name": "service-2",
+  "link": "service_edit?id=2",
+  "entities": [],
+  "states": {
+    "intake-conducted": "danger",
+    "entity-on-test": "danger",
+    "representative-approved": "danger",
+    "privacy-questions": "danger",
+    "production-connection": "danger"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}

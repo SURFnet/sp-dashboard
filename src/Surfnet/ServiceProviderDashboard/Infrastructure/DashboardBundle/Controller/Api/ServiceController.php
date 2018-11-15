@@ -29,8 +29,8 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -65,6 +65,10 @@ class ServiceController extends Controller
      * @var EntityService
      */
     private $entityService;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param RouterInterface $router
@@ -73,6 +77,7 @@ class ServiceController extends Controller
      * @param ServiceService $serviceService
      * @param ServiceStatusService $serviceStatusService
      * @param EntityService $entityService
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         RouterInterface $router,
@@ -80,7 +85,8 @@ class ServiceController extends Controller
         AuthorizationService $authorizationService,
         ServiceService $serviceService,
         ServiceStatusService $serviceStatusService,
-        EntityService $entityService
+        EntityService $entityService,
+        TranslatorInterface $translator
     ) {
         $this->router = $router;
         $this->commandBus = $commandBus;
@@ -88,26 +94,43 @@ class ServiceController extends Controller
         $this->serviceService = $serviceService;
         $this->serviceStatusService = $serviceStatusService;
         $this->entityService = $entityService;
+        $this->translator = $translator;
     }
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/api/service/status", name="api_service_status")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/api/service/status/{id}", name="api_service_status")
+     * @Security("has_role('ROLE_USER')")
      *
-     * @param Request $request
+     * @param int $id
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function statusAction()
+    public function statusAction($id)
     {
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
+        $this->authorizationService->assertServiceIdAllowed($id);
+
+        $service = $this->serviceService->getServiceById($id);
+
+        $labels = [];
+        $tooltips = [];
+        foreach (ServiceStatusAssembler::states() as $state) {
+            $labels[$state] = $this->translator->trans('service.overview.progress.label.'.$state);
+            $tooltips[$state] = $this->translator->trans('service.overview.progress.tooltip.'.$state);
+        }
 
         $serviceLink = $this->router->generate('service_edit', ['id' => $service->getId()]);
         $entityList = $this->entityService->getEntityListForService($service);
 
-        $serviceStatusAssembler = new ServiceStatusAssembler($service, $serviceLink, $this->serviceStatusService, $entityList);
+        $serviceStatusAssembler = new ServiceStatusAssembler(
+            $service,
+            $serviceLink,
+            $this->serviceStatusService,
+            $entityList,
+            $labels,
+            $tooltips
+        );
+
         $serviceStatus = $serviceStatusAssembler->getDto();
 
         return new JsonResponse([

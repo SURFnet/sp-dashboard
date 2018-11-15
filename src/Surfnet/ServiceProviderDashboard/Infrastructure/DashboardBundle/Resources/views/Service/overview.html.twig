@@ -2,9 +2,11 @@
 
 {% block body %}
 
+    <div id="service-states">
     {% for service in services %}
-        <h1><a href="{{ path('select_service', {"service": service.id }) }}">{{ service.name }}</a></h1>
+        <div class="service-status-container" data-service-id="{{ service.id }}"></div>
     {% endfor %}
+    </div>
 
 {% endblock %}
 

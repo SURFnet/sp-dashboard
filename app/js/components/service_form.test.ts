@@ -1,12 +1,11 @@
+import { loadServiceForm } from "./service_form";
+import * as $ from "jquery";
+
 jest
     .dontMock('fs')
     .dontMock('jquery');
 
-
-window.$ = require('jquery');
-
-
-const loadServiceForm = require('./service_form.ts');
+(<any>window).$ = $;
 
 describe('validate visibility toggling of service status fields on the service edit form', function() {
 

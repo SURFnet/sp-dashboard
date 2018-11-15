@@ -40,24 +40,38 @@ class ServiceStatusDto implements \JsonSerializable
      * @var string[]
      */
     private $states;
+    /**
+     * @var array
+     */
+    private $labels;
+    /**
+     * @var array
+     */
+    private $tooltips;
 
     /**
      * ServiceStatusDto constructor.
-     * @param $name
-     * @param $link
+     * @param string $name
+     * @param string $link
      * @param EntityList $entityList
-     * @param array $states
+     * @param string[] $states
+     * @param string[] $labels
+     * @param string[] $tooltips
      */
     public function __construct(
         $name,
         $link,
         EntityList $entityList,
-        array $states
+        array $states,
+        array $labels,
+        array $tooltips
     ) {
         $this->name = $name;
         $this->link = $link;
         $this->entityList = $entityList;
         $this->states = $states;
+        $this->labels = $labels;
+        $this->tooltips = $tooltips;
     }
 
     /**
@@ -70,6 +84,8 @@ class ServiceStatusDto implements \JsonSerializable
             'link' => $this->link,
             'entities' => $this->entityList,
             'states' => $this->states,
+            'labels' => $this->labels,
+            'tooltips' => $this->tooltips,
         ];
     }
 }
