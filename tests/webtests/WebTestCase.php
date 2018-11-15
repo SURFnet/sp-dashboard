@@ -46,7 +46,12 @@ class WebTestCase extends SymfonyWebTestCase
     /**
      * @var MockHandler
      */
-    protected $mockHandler;
+    protected $testMockHandler;
+
+    /**
+     * @var MockHandler
+     */
+    protected $prodMockHandler;
 
     public function setUp()
     {
@@ -62,7 +67,8 @@ class WebTestCase extends SymfonyWebTestCase
 
         $this->client->disableReboot();
 
-        $this->mockHandler = $this->client->getContainer()->get('surfnet.manage.http.guzzle.mock_handler');
+        $this->testMockHandler = $this->client->getContainer()->get('surfnet.manage.http.guzzle.mock_handler');
+        $this->prodMockHandler = $this->client->getContainer()->get('surfnet.manage.http.guzzle.mock_handler_prod');
     }
 
     protected function loadFixtures()

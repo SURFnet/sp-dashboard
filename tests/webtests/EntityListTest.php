@@ -28,7 +28,8 @@ class EntityListTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->getAuthorizationService()->setSelectedServiceId(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
@@ -78,8 +79,9 @@ class EntityListTest extends WebTestCase
             ],
         ]);
 
-        $this->mockHandler->append(new Response(200, [], $searchResponse));
-        $this->mockHandler->append(new Response(200, [], $sp3QueryResponse));
+        $this->testMockHandler->append(new Response(200, [], $searchResponse));
+        $this->testMockHandler->append(new Response(200, [], $sp3QueryResponse));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->getAuthorizationService()->setSelectedServiceId(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
@@ -108,7 +110,8 @@ class EntityListTest extends WebTestCase
         $service = $this->getServiceRepository()->findByName('SURFnet');
         $this->logIn('ROLE_USER', [$service]);
 
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->getAuthorizationService()->setSelectedServiceId(
             $service->getId()
@@ -130,7 +133,8 @@ class EntityListTest extends WebTestCase
         $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
         $this->logIn('ROLE_USER', [$service]);
 
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->getAuthorizationService()->setSelectedServiceId(
             $service->getId()

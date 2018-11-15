@@ -42,6 +42,10 @@ services:
         class: GuzzleHttp\Handler\MockHandler
         public: true
 
+    surfnet.manage.http.guzzle.mock_handler_prod:
+        class: GuzzleHttp\Handler\MockHandler
+        public: true
+
     surfnet.manage.http.guzzle.test_environment:
         class: GuzzleHttp\Client
         arguments:
@@ -50,7 +54,7 @@ services:
     surfnet.manage.http.guzzle.prod_environment:
         class: GuzzleHttp\Client
         arguments:
-        - handler: '@surfnet.manage.http.guzzle.mock_handler'
+        - handler: '@surfnet.manage.http.guzzle.mock_handler_prod'
 
     # These services are overloaded for functional tests and have been made public to prevent:
     #

@@ -34,7 +34,8 @@ class EditServiceTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
     }
 
     public function test_can_edit_existing_service()
@@ -50,7 +51,8 @@ class EditServiceTest extends WebTestCase
         ];
 
         // EntityService::getEntityListForService -> findByTeamName
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/edit');
 
@@ -78,7 +80,8 @@ class EditServiceTest extends WebTestCase
         $this->logIn('ROLE_ADMINISTRATOR');
 
         // EntityService::getEntityListForService -> findByTeamName
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/edit');
 
@@ -115,9 +118,11 @@ class EditServiceTest extends WebTestCase
         // Step 3: Admin enables the Privacy questions
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        // EntityService::getEntityListForService -> findByTeamName (is called twice)
-        $this->mockHandler->append(new Response(200, [], '[]'));
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        // EntityService::getEntityListForService -> findByTeamName (is called twice on both test and prod)
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/edit');
 
@@ -133,7 +138,8 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
 
@@ -153,7 +159,8 @@ class EditServiceTest extends WebTestCase
         $this->switchToService('Ibuildings B.V.');
 
         // EntityService::getEntityListForService -> findByTeamName
-        $this->mockHandler->append(new Response(200, [], '{}'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/edit');
 

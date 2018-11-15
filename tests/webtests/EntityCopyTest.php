@@ -40,16 +40,18 @@ class EntityCopyTest extends WebTestCase
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
         );
-        $this->mockHandler->append(new Response(200, [], $response));
+        $this->testMockHandler->append(new Response(200, [], $response));
+        $this->prodMockHandler->append(new Response(200, [], $response));
 
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
         );
-        $this->mockHandler->append(new Response(200, [], json_decode($response)));
+        $this->testMockHandler->append(new Response(200, [], json_decode($response)));
 
         $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -137,12 +139,13 @@ class EntityCopyTest extends WebTestCase
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
         );
-        $this->mockHandler->append(new Response(200, [], $response));
+        $this->testMockHandler->append(new Response(200, [], $response));
+        $this->prodMockHandler->append(new Response(200, [], $response));
 
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
         );
-        $this->mockHandler->append(new Response(200, [], json_decode($response)));
+        $this->testMockHandler->append(new Response(200, [], json_decode($response)));
 
         $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
 
@@ -156,12 +159,13 @@ class EntityCopyTest extends WebTestCase
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
         );
-        $this->mockHandler->append(new Response(200, [], $response));
+        $this->testMockHandler->append(new Response(200, [], $response));
+        $this->prodMockHandler->append(new Response(200, [], $response));
 
         $response = file_get_contents(
             __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
         );
-        $this->mockHandler->append(new Response(200, [], json_decode($response)));
+        $this->testMockHandler->append(new Response(200, [], json_decode($response)));
 
         $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
