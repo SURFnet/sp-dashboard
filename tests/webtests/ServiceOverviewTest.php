@@ -40,7 +40,6 @@ class ServiceOverviewTest extends WebTestCase
      * for the contact that is currently logged in
      *
      * Todo: add tests for the entity form
-     * Todo: The link on the h1 will probably be moved elsewhere
      */
     public function test_users_can_use_the_service_overview_page()
     {
@@ -51,17 +50,10 @@ class ServiceOverviewTest extends WebTestCase
         $crawler = $this->client->request('GET', '/');
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
-        $nodes = $crawler->filter('.card h1');
+        $nodes = $crawler->filter('.service-status-container');
         $serviceNode = $nodes->first();
 
-        $this->assertEquals('SURFnet', $serviceNode->text());
-
-        $link = $serviceNode->filter('a')->first()->link();
-
-        // Clicking on the anchor, swithces the service context to clicked service.
-        $this->client->click($link);
-        // The my entities page should now be open.
-        $this->assertRegExp('#entities$#', $this->client->getResponse()->headers->get('location'));
+        $this->assertEquals('1', $serviceNode->attr('data-service-id'));
     }
 
     /**
@@ -77,7 +69,7 @@ class ServiceOverviewTest extends WebTestCase
         $crawler = $this->client->request('GET', '/');
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
-        $nodes = $crawler->filter('.card h1');
+        $nodes = $crawler->filter('.service-status-container');
 
         // Two services should be on page: surf and ibuildings.
         $this->assertEquals(2, $nodes->count());
@@ -86,8 +78,8 @@ class ServiceOverviewTest extends WebTestCase
         $serviceNode = $nodes->first();
         $service2 = $nodes->eq(1);
 
-        $this->assertEquals('Ibuildings B.V.', $serviceNode->text());
-        $this->assertEquals('SURFnet', $service2->text());
+        $this->assertEquals('2', $serviceNode->attr('data-service-id'));
+        $this->assertEquals('1', $service2->attr('data-service-id'));
     }
 
     public function test_service_overview_redirects_to_service_add_when_no_service_exists()

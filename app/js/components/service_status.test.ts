@@ -72,8 +72,8 @@ describe('validate donut status graph', function() {
         loadServiceStatus();
 
         let expected = `
-            <div class="service-status-container" data-service-id="2"><div class="service-status-title"><a href="/service/edit/1">service name</a></div><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-entities"><a href="/entity/edit/1" class="service-status-entity-link">test entity name</a></div><div class="service-status-entities"></div></div>
-            <div class="service-status-container" data-service-id="1"><div class="service-status-title"><a href="/service/edit/1">service name</a></div><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-entities"><a href="/entity/edit/1" class="service-status-entity-link">test entity name</a></div><div class="service-status-entities"></div></div>
+            <div class="service-status-container" data-service-id="2"><div class="service-status-title"><a href="/service/edit/1">service name</a></div><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-entities"><a href="/entity/edit/1" class="service-status-entity-link">test entity name</a></div><div class="service-status-entities"><a href=\"/entity/edit/2\" class=\"service-status-entity-link\">prod entity name</a></div></div>
+            <div class="service-status-container" data-service-id="1"><div class="service-status-title"><a href="/service/edit/1">service name</a></div><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-entities"><a href="/entity/edit/1" class="service-status-entity-link">test entity name</a></div><div class="service-status-entities"><a href=\"/entity/edit/2\" class=\"service-status-entity-link\">prod entity name</a></div></div>
         `;
 
         let actual = $('#service-states').html();

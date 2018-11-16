@@ -146,7 +146,7 @@ export class ServiceStatus {
       link.innerHTML = entity.name;
       link.classList.add('service-status-entity-link');
 
-      if (entity.environment === 'prod') {
+      if (entity.environment === 'production') {
         if (this.elementListProd.innerText === '') {
           this.elementListProd.innerText = 'Prod';
         }
@@ -169,7 +169,7 @@ export class ServiceStatus {
   }
 
   private initStateColors() {
-    this.stateColors.danger = '#d73232';
+    this.stateColors.danger = '#d1d2d6';
     this.stateColors.success = '#67a979';
     this.stateColors.info = '#f6aa61';
   }

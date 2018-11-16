@@ -119,7 +119,7 @@ class ServiceController extends Controller
             $tooltips[$state] = $this->translator->trans('service.overview.progress.tooltip.'.$state);
         }
 
-        $serviceLink = $this->router->generate('service_edit', ['id' => $service->getId()]);
+        $serviceLink = $this->router->generate('select_service', ['service' => $service->getId()]);
         $entityList = $this->entityService->getEntityListForService($service);
 
         $serviceStatusAssembler = new ServiceStatusAssembler(
