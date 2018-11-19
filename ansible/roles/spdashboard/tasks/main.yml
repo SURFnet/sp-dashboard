@@ -6,17 +6,14 @@
 - name: Install yarn repo file
   copy: src=yarn.repo dest=/etc/yum.repos.d/
 
+- name: Install nodejs 11 repo file
+  yum: pkg=https://rpm.nodesource.com/pub_11.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm state=present
+
 - name: Install some packages needed for installation
   yum: pkg={{ item }} state=present
   with_items:
-    - npm 
+    - nodejs
     - yarn
-
-- name: Install n in order to upgrade node
-  command: yarn global add n --prefix /usr/local
-
-- name: Upgrade node to the configured version
-  command: /usr/local/bin/n {{ spdashboard_node_version }}
 
 - name: Add group {{ spdashboard_fpm_user }}
   group: name={{ spdashboard_fpm_user }} state=present
