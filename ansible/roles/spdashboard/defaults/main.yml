@@ -15,3 +15,5 @@ spdashboard_support_email: coin-logs-dev@list.surfnet.nl
 
 # In order to be able to use Webpack Encore 0.21, Node > 6 is required.
 spdashboard_node_version: v11.1.0
+
+spdashboard_manage_prod_host: "https://manage-prod.{{ base_domain }}"
