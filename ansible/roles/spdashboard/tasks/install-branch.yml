@@ -15,11 +15,6 @@
   with_items:
      - git
 
-- name: Checkout spdashboard branch
-  git: repo=https://github.com/SURFnet/sp-dashboard.git dest="{{ spdashboard_branch_dir }}" version={{ spdashboard_branch }} force=yes
-  when: spdashboard_branch != ''
-  register: support_gitclone
-
 - name: Copy makerelease.sh
   copy: src=makeRelease.sh dest={{spdashboard_branch_dir}} mode=770
 
@@ -57,6 +52,11 @@
 
 - name: Install config file
   template: src=parameters.yml.j2 dest={{ spdashboard_data_dir}}/current/app/config/parameters.yml
+
+- name: Clear the cache
+  command: bin/console cache:clear --env=prod
+  args:
+    chdir: "{{ spdashboard_data_dir }}/current/"
 
 - name: Run database migrations
   command: bin/console doctrine:migrations:migrate
