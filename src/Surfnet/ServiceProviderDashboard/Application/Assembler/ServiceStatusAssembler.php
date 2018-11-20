@@ -34,7 +34,6 @@ class ServiceStatusAssembler
     const SERVICE_STATE_PRIVACY_QUESTIONS = 'privacy-questions';
     const SERVICE_STATE_PRODUCTION_CONNECTION = 'production-connection';
 
-
     /**
      * The possible states used in the mapping
      */
@@ -89,9 +88,17 @@ class ServiceStatusAssembler
      * @param string $serviceLink
      * @param ServiceStatusService $serviceStatusService
      * @param EntityList $entityList
+     * @param string[] $labels
+     * @param string[] $tooltips
      */
-    public function __construct(Service $service, $serviceLink, ServiceStatusService $serviceStatusService, EntityList $entityList)
-    {
+    public function __construct(
+        Service $service,
+        $serviceLink,
+        ServiceStatusService $serviceStatusService,
+        EntityList $entityList,
+        array $labels,
+        array $tooltips
+    ) {
         $states = $this->getStates($service, $serviceStatusService);
         $mappedStates = $this->mapStates($states);
 
@@ -99,7 +106,9 @@ class ServiceStatusAssembler
             $service->getName(),
             $serviceLink,
             $entityList,
-            $mappedStates
+            $mappedStates,
+            $labels,
+            $tooltips
         );
     }
 
@@ -109,6 +118,21 @@ class ServiceStatusAssembler
     public function getDto()
     {
         return $this->serviceStatusDto;
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function states()
+    {
+        return [
+            self::SERVICE_STATE_INTAKE_CONDUCTED,
+            self::SERVICE_STATE_ENTITY_ON_TEST,
+            self::SERVICE_STATE_REPRESENTATIVE_APPROVED,
+            self::SERVICE_STATE_CONTRACT_SIGNED,
+            self::SERVICE_STATE_PRIVACY_QUESTIONS,
+            self::SERVICE_STATE_PRODUCTION_CONNECTION,
+        ];
     }
 
     /**

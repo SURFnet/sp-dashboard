@@ -174,6 +174,21 @@ class AuthorizationService
     }
 
     /**
+     * Get the service selected in the service switcher.
+     *
+     * @param int $serviceId
+     * @return string
+     */
+    public function assertServiceIdAllowed($serviceId)
+    {
+        if ($serviceId && !$this->hasAccessToService($serviceId)) {
+            throw new RuntimeException(
+                sprintf('User is not granted access to service with ID %d', $serviceId)
+            );
+        }
+    }
+
+    /**
      * Did the user select a service in the switcher?
      *
      * @return bool

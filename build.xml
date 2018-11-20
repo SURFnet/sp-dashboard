@@ -68,7 +68,7 @@
 
         <echo message="${line.separator}jscpd:" />
         <exec executable="node_modules/jscpd/bin/jscpd" failonerror="true">
-            <arg line='--exclude "**/*.test.js"' />
+            <arg line='--exclude "**/*.test.ts"' />
             <arg line="--limit=-1" />
         </exec>
 

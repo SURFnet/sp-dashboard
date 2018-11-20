@@ -12,6 +12,7 @@
     "file-loader": "^2.0.0",
     "import-glob-loader": "^1.1.0",
     "jest": "^23.6.0",
+    "jest-canvas-mock": "^1.1.0",
     "jscpd": "^0.6.23",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
@@ -26,7 +27,9 @@
     "webpack-dev-server": "3"
   },
   "dependencies": {
+    "@types/chart.js": "^2.7.40",
     "@types/jquery": "^3.3.22",
+    "chart.js": "^2.7.3",
     "jquery": "^3.2.1",
     "parsleyjs": "^2.8.1",
     "select2": "^4.0.3",

@@ -34,7 +34,8 @@
     "cyclomatic-complexity": [
       true,
       12
-    ]
+    ],
+    "eofline": true
   },
   "rulesDirectory": []
 }

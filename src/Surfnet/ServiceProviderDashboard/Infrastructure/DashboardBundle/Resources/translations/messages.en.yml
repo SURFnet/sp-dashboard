@@ -194,3 +194,15 @@ mail.confirmation.publish_production.service_name: Service name
 mail.confirmation.publish_production.publish_date: Publish date
 mail.confirmation.publish_production.team_id: Team id
 mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'
+service.overview.progress.label.intake-conducted: Intake done
+service.overview.progress.label.entity-on-test: Entity on test
+service.overview.progress.label.contract-signed: Contract signed
+service.overview.progress.label.representative-approved: Approved by representative
+service.overview.progress.label.privacy-questions: Privacy questions answered
+service.overview.progress.label.production-connection: Production connection aquired
+service.overview.progress.tooltip.intake-conducted: Is the intake done
+service.overview.progress.tooltip.entity-on-test: Is there an entity on the test environment
+service.overview.progress.tooltip.contract-signed: Is a contract signed
+service.overview.progress.tooltip.representative-approved: Is the service approved by a representative
+service.overview.progress.tooltip.privacy-questions: Are the privacy questions answered
+service.overview.progress.tooltip.production-connection: Is a production connection active

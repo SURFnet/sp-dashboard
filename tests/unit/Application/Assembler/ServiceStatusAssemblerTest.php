@@ -69,11 +69,15 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
             $this->service,
             $serviceLink,
             $this->serviceStatusService,
-            $entitiesList
+            $entitiesList,
+            $this->getTestLabels(),
+            $this->getTestTooltips()
         );
 
         $result = $assembler->getDto();
         $json = json_encode($result);
+
+        $expectedJson = json_encode(json_decode($expectedJson));
 
         $this->assertSame($expectedJson, $json);
     }
@@ -99,7 +103,41 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => true,
                 ],
-                'result' => '{"name":"service-2","link":"service_edit?id=2","entities":[{"name":"entity-1","environment":"production","link":"entity_edit?id=1"}],"states":{"intake-conducted":"success","entity-on-test":"success","representative-approved":"success","privacy-questions":"success","production-connection":"success"}}'
+                'result' => '{
+  "name": "service-2",
+  "link": "service_edit?id=2",
+  "entities": [
+    {
+      "name": "entity-1",
+      "environment": "production",
+      "link": "entity_edit?id=1"
+    }
+  ],
+  "states": {
+    "intake-conducted": "success",
+    "entity-on-test": "success",
+    "representative-approved": "success",
+    "privacy-questions": "success",
+    "production-connection": "success"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}
+'
             ],
             'non-institute-output' => [
                 'service' => [
@@ -119,7 +157,40 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => true,
                 ],
-                'result' => '{"name":"service-1","link":"service_edit?id=1","entities":[{"name":"entity-1","environment":"production","link":"entity_edit?id=1"}],"states":{"intake-conducted":"success","entity-on-test":"success","contract-signed":"success","privacy-questions":"success","production-connection":"success"}}'
+                'result' => '{
+  "name": "service-1",
+  "link": "service_edit?id=1",
+  "entities": [
+    {
+      "name": "entity-1",
+      "environment": "production",
+      "link": "entity_edit?id=1"
+    }
+  ],
+  "states": {
+    "intake-conducted": "success",
+    "entity-on-test": "success",
+    "contract-signed": "success",
+    "privacy-questions": "success",
+    "production-connection": "success"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}'
             ],
             'entity-links' => [
                 'service' => [
@@ -141,7 +212,51 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => true,
                 ],
-                'result' => '{"name":"service-2","link":"service_edit?id=2","entities":[{"name":"entity-1","environment":"production","link":"entity_edit?id=1"},{"name":"entity-2","environment":"test","link":"entity_edit?id=2"},{"name":"entity-3","environment":"test","link":"entity_edit?id=3"}],"states":{"intake-conducted":"success","entity-on-test":"success","representative-approved":"success","privacy-questions":"success","production-connection":"success"}}'
+                'result' => '{
+  "name": "service-2",
+  "link": "service_edit?id=2",
+  "entities": [
+    {
+      "name": "entity-1",
+      "environment": "production",
+      "link": "entity_edit?id=1"
+    },
+    {
+      "name": "entity-2",
+      "environment": "test",
+      "link": "entity_edit?id=2"
+    },
+    {
+      "name": "entity-3",
+      "environment": "test",
+      "link": "entity_edit?id=3"
+    }
+  ],
+  "states": {
+    "intake-conducted": "success",
+    "entity-on-test": "success",
+    "representative-approved": "success",
+    "privacy-questions": "success",
+    "production-connection": "success"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}
+'
             ],
             'privacy-questions-disabled' => [
                 'service' => [
@@ -159,7 +274,33 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => false,
                 ],
-                'result' => '{"name":"service-2","link":"service_edit?id=2","entities":[],"states":{"intake-conducted":"success","entity-on-test":"success","representative-approved":"success","production-connection":"success"}}'
+                'result' => '{
+  "name": "service-2",
+  "link": "service_edit?id=2",
+  "entities": [],
+  "states": {
+    "intake-conducted": "success",
+    "entity-on-test": "success",
+    "representative-approved": "success",
+    "production-connection": "success"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}'
             ],
             'institute-output-danger' => [
                 'service' => [
@@ -177,7 +318,35 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_NO,
                     'privacyQuestions' => false,
                 ],
-                'result' => '{"name":"service-2","link":"service_edit?id=2","entities":[],"states":{"intake-conducted":"danger","entity-on-test":"danger","representative-approved":"danger","privacy-questions":"danger","production-connection":"danger"}}'
+                'result' => '{
+  "name": "service-2",
+  "link": "service_edit?id=2",
+  "entities": [],
+  "states": {
+    "intake-conducted": "danger",
+    "entity-on-test": "danger",
+    "representative-approved": "danger",
+    "privacy-questions": "danger",
+    "production-connection": "danger"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}
+'
             ],
             'none-institute-output-danger' => [
                 'service' => [
@@ -195,7 +364,34 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_NO,
                     'privacyQuestions' => false,
                 ],
-                'result' => '{"name":"service-2","link":"service_edit?id=2","entities":[],"states":{"intake-conducted":"danger","entity-on-test":"danger","contract-signed":"danger","privacy-questions":"danger","production-connection":"danger"}}'
+                'result' => '{
+  "name": "service-2",
+  "link": "service_edit?id=2",
+  "entities": [],
+  "states": {
+    "intake-conducted": "danger",
+    "entity-on-test": "danger",
+    "contract-signed": "danger",
+    "privacy-questions": "danger",
+    "production-connection": "danger"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}'
             ],
             'institute-output-info' => [
                 'service' => [
@@ -213,7 +409,34 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_IN_PROGRESS,
                     'privacyQuestions' => false,
                 ],
-                'result' => '{"name":"service-2","link":"service_edit?id=2","entities":[],"states":{"entity-on-test":"warning","representative-approved":"success","privacy-questions":"danger","production-connection":"info"}}'
+                'result' => '{
+  "name": "service-2",
+  "link": "service_edit?id=2",
+  "entities": [],
+  "states": {
+    "entity-on-test": "warning",
+    "representative-approved": "success",
+    "privacy-questions": "danger",
+    "production-connection": "info"
+  },
+  "labels": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  },
+  "tooltips": {
+    "intake-conducted": "intake-conducted",
+    "entity-on-test": "entity-on-test",
+    "representative-approved": "representative-approved",
+    "contract-signed": "contract-signed",
+    "privacy-questions": "privacy-questions",
+    "production-connection": "production-connection"
+  }
+}
+'
             ],
         ];
     }
@@ -288,5 +511,35 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
         }
 
         return new EntityList($entities);
+    }
+
+    /**
+     * @return array
+     */
+    private function getTestLabels()
+    {
+        return [
+            ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED => ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED,
+            ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST => ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST,
+            ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED => ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED,
+            ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED => ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED,
+            ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS => ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS,
+            ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION => ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getTestTooltips()
+    {
+        return [
+            ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED => ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED,
+            ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST => ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST,
+            ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED => ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED,
+            ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED => ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED,
+            ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS => ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS,
+            ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION => ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION,
+        ];
     }
 }
