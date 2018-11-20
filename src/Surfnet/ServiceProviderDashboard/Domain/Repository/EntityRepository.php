@@ -49,4 +49,13 @@ interface EntityRepository
      * @return Entity[]
      */
     public function findByServiceId($serviceId);
+
+    /**
+     * @param string $status
+     * @param string $environment
+     * @param int $limit
+     *
+     * @return Entity[]
+     */
+    public function findByState($status, $environment, $limit = 10);
 }

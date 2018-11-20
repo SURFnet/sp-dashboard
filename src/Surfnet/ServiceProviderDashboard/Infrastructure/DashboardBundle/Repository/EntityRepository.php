@@ -72,6 +72,17 @@ class EntityRepository extends DoctrineEntityRepository implements EntityReposit
         ]);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function findByState($status, $environment, $limit = 10)
+    {
+        return parent::findBy([
+            'status' => $status,
+            'environment' => $environment,
+        ], null, $limit, 0);
+    }
+
     public function delete(Entity $entity)
     {
         $this->_em->remove($entity);
