@@ -16,8 +16,10 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception;
+namespace Surfnet\ServiceProviderDashboard\Application\Exception;
 
-class DeleteEntityFromManageException extends RuntimeException
+use RuntimeException;
+
+class UnableToDeleteEntityException extends RuntimeException
 {
 }

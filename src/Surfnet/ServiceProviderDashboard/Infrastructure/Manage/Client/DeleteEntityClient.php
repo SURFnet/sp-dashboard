@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository as DeleteEntityRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\DeleteEntityFromManageException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
@@ -52,7 +53,7 @@ class DeleteEntityClient implements DeleteEntityRepositoryInterface
      * @param string $manageId
      *
      * @return string
-     * @throws DeleteEntityFromManageException
+     * @throws UnableToDeleteEntityException
      */
     public function delete($manageId)
     {
@@ -60,13 +61,13 @@ class DeleteEntityClient implements DeleteEntityRepositoryInterface
             $result = $this->client->delete(sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId));
 
             if ($result !== true) {
-                throw new DeleteEntityFromManageException(
+                throw new UnableToDeleteEntityException(
                     sprintf('Not allowed to delete entity with internal manage ID: "%s"', $manageId)
                 );
             }
             return self::RESULT_SUCCESS;
         } catch (HttpException $e) {
-            throw new DeleteEntityFromManageException(
+            throw new UnableToDeleteEntityException(
                 sprintf('Unable to delete entity with internal manage ID: "%s"', $manageId),
                 0,
                 $e

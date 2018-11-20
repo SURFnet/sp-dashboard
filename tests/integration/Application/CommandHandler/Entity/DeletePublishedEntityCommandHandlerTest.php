@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,28 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteDraftEntityCommandHandler;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\DeleteEntityFromManageException;
 
-class DeleteDraftEntityCommandHandlerTest extends MockeryTestCase
+class DeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 {
 
     /**
-     * @var DeleteDraftEntityCommandHandler
+     * @var DeletePublishedEntityCommandHandler
      */
     private $commandHandler;
 
     /**
-     * @var EntityRepository|Mock
+     * @var DeleteEntityRepository|Mock
      */
-    private $repository;
+    private $repositoryTest;
+    /**
+     * @var DeleteEntityRepository|Mock
+     */
+    private $repositoryProd;
 
     /**
      * @var LoggerInterface|Mock
@@ -47,28 +52,92 @@ class DeleteDraftEntityCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = m::mock(EntityRepository::class);
+        $this->repositoryTest = m::mock(DeleteEntityRepository::class);
+        $this->repositoryProd = m::mock(DeleteEntityRepository::class);
 
         $this->logger = m::mock(LoggerInterface::class);
 
-        $this->commandHandler = new DeleteDraftEntityCommandHandler($this->repository, $this->logger);
+        $this->commandHandler = new DeletePublishedEntityCommandHandler(
+            $this->repositoryTest,
+            $this->repositoryProd,
+            $this->logger
+        );
     }
 
-    public function test_it_can_delete_an_entity()
+    public function test_it_can_delete_an_entity_from_test()
     {
-        $command = new DeleteDraftEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'test');
 
-        $entity = m::mock(Entity::class);
-        $entity->shouldReceive('getNameEn');
-
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
-
-        $this->repository
+        $this->repositoryTest
             ->shouldReceive('delete')
-            ->with($entity);
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->andReturn(DeleteEntityRepository::RESULT_SUCCESS);
+
+        $this->logger
+            ->shouldReceive('info');
+
+        $this->commandHandler->handle($command);
+    }
+
+    public function test_it_can_delete_an_entity_from_production()
+    {
+        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'production');
+
+        $this->repositoryProd
+            ->shouldReceive('delete')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->andReturn(DeleteEntityRepository::RESULT_SUCCESS);
+
+        $this->logger
+            ->shouldReceive('info');
+
+        $this->commandHandler->handle($command);
+    }
+
+    /**
+     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException
+     * @expectedExceptionMessage Deleting the entity yielded an non success response
+     */
+    public function test_it_handles_non_error_responses()
+    {
+        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'production');
+
+        $this->repositoryProd
+            ->shouldReceive('delete')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->andReturn(false);
+
+        $this->logger
+            ->shouldReceive('info');
+
+        $this->commandHandler->handle($command);
+    }
+
+    /**
+     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Deleting entities from "staging" environment is not supported
+     */
+    public function test_it_rejects_invalid_environment()
+    {
+        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'staging');
+
+        $this->logger
+            ->shouldReceive('info');
+
+        $this->commandHandler->handle($command);
+    }
+
+    /**
+     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException
+     */
+    public function test_it_handles_failing_delete_requests()
+    {
+        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'test');
+
+        $this->repositoryTest
+            ->shouldReceive('delete')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->andThrow(UnableToDeleteEntityException::class);
 
         $this->logger
             ->shouldReceive('info');

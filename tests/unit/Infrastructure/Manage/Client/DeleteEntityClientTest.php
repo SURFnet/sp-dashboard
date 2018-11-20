@@ -83,7 +83,7 @@ class DeleteEntityClientTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\DeleteEntityFromManageException
+     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException
      * @expectedExceptionMessage Not allowed to delete entity with internal manage ID
      */
     public function test_it_can_handle_error_response()
