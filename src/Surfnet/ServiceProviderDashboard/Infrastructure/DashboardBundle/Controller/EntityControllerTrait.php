@@ -131,7 +131,7 @@ trait EntityControllerTrait
 
             case Entity::ENVIRONMENT_PRODUCTION:
                 $publishEntityCommand = new PublishEntityProductionCommand($entity->getId());
-                $destination = 'entity_published_test';
+                $destination = 'entity_published_production';
                 break;
         }
 

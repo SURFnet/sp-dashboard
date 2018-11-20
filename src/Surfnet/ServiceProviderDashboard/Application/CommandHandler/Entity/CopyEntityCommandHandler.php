@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -28,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 
 class CopyEntityCommandHandler implements CommandHandler
 {
@@ -44,7 +46,12 @@ class CopyEntityCommandHandler implements CommandHandler
     /**
      * @var ManageClient
      */
-    private $manageClient;
+    private $manageTestClient;
+
+    /**
+     * @var ManageClient
+     */
+    private $manageProductionClient;
 
     /**
      * @var AttributesMetadataRepository
@@ -54,28 +61,31 @@ class CopyEntityCommandHandler implements CommandHandler
     /**
      * @param CommandBus $commandBus
      * @param EntityRepository $entityRepository
-     * @param ManageClient $manageClient
+     * @param ManageClient $manageTestClient
+     * @param ManageClient $manageProductionClient
      * @param AttributesMetadataRepository $attributeMetadataRepository
      */
     public function __construct(
         CommandBus $commandBus,
         EntityRepository $entityRepository,
-        ManageClient $manageClient,
+        ManageClient $manageTestClient,
+        ManageClient $manageProductionClient,
         AttributesMetadataRepository $attributeMetadataRepository
     ) {
         $this->commandBus = $commandBus;
         $this->entityRepository = $entityRepository;
-        $this->manageClient = $manageClient;
+        $this->manageTestClient = $manageTestClient;
+        $this->manageProductionClient = $manageProductionClient;
         $this->attributeMetadataRepository = $attributeMetadataRepository;
     }
 
     /**
      * @param CopyEntityCommand $command
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) - The different copy actions should be broken into different
+     *                                                 commands.
      * @throws InvalidArgumentException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @throws QueryServiceProviderException
      */
     public function handle(CopyEntityCommand $command)
     {
@@ -89,7 +99,13 @@ class CopyEntityCommandHandler implements CommandHandler
             );
         }
 
-        $manageEntity = $this->manageClient->findByManageId($manageId);
+        $manageClient = $this->manageProductionClient;
+        if ($command->getSourceEnvironment() == 'test') {
+            $manageClient = $this->manageTestClient;
+        }
+
+        $manageEntity = $manageClient->findByManageId($manageId);
+
         if (empty($manageEntity)) {
             throw new InvalidArgumentException(
                 'Could not find entity in manage: '.$manageId
@@ -98,7 +114,9 @@ class CopyEntityCommandHandler implements CommandHandler
 
         $manageMetadata = $manageEntity['data']['metaDataFields'];
         $manageTeamName = $manageMetadata['coin:service_team_id'];
-        $arp = isset($manageEntity['data']['arp']['attributes']) ? $manageEntity['data']['arp']['attributes'] : [];
+
+        $manageStagingState = $this->getManageStagingState($manageMetadata);
+
         if ($manageTeamName !== $command->getService()->getTeamName()) {
             throw new InvalidArgumentException(
                 sprintf(
@@ -114,13 +132,55 @@ class CopyEntityCommandHandler implements CommandHandler
         $saveEntityCommand->setService($command->getService());
         $saveEntityCommand->setManageId($command->getManageId());
 
+        // Published production entities must be cloned, not copied
+        $isProductionClone = $command->getEnvironment() == 'production' && $manageStagingState === 0;
+        // Entities copied from test to prod should not have a manage id either
+        $isCopyToProduction = $command->getEnvironment() == 'production' && $command->getSourceEnvironment() == 'test';
+        if ($isProductionClone || $isCopyToProduction) {
+            $saveEntityCommand->setManageId(null);
+        }
+
         $this->commandBus->handle(
             new LoadMetadataCommand(
                 $saveEntityCommand,
-                ['metadata' => ['pastedMetadata' => $this->manageClient->getMetadataXmlByManageId($manageId)]]
+                ['metadata' => ['pastedMetadata' => $manageClient->getMetadataXmlByManageId($manageId)]]
             )
         );
 
+        $this->setManageMetadataOn($saveEntityCommand, $manageMetadata);
+
+        if (isset($manageEntity['data']['metadataurl'])) {
+            $saveEntityCommand->setMetadataUrl($manageEntity['data']['metadataurl']);
+        }
+
+        $arp = isset($manageEntity['data']['arp']['attributes']) ? $manageEntity['data']['arp']['attributes'] : [];
+        $this->setAttributesOn($saveEntityCommand, $arp);
+
+        // Set the target environment
+        $saveEntityCommand->setEnvironment($command->getEnvironment());
+    }
+
+    /**
+     * Determine the staging state
+     *
+     * The state is based on the presence of the coin:exclude_from_push attribute.
+     *
+     * 0 means this is a production entity.
+     * 1 means the entity is still in staging (access was requested).
+     *
+     * @param $manageMetadata
+     * @return int
+     */
+    private function getManageStagingState($manageMetadata)
+    {
+        if (isset($manageMetadata['coin:exclude_from_push']) && $manageMetadata['coin:exclude_from_push'] == 1) {
+            return 1;
+        }
+        return 0;
+    }
+
+    private function setManageMetadataOn(SaveEntityCommand $saveEntityCommand, array $manageMetadata)
+    {
         if (isset($manageMetadata['coin:application_url'])) {
             $saveEntityCommand->setApplicationUrl($manageMetadata['coin:application_url']);
         }
@@ -132,11 +192,10 @@ class CopyEntityCommandHandler implements CommandHandler
         if (isset($manageMetadata['coin:original_metadata_url'])) {
             $saveEntityCommand->setImportUrl($manageMetadata['coin:original_metadata_url']);
         }
+    }
 
-        if (isset($manageEntity['data']['metadataurl'])) {
-            $saveEntityCommand->setMetadataUrl($manageEntity['data']['metadataurl']);
-        }
-
+    private function setAttributesOn($saveEntityCommand, $arp)
+    {
         // Copy the ARP attributes to the new entity based on the data from manage.
         foreach ($this->attributeMetadataRepository->findAll() as $attributeDefinition) {
             $urn = reset($attributeDefinition->urns);
@@ -161,8 +220,5 @@ class CopyEntityCommandHandler implements CommandHandler
 
             $saveEntityCommand->{$setter}($attribute);
         }
-
-        // Set the target environment
-        $saveEntityCommand->setEnvironment($command->getEnvironment());
     }
 }

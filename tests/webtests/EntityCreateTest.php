@@ -106,7 +106,8 @@ class EntityCreateTest extends WebTestCase
         );
 
         // The entity list queries manage for published entities
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
         $pageTitle = $crawler->filter('h1')->first()->text();
@@ -135,7 +136,8 @@ class EntityCreateTest extends WebTestCase
         );
 
         // The entity list queries manage for published entities
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
 
@@ -183,9 +185,9 @@ class EntityCreateTest extends WebTestCase
             ->form();
 
         // Publish json
-        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
-        $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         $this->client->submit($form, $formData);
 
@@ -196,7 +198,8 @@ class EntityCreateTest extends WebTestCase
         );
 
         // The entity list queries manage for published entities
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
         // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
@@ -215,9 +218,9 @@ class EntityCreateTest extends WebTestCase
             ->form();
 
         // Publish json
-        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
-        $this->mockHandler->append(new Response(404, [], '{"status":"failed"}'));
+        $this->testMockHandler->append(new Response(404, [], '{"status":"failed"}'));
 
         $this->client->submit($form, $formData);
 
@@ -323,7 +326,8 @@ class EntityCreateTest extends WebTestCase
         );
 
         // The entity list queries manage for published entities
-        $this->mockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
 

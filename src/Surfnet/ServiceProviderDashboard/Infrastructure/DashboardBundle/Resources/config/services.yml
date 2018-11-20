@@ -8,6 +8,13 @@ services:
 
     surfnet.dashboard.command_handler.copy_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
+        arguments:
+           - '@tactician.commandbus.default'
+           - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+           - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+           - '@surfnet.manage.client.query_client.prod_environment'
+           - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand }
@@ -156,7 +163,10 @@ services:
         tags: [twig.extension]
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator:
-        arguments:  ['@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient']
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
         tags:
             - { name: validator.constraint_validator, alias: entity_id }
 
@@ -175,6 +185,13 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\HasAttributesValidator:
         tags:
             - { name: validator.constraint_validator, alias: has_attributes }
+
+    Surfnet\ServiceProviderDashboard\Application\Service\EntityService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '@router.default'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:

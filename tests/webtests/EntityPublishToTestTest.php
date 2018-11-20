@@ -100,9 +100,9 @@ class EntityPublishToTestTest extends WebTestCase
     public function test_it_published_metadata_to_manage()
     {
         // Entity id validation
-        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
-        $this->mockHandler->append(new Response(200, [], '{"status":"OK"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         // Build and save an entity to work with
         $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
@@ -138,7 +138,7 @@ class EntityPublishToTestTest extends WebTestCase
     public function test_it_validates_the_from_on_publish()
     {
         // Entity id validation
-        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
 
         $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
         $entity->setCertificate('-----BEGIN CERTIFICATE-----THIS IS NOT A VALID CERTIFICATE-----END CERTIFICATE-----');
@@ -161,7 +161,7 @@ class EntityPublishToTestTest extends WebTestCase
 
     public function test_it_validates_at_least_one_attribute_present()
     {
-        $this->mockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
 
         $entity = $this->buildEntityWithoutAttribute($this->getServiceRepository()->findByName('SURFnet'));
 

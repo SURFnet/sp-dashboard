@@ -35,7 +35,13 @@ class EntityService
     /**
      * @var ManageQueryClient
      */
-    private $manageQueryClient;
+    private $manageTestQueryClient;
+
+    /**
+     * @var ManageQueryClient
+     */
+    private $manageProductionQueryClient;
+
     /**
      * @var RouterInterface
      */
@@ -43,16 +49,19 @@ class EntityService
 
     /**
      * @param EntityRepository $entityRepository
-     * @param ManageQueryClient $manageQueryClient
+     * @param ManageQueryClient $manageTestQueryClient
+     * @param ManageQueryClient $manageProductionQueryClient
      * @param RouterInterface $router
      */
     public function __construct(
         EntityRepository $entityRepository,
-        ManageQueryClient $manageQueryClient,
+        ManageQueryClient $manageTestQueryClient,
+        ManageQueryClient $manageProductionQueryClient,
         RouterInterface $router
     ) {
         $this->entityRepository = $entityRepository;
-        $this->manageQueryClient = $manageQueryClient;
+        $this->manageTestQueryClient = $manageTestQueryClient;
+        $this->manageProductionQueryClient = $manageProductionQueryClient;
         $this->router = $router;
     }
 
@@ -87,8 +96,12 @@ class EntityService
             $entities[] = ViewObject\Entity::fromEntity($entity, $this->router);
         }
 
-        foreach ($this->manageQueryClient->findByTeamName($service->getTeamName()) as $result) {
-            $entities[] = ViewObject\Entity::fromManageResult($result, $this->router);
+        foreach ($this->manageTestQueryClient->findByTeamName($service->getTeamName()) as $result) {
+            $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router);
+        }
+
+        foreach ($this->manageProductionQueryClient->findByTeamName($service->getTeamName()) as $result) {
+            $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router);
         }
 
         return new ViewObject\EntityList($entities);
