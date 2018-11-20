@@ -23,6 +23,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit_Framework_TestCase as UnitTest;
 use Psr\Log\NullLogger;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\MalformedResponseException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
@@ -148,5 +149,64 @@ class HttpClientTest extends UnitTest
         $this->expectException(AccessDeniedException::class);
 
         $client->post('post-and-give-me/403', 'Post body');
+    }
+
+    public function test_data_from_a_resource_can_be_deleted()
+    {
+        $mockHandler = new MockHandler(
+            [
+                new Response(200, [], json_encode(true))
+            ]
+        );
+        $guzzle      = new Client(['handler' => $mockHandler]);
+        $client = new HttpClient($guzzle, new NullLogger());
+
+        $response = $client->delete('/resource');
+
+        $this->assertTrue($response);
+    }
+
+    public function test_malformed_json_causes_a_malformed_response_exception_when_deleting()
+    {
+        $malformedJson = '{';
+
+        $mockHandler   = new MockHandler([
+            new Response(200, [], $malformedJson)
+        ]);
+        $guzzle = new Client(['handler' => $mockHandler]);
+        $client = new HttpClient($guzzle, new NullLogger());
+
+        $this->expectException(MalformedResponseException::class);
+
+        $client->delete('/delete-and-give-me/malformed-json');
+    }
+
+    public function test_null_is_returned_when_the_response_status_code_is_404_when_deleting()
+    {
+        $mockHandler   = new MockHandler([
+            new Response(404, [])
+        ]);
+        $guzzle = new Client(['handler' => $mockHandler]);
+        $client = new HttpClient($guzzle, new NullLogger());
+
+        $response = $client->delete('delete-and-give-me/404');
+
+        $this->assertNull(
+            $response,
+            'The response should be null when encountering a 404 when delting, but it was not'
+        );
+    }
+
+    public function test_an_access_denied_exception_is_thrown_if_the_response_status_code_is_403_when_deleting()
+    {
+        $mockHandler   = new MockHandler([
+            new Response(403, [])
+        ]);
+        $guzzle = new Client(['handler' => $mockHandler]);
+        $client = new HttpClient($guzzle, new NullLogger());
+
+        $this->expectException(AccessDeniedException::class);
+
+        $client->delete('delete-and-give-me/403');
     }
 }

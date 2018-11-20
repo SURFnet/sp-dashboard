@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidJsonException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\MalformedResponseException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\UndeleteableResourceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\UnreadableResourceException;
 
 final class HttpClient
@@ -227,6 +228,62 @@ final class HttpClient
         } catch (InvalidJsonException $e) {
             throw new MalformedResponseException(
                 sprintf('Cannot read resource "%s": malformed JSON returned', $resource)
+            );
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string $path
+     * @param array $parameters
+     * @param array $headers
+     *
+     * @return mixed
+     *
+     * @throws AccessDeniedException
+     * @throws MalformedResponseException
+     * @throws UnreadableResourceException
+     */
+    public function delete($path, $parameters = [], array $headers = ['Content-Type' => 'application/json'])
+    {
+        $resource = ResourcePathFormatter::format($path, $parameters);
+
+        $this->logger->debug(sprintf('Deleting data from manage (%s) on path %s', $this->mode, $resource));
+
+        $response = $this->httpClient->request('DELETE', $resource, [
+            'exceptions' => false,
+            'headers' => $headers
+        ]);
+
+        $statusCode = $response->getStatusCode();
+        $body = (string) $response->getBody();
+
+        $this->logger->debug(
+            sprintf('Received %d response from manage (%s)', $statusCode, $this->mode),
+            ['body' => $body]
+        );
+
+        // 404 is considered a valid response, the resource may not be there (yet?) intentionally.
+        if ($statusCode == 404) {
+            return null;
+        }
+
+        if ($statusCode == 403) {
+            throw new AccessDeniedException($resource);
+        }
+
+        if (($statusCode < 200 || $statusCode >= 300) && $statusCode != 400) {
+            throw new UndeleteableResourceException(
+                sprintf('Resource could not be deleted (status code %d)', $statusCode)
+            );
+        }
+
+        try {
+            $data = JsonResponseParser::parse((string) $response->getBody());
+        } catch (InvalidJsonException $e) {
+            throw new MalformedResponseException(
+                sprintf('Cannot delete resource "%s": malformed JSON returned', $resource)
             );
         }
 
