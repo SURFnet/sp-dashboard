@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DeleteEntityCommand implements Command
+class DeleteDraftEntityCommand implements Command
 {
     /**
      * @var string

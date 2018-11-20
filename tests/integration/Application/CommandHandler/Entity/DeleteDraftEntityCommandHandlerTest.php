@@ -22,16 +22,16 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteDraftEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
-class DeleteEntityCommandHandlerTest extends MockeryTestCase
+class DeleteDraftEntityCommandHandlerTest extends MockeryTestCase
 {
 
     /**
-     * @var DeleteEntityCommandHandler
+     * @var DeleteDraftEntityCommandHandler
      */
     private $commandHandler;
 
@@ -51,12 +51,12 @@ class DeleteEntityCommandHandlerTest extends MockeryTestCase
 
         $this->logger = m::mock(LoggerInterface::class);
 
-        $this->commandHandler = new DeleteEntityCommandHandler($this->repository, $this->logger);
+        $this->commandHandler = new DeleteDraftEntityCommandHandler($this->repository, $this->logger);
     }
 
     public function test_it_can_delete_an_entity()
     {
-        $command = new DeleteEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new DeleteDraftEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
 
         $entity = m::mock(Entity::class);
         $entity->shouldReceive('getNameEn');

@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
@@ -143,7 +143,7 @@ trait EntityControllerTrait
             $this->get('session')->set('published.entity.clone', clone $entity);
 
             // Test entities are removed after they've been published to Manage
-            $deleteCommand = new DeleteEntityCommand($entity->getId());
+            $deleteCommand = new DeleteDraftEntityCommand($entity->getId());
             $this->commandBus->handle($deleteCommand);
 
             return $this->redirectToRoute($destination);

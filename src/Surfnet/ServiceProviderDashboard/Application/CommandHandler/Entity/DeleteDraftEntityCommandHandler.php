@@ -19,11 +19,11 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
-class DeleteEntityCommandHandler implements CommandHandler
+class DeleteDraftEntityCommandHandler implements CommandHandler
 {
     /**
      * @var EntityRepository
@@ -41,7 +41,7 @@ class DeleteEntityCommandHandler implements CommandHandler
         $this->logger = $logger;
     }
 
-    public function handle(DeleteEntityCommand $command)
+    public function handle(DeleteDraftEntityCommand $command)
     {
         $entity = $this->entityRepository->findById($command->getId());
         $this->logger->info(

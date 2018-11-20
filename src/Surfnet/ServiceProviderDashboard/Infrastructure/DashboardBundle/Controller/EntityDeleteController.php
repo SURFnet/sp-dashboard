@@ -24,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -66,7 +66,7 @@ class EntityDeleteController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
                 $this->commandBus->handle(
-                    new DeleteEntityCommand($entity->getId())
+                    new DeleteDraftEntityCommand($entity->getId())
                 );
             }
 
