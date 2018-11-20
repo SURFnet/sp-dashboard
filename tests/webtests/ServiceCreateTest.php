@@ -41,9 +41,11 @@ class ServiceCreateTest extends WebTestCase
 
         $formData = [
             'dashboard_bundle_service_type' => [
-                'guid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                'name' => 'The A Team',
-                'teamName' => 'team-a',
+                'general' => [
+                    'guid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                    'name' => 'The A Team',
+                    'teamName' => 'team-a',
+                ]
             ]
         ];
 
@@ -56,7 +58,7 @@ class ServiceCreateTest extends WebTestCase
         $crawler = $this->client->submit($form, $formData);
 
 
-        $nodes = $crawler->filter('#dashboard_bundle_service_type li');
+        $nodes = $crawler->filter('#dashboard_bundle_service_type_general li');
         $this->assertEquals('This is not a valid UUID.', $nodes->first()->text());
     }
 
@@ -66,9 +68,11 @@ class ServiceCreateTest extends WebTestCase
 
         $formData = [
             'dashboard_bundle_service_type' => [
-                'guid' => '',
-                'name' => 'The A Team',
-                'teamName' => 'team-a',
+                'general' => [
+                    'guid' => '',
+                    'name' => 'The A Team',
+                    'teamName' => 'team-a',
+                ]
             ]
         ];
 
@@ -96,9 +100,11 @@ class ServiceCreateTest extends WebTestCase
         // This UUID is not compliant to the RFC-4122 spec, but is a valid GUID
         $formData = [
             'dashboard_bundle_service_type' => [
-                'guid' => '1234abcd-146e-e711-80e8-005056956c1e',
-                'name' => 'The A Team',
-                'teamName' => 'team-a',
+                'general' => [
+                    'guid' => '1234abcd-146e-e711-80e8-005056956c1e',
+                    'name' => 'The A Team',
+                    'teamName' => 'team-a',
+                ]
             ]
         ];
 
@@ -122,9 +128,11 @@ class ServiceCreateTest extends WebTestCase
 
         $formData = [
             'dashboard_bundle_service_type' => [
-                'guid' => Uuid::uuid4(),
-                'name' => 'The A Team',
-                'teamName' => 'urn:collab:org:surf.nl',
+                'general' => [
+                    'guid' => Uuid::uuid4(),
+                    'name' => 'The A Team',
+                    'teamName' => 'urn:collab:org:surf.nl',
+                ]
             ]
         ];
 
@@ -150,9 +158,11 @@ class ServiceCreateTest extends WebTestCase
 
         $formData = [
             'dashboard_bundle_service_type' => [
-                'guid' => 'b9aaa8c4-3376-4e9d-b828-afa38cf29986',
-                'name' => 'The A Team',
-                'teamName' => 'team-a',
+                'general' => [
+                    'guid' => 'b9aaa8c4-3376-4e9d-b828-afa38cf29986',
+                    'name' => 'The A Team',
+                    'teamName' => 'team-a',
+                ]
             ]
         ];
 

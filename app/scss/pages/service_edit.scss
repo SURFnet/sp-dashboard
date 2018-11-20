@@ -143,6 +143,22 @@ form {
       text-transform: uppercase;
     }
   }
+
+  &.service-form {
+    background: white;
+    .button-wrapper {
+      clear: both;
+      padding: 25px;
+    }
+    .card {
+      float: left;
+      width: 50%;
+      box-shadow: none;
+    }
+    .radio-container {
+      width: 100%;
+    }
+  }
 }
 /* stylelint-enable */
 

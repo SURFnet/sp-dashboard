@@ -44,9 +44,11 @@ class EditServiceTest extends WebTestCase
 
         $formData = [
             'dashboard_bundle_edit_service_type' => [
-                'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',
-                'name' => 'The A Team',
-                'teamName' => 'team-a',
+                'general' => [
+                    'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',
+                    'name' => 'The A Team',
+                    'teamName' => 'team-a',
+                ]
             ]
         ];
 
@@ -88,7 +90,9 @@ class EditServiceTest extends WebTestCase
         // Step 1: Admin sets privacy questions enabled to false
         $formData = [
             'dashboard_bundle_edit_service_type' => [
-                'privacyQuestionsEnabled' => false,
+                'general' => [
+                    'privacyQuestionsEnabled' => false,
+                ]
             ]
         ];
 
@@ -128,7 +132,9 @@ class EditServiceTest extends WebTestCase
 
         $formData = [
             'dashboard_bundle_edit_service_type' => [
-                'privacyQuestionsEnabled' => true,
+                'general' => [
+                    'privacyQuestionsEnabled' => true,
+                ]
             ]
         ];
 
@@ -164,7 +170,7 @@ class EditServiceTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/service/edit');
 
-        $radio = $crawler->filter('#dashboard_bundle_edit_service_type_privacyQuestionsAnswered_1');
+        $radio = $crawler->filter('#dashboard_bundle_edit_service_type_serviceStatus_privacyQuestionsAnswered_1');
         // The checked element should be the 'Yes' radio option as the ibuildings service has a privacy questions entity
         $this->assertEquals(1, $radio->attr('value'));
         // The radio is disabled
