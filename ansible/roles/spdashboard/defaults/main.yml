@@ -12,6 +12,5 @@ spdashboard_saml_sp_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml
 spdashboard_saml_metadata_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer"
 spdashboard_saml_metadata_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
 spdashboard_support_email: coin-logs-dev@list.surfnet.nl
-
-# In order to be able to use Webpack Encore 0.21, Node > 6 is required.
-spdashboard_node_version: v11.1.0
+spdashboard_manage_prod_host: "https://manage-prod.{{ base_domain }}"
+spdashboard_nodejs_rpm_url: "https://rpm.nodesource.com/pub_11.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm"
