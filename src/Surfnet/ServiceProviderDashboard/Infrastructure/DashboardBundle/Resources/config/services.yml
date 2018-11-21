@@ -278,3 +278,9 @@ services:
           - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
           - '@surfnet.manage.client.query_client.prod_environment'
         tags: ['console.command']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\JiraServiceFactory:
+        arguments:
+            - '%jira_host%'
+            - '%jira_username%'
+            - '%jira_password%'
