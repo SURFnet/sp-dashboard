@@ -14,3 +14,6 @@ spdashboard_saml_metadata_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepu
 spdashboard_support_email: coin-logs-dev@list.surfnet.nl
 spdashboard_manage_prod_host: "https://manage-prod.{{ base_domain }}"
 spdashboard_nodejs_rpm_url: "https://rpm.nodesource.com/pub_11.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm"
+spdashboard_jira_host: https://jira-test.surfnet.nl
+spdashboard_jira_username: username
+spdashboard_jira_password: password
