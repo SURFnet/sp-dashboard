@@ -22,6 +22,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class Entity implements JsonSerializable
 {
     /**
@@ -276,6 +279,11 @@ class Entity implements JsonSerializable
     public function allowDeleteAction()
     {
         return true;
+    }
+
+    public function isPublishedToProduction()
+    {
+        return $this->state == 'published' && $this->environment == 'production';
     }
 
     /**

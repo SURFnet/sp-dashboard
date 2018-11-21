@@ -5,7 +5,8 @@ error.403.text: "You do not have access to this page."
 error.404.title:  "Page not found"
 error.404.text: "Oops, we were unable to find the page."
 entity.delete.title: "Delete entity"
-entity.delete.draft.confirmation: "You are about to delete '%name%'. This is a '%status%' entity, are you sure?"
+entity.delete.confirmation: "You are about to delete '%name%'. This is a '%status%' entity, are you sure?"
+entity.delete.request.confirmation: "You are about to request to remove '%name%'. The service desk will be informed. Are you sure?"
 entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
