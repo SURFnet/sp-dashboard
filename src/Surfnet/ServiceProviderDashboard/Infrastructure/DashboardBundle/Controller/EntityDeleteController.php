@@ -25,6 +25,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,11 +41,17 @@ class EntityDeleteController extends Controller
     private $commandBus;
 
     /**
+     * @var EntityService
+     */
+    private $entityService;
+
+    /**
      * @param CommandBus $commandBus
      */
-    public function __construct(CommandBus $commandBus)
+    public function __construct(CommandBus $commandBus, EntityService $entityService)
     {
         $this->commandBus = $commandBus;
+        $this->entityService = $entityService;
     }
 
     /**
@@ -75,7 +83,51 @@ class EntityDeleteController extends Controller
 
         return [
             'form' => $form->createView(),
+            'status' => $entity->getStatus(),
             'entityName' => $entity->getNameEn(),
+        ];
+    }
+
+    /**
+     * @Method({"GET", "POST"})
+     * @Route(
+     *     "/entity/delete/published/{manageId}/{environment}",
+     *     name="entity_delete_published",
+     *     defaults={
+     *          "manageId": null,
+     *          "environment": "test"
+     *     }
+     * )
+     * @Template("@Dashboard/EntityDelete/delete.html.twig")
+     *
+     * @param Request $request
+     *
+     * @param $manageId
+     * @param $environment
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function deletePublishedAction(Request $request, $manageId, $environment)
+    {
+        $entity = $this->entityService->getManageEntityById($manageId, $environment);
+        $nameEn = $entity['data']['metaDataFields']['name:en'];
+
+        $form = $this->createForm(DeleteEntityType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->getClickedButton()->getName() === 'delete') {
+                $this->commandBus->handle(
+                    new DeletePublishedEntityCommand($manageId, $environment)
+                );
+            }
+
+            return $this->redirectToRoute('entity_list');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'status' => 'published',
+            'entityName' => $nameEn,
         ];
     }
 }

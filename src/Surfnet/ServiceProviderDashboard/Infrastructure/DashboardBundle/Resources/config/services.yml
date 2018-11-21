@@ -31,6 +31,15 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand }
 
+    surfnet.dashboard.command_handler.delete_published_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedEntityCommandHandler
+        arguments:
+            - '@surfnet.manage.client.delete_client.test_environment'
+            - '@surfnet.manage.client.delete_client.prod_environment'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand }
+
     surfnet.dashboard.command_handler.edit_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveEntityCommandHandler
         public: true
@@ -219,6 +228,18 @@ services:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
             - '@logger'
+
+    surfnet.manage.client.delete_client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+        arguments:
+        - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+        - '@logger'
+
+    surfnet.manage.client.delete_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+        arguments:
+        - '@surfnet.manage.http.http_client.prod_environment'
+        - '@logger'
 
     surfnet.manage.http.guzzle.test_environment:
         class: GuzzleHttp\Client

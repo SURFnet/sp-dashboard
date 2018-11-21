@@ -279,6 +279,22 @@ class Entity implements JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return $this->getState() === 'published';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRequested()
+    {
+        return $this->getState() === 'requested';
+    }
+
+    /**
      * @return string
      */
     public function getLink()

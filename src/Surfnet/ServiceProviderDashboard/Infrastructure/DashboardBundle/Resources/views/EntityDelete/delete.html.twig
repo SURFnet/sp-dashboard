@@ -5,7 +5,7 @@
 {% block page_heading %}{{ 'entity.delete.title'|trans }}{%endblock%}
 
 {% block body %}
-        <p>{{ 'entity.delete.draft.confirmation'|trans({ '%name%': entityName}) }}</p>
+        <p>{{ 'entity.delete.draft.confirmation'|trans({ '%name%': entityName, '%status%': status }) }}</p>
         {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <div class="button-wrapper">
