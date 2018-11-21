@@ -275,12 +275,7 @@ class Entity implements JsonSerializable
      */
     public function allowDeleteAction()
     {
-
-        if ($this->state != 'published' && $this->state != 'requested') {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**
