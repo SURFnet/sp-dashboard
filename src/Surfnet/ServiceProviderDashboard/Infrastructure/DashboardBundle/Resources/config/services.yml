@@ -238,3 +238,10 @@ services:
         arguments:
         - base_uri: "%manage_prod_host%"
           auth: ["%manage_prod_username%", "%manage_prod_password%", "Basic"]
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand
+        arguments:
+          - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+          - '@surfnet.manage.client.query_client.prod_environment'
+        tags: ['console.command']
