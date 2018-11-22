@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,37 +19,31 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
-class DeleteEntityCommandHandler implements CommandHandler
+class RequestDeletePublishedEntityCommandHandler implements CommandHandler
 {
-    /**
-     * @var EntityRepository
-     */
-    private $entityRepository;
-
     /**
      * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(EntityRepository $entityRepository, LoggerInterface $logger)
-    {
-        $this->entityRepository = $entityRepository;
+    public function __construct(
+        LoggerInterface $logger
+    ) {
         $this->logger = $logger;
     }
 
-    public function handle(DeleteEntityCommand $command)
+    public function handle(RequestDeletePublishedEntityCommand $command)
     {
-        $entity = $this->entityRepository->findById($command->getId());
         $this->logger->info(
             sprintf(
-                'Removing entity draft entity "%s"',
-                $entity->getNameEn()
+                'Request delete of a published production entity with manage id "%s"',
+                $command->getManageId()
             )
         );
-        $this->entityRepository->delete($entity);
+        // Todo: the exact way to deal with a delete request is yet to be determined. Jira, mail, ...
+        // The corresponding integration & acceptance test it also to be created.
     }
 }

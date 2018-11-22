@@ -71,7 +71,13 @@
                             </li>
                             {% if entity.allowDeleteAction %}
                             <li>
+                                {% if entity.isPublishedToProduction %}
+                                <a href="{{ path('entity_delete_request', {manageId: entity.id}) }}">
+                                {% elseif entity.isPublished or entity.isRequested %}
+                                <a href="{{ path('entity_delete_published', {manageId: entity.id, environment: entity.environment}) }}">
+                                {% else %}
                                 <a href="{{ path('entity_delete', {id: entity.id}) }}">
+                                {% endif %}
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     {{ 'entity.list.action.delete'|trans }}
                                 </a>

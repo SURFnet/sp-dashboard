@@ -26,10 +26,31 @@ services:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
     surfnet.dashboard.command_handler.delete_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteEntityCommandHandler
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteDraftEntityCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand }
+
+    surfnet.dashboard.command_handler.delete_published_production_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedProductionEntityCommandHandler
+        arguments:
+            - '@surfnet.manage.client.delete_client.prod_environment'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand }
+
+    surfnet.dashboard.command_handler.delete_published_test_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedTestEntityCommandHandler
+        arguments:
+            - '@surfnet.manage.client.delete_client.test_environment'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand }
+
+    surfnet.dashboard.command_handler.request_delete_published_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\RequestDeletePublishedEntityCommandHandler
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand }
 
     surfnet.dashboard.command_handler.edit_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveEntityCommandHandler
@@ -219,6 +240,18 @@ services:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
             - '@logger'
+
+    surfnet.manage.client.delete_client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+        arguments:
+        - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+        - '@logger'
+
+    surfnet.manage.client.delete_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+        arguments:
+        - '@surfnet.manage.http.http_client.prod_environment'
+        - '@logger'
 
     surfnet.manage.http.guzzle.test_environment:
         class: GuzzleHttp\Client

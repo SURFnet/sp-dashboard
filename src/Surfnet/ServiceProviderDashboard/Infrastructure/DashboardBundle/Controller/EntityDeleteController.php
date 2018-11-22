@@ -24,7 +24,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,11 +43,17 @@ class EntityDeleteController extends Controller
     private $commandBus;
 
     /**
+     * @var EntityService
+     */
+    private $entityService;
+
+    /**
      * @param CommandBus $commandBus
      */
-    public function __construct(CommandBus $commandBus)
+    public function __construct(CommandBus $commandBus, EntityService $entityService)
     {
         $this->commandBus = $commandBus;
+        $this->entityService = $entityService;
     }
 
     /**
@@ -66,7 +76,7 @@ class EntityDeleteController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
                 $this->commandBus->handle(
-                    new DeleteEntityCommand($entity->getId())
+                    new DeleteDraftEntityCommand($entity->getId())
                 );
             }
 
@@ -75,7 +85,103 @@ class EntityDeleteController extends Controller
 
         return [
             'form' => $form->createView(),
+            'environment' => $entity->getEnvironment(),
+            'status' => $entity->getStatus(),
             'entityName' => $entity->getNameEn(),
+        ];
+    }
+
+    /**
+     * @Method({"GET", "POST"})
+     * @Route(
+     *     "/entity/delete/published/{manageId}/{environment}",
+     *     name="entity_delete_published",
+     *     defaults={
+     *          "manageId": null,
+     *          "environment": "test"
+     *     }
+     * )
+     * @Template("@Dashboard/EntityDelete/delete.html.twig")
+     *
+     * @param Request $request
+     *
+     * @param $manageId
+     * @param $environment
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function deletePublishedAction(Request $request, $manageId, $environment)
+    {
+        $entity = $this->entityService->getManageEntityById($manageId, $environment);
+        $nameEn = $entity['data']['metaDataFields']['name:en'];
+
+        $excludeFromPush = 0;
+        if (isset($entity['data']['metaDataFields']['coin:exclude_from_push'])) {
+            $excludeFromPush = $entity['data']['metaDataFields']['coin:exclude_from_push'];
+        }
+
+        $form = $this->createForm(DeleteEntityType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->getClickedButton()->getName() === 'delete') {
+                $command = new DeletePublishedProductionEntityCommand($manageId);
+                if ($environment === 'test') {
+                    $command = new DeletePublishedTestEntityCommand($manageId);
+                }
+                $this->commandBus->handle($command);
+            }
+
+            return $this->redirectToRoute('entity_list');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'environment' => $environment,
+            'status' => $excludeFromPush === "1" ? 'requested' : 'published',
+            'entityName' => $nameEn,
+        ];
+    }
+    /**
+     * @Method({"GET", "POST"})
+     * @Route(
+     *     "/entity/delete/request/{manageId}/{environment}",
+     *     name="entity_delete_request",
+     *     defaults={
+     *          "manageId": null,
+     *          "environment": "production"
+     *     }
+     * )
+     * @Template("@Dashboard/EntityDelete/delete.html.twig")
+     *
+     * @param Request $request
+     *
+     * @param $manageId
+     * @param $environment
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function deleteRequestAction(Request $request, $manageId, $environment)
+    {
+        $entity = $this->entityService->getManageEntityById($manageId, $environment);
+        $nameEn = $entity['data']['metaDataFields']['name:en'];
+
+        $form = $this->createForm(DeleteEntityType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->getClickedButton()->getName() === 'delete') {
+                $this->commandBus->handle(
+                    new RequestDeletePublishedEntityCommand($manageId)
+                );
+            }
+
+            return $this->redirectToRoute('entity_list');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'environment' => $environment,
+            'status' => 'published',
+            'entityName' => $nameEn,
         ];
     }
 }

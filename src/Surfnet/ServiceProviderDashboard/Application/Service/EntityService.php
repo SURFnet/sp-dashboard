@@ -18,6 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Ramsey\Uuid\Uuid;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -105,5 +106,30 @@ class EntityService
         }
 
         return new ViewObject\EntityList($entities);
+    }
+
+    /**
+     * @param string $manageId
+     * @param string $env
+     *
+     * @return array|null
+     *
+     * @throws InvalidArgumentException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
+     */
+    public function getManageEntityById($manageId, $env = 'test')
+    {
+        switch ($env) {
+            case "test":
+                $manageClient = $this->manageTestQueryClient;
+                break;
+            case "production":
+                $manageClient = $this->manageProductionQueryClient;
+                break;
+            default:
+                throw new InvalidArgumentException(sprintf('Unsupported Manage environment "%s" requested.', $env));
+                break;
+        }
+        return $manageClient->findByManageId($manageId);
     }
 }

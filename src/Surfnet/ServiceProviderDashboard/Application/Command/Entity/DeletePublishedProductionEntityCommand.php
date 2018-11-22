@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,28 +21,28 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DeleteEntityCommand implements Command
+class DeletePublishedProductionEntityCommand implements Command
 {
     /**
      * @var string
      * @Assert\NotBlank
      * @Assert\Uuid
      */
-    private $id;
+    private $manageId;
 
     /**
      * @param string $id
      */
-    public function __construct($id)
+    public function __construct($manageId)
     {
-        $this->id = $id;
+        $this->manageId = $manageId;
     }
 
     /**
      * @return string
      */
-    public function getId()
+    public function getManageId()
     {
-        return $this->id;
+        return $this->manageId;
     }
 }

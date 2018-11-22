@@ -64,10 +64,10 @@ class EntityTest extends MockeryTestCase
         // The expectations are in order: mayEdit, mayDelete, mayClone, mayCopy, mayCopyToProduction
         return [
             ['test draft', $this->buildEntity('draft', 'test'), true, true, false, false, false],
-            ['test published', $this->buildEntity('published', 'test'), false, false, false, true, true],
+            ['test published', $this->buildEntity('published', 'test'), false, true, false, true, true],
             ['prod draft', $this->buildEntity('draft', 'production'), true, true, false, false, false],
-            ['prod requested', $this->buildEntity('requested', 'production'), false, false, false, true, false],
-            ['prod published', $this->buildEntity('published', 'production'), false, false, true, false, false],
+            ['prod requested', $this->buildEntity('requested', 'production'), false, true, false, true, false],
+            ['prod published', $this->buildEntity('published', 'production'), false, true, true, false, false],
         ];
     }
 

@@ -5,7 +5,11 @@
 {% block page_heading %}{{ 'entity.delete.title'|trans }}{%endblock%}
 
 {% block body %}
-        <p>{{ 'entity.delete.confirmation'|trans({ '%name%': entityName}) }}</p>
+    {% if environment == 'test' or status != 'published' %}
+        <p>{{ 'entity.delete.confirmation'|trans({ '%name%': entityName, '%status%': status }) }}</p>
+    {% else %}
+        <p>{{ 'entity.delete.request.confirmation'|trans({ '%name%': entityName }) }}</p>
+    {% endif %}
         {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <div class="button-wrapper">
