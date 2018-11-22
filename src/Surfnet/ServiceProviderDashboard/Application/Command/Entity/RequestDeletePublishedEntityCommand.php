@@ -31,8 +31,7 @@ class RequestDeletePublishedEntityCommand implements Command
     private $manageId;
 
     /**
-     * @param string $id
-     * @param string $environment
+     * @param string $manageId
      */
     public function __construct($manageId)
     {
