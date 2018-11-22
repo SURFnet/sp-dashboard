@@ -32,9 +32,11 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -173,6 +175,12 @@ class ServiceController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // On delete, forward to the service delete confirmation page.
+            if ($this->isDeleteAction($form)) {
+                $logger->info('Forwarding to the delete confirmation page');
+                return $this->redirectToRoute('service_delete');
+            }
+
             $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
@@ -191,6 +199,36 @@ class ServiceController extends Controller
 
     /**
      * @Method({"GET", "POST"})
+     * @Route("/service/delete", name="service_delete")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction(Request $request)
+    {
+        $form = $this->createForm(DeleteServiceType::class);
+        $form->handleRequest($request);
+
+        $service = $this->serviceService->getServiceById(
+            $this->authorizationService->getActiveServiceId()
+        );
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->getClickedButton()->getName() === 'delete') {
+                // TODO: handle the delete request
+            }
+
+            return $this->redirectToRoute('service_overview');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'serviceName' => $service->getName()
+        ];
+    }
+    /**
+     * @Method({"GET", "POST"})
      * @Route("/service/select", name="select_service")
      * @Security("has_role('ROLE_USER')")
      */
@@ -204,5 +242,32 @@ class ServiceController extends Controller
         $this->commandBus->handle($command);
 
         return $this->redirectToRoute('entity_list');
+    }
+
+    /**
+     * @param ServiceType $form
+     * @return bool
+     */
+    private function isDeleteAction(Form $form)
+    {
+        return $this->assertUsedSubmitButton($form, 'delete');
+    }
+
+    /**
+     * Check if the form was submitted using the given button name.
+     *
+     * @param EditServiceType $form
+     * @param string $expectedButtonName
+     * @return bool
+     */
+    private function assertUsedSubmitButton(Form $form, $expectedButtonName)
+    {
+        $button = $form->getClickedButton();
+
+        if ($button === null) {
+            return false;
+        }
+
+        return $button->getName() === $expectedButtonName;
     }
 }
