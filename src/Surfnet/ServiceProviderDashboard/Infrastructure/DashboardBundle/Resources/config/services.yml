@@ -31,14 +31,21 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand }
 
-    surfnet.dashboard.command_handler.delete_published_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedEntityCommandHandler
+    surfnet.dashboard.command_handler.delete_published_production_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedProductionEntityCommandHandler
         arguments:
-            - '@surfnet.manage.client.delete_client.test_environment'
             - '@surfnet.manage.client.delete_client.prod_environment'
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand }
+
+    surfnet.dashboard.command_handler.delete_published_test_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedTestEntityCommandHandler
+        arguments:
+            - '@surfnet.manage.client.delete_client.test_environment'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand }
 
     surfnet.dashboard.command_handler.request_delete_published_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\RequestDeletePublishedEntityCommandHandler
