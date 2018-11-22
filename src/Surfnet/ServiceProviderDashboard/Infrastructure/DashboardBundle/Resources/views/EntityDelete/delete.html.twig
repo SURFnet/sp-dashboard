@@ -5,8 +5,8 @@
 {% block page_heading %}{{ 'entity.delete.title'|trans }}{%endblock%}
 
 {% block body %}
-    {% if environment != 'production' and status != 'published' %}
-        <p>{{ 'entity.delete.draft.confirmation'|trans({ '%name%': entityName, '%status%': status }) }}</p>
+    {% if environment == 'test' or status != 'published' %}
+        <p>{{ 'entity.delete.confirmation'|trans({ '%name%': entityName, '%status%': status }) }}</p>
     {% else %}
         <p>{{ 'entity.delete.request.confirmation'|trans({ '%name%': entityName }) }}</p>
     {% endif %}
