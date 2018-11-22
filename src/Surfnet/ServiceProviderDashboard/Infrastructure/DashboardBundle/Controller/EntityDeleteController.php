@@ -25,7 +25,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -113,14 +114,21 @@ class EntityDeleteController extends Controller
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $nameEn = $entity['data']['metaDataFields']['name:en'];
 
+        $excludeFromPush = 0;
+        if (isset($entity['data']['metaDataFields']['coin:exclude_from_push'])) {
+            $excludeFromPush = $entity['data']['metaDataFields']['coin:exclude_from_push'];
+        }
+
         $form = $this->createForm(DeleteEntityType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
-                $this->commandBus->handle(
-                    new DeletePublishedEntityCommand($manageId, $environment)
-                );
+                $command = new DeletePublishedProductionEntityCommand($manageId);
+                if ($environment === 'test') {
+                    $command = new DeletePublishedTestEntityCommand($manageId);
+                }
+                $this->commandBus->handle($command);
             }
 
             return $this->redirectToRoute('entity_list');
@@ -129,7 +137,7 @@ class EntityDeleteController extends Controller
         return [
             'form' => $form->createView(),
             'environment' => $environment,
-            'status' => 'published',
+            'status' => $excludeFromPush === "1" ? 'requested' : 'published',
             'entityName' => $nameEn,
         ];
     }
@@ -162,7 +170,7 @@ class EntityDeleteController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
                 $this->commandBus->handle(
-                    new RequestDeletePublishedEntityCommand($manageId, $environment)
+                    new RequestDeletePublishedEntityCommand($manageId)
                 );
             }
 
