@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DeletePublishedEntityCommand implements Command
+class DeletePublishedProductionEntityCommand implements Command
 {
     /**
      * @var string
@@ -31,19 +31,11 @@ class DeletePublishedEntityCommand implements Command
     private $manageId;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $environment;
-
-    /**
      * @param string $id
-     * @param string $environment
      */
-    public function __construct($manageId, $environment)
+    public function __construct($manageId)
     {
         $this->manageId = $manageId;
-        $this->environment = $environment;
     }
 
     /**
@@ -52,13 +44,5 @@ class DeletePublishedEntityCommand implements Command
     public function getManageId()
     {
         return $this->manageId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
     }
 }

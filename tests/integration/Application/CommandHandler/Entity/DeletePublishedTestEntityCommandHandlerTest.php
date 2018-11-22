@@ -22,28 +22,24 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedTestEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\DeleteEntityFromManageException;
 
-class DeletePublishedEntityCommandHandlerTest extends MockeryTestCase
+class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
 {
 
     /**
-     * @var DeletePublishedEntityCommandHandler
+     * @var DeletePublishedTestEntityCommandHandler
      */
     private $commandHandler;
 
     /**
      * @var DeleteEntityRepository|Mock
      */
-    private $repositoryTest;
-    /**
-     * @var DeleteEntityRepository|Mock
-     */
-    private $repositoryProd;
+    private $repository;
 
     /**
      * @var LoggerInterface|Mock
@@ -52,38 +48,21 @@ class DeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repositoryTest = m::mock(DeleteEntityRepository::class);
-        $this->repositoryProd = m::mock(DeleteEntityRepository::class);
+        $this->repository = m::mock(DeleteEntityRepository::class);
 
         $this->logger = m::mock(LoggerInterface::class);
 
-        $this->commandHandler = new DeletePublishedEntityCommandHandler(
-            $this->repositoryTest,
-            $this->repositoryProd,
+        $this->commandHandler = new DeletePublishedTestEntityCommandHandler(
+            $this->repository,
             $this->logger
         );
     }
 
     public function test_it_can_delete_an_entity_from_test()
     {
-        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'test');
+        $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
 
-        $this->repositoryTest
-            ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn(DeleteEntityRepository::RESULT_SUCCESS);
-
-        $this->logger
-            ->shouldReceive('info');
-
-        $this->commandHandler->handle($command);
-    }
-
-    public function test_it_can_delete_an_entity_from_production()
-    {
-        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'production');
-
-        $this->repositoryProd
+        $this->repository
             ->shouldReceive('delete')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
             ->andReturn(DeleteEntityRepository::RESULT_SUCCESS);
@@ -100,26 +79,12 @@ class DeletePublishedEntityCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_handles_non_error_responses()
     {
-        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'production');
+        $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
 
-        $this->repositoryProd
+        $this->repository
             ->shouldReceive('delete')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
             ->andReturn(false);
-
-        $this->logger
-            ->shouldReceive('info');
-
-        $this->commandHandler->handle($command);
-    }
-
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Deleting entities from "staging" environment is not supported
-     */
-    public function test_it_rejects_invalid_environment()
-    {
-        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'staging');
 
         $this->logger
             ->shouldReceive('info');
@@ -132,9 +97,9 @@ class DeletePublishedEntityCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_handles_failing_delete_requests()
     {
-        $command = new DeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', 'test');
+        $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
 
-        $this->repositoryTest
+        $this->repository
             ->shouldReceive('delete')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
             ->andThrow(UnableToDeleteEntityException::class);

@@ -19,24 +19,20 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 
-class DeletePublishedEntityCommandHandler implements CommandHandler
+class DeletePublishedTestEntityCommandHandler implements CommandHandler
 {
     /**
      * @var DeleteEntityRepository
      */
-    private $deleteEntityTest;
-
-    /**
-     * @var DeleteEntityRepository
-     */
-    private $deleteEntityProduction;
+    private $deleteEntityRepository;
 
     /**
      * @var LoggerInterface
@@ -44,45 +40,29 @@ class DeletePublishedEntityCommandHandler implements CommandHandler
     private $logger;
 
     public function __construct(
-        DeleteEntityRepository $deleteEntityTest,
-        DeleteEntityRepository $deleteEntityProduction,
+        DeleteEntityRepository $deleteEntityRepository,
         LoggerInterface $logger
     ) {
-        $this->deleteEntityTest = $deleteEntityTest;
-        $this->deleteEntityProduction = $deleteEntityProduction;
+        $this->deleteEntityRepository = $deleteEntityRepository;
         $this->logger = $logger;
     }
 
-    public function handle(DeletePublishedEntityCommand $command)
+    public function handle(DeletePublishedTestEntityCommand $command)
     {
         $this->logger->info(
             sprintf(
-                'Removing entity with manage id "%s" from environment "%s"',
-                $command->getManageId(),
-                $command->getEnvironment()
+                'Removing entity with manage id "%s" from test environment',
+                $command->getManageId()
             )
         );
 
         try {
-            switch ($command->getEnvironment()) {
-                case 'test':
-                    $response = $this->deleteEntityTest->delete($command->getManageId());
-                    break;
-                case 'production':
-                    $response = $this->deleteEntityProduction->delete($command->getManageId());
-                    break;
-                default:
-                    throw new InvalidArgumentException(
-                        sprintf('Deleting entities from "%s" environment is not supported.', $command->getEnvironment())
-                    );
-                    break;
-            }
+            $response = $this->deleteEntityRepository->delete($command->getManageId());
         } catch (UnableToDeleteEntityException $e) {
             throw new EntityNotDeletedException(
                 sprintf(
-                    'Deleting of entity with manage id "%s" from environment "%s" failed.',
-                    $command->getManageId(),
-                    $command->getEnvironment()
+                    'Deleting of entity with manage id "%s" from test environment failed.',
+                    $command->getManageId()
                 ),
                 0,
                 $e
