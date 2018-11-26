@@ -25,6 +25,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
 
+    surfnet.dashboard.command_handler.delete_service:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand }
+
     surfnet.dashboard.command_handler.delete_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteDraftEntityCommandHandler
         public: true
@@ -110,6 +116,12 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
+
+    surfnet.dashboard.command_handler.reset_service:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\ResetServiceCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand }
 
     surfnet.dashboard.command_handler.select_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\SelectServiceCommandHandler

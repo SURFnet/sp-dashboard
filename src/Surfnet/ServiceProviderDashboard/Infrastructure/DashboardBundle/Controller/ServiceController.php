@@ -25,11 +25,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
@@ -216,7 +218,17 @@ class ServiceController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
-                // TODO: handle the delete request
+                $service = $this->serviceService->getServiceById(
+                    $this->authorizationService->getActiveServiceId()
+                );
+
+                // Remove the service
+                $command = new DeleteServiceCommand($service->getId());
+                $this->commandBus->handle($command);
+
+                // Reset the service switcher (the currently active service was just removed)
+                $resetCommand = new ResetServiceCommand();
+                $this->commandBus->handle($resetCommand);
             }
 
             return $this->redirectToRoute('service_overview');
