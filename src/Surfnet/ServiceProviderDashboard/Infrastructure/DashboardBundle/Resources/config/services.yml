@@ -221,10 +221,14 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityService:
         arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider'
+            - '@router'
+
+    Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider:
+        arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
-            - '@router.default'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:

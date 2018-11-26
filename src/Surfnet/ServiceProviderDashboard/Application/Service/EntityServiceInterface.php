@@ -51,11 +51,4 @@ interface EntityServiceInterface
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
      */
     public function getManageEntityById($manageId, $env = 'test');
-
-    /**
-     * Remove the entities from the EntityList
-     *
-     * @param EntityList $list
-     */
-    public function removeFrom(EntityList $list);
 }

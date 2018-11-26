@@ -20,29 +20,17 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
 use Symfony\Component\Routing\RouterInterface;
 
 class EntityService implements EntityServiceInterface
 {
     /**
-     * @var EntityRepository
+     * @var EntityQueryRepositoryProvider
      */
-    private $entityRepository;
-
-    /**
-     * @var ManageQueryClient
-     */
-    private $manageTestQueryClient;
-
-    /**
-     * @var ManageQueryClient
-     */
-    private $manageProductionQueryClient;
+    private $queryRepositoryProvider;
 
     /**
      * @var RouterInterface
@@ -50,40 +38,48 @@ class EntityService implements EntityServiceInterface
     private $router;
 
     public function __construct(
-        EntityRepository $entityRepository,
-        ManageQueryClient $manageTestQueryClient,
-        ManageQueryClient $manageProductionQueryClient,
+        EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         RouterInterface $router
     ) {
-        $this->entityRepository = $entityRepository;
-        $this->manageTestQueryClient = $manageTestQueryClient;
-        $this->manageProductionQueryClient = $manageProductionQueryClient;
+        $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->router = $router;
     }
 
     public function createEntityUuid()
     {
-        return (string) Uuid::uuid1();
+        return (string)Uuid::uuid1();
     }
 
     public function getEntityById($id)
     {
-        return $this->entityRepository->findById($id);
+        return $this->queryRepositoryProvider->getEntityRepository()->findById($id);
     }
 
     public function getEntityListForService(Service $service)
     {
         $entities = [];
 
-        foreach ($this->entityRepository->findByServiceId($service->getId()) as $entity) {
+        $draftEntities = $this->queryRepositoryProvider
+            ->getEntityRepository()
+            ->findByServiceId($service->getId());
+
+        foreach ($draftEntities as $entity) {
             $entities[] = ViewObject\Entity::fromEntity($entity, $this->router);
         }
 
-        foreach ($this->manageTestQueryClient->findByTeamName($service->getTeamName()) as $result) {
+        $testEntities = $this->queryRepositoryProvider
+            ->getManageTestQueryClient()
+            ->findByTeamName($service->getTeamName());
+
+        foreach ($testEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router);
         }
 
-        foreach ($this->manageProductionQueryClient->findByTeamName($service->getTeamName()) as $result) {
+        $productionEntities = $this->queryRepositoryProvider
+            ->getManageProductionQueryClient()
+            ->findByTeamName($service->getTeamName());
+
+        foreach ($productionEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router);
         }
 
@@ -101,21 +97,8 @@ class EntityService implements EntityServiceInterface
      */
     public function getManageEntityById($manageId, $env = 'test')
     {
-        switch ($env) {
-            case "test":
-                $manageClient = $this->manageTestQueryClient;
-                break;
-            case "production":
-                $manageClient = $this->manageProductionQueryClient;
-                break;
-            default:
-                throw new InvalidArgumentException(sprintf('Unsupported Manage environment "%s" requested.', $env));
-                break;
-        }
-        return $manageClient->findByManageId($manageId);
-    }
-
-    public function removeFrom(EntityList $list)
-    {
+        return $this->queryRepositoryProvider
+            ->fromEnvironment($env)
+            ->findByManageId($manageId);
     }
 }
