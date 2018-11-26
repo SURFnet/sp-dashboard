@@ -119,4 +119,10 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
             'teamName' => $teamNames,
         ]);
     }
+
+    public function delete(Service $service)
+    {
+        $this->getEntityManager()->remove($service);
+        $this->getEntityManager()->flush($service);
+    }
 }
