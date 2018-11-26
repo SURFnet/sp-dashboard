@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
+use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
@@ -59,8 +60,11 @@ class EntityServiceTest extends MockeryTestCase
         $this->repository = m::mock(EntityRepository::class);
         $this->manageTest = m::mock(ManageQueryClient::class);
         $this->manageProd = m::mock(ManageQueryClient::class);
+
+        $provider = new EntityQueryRepositoryProvider($this->repository, $this->manageTest, $this->manageProd);
+
         $this->router = m::mock(RouterInterface::class);
-        $this->service = new EntityService($this->repository, $this->manageTest, $this->manageProd, $this->router);
+        $this->service = new EntityService($provider, $this->router);
     }
 
     public function test_it_can_search_manage_test_by_manage_id()
@@ -87,7 +91,7 @@ class EntityServiceTest extends MockeryTestCase
 
     /**
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Unsupported Manage environment "staging" requested.
+     * @expectedExceptionMessage Unsupported environment "staging" requested.
      */
     public function test_it_rejects_invalid_evnironment_when_searching_manage_entity()
     {
