@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,10 +39,10 @@ class ChooseEntityTypeType extends AbstractType
                     'SAML 2.0' => Entity::TYPE_SAML,
                     'OpenID Connect' => Entity::TYPE_OPENID_CONNECT
                 ],
+                'label' => false,
                 'expanded' => true,
                 'multiple' => false,
-            ])
-            ->add('create', SubmitType::class, ['attr' => ['class' => 'button pull-right']]);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
