@@ -4,7 +4,85 @@
 
     <div id="service-states">
     {% for service in services %}
-        <div class="service-status-container" data-service-id="{{ service.id }}"></div>
+        <div class="service-status-container">
+            <div class="service-status-title">
+                <a href="{{ path('select_service', {service: service.id }) }}">{{ service.name }}</a>
+            </div>
+            <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
+            <div class="service-status-entities">
+
+                <h2>{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h2>
+
+                <table>
+                    {# Production entities #}
+                    <tr>
+                        <td colspan="4">
+                            <h3>{{ 'service.overview.entitylist.production.title'|trans }}</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'service.overview.entitylist.name'|trans }}</th>
+                        <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
+                        <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
+                        <th>{{ 'service.overview.entitylist.state'|trans }}</th>
+                    </tr>
+                    {% set hasEntities = false %}
+                    {% for entity in service.entityList %}
+                        {% if entity.environment == 'production' %}
+                            {% set hasEntities = true %}
+                            <tr>
+                                <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
+                                <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
+                                <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
+                                <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                            </tr>
+                        {%  endif %}
+                    {% endfor %}
+                    {% if hasEntities == false %}
+                        <tr>
+                            <td colspan="4">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                        </tr>
+                    {% endif %}
+
+                    {# Spacing #}
+                    <tr>
+                        <td colspan="4"></td>
+                    </tr>
+
+                    {# Test entities #}
+                    <tr>
+                        <td colspan="4">
+                            <h3>{{ 'service.overview.entitylist.test.title'|trans }}</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'service.overview.entitylist.name'|trans }}</th>
+                        <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
+                        <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
+                        <th>{{ 'service.overview.entitylist.state'|trans }}</th>
+                    </tr>
+                    {% set hasEntities = false %}
+                    {% for entity in service.entityList %}
+                        {% if entity.environment == 'test' %}
+                            {% set hasEntities = true %}
+                            <tr>
+                                <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
+                                <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
+                                <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
+                                <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                            </tr>
+                        {%  endif %}
+                    {% endfor %}
+                    {% if hasEntities == false %}
+                        <tr>
+                            <td colspan="4">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                        </tr>
+                    {% endif %}
+                </table>
+
+            </div>
+
+        </div>
     {% endfor %}
     </div>
 

@@ -13,20 +13,6 @@ jest
         done: function(e: any) {
             let result = {
                 service: {
-                    link: '/service/edit/1',
-                    name: 'service name',
-                    entities: [{
-                        name: 'prod entity name',
-                        link: '/entity/edit/2',
-                        environment: 'production',
-
-                    },
-                    {
-                        name: 'test entity name',
-                        link: '/entity/edit/1',
-                        environment: 'test',
-
-                    }],
                     states: {
                         "intake-conducted": "success",
                         "entity-on-test":"success",
@@ -50,6 +36,21 @@ jest
                         "privacy-questions":"Are the privacy questions answered",
                         "production-connection":"Is a production connection active"
                     },
+                    legend: {
+                      info: {
+                        label: "Unstarted",
+                        color: "#d1d2d6"
+                      },
+                      'in-progress': {
+                        label: "In progress",
+                        color: "#f6aa61"
+                      },
+                      success: {
+                        label: "Done",
+                        color: "#67a979",
+                      },
+                    },
+                    percentage:	80,
                 }
             };
             e(result);
@@ -63,8 +64,8 @@ describe('validate donut status graph', function() {
 
     let stateHtml = `
         <div id="service-states">
-            <div class="service-status-container" data-service-id="2"></div>
-            <div class="service-status-container" data-service-id="1"></div>
+            <div class="service-status-container"> <div class="service-status-graph" data-service-id="2"></div></div>
+            <div class="service-status-container"> <div class="service-status-graph" data-service-id="1"></div></div>
         </div>`;
 
     it('should generate content based on the api call', function() {
@@ -72,8 +73,8 @@ describe('validate donut status graph', function() {
         loadServiceStatus();
 
         let expected = `
-            <div class="service-status-container" data-service-id="2"><div class="service-status-title"><a href="/service/edit/1">service name</a></div><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-entities"><a href="/entity/edit/1" class="service-status-entity-link">test entity name</a></div><div class="service-status-entities"><a href=\"/entity/edit/2\" class=\"service-status-entity-link\">prod entity name</a></div></div>
-            <div class="service-status-container" data-service-id="1"><div class="service-status-title"><a href="/service/edit/1">service name</a></div><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-entities"><a href="/entity/edit/1" class="service-status-entity-link">test entity name</a></div><div class="service-status-entities"><a href=\"/entity/edit/2\" class=\"service-status-entity-link\">prod entity name</a></div></div>
+            <div class="service-status-container"> <div class="service-status-graph" data-service-id="2"><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-legend"><div class="legend-item" style="background-color: rgb(209, 210, 214);"></div><div class="legend-item" style="background-color: rgb(246, 170, 97);"></div><div class="legend-item" style="background-color: rgb(103, 169, 121);"></div></div><div class="service-status-percentage"></div></div></div>
+            <div class="service-status-container"> <div class="service-status-graph" data-service-id="1"><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-legend"><div class="legend-item" style="background-color: rgb(209, 210, 214);"></div><div class="legend-item" style="background-color: rgb(246, 170, 97);"></div><div class="legend-item" style="background-color: rgb(103, 169, 121);"></div></div><div class="service-status-percentage"></div></div></div>
         `;
 
         let actual = $('#service-states').html();

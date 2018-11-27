@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,31 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use ArrayIterator;
 use IteratorAggregate;
 
-class EntityList implements IteratorAggregate
+class ServiceList implements IteratorAggregate
 {
     /**
-     * @var Entity[]
+     * @var Service[]
      */
-    private $entities;
+    private $services;
 
     /**
-     * @param Entity[] $entities
+     * @param Service[] $services
      */
-    public function __construct(array $entities)
+    public function __construct(array $services)
     {
-        $this->entities = $entities;
+        $this->services = $services;
     }
 
     /**
-     * @return Entity[]
+     * @return Service[]
      */
-    public function getEntities()
+    public function getServices()
     {
-        return $this->entities;
+        return $this->services;
     }
 
     public function getIterator()
     {
-        return new ArrayIterator($this->entities);
+        return new ArrayIterator($this->services);
     }
 }

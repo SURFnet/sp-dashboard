@@ -29,9 +29,12 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCo
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Service;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\ServiceList;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
@@ -40,6 +43,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -65,6 +69,14 @@ class ServiceController extends Controller
      * @var ServiceStatusService
      */
     private $serviceStatusService;
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+    /**
+     * @var EntityService
+     */
+    private $entityService;
 
     /**
      * @param CommandBus $commandBus
@@ -76,12 +88,16 @@ class ServiceController extends Controller
         CommandBus $commandBus,
         AuthorizationService $authorizationService,
         ServiceService $serviceService,
-        ServiceStatusService $serviceStatusService
+        ServiceStatusService $serviceStatusService,
+        RouterInterface $router,
+        EntityService $entityService
     ) {
         $this->commandBus = $commandBus;
         $this->authorizationService = $authorizationService;
         $this->serviceService = $serviceService;
         $this->serviceStatusService = $serviceStatusService;
+        $this->router = $router;
+        $this->entityService = $entityService;
     }
 
     /**
@@ -99,8 +115,16 @@ class ServiceController extends Controller
             return $this->redirectToRoute('service_add');
         }
 
+
+        $serviceObjects = [];
+        foreach ($services as $service) {
+            $entityList = $this->entityService->getEntityListForService($service);
+            $serviceObjects[] = Service::fromService($service, $entityList, $this->router);
+        }
+        $serviceList = new ServiceList($serviceObjects);
+
         return $this->render('DashboardBundle:Service:overview.html.twig', [
-            'services' => $services
+            'services' => $serviceList
         ]);
     }
     

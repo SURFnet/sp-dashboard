@@ -17,7 +17,6 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-use JsonSerializable;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
 use Symfony\Component\Routing\RouterInterface;
@@ -25,7 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class Entity implements JsonSerializable
+class Entity
 {
     /**
      * @var string
@@ -228,6 +227,14 @@ class Entity implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return 'SAML';
+    }
+
+    /**
      * @return bool
      */
     public function allowEditAction()
@@ -324,17 +331,5 @@ class Entity implements JsonSerializable
         }
 
         return '#';
-    }
-
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'name' => $this->name,
-            'environment' => $this->environment,
-            'link' => $this->getLink(),
-        ];
     }
 }

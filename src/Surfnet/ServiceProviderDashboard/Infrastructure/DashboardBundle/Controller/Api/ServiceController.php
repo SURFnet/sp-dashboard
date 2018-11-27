@@ -23,13 +23,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Assembler\ServiceStatusAssembler;
-use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -58,42 +56,28 @@ class ServiceController extends Controller
     private $serviceStatusService;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param RouterInterface $router
      * @param CommandBus $commandBus
      * @param AuthorizationService $authorizationService
      * @param ServiceService $serviceService
      * @param ServiceStatusService $serviceStatusService
-     * @param EntityService $entityService
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        RouterInterface $router,
         CommandBus $commandBus,
         AuthorizationService $authorizationService,
         ServiceService $serviceService,
         ServiceStatusService $serviceStatusService,
-        EntityService $entityService,
         TranslatorInterface $translator
     ) {
-        $this->router = $router;
         $this->commandBus = $commandBus;
         $this->authorizationService = $authorizationService;
         $this->serviceService = $serviceService;
         $this->serviceStatusService = $serviceStatusService;
-        $this->entityService = $entityService;
         $this->translator = $translator;
     }
 
@@ -112,23 +96,10 @@ class ServiceController extends Controller
 
         $service = $this->serviceService->getServiceById($id);
 
-        $labels = [];
-        $tooltips = [];
-        foreach (ServiceStatusAssembler::states() as $state) {
-            $labels[$state] = $this->translator->trans('service.overview.progress.label.'.$state);
-            $tooltips[$state] = $this->translator->trans('service.overview.progress.tooltip.'.$state);
-        }
-
-        $serviceLink = $this->router->generate('select_service', ['service' => $service->getId()]);
-        $entityList = $this->entityService->getEntityListForService($service);
-
         $serviceStatusAssembler = new ServiceStatusAssembler(
             $service,
-            $serviceLink,
             $this->serviceStatusService,
-            $entityList,
-            $labels,
-            $tooltips
+            $this->translator
         );
 
         $serviceStatus = $serviceStatusAssembler->getDto();
