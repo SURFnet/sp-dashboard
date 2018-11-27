@@ -43,6 +43,21 @@ class EntityCreateController extends Controller
     use EntityControllerTrait;
 
     /**
+     * @Method({"GET", "POST"})
+     * @Route("/entity/create/type", name="entity_type")
+     * @Security("has_role('ROLE_USER')")
+     * @Template("@Dashboard/EntityType/type.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function typeAction(Request $request)
+    {
+        return [];
+    }
+
+    /**
      * The create action serves two routes.
      *
      *  1. entity_add to create new entities.
