@@ -1,3 +1,5 @@
+{% form_theme form 'form/fields.html.twig' %}
+
 {% extends '::base.html.twig' %}
 
 {% block page_heading %} {{ 'entity.type.title'|trans }} {% endblock %}
@@ -5,5 +7,7 @@
 {% block body %}
 
     <div class="wysiwyg">{{ 'entity.type.description.html'|trans|raw }}</div>
+
+    <div class="row entity-type">{{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
 
 {% endblock %}

@@ -28,6 +28,8 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
@@ -44,17 +46,35 @@ class EntityCreateController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/entity/create/type", name="entity_type")
+     * @Route(
+     *     "/entity/create/type/{targetEnvironment}",
+     *     defaults={
+     *          "targetEnvironment" = "test",
+     *     },
+     *     name="entity_type"
+     * )
      * @Security("has_role('ROLE_USER')")
      * @Template("@Dashboard/EntityType/type.html.twig")
      *
      * @param Request $request
      *
-     * @return Response
+     * @param $targetEnvironment
+     * @return array
      */
-    public function typeAction(Request $request)
+    public function typeAction(Request $request, $targetEnvironment)
     {
-        return [];
+        $command = new ChooseEntityTypeCommand();
+        $form = $this->createForm(ChooseEntityTypeType::class, $command);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // forward to create action.
+            return $this->redirectToRoute('entity_add', ['targetEnvironment' => $targetEnvironment]);
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**

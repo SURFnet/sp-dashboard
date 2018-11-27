@@ -11,12 +11,12 @@
 {% block body %}
     {% if not no_service_selected %}
     <div class="add-entity-actions">
-        <a href="{{ path('entity_add') }}">
+        <a href="{{ path('entity_type') }}">
             <i class="fa fa-plus"></i>
             {{ 'entity.list.add_to_test'|trans}}
         </a>
         {% if production_entities_enabled %}
-            <a href="{{ path('entity_add', {targetEnvironment: "production"}) }}">
+            <a href="{{ path('entity_type', {targetEnvironment: "production"}) }}">
                 <i class="fa fa-plus"></i>
                 {{ 'entity.list.add_to_production'|trans}}
             </a>

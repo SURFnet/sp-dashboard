@@ -147,4 +147,36 @@ class EntityListTest extends WebTestCase
         $this->assertContains('Add for test', $actions->eq(0)->text(), 'Add for test link not found');
         $this->assertContains('Add for production', $actions->eq(1)->text(), 'Add for production link not found');
     }
+
+    public function test_create_entity_buttons_trigger_the_entity_type_dialog()
+    {
+        $this->loadFixtures();
+        $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+        $this->logIn('ROLE_USER', [$service]);
+
+        // The entity overview page is loaded twice, so manage is asked twice for getting prod & test entities.
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $service->getId()
+        );
+
+        $crawler = $this->client->request('GET', '/entities');
+
+        // Click the add for test link and verify the entity/create/type path is active
+        $link = $crawler->selectLink('Add for test')->link();
+        $this->client->click($link);
+        $this->assertRegExp('/\/entity\/create\/type/', $this->client->getRequest()->getRequestUri());
+
+        // Go back to overview page, and click the add for production link
+        $crawler = $this->client->request('GET', '/entities');
+
+        // Click the add for test link and verify the entity/create/type/production path is active
+        $link = $crawler->selectLink('Add for production')->link();
+        $this->client->click($link);
+        $this->assertRegExp('/\/entity\/create\/type\/production/', $this->client->getRequest()->getRequestUri());
+    }
 }
