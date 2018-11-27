@@ -74,6 +74,7 @@ class EntityCreateController extends Controller
 
         return [
             'form' => $form->createView(),
+            'environment' => $targetEnvironment,
         ];
     }
 

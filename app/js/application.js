@@ -8,3 +8,4 @@ import './components/validation.js';
 import './components/service_edit_attribute.js';
 import './components/translation_ui.js';
 import './components/tooltips.js';
+import './components/modal.js';
