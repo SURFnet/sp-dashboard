@@ -48,6 +48,9 @@ class Entity
     const STATE_DRAFT = 'draft';
     const STATE_PUBLISHED = 'published';
 
+    const TYPE_SAML = 'saml20';
+    const TYPE_OPENID_CONNECT = 'oidc';
+
     /**
      * @var string
      *
