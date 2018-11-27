@@ -24,10 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
@@ -48,12 +45,21 @@ class EntityDeleteController extends Controller
     private $entityService;
 
     /**
+     * @var DeleteCommandFactory
+     */
+    private $commandFactory;
+
+    /**
      * @param CommandBus $commandBus
      */
-    public function __construct(CommandBus $commandBus, EntityService $entityService)
-    {
+    public function __construct(
+        CommandBus $commandBus,
+        EntityService $entityService,
+        DeleteCommandFactory $commandFactory
+    ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
+        $this->commandFactory = $commandFactory;
     }
 
     /**
@@ -76,7 +82,7 @@ class EntityDeleteController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
                 $this->commandBus->handle(
-                    new DeleteDraftEntityCommand($entity->getId())
+                    $this->commandFactory->buildDeleteDraftEntityCommand($entity->getId())
                 );
             }
 
@@ -124,9 +130,9 @@ class EntityDeleteController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
-                $command = new DeletePublishedProductionEntityCommand($manageId);
+                $command = $this->commandFactory->buildDeletePublishedProductionEntityCommand($manageId);
                 if ($environment === 'test') {
-                    $command = new DeletePublishedTestEntityCommand($manageId);
+                    $command = $this->commandFactory->buildDeletePublishedTestEntityCommand($manageId);
                 }
                 $this->commandBus->handle($command);
             }
@@ -170,7 +176,7 @@ class EntityDeleteController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
                 $this->commandBus->handle(
-                    new RequestDeletePublishedEntityCommand($manageId)
+                    $this->commandFactory->buildRequestDeletePublishedEntityCommand($manageId)
                 );
             }
 

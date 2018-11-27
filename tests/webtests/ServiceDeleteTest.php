@@ -46,6 +46,10 @@ class ServiceDeleteTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
+        // EntityService::getEntityListForService -> getEntityListForService
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+
         $crawler = $this->client->request('GET', '/service/edit');
 
         $form = $crawler

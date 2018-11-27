@@ -18,10 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 
+use Exception;
+use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class DeleteServiceCommandHandler implements CommandHandler
@@ -37,6 +41,16 @@ class DeleteServiceCommandHandler implements CommandHandler
     private $entityService;
 
     /**
+     * @var DeleteCommandFactory
+     */
+    private $deleteCommandFactory;
+
+    /**
+     * @var CommandBus
+     */
+    private $commandBus;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -44,10 +58,14 @@ class DeleteServiceCommandHandler implements CommandHandler
     public function __construct(
         ServiceRepository $serviceRepository,
         EntityServiceInterface $entityService,
+        DeleteCommandFactory $deleteCommandFactory,
+        CommandBus $commandBus,
         LoggerInterface $logger
     ) {
         $this->serviceRepository = $serviceRepository;
         $this->entityService = $entityService;
+        $this->deleteCommandFactory = $deleteCommandFactory;
+        $this->commandBus = $commandBus;
         $this->logger = $logger;
     }
 
@@ -66,10 +84,35 @@ class DeleteServiceCommandHandler implements CommandHandler
         $nofEntities = count($entityList->getEntities());
         if ($nofEntities > 0) {
             $this->logger->info(sprintf('Removing "%d" entities.', $nofEntities));
-            $this->entityService->removeFrom($entityList);
+            // Invoke the correct entity delete command on the command bus
+            $this->removeEntitiesFrom($entityList);
         }
 
         // Finally delete the service
         $this->serviceRepository->delete($service);
+    }
+
+    /**
+     * Using the deleteCommandFactory, entity delete commands are created
+     * that will remove them from the appropriate environment.
+     */
+    private function removeEntitiesFrom(EntityList $entityList)
+    {
+        foreach ($entityList->getEntities() as $entity) {
+            try {
+                $command = $this->deleteCommandFactory->from($entity);
+                $this->commandBus->handle($command);
+            } catch (Exception $e) {
+                $this->logger->error(
+                    sprintf(
+                        'Removing entity "%s" (env="%s", status="%s") failed',
+                        $entity->getEntityId(),
+                        $entity->getEnvironment(),
+                        $entity->getState()
+                    ),
+                    [$e->getMessage()]
+                );
+            }
+        }
     }
 }
