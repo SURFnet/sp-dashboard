@@ -18,12 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+
 class Ticket
 {
-    /** @var string */
-    private $applicantEmail;
-    /** @var string */
-    private $applicantName;
     /** @var string */
     private $assignee = 'conext-beheer';
     /** @var string */
@@ -39,29 +37,11 @@ class Ticket
     /** @var string */
     private $summary;
 
-    public function __construct($summary, $description, $entityId, $applicantName, $applicantEmail)
+    public function __construct($summary, $description, $entityId)
     {
         $this->summary = $summary;
         $this->description = $description;
         $this->entityId = $entityId;
-        $this->applicantName = $applicantName;
-        $this->applicantEmail = $applicantEmail;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApplicantEmail()
-    {
-        return $this->applicantEmail;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApplicantName()
-    {
-        return $this->applicantName;
     }
 
     /**
