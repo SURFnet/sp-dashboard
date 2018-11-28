@@ -166,17 +166,27 @@ class EntityListTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/entities');
 
-        // Click the add for test link and verify the entity/create/type path is active
-        $link = $crawler->selectLink('Add for test')->link();
-        $this->client->click($link);
+        // Assert the two modal windows are on the page and have a form with appropriate form actions.
+        $modalTest = $crawler->filter('#add-for-test form');
+        $modalProd = $crawler->filter('#add-for-production form');
+        $testAction = $modalTest->first()->attr('action');
+        $prodAction = $modalProd->first()->attr('action');
+
+        $this->assertEquals('/entity/create/type', $testAction);
+        $this->assertEquals('/entity/create/type/production', $prodAction);
+
+        // Now submit one of the forms and ascertain we ended up on the edit entity form
+        $form = $crawler->filter('#add-for-test')
+            ->selectButton('Create')
+            ->form();
+        $this->client->submit($form);
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expected a redirect to the /entity/create/type action'
+        );
+
         $this->assertRegExp('/\/entity\/create\/type/', $this->client->getRequest()->getRequestUri());
 
-        // Go back to overview page, and click the add for production link
-        $crawler = $this->client->request('GET', '/entities');
-
-        // Click the add for test link and verify the entity/create/type/production path is active
-        $link = $crawler->selectLink('Add for production')->link();
-        $this->client->click($link);
-        $this->assertRegExp('/\/entity\/create\/type\/production/', $this->client->getRequest()->getRequestUri());
+        // TODO: test submitting to the openidconnect form that is yet to be created
     }
 }
