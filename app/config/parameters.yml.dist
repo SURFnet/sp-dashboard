@@ -55,3 +55,8 @@ parameters:
     mail_from: support@surfconext.nl
     mail_receiver: support@surfconext.nl
     mail_no_reply: no-reply@surfconext.nl
+
+    # Jira settings
+    jira_host: https://jira.example.com
+    jira_username: sp-dashboard
+    jira_password: secret
