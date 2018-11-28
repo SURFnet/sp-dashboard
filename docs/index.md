@@ -7,3 +7,4 @@
 3. [Translations](translations.md)
 3. [Legacy code](legacy_code.md)
 3. [Third party frontend packages](third_party_packages.md)
+3. [Jira docker setup guide](jira.md)
