@@ -147,4 +147,46 @@ class EntityListTest extends WebTestCase
         $this->assertContains('Add for test', $actions->eq(0)->text(), 'Add for test link not found');
         $this->assertContains('Add for production', $actions->eq(1)->text(), 'Add for production link not found');
     }
+
+    public function test_create_entity_buttons_trigger_the_entity_type_dialog()
+    {
+        $this->loadFixtures();
+        $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+        $this->logIn('ROLE_USER', [$service]);
+
+        // The entity overview page is loaded twice, so manage is asked twice for getting prod & test entities.
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $service->getId()
+        );
+
+        $crawler = $this->client->request('GET', '/entities');
+
+        // Assert the two modal windows are on the page and have a form with appropriate form actions.
+        $modalTest = $crawler->filter('#add-for-test form');
+        $modalProd = $crawler->filter('#add-for-production form');
+        $testAction = $modalTest->first()->attr('action');
+        $prodAction = $modalProd->first()->attr('action');
+
+        $this->assertEquals('/entity/create/type', $testAction);
+        $this->assertEquals('/entity/create/type/production', $prodAction);
+
+        // Now submit one of the forms and ascertain we ended up on the edit entity form
+        $form = $crawler->filter('#add-for-test')
+            ->selectButton('Create')
+            ->form();
+        $this->client->submit($form);
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expected a redirect to the /entity/create/type action'
+        );
+
+        $this->assertRegExp('/\/entity\/create\/type/', $this->client->getRequest()->getRequestUri());
+
+        // TODO: test submitting to the openidconnect form that is yet to be created
+    }
 }

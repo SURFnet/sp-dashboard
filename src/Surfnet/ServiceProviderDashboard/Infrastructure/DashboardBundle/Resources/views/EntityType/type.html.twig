@@ -1,0 +1,22 @@
+{% form_theme form 'form/fields.html.twig' %}
+
+{% extends '::modal.html.twig' %}
+
+{% block page_heading %} {{ 'entity.type.title'|trans }} {% endblock %}
+
+{% block body %}
+
+    <div class="wysiwyg">{{ 'entity.type.description.html'|trans|raw }}</div>
+
+    <div class="row entity-type">
+        {{ form_start(form, {'action': path('entity_type', {'targetEnvironment': environment})}) }}
+        {{ form_widget(form) }}
+
+        <div class="button-row">
+            <button type="submit" class="button pull-right blue">Create</button>
+            <a href="#close" class="button pull-right" rel="modal:close">Cancel</a>
+        </div>
+
+        {{ form_end(form) }}
+
+{% endblock %}

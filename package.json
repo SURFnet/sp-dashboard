@@ -31,6 +31,7 @@
     "@types/jquery": "^3.3.22",
     "chart.js": "^2.7.3",
     "jquery": "^3.2.1",
+    "jquery-modal": "^0.9.1",
     "parsleyjs": "^2.8.1",
     "select2": "^4.0.3",
     "tippy.js": "^2.0.2"

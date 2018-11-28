@@ -11,12 +11,12 @@
 {% block body %}
     {% if not no_service_selected %}
     <div class="add-entity-actions">
-        <a href="{{ path('entity_add') }}">
+        <a href="#add-for-test" rel="modal:open">
             <i class="fa fa-plus"></i>
             {{ 'entity.list.add_to_test'|trans}}
         </a>
         {% if production_entities_enabled %}
-            <a href="{{ path('entity_add', {targetEnvironment: "production"}) }}">
+            <a href="#add-for-production" rel="modal:open">
                 <i class="fa fa-plus"></i>
                 {{ 'entity.list.add_to_production'|trans}}
             </a>
@@ -109,5 +109,13 @@
         </tbody>
     </table>
     {% endif %}
+
+    <div class="modal" id="add-for-test">
+        {{ render(controller('DashboardBundle:EntityCreate:type', {targetEnvironment: "test"})) }}
+    </div>
+
+    <div class="modal" id="add-for-production">
+        {{ render(controller('DashboardBundle:EntityCreate:type', {targetEnvironment: "production"})) }}
+    </div>
 
 {% endblock %}

@@ -3,6 +3,12 @@ form {
     position: relative;
   }
 
+  .button.blue{
+    background-color: $blue;
+    color: #fff;
+    border: none;
+  }
+
   .help-button {
     i.fa {
       color: $blue;
@@ -23,6 +29,17 @@ form {
       margin-right: 25px;
     }
   }
+
+  div.button-row {
+    display: block;
+    height: 30px;
+    margin: 15px 0;
+
+    .button {
+      margin: 0 15px 0 0;
+    }
+  }
+
 }
 
 .tippy-tooltip.light-theme {

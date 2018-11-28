@@ -6,3 +6,4 @@
 3. [Frontend tooling](frontend_tooling.md)
 3. [Translations](translations.md)
 3. [Legacy code](legacy_code.md)
+3. [Third party frontend packages](third_party_packages.md)
