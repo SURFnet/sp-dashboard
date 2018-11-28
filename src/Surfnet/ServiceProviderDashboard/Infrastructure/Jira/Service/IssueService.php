@@ -21,18 +21,18 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\TicketRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\IssueFieldFactoryTest;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\JiraServiceFactoryTest;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 
 class IssueService implements TicketRepository
 {
     /**
-     * @var JiraServiceFactoryTest
+     * @var JiraServiceFactory
      */
     private $factory;
 
     /**
-     * @var IssueFieldFactoryTest
+     * @var IssueFieldFactory
      */
     private $fieldFactory;
 
@@ -42,13 +42,13 @@ class IssueService implements TicketRepository
     private $logger;
 
     /**
-     * @param JiraServiceFactoryTest $jiraFactory
-     * @param IssueFieldFactoryTest $issueFieldFactory
+     * @param JiraServiceFactory $jiraFactory
+     * @param IssueFieldFactory $issueFieldFactory
      * @param LoggerInterface $logger
      */
     public function __construct(
-        JiraServiceFactoryTest $jiraFactory,
-        IssueFieldFactoryTest $issueFieldFactory,
+        JiraServiceFactory $jiraFactory,
+        IssueFieldFactory $issueFieldFactory,
         LoggerInterface $logger
     ) {
         $this->factory = $jiraFactory;
