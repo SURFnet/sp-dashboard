@@ -26,8 +26,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\IssueFieldFactoryTest;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\JiraServiceFactoryTest;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
 
 class IssueServiceTest extends MockeryTestCase
@@ -38,11 +38,11 @@ class IssueServiceTest extends MockeryTestCase
     private $service;
 
     /**
-     * @var JiraServiceFactoryTest|Mock
+     * @var JiraServiceFactory|Mock
      */
     private $factory;
     /**
-     * @var IssueFieldFactoryTest|Mock
+     * @var IssueFieldFactory|Mock
      */
     private $ticketFactory;
 
@@ -58,8 +58,8 @@ class IssueServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->factory = m::mock(JiraServiceFactoryTest::class);
-        $this->ticketFactory = m::mock(IssueFieldFactoryTest::class);
+        $this->factory = m::mock(JiraServiceFactory::class);
+        $this->ticketFactory = m::mock(IssueFieldFactory::class);
         $this->jiraIssueService = m::mock(JiraIssueService::class);
         $this->logger = m::mock(LoggerInterface::class);
         $this->service = new IssueService($this->factory, $this->ticketFactory, $this->logger);
@@ -78,7 +78,7 @@ class IssueServiceTest extends MockeryTestCase
             ->andReturn($this->jiraIssueService)
             ->once();
 
-        $ticket = new Ticket('summary', 'description');
+        $ticket = new Ticket('Summary', 'Description', 'https://example.com', 'John Doe', 'john@example.com');
 
         $issue = new Issue();
         $issueField = new IssueField();

@@ -20,22 +20,56 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 class Ticket
 {
+    /** @var string */
+    private $applicantEmail;
+    /** @var string */
+    private $applicantName;
+    /** @var string */
+    private $assignee = 'conext-beheer';
+    /** @var string */
+    private $description;
+    /** @var string */
+    private $entityId;
+    /** @var string */
+    private $issueType = 'spd-delete-production-entity';
+    /** @var string */
+    private $priority = 'Medium';
+    /** @var string */
+    private $reporter = 'sp-dashboard';
+    /** @var string */
     private $summary;
 
-    private $description;
-
-    public function __construct($summary, $description)
+    public function __construct($summary, $description, $entityId, $applicantName, $applicantEmail)
     {
         $this->summary = $summary;
         $this->description = $description;
+        $this->entityId = $entityId;
+        $this->applicantName = $applicantName;
+        $this->applicantEmail = $applicantEmail;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getSummary()
+    public function getApplicantEmail()
     {
-        return $this->summary;
+        return $this->applicantEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApplicantName()
+    {
+        return $this->applicantName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssignee()
+    {
+        return $this->assignee;
     }
 
     /**
@@ -44,5 +78,45 @@ class Ticket
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIssueType()
+    {
+        return $this->issueType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReporter()
+    {
+        return $this->reporter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSummary()
+    {
+        return $this->summary;
     }
 }
