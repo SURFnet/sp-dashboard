@@ -19,6 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Servic
 
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -251,5 +252,12 @@ class AuthorizationService
         );
 
         return in_array($serviceId, $allowedServiceIds);
+    }
+
+    public function getContact()
+    {
+        /** @var Identity $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+        return $user->getContact();
     }
 }

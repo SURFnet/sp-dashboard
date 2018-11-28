@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class RequestDeletePublishedEntityCommand implements Command
@@ -31,11 +32,17 @@ class RequestDeletePublishedEntityCommand implements Command
     private $manageId;
 
     /**
+     * @var Contact
+     */
+    private $applicant;
+
+    /**
      * @param string $manageId
      */
-    public function __construct($manageId)
+    public function __construct($manageId, Contact $applicatant)
     {
         $this->manageId = $manageId;
+        $this->applicant = $applicatant;
     }
 
     /**
@@ -44,5 +51,10 @@ class RequestDeletePublishedEntityCommand implements Command
     public function getManageId()
     {
         return $this->manageId;
+    }
+
+    public function getApplicant()
+    {
+        return $this->applicant;
     }
 }

@@ -44,6 +44,24 @@ class Ticket
         $this->entityId = $entityId;
     }
 
+    public static function fromManageResponse($entity, Contact $applicant)
+    {
+        $entityId = $entity['data']['entityid'];
+        $nameEn = $entity['data']['metaDataFields']['name:en'];
+
+        $summary = sprintf('Request to remove %s from production', $nameEn);
+        $description = sprintf(
+            'h2. Details
+            
+            *Applicant name*: %s
+            *Applicant email*: %s.',
+            $applicant->getDisplayName(),
+            $applicant->getEmailAddress()
+        );
+
+        return new self($summary, $description, $entityId);
+    }
+
     /**
      * @return string
      */

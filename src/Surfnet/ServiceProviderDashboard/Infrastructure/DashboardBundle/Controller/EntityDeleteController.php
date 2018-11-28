@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFac
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,15 +51,23 @@ class EntityDeleteController extends Controller
     private $commandFactory;
 
     /**
+     * @var AuthorizationService
+     */
+    private $authorizationService;
+
+    /**
      * @param CommandBus $commandBus
      */
+
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
-        DeleteCommandFactory $commandFactory
+        DeleteCommandFactory $commandFactory,
+        AuthorizationService $authorizationService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
+        $this->authorizationService = $authorizationService;
         $this->commandFactory = $commandFactory;
     }
 
@@ -175,8 +184,9 @@ class EntityDeleteController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
+                $contact = $this->authorizationService->getContact();
                 $this->commandBus->handle(
-                    $this->commandFactory->buildRequestDeletePublishedEntityCommand($manageId)
+                    $this->commandFactory->buildRequestDeletePublishedEntityCommand($manageId, $contact)
                 );
             }
 

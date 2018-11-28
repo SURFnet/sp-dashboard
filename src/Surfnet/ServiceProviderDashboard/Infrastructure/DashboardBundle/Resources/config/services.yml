@@ -55,6 +55,8 @@ services:
 
     surfnet.dashboard.command_handler.request_delete_published_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\RequestDeletePublishedEntityCommandHandler
+        arguments:
+            - '@surfnet.manage.client.query_client.prod_environment'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand }
 
@@ -295,7 +297,7 @@ services:
           - '@surfnet.manage.client.query_client.prod_environment'
         tags: ['console.command']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\JiraServiceFactory:
+    Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory:
         arguments:
             - '%jira_host%'
             - '%jira_username%'

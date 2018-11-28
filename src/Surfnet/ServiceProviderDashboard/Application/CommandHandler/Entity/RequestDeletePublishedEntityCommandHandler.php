@@ -21,6 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
 
 class RequestDeletePublishedEntityCommandHandler implements CommandHandler
 {
@@ -28,10 +31,16 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
      * @var LoggerInterface
      */
     private $logger;
+    private $queryClient;
+    private $jiraService;
 
     public function __construct(
+        ManageQueryClient $manageProductionQueryClient,
+        TicketService $jiraService,
         LoggerInterface $logger
     ) {
+        $this->queryClient = $manageProductionQueryClient;
+        $this->jiraService = $jiraService;
         $this->logger = $logger;
     }
 
@@ -43,7 +52,9 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
                 $command->getManageId()
             )
         );
-        // Todo: the exact way to deal with a delete request is yet to be determined. Jira, mail, ...
-        // The corresponding integration & acceptance test it also to be created.
+        $entity = $this->queryClient->findByManageId($command->getManageId());
+        $ticket = Ticket::fromManageResponse($entity, $command->getApplicant());
+        $issue = $this->jiraService->createIssueFrom($ticket);
+        $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
     }
 }
