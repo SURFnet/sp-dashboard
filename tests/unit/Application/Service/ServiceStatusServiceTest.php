@@ -20,9 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity as ViewObjectEntity;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -57,12 +57,12 @@ class ServiceStatusServiceTest extends MockeryTestCase
      * @param string $expectedStatus
      * @param string $dataProviderContext provides information on what test data was used
      */
-    public function test_it_displays_correct_entity_status(EntityList $entities, $expectedStatus, $dataProviderContext)
+    public function test_it_displays_correct_entity_status(array $entities, $expectedStatus, $dataProviderContext)
     {
         $service = m::mock(Service::class);
 
         $this->entityService
-            ->shouldReceive('getEntityListForService')
+            ->shouldReceive('getEntitiesForService')
             ->with($service)
             ->andReturn($entities);
 
@@ -74,32 +74,32 @@ class ServiceStatusServiceTest extends MockeryTestCase
     {
         return [
             [
-                $this->buildEntityList([]),
+                $this->buildEntities([]),
                 Service::ENTITY_PUBLISHED_NO,
                 'No entities are available for this service, so none are published.',
             ],
             [
-                $this->buildEntityList([0 => Entity::STATE_DRAFT]),
+                $this->buildEntities([0 => Entity::STATE_DRAFT]),
                 Service::ENTITY_PUBLISHED_IN_PROGRESS,
                 'One drafted entity should result in "in progress"',
             ],
             [
-                $this->buildEntityList([0 => Entity::STATE_DRAFT, 1 => Entity::STATE_DRAFT, 2 => Entity::STATE_DRAFT]),
+                $this->buildEntities([0 => Entity::STATE_DRAFT, 1 => Entity::STATE_DRAFT, 2 => Entity::STATE_DRAFT]),
                 Service::ENTITY_PUBLISHED_IN_PROGRESS,
                 'Multiple drafted entity should result in "in progress"',
             ],
             [
-                $this->buildEntityList([0 => Entity::STATE_PUBLISHED]),
+                $this->buildEntities([0 => Entity::STATE_PUBLISHED]),
                 Service::ENTITY_PUBLISHED_YES,
                 'One published entity should result in "yes"',
             ],
             [
-                $this->buildEntityList([0 => Entity::STATE_PUBLISHED, 1 => Entity::STATE_PUBLISHED]),
+                $this->buildEntities([0 => Entity::STATE_PUBLISHED, 1 => Entity::STATE_PUBLISHED]),
                 Service::ENTITY_PUBLISHED_YES,
                 'Multiple published entity should result in "yes"',
             ],
             [
-                $this->buildEntityList(
+                $this->buildEntities(
                     [0 => Entity::STATE_DRAFT, 1 => Entity::STATE_PUBLISHED, 2 => Entity::STATE_DRAFT]
                 ),
                 Service::ENTITY_PUBLISHED_YES,
@@ -108,17 +108,17 @@ class ServiceStatusServiceTest extends MockeryTestCase
         ];
     }
 
-    private function buildEntityList(array $entities)
+    private function buildEntities(array $entities)
     {
         $entityList = [];
         foreach ($entities as $key => $status) {
-            $mockEntity = m::mock(ViewObjectEntity::class);
+            $mockEntity = m::mock(EntityDto::class);
             $mockEntity
                 ->shouldReceive('getState')
                 ->andReturn($status);
 
             $entityList[] = $mockEntity;
         }
-        return new EntityList($entityList);
+        return $entityList;
     }
 }

@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -65,12 +66,12 @@ class ServiceStatusService
      */
     public function getEntityStatus(Service $service)
     {
-        $entities = $this->entityService->getEntityListForService($service);
+        $entities = $this->entityService->getEntitiesForService($service);
 
         $inProgressList = [];
         $publishedList = [];
 
-        foreach ($entities->getEntities() as $entity) {
+        foreach ($entities as $entity) {
             if ($entity->getState() == Entity::STATE_PUBLISHED) {
                 $publishedList[] = $entity;
             }
