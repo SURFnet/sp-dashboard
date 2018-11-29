@@ -31,17 +31,25 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
      * @var LoggerInterface
      */
     private $logger;
+
+    /**
+     * @var TicketService
+     */
+    private $ticketService;
+
+    /**
+     * @var ManageQueryClient
+     */
     private $queryClient;
-    private $jiraService;
 
     public function __construct(
         ManageQueryClient $manageProductionQueryClient,
-        TicketService $jiraService,
+        TicketService $ticketService,
         LoggerInterface $logger
     ) {
         $this->queryClient = $manageProductionQueryClient;
-        $this->jiraService = $jiraService;
         $this->logger = $logger;
+        $this->ticketService = $ticketService;
     }
 
     public function handle(RequestDeletePublishedEntityCommand $command)
@@ -54,7 +62,9 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
         );
         $entity = $this->queryClient->findByManageId($command->getManageId());
         $ticket = Ticket::fromManageResponse($entity, $command->getApplicant());
-        $issue = $this->jiraService->createIssueFrom($ticket);
+        $issue = $this->ticketService->createIssueFrom($ticket);
+
         $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+        $this->ticketService->storeTicket($issue->key, $command->getManageId());
     }
 }
