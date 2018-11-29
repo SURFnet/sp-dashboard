@@ -65,4 +65,11 @@ interface ServiceRepository
      * @return Service[]
      */
     public function findByTeamNames($teamNames);
+
+    /**
+     * Delete a service
+     * @param Service $service
+     * @return mixed
+     */
+    public function delete(Service $service);
 }

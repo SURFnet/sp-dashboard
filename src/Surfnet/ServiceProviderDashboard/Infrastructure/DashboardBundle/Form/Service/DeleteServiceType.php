@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,25 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EditServiceType extends ServiceType
+class DeleteServiceType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
-        $builder->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(
-            array(
-                'data_class' => EditServiceCommand::class,
-            )
-        );
+        $builder
+            ->add('delete', SubmitType::class, ['label' => 'Delete', 'attr' => ['class' => 'button']])
+            ->add('cancel', SubmitType::class, ['label'=> 'Cancel', 'attr' => ['class' => 'button']]);
     }
 
     public function getBlockPrefix()
     {
-        return 'dashboard_bundle_edit_service_type';
+        return 'dashboard_bundle_delete_service_type';
     }
 }

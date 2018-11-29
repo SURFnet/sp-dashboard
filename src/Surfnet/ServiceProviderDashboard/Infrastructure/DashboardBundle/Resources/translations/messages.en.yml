@@ -164,6 +164,8 @@ privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF 
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
 service.create.title: Add new service
 service.edit.title: Edit service
+service.delete.title: "Delete service"
+service.delete.confirmation: "You are about to delete '%name%'. Are you sure?"
 service.form.general.title: General
 service.form.status.title: Service status
 service.form.label.connection_status: Connection status
