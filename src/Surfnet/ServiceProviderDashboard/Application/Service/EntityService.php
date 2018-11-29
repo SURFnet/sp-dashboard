@@ -19,10 +19,13 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Ramsey\Uuid\Uuid;
+use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
 
 class EntityService implements EntityServiceInterface
@@ -59,31 +62,44 @@ class EntityService implements EntityServiceInterface
     {
         $entities = [];
 
-        $draftEntities = $this->queryRepositoryProvider
-            ->getEntityRepository()
-            ->findByServiceId($service->getId());
-
+        $draftEntities = $this->findDraftEntitiesByServiceId($service->getId());
         foreach ($draftEntities as $entity) {
             $entities[] = ViewObject\Entity::fromEntity($entity, $this->router);
         }
 
-        $testEntities = $this->queryRepositoryProvider
-            ->getManageTestQueryClient()
-            ->findByTeamName($service->getTeamName());
-
+        $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
         foreach ($testEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router);
         }
 
-        $productionEntities = $this->queryRepositoryProvider
-            ->getManageProductionQueryClient()
-            ->findByTeamName($service->getTeamName());
-
+        $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
         foreach ($productionEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router);
         }
 
         return new ViewObject\EntityList($entities);
+    }
+
+    public function getEntitiesForService(Service $service)
+    {
+        $entities = [];
+
+        $draftEntities = $this->findDraftEntitiesByServiceId($service->getId());
+        foreach ($draftEntities as $entity) {
+            $entities[] = EntityDto::fromEntity($entity);
+        }
+
+        $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
+        foreach ($testEntities as $result) {
+            $entities[] = EntityDto::fromManageTestResult($result);
+        }
+
+        $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
+        foreach ($productionEntities as $result) {
+            $entities[] = EntityDto::fromManageProductionResult($result);
+        }
+
+        return $entities;
     }
 
     /**
@@ -93,12 +109,47 @@ class EntityService implements EntityServiceInterface
      * @return array|null
      *
      * @throws InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
+     * @throws QueryServiceProviderException
      */
     public function getManageEntityById($manageId, $env = 'test')
     {
         return $this->queryRepositoryProvider
             ->fromEnvironment($env)
             ->findByManageId($manageId);
+    }
+
+    /**
+     * @param $serivceid
+     * @return Entity[]
+     */
+    private function findDraftEntitiesByServiceId($serivceid)
+    {
+        return $this->queryRepositoryProvider
+            ->getEntityRepository()
+            ->findByServiceId($serivceid);
+    }
+
+    /**
+     * @param string $teamName
+     * @return array|null
+     * @throws QueryServiceProviderException
+     */
+    private function findPublishedTestEntitiesByTeamName($teamName)
+    {
+        return $this->queryRepositoryProvider
+            ->getManageTestQueryClient()
+            ->findByTeamName($teamName);
+    }
+
+    /**
+     * @param $teamName
+     * @return array|null
+     * @throws QueryServiceProviderException
+     */
+    private function findPublishedProductionEntitiesByTeamName($teamName)
+    {
+        return $this->queryRepositoryProvider
+            ->getManageProductionQueryClient()
+            ->findByTeamName($teamName);
     }
 }

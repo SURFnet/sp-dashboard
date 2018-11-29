@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
 
 /**
  * DeleteCommandFactory builds entity delete commands
@@ -34,7 +34,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
  */
 class DeleteCommandFactory
 {
-    public function from(Entity $entity)
+    public function from(EntityDto $entity)
     {
         $isDraft = $entity->getState() === 'draft';
         $isPublishedToTest = $entity->getEnvironment() === 'test' && $entity->getState() === 'published';

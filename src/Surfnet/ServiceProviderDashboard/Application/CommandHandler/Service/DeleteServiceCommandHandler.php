@@ -80,12 +80,12 @@ class DeleteServiceCommandHandler implements CommandHandler
         $this->logger->info(sprintf('Removing "%s" and all its entities.', $service->getName()));
 
         // Remove the entities of the service
-        $entityList = $this->entityService->getEntityListForService($service);
-        $nofEntities = count($entityList->getEntities());
+        $entities = $this->entityService->getEntitiesForService($service);
+        $nofEntities = count($entities);
         if ($nofEntities > 0) {
             $this->logger->info(sprintf('Removing "%d" entities.', $nofEntities));
             // Invoke the correct entity delete command on the command bus
-            $this->removeEntitiesFrom($entityList);
+            $this->removeEntitiesFrom($entities);
         }
 
         // Finally delete the service
@@ -96,9 +96,9 @@ class DeleteServiceCommandHandler implements CommandHandler
      * Using the deleteCommandFactory, entity delete commands are created
      * that will remove them from the appropriate environment.
      */
-    private function removeEntitiesFrom(EntityList $entityList)
+    private function removeEntitiesFrom(array $entities)
     {
-        foreach ($entityList->getEntities() as $entity) {
+        foreach ($entities as $entity) {
             try {
                 $command = $this->deleteCommandFactory->from($entity);
                 $this->commandBus->handle($command);

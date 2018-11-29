@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntit
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
+use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 
 class DeleteCommandFactoryTest extends MockeryTestCase
 {
@@ -38,11 +38,11 @@ class DeleteCommandFactoryTest extends MockeryTestCase
 
     /**
      * @dataProvider testEntities
-     * @param Entity $entity
+     * @param EntityDto $entity
      * @param mixed $expectedCommand
      * @param string $testDescription
      */
-    public function test_from(Entity $entity, $expectedCommand, $testDescription)
+    public function test_from(EntityDto $entity, $expectedCommand, $testDescription)
     {
         $command = $this->factory->from($entity);
         $this->assertInstanceOf($expectedCommand, $command, $testDescription);
@@ -54,7 +54,7 @@ class DeleteCommandFactoryTest extends MockeryTestCase
      */
     public function test_invalid_entity_results_in_exception()
     {
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(EntityDto::class);
         $entity->shouldReceive('getState')->andReturn('Wisconsin');
         $entity->shouldReceive('getEnvironment')->andReturn('Desert');
 
@@ -94,7 +94,7 @@ class DeleteCommandFactoryTest extends MockeryTestCase
 
     private function buildEntity($environment, $status)
     {
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(EntityDto::class);
         $entity
             ->shouldReceive('getId')
             ->andReturn(1);
