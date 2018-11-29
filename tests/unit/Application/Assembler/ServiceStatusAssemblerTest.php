@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\Routing\RouterInterface;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity as EntityViewObject;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ServiceStatusAssemblerTest extends MockeryTestCase
 {
@@ -39,17 +40,29 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     /** @var RouterInterface|MockInterface */
     private $router;
 
+    /** @var TranslatorInterface|MockInterface */
+    private $translator;
+
     public function setUp()
     {
         $this->service = m::mock(Service::class);
         $this->serviceStatusService = m::mock(ServiceStatusService::class);
         $this->router = m::mock(RouterInterface::class);
+        $this->translator = m::mock(TranslatorInterface::class);
 
         $this->router
             ->shouldReceive('generate')
             ->andReturnUsing(
                 function ($route, $parameters) {
                     return $route.'?'.http_build_query($parameters);
+                }
+            );
+
+        $this->translator
+            ->shouldReceive('trans')
+            ->andReturnUsing(
+                function ($id, $parameters = array()) {
+                    return $id . (count($parameters) ? '%'. implode('%', $parameters) : '');
                 }
             );
     }
@@ -62,16 +75,10 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
         $this->createServiceMock($serviceData);
         $this->createStatusServiceMock($statusServiceData);
 
-        $serviceLink = 'service_edit?id='.$serviceData['id'];
-        $entitiesList = $this->creatEntityList($serviceData['entities']);
-
         $assembler = new ServiceStatusAssembler(
             $this->service,
-            $serviceLink,
             $this->serviceStatusService,
-            $entitiesList,
-            $this->getTestLabels(),
-            $this->getTestTooltips()
+            $this->translator
         );
 
         $result = $assembler->getDto();
@@ -104,15 +111,6 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
-  "name": "service-2",
-  "link": "service_edit?id=2",
-  "entities": [
-    {
-      "name": "entity-1",
-      "environment": "production",
-      "link": "entity_edit?id=1"
-    }
-  ],
   "states": {
     "intake-conducted": "success",
     "entity-on-test": "success",
@@ -121,21 +119,35 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     "production-connection": "success"
   },
   "labels": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
+    "intake-conducted": "service.overview.progress.label.intake-conducted",
+    "entity-on-test": "service.overview.progress.label.entity-on-test",
+    "representative-approved": "service.overview.progress.label.representative-approved",
+    "contract-signed": "service.overview.progress.label.contract-signed",
+    "privacy-questions": "service.overview.progress.label.privacy-questions",
+    "production-connection": "service.overview.progress.label.production-connection"
   },
   "tooltips": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
-  }
+    "intake-conducted": "service.overview.progress.tooltip.intake-conducted.success.html",
+    "entity-on-test": "service.overview.progress.tooltip.entity-on-test.success.html",
+    "representative-approved": "service.overview.progress.tooltip.representative-approved.success.html",
+    "privacy-questions": "service.overview.progress.tooltip.privacy-questions.success.html",
+    "production-connection": "service.overview.progress.tooltip.production-connection.success.html"
+  },
+  "legend": {
+    "info": {
+      "label": "service.overview.legend.info",
+      "color": "#d1d2d6"
+    },
+    "in-progress": {
+      "label": "service.overview.legend.in-progress",
+      "color": "#f6aa61"
+    },
+    "success": {
+      "label": "service.overview.legend.success",
+      "color": "#67a979"
+    }
+  },
+  "percentage": 100
 }
 '
             ],
@@ -158,15 +170,6 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
-  "name": "service-1",
-  "link": "service_edit?id=1",
-  "entities": [
-    {
-      "name": "entity-1",
-      "environment": "production",
-      "link": "entity_edit?id=1"
-    }
-  ],
   "states": {
     "intake-conducted": "success",
     "entity-on-test": "success",
@@ -175,21 +178,35 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     "production-connection": "success"
   },
   "labels": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
+    "intake-conducted": "service.overview.progress.label.intake-conducted",
+    "entity-on-test": "service.overview.progress.label.entity-on-test",
+    "representative-approved": "service.overview.progress.label.representative-approved",
+    "contract-signed": "service.overview.progress.label.contract-signed",
+    "privacy-questions": "service.overview.progress.label.privacy-questions",
+    "production-connection": "service.overview.progress.label.production-connection"
   },
   "tooltips": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
-  }
+    "intake-conducted": "service.overview.progress.tooltip.intake-conducted.success.html",
+    "entity-on-test": "service.overview.progress.tooltip.entity-on-test.success.html",
+    "contract-signed": "service.overview.progress.tooltip.contract-signed.success.html",
+    "privacy-questions": "service.overview.progress.tooltip.privacy-questions.success.html",
+    "production-connection": "service.overview.progress.tooltip.production-connection.success.html"
+  },
+  "legend": {
+    "info": {
+      "label": "service.overview.legend.info",
+      "color": "#d1d2d6"
+    },
+    "in-progress": {
+      "label": "service.overview.legend.in-progress",
+      "color": "#f6aa61"
+    },
+    "success": {
+      "label": "service.overview.legend.success",
+      "color": "#67a979"
+    }
+  },
+  "percentage": 100
 }'
             ],
             'entity-links' => [
@@ -213,25 +230,6 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
-  "name": "service-2",
-  "link": "service_edit?id=2",
-  "entities": [
-    {
-      "name": "entity-1",
-      "environment": "production",
-      "link": "entity_edit?id=1"
-    },
-    {
-      "name": "entity-2",
-      "environment": "test",
-      "link": "entity_edit?id=2"
-    },
-    {
-      "name": "entity-3",
-      "environment": "test",
-      "link": "entity_edit?id=3"
-    }
-  ],
   "states": {
     "intake-conducted": "success",
     "entity-on-test": "success",
@@ -240,21 +238,35 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     "production-connection": "success"
   },
   "labels": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
+    "intake-conducted": "service.overview.progress.label.intake-conducted",
+    "entity-on-test": "service.overview.progress.label.entity-on-test",
+    "representative-approved": "service.overview.progress.label.representative-approved",
+    "contract-signed": "service.overview.progress.label.contract-signed",
+    "privacy-questions": "service.overview.progress.label.privacy-questions",
+    "production-connection": "service.overview.progress.label.production-connection"
   },
   "tooltips": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
-  }
+    "intake-conducted": "service.overview.progress.tooltip.intake-conducted.success.html",
+    "entity-on-test": "service.overview.progress.tooltip.entity-on-test.success.html",
+    "representative-approved": "service.overview.progress.tooltip.representative-approved.success.html",
+    "privacy-questions": "service.overview.progress.tooltip.privacy-questions.success.html",
+    "production-connection": "service.overview.progress.tooltip.production-connection.success.html"
+  },
+  "legend": {
+    "info": {
+      "label": "service.overview.legend.info",
+      "color": "#d1d2d6"
+    },
+    "in-progress": {
+      "label": "service.overview.legend.in-progress",
+      "color": "#f6aa61"
+    },
+    "success": {
+      "label": "service.overview.legend.success",
+      "color": "#67a979"
+    }
+  },
+  "percentage": 100
 }
 '
             ],
@@ -275,9 +287,6 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
-  "name": "service-2",
-  "link": "service_edit?id=2",
-  "entities": [],
   "states": {
     "intake-conducted": "success",
     "entity-on-test": "success",
@@ -285,22 +294,36 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     "production-connection": "success"
   },
   "labels": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
+    "intake-conducted": "service.overview.progress.label.intake-conducted",
+    "entity-on-test": "service.overview.progress.label.entity-on-test",
+    "representative-approved": "service.overview.progress.label.representative-approved",
+    "contract-signed": "service.overview.progress.label.contract-signed",
+    "privacy-questions": "service.overview.progress.label.privacy-questions",
+    "production-connection": "service.overview.progress.label.production-connection"
   },
   "tooltips": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
-  }
-}'
+    "intake-conducted": "service.overview.progress.tooltip.intake-conducted.success.html",
+    "entity-on-test": "service.overview.progress.tooltip.entity-on-test.success.html",
+    "representative-approved": "service.overview.progress.tooltip.representative-approved.success.html",
+    "production-connection": "service.overview.progress.tooltip.production-connection.success.html"
+  },
+  "legend": {
+    "info": {
+      "label": "service.overview.legend.info",
+      "color": "#d1d2d6"
+    },
+    "in-progress": {
+      "label": "service.overview.legend.in-progress",
+      "color": "#f6aa61"
+    },
+    "success": {
+      "label": "service.overview.legend.success",
+      "color": "#67a979"
+    }
+  },
+  "percentage": 100
+}
+'
             ],
             'institute-output-danger' => [
                 'service' => [
@@ -319,32 +342,43 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
-  "name": "service-2",
-  "link": "service_edit?id=2",
-  "entities": [],
   "states": {
-    "intake-conducted": "danger",
-    "entity-on-test": "danger",
-    "representative-approved": "danger",
-    "privacy-questions": "danger",
-    "production-connection": "danger"
+    "intake-conducted": "info",
+    "entity-on-test": "info",
+    "representative-approved": "info",
+    "privacy-questions": "info",
+    "production-connection": "info"
   },
   "labels": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
+    "intake-conducted": "service.overview.progress.label.intake-conducted",
+    "entity-on-test": "service.overview.progress.label.entity-on-test",
+    "representative-approved": "service.overview.progress.label.representative-approved",
+    "contract-signed": "service.overview.progress.label.contract-signed",
+    "privacy-questions": "service.overview.progress.label.privacy-questions",
+    "production-connection": "service.overview.progress.label.production-connection"
   },
   "tooltips": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
-  }
+    "intake-conducted": "service.overview.progress.tooltip.intake-conducted.info.html",
+    "entity-on-test": "service.overview.progress.tooltip.entity-on-test.info.html",
+    "representative-approved": "service.overview.progress.tooltip.representative-approved.info.html",
+    "privacy-questions": "service.overview.progress.tooltip.privacy-questions.info.html",
+    "production-connection": "service.overview.progress.tooltip.production-connection.info.html"
+  },
+  "legend": {
+    "info": {
+      "label": "service.overview.legend.info",
+      "color": "#d1d2d6"
+    },
+    "in-progress": {
+      "label": "service.overview.legend.in-progress",
+      "color": "#f6aa61"
+    },
+    "success": {
+      "label": "service.overview.legend.success",
+      "color": "#67a979"
+    }
+  },
+  "percentage": 0
 }
 '
             ],
@@ -364,34 +398,48 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entityStatus' => Service::ENTITY_PUBLISHED_NO,
                     'privacyQuestions' => false,
                 ],
-                'result' => '{
-  "name": "service-2",
-  "link": "service_edit?id=2",
-  "entities": [],
+                'result' => '
+                {
   "states": {
-    "intake-conducted": "danger",
-    "entity-on-test": "danger",
-    "contract-signed": "danger",
-    "privacy-questions": "danger",
-    "production-connection": "danger"
+    "intake-conducted": "info",
+    "entity-on-test": "info",
+    "contract-signed": "info",
+    "privacy-questions": "info",
+    "production-connection": "info"
   },
   "labels": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
+    "intake-conducted": "service.overview.progress.label.intake-conducted",
+    "entity-on-test": "service.overview.progress.label.entity-on-test",
+    "representative-approved": "service.overview.progress.label.representative-approved",
+    "contract-signed": "service.overview.progress.label.contract-signed",
+    "privacy-questions": "service.overview.progress.label.privacy-questions",
+    "production-connection": "service.overview.progress.label.production-connection"
   },
   "tooltips": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
-  }
-}'
+    "intake-conducted": "service.overview.progress.tooltip.intake-conducted.info.html",
+    "entity-on-test": "service.overview.progress.tooltip.entity-on-test.info.html",
+    "contract-signed": "service.overview.progress.tooltip.contract-signed.info.html",
+    "privacy-questions": "service.overview.progress.tooltip.privacy-questions.info.html",
+    "production-connection": "service.overview.progress.tooltip.production-connection.info.html"
+  },
+  "legend": {
+    "info": {
+      "label": "service.overview.legend.info",
+      "color": "#d1d2d6"
+    },
+    "in-progress": {
+      "label": "service.overview.legend.in-progress",
+      "color": "#f6aa61"
+    },
+    "success": {
+      "label": "service.overview.legend.success",
+      "color": "#67a979"
+    }
+  },
+  "percentage": 0
+}
+
+'
             ],
             'institute-output-info' => [
                 'service' => [
@@ -410,31 +458,41 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
-  "name": "service-2",
-  "link": "service_edit?id=2",
-  "entities": [],
   "states": {
-    "entity-on-test": "warning",
+    "entity-on-test": "in-progress",
     "representative-approved": "success",
-    "privacy-questions": "danger",
-    "production-connection": "info"
+    "privacy-questions": "info",
+    "production-connection": "in-progress"
   },
   "labels": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
+    "intake-conducted": "service.overview.progress.label.intake-conducted",
+    "entity-on-test": "service.overview.progress.label.entity-on-test",
+    "representative-approved": "service.overview.progress.label.representative-approved",
+    "contract-signed": "service.overview.progress.label.contract-signed",
+    "privacy-questions": "service.overview.progress.label.privacy-questions",
+    "production-connection": "service.overview.progress.label.production-connection"
   },
   "tooltips": {
-    "intake-conducted": "intake-conducted",
-    "entity-on-test": "entity-on-test",
-    "representative-approved": "representative-approved",
-    "contract-signed": "contract-signed",
-    "privacy-questions": "privacy-questions",
-    "production-connection": "production-connection"
-  }
+    "entity-on-test": "service.overview.progress.tooltip.entity-on-test.in-progress.html",
+    "representative-approved": "service.overview.progress.tooltip.representative-approved.success.html",
+    "privacy-questions": "service.overview.progress.tooltip.privacy-questions.info.html",
+    "production-connection": "service.overview.progress.tooltip.production-connection.in-progress.html"
+  },
+  "legend": {
+    "info": {
+      "label": "service.overview.legend.info",
+      "color": "#d1d2d6"
+    },
+    "in-progress": {
+      "label": "service.overview.legend.in-progress",
+      "color": "#f6aa61"
+    },
+    "success": {
+      "label": "service.overview.legend.success",
+      "color": "#67a979"
+    }
+  },
+  "percentage": 25
 }
 '
             ],
@@ -500,46 +558,5 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
             ->andReturn($environment);
 
         return $entity;
-    }
-
-    private function creatEntityList($data)
-    {
-        $entities = [];
-        foreach ($data as $entityData) {
-            $entity = $this->createEntityMock($entityData['id'], $entityData['name'], $entityData['environment']);
-            $entities[] = EntityViewObject::fromEntity($entity, $this->router);
-        }
-
-        return new EntityList($entities);
-    }
-
-    /**
-     * @return array
-     */
-    private function getTestLabels()
-    {
-        return [
-            ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED => ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED,
-            ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST => ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST,
-            ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED => ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED,
-            ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED => ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED,
-            ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS => ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS,
-            ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION => ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getTestTooltips()
-    {
-        return [
-            ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED => ServiceStatusAssembler::SERVICE_STATE_INTAKE_CONDUCTED,
-            ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST => ServiceStatusAssembler::SERVICE_STATE_ENTITY_ON_TEST,
-            ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED => ServiceStatusAssembler::SERVICE_STATE_REPRESENTATIVE_APPROVED,
-            ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED => ServiceStatusAssembler::SERVICE_STATE_CONTRACT_SIGNED,
-            ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS => ServiceStatusAssembler::SERVICE_STATE_PRIVACY_QUESTIONS,
-            ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION => ServiceStatusAssembler::SERVICE_STATE_PRODUCTION_CONNECTION,
-        ];
     }
 }

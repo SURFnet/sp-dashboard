@@ -1,48 +1,40 @@
 import * as Chart from 'chart.js';
 import { ChartTooltipItem } from 'chart.js';
 import * as $ from 'jquery';
+import 'chartjs-plugin-datalabels';
 
 interface StatesDictionary {
   [key: string]: string;
 }
 
-interface EntityJson {
-  name: string;
-  environment: string;
-  link: string;
+interface LegendJson {
+  label: string;
+  color: string;
 }
 
 interface StatesResponseJson {
   service: {
-    entities: EntityJson[];
-    link: string;
-    name: string;
     states: StatesDictionary;
     labels: StatesDictionary;
     tooltips: StatesDictionary;
+    legend: LegendJson[];
+    percentage: number;
   };
 }
 
 export class ServiceStatus {
   private stateColors: StatesDictionary;
   private elementContainer: HTMLElement;
-  private elementTitle: HTMLElement;
-  private elementListTest: HTMLElement;
-  private elementListProd: HTMLElement;
   private canvas: HTMLCanvasElement;
   private serviceId: string;
-  private chart: Chart|undefined;
+  private chart: Chart | undefined;
 
   constructor(elementContainer: HTMLElement, serviceId: string) {
     this.elementContainer = elementContainer;
     this.serviceId = serviceId;
     this.stateColors = {};
     this.chart = undefined;
-    this.initStateColors();
     this.canvas = document.createElement('canvas') as HTMLCanvasElement;
-    this.elementTitle = document.createElement('div') as HTMLElement;
-    this.elementListTest = document.createElement('div') as HTMLElement;
-    this.elementListProd = document.createElement('div') as HTMLElement;
     this.initCanvas();
   }
 
@@ -66,9 +58,11 @@ export class ServiceStatus {
       context: document.body,
     }).done((e) => {
       const statesResponse = e as StatesResponseJson;
-      this.drawTitle(statesResponse);
+      this.initStateColors(statesResponse);
       this.drawChart(statesResponse);
-      this.drawEntities(statesResponse);
+      this.drawLegend(statesResponse);
+      this.drawPercentage(statesResponse);
+
     });
   }
 
@@ -92,6 +86,56 @@ export class ServiceStatus {
       tooltips.push(states.service.tooltips[key]);
     }
 
+    const customTooltip = function (this: any, tooltipModel: any) {
+      // Tooltip Element
+      let tooltipEl = document.getElementById('chartjs-tooltip');
+
+      // Create element on first render
+      if (!tooltipEl) {
+        tooltipEl = document.createElement('div');
+        tooltipEl.id = 'chartjs-tooltip';
+        tooltipEl.innerHTML = '';
+        document.body.appendChild(tooltipEl);
+      }
+
+      // Set caret Position
+      tooltipEl.classList.remove('above', 'below', 'no-transform');
+      if (tooltipModel.yAlign) {
+        tooltipEl.classList.add(tooltipModel.yAlign);
+      } else {
+        tooltipEl.classList.add('no-transform');
+      }
+
+      // Set Text
+      if (tooltipModel.body) {
+        const titleLines = tooltipModel.title || [];
+        const bodyLines = tooltipModel.body.map((bodyItem: any) => {
+          return bodyItem.lines;
+        });
+
+        let innerHtml = '<h4>';
+
+        titleLines.forEach((title: any) => {
+          innerHtml += `${title} <br>`;
+        });
+        innerHtml += '</h4>';
+
+        bodyLines.forEach((body: any, _i: number) => {
+          innerHtml += `${body} <br>`;
+        });
+
+        tooltipEl.innerHTML = innerHtml;
+      }
+
+      // `this` will be the overall tooltip
+      const position = this._chart.canvas.getBoundingClientRect();
+
+      // Display, position, and set styles for font
+      tooltipEl.style.position = 'absolute';
+      tooltipEl.style.left = `${position.left + window.pageXOffset + tooltipModel.caretX}px`;
+      tooltipEl.style.top = `${position.top + window.pageYOffset + tooltipModel.caretY}px`;
+    };
+
     const options: Chart.ChartConfiguration = {
       type: 'doughnut',
       data: {
@@ -102,13 +146,19 @@ export class ServiceStatus {
         }],
       },
       options: {
-        cutoutPercentage: 85,
+        cutoutPercentage: 75,
         responsive: true,
-        legend: {
-          position: 'right',
-          labels: {
-            fontSize: 14,
+        aspectRatio: 1,
+        layout: {
+          padding: {
+            left: 60,
+            right: 60,
+            top: 60,
+            bottom: 60,
           },
+        },
+        legend: {
+          display: false,
         },
         title: {
           display: false,
@@ -118,6 +168,11 @@ export class ServiceStatus {
           animateRotate: true,
         },
         tooltips: {
+          // Disable the on-canvas tooltip
+          enabled: false,
+          mode: 'index',
+          position: 'nearest',
+          custom: customTooltip,
           callbacks: {
             label: (tooltipItem: ChartTooltipItem) => {
               if (tooltipItem.index === undefined) {
@@ -127,77 +182,86 @@ export class ServiceStatus {
             },
           },
         },
+        plugins: {
+          datalabels: {
+            backgroundColor: null,
+            borderColor: 'none',
+            display: true,
+            font: {
+              weight: 'bold',
+            },
+            formatter: (_value: any, context: any) => {
+              return labels[context.dataIndex];
+            },
+            offset: 4,
+            align: 'end',
+            anchor: 'end',
+            textAlign: 'center',
+          },
+        },
       },
     };
 
     this.chart = new Chart(this.canvas, options);
   }
 
-  private drawEntities(states: StatesResponseJson) {
-    for (const id in states.service.entities) {
-      if (!states.service.entities.hasOwnProperty(id)) {
+  private drawLegend(states: StatesResponseJson) {
+    // create legend container
+    const legend = document.createElement('div');
+    legend.classList.add('service-status-legend');
+
+    // create legend items
+    for (const id in states.service.legend) {
+      if (!states.service.legend.hasOwnProperty(id)) {
         continue;
       }
 
-      const entity = states.service.entities[id];
+      const current = states.service.legend[id];
 
-      const link = document.createElement('a') as HTMLAnchorElement;
-      link.href = entity.link;
-      link.innerHTML = entity.name;
-      link.classList.add('service-status-entity-link');
+      // add legend item
+      const item = document.createElement('div');
+      item.classList.add('legend-item');
+      item.style.backgroundColor = current.color;
+      item.innerText = current.label;
 
-      if (entity.environment === 'production') {
-        if (this.elementListProd.innerText === '') {
-          this.elementListProd.innerText = 'Prod';
-        }
-        this.elementListProd.appendChild(link);
-      } else if (entity.environment === 'test') {
-        if (this.elementListTest.innerText === '') {
-          this.elementListTest.innerText = 'Test';
-        }
-        this.elementListTest.appendChild(link);
+      legend.append(item);
+    }
+
+    this.elementContainer.appendChild(legend);
+  }
+
+  private drawPercentage(states: StatesResponseJson) {
+    const percentage = document.createElement('div');
+    percentage.classList.add('service-status-percentage');
+    percentage.innerText = `${states.service.percentage}%`;
+
+    this.elementContainer.appendChild(percentage);
+  }
+
+  private initStateColors(states: StatesResponseJson) {
+    for (const id in states.service.legend) {
+      if (!states.service.legend.hasOwnProperty(id)) {
+        continue;
       }
+
+      this.stateColors[id] = states.service.legend[id].color;
     }
   }
 
-  private drawTitle(states: StatesResponseJson) {
-    const link = document.createElement('a') as HTMLAnchorElement;
-    link.href = states.service.link;
-    link.innerHTML = states.service.name;
-
-    this.elementTitle.appendChild(link);
-  }
-
-  private initStateColors() {
-    this.stateColors.danger = '#d1d2d6';
-    this.stateColors.success = '#67a979';
-    this.stateColors.info = '#f6aa61';
-  }
-
   private initCanvas() {
-    // title
-    this.elementTitle.classList.add('service-status-title');
-    this.elementContainer.appendChild(this.elementTitle);
-
     // canvas
     const container = document.createElement('div');
     container.classList.add('service-status-canvas');
 
     container.appendChild(this.canvas);
     this.elementContainer.appendChild(container);
-
-    // entitylist
-    this.elementListTest.classList.add('service-status-entities');
-    this.elementContainer.appendChild(this.elementListTest);
-    this.elementListProd.classList.add('service-status-entities');
-    this.elementContainer.appendChild(this.elementListProd);
   }
 }
 
 export function loadServiceStatus() {
   if ($('#service-states').length > 0) {
 
-    const elements = document.getElementsByClassName('service-status-container');
+    const elements = document.getElementsByClassName('service-status-graph');
     Array.prototype.forEach.call(elements,  (el: HTMLCanvasElement) => {
 
       const serviceId = el.dataset.serviceId;

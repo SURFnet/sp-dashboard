@@ -1673,6 +1673,11 @@ chartjs-color@^2.1.0:
     chartjs-color-string "^0.5.0"
     color-convert "^0.5.3"
 
+chartjs-plugin-datalabels@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-0.4.0.tgz#97ed2b3dd2f2b8f0b6ca084e450c8da567faea75"
+  integrity sha512-nC755jEZFl45KtUPEGMrH+f3/F/u8RbRS328yP+puca7/DBgkCA/n99DovFbsSc6/FgYmn/Z3+/MUQFl77qv8w==
+
 chokidar@^2.0.0, chokidar@^2.0.2:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.0.4.tgz#356ff4e2b0e8e43e322d18a372460bbcf3accd26"

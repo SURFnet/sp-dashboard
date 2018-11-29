@@ -17,25 +17,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
-
 class ServiceStatusDto implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $link;
-
-    /**
-     * @var EntityList
-     */
-    private $entityList;
-
     /**
      * @var string[]
      */
@@ -48,30 +31,35 @@ class ServiceStatusDto implements \JsonSerializable
      * @var array
      */
     private $tooltips;
+    /**
+     * @var array
+     */
+    private $legend;
+    /**
+     * @var int
+     */
+    private $percentage;
 
     /**
      * ServiceStatusDto constructor.
-     * @param string $name
-     * @param string $link
-     * @param EntityList $entityList
      * @param string[] $states
      * @param string[] $labels
      * @param string[] $tooltips
+     * @param array $legend
+     * @param int $percentage
      */
     public function __construct(
-        $name,
-        $link,
-        EntityList $entityList,
         array $states,
         array $labels,
-        array $tooltips
+        array $tooltips,
+        array $legend,
+        $percentage
     ) {
-        $this->name = $name;
-        $this->link = $link;
-        $this->entityList = $entityList;
         $this->states = $states;
         $this->labels = $labels;
         $this->tooltips = $tooltips;
+        $this->legend = $legend;
+        $this->percentage = $percentage;
     }
 
     /**
@@ -80,12 +68,11 @@ class ServiceStatusDto implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'name' => $this->name,
-            'link' => $this->link,
-            'entities' => $this->entityList,
             'states' => $this->states,
             'labels' => $this->labels,
             'tooltips' => $this->tooltips,
+            'legend' => $this->legend,
+            'percentage' => $this->percentage,
         ];
     }
 }

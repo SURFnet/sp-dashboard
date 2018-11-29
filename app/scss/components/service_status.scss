@@ -1,53 +1,137 @@
-.service-status-container {
-  display:block;
-  clear: both;
-  overflow: auto;
-  border-bottom: 1px solid #4DB2CF;
-  padding: 30px 0 50px;
+#chartjs-tooltip {
+  position: absolute;
+  display: block;
+  background: rgba(0,0,0, 0.8);
+  border-radius: 5px;
+  color: #fff;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 0 3px 0 rgba(0,0,0,0.5);
 
   a {
-    color:#428bca;
+    color:#4B9EE6;
     text-decoration:none;
   }
   a:hover,a:focus {
-    color:#2a6496;
+    color:#428bca;
     text-decoration:underline;
   }
+}
 
-  &:last-child {
-    border: none;
-    padding-bottom: 0;
-  }
+#service-states {
 
-  .service-status-title {
-    font-size: 25px;
-  }
-
-  .service-status-canvas {
+  .service-status-container {
     display: block;
-    float: left;
-    width: 600px;
-    height: 300px;
-  }
+    clear: both;
+    height: auto;
+    overflow: auto;
+    border-bottom: 1px solid #4DB2CF;
+    padding: 30px 0 50px;
 
-  .service-status-entities {
-    display: block;
-    float: right;
-    width: 300px;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin-left: 40px;
+    a {
+      color: #428bca;
+      text-decoration: none;
+    }
 
-    .service-status-entity-link {
+    a:hover, a:focus {
+      color: #2a6496;
+      text-decoration: underline;
+    }
+
+    &:last-child {
+      border: none;
+      padding-bottom: 20px;
+    }
+
+    .service-status-title {
+      font-size: 25px;
+      margin-bottom: 0;
+    }
+
+    .service-status-graph {
       display: block;
-      width: 100%;
-      padding: 10px;
-      border-top: 1px solid #d9d9d8;
-      font-weight: normal;
-      text-transform: initial;
+      position: relative;
+      float: left;
+      width: 400px;
+      height: 450px;
 
-      &:last-child {
-        border-bottom: 1px solid #d9d9d8;
+      .service-status-legend {
+        clear: both;
+        display: block;
+        width: 100%;
+
+        text-align: center;
+
+        .legend-item {
+          font-size: 12px;
+          display: inline-block;
+          padding: 2px 5px;
+          margin: 0 10px 10px;
+
+          animation: fadein 2s;
+          @keyframes fadein {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .service-status-percentage {
+        display: block;
+        position: absolute;
+        left: 200px;
+        top: 200px;
+        font-size: 25px;
+        width: 200px;
+        margin-left: -100px;
+        line-height: 0;
+        text-align: center;
+        color: #d1d2d6;
+
+        animation: fadein 2s;
+        @keyframes fadein {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .service-status-entities {
+      display: block;
+      float: right;
+      width: 550px;
+      font-weight: bold;
+
+      animation: fadein 2s;
+      @keyframes fadein {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      h2 {
+        font-size: 25px;
+        font-weight: normal;
+      }
+
+      h3 {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      td, th {
+        font-size: 12px;
       }
     }
   }

@@ -201,15 +201,34 @@ mail.confirmation.publish_production.service_name: Service name
 mail.confirmation.publish_production.publish_date: Publish date
 mail.confirmation.publish_production.team_id: Team id
 mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'
-service.overview.progress.label.intake-conducted: Intake done
-service.overview.progress.label.entity-on-test: Entity on test
-service.overview.progress.label.contract-signed: Contract signed
-service.overview.progress.label.representative-approved: Approved by representative
-service.overview.progress.label.privacy-questions: Privacy questions answered
-service.overview.progress.label.production-connection: Production connection aquired
-service.overview.progress.tooltip.intake-conducted: Is the intake done
-service.overview.progress.tooltip.entity-on-test: Is there an entity on the test environment
-service.overview.progress.tooltip.contract-signed: Is a contract signed
-service.overview.progress.tooltip.representative-approved: Is the service approved by a representative
-service.overview.progress.tooltip.privacy-questions: Are the privacy questions answered
-service.overview.progress.tooltip.production-connection: Is a production connection active
+service.overview.entitylist.title: Entities of service %name%
+service.overview.entitylist.test.title: Entities @ test environment
+service.overview.entitylist.production.title: Entities @ production environment
+service.overview.entitylist.name: Name
+service.overview.entitylist.entityId: Entity ID
+service.overview.entitylist.protocol: Protocol
+service.overview.entitylist.state: State
+service.overview.entitylist.empty: No entities found.
+service.overview.legend.success: Done
+service.overview.legend.in-progress: In progress
+service.overview.legend.info: Unstarted
+service.overview.progress.label.intake-conducted: "Intake\ndone"
+service.overview.progress.label.entity-on-test: "Entity\non\ntest"
+service.overview.progress.label.contract-signed: "Contract\nsigned"
+service.overview.progress.label.representative-approved: "Approved\nby\nrepresentative"
+service.overview.progress.label.privacy-questions: "Privacy\nquestions\nanswered"
+service.overview.progress.label.production-connection: "Production\nconnection\naquired"
+service.overview.progress.tooltip.intake-conducted.success.html: "Thank you\nthe intake was completed"
+service.overview.progress.tooltip.intake-conducted.info.html: "Is the intake done?"
+service.overview.progress.tooltip.entity-on-test.success.html: 'Thank you<br> there is a entity on the test environment<br><a href="/">more info</a>'
+service.overview.progress.tooltip.entity-on-test.info.html: "Is there an entity on the test environment?"
+service.overview.progress.tooltip.entity-on-test.in-progress.html: "The deployment to the test environment is in progress"
+service.overview.progress.tooltip.contract-signed.success.html: "Thank you, the contract is signed"
+service.overview.progress.tooltip.contract-signed.info.html: "Is a contract signed?"
+service.overview.progress.tooltip.representative-approved.success.html: "The service is approved by a Surfconext representative"
+service.overview.progress.tooltip.representative-approved.info.html: "Is the service approved by a representative?"
+service.overview.progress.tooltip.privacy-questions.success.html: "Thank you\n the privacy questions are answered"
+service.overview.progress.tooltip.privacy-questions.info.html: "Are the privacy questions answered?"
+service.overview.progress.tooltip.production-connection.info.html: "Is a production connection active?"
+service.overview.progress.tooltip.production-connection.in-progress.html: "The deployment to the production environment is in progress"
+service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
