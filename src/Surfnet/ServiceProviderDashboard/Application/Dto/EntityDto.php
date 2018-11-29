@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 class EntityDto
@@ -41,6 +42,11 @@ class EntityDto
      * @var string
      */
     private $state;
+
+    /**
+     * @var Contact
+     */
+    private $contact;
 
     /**
      * @param string $id
@@ -104,5 +110,15 @@ class EntityDto
     public function getState()
     {
         return $this->state;
+    }
+
+    public function setContact(Contact $contact)
+    {
+        $this->contact = $contact;
+    }
+
+    public function getContact()
+    {
+        return $this->contact;
     }
 }

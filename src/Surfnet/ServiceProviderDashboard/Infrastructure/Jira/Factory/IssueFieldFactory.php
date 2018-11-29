@@ -23,9 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 
 class IssueFieldFactory
 {
-    const CUSTOM_FIELD_ENTITY_ID = 'customfield_13018';
-    const CUSTOM_FIELD_APPLICANT_NAME = 'customfield_11111';
-    const CUSTOM_FIELD_APPLICANT_EMAIL = 'customfield_22222';
+    const CUSTOM_FIELD_ENTITY_ID = 'customfield_10107';
 
     public function fromTicket(Ticket $ticket)
     {
@@ -38,8 +36,6 @@ class IssueFieldFactory
             ->setAssigneeName($ticket->getAssignee())
             ->setReporterName($ticket->getReporter())
             ->addCustomField(self::CUSTOM_FIELD_ENTITY_ID, $ticket->getEntityId())
-            ->addCustomField(self::CUSTOM_FIELD_APPLICANT_NAME, $ticket->getApplicantName())
-            ->addCustomField(self::CUSTOM_FIELD_APPLICANT_EMAIL, $ticket->getApplicantEmail())
         ;
 
         return $issueField;

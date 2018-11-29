@@ -18,12 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+/**
+ * See https://bugs.php.net/bug.php?id=66773
+ */
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
+
 class Ticket
 {
-    /** @var string */
-    private $applicantEmail;
-    /** @var string */
-    private $applicantName;
     /** @var string */
     private $assignee = 'conext-beheer';
     /** @var string */
@@ -39,29 +40,29 @@ class Ticket
     /** @var string */
     private $summary;
 
-    public function __construct($summary, $description, $entityId, $applicantName, $applicantEmail)
+    public function __construct($summary, $description, $entityId)
     {
         $this->summary = $summary;
         $this->description = $description;
         $this->entityId = $entityId;
-        $this->applicantName = $applicantName;
-        $this->applicantEmail = $applicantEmail;
     }
 
-    /**
-     * @return string
-     */
-    public function getApplicantEmail()
+    public static function fromManageResponse($entity, Applicant $applicant)
     {
-        return $this->applicantEmail;
-    }
+        $entityId = $entity['data']['entityid'];
+        $nameEn = $entity['data']['metaDataFields']['name:en'];
 
-    /**
-     * @return string
-     */
-    public function getApplicantName()
-    {
-        return $this->applicantName;
+        $summary = sprintf('Request to remove %s from production', $nameEn);
+        $description = sprintf(
+            'h2. Details
+            
+            *Applicant name*: %s
+            *Applicant email*: %s.',
+            $applicant->getDisplayName(),
+            $applicant->getEmailAddress()
+        );
+
+        return new self($summary, $description, $entityId);
     }
 
     /**

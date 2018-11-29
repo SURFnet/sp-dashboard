@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
 /**
  * DeleteCommandFactory builds entity delete commands
@@ -51,7 +52,7 @@ class DeleteCommandFactory
             return $this->buildDeletePublishedProductionEntityCommand($entity->getId());
         }
         if ($isRequestDelete) {
-            return $this->buildRequestDeletePublishedEntityCommand($entity->getId());
+            return $this->buildRequestDeletePublishedEntityCommand($entity->getId(), $entity->getContact());
         }
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
     }
@@ -71,8 +72,8 @@ class DeleteCommandFactory
         return new DeletePublishedProductionEntityCommand($manageId);
     }
 
-    public function buildRequestDeletePublishedEntityCommand($manageId)
+    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact)
     {
-        return new RequestDeletePublishedEntityCommand($manageId);
+        return new RequestDeletePublishedEntityCommand($manageId, $contact);
     }
 }

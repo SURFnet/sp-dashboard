@@ -36,14 +36,12 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_build_issue_field_from_ticket()
     {
-        $ticket = new Ticket('Summary', 'Description', 'https://example.com', 'John Doe', 'john@example.com');
+        $ticket = new Ticket('Summary', 'Description', 'https://example.com');
         $issueField = $this->factory->fromTicket($ticket);
 
         $this->assertEquals('Summary', $issueField->summary);
         $this->assertEquals('Description', $issueField->description);
-        $this->assertEquals('https://example.com', $issueField->customFields['customfield_13018']);
-        $this->assertEquals('John Doe', $issueField->customFields['customfield_11111']);
-        $this->assertEquals('john@example.com', $issueField->customFields['customfield_22222']);
+        $this->assertEquals('https://example.com', $issueField->customFields['customfield_10107']);
         $this->assertEquals('conext-beheer', $issueField->assignee->name);
         $this->assertEquals('spd-delete-production-entity', $issueField->getIssueType()->name);
         $this->assertEquals('Medium', $issueField->priority->name);

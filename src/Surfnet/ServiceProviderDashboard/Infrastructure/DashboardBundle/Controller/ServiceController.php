@@ -223,7 +223,8 @@ class ServiceController extends Controller
                 );
 
                 // Remove the service
-                $command = new DeleteServiceCommand($service->getId());
+                $contact = $this->authorizationService->getContact();
+                $command = new DeleteServiceCommand($service->getId(), $contact);
                 $this->commandBus->handle($command);
 
                 // Reset the service switcher (the currently active service was just removed)
