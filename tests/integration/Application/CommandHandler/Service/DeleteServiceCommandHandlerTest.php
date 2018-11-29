@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntit
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
@@ -80,10 +81,10 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $serviceId = 1;
         $service = m::mock(Service::class);
 
-        $entity1 = m::mock(Entity::class);
-        $entity2 = m::mock(Entity::class);
+        $entity1 = m::mock(EntityDto::class);
+        $entity2 = m::mock(EntityDto::class);
 
-        $entityList = new EntityList([$entity1, $entity2]);
+        $entityList = [$entity1, $entity2];
 
         $command = new DeleteServiceCommand($serviceId);
 
@@ -103,7 +104,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->times(2);
 
         $this->entityService
-            ->shouldReceive('getEntityListForService')
+            ->shouldReceive('getEntitiesForService')
             ->with($service)
             ->andReturn($entityList)
             ->once();
@@ -148,7 +149,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     {
         $serviceId = 1;
         $service = m::mock(Service::class);
-        $entityList = new EntityList([]);
+        $entityList = [];
 
         $command = new DeleteServiceCommand($serviceId);
 
@@ -168,7 +169,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->times();
 
         $this->entityService
-            ->shouldReceive('getEntityListForService')
+            ->shouldReceive('getEntitiesForService')
             ->with($service)
             ->andReturn($entityList)
             ->once();
@@ -190,7 +191,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $serviceId = 1;
         $service = m::mock(Service::class);
 
-        $entity1 = m::mock(Entity::class);
+        $entity1 = m::mock(EntityDto::class);
 
         $entity1
             ->shouldReceive('getEntityId')
@@ -207,9 +208,9 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->andReturn('polar')
             ->once();
 
-        $entity2 = m::mock(Entity::class);
+        $entity2 = m::mock(EntityDto::class);
 
-        $entityList = new EntityList([$entity1, $entity2]);
+        $entityList = [$entity1, $entity2];
 
         $command = new DeleteServiceCommand($serviceId);
 
@@ -229,7 +230,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->times(2);
 
         $this->entityService
-            ->shouldReceive('getEntityListForService')
+            ->shouldReceive('getEntitiesForService')
             ->with($service)
             ->andReturn($entityList)
             ->once();

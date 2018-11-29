@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -41,6 +42,12 @@ interface EntityServiceInterface
      * @return EntityList
      */
     public function getEntityListForService(Service $service);
+
+    /**
+     * @param Service $service
+     * @return EntityDto[]
+     */
+    public function getEntitiesForService(Service $service);
 
     /**
      * @param string $manageId
