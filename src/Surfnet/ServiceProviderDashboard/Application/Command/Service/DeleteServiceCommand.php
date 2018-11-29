@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Symfony\Component\Validator\Constraints as Assert;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
 class DeleteServiceCommand implements Command
 {
@@ -28,9 +28,16 @@ class DeleteServiceCommand implements Command
      */
     private $id;
 
-    public function __construct($id)
+    /**
+     * The Contact that initiated the service deletion.
+     * @var Contact
+     */
+    private $contact;
+
+    public function __construct($id, Contact $contact)
     {
         $this->id = $id;
+        $this->contact = $contact;
     }
 
     /**
@@ -39,5 +46,13 @@ class DeleteServiceCommand implements Command
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return Contact
+     */
+    public function getContact()
+    {
+        return $this->contact;
     }
 }

@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFac
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class DeleteServiceCommandHandler implements CommandHandler
@@ -85,7 +85,7 @@ class DeleteServiceCommandHandler implements CommandHandler
         if ($nofEntities > 0) {
             $this->logger->info(sprintf('Removing "%d" entities.', $nofEntities));
             // Invoke the correct entity delete command on the command bus
-            $this->removeEntitiesFrom($entities);
+            $this->removeEntitiesFrom($entities, $command->getContact());
         }
 
         // Finally delete the service
@@ -96,10 +96,12 @@ class DeleteServiceCommandHandler implements CommandHandler
      * Using the deleteCommandFactory, entity delete commands are created
      * that will remove them from the appropriate environment.
      */
-    private function removeEntitiesFrom(array $entities)
+    private function removeEntitiesFrom(array $entities, Contact $contact)
     {
         foreach ($entities as $entity) {
             try {
+                // Set the contact on the entity dto, it is required to create a jira ticket if need be
+                $entity->setContact($contact);
                 $command = $this->deleteCommandFactory->from($entity);
                 $this->commandBus->handle($command);
             } catch (Exception $e) {

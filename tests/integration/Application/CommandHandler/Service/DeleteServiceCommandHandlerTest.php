@@ -31,8 +31,7 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteSe
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
@@ -80,13 +79,22 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     {
         $serviceId = 1;
         $service = m::mock(Service::class);
+        $contact = m::mock(Contact::class);
 
         $entity1 = m::mock(EntityDto::class);
+        $entity1->shouldReceive('getEntityId');
+        $entity1->shouldReceive('getEnvironment');
+        $entity1->shouldReceive('getState');
+        $entity1->shouldReceive('setContact')->with($contact);
+
         $entity2 = m::mock(EntityDto::class);
+        $entity2->shouldReceive('getEntityId');
+        $entity2->shouldReceive('getEnvironment');
+        $entity2->shouldReceive('getState');
+        $entity2->shouldReceive('setContact')->with($contact);
 
         $entityList = [$entity1, $entity2];
-
-        $command = new DeleteServiceCommand($serviceId);
+        $command = new DeleteServiceCommand($serviceId, $contact);
 
         $this->repository
             ->shouldReceive('findById')
@@ -149,9 +157,11 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     {
         $serviceId = 1;
         $service = m::mock(Service::class);
+        $contact = m::mock(Contact::class);
+
         $entityList = [];
 
-        $command = new DeleteServiceCommand($serviceId);
+        $command = new DeleteServiceCommand($serviceId, $contact);
 
         $this->repository
             ->shouldReceive('findById')
@@ -190,6 +200,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     {
         $serviceId = 1;
         $service = m::mock(Service::class);
+        $contact = m::mock(Contact::class);
 
         $entity1 = m::mock(EntityDto::class);
 
@@ -208,11 +219,19 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->andReturn('polar')
             ->once();
 
+        $entity1
+            ->shouldReceive('setContact')
+            ->with($contact);
+
         $entity2 = m::mock(EntityDto::class);
+        $entity2->shouldReceive('getEntityId');
+        $entity2->shouldReceive('getEnvironment');
+        $entity2->shouldReceive('getState');
+        $entity2->shouldReceive('setContact')->with($contact);
 
         $entityList = [$entity1, $entity2];
 
-        $command = new DeleteServiceCommand($serviceId);
+        $command = new DeleteServiceCommand($serviceId, $contact);
 
         $this->repository
             ->shouldReceive('findById')
