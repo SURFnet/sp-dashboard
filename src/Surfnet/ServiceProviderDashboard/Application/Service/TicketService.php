@@ -21,10 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 use JiraRestApi\Issue\Issue;
 use JiraRestApi\JiraException;
 use JsonMapper_Exception;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityRemovalRequest;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRemovalRequestRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
+use Webmozart\Assert\Assert;
 
 class TicketService
 {
@@ -38,21 +41,36 @@ class TicketService
      */
     private $issueFactory;
 
-    public function __construct(JiraServiceFactory $serviceFactory, IssueFieldFactory $issueFactory)
-    {
+    /**
+     * @var EntityRemovalRequestRepository
+     */
+    private $entityRemovalRequestRepository;
+
+    public function __construct(
+        JiraServiceFactory $serviceFactory,
+        IssueFieldFactory $issueFactory,
+        EntityRemovalRequestRepository $entityRemovalRequestRepository
+    ) {
         $this->serviceFactory = $serviceFactory;
         $this->issueFactory = $issueFactory;
+        $this->entityRemovalRequestRepository = $entityRemovalRequestRepository;
     }
 
     /**
-     * @param $serviceId
-     * @param Service $service
-     * @return string|null
+     * Store a EntityRemovalRequest
+     *
+     * Creates the entity and stores it.
+     *
+     * @param string $jiraIssueKey
+     * @param string $manageId
      */
-    public function getTicketIdForService($serviceId, Service $service)
+    public function storeTicket($jiraIssueKey, $manageId)
     {
-        // @todo implement Jira integration
-        return null;
+        Assert::string($jiraIssueKey, 'jiraIssueKey id must be a string');
+        Assert::string($manageId, 'manageId id must be a string');
+
+        $entityRemovalRequest = new EntityRemovalRequest($jiraIssueKey, $manageId);
+        $this->entityRemovalRequestRepository->save($entityRemovalRequest);
     }
 
     /**
