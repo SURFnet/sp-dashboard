@@ -25,6 +25,8 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityRemovalRequest;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRemovalRequestRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 
 class TicketServiceTest extends MockeryTestCase
 {
@@ -36,10 +38,22 @@ class TicketServiceTest extends MockeryTestCase
      */
     private $service;
 
+    /**
+     * @var JiraServiceFactory
+     */
+    private $issueFieldFactory;
+
+    /**
+     * @var IssueFieldFactory
+     */
+    private $jiraServiceFactory;
+
     public function setUp()
     {
         $this->repository = m::mock(EntityRemovalRequestRepository::class);
-        $this->service = new TicketService($this->repository);
+        $this->jiraServiceFactory = m::mock(JiraServiceFactory::class);
+        $this->issueFieldFactory = m::mock(IssueFieldFactory::class);
+        $this->service = new TicketService($this->jiraServiceFactory, $this->issueFieldFactory, $this->repository);
     }
 
     public function test_it_can_save_a_ticket_reference()
