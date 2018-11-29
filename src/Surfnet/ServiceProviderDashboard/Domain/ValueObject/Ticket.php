@@ -18,7 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+/**
+ * See https://bugs.php.net/bug.php?id=66773
+ */
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
 
 class Ticket
 {
@@ -44,7 +47,7 @@ class Ticket
         $this->entityId = $entityId;
     }
 
-    public static function fromManageResponse($entity, Contact $applicant)
+    public static function fromManageResponse($entity, Applicant $applicant)
     {
         $entityId = $entity['data']['entityid'];
         $nameEn = $entity['data']['metaDataFields']['name:en'];
