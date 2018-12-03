@@ -6,6 +6,10 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\:
+        resource: '../../Security/Voter'
+        tags: ['security.voter']
+
     surfnet.dashboard.command_handler.copy_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
         arguments:

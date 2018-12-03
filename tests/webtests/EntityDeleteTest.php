@@ -106,10 +106,14 @@ class EntityDeleteTest extends WebTestCase
                     'contacts:0:givenName' => 'Test',
                     'contacts:0:surName' => 'Test',
                     'contacts:0:emailAddress' => 'test@example.org',
+                    'coin:service_team_id' => 'urn:collab:org:surf.nl',
                 ],
             ],
         ]);
 
+        // Authz test (ManageEntityAccessGrantedVoter) (tested twice for both controller entries)
+        $this->testMockHandler->append(new Response(200, [], $queryResponse));
+        $this->testMockHandler->append(new Response(200, [], $queryResponse));
         // Rendering the form requires retrieval of the manage entity
         $this->testMockHandler->append(new Response(200, [], $queryResponse));
         // Handling the form also requires retrieval of the manage entity
@@ -147,9 +151,14 @@ class EntityDeleteTest extends WebTestCase
                     'contacts:0:givenName' => 'Test',
                     'contacts:0:surName' => 'Test',
                     'contacts:0:emailAddress' => 'test@example.org',
+                    'coin:service_team_id' => 'urn:collab:org:surf.nl',
                 ],
             ],
         ]);
+
+        // Authz test (ManageEntityAccessGrantedVoter) (tested twice for both controller entries)
+        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
+        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
 
         // Rendering the form requires retrieval of the manage entity
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
