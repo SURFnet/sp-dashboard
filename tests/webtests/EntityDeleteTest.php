@@ -135,7 +135,7 @@ class EntityDeleteTest extends WebTestCase
         );
     }
 
-    public function test_delete_a_published_production_entity()
+    public function test_delete_a_unpublished_production_entity()
     {
         $queryResponse = json_encode((object)[
             'id' => 'a8e7cffd-0409-45c7-a37a-000000000000',
@@ -173,6 +173,64 @@ class EntityDeleteTest extends WebTestCase
         $this->assertTrue(
             $this->client->getResponse() instanceof RedirectResponse,
             'Expecting a redirect response after editing an entity'
+        );
+    }
+
+    /**
+     * The acceptance test environment does not test against a Jira mock server and
+     * thus, only a 'jira is down' web test is provided.
+     */
+    public function test_request_delete_a_published_production_entity_jira_not_available()
+    {
+        $queryResponse = json_encode((object)[
+            'id' => 'a8e7cffd-0409-45c7-a37a-000000000000',
+            'data' => (object)[
+                'entityid' => 'SP1',
+                'metaDataFields' => (object) [
+                    'name:en' => 'SP1',
+                    'contacts:0:contactType' => 'administrative',
+                    'contacts:0:givenName' => 'Test',
+                    'contacts:0:surName' => 'Test',
+                    'contacts:0:emailAddress' => 'test@example.org',
+                ],
+            ],
+        ]);
+
+        // Rendering the form requires retrieval of the manage entity
+        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
+        // Handling the form also requires retrieval of the manage entity
+        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
+        // Successfull deleting an entity from manage results in return type boolean : true
+        $this->prodMockHandler->append(new Response(200, [], json_encode(true)));
+
+        // The entity list action
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+
+        $crawler = $this->client->request('GET', "/entity/delete/request/a8e7cffd-0409-45c7-a37a-000000000000");
+
+        $pageTitle = $crawler->filter('.page-container h1');
+
+        $this->assertEquals('Delete entity', $pageTitle->text());
+
+        $form = $crawler->filter('.page-container')
+            ->selectButton('Delete')
+            ->form();
+
+        $this->client->submit($form);
+
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect response after opening a entity delete request ticket'
+        );
+
+        $crawler = $this->client->followRedirect();
+
+        $flashMessage = $crawler->filter('div.message.error');
+
+        $this->assertEquals(
+            'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.',
+            $flashMessage->text()
         );
     }
 }
