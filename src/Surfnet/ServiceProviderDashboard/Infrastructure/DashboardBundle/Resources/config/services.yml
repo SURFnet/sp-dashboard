@@ -64,11 +64,17 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand }
 
-    surfnet.dashboard.command_handler.edit_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveEntityCommandHandler
+    surfnet.dashboard.command_handler.edit_saml_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveSamlEntityCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand }
+
+    surfnet.dashboard.command_handler.edit_oidc_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand }
 
     surfnet.dashboard.command_handler.edit_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
@@ -208,6 +214,14 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
         tags:
             - { name: validator.constraint_validator, alias: entity_id }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidClientIdValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+        tags:
+            - { name: validator.constraint_validator, alias: client_id }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
         arguments:  ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper']

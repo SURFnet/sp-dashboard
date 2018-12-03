@@ -156,6 +156,8 @@ entity.edit.information.importUrl: Text should be set in web translations
 entity.edit.information.metadataUrl: Text should be set in web translations
 entity.edit.information.acsLocation: Text should be set in web translations
 entity.edit.information.entityId: Text should be set in web translations
+entity.edit.information.clientId: Text should be set in web translations
+entity.edit.information.redirectUris: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations
 entity.edit.information.logoUrl: Text should be set in web translations
@@ -188,6 +190,11 @@ entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.motivation.keep_talking: 'Please provide a more detailed motivation.'
 entity.edit.label.transient: Transient
 entity.edit.label.persistent: Persistent
+entity.edit.label.authorization_code: Authorization code
+entity.edit.label.implicit: Implicit
+entity.edit.label.authorization_code_token: response_type=id_token
+entity.edit.label.implicit_id_token_token: response_type=id_token token
+entity.edit.label.implicit_id_token: response_type=id_token
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."

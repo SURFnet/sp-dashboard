@@ -84,12 +84,6 @@ form {
     }
   }
 
-  .nameidformat-container, .service-status-container {
-    @include clearfix;
-
-    width: 100%;
-  }
-
   .form-row {
     .radio-container {
       border: 1px solid $lighter-grey;

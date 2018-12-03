@@ -44,6 +44,7 @@ class Entity
     // When adding valid name id formats, don't forget to add them to self::getValidNameIdFormats()
     const NAME_ID_FORMAT_DEFAULT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
     const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
+    const NAME_ID_FORMAT_UNSPECIFIED = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
 
     const ENVIRONMENT_TEST = 'test';
     const ENVIRONMENT_PRODUCTION = 'production';
@@ -55,6 +56,10 @@ class Entity
 
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT = 'oidc';
+
+    const GRANT_TYPE_AUTHORIZATION_CODE_CODE = 'authorization_code_code';
+    const GRANT_TYPE_IMPLICIT_ID_TOKEN_TOKEN = 'implicit_id_token_token';
+    const GRANT_TYPE_IMPLICIT_ID_TOKEN = 'implicit_id_token';
 
     /**
      * @var string

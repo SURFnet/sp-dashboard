@@ -23,7 +23,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -102,7 +102,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('dashboardid')
             ->andReturn(false);
 
-        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+        $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
             new CopyEntityCommand(
@@ -130,7 +130,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn([]);
 
-        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+        $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
             new CopyEntityCommand(
@@ -173,7 +173,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn($manageEntity);
 
-        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+        $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
         $this->commandHandler->handle(
             new CopyEntityCommand(
                 $saveCommand,
@@ -274,7 +274,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
 JSON
             ));
 
-        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+        $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
             new CopyEntityCommand(
@@ -383,7 +383,7 @@ JSON
 JSON
             ));
 
-        $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
+        $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
             new CopyEntityCommand(

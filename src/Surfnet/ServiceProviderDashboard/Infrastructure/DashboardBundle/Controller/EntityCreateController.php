@@ -23,14 +23,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcEntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -59,7 +61,7 @@ class EntityCreateController extends Controller
      * @param Request $request
      *
      * @param $targetEnvironment
-     * @return array
+     * @return array|RedirectResponse
      */
     public function typeAction(Request $request, $targetEnvironment)
     {
@@ -69,7 +71,7 @@ class EntityCreateController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // forward to create action.
-            return $this->redirectToRoute('entity_add', ['targetEnvironment' => $targetEnvironment]);
+            return $this->redirectToRoute('entity_add', ['targetEnvironment' => $targetEnvironment, 'type' => $form->get('type')->getData()]);
         }
 
         return [
@@ -79,23 +81,94 @@ class EntityCreateController extends Controller
     }
 
     /**
-     * The create action serves two routes.
-     *
-     *  1. entity_add to create new entities.
-     *
-     *  2. entity_copy to copy entities from Manage into the SP Dashboard.
-     *     The Entity is copied from the manage test environment to become either a SP Dashboard test-draft or
-     *     production-draft entity.
-     *
      * @Method({"GET", "POST"})
-     * @Route("/entity/create/{targetEnvironment}",
-     *      defaults={
-     *          "manageId" = null,
-     *          "targetEnvironment" = "test",
-     *          "sourceEnvironment" = "test"
-     *      },
-     *      name="entity_add"
-     * )
+     * @Route("/entity/create/{type}/{targetEnvironment}", name="entity_add")
+     * @Template("@Dashboard/EntityEdit/edit.html.twig")
+     * @param Request $request
+     * @param null|string $targetEnvironment
+     * @param null|string $type
+     *
+     * @return RedirectResponse|Response
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     */
+    public function createAction(Request $request, $targetEnvironment, $type)
+    {
+        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag->clear();
+
+        $service = $this->getService();
+
+        if (!$service->isProductionEntitiesEnabled() &&
+            $targetEnvironment !== Entity::ENVIRONMENT_TEST
+        ) {
+            throw $this->createAccessDeniedException(
+                'You do not have access to create entities without publishing to the test environment first'
+            );
+        }
+
+        if ($type == Entity::TYPE_OPENID_CONNECT) {
+            $command = SaveOidcEntityCommand::forCreateAction($service);
+            $command->setEnvironment($targetEnvironment);
+            $form = $this->createForm(OidcEntityType::class, $command, $this->buildOptions($targetEnvironment));
+        } else {
+            $command = SaveSamlEntityCommand::forCreateAction($service);
+            $command->setEnvironment($targetEnvironment);
+            $form = $this->createForm(SamlEntityType::class, $command, $this->buildOptions($targetEnvironment));
+        }
+
+        if ($request->isMethod('post')) {
+            $form->handleRequest($request);
+        }
+
+        if ($this->isImportAction($form)) {
+            // Import metadata before loading data into the form. Rebuild the form with the imported data
+            $form = $this->handleImport($request, $command);
+        }
+
+        if ($form->isSubmitted()) {
+            try {
+                if ($this->isSaveAction($form)) {
+                    // Only trigger form validation on publish
+                    $this->commandBus->handle($command);
+
+                    return $this->redirectToRoute('entity_list');
+                } elseif ($this->isPublishAction($form)) {
+                    // Only trigger form validation on publish
+                    if ($form->isValid()) {
+                        $this->commandBus->handle($command);
+
+                        $entity = $this->entityService->getEntityById($command->getId());
+                        $response = $this->publishEntity($entity, $flashBag);
+
+                        // When a response is returned, publishing was a success
+                        if ($response instanceof Response) {
+                            return $response;
+                        }
+
+                        // When publishing failed, forward to the edit action and show the error messages there
+                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                    }
+                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
+                } elseif ($this->isCancelAction($form)) {
+                    // Simply return to entity list, no entity was saved
+                    return $this->redirectToRoute('entity_list');
+                }
+            } catch (InvalidArgumentException $e) {
+                $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+
+    /**
+     * @Method({"GET", "POST"})
      * @Route("/entity/copy/{manageId}/{targetEnvironment}/{sourceEnvironment}",
      *      defaults={
      *          "manageId" = null,
@@ -119,35 +192,24 @@ class EntityCreateController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function createAction(Request $request, $manageId, $targetEnvironment, $sourceEnvironment)
+    public function copyAction(Request $request, $manageId, $targetEnvironment, $sourceEnvironment)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
 
         $service = $this->getService();
 
-        if (!$service->isProductionEntitiesEnabled() &&
-            $targetEnvironment !== Entity::ENVIRONMENT_TEST &&
-            !$this->isCopyRoute($request)
-        ) {
-            throw $this->createAccessDeniedException(
-                'You do not have access to create entities without publishing to the test environment first'
-            );
-        }
-
-        $command = SaveEntityCommand::forCreateAction($service);
+        $command = SaveSamlEntityCommand::forCreateAction($service);
         $command->setEnvironment($targetEnvironment);
 
-        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($targetEnvironment));
+        $form = $this->createForm(SamlEntityType::class, $command, $this->buildOptions($targetEnvironment));
 
-        if ($this->isCopyRoute($request)) {
-            if (!$request->isMethod('post')) {
-                $form = $this->handleCopy($command, $service, $manageId, $targetEnvironment, $sourceEnvironment);
-            }
-
-            // A copy can never be saved as draft: changes are published directly to manage.
-            $form->remove('save');
+        if (!$request->isMethod('post')) {
+            $form = $this->handleCopy($command, $service, $manageId, $targetEnvironment, $sourceEnvironment);
         }
+
+        // A copy can never be saved as draft: changes are published directly to manage.
+        $form->remove('save');
 
         if ($request->isMethod('post')) {
             $form->handleRequest($request);
@@ -196,11 +258,6 @@ class EntityCreateController extends Controller
         ];
     }
 
-    private function isCopyRoute(Request $request)
-    {
-        return 'entity_copy' === $request->get('_route', false);
-    }
-
     /**
      * @return Service
      * @throws ServiceNotFoundException
@@ -217,7 +274,7 @@ class EntityCreateController extends Controller
     }
 
     /**
-     * @param SaveEntityCommand $command
+     * @param SaveSamlEntityCommand $command
      * @param Service $service
      * @param $manageId
      * @param string $targetEnvironment
@@ -228,7 +285,7 @@ class EntityCreateController extends Controller
      * @throws InvalidArgumentException
      */
     private function handleCopy(
-        SaveEntityCommand $command,
+        SaveSamlEntityCommand $command,
         Service $service,
         $manageId,
         $targetEnvironment,
@@ -240,7 +297,7 @@ class EntityCreateController extends Controller
             new CopyEntityCommand($command, $entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment)
         );
 
-        $form = $this->createForm(EntityType::class, $command, $this->buildOptions($targetEnvironment));
+        $form = $this->createForm(SamlEntityType::class, $command, $this->buildOptions($targetEnvironment));
         $form->remove('save');
 
         return $form;

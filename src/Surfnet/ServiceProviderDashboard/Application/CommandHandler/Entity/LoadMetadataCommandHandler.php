@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -89,7 +89,7 @@ class LoadMetadataCommandHandler implements CommandHandler
         $command->setNameIdFormat($metadata->nameIdFormat);
     }
 
-    private function mapTextFields(SaveEntityCommand $command, $metadata)
+    private function mapTextFields(SaveSamlEntityCommand $command, $metadata)
     {
         $map = [
             'acsLocation' => ['getAcsLocation', 'setAcsLocation'],
@@ -112,7 +112,7 @@ class LoadMetadataCommandHandler implements CommandHandler
         $this->map($map, $command, $metadata);
     }
 
-    private function mapAttributes(SaveEntityCommand $command, Metadata $metadata)
+    private function mapAttributes(SaveSamlEntityCommand $command, Metadata $metadata)
     {
         $map = [
             'emailAddressAttribute' => ['getEmailAddressAttribute', 'setEmailAddressAttribute'],
@@ -135,7 +135,7 @@ class LoadMetadataCommandHandler implements CommandHandler
         $this->map($map, $command, $metadata);
     }
 
-    private function mapContacts(SaveEntityCommand $command, Metadata $metadata)
+    private function mapContacts(SaveSamlEntityCommand $command, Metadata $metadata)
     {
         $map = [
             'technicalContact' => ['getTechnicalContact', 'setTechnicalContact'],
@@ -148,7 +148,7 @@ class LoadMetadataCommandHandler implements CommandHandler
 
     /**
      * The map should be an associative array where the keys are the fieldnames of the metadata field. The value should
-     * be an array with two values. These values being the getter and setter on the SaveEntityCommand, effectively
+     * be an array with two values. These values being the getter and setter on the SaveSamlEntityCommand, effectively
      * updating the form fields.
      *
      * Example:
@@ -157,10 +157,10 @@ class LoadMetadataCommandHandler implements CommandHandler
      * ]
      *
      * @param array $map
-     * @param SaveEntityCommand $command
+     * @param SaveSamlEntityCommand $command
      * @param Metadata $metadata
      */
-    private function map(array $map, SaveEntityCommand $command, Metadata $metadata)
+    private function map(array $map, SaveSamlEntityCommand $command, Metadata $metadata)
     {
         foreach ($map as $metadataFieldName => $entityMethods) {
             $setter = $entityMethods[1];

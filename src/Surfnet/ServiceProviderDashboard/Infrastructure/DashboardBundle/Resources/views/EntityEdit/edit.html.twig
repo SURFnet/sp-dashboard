@@ -7,8 +7,6 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
 
-    {{ form_widget(form.default) }}
-
     <div class="fieldset card">
 
         {% for type, messages in app.session.flashbag.all %}
