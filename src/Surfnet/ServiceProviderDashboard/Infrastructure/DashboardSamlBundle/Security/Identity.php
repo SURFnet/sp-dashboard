@@ -18,6 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
 class Identity
 {
@@ -37,6 +38,22 @@ class Identity
     public function getContact()
     {
         return $this->contact;
+    }
+
+    /**
+     * @param string $teamName
+     * @return bool
+     */
+    public function isPartOfTeam($teamName)
+    {
+        $services = $this->getContact()->getServices();
+        /** @var Service $service */
+        foreach ($services as $service) {
+            if ($service->getTeamName() === $teamName) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

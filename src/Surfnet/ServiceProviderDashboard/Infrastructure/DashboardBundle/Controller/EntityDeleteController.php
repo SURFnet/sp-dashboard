@@ -75,7 +75,7 @@ class EntityDeleteController extends Controller
      * @Method({"GET", "POST"})
      * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
      * @Route("/entity/delete/{id}", name="entity_delete")
-     * @Security("token.hasAccessToEntity(request.get('entity'))")
+     * @Security("has_role('ROLE_USER') and token.hasAccessToEntity(request.get('entity'))")
      * @Template()
      *
      * @param Request $request
@@ -117,7 +117,7 @@ class EntityDeleteController extends Controller
      *     }
      * )
      * @Template("@Dashboard/EntityDelete/delete.html.twig")
-     *
+     * @Security("has_role('ROLE_USER')")
      * @param Request $request
      *
      * @param $manageId
@@ -126,6 +126,8 @@ class EntityDeleteController extends Controller
      */
     public function deletePublishedAction(Request $request, $manageId, $environment)
     {
+        $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
+
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $nameEn = $entity['data']['metaDataFields']['name:en'];
 
@@ -156,6 +158,7 @@ class EntityDeleteController extends Controller
             'entityName' => $nameEn,
         ];
     }
+
     /**
      * @Method({"GET", "POST"})
      * @Route(
@@ -167,17 +170,20 @@ class EntityDeleteController extends Controller
      *     }
      * )
      * @Template("@Dashboard/EntityDelete/delete.html.twig")
+     * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
-     *
      * @param $manageId
      * @param $environment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function deleteRequestAction(Request $request, $manageId, $environment)
     {
+        $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
+
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $nameEn = $entity['data']['metaDataFields']['name:en'];
+
 
         $form = $this->createForm(DeleteEntityType::class);
         $form->handleRequest($request);
