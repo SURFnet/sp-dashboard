@@ -209,11 +209,14 @@ class EntityDeleteTest extends WebTestCase
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
         // Handling the form also requires retrieval of the manage entity
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
-        // Successfull deleting an entity from manage results in return type boolean : true
+        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
+        // Successful deleting an entity from manage results in return type boolean : true
         $this->prodMockHandler->append(new Response(200, [], json_encode(true)));
 
         // The entity list action
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', "/entity/delete/request/a8e7cffd-0409-45c7-a37a-000000000000");

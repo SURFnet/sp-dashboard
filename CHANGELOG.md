@@ -1,3 +1,8 @@
+## 1.4.1
+
+**Bugfixes:**
+ - Fixed the test_request_delete_a_published_production_entity_jira_not_available web test
+
 ## 1.4.0
 
 This release is the product of two development sprints. The main focus is on improving the service overview screen for
