@@ -24,6 +24,12 @@
     </div>
     {% endif %}
 
+    {% for type, messages in app.session.flashbag.all %}
+        {% for message in messages %}
+            <div class="message {{ type }}">{{ message|trans }}</div>
+        {% endfor %}
+    {% endfor %}
+
     {% if no_service_selected %}
         {{ 'entity.list.no_service_selected'|trans }}
     {% elseif entity_list.entities is empty %}
