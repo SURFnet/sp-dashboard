@@ -24,6 +24,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
@@ -95,6 +96,8 @@ class DeleteServiceCommandHandler implements CommandHandler
     /**
      * Using the deleteCommandFactory, entity delete commands are created
      * that will remove them from the appropriate environment.
+     * @param EntityDto[] $entities
+     * @param Contact $contact
      */
     private function removeEntitiesFrom(array $entities, Contact $contact)
     {

@@ -99,6 +99,14 @@ class EntityDto
     /**
      * @return string
      */
+    public function getEntityId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
     public function getEnvironment()
     {
         return $this->environment;
