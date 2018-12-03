@@ -19,6 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Jira\Factory;
 
 use JiraRestApi\Issue\IssueService;
+use Mockery as m;
+use Monolog\Logger;
 use PHPUnit_Framework_TestCase;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 
@@ -29,7 +31,7 @@ class JiraServiceFactoryTest extends PHPUnit_Framework_TestCase
         $hostname = 'https://jira.example.com/';
         $username = 'user';
         $password = 'secret';
-        $factory = new JiraServiceFactory($hostname, $username, $password);
+        $factory = new JiraServiceFactory($hostname, $username, $password, m::mock(Logger::class));
 
         $issueService = $factory->buildIssueService();
 

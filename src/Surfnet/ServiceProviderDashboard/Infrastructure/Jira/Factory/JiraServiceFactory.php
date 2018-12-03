@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory;
 
 use JiraRestApi\Configuration\ArrayConfiguration;
 use JiraRestApi\Issue\IssueService;
+use Psr\Log\LoggerInterface;
 
 class JiraServiceFactory
 {
@@ -29,11 +30,17 @@ class JiraServiceFactory
     private $config;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param string $host
      * @param string $username
      * @param string $password
+     * @param LoggerInterface $logger
      */
-    public function __construct($host, $username, $password)
+    public function __construct($host, $username, $password, LoggerInterface $logger)
     {
         // Create a IssueService with a Jira connection built in.
         $this->config = new ArrayConfiguration([
@@ -41,10 +48,12 @@ class JiraServiceFactory
             'jiraUser' => $username,
             'jiraPassword' => $password
         ]);
+
+        $this->logger = $logger;
     }
 
     public function buildIssueService()
     {
-        return new IssueService($this->config);
+        return new IssueService($this->config, $this->logger);
     }
 }
