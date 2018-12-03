@@ -18,20 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
+use JiraRestApi\JiraException;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class RequestDeletePublishedEntityCommandHandler implements CommandHandler
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     /**
      * @var TicketService
      */
@@ -42,14 +39,26 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
      */
     private $queryClient;
 
+    /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         ManageQueryClient $manageProductionQueryClient,
         TicketService $ticketService,
+        FlashBagInterface $flashBag,
         LoggerInterface $logger
     ) {
         $this->queryClient = $manageProductionQueryClient;
-        $this->logger = $logger;
         $this->ticketService = $ticketService;
+        $this->flashBag = $flashBag;
+        $this->logger = $logger;
     }
 
     public function handle(RequestDeletePublishedEntityCommand $command)
@@ -62,9 +71,13 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
         );
         $entity = $this->queryClient->findByManageId($command->getManageId());
         $ticket = Ticket::fromManageResponse($entity, $command->getApplicant());
-        $issue = $this->ticketService->createIssueFrom($ticket);
-
-        $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
-        $this->ticketService->storeTicket($issue->key, $command->getManageId());
+        try {
+            $issue = $this->ticketService->createIssueFrom($ticket);
+            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+            $this->ticketService->storeTicket($issue->key, $command->getManageId());
+        } catch (JiraException $e) {
+            $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
+            $this->flashBag->add('error', 'entity.delete.request.failed');
+        }
     }
 }
