@@ -40,7 +40,6 @@
     {%- endfor -%}
 {%- endblock attributes -%}
 
-
 {%- block form_row -%}
     <div class="form-row{% if errors is not empty %} error {% endif %}">
         {{- form_label(form) -}}
@@ -115,6 +114,19 @@
     </div>
 {%- endblock choice_widget_expanded -%}
 
+{# A collection widget is used to add multiple redirect uris #}
+{%- block collection_widget -%}
+    <div class="collection-widget" data-prototype="{{ form_widget(form.vars.prototype)|e }}">
+        <ul>
+            {%- for child in form %}
+                <div class="input-container">
+                    {{- form_widget(child) -}}
+                </div>
+            {% endfor -%}
+        </ul>
+    </div>
+{%- endblock collection_widget -%}
+
 {# Override the form_label to enable us to output anchors in form labels. #}
 {%- block form_label -%}
     {% if label is not same as(false) -%}
@@ -137,3 +149,12 @@
         <label{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>{{ translation_domain is same as(false) ? label|striptags('<a>')|raw : label|trans({}, translation_domain)|striptags('<a>')|raw }}</label>
     {%- endif -%}
 {%- endblock form_label -%}
+
+
+
+{#{% block _tasks_entry_widget %}#}
+    {#<tr>#}
+        {#<td>{{ form_widget(task.task) }}</td>#}
+        {#<td>{{ form_widget(task.dueDate) }}</td>#}
+    {#</tr>#}
+{#{% endblock %}#}

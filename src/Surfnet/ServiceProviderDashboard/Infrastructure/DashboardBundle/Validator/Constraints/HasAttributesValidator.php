@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use ReflectionMethod;
 use ReflectionObject;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -33,7 +33,7 @@ class HasAttributesValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$value instanceof SaveEntityCommand) {
+        if (!$value instanceof Command) {
             return;
         }
 
@@ -42,7 +42,7 @@ class HasAttributesValidator extends ConstraintValidator
         }
     }
 
-    private function hasAttributes(SaveEntityCommand $command)
+    private function hasAttributes(Command $command)
     {
         $reflection = new ReflectionObject($command);
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);

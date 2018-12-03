@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @SpDashboardAssert\HasAttributes()
  */
-class SaveEntityCommand implements Command
+class SaveOidcEntityCommand implements Command
 {
     /**
      * @var string
@@ -72,55 +72,38 @@ class SaveEntityCommand implements Command
     private $environment = Entity::ENVIRONMENT_TEST;
 
     /**
-     * Metadata URL that import last happened from.
-     *
-     * @var string
-
-     */
-    private $importUrl;
-
-    /**
-     * @var string
-     *
-     * @Assert\Url(
-     *      protocols={"https"},
-     *      message = "url.notSecure"
-     * )
-     */
-    private $metadataUrl;
-
-    /**
-     * @var string
-     */
-    private $pastedMetadata;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Url(protocols={"https","http"})
-     * @Assert\Url(
-     *      protocols={"https"},
-     *      message = "url.notSecure"
-     * )
-     */
-    private $acsLocation;
-
-    /**
      * @var string
      *
      * @Assert\NotBlank()
      * @Assert\Url()
-     * @SpDashboardAssert\ValidEntityId()
+     * @SpDashboardAssert\ValidClientId()
      */
-    private $entityId;
+    private $clientId;
+
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     */
+    private $clientSecret;
+
+    /**
+     * @var string[]
+     *
+     * @Assert\All({
+     *     @Assert\NotBlank,
+     *     @Assert\Url(),
+     *     @Assert\Length(min=1)
+     * })
+     */
+    private $redirectUris;
 
     /**
      * @var string
      *
-     * @SpDashboardAssert\ValidSSLCertificate()
+     * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"authorization_code_code", "implicit_id_token_token", "implicit_id_token"}, strict=true)
      */
-    private $certificate;
+    private $grantType;
 
     /**
      * @var string
@@ -324,18 +307,6 @@ class SaveEntityCommand implements Command
 
     /**
      * @var string
-     * @Assert\Choice(
-     *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Entity",
-     *         "getValidNameIdFormats"
-     *     },
-     *     strict=true
-     * )
-     */
-    private $nameIdFormat = Entity::NAME_ID_FORMAT_DEFAULT;
-
-    /**
-     * @var string
      */
     private $organizationNameNl;
 
@@ -365,6 +336,11 @@ class SaveEntityCommand implements Command
     private $organizationUrlEn;
 
     /**
+     * @var bool
+     */
+    private $enablePlayground;
+
+    /**
      * @var string
      */
     private $manageId;
@@ -375,7 +351,7 @@ class SaveEntityCommand implements Command
 
     /**
      * @param Service $service
-     * @return SaveEntityCommand
+     * @return SaveOidcEntityCommand
      */
     public static function forCreateAction(Service $service)
     {
@@ -387,7 +363,7 @@ class SaveEntityCommand implements Command
     /**
      * @param Entity $entity
      *
-     * @return SaveEntityCommand
+     * @return SaveOidcEntityCommand
      */
     public static function fromEntity(Entity $entity)
     {
@@ -399,12 +375,13 @@ class SaveEntityCommand implements Command
         $command->ticketNumber = $entity->getTicketNumber();
         $command->archived = $entity->isArchived();
         $command->environment = $entity->getEnvironment();
-        $command->importUrl = $entity->getImportUrl();
-        $command->pastedMetadata = $entity->getPastedMetadata();
-        $command->metadataUrl = $entity->getMetadataUrl();
-        $command->acsLocation = $entity->getAcsLocation();
-        $command->entityId = $entity->getEntityId();
-        $command->certificate = $entity->getCertificate();
+
+//        TODO:
+//        $clientId
+//        $clientSecret
+//        $redirectUris
+//        $grantType
+
         $command->logoUrl = $entity->getLogoUrl();
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
@@ -431,7 +408,6 @@ class SaveEntityCommand implements Command
         $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
         $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
         $command->comments = $entity->getComments();
-        $command->nameIdFormat = $entity->getNameIdFormat();
         $command->organizationNameNl = $entity->getOrganizationNameNl();
         $command->organizationNameEn = $entity->getOrganizationNameEn();
         $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
@@ -522,101 +498,84 @@ class SaveEntityCommand implements Command
     {
         $this->ticketNumber = $ticketNo;
     }
-
     /**
      * @return string
      */
-    public function getImportUrl()
+    public function getClientId()
     {
-        return $this->importUrl;
+        return $this->clientId;
     }
 
     /**
-     * @param string $importUrl
+     * @param string $clientId
      */
-    public function setImportUrl($importUrl)
+    public function setClientId($clientId)
     {
-        $this->importUrl = $importUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMetadataUrl()
-    {
-        return $this->metadataUrl;
-    }
-
-    /**
-     * @param string $metadataUrl
-     */
-    public function setMetadataUrl($metadataUrl)
-    {
-        $this->metadataUrl = $metadataUrl;
+        $this->clientId = $clientId;
     }
 
     /**
      * @return string
      */
-    public function getPastedMetadata()
+    public function getClientSecret()
     {
-        return $this->pastedMetadata;
+        return $this->clientSecret;
     }
 
     /**
-     * @param string $pastedMetadata
+     * @param string $clientSecret
      */
-    public function setPastedMetadata($pastedMetadata)
+    public function setClientSecret($clientSecret)
     {
-        $this->pastedMetadata = $pastedMetadata;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAcsLocation()
-    {
-        return $this->acsLocation;
-    }
-
-    /**
-     * @param string $acsLocation
-     */
-    public function setAcsLocation($acsLocation)
-    {
-        $this->acsLocation = $acsLocation;
+        $this->clientSecret = $clientSecret;
     }
 
     /**
      * @return string
      */
-    public function getEntityId()
+    public function getRedirectUris()
     {
-        return $this->entityId;
+        return $this->redirectUris;
     }
 
     /**
-     * @param string $entityId
+     * @param string $redirectUris
      */
-    public function setEntityId($entityId)
+    public function setRedirectUris($redirectUris)
     {
-        $this->entityId = $entityId;
+        $this->redirectUris = $redirectUris;
     }
 
     /**
      * @return string
      */
-    public function getCertificate()
+    public function getGrantTypeResponseType()
     {
-        return $this->certificate;
+        return $this->grantType;
     }
 
     /**
-     * @param string $certificate
+     * @param string $grantType
      */
-    public function setCertificate($certificate)
+    public function setGrantTypeResponseType($grantType)
     {
-        $this->certificate = $certificate;
+        $this->grantType = $grantType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnablePlayground()
+    {
+        return $this->enablePlayground;
+    }
+
+    /**
+     * @param bool $enablePlayground
+     */
+    public function setEnablePlayground($enablePlayground)
+    {
+        $this->enablePlayground = $enablePlayground;
     }
 
     /**
@@ -1033,22 +992,6 @@ class SaveEntityCommand implements Command
     public function setComments($comments)
     {
         $this->comments = $comments;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNameIdFormat()
-    {
-        return $this->nameIdFormat;
-    }
-
-    /**
-     * @param string $nameIdFormat
-     */
-    public function setNameIdFormat($nameIdFormat)
-    {
-        $this->nameIdFormat = $nameIdFormat;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -33,8 +35,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityType extends AbstractType
+class OidcEntityType extends AbstractType
 {
+
+    const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization';
+    const GRANT_TYPE_IMPLICIT = 'implicit';
+
+    private static $responseTypes = [
+        Entity::GRANT_TYPE_AUTHORIZATION_CODE_CODE => self::GRANT_TYPE_AUTHORIZATION_CODE,
+        Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN_TOKEN => self::GRANT_TYPE_IMPLICIT,
+        Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN => self::GRANT_TYPE_IMPLICIT,
+    ];
+
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
@@ -45,14 +57,6 @@ class EntityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // The first button in a form defines the default behaviour when
-            // submitting the form by pressing ENTER. We add a 'default
-            // action' button on top of the form so the controller action
-            // handling the form submission can choose what action to
-            // perform. This is to prevent the import action when submitting
-            // the form (the import button is now the second button on the
-            // form).
-            ->add('default', SubmitType::class, ['attr' => ['style' => 'display: none']])
             ->add(
                 $builder->create(
                     'general',
@@ -75,96 +79,67 @@ class EntityType extends AbstractType
             ->add(
                 $builder->create('metadata', FormType::class, ['inherit_data' => true])
                     ->add(
-                        'importUrl',
+                        'clientId',
                         TextType::class,
                         [
                             'required' => false,
                             'attr' => [
-                                'data-help' => 'entity.edit.information.importUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'pastedMetadata',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.pastedMetadata',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'importButton',
-                        SubmitType::class,
-                        [
-                            'label' => 'Import',
-                            'attr' => ['class' => 'button'],
-                        ]
-                    )
-                    ->add(
-                        'metadataUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.metadataUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'acsLocation',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.acsLocation',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'entityId',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.entityId',
+                                'data-help' => 'entity.edit.information.clientId',
                                 'data-parsley-uri' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
                         ]
                     )
                     ->add(
-                        'nameIdFormat',
+                        'redirectUris',
+                        CollectionType::class,
+                        [
+                            'prototype' => true,
+                            'allow_add' => true,
+                            'allow_delete' => true,
+                            'required' => false,
+                            'entry_type' => TextType::class,
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.redirectUris',
+                            ],
+                        ]
+                    )
+                    ->add(
+                        'grantType',
+                        ChoiceType::class,
+                        [
+                            'expanded' => true,
+                            'multiple' => false,
+                            'mapped' => false,
+                            'choices'  => [
+                                'entity.edit.label.authorization_code' => static::GRANT_TYPE_AUTHORIZATION_CODE,
+                                'entity.edit.label.implicit' => static::GRANT_TYPE_IMPLICIT,
+                            ],
+                            'attr' => [
+                                'class' => 'grant-type-container grant-type-toggle',
+                                'data-help' => 'entity.edit.information.grantType',
+                            ],
+                        ]
+                    )
+                    ->add(
+                        'grantTypeResponseType',
                         ChoiceType::class,
                         [
                             'expanded' => true,
                             'multiple' => false,
                             'choices'  => [
-                                'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_DEFAULT,
-                                'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
+                                'entity.edit.label.authorization_code_token' => Entity::GRANT_TYPE_AUTHORIZATION_CODE_CODE,
+                                'entity.edit.label.implicit_id_token_token' => Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN_TOKEN,
+                                'entity.edit.label.implicit_id_token' => Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN,
                             ],
+                            'choice_attr' => function ($choiceValue, $key, $value) {
+                                return [
+                                    'data-field' => 'dashboard_bundle_entity_type_metadata_grantTypeChoice',
+                                    'data-show' => self::$responseTypes[$value],
+                                ];
+                            },
                             'attr' => [
-                                'class' => 'nameidformat-container',
-                                'data-help' => 'entity.edit.information.nameIdFormat',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'certificate',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.certificate',
-                                'rows' => 10,
+                                'class' => 'grant-type-response-type-container',
                             ],
                         ]
                     )
@@ -240,6 +215,16 @@ class EntityType extends AbstractType
                                 'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
                             ],
+                        ]
+                    )
+                    ->add(
+                        'enablePlayground',
+                        CheckboxType::class,
+                        [
+                            'required' => false,
+                            'attr' => [
+                                'class' => 'requested'
+                            ]
                         ]
                     )
             )
@@ -444,7 +429,7 @@ class EntityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => SaveEntityCommand::class
+            'data_class' => SaveOidcEntityCommand::class
         ));
     }
 

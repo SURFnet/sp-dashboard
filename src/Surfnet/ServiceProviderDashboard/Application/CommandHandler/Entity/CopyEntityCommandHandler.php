@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -180,7 +180,7 @@ class CopyEntityCommandHandler implements CommandHandler
         return 0;
     }
 
-    private function setManageMetadataOn(SaveEntityCommand $saveEntityCommand, ManageEntity $manageMetadata)
+    private function setManageMetadataOn(SaveSamlEntityCommand $saveEntityCommand, ManageEntity $manageMetadata)
     {
         if (!empty($manageMetadata->getMetaData()->getCoin()->getApplicationUrl())) {
             $saveEntityCommand->setApplicationUrl($manageMetadata->getMetaData()->getCoin()->getApplicationUrl());

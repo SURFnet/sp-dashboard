@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
-use Pdp\Parser;
-use Pdp\PublicSuffixListManager;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-/**
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.NPathComplexity)
- */
-class ValidEntityIdValidator extends ConstraintValidator
+class ValidClientIdValidator extends ConstraintValidator
 {
     /**
      * @var QueryEntityRepository
@@ -72,33 +66,10 @@ class ValidEntityIdValidator extends ConstraintValidator
     {
         $root = $this->context->getRoot();
 
-        if ($root instanceof SaveSamlEntityCommand) {
+        if ($root instanceof SaveOidcEntityCommand) {
             $entityCommand = $root;
         } else {
             $entityCommand = $root->getData();
-        }
-
-        $metadataUrl = $entityCommand->getMetadataUrl();
-
-        if (empty($metadataUrl) || empty($value)) {
-            return;
-        }
-
-        $pslManager = new PublicSuffixListManager();
-        $parser = new Parser($pslManager->getList());
-
-        try {
-            $parser->parseUrl($metadataUrl);
-        } catch (\Exception $e) {
-            $this->context->addViolation('validator.entity_id.invalid_url');
-            return;
-        }
-
-        try {
-            $parser->parseUrl($value);
-        } catch (\Exception $e) {
-            $this->context->addViolation('validator.entity_id.invalid_entity_id');
-            return;
         }
 
         $manage = $this->manageTestRepository;

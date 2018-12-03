@@ -23,13 +23,13 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntit
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
@@ -84,14 +84,14 @@ trait EntityControllerTrait
 
     /**
      * @param Request $request
-     * @param SaveEntityCommand $command
+     * @param SaveSamlEntityCommand $command
      *
      * @return Form
      */
-    private function handleImport(Request $request, SaveEntityCommand $command)
+    private function handleImport(Request $request, SaveSamlEntityCommand $command)
     {
         // Handle an import action based on the posted xml or import url.
-        $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
+        $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_saml_type'));
         try {
             $this->commandBus->handle($metadataCommand);
         } catch (MetadataFetchException $e) {
@@ -107,7 +107,7 @@ trait EntityControllerTrait
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
         }
 
-        $form = $this->createForm(EntityType::class, $command);
+        $form = $this->createForm(SamlEntityType::class, $command);
 
         if ($command->getStatus() === Entity::STATE_PUBLISHED) {
             $form->remove('save');
