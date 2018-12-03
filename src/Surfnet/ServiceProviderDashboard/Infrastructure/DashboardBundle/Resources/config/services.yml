@@ -306,3 +306,4 @@ services:
             - '%jira_host%'
             - '%jira_username%'
             - '%jira_password%'
+            - '@logger'
