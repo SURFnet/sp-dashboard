@@ -20,10 +20,12 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory;
 
 use JiraRestApi\Issue\IssueField;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
+use Symfony\Component\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
 
 class IssueFieldFactory
 {
+    /**
     /**
      * @var string
      */
@@ -55,15 +57,28 @@ class IssueFieldFactory
     private $reporter;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param string $assignee
      * @param string $entityIdFieldName
      * @param string $issueType
      * @param string $priority
      * @param string $projectKey
      * @param string $reporter
+     * @param TranslatorInterface $translator
      */
-    public function __construct($assignee, $entityIdFieldName, $issueType, $priority, $projectKey, $reporter)
-    {
+    public function __construct(
+        $assignee,
+        $entityIdFieldName,
+        $issueType,
+        $priority,
+        $projectKey,
+        $reporter,
+        TranslatorInterface $translator
+    ) {
         Assert::stringNotEmpty($assignee, 'The assignee may not be empty, configure in parameters.yml');
         Assert::stringNotEmpty(
             $entityIdFieldName,
@@ -80,14 +95,15 @@ class IssueFieldFactory
         $this->priority = $priority;
         $this->projectKey = $projectKey;
         $this->reporter = $reporter;
+        $this->translator = $translator;
     }
 
     public function fromTicket(Ticket $ticket)
     {
         $issueField = new IssueField();
-        $issueField->setProjectKey($this->projectKey)
-            ->setDescription($ticket->getDescription())
-            ->setSummary($ticket->getSummary())
+        $issueField->setProjectKey("CXT")
+            ->setDescription($this->translateDescription($ticket))
+            ->setSummary($this->translateSummary($ticket))
             ->setIssueType($this->issueType)
             ->setPriorityName($this->priority)
             ->setAssigneeName($this->assignee)
@@ -96,5 +112,21 @@ class IssueFieldFactory
         ;
 
         return $issueField;
+    }
+
+    private function translateDescription(Ticket $ticket)
+    {
+        return $this->translator->trans('entity.delete.request.ticket.description', [
+            '%applicant_name%' => $ticket->getApplicantName(),
+            '%applicant_email%' =>  $ticket->getApplicantEmail(),
+            '%entity_name%' => $ticket->getEntityName()
+        ]);
+    }
+
+    private function translateSummary(Ticket $ticket)
+    {
+        return $this->translator->trans('entity.delete.request.ticket.summary', [
+            '%entity_name%' => $ticket->getEntityName()
+        ]);
     }
 }

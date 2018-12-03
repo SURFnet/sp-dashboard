@@ -8,6 +8,12 @@ entity.delete.title: "Delete entity"
 entity.delete.confirmation: "You are about to delete '%name%'. This is a '%status%' entity, are you sure?"
 entity.delete.request.confirmation: "You are about to request to remove '%name%'. The service desk will be informed. Are you sure?"
 entity.delete.request.failed: "Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time."
+entity.delete.request.ticket.summary: "Request to remove %entity_name% from production"
+entity.delete.request.ticket.description: "h2. Details
+
+*Applicant name*: %applicant_name%
+*Applicant email*: %applicant_email%.
+*Entity name (en)*: %entity_name%."
 entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured

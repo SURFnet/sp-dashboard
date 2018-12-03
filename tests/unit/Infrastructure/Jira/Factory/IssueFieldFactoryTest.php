@@ -18,9 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Jira\Factory;
 
+use Mockery as m;
+use Mockery\Mock;
 use PHPUnit_Framework_TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 {
@@ -28,22 +31,48 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
      * @var IssueFieldFactory
      */
     private $factory;
+    /**
+     * @var TranslatorInterface|Mock
+     */
+    private $translator;
 
     public function setUp()
     {
+        $this->translator = m::mock(TranslatorInterface::class);
         $this->factory = new IssueFieldFactory(
             'Jane Doe',
             'customfield_10107',
             'bug',
             'Critical',
             'SPD',
-            'John Doe'
+            'John Doe',
+            $this->translator
         );
     }
 
     public function test_build_issue_field_from_ticket()
     {
-        $ticket = new Ticket('Summary', 'Description', 'https://example.com');
+        $ticket = new Ticket('https://example.com', 'Test Service', 'John Doe', 'john@example.com');
+
+        $this->translator
+            ->shouldReceive('trans')
+            ->with(
+                'entity.delete.request.ticket.description',
+                [
+                    '%applicant_name%' => 'John Doe',
+                    '%applicant_email%' => 'john@example.com',
+                    '%entity_name%' => 'Test Service',
+                ]
+            )
+            ->andReturn('Description')
+            ->once();
+
+        $this->translator
+            ->shouldReceive('trans')
+            ->with('entity.delete.request.ticket.summary', ['%entity_name%' => 'Test Service'])
+            ->andReturn('Summary')
+            ->once();
+
         $issueField = $this->factory->fromTicket($ticket);
 
         $this->assertEquals('Summary', $issueField->summary);

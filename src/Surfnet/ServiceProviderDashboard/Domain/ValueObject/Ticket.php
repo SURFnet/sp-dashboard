@@ -21,22 +21,26 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 /**
  * See https://bugs.php.net/bug.php?id=66773
  */
+
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
 
 class Ticket
 {
     /** @var string */
-    private $description;
-    /** @var string */
     private $entityId;
     /** @var string */
-    private $summary;
+    private $entityName;
+    /** @var string */
+    private $applicantName;
+    /** @var string */
+    private $applicantEmail;
 
-    public function __construct($summary, $description, $entityId)
+    public function __construct($entityId, $nameEn, $applicantName, $applicantEmail)
     {
-        $this->summary = $summary;
-        $this->description = $description;
         $this->entityId = $entityId;
+        $this->entityName = $nameEn;
+        $this->applicantName = $applicantName;
+        $this->applicantEmail = $applicantEmail;
     }
 
     public static function fromManageResponse($entity, Applicant $applicant)
@@ -44,25 +48,7 @@ class Ticket
         $entityId = $entity['data']['entityid'];
         $nameEn = $entity['data']['metaDataFields']['name:en'];
 
-        $summary = sprintf('Request to remove %s from production', $nameEn);
-        $description = sprintf(
-            'h2. Details
-            
-            *Applicant name*: %s
-            *Applicant email*: %s.',
-            $applicant->getDisplayName(),
-            $applicant->getEmailAddress()
-        );
-
-        return new self($summary, $description, $entityId);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
+        return new self($entityId, $nameEn, $applicant->getDisplayName(), $applicant->getEmailAddress());
     }
 
     /**
@@ -73,11 +59,18 @@ class Ticket
         return $this->entityId;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSummary()
+    public function getEntityName()
     {
-        return $this->summary;
+        return $this->entityName;
+    }
+
+    public function getApplicantName()
+    {
+        return $this->applicantName;
+    }
+
+    public function getApplicantEmail()
+    {
+        return $this->applicantEmail;
     }
 }
