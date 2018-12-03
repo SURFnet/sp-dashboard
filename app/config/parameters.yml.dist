@@ -60,3 +60,11 @@ parameters:
     jira_host: https://jira.example.com
     jira_username: sp-dashboard
     jira_password: secret
+
+    # Jira default issue settings
+    jira_issue_assignee: conext-beheer
+    jira_issue_priority: Medium
+    jira_issue_reporter: sp-dashboard
+    jira_issue_type: spd-delete-production-entity
+    jira_issue_entityid_fieldname: customfield_13018
+    jira_issue_project_key: CXT

@@ -26,17 +26,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
 class Ticket
 {
     /** @var string */
-    private $assignee = 'conext-beheer';
-    /** @var string */
     private $description;
     /** @var string */
     private $entityId;
-    /** @var string */
-    private $issueType = 'spd-delete-production-entity';
-    /** @var string */
-    private $priority = 'Medium';
-    /** @var string */
-    private $reporter = 'sp-dashboard';
     /** @var string */
     private $summary;
 
@@ -66,14 +58,6 @@ class Ticket
     }
 
     /**
-     * @return string
-     */
-    public function getAssignee()
-    {
-        return $this->assignee;
-    }
-
-    /**
      * @return mixed
      */
     public function getDescription()
@@ -87,30 +71,6 @@ class Ticket
     public function getEntityId()
     {
         return $this->entityId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIssueType()
-    {
-        return $this->issueType;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReporter()
-    {
-        return $this->reporter;
     }
 
     /**

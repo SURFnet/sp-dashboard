@@ -20,22 +20,79 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory;
 
 use JiraRestApi\Issue\IssueField;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
+use Webmozart\Assert\Assert;
 
 class IssueFieldFactory
 {
-    const CUSTOM_FIELD_ENTITY_ID = 'customfield_10107';
+    /**
+     * @var string
+     */
+    private $assignee;
+
+    /**
+     * @var string
+     */
+    private $entityIdFieldName;
+
+    /**
+     * @var string
+     */
+    private $issueType;
+
+    /**
+     * @var string
+     */
+    private $priority;
+
+    /**
+     * @var string
+     */
+    private $projectKey;
+
+    /**
+     * @var string
+     */
+    private $reporter;
+
+    /**
+     * @param string $assignee
+     * @param string $entityIdFieldName
+     * @param string $issueType
+     * @param string $priority
+     * @param string $projectKey
+     * @param string $reporter
+     */
+    public function __construct($assignee, $entityIdFieldName, $issueType, $priority, $projectKey, $reporter)
+    {
+        Assert::stringNotEmpty($assignee, 'The assignee may not be empty, configure in parameters.yml');
+        Assert::stringNotEmpty(
+            $entityIdFieldName,
+            'The entity id field name may not be empty, configure in parameters.yml'
+        );
+        Assert::stringNotEmpty($issueType, 'The issue type may not be empty, configure in arameters.yml');
+        Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in parameters.yml');
+        Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in parameters.yml');
+        Assert::stringNotEmpty($reporter, 'The reporter may not be empty, configure in parameters.yml');
+
+        $this->assignee = $assignee;
+        $this->entityIdFieldName = $entityIdFieldName;
+        $this->issueType = $issueType;
+        $this->priority = $priority;
+        $this->projectKey = $projectKey;
+        $this->reporter = $reporter;
+    }
 
     public function fromTicket(Ticket $ticket)
     {
         $issueField = new IssueField();
-        $issueField->setProjectKey("CXT")
+        $issueField->setProjectKey($this->projectKey)
             ->setDescription($ticket->getDescription())
-            ->setIssueType($ticket->getIssueType())
             ->setSummary($ticket->getSummary())
-            ->setPriorityName($ticket->getPriority())
-            ->setAssigneeName($ticket->getAssignee())
-            ->setReporterName($ticket->getReporter())
-            ->addCustomField(self::CUSTOM_FIELD_ENTITY_ID, $ticket->getEntityId())
+            ->setIssueType($this->issueType)
+            ->setPriorityName($this->priority)
+            ->setAssigneeName($this->assignee)
+            ->setReporterName($this->reporter)
+            ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
         ;
 
         return $issueField;

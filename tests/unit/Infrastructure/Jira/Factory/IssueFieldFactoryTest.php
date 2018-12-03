@@ -31,7 +31,14 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->factory = new IssueFieldFactory();
+        $this->factory = new IssueFieldFactory(
+            'Jane Doe',
+            'customfield_10107',
+            'bug',
+            'Critical',
+            'SPD',
+            'John Doe'
+        );
     }
 
     public function test_build_issue_field_from_ticket()
@@ -41,10 +48,11 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('Summary', $issueField->summary);
         $this->assertEquals('Description', $issueField->description);
+        $this->assertEquals('Jane Doe', $issueField->assignee->name);
+        // The custom field is used for saving the entity id.
         $this->assertEquals('https://example.com', $issueField->customFields['customfield_10107']);
-        $this->assertEquals('conext-beheer', $issueField->assignee->name);
-        $this->assertEquals('spd-delete-production-entity', $issueField->getIssueType()->name);
-        $this->assertEquals('Medium', $issueField->priority->name);
-        $this->assertEquals('sp-dashboard', $issueField->reporter->name);
+        $this->assertEquals('bug', $issueField->getIssueType()->name);
+        $this->assertEquals('Critical', $issueField->priority->name);
+        $this->assertEquals('John Doe', $issueField->reporter->name);
     }
 }
