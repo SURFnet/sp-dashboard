@@ -1,4 +1,4 @@
-## 2.0.0
+## 1.4.0
 
 This release is the product of two development sprints. The main focus is on improving the service overview screen for
 SP's and also add additional features for moderating entities and services.
