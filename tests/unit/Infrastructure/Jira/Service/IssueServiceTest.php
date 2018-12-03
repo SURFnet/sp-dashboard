@@ -67,8 +67,6 @@ class IssueServiceTest extends MockeryTestCase
 
     public function test_create_issue()
     {
-        // Todo: This test is boilerplate for later implementation!
-
         $this->logger
             ->shouldReceive('info')
             ->once();
