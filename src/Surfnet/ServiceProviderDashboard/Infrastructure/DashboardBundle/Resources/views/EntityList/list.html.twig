@@ -63,6 +63,18 @@
                         </a>
                         <ul>
                             <li>
+                                {% if entity.isPublishedToProduction %}
+                                <a href="{{ path('entity_detail_draft', {id: entity.id}) }}">
+                                {% elseif entity.isPublished or entity.isRequested %}
+                                <a href="{{ path('entity_detail_draft', {id: entity.id}) }}">
+                                {% else %}
+                                <a href="{{ path('entity_detail_draft', {id: entity.id}) }}">
+                                {% endif %}
+                                    <i class="fa fa-book" aria-hidden="true"></i>
+                                    {{ 'entity.list.action.view'|trans }}
+                                </a>
+                            </li>
+                            <li>
                                 {% if entity.allowEditAction %}
                                     <a href="{{ path('entity_edit', {id: entity.id, environment: entity.environment}) }}">
                                         <i class="fa fa-pencil-square" aria-hidden="true"></i>
