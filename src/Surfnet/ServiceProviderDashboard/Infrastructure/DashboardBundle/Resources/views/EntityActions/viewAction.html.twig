@@ -1,0 +1,12 @@
+<li>
+    {% if action.isPublishedToProduction %}
+    <a href="{{ path('entity_detail_draft', {id: action.id}) }}">
+    {% elseif action.isPublished or action.isRequested %}
+    <a href="{{ path('entity_detail_draft', {id: action.id}) }}">
+    {% else %}
+    <a href="{{ path('entity_detail_draft', {id: action.id}) }}">
+    {% endif %}
+        <i class="fa fa-book" aria-hidden="true"></i>
+        {{ 'entity.list.action.view'|trans }}
+    </a>
+</li>

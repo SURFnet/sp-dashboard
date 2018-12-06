@@ -1,0 +1,8 @@
+{% if action.allowCloneAction %}
+    <li>
+        <a href="{{ path('entity_copy', {manageId: action.id, targetEnvironment: 'production', sourceEnvironment: 'production'}) }}">
+            <i class="fa fa-copy" aria-hidden="true"></i>
+            {{ 'entity.list.action.copy'|trans }}
+        </a>
+    </li>
+{% endif %}

@@ -48,13 +48,29 @@ class EntityTest extends MockeryTestCase
     ) {
         $messageFormat = 'Unexpected outcome for the "%s" test in scenario "%s".';
 
-        $this->assertEquals($mayEdit, $entity->allowEditAction(), sprintf($messageFormat, 'mayEdit', $testName));
-        $this->assertEquals($mayDelete, $entity->allowDeleteAction(), sprintf($messageFormat, 'mayDelete', $testName));
-        $this->assertEquals($mayClone, $entity->allowCloneAction(), sprintf($messageFormat, 'mayClone', $testName));
-        $this->assertEquals($mayCopy, $entity->allowCopyAction(), sprintf($messageFormat, 'mayCopy', $testName));
+        $this->assertEquals(
+            $mayEdit,
+            $entity->getActions()->allowEditAction(),
+            sprintf($messageFormat, 'mayEdit', $testName)
+        );
+        $this->assertEquals(
+            $mayDelete,
+            $entity->getActions()->allowDeleteAction(),
+            sprintf($messageFormat, 'mayDelete', $testName)
+        );
+        $this->assertEquals(
+            $mayClone,
+            $entity->getActions()->allowCloneAction(),
+            sprintf($messageFormat, 'mayClone', $testName)
+        );
+        $this->assertEquals(
+            $mayCopy,
+            $entity->getActions()->allowCopyAction(),
+            sprintf($messageFormat, 'mayCopy', $testName)
+        );
         $this->assertEquals(
             $mayCopyToProduction,
-            $entity->allowCopyToProductionAction(),
+            $entity->getActions()->allowCopyToProductionAction(),
             sprintf($messageFormat, 'mayCopyToProduction', $testName)
         );
     }

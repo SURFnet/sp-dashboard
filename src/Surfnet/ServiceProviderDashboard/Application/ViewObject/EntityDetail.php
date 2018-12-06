@@ -214,6 +214,11 @@ class EntityDetail
      */
     private $manageId;
 
+    /**
+     * @var EntityActions
+     */
+    private $actions;
+
     private function __construct()
     {
     }
@@ -225,55 +230,46 @@ class EntityDetail
      */
     public static function fromEntity(DomainEntity $entity)
     {
-        $command = new self();
-        $command->manageId = $entity->getManageId();
-        $command->environment = $entity->getEnvironment();
-        $command->metadataUrl = $entity->getMetadataUrl();
-        $command->acsLocation = $entity->getAcsLocation();
-        $command->entityId = $entity->getEntityId();
-        $command->certificate = $entity->getCertificate();
-        $command->logoUrl = $entity->getLogoUrl();
-        $command->nameNl = $entity->getNameNl();
-        $command->nameEn = $entity->getNameEn();
-        $command->descriptionNl = $entity->getDescriptionNl();
-        $command->descriptionEn = $entity->getDescriptionEn();
-        $command->applicationUrl = $entity->getApplicationUrl();
-        $command->eulaUrl = $entity->getEulaUrl();
-        $command->administrativeContact = $entity->getAdministrativeContact();
-        $command->technicalContact = $entity->getTechnicalContact();
-        $command->supportContact = $entity->getSupportContact();
-        $command->givenNameAttribute = $entity->getGivenNameAttribute();
-        $command->surNameAttribute = $entity->getSurNameAttribute();
-        $command->commonNameAttribute = $entity->getCommonNameAttribute();
-        $command->displayNameAttribute = $entity->getDisplayNameAttribute();
-        $command->emailAddressAttribute = $entity->getEmailAddressAttribute();
-        $command->organizationAttribute = $entity->getOrganizationAttribute();
-        $command->organizationTypeAttribute = $entity->getOrganizationTypeAttribute();
-        $command->affiliationAttribute = $entity->getAffiliationAttribute();
-        $command->entitlementAttribute = $entity->getEntitlementAttribute();
-        $command->principleNameAttribute = $entity->getPrincipleNameAttribute();
-        $command->uidAttribute = $entity->getUidAttribute();
-        $command->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
-        $command->personalCodeAttribute = $entity->getPersonalCodeAttribute();
-        $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
-        $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
-        $command->nameIdFormat = $entity->getNameIdFormat();
-        $command->organizationNameNl = $entity->getOrganizationNameNl();
-        $command->organizationNameEn = $entity->getOrganizationNameEn();
-        $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
-        $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
-        $command->organizationUrlNl = $entity->getOrganizationUrlNl();
-        $command->organizationUrlEn = $entity->getOrganizationUrlEn();
-
-        return $command;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
+        $entityDetail = new self();
+        $entityDetail->manageId = $entity->getManageId();
+        $entityDetail->metadataUrl = $entity->getMetadataUrl();
+        $entityDetail->acsLocation = $entity->getAcsLocation();
+        $entityDetail->entityId = $entity->getEntityId();
+        $entityDetail->certificate = $entity->getCertificate();
+        $entityDetail->logoUrl = $entity->getLogoUrl();
+        $entityDetail->nameNl = $entity->getNameNl();
+        $entityDetail->nameEn = $entity->getNameEn();
+        $entityDetail->descriptionNl = $entity->getDescriptionNl();
+        $entityDetail->descriptionEn = $entity->getDescriptionEn();
+        $entityDetail->applicationUrl = $entity->getApplicationUrl();
+        $entityDetail->eulaUrl = $entity->getEulaUrl();
+        $entityDetail->administrativeContact = $entity->getAdministrativeContact();
+        $entityDetail->technicalContact = $entity->getTechnicalContact();
+        $entityDetail->supportContact = $entity->getSupportContact();
+        $entityDetail->givenNameAttribute = $entity->getGivenNameAttribute();
+        $entityDetail->surNameAttribute = $entity->getSurNameAttribute();
+        $entityDetail->commonNameAttribute = $entity->getCommonNameAttribute();
+        $entityDetail->displayNameAttribute = $entity->getDisplayNameAttribute();
+        $entityDetail->emailAddressAttribute = $entity->getEmailAddressAttribute();
+        $entityDetail->organizationAttribute = $entity->getOrganizationAttribute();
+        $entityDetail->organizationTypeAttribute = $entity->getOrganizationTypeAttribute();
+        $entityDetail->affiliationAttribute = $entity->getAffiliationAttribute();
+        $entityDetail->entitlementAttribute = $entity->getEntitlementAttribute();
+        $entityDetail->principleNameAttribute = $entity->getPrincipleNameAttribute();
+        $entityDetail->uidAttribute = $entity->getUidAttribute();
+        $entityDetail->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
+        $entityDetail->personalCodeAttribute = $entity->getPersonalCodeAttribute();
+        $entityDetail->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
+        $entityDetail->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
+        $entityDetail->nameIdFormat = $entity->getNameIdFormat();
+        $entityDetail->organizationNameNl = $entity->getOrganizationNameNl();
+        $entityDetail->organizationNameEn = $entity->getOrganizationNameEn();
+        $entityDetail->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
+        $entityDetail->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
+        $entityDetail->organizationUrlNl = $entity->getOrganizationUrlNl();
+        $entityDetail->organizationUrlEn = $entity->getOrganizationUrlEn();
+        $entityDetail->actions = new EntityActions($entity->getId(), $entity->getStatus(), $entity->getEnvironment());
+        return $entityDetail;
     }
 
     /**
@@ -570,5 +566,13 @@ class EntityDetail
     public function getManageId()
     {
         return $this->manageId;
+    }
+
+    /**
+     * @return EntityActions
+     */
+    public function getActions()
+    {
+        return $this->actions;
     }
 }
