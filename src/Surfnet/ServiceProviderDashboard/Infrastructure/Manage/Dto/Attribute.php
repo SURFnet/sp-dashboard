@@ -29,16 +29,20 @@ class Attribute
 
     public static function fromApiResponse($attributeName, array $attributeData)
     {
+        $value = $attributeData['value'];
+        $source = isset($attributeData['source']) ? $attributeData['source'] : '';
+        $motivation = isset($attributeData['motivation']) ? $attributeData['motivation'] : '';
+
         Assert::stringNotEmpty($attributeName, 'The attribute name must be non-empty string');
-        Assert::stringNotEmpty($attributeData['value'], 'The attribute value must be non-empty string');
-        Assert::string($attributeData['source'], 'The attribute source must be string');
-        Assert::string($attributeData['motivation'], 'The attribute motivation must be string');
+        Assert::stringNotEmpty($value, 'The attribute value must be non-empty string');
+        Assert::string($source, 'The attribute source must be string');
+        Assert::string($motivation, 'The attribute motivation must be string');
 
         return new self(
             $attributeName,
-            $attributeData['value'],
-            $attributeData['source'],
-            $attributeData['motivation']
+            $value,
+            $source,
+            $motivation
         );
     }
 
