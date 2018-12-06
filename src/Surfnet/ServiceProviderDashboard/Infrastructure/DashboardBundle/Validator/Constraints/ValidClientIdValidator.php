@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Pdp\Parser;
+use Pdp\PublicSuffixListManager;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
@@ -70,6 +72,16 @@ class ValidClientIdValidator extends ConstraintValidator
             $entityCommand = $root;
         } else {
             $entityCommand = $root->getData();
+        }
+
+        $pslManager = new PublicSuffixListManager();
+        $parser = new Parser($pslManager->getList());
+
+        try {
+            $parser->parseUrl($value);
+        } catch (\Exception $e) {
+            $this->context->addViolation('validator.entity_id.invalid_url');
+            return;
         }
 
         $manage = $this->manageTestRepository;

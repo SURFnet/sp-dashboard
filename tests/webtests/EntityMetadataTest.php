@@ -48,7 +48,6 @@ class EntityMetadataTest extends WebTestCase
         );
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
-        $entity->setTicketNumber('IID-9');
         $entity->setStatus(Entity::STATE_PUBLISHED);
 
         $this->getEntityRepository()->save($entity);
@@ -76,7 +75,6 @@ class EntityMetadataTest extends WebTestCase
         );
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
-        $entity->setTicketNumber('IID-9');
         $entity->setStatus(Entity::STATE_DRAFT);
 
         $this->getEntityRepository()->save($entity);

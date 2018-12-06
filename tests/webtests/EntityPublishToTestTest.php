@@ -78,7 +78,6 @@ class EntityPublishToTestTest extends WebTestCase
         $entity->setNameNl('MijnService');
         $entity->setDescriptionEn('MijnService description');
         $entity->setDescriptionNl('MijnService description');
-        $entity->setTicketNumber('IID-9');
         $entity->setTechnicalContact($this->buildContact());
         $entity->setEnvironment(Entity::ENVIRONMENT_TEST);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));

@@ -25,6 +25,8 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
 class SaveOidcEntityCommandHandler implements CommandHandler
 {
@@ -59,11 +61,14 @@ class SaveOidcEntityCommandHandler implements CommandHandler
                 );
             }
 
+            $secret = new Secret(20);
+
             $entity = new Entity();
             $entity->setId($id);
             $entity->setService($command->getService());
-            $entity->setTicketNumber($command->getTicketNumber());
+            $entity->setClientSecret($secret->getSecret());
             $command->setId($id);
+            $command->setClientSecret($secret->getSecret());
         } else {
             $entity = $this->repository->findById($command->getId());
         }
@@ -76,26 +81,12 @@ class SaveOidcEntityCommandHandler implements CommandHandler
         $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());
         $entity->setEnvironment($command->getEnvironment());
-
-
         $entity->setEntityId($command->getClientId());
-
-        // generate secret
-
-//        TODO:
-//        $clientId
-//        $clientSecret
-//        $redirectUris
-//        $grantType
-//        $protocol
-
-//        $entity->setImportUrl($command->getImportUrl());
-//        $entity->setPastedMetadata($command->getPastedMetadata());
-//        $entity->setMetadataUrl($command->getMetadataUrl());
-//        $entity->setAcsLocation($command->getAcsLocation());
-//        $entity->setEntityId($command->getEntityId());
-//        $entity->setCertificate($command->getCertificate());
-
+        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+        $entity->setClientSecret('');
+        $entity->setRedirectUris($command->getRedirectUris());
+        $entity->setGrantType(new OidcGrantType($command->getGrantType()));
+        $entity->setEnablePlayground($command->isEnablePlayground());
         $entity->setLogoUrl($command->getLogoUrl());
         $entity->setNameNl($command->getNameNl());
         $entity->setNameEn($command->getNameEn());

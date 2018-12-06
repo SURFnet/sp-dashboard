@@ -14,7 +14,7 @@ class CollectionWidget {
     $collectionWidget: JQuery,
   ) {
     this.$collectionWidget = $collectionWidget;
-    this.$collectionList = this.$collectionWidget.find('ul');
+    this.$collectionList = this.$collectionWidget.find('ul.collection-list');
     this.prototype = this.$collectionWidget.data('prototype');
     this.$input = $(this.prototype);
   }
@@ -45,10 +45,13 @@ class CollectionWidget {
 
     this.$collectionWidget.append($collectionContainer);
 
-    const handleAddClick = () => {
-      this.addCollectionEntry();
-    };
-    $addEntryButton.on('click', handleAddClick);
+    this.index = this.$collectionList.find('.collection-entry').length;
+
+    this.$collectionList.find('.remove_collection_entry').each((_index: number, el: HTMLElement) => {
+      this.registerRemoveClickHandler($(el));
+    });
+
+    this.registerAddClickHandler($addEntryButton);
   }
 
   /**
@@ -58,14 +61,12 @@ class CollectionWidget {
     const collectionEntry = $('<li class="collection-entry"></li>');
     const $removeEntryButton = $('<button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button>');
 
-    const handleRemoveClick = (el: JQuery.Event) => {
-      this.removeCollectionEntry(el);
-    };
-    $removeEntryButton.on('click', handleRemoveClick);
+    this.registerRemoveClickHandler($removeEntryButton);
 
     collectionEntry.append(this.createNewCollectionEntry());
     collectionEntry.append($removeEntryButton);
     this.$collectionList.append(collectionEntry);
+
     this.index += 1;
   }
 
@@ -90,14 +91,36 @@ class CollectionWidget {
     this.$input.val('');
     return $input;
   }
+
+  /**
+   * Add click handler to add removal of entry
+   * @param $removeEntryButton
+   */
+  private registerRemoveClickHandler($removeEntryButton: JQuery<HTMLElement>) {
+    const handleRemoveClick = (el: JQuery.Event) => {
+      this.removeCollectionEntry(el);
+    };
+    $removeEntryButton.on('click', handleRemoveClick);
+  }
+
+  /**
+   * Add click handler to add entry
+   * @param $addEntryButton
+   */
+  private registerAddClickHandler($addEntryButton: JQuery<HTMLElement>) {
+    const handleAddClick = () => {
+      this.addCollectionEntry();
+    };
+    $addEntryButton.on('click', handleAddClick);
+  }
 }
 
 export function loadEntityOidcForm() {
   const $widgets = $('form .collection-widget');
   if ($widgets.length > 0) {
 
-    $widgets.each(() => {
-      const collectionWidget = new CollectionWidget($(this));
+    $widgets.each((_index: number, el: HTMLElement) => {
+      const collectionWidget = new CollectionWidget($(el));
       collectionWidget.registerEventHandlers();
     });
   }
