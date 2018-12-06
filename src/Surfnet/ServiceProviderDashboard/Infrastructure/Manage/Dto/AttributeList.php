@@ -25,6 +25,23 @@ class AttributeList
      */
     private $attributes = [];
 
+    public static function fromApiResponse(array $data)
+    {
+        $list = new self();
+
+        if (isset($data['data']['arp'])) {
+            $attributes = $data['data']['arp']['attributes'];
+
+            foreach ($attributes as $attributeName => $attributeList) {
+                foreach ($attributeList as $attributeData) {
+                    $list->add(Attribute::fromApiResponse($attributeName, $attributeData));
+                }
+            }
+        }
+
+        return $list;
+    }
+
     public function add(Attribute $attribute)
     {
         $this->attributes[] = $attribute;

@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Webmozart\Assert\Assert;
+
 class Contact
 {
     private $type;
@@ -26,6 +28,23 @@ class Contact
     private $email;
     private $phone;
 
+    public static function from(array $contactData)
+    {
+        $type = $contactData['contactType'];
+        $givenName = isset($contactData['givenName']) ? $contactData['givenName'] : '';
+        $surName = isset($contactData['surName']) ? $contactData['surName'] : '';
+        $email = isset($contactData['emailAddress']) ? $contactData['emailAddress'] : '';
+        $phone = isset($contactData['phone']) ? $contactData['phone'] : '';
+
+        Assert::stringNotEmpty($type);
+        Assert::string($givenName);
+        Assert::string($surName);
+        Assert::string($email);
+        Assert::string($phone);
+
+        return new self($type, $givenName, $surName, $email, $phone);
+    }
+
     /**
      * @param string $type
      * @param string $givenName
@@ -33,7 +52,7 @@ class Contact
      * @param string $email
      * @param string $phone
      */
-    public function __construct($type, $givenName, $surName, $email, $phone)
+    private function __construct($type, $givenName, $surName, $email, $phone)
     {
         $this->type = $type;
         $this->givenName = $givenName;

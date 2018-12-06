@@ -32,12 +32,19 @@ class ManageEntity
      */
     private $metaData;
 
+    public static function fromApiResponse($data)
+    {
+        $attributeList = AttributeList::fromApiResponse($data);
+        $metaData = MetaData::fromApiResponse($data);
+        return new self($data['id'], $attributeList, $metaData);
+    }
+
     /**
      * @param string $id
      * @param AttributeList $attributes
      * @param MetaData $metaData
      */
-    public function __construct($id, AttributeList $attributes, MetaData $metaData)
+    private function __construct($id, AttributeList $attributes, MetaData $metaData)
     {
         $this->id = $id;
         $this->attributes = $attributes;

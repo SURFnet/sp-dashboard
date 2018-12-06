@@ -18,18 +18,33 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Webmozart\Assert\Assert;
+
 class Logo
 {
     private $url;
     private $width;
     private $height;
 
+    public static function fromApiResponse(array $data)
+    {
+        $url = isset($data['logo:0:url']) ? $data['logo:0:url'] : '';
+        $width = isset($data['logo:0:width']) ? (int) $data['logo:0:width'] : 0;
+        $height = isset($data['logo:0:height']) ? (int) $data['logo:0:height'] : 0;
+
+        Assert::string($url);
+        Assert::integer($width);
+        Assert::integer($height);
+
+        return new self($url, $width, $height);
+    }
+
     /**
      * @param string $url
-     * @param string $width
-     * @param string $height
+     * @param int $width
+     * @param int $height
      */
-    public function __construct($url, $width, $height)
+    private function __construct($url, $width, $height)
     {
         $this->url = $url;
         $this->width = $width;

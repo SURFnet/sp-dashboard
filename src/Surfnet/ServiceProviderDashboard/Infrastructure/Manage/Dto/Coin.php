@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Webmozart\Assert\Assert;
+
 class Coin
 {
     private $signatureMethod;
@@ -25,13 +27,32 @@ class Coin
     private $originalMetadataUrl;
     private $excludeFromPush;
 
+    public static function fromApiResponse(array $metaDataFields)
+    {
+        $signatureMethod = isset($metaDataFields['coin:signature_method'])
+            ? $metaDataFields['coin:signature_method'] : '';
+        $serviceTeamId = isset($metaDataFields['coin:service_team_id'])
+            ? $metaDataFields['coin:service_team_id'] : '';
+        $originalMetadataUrl = isset($metaDataFields['coin:original_metadata_url'])
+            ? $metaDataFields['coin:original_metadata_url'] : '';
+        $excludeFromPush = isset($metaDataFields['coin:exclude_from_push'])
+            ?  (int) $metaDataFields['coin:exclude_from_push'] : 1;
+
+        Assert::string($signatureMethod);
+        Assert::string($serviceTeamId);
+        Assert::string($originalMetadataUrl);
+        Assert::integer($excludeFromPush);
+
+        return new self($signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush);
+    }
+
     /**
      * @param string $signatureMethod
      * @param string $serviceTeamId
      * @param string $originalMetadataUrl
      * @param string $excludeFromPush
      */
-    public function __construct($signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush)
+    private function __construct($signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush)
     {
         $this->signatureMethod = $signatureMethod;
         $this->serviceTeamId = $serviceTeamId;

@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Webmozart\Assert\Assert;
+
 class MetaData
 {
     /**
@@ -25,9 +27,9 @@ class MetaData
      */
     private $acsBinding;
     private $acsLocation;
-
+    private $entityId;
+    private $metaDataUrl;
     private $nameIdFormat;
-    private $signatureMethod;
     private $certData;
     private $descriptionEn;
     private $descriptionNl;
@@ -55,10 +57,68 @@ class MetaData
     private $logo;
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
+     * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
+     * @param array $data
+     * @return MetaData
+     */
+    public static function fromApiResponse(array $data)
+    {
+        $metaDataFields = $data['data']['metaDataFields'];
+
+        $entityId = $data['data']['entityid'];
+        $metaDataUrl = isset($data['data']['metadataurl']) ? $data['data']['metadataurl'] : '';
+        $acsBinding = isset($metaDataFields['AssertionConsumerService:0:Binding'])
+            ? $metaDataFields['AssertionConsumerService:0:Binding'] : '';
+        $acsLocation = isset($metaDataFields['AssertionConsumerService:0:Location'])
+            ? $metaDataFields['AssertionConsumerService:0:Location'] : '';
+        $nameIdFormat = isset($metaDataFields['NameIDFormat']) ? $metaDataFields['NameIDFormat'] : '';
+        $certData = isset($metaDataFields['certData']) ? $metaDataFields['certData'] : '';
+        $descriptionEn = isset($metaDataFields['description:en']) ? $metaDataFields['description:en'] : '';
+        $descriptionNl = isset($metaDataFields['description:nl']) ? $metaDataFields['description:nl'] : '';
+        $nameEn = isset($metaDataFields['name:en']) ? $metaDataFields['name:en'] : '';
+        $nameNl = isset($metaDataFields['name:nl']) ? $metaDataFields['name:nl'] : '';
+
+        Assert::stringNotEmpty($entityId);
+        Assert::string($metaDataUrl);
+        Assert::string($acsBinding);
+        Assert::string($acsLocation);
+        Assert::string($nameIdFormat);
+        Assert::string($certData);
+        Assert::string($descriptionEn);
+        Assert::string($descriptionNl);
+        Assert::string($nameEn);
+        Assert::string($nameNl);
+
+        $contactList = ContactList::fromApiResponse($metaDataFields);
+        $organization = Organization::fromApiResponse($metaDataFields);
+        $coin = Coin::fromApiResponse($metaDataFields);
+        $logo = Logo::fromApiResponse($metaDataFields);
+
+        return new self(
+            $entityId,
+            $metaDataUrl,
+            $acsBinding,
+            $acsLocation,
+            $nameIdFormat,
+            $certData,
+            $descriptionEn,
+            $descriptionNl,
+            $nameEn,
+            $nameNl,
+            $contactList,
+            $organization,
+            $coin,
+            $logo
+        );
+    }
+
+    /**
+     * @param string $entityId,
+     * @param string $metaDataUrl
      * @param string $acsBinding
      * @param string $acsLocation
      * @param string $nameIdFormat
-     * @param string $signatureMethod
      * @param string $certData
      * @param string $descriptionEn
      * @param string $descriptionNl
@@ -68,12 +128,14 @@ class MetaData
      * @param Organization $organization
      * @param Coin $coin
      * @param Logo $logo
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    public function __construct(
+    private function __construct(
+        $entityId,
+        $metaDataUrl,
         $acsBinding,
         $acsLocation,
         $nameIdFormat,
-        $signatureMethod,
         $certData,
         $descriptionEn,
         $descriptionNl,
@@ -84,10 +146,11 @@ class MetaData
         Coin $coin,
         Logo $logo
     ) {
+        $this->entityId = $entityId;
+        $this->metaDataUrl = $metaDataUrl;
         $this->acsBinding = $acsBinding;
         $this->acsLocation = $acsLocation;
         $this->nameIdFormat = $nameIdFormat;
-        $this->signatureMethod = $signatureMethod;
         $this->certData = $certData;
         $this->descriptionEn = $descriptionEn;
         $this->descriptionNl = $descriptionNl;
@@ -97,6 +160,16 @@ class MetaData
         $this->organization = $organization;
         $this->coin = $coin;
         $this->logo = $logo;
+    }
+
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    public function getMetaDataUrl()
+    {
+        return $this->metaDataUrl;
     }
 
     public function getAcsBinding()

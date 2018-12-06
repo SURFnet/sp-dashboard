@@ -22,11 +22,34 @@ class ContactList
 {
     private $contacts = [];
 
+    public static function fromApiResponse(array $metaDataFields)
+    {
+        // 1. Structure the flat keyed data into an associative array
+        $contactsData = [];
+        foreach ($metaDataFields as $fieldName => $value) {
+            if (substr($fieldName, 0, 9) === 'contacts:') {
+                $fieldNameParts = explode(':', $fieldName);
+                $contactsData[$fieldNameParts[1]][$fieldNameParts[2]] = $value;
+            }
+        }
+
+        // 2. Build the Contact DTOs
+        $list = new self();
+        foreach ($contactsData as $contact) {
+            $list->add(Contact::from($contact));
+        }
+
+        return $list;
+    }
+
     public function add(Contact $contact)
     {
         $this->contacts[$contact->getType()] = $contact;
     }
 
+    /**
+     * @return Contact|null
+     */
     public function findTechnicalContact()
     {
         if (isset($this->contacts['technical'])) {
@@ -35,6 +58,9 @@ class ContactList
         return null;
     }
 
+    /**
+     * @return Contact|null
+     */
     public function findAdministrativeContact()
     {
         if (isset($this->contacts['administrative'])) {
@@ -43,6 +69,9 @@ class ContactList
         return null;
     }
 
+    /**
+     * @return Contact|null
+     */
     public function findSupportContact()
     {
         if (isset($this->contacts['support'])) {

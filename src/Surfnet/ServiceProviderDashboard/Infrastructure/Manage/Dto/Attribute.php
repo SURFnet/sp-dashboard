@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Webmozart\Assert\Assert;
+
 class Attribute
 {
     private $name;
@@ -25,13 +27,28 @@ class Attribute
     private $source;
     private $motivation;
 
+    public static function fromApiResponse($attributeName, array $attributeData)
+    {
+        Assert::stringNotEmpty($attributeName, 'The attribute name must be non-empty string');
+        Assert::stringNotEmpty($attributeData['value'], 'The attribute value must be non-empty string');
+        Assert::string($attributeData['source'], 'The attribute source must be string');
+        Assert::string($attributeData['motivation'], 'The attribute motivation must be string');
+
+        return new self(
+            $attributeName,
+            $attributeData['value'],
+            $attributeData['source'],
+            $attributeData['motivation']
+        );
+    }
+
     /**
      * @param string $name
      * @param string $value
      * @param string $source
      * @param string $motivation
      */
-    public function __construct($name, $value, $source, $motivation)
+    private function __construct($name, $value, $source, $motivation)
     {
         $this->name = $name;
         $this->value = $value;

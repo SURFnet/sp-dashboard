@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Webmozart\Assert\Assert;
+
 class Organization
 {
     private $nameEn;
@@ -27,6 +29,27 @@ class Organization
     private $displayNameNl;
     private $urlNl;
 
+    public static function fromApiResponse(array $metaDataFields)
+    {
+        $nameEn = isset($metaDataFields['OrganizationName:en']) ? $metaDataFields['OrganizationName:en'] : '';
+        $displayNameEn = isset($metaDataFields['OrganizationDisplayName:en'])
+            ? $metaDataFields['OrganizationDisplayName:en'] : '';
+        $urlEn = isset($metaDataFields['OrganizationURL:en']) ? $metaDataFields['OrganizationURL:en'] : '';
+        $nameNl = isset($metaDataFields['OrganizationName:nl']) ? $metaDataFields['OrganizationName:nl'] : '';
+        $displayNameNl = isset($metaDataFields['OrganizationDisplayName:nl'])
+            ? $metaDataFields['OrganizationDisplayName:nl'] : '';
+        $urlNl = isset($metaDataFields['OrganizationURL:nl']) ? $metaDataFields['OrganizationURL:nl'] : '';
+
+        Assert::string($nameEn);
+        Assert::string($displayNameEn);
+        Assert::string($urlEn);
+        Assert::string($nameNl);
+        Assert::string($displayNameNl);
+        Assert::string($urlNl);
+
+        return new self($nameEn, $displayNameEn, $urlEn, $nameNl, $displayNameNl, $urlNl);
+    }
+
     /**
      * @param string $nameEn
      * @param string $displayNameEn
@@ -35,7 +58,7 @@ class Organization
      * @param string $displayNameNl
      * @param string $urlNl
      */
-    public function __construct($nameEn, $displayNameEn, $urlEn, $nameNl, $displayNameNl, $urlNl)
+    private function __construct($nameEn, $displayNameEn, $urlEn, $nameNl, $displayNameNl, $urlNl)
     {
         $this->nameEn = $nameEn;
         $this->displayNameEn = $displayNameEn;
