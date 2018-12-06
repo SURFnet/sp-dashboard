@@ -23,10 +23,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,8 +72,8 @@ class EntityEditController extends Controller
             $flashBag->clear();
         }
 
-        $command = SaveSamlEntityCommand::fromEntity($entity);
-        $form = $this->createForm(SamlEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
+        $form = $this->entityTypeFactory->createEditForm($entity);
+        $command = $form->getData();
 
         if ($entity->isPublished()) {
             $form->remove('save');

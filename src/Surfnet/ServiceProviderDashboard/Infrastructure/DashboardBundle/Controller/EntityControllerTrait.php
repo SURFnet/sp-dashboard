@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -62,24 +63,30 @@ trait EntityControllerTrait
      * @var AuthorizationService
      */
     private $authorizationService;
+    /**
+     * @var EntityTypeFactory
+     */
+    private $entityTypeFactory;
 
     /**
      * @param CommandBus $commandBus
      * @param EntityService $entityService
      * @param ServiceService $serviceService
      * @param AuthorizationService $authorizationService
-     * @param MailMessageFactory $mailMessageFactory
+     * @param EntityTypeFactory $entityTypeFactory
      */
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         ServiceService $serviceService,
-        AuthorizationService $authorizationService
+        AuthorizationService $authorizationService,
+        EntityTypeFactory $entityTypeFactory
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->serviceService = $serviceService;
         $this->authorizationService = $authorizationService;
+        $this->entityTypeFactory = $entityTypeFactory;
     }
 
     /**
@@ -221,14 +228,5 @@ trait EntityControllerTrait
     private function isCancelAction(Form $form)
     {
         return $this->assertUsedSubmitButton($form, 'cancel');
-    }
-
-    private function buildOptions($environment)
-    {
-        $options = [];
-        if ($environment === Entity::ENVIRONMENT_PRODUCTION) {
-            $options = ['validation_groups' => ['Default', 'production']];
-        }
-        return $options;
     }
 }

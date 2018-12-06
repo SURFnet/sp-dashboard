@@ -54,25 +54,6 @@ class SamlEntityType extends AbstractType
             // form).
             ->add('default', SubmitType::class, ['attr' => ['style' => 'display: none']])
             ->add(
-                $builder->create(
-                    'general',
-                    FormType::class,
-                    [
-                        'inherit_data' => true,
-                        'label' => 'General information',
-                    ]
-                )
-                    ->add(
-                        'ticketNumber',
-                        TextType::class,
-                        [
-                            'disabled' => true,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.ticketNumber'],
-                        ]
-                    )
-            )
-            ->add(
                 $builder->create('metadata', FormType::class, ['inherit_data' => true])
                     ->add(
                         'importUrl',

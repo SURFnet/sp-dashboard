@@ -75,6 +75,7 @@ class Entity
      * @param string $contact
      * @param string $state
      * @param string $environment
+     * @param string $protocol
      * @param RouterInterface $router
      */
     public function __construct(
@@ -85,6 +86,7 @@ class Entity
         $contact,
         $state,
         $environment,
+        $protocol,
         RouterInterface $router
     ) {
         $this->id = $id;
@@ -93,6 +95,7 @@ class Entity
         $this->contact = $contact;
         $this->state = $state;
         $this->environment = $environment;
+        $this->protocol = $protocol;
         $this->router = $router;
         $this->actions = new EntityActions($id, $serviceId, $state, $environment);
     }
@@ -115,6 +118,7 @@ class Entity
             $formattedContact,
             $entity->getStatus(),
             $entity->getEnvironment(),
+            $entity->getProtocol(),
             $router
         );
     }
@@ -137,6 +141,7 @@ class Entity
             $formattedContact,
             'published',
             'test',
+            $result['type'],
             $router
         );
     }
@@ -169,6 +174,7 @@ class Entity
             $formattedContact,
             $status,
             'production',
+            $result['type'],
             $router
         );
     }
@@ -257,7 +263,7 @@ class Entity
      */
     public function getProtocol()
     {
-        return 'SAML';
+        return $this->protocol;
     }
 
     public function isPublishedToProduction()

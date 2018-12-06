@@ -54,11 +54,6 @@ class SaveSamlEntityCommand implements Command
     private $service;
 
     /**
-     * @var string
-     */
-    private $ticketNumber;
-
-    /**
      * @var bool
      */
     private $archived = false;
@@ -396,7 +391,6 @@ class SaveSamlEntityCommand implements Command
         $command->status = $entity->getStatus();
         $command->manageId = $entity->getManageId();
         $command->service = $entity->getService();
-        $command->ticketNumber = $entity->getTicketNumber();
         $command->archived = $entity->isArchived();
         $command->environment = $entity->getEnvironment();
         $command->importUrl = $entity->getImportUrl();
@@ -467,14 +461,6 @@ class SaveSamlEntityCommand implements Command
     }
 
     /**
-     * @return string
-     */
-    public function getTicketNumber()
-    {
-        return $this->ticketNumber;
-    }
-
-    /**
      * @return bool
      */
     public function isArchived()
@@ -513,14 +499,6 @@ class SaveSamlEntityCommand implements Command
         }
 
         $this->environment = $environment;
-    }
-
-    /**
-     * @param string $ticketNo
-     */
-    public function setTicketNumber($ticketNo)
-    {
-        $this->ticketNumber = $ticketNo;
     }
 
     /**

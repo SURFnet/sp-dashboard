@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -38,15 +38,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class OidcEntityType extends AbstractType
 {
 
-    const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization';
-    const GRANT_TYPE_IMPLICIT = 'implicit';
-
-    private static $responseTypes = [
-        Entity::GRANT_TYPE_AUTHORIZATION_CODE_CODE => self::GRANT_TYPE_AUTHORIZATION_CODE,
-        Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN_TOKEN => self::GRANT_TYPE_IMPLICIT,
-        Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN => self::GRANT_TYPE_IMPLICIT,
-    ];
-
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
@@ -57,25 +48,6 @@ class OidcEntityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(
-                $builder->create(
-                    'general',
-                    FormType::class,
-                    [
-                        'inherit_data' => true,
-                        'label' => 'General information',
-                    ]
-                )
-                    ->add(
-                        'ticketNumber',
-                        TextType::class,
-                        [
-                            'disabled' => true,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.ticketNumber'],
-                        ]
-                    )
-            )
             ->add(
                 $builder->create('metadata', FormType::class, ['inherit_data' => true])
                     ->add(
@@ -110,36 +82,12 @@ class OidcEntityType extends AbstractType
                         [
                             'expanded' => true,
                             'multiple' => false,
-                            'mapped' => false,
                             'choices'  => [
-                                'entity.edit.label.authorization_code' => static::GRANT_TYPE_AUTHORIZATION_CODE,
-                                'entity.edit.label.implicit' => static::GRANT_TYPE_IMPLICIT,
+                                'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
+                                'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT,
                             ],
                             'attr' => [
-                                'class' => 'grant-type-container grant-type-toggle',
                                 'data-help' => 'entity.edit.information.grantType',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'grantTypeResponseType',
-                        ChoiceType::class,
-                        [
-                            'expanded' => true,
-                            'multiple' => false,
-                            'choices'  => [
-                                'entity.edit.label.authorization_code_token' => Entity::GRANT_TYPE_AUTHORIZATION_CODE_CODE,
-                                'entity.edit.label.implicit_id_token_token' => Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN_TOKEN,
-                                'entity.edit.label.implicit_id_token' => Entity::GRANT_TYPE_IMPLICIT_ID_TOKEN,
-                            ],
-                            'choice_attr' => function ($choiceValue, $key, $value) {
-                                return [
-                                    'data-field' => 'dashboard_bundle_entity_type_metadata_grantTypeChoice',
-                                    'data-show' => self::$responseTypes[$value],
-                                ];
-                            },
-                            'attr' => [
-                                'class' => 'grant-type-response-type-container',
                             ],
                         ]
                     )

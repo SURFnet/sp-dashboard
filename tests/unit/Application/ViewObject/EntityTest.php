@@ -104,6 +104,7 @@ class EntityTest extends MockeryTestCase
             'John Doe',
             $state,
             $env,
+            'saml20',
             $router
         );
     }

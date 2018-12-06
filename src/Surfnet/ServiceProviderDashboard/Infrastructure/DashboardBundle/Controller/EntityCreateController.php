@@ -23,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
@@ -31,7 +30,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
@@ -45,6 +43,7 @@ use Symfony\Component\HttpFoundation\Response;
 class EntityCreateController extends Controller
 {
     use EntityControllerTrait;
+
 
     /**
      * @Method({"GET", "POST"})
@@ -109,15 +108,8 @@ class EntityCreateController extends Controller
             );
         }
 
-        if ($type == Entity::TYPE_OPENID_CONNECT) {
-            $command = SaveOidcEntityCommand::forCreateAction($service);
-            $command->setEnvironment($targetEnvironment);
-            $form = $this->createForm(OidcEntityType::class, $command, $this->buildOptions($targetEnvironment));
-        } else {
-            $command = SaveSamlEntityCommand::forCreateAction($service);
-            $command->setEnvironment($targetEnvironment);
-            $form = $this->createForm(SamlEntityType::class, $command, $this->buildOptions($targetEnvironment));
-        }
+        $form = $this->entityTypeFactory->createCreateForm($type, $service, $targetEnvironment);
+        $command = $form->getData();
 
         if ($request->isMethod('post')) {
             $form->handleRequest($request);
@@ -199,10 +191,8 @@ class EntityCreateController extends Controller
 
         $service = $this->getService();
 
-        $command = SaveSamlEntityCommand::forCreateAction($service);
-        $command->setEnvironment($targetEnvironment);
-
-        $form = $this->createForm(SamlEntityType::class, $command, $this->buildOptions($targetEnvironment));
+        $form = $this->entityTypeFactory->createCreateForm(Entity::TYPE_SAML, $service, $targetEnvironment);
+        $command = $form->getData();
 
         if (!$request->isMethod('post')) {
             $form = $this->handleCopy($command, $service, $manageId, $targetEnvironment, $sourceEnvironment);

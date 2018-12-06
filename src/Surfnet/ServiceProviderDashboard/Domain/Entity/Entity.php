@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
@@ -54,10 +55,6 @@ class Entity
 
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT = 'oidc';
-
-    const GRANT_TYPE_AUTHORIZATION_CODE_CODE = 'authorization_code_code';
-    const GRANT_TYPE_IMPLICIT_ID_TOKEN_TOKEN = 'implicit_id_token_token';
-    const GRANT_TYPE_IMPLICIT_ID_TOKEN = 'implicit_id_token';
 
     /**
      * @var string
@@ -106,12 +103,6 @@ class Entity
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    private $ticketNo;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
     private $manageId;
 
     /**
@@ -133,6 +124,36 @@ class Entity
      * @ORM\Column(type="text", nullable=true)
      */
     private $pastedMetadata;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, length=50)
+     */
+    private $clientSecret;
+
+    /**
+     * @var string[]
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    private $redirectUris;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, length=50)
+     */
+    private $grantType;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enablePlayground;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, length=50)
+     */
+    private $protocol;
 
     /**
      * SAML XML Metadata for entity.
@@ -487,14 +508,6 @@ class Entity
     }
 
     /**
-     * @param string $ticketNumber
-     */
-    public function setTicketNumber($ticketNumber)
-    {
-        $this->ticketNo = $ticketNumber;
-    }
-
-    /**
      * @param bool $archived
      */
     public function setArchived($archived)
@@ -809,14 +822,6 @@ class Entity
     /**
      * @return string
      */
-    public function getTicketNumber()
-    {
-        return $this->ticketNo;
-    }
-
-    /**
-     * @return string
-     */
     public function getEnvironment()
     {
         return $this->environment;
@@ -892,6 +897,86 @@ class Entity
     public function getAcsLocation()
     {
         return $this->acsLocation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
+
+    /**
+     * @param string $clientSecret
+     */
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRedirectUris()
+    {
+        return $this->redirectUris;
+    }
+
+    /**
+     * @param string[] $redirectUris
+     */
+    public function setRedirectUris($redirectUris)
+    {
+        $this->redirectUris = $redirectUris;
+    }
+
+    /**
+     * @return OidcGrantType
+     */
+    public function getGrantType()
+    {
+        return new OidcGrantType($this->grantType);
+    }
+
+    /**
+     * @param OidcGrantType $grantType
+     */
+    public function setGrantType(OidcGrantType $grantType)
+    {
+        $this->grantType = $grantType->getGrantType();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnablePlayground()
+    {
+        return $this->enablePlayground;
+    }
+
+    /**
+     * @param bool $enablePlayground
+     */
+    public function setEnablePlayground($enablePlayground)
+    {
+        $this->enablePlayground = $enablePlayground;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+
+    /**
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
     }
 
     /**

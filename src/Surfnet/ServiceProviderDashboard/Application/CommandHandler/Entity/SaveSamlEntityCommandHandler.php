@@ -62,7 +62,6 @@ class SaveSamlEntityCommandHandler implements CommandHandler
             $entity = new Entity();
             $entity->setId($id);
             $entity->setService($command->getService());
-            $entity->setTicketNumber($command->getTicketNumber());
             $command->setId($id);
         } else {
             $entity = $this->repository->findById($command->getId());
@@ -72,8 +71,7 @@ class SaveSamlEntityCommandHandler implements CommandHandler
             throw new EntityNotFoundException('The requested Service cannot be found');
         }
 
-        // TODO: set $protocol
-
+        $entity->setProtocol(Entity::TYPE_SAML);
         $entity->setService($command->getService());
         $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());

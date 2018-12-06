@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -54,11 +55,6 @@ class SaveOidcEntityCommand implements Command
     private $service;
 
     /**
-     * @var string
-     */
-    private $ticketNumber;
-
-    /**
      * @var bool
      */
     private $archived = false;
@@ -82,26 +78,26 @@ class SaveOidcEntityCommand implements Command
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
     private $clientSecret;
 
     /**
      * @var string[]
-     *
+     * @Assert\Count(
+     *      min = 1,
+     *      max = 1000
+     * )
      * @Assert\All({
-     *     @Assert\NotBlank,
+     *     @Assert\NotBlank(),
      *     @Assert\Url(),
-     *     @Assert\Length(min=1)
      * })
      */
     private $redirectUris;
 
     /**
-     * @var string
+     * @var OidcGrantType
      *
      * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"authorization_code_code", "implicit_id_token_token", "implicit_id_token"}, strict=true)
      */
     private $grantType;
 
@@ -347,6 +343,7 @@ class SaveOidcEntityCommand implements Command
 
     private function __construct()
     {
+        $this->grantType = new OidcGrantType();
     }
 
     /**
@@ -372,16 +369,13 @@ class SaveOidcEntityCommand implements Command
         $command->status = $entity->getStatus();
         $command->manageId = $entity->getManageId();
         $command->service = $entity->getService();
-        $command->ticketNumber = $entity->getTicketNumber();
         $command->archived = $entity->isArchived();
         $command->environment = $entity->getEnvironment();
-
-//        TODO:
-//        $clientId
-//        $clientSecret
-//        $redirectUris
-//        $grantType
-
+        $command->clientId = $entity->getEntityId();
+        $command->clientSecret = $entity->getClientSecret();
+        $command->redirectUris = $entity->getRedirectUris();
+        $command->grantType = $entity->getGrantType();
+        $command->enablePlayground = $entity->isEnablePlayground();
         $command->logoUrl = $entity->getLogoUrl();
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
@@ -442,13 +436,6 @@ class SaveOidcEntityCommand implements Command
         return $this->service;
     }
 
-    /**
-     * @return string
-     */
-    public function getTicketNumber()
-    {
-        return $this->ticketNumber;
-    }
 
     /**
      * @return bool
@@ -492,13 +479,6 @@ class SaveOidcEntityCommand implements Command
     }
 
     /**
-     * @param string $ticketNo
-     */
-    public function setTicketNumber($ticketNo)
-    {
-        $this->ticketNumber = $ticketNo;
-    }
-    /**
      * @return string
      */
     public function getClientId()
@@ -531,11 +511,14 @@ class SaveOidcEntityCommand implements Command
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getRedirectUris()
     {
-        return $this->redirectUris;
+        if (!is_array($this->redirectUris)) {
+            return [];
+        }
+        return array_values($this->redirectUris);
     }
 
     /**
@@ -549,17 +532,17 @@ class SaveOidcEntityCommand implements Command
     /**
      * @return string
      */
-    public function getGrantTypeResponseType()
+    public function getGrantType()
     {
-        return $this->grantType;
+        return $this->grantType->getGrantType();
     }
 
     /**
-     * @param string $grantType
+     * @param string
      */
-    public function setGrantTypeResponseType($grantType)
+    public function setGrantType($grantType)
     {
-        $this->grantType = $grantType;
+        $this->grantType = new OidcGrantType($grantType);
     }
 
     /**
