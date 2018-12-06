@@ -63,6 +63,11 @@ class Entity
     private $router;
 
     /**
+     * @var string
+     */
+    private $protocol;
+
+    /**
      * @var EntityActions
      */
     private $actions;

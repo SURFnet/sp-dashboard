@@ -67,7 +67,6 @@ class EntityTypeFactory
         throw new \InvalidArgumentException("invalid form type requested: " . $type);
     }
 
-
     /**
      * @param $type
      * @param Entity $entity
