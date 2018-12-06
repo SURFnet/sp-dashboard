@@ -1,9 +1,5 @@
 <li>
-    {% if action.isPublishedToProduction %}
-    <a href="{{ path('entity_detail', {id: action.id}) }}">
-    {% elseif (action.isPublished or action.isRequested) %}
     <a href="{{ path('entity_detail', {id: action.id, manageTarget: action.environment}) }}">
-    {% endif %}
         <i class="fa fa-book" aria-hidden="true"></i>
         {{ 'entity.list.action.view'|trans }}
     </a>

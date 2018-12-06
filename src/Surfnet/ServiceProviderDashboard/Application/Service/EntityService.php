@@ -61,19 +61,19 @@ class EntityService implements EntityServiceInterface
 
     public function getEntityByIdAndTarget($id, $manageTarget)
     {
-        switch ($manageTarget){
+        switch ($manageTarget) {
             case 'production':
                 $entity = $this->queryRepositoryProvider
                     ->getManageProductionQueryClient()
                     ->findByManageId($id);
 
-                return Entity::fromManageResponse($entity);
+                return Entity::fromManageResponse($entity, $manageTarget);
                 break;
             case 'test':
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
-                return Entity::fromManageResponse($entity);
+                return Entity::fromManageResponse($entity, $manageTarget);
                 break;
             default:
                 return $this->getEntityById($id);
