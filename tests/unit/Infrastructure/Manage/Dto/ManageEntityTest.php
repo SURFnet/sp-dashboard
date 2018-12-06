@@ -29,7 +29,7 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertInstanceOf(ManageEntity::class, $entity);
         // Test some samples
         $this->assertEquals('411f8e0f-87a6-4ea7-8194-66b3e77f97d5', $entity->getId());
-        $this->assertEquals('urn:mace:dir:attribute-def:uid', $entity->getAttributes()->getAttributes()[1]->getName());
+        $this->assertEquals('urn:mace:dir:attribute-def:uid', $entity->getAttributes()->findByUrn('urn:mace:dir:attribute-def:uid')->getName());
         $this->assertEquals('Technical Support', $entity->getMetaData()->getContacts()->findTechnicalContact()->getSurName());
         $this->assertEquals('SURFnet BV', $entity->getMetaData()->getOrganization()->getNameEn());
         $this->assertEquals(160, $entity->getMetaData()->getLogo()->getHeight());

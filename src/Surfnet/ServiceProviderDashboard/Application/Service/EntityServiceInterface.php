@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 interface EntityServiceInterface
 {
@@ -52,7 +53,7 @@ interface EntityServiceInterface
     /**
      * @param string $manageId
      * @param string $env
-     * @return array|null
+     * @return ManageEntity|null
      *
      * @throws InvalidArgumentException
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException

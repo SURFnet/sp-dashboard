@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class EntityDto
 {
@@ -68,21 +69,21 @@ class EntityDto
         return new self($entity->getId(), $entity->getEntityId(), $entity->getEnvironment(), $entity->getStatus());
     }
 
-    public static function fromManageTestResult(array $manageResponse)
+    public static function fromManageTestResult(ManageEntity $manageResponse)
     {
         return new self(
-            $manageResponse['id'],
-            $manageResponse['data']['entityid'],
+            $manageResponse->getId(),
+            $manageResponse->getMetaData()->getEntityId(),
             'published',
             'test'
         );
     }
 
-    public static function fromManageProductionResult(array $manageResponse)
+    public static function fromManageProductionResult(ManageEntity $manageResponse)
     {
         return new self(
-            $manageResponse['id'],
-            $manageResponse['data']['entityid'],
+            $manageResponse->getId(),
+            $manageResponse->getMetaData()->getEntityId(),
             'published',
             'production'
         );

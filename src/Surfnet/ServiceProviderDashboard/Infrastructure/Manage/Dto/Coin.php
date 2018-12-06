@@ -26,6 +26,8 @@ class Coin
     private $serviceTeamId;
     private $originalMetadataUrl;
     private $excludeFromPush;
+    private $applicationUrl;
+    private $eula;
 
     public static function fromApiResponse(array $metaDataFields)
     {
@@ -35,15 +37,23 @@ class Coin
             ? $metaDataFields['coin:service_team_id'] : '';
         $originalMetadataUrl = isset($metaDataFields['coin:original_metadata_url'])
             ? $metaDataFields['coin:original_metadata_url'] : '';
+        $applicationUrl = isset($metaDataFields['coin:application_url'])
+            ? $metaDataFields['coin:application_url'] : '';
+        $eula = isset($metaDataFields['coin:eula'])
+            ? $metaDataFields['coin:eula'] : '';
         $excludeFromPush = isset($metaDataFields['coin:exclude_from_push'])
-            ?  (int) $metaDataFields['coin:exclude_from_push'] : 1;
+            ? (int) $metaDataFields['coin:exclude_from_push'] : 0;
 
         Assert::string($signatureMethod);
         Assert::string($serviceTeamId);
         Assert::string($originalMetadataUrl);
+        Assert::string($applicationUrl);
+        Assert::string($eula);
         Assert::integer($excludeFromPush);
 
-        return new self($signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush);
+        return new self(
+            $signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush, $applicationUrl, $eula
+        );
     }
 
     /**
@@ -51,13 +61,23 @@ class Coin
      * @param string $serviceTeamId
      * @param string $originalMetadataUrl
      * @param string $excludeFromPush
+     * @param string $applicationUrl
+     * @param string $eula
      */
-    private function __construct($signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush)
-    {
+    private function __construct(
+        $signatureMethod,
+        $serviceTeamId,
+        $originalMetadataUrl,
+        $excludeFromPush,
+        $applicationUrl,
+        $eula
+    ) {
         $this->signatureMethod = $signatureMethod;
         $this->serviceTeamId = $serviceTeamId;
         $this->originalMetadataUrl = $originalMetadataUrl;
         $this->excludeFromPush = $excludeFromPush;
+        $this->applicationUrl = $applicationUrl;
+        $this->eula = $eula;
     }
 
     public function getSignatureMethod()
@@ -78,5 +98,15 @@ class Coin
     public function getExcludeFromPush()
     {
         return $this->excludeFromPush;
+    }
+
+    public function getApplicationUrl()
+    {
+        return $this->applicationUrl;
+    }
+
+    public function getEula()
+    {
+        return $this->eula;
     }
 }

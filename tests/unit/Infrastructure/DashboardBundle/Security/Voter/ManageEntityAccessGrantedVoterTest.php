@@ -23,6 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\ManageEntityAccessGrantedVoter;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -100,7 +101,7 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
                 ['manageId' => 'id', 'environment' => 'test'],
                 [ManageEntityAccessGrantedVoter::MANAGE_ENTITY_ACCESS],
                 $this->buildToken(['ROLE_USER']),
-                $this->buildManageResponse(['response' => 'false']),
+                $this->buildManageResponse(false),
                 VoterInterface::ACCESS_DENIED,
             ],
             [
@@ -122,14 +123,14 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
         ];
     }
 
-    private function buildManageResponse(array $response = [])
+    private function buildManageResponse($response = 'team-a')
     {
-        if (empty($response)) {
-            $entity['data']['metaDataFields']['coin:service_team_id'] = 'team-a';
-            return $entity;
-        }
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getCoin->getServiceTeamId')
+            ->andReturn($response);
 
-        return $response;
+        return $manageEntity;
     }
 
     private function buildToken(array $roles = [], $isPartOfTeam = true)

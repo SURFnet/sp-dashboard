@@ -34,6 +34,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFacto
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -113,22 +114,24 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('info')
         ;
 
+        $manageDto = ManageEntity::fromApiResponse([
+            'id' => 'd6f394b2-08b1-4882-8b32-81688c15c489',
+            'data' => [
+                'entityid' => 'SP1',
+                'metaDataFields' => [
+                    'name:en' => 'SP1',
+                    'contacts:0:contactType' => 'administrative',
+                    'contacts:0:givenName' => 'Test',
+                    'contacts:0:surName' => 'Test',
+                    'contacts:0:emailAddress' => 'test@example.org',
+                ],
+            ],
+        ]);
+
         $this->queryClient
             ->shouldReceive('findByManageId')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn([
-                'id' => 'd6f394b2-08b1-4882-8b32-81688c15c489',
-                'data' => [
-                    'entityid' => 'SP1',
-                    'metaDataFields' => [
-                        'name:en' => 'SP1',
-                        'contacts:0:contactType' => 'administrative',
-                        'contacts:0:givenName' => 'Test',
-                        'contacts:0:surName' => 'Test',
-                        'contacts:0:emailAddress' => 'test@example.org',
-                    ],
-                ],
-            ]);
+            ->andReturn($manageDto);
 
         $this->translator
             ->shouldReceive('trans')
@@ -163,22 +166,24 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('critical')
         ;
 
+        $managetDto = ManageEntity::fromApiResponse([
+            'id' => 'd6f394b2-08b1-4882-8b32-81688c15c489',
+            'data' => [
+                'entityid' => 'SP1',
+                'metaDataFields' => [
+                    'name:en' => 'SP1',
+                    'contacts:0:contactType' => 'administrative',
+                    'contacts:0:givenName' => 'Test',
+                    'contacts:0:surName' => 'Test',
+                    'contacts:0:emailAddress' => 'test@example.org',
+                ],
+            ],
+        ]);
+
         $this->queryClient
             ->shouldReceive('findByManageId')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn([
-                'id' => 'd6f394b2-08b1-4882-8b32-81688c15c489',
-                'data' => [
-                    'entityid' => 'SP1',
-                    'metaDataFields' => [
-                        'name:en' => 'SP1',
-                        'contacts:0:contactType' => 'administrative',
-                        'contacts:0:givenName' => 'Test',
-                        'contacts:0:surName' => 'Test',
-                        'contacts:0:emailAddress' => 'test@example.org',
-                    ],
-                ],
-            ]);
+            ->andReturn($managetDto);
 
         $this->translator
             ->shouldReceive('trans')

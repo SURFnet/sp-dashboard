@@ -44,7 +44,19 @@ class AttributeList
 
     public function add(Attribute $attribute)
     {
-        $this->attributes[] = $attribute;
+        $this->attributes[$attribute->getName()] = $attribute;
+    }
+
+    /**
+     * @param $urn
+     * @return Attribute|null
+     */
+    public function findByUrn($urn)
+    {
+        if (isset($this->attributes[$urn])) {
+            return $this->attributes[$urn];
+        }
+        return null;
     }
 
     /**
