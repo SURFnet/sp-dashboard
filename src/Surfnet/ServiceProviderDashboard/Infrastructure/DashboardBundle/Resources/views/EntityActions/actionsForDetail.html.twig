@@ -1,4 +1,10 @@
 <ul>
+    <li>
+        <a href="{{ path('entity_list') }}">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            {{ 'entity.list.action.back'|trans }}
+        </a>
+    </li>
     {% include "@Dashboard/EntityActions/editAction.html.twig" with {action: entity} %}
     {% include "@Dashboard/EntityActions/deleteAction.html.twig" with {action: entity} %}
     {% include "@Dashboard/EntityActions/copyAction.html.twig" with {action: entity} %}

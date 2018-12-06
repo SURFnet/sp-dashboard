@@ -4,10 +4,10 @@
 
     <h1>{% block page_heading %}{{ 'entity.detail.title'|trans }}{% endblock %}</h1>
 
+    <div class="fieldset card action">
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}
+    </div>
     <div class="fieldset card">
-
-        <div class="actions">{% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}</div>
-
         <h2>{{ 'entity.detail.info.title'|trans }}</h2>
         <div class="wysiwyg">{{ 'entity.detail.info.html'|trans|raw }}</div>
     </div>

@@ -77,6 +77,7 @@ entity.list.entity_id: Entity ID
 entity.list.primary_contact: Primary contact
 entity.list.environment: Environment
 entity.list.state: State
+entity.list.action.back: Back to overview
 entity.list.action.view: View
 entity.list.action.edit: Edit
 entity.list.action.copy: Copy

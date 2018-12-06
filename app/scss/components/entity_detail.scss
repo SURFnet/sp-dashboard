@@ -1,4 +1,22 @@
-.card {
+.page-container .card {
+  &.action {
+    height: 4em;
+    background: $blue;
+    padding: 0 0 0 25px;
+    color: white;
+    li {
+      display: inline;
+      float: left;
+      a {
+        font-size: larger;
+        text-decoration: none;
+        color: white;
+        display: block;
+        padding: 1em 3em 0 0;
+      }
+    }
+  }
+
   .detail {
     pre {
       font-family: monospace;
