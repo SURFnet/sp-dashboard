@@ -30,6 +30,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class CopyEntityCommandHandlerTest extends MockeryTestCase
 {
@@ -152,15 +154,24 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('dashboardid')
             ->andReturn(true);
 
+        $manageEntity = m::mock(ManageEntity::class);
+
+        $coin = m::mock(Coin::class);
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getCoin')
+            ->andReturn($coin);
+
+        $coin
+            ->shouldReceive('getServiceTeamId')
+            ->andReturn('wrongteam');
+        $coin
+            ->shouldReceive('getExcludeFromPush')
+            ->andReturn(1);
+
         $this->manageProdClient->shouldReceive('findByManageId')
             ->with('manageid')
-            ->andReturn([
-                'data' => [
-                    'metaDataFields' => [
-                        'coin:service_team_id' => 'wrongteam',
-                    ]
-                ]
-            ]);
+            ->andReturn($manageEntity);
 
         $saveCommand = SaveEntityCommand::forCreateAction(m::mock(Service::class));
         $this->commandHandler->handle(
@@ -181,38 +192,42 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('dashboardid')
             ->andReturn(true);
 
+        $manageDto = ManageEntity::fromApiResponse([
+            'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
+            'data' => [
+                'entityid' => 'http://example.com',
+                'arp' => [
+                    'attributes' => [
+                        'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test1',
+                        ]],
+                        'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test2',
+                        ]],
+                        'urn:mace:dir:attribute-def:displayName' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test3',
+                        ]],
+                    ],
+                ],
+                'metaDataFields' => [
+                    'name:en' => 'name en',
+                    'name:nl' => 'name nl',
+                    'description:en' => 'description en',
+                    'description:nl' => 'description nl',
+                    'coin:service_team_id' => 'testteam',
+                ]
+            ]
+        ]);
+
         $this->manageTestClient->shouldReceive('findByManageId')
             ->with('manageid')
-            ->andReturn([
-                'data' => [
-                    'arp' => [
-                        'attributes' => [
-                            'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
-                                'source' => 'idp',
-                                'value' => '*',
-                                'motivation' => 'test1',
-                            ]],
-                            'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
-                                'source' => 'idp',
-                                'value' => '*',
-                                'motivation' => 'test2',
-                            ]],
-                            'urn:mace:dir:attribute-def:displayName' => [[
-                                'source' => 'idp',
-                                'value' => '*',
-                                'motivation' => 'test3',
-                            ]],
-                        ],
-                    ],
-                    'metaDataFields' => [
-                        'name:en' => 'name en',
-                        'name:nl' => 'name nl',
-                        'description:en' => 'description en',
-                        'description:nl' => 'description nl',
-                        'coin:service_team_id' => 'testteam',
-                    ]
-                ]
-            ]);
+            ->andReturn($manageDto);
 
         $this->manageTestClient->shouldReceive('getMetadataXmlByManageId')
             ->with('manageid')
@@ -286,38 +301,42 @@ JSON
             ->with('dashboardid')
             ->andReturn(true);
 
+        $manageDto = ManageEntity::fromApiResponse([
+            'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
+            'data' => [
+                'entityid' => 'http://example.com',
+                'arp' => [
+                    'attributes' => [
+                        'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test1',
+                        ]],
+                        'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test2',
+                        ]],
+                        'urn:mace:dir:attribute-def:displayName' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test3',
+                        ]],
+                    ],
+                ],
+                'metaDataFields' => [
+                    'name:en' => 'name en',
+                    'name:nl' => 'name nl',
+                    'description:en' => 'description en',
+                    'description:nl' => 'description nl',
+                    'coin:service_team_id' => 'testteam',
+                ]
+            ]
+        ]);
+
         $this->manageProdClient->shouldReceive('findByManageId')
             ->with('manageid')
-            ->andReturn([
-                'data' => [
-                    'arp' => [
-                        'attributes' => [
-                            'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
-                                'source' => 'idp',
-                                'value' => '*',
-                                'motivation' => 'test1',
-                            ]],
-                            'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
-                                'source' => 'idp',
-                                'value' => '*',
-                                'motivation' => 'test2',
-                            ]],
-                            'urn:mace:dir:attribute-def:displayName' => [[
-                                'source' => 'idp',
-                                'value' => '*',
-                                'motivation' => 'test3',
-                            ]],
-                        ],
-                    ],
-                    'metaDataFields' => [
-                        'name:en' => 'name en',
-                        'name:nl' => 'name nl',
-                        'description:en' => 'description en',
-                        'description:nl' => 'description nl',
-                        'coin:service_team_id' => 'testteam',
-                    ]
-                ]
-            ]);
+            ->andReturn($manageDto);
 
         $this->manageProdClient->shouldReceive('getMetadataXmlByManageId')
             ->with('manageid')

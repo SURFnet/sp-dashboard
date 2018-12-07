@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryP
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -106,7 +107,7 @@ class EntityService implements EntityServiceInterface
      * @param string $manageId
      * @param string $env
      *
-     * @return array|null
+     * @return ManageEntity|null
      *
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException

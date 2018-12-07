@@ -19,6 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -102,16 +103,14 @@ class Entity
         );
     }
 
-    public static function fromManageTestResult(array $result, RouterInterface $router)
+    public static function fromManageTestResult(ManageEntity $result, RouterInterface $router)
     {
-        $metadata = $result['data']['metaDataFields'];
-
-        $formattedContact = self::formatManageContact($metadata);
+        $formattedContact = self::formatManageContact($result);
 
         return new self(
-            $result['id'],
-            $result['data']['entityid'],
-            $metadata['name:en'],
+            $result->getId(),
+            $result->getMetaData()->getEntityId(),
+            $result->getMetaData()->getNameEn(),
             $formattedContact,
             'published',
             'test',
@@ -119,24 +118,24 @@ class Entity
         );
     }
 
-    public static function fromManageProductionResult(array $result, RouterInterface $router)
+    public static function fromManageProductionResult(ManageEntity $result, RouterInterface $router)
     {
-        $metadata = $result['data']['metaDataFields'];
-
-        $formattedContact = self::formatManageContact($metadata);
+        $formattedContact = self::formatManageContact($result);
 
         // As long as the coin:exclude_from_push metadata is present, allow modifications to the entity by
         // copying it from manage and merging the changes. The view status text: requested is set when an entity
         // can still be edited.
         $status = 'published';
-        if (isset($metadata['coin:exclude_from_push']) && $metadata['coin:exclude_from_push'] == 1) {
+
+        $excludeFromPush = $result->getMetaData()->getCoin()->getExcludeFromPush();
+        if ($excludeFromPush === 1) {
             $status = 'requested';
         }
 
         return new self(
-            $result['id'],
-            $result['data']['entityid'],
-            $metadata['name:en'],
+            $result->getId(),
+            $result->getMetaData()->getEntityId(),
+            $result->getMetaData()->getNameEn(),
             $formattedContact,
             $status,
             'production',
@@ -147,19 +146,16 @@ class Entity
     /**
      * @return string
      */
-    private static function formatManageContact(array $metadata)
+    private static function formatManageContact(ManageEntity $metadata)
     {
-        for ($i=0; $i<=2; $i++) {
-            $attrPrefix = sprintf('contacts:%d:', $i);
-
-            if (isset($metadata[$attrPrefix . 'contactType']) && $metadata[$attrPrefix . 'contactType'] === 'administrative') {
-                return sprintf(
-                    '%s %s (%s)',
-                    $metadata[$attrPrefix . 'givenName'],
-                    $metadata[$attrPrefix . 'surName'],
-                    $metadata[$attrPrefix . 'emailAddress']
-                );
-            }
+        $administrative = $metadata->getMetaData()->getContacts()->findAdministrativeContact();
+        if ($administrative) {
+            return sprintf(
+                '%s %s (%s)',
+                $administrative->getGivenName(),
+                $administrative->getSurName(),
+                $administrative->getEmail()
+            );
         }
 
         return '';

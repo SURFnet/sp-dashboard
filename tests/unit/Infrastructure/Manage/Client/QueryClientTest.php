@@ -66,18 +66,18 @@ class QueryClientTest extends MockeryTestCase
         // When the queried entityId is found
         $this->mockHandler
             ->append(
-                new Response(200, [], file_get_contents(__DIR__ . '/fixture/query_response.json'))
+                new Response(200, [], file_get_contents(__DIR__ . '/fixture/read_response.json'))
             );
         $response = $this->client->findByManageId('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33');
-        $this->assertEquals('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $response[0]['_id']);
+        $this->assertEquals('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $response->getId());
 
         $this->assertEquals(
             'https://engine.dev.support.surfconext.nl/authentication/sp/metadata',
-            $response[0]['data']['entityid']
+            $response->getMetaData()->getEntityId()
         );
         $this->assertEquals(
             'OpenConext Engine',
-            $response[0]['data']['metaDataFields']['name:en']
+            $response->getMetaData()->getNameEn()
         );
     }
 

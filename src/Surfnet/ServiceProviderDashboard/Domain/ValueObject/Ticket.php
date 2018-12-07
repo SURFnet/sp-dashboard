@@ -23,6 +23,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
  */
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class Ticket
 {
@@ -43,10 +44,10 @@ class Ticket
         $this->applicantEmail = $applicantEmail;
     }
 
-    public static function fromManageResponse($entity, Applicant $applicant)
+    public static function fromManageResponse(ManageEntity $entity, Applicant $applicant)
     {
-        $entityId = $entity['data']['entityid'];
-        $nameEn = $entity['data']['metaDataFields']['name:en'];
+        $entityId = $entity->getMetaData()->getEntityId();
+        $nameEn = $entity->getMetaData()->getNameEn();
 
         return new self($entityId, $nameEn, $applicant->getDisplayName(), $applicant->getEmailAddress());
     }
