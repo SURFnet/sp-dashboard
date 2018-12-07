@@ -46,14 +46,35 @@ class JsonGenerator implements GeneratorInterface
      */
     private $spDashboardMetadataGenerator;
 
+    /**
+     * @var string
+     */
+    private $oidcPlaygroundUriTest;
+
+    /**
+     * @var string
+     */
+    private $oidcPlaygroundUriProd;
+
+    /**
+     * @param ArpGenerator $arpMetadataGenerator
+     * @param PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator
+     * @param SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+     * @param string $oidcPlaygroundUriTest OIDC playgroudn uri
+     * @param string $oidcPlaygroundUriProd OIDC playgroudn uri
+     */
     public function __construct(
         ArpGenerator $arpMetadataGenerator,
         PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
+        $oidcPlaygroundUriTest,
+        $oidcPlaygroundUriProd
     ) {
         $this->arpMetadataGenerator = $arpMetadataGenerator;
         $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
+        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
+        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
     /**
@@ -65,14 +86,23 @@ class JsonGenerator implements GeneratorInterface
         $metadata = [
             'arp'             => $this->arpMetadataGenerator->build($entity),
             'entityid'        => $entity->getEntityId(),
-            'metadataurl'     => $entity->getMetadataUrl(),
             'active'          => true,
             'allowedEntities' => [],
             'allowedall'      => true,
             'state'           => 'testaccepted',
-            'type'            => 'saml20-sp',
             'metaDataFields'  => $this->generateMetadataFields($entity),
         ];
+
+        switch (true) {
+            case ($entity->getProtocol() == Entity::TYPE_SAML):
+                $metadata['type'] = 'saml20-sp';
+                $metadata['metadataurl'] = $entity->getMetadataUrl();
+                break;
+            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
+                $metadata['type'] = 'oidc';
+                $metadata['oidcClient'] = $this->generateOidcClient($entity);
+                break;
+        }
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
@@ -90,8 +120,13 @@ class JsonGenerator implements GeneratorInterface
         $metadata = [
             'arp'             => $this->arpMetadataGenerator->build($entity),
             'entityid'        => $entity->getEntityId(),
-            'metadataurl'     => $entity->getMetadataUrl(),
         ];
+
+        if ($entity->getProtocol() == Entity::TYPE_SAML) {
+            $metadata['metadataurl'] = $entity->getMetadataUrl();
+        } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
+            $metadata['oidcClient'] = $this->generateOidcClient($entity);
+        }
 
         $metadata += $this->flattenMetadataFields(
             $this->generateMetadataFields($entity)
@@ -149,12 +184,17 @@ class JsonGenerator implements GeneratorInterface
                 'name:en' => $entity->getNameEn(),
                 'name:nl' => $entity->getNameNl(),
             ],
-            $this->generateSecurityMetadata($entity),
             $this->generateAllContactsMetadata($entity),
             $this->generateOrganizationMetadata($entity),
             $this->privacyQuestionsMetadataGenerator->build($entity),
             $this->spDashboardMetadataGenerator->build($entity)
         );
+
+        if ($entity->getProtocol() == Entity::TYPE_SAML) {
+            $metadata = array_merge($metadata, $this->generateSecurityMetadata($entity));
+        } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
+            $metadata["coin:oidc_client"] = '1';
+        }
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to engineblock.
@@ -181,6 +221,29 @@ class JsonGenerator implements GeneratorInterface
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getCertificate()
             );
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    private function generateOidcClient(Entity $entity)
+    {
+        $metadata['clientId'] = $entity->getEntityId();
+        $metadata['clientSecret'] = $entity->getClientSecret();
+        $metadata['redirectUris'] = $entity->getRedirectUris();
+        $metadata['grantType'] = $entity->getGrantType()->getGrantType();
+        $metadata['scope'] = ['openid'];
+
+        if ($entity->isEnablePlayground()) {
+            if ($entity->isProduction()) {
+                $metadata['redirectUris'][] = $this->oidcPlaygroundUriProd;
+            } else {
+                $metadata['redirectUris'][] = $this->oidcPlaygroundUriTest;
+            }
         }
 
         return $metadata;

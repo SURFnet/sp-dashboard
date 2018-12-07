@@ -168,6 +168,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
