@@ -28,6 +28,7 @@ class Coin
     private $excludeFromPush;
     private $applicationUrl;
     private $eula;
+    private $oidcClient;
 
     public static function fromApiResponse(array $metaDataFields)
     {
@@ -43,6 +44,8 @@ class Coin
             ? $metaDataFields['coin:eula'] : '';
         $excludeFromPush = isset($metaDataFields['coin:exclude_from_push'])
             ? (int) $metaDataFields['coin:exclude_from_push'] : 0;
+        $oidcClient = isset($metaDataFields['coin:oidc_client'])
+            ? (int) $metaDataFields['coin:oidc_client'] : 0;
 
         Assert::string($signatureMethod);
         Assert::string($serviceTeamId);
@@ -50,9 +53,10 @@ class Coin
         Assert::string($applicationUrl);
         Assert::string($eula);
         Assert::integer($excludeFromPush);
+        Assert::integer($oidcClient);
 
         return new self(
-            $signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush, $applicationUrl, $eula
+            $signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush, $applicationUrl, $eula, $oidcClient
         );
     }
 
@@ -63,6 +67,7 @@ class Coin
      * @param string $excludeFromPush
      * @param string $applicationUrl
      * @param string $eula
+     * @param int $oidcClient
      */
     private function __construct(
         $signatureMethod,
@@ -70,7 +75,8 @@ class Coin
         $originalMetadataUrl,
         $excludeFromPush,
         $applicationUrl,
-        $eula
+        $eula,
+        $oidcClient
     ) {
         $this->signatureMethod = $signatureMethod;
         $this->serviceTeamId = $serviceTeamId;
@@ -78,6 +84,7 @@ class Coin
         $this->excludeFromPush = $excludeFromPush;
         $this->applicationUrl = $applicationUrl;
         $this->eula = $eula;
+        $this->oidcClient = $oidcClient;
     }
 
     public function getSignatureMethod()
@@ -108,5 +115,10 @@ class Coin
     public function getEula()
     {
         return $this->eula;
+    }
+
+    public function getOidcClient()
+    {
+        return $this->oidcClient;
     }
 }

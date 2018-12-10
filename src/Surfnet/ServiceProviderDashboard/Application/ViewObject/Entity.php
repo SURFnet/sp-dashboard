@@ -141,7 +141,7 @@ class Entity
             $formattedContact,
             $result->getStatus(),
             'test',
-            $result['type'],
+            self::detectProtocol($result),
             $router
         );
     }
@@ -174,7 +174,7 @@ class Entity
             $formattedContact,
             $status,
             'production',
-            $result['type'],
+            self::detectProtocol($result),
             $router
         );
     }
@@ -208,6 +208,19 @@ class Entity
             $contact->getLastName(),
             $contact->getEmail()
         );
+    }
+
+
+    /**
+     * @param ManageEntity $entity
+     * @return string
+     */
+    private static function detectProtocol(ManageEntity $entity)
+    {
+        if ($entity->getMetaData()->getCoin()->getOidcClient()) {
+            return DomainEntity::TYPE_OPENID_CONNECT;
+        }
+        return DomainEntity::TYPE_SAML;
     }
 
     /**
