@@ -95,11 +95,10 @@ class JsonGenerator implements GeneratorInterface
 
         switch (true) {
             case ($entity->getProtocol() == Entity::TYPE_SAML):
-                $metadata['type'] = 'saml20-sp';
+                $metadata['type']        = 'saml20-sp';
                 $metadata['metadataurl'] = $entity->getMetadataUrl();
                 break;
             case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
-                $metadata['type'] = 'oidc';
                 $metadata['oidcClient'] = $this->generateOidcClient($entity);
                 break;
         }
@@ -176,9 +175,6 @@ class JsonGenerator implements GeneratorInterface
     {
         $metadata = array_merge(
             [
-                'AssertionConsumerService:0:Binding' => $entity->getAcsBinding(),
-                'AssertionConsumerService:0:Location' => $entity->getAcsLocation(),
-                'NameIDFormat' => $entity->getNameIdFormat(),
                 'description:en' => $entity->getDescriptionEn(),
                 'description:nl' => $entity->getDescriptionNl(),
                 'name:en' => $entity->getNameEn(),
@@ -191,6 +187,9 @@ class JsonGenerator implements GeneratorInterface
         );
 
         if ($entity->getProtocol() == Entity::TYPE_SAML) {
+            $metadata['AssertionConsumerService:0:Binding'] = $entity->getAcsBinding();
+            $metadata['AssertionConsumerService:0:Location'] = $entity->getAcsLocation();
+            $metadata['NameIDFormat'] = $entity->getNameIdFormat();
             $metadata = array_merge($metadata, $this->generateSecurityMetadata($entity));
         } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
             $metadata["coin:oidc_client"] = '1';
