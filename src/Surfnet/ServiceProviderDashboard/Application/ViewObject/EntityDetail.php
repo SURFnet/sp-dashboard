@@ -268,7 +268,7 @@ class EntityDetail
         $entityDetail->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
         $entityDetail->organizationUrlNl = $entity->getOrganizationUrlNl();
         $entityDetail->organizationUrlEn = $entity->getOrganizationUrlEn();
-        $entityDetail->actions = new EntityActions($entity->getId(), $entity->getStatus(), $entity->getEnvironment());
+        $entityDetail->actions = new EntityActions($entity->getManageId(), $entity->getStatus(), $entity->getEnvironment());
         return $entityDetail;
     }
 

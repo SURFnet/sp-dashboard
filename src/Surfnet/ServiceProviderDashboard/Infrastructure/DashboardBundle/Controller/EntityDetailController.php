@@ -19,28 +19,38 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class EntityDetailController extends Controller
 {
     /**
+     * @var EntityServiceInterface
+     */
+    private $entityService;
+
+    public function __construct(EntityServiceInterface $entityService)
+    {
+        $this->entityService = $entityService;
+    }
+
+    /**
      * @Method("GET")
-     * @Route("/entity/detail/{id}", name="entity_detail_draft")
-     * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
-     * @Security("has_role('ROLE_USER') and token.hasAccessToEntity(request.get('entity'))")
+     * @Route("/entity/detail/{id}/{manageTarget}", name="entity_detail", defaults={"manageTarget" = false})
+     * @Security("has_role('ROLE_USER')")
      * @Template("@Dashboard/EntityDetail/detail.html.twig")
      *
+     * @param $id
+     * @param $manageTarget
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
-     * @param Entity $entity
      */
-    public function detailDraftAction(Entity $entity)
+    public function detailAction($id, $manageTarget)
     {
+        $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget);
         $viewObject = EntityDetail::fromEntity($entity);
 
         return ['entity' => $viewObject];

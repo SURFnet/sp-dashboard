@@ -33,6 +33,13 @@ interface EntityServiceInterface
     public function createEntityUuid();
 
     /**
+     * @param string $id
+     * @param string $manageTarget
+     * @return mixed
+     */
+    public function getEntityByIdAndTarget($id, $manageTarget);
+
+    /**
      * @param $id
      * @return Entity|null
      */
