@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -361,6 +362,79 @@ class Entity
      * @ORM\JoinColumn(nullable=false)
      */
     private $service;
+
+    public static function fromManageResponse(ManageEntity $manageEntity)
+    {
+        $metaData = $manageEntity->getMetaData();
+        $coin = $metaData->getCoin();
+        $arp = $manageEntity->getAttributes();
+
+        $entity = new self();
+
+        // Todo set env & state
+        $entity->setEnvironment('production');
+        $entity->setStatus('published');
+
+        $entity->setManageId($manageEntity->getId());
+        $entity->setEntityId($metaData->getEntityId());
+        $entity->setMetadataUrl($metaData->getMetaDataUrl());
+        $entity->setAcsLocation($metaData->getAcsLocation());
+        $entity->setNameIdFormat($metaData->getNameIdFormat());
+        $entity->setCertificate($metaData->getCertData());
+        $entity->setDescriptionEn($metaData->getDescriptionEn());
+        $entity->setDescriptionNl($metaData->getDescriptionNl());
+        $entity->setNameEn($metaData->getNameEn());
+        $entity->setNameNl($metaData->getNameNl());
+        $entity->setLogoUrl($metaData->getLogo()->getUrl());
+        $entity->setOrganizationDisplayNameEn($metaData->getOrganization()->getDisplayNameEn());
+        $entity->setOrganizationDisplayNameNl($metaData->getOrganization()->getDisplayNameNl());
+        $entity->setOrganizationNameEn($metaData->getOrganization()->getNameEn());
+        $entity->setOrganizationNameNl($metaData->getOrganization()->getNameNl());
+        $entity->setOrganizationUrlEn($metaData->getOrganization()->getUrlEn());
+        $entity->setOrganizationUrlNl($metaData->getOrganization()->getUrlNl());
+        $entity->setApplicationUrl($coin->getApplicationUrl());
+        $entity->setEulaUrl($coin->getEula());
+
+        $administrative = $metaData->getContacts()->findAdministrativeContact();
+        if ($administrative) {
+            $entity->setAdministrativeContact(
+                new ContactPerson(
+                    $administrative->getGivenName(),
+                    $administrative->getSurName(),
+                    $administrative->getEmail(),
+                    $administrative->getPhone()
+                )
+            );
+        }
+
+        $technical = $metaData->getContacts()->findTechnicalContact();
+        if ($technical) {
+            $entity->setTechnicalContact(
+                new ContactPerson(
+                    $technical->getGivenName(),
+                    $technical->getSurName(),
+                    $technical->getEmail(),
+                    $technical->getPhone()
+                )
+            );
+        }
+
+        $support = $metaData->getContacts()->findSupportContact();
+        if ($support) {
+            $entity->setSupportContact(
+                new ContactPerson(
+                    $support->getGivenName(),
+                    $support->getSurName(),
+                    $support->getEmail(),
+                    $support->getPhone()
+                )
+            );
+        }
+
+        // Todo attributes
+
+        return $entity;
+    }
 
     /**
      * @param string $id

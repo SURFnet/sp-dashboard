@@ -1,0 +1,8 @@
+{% if action.allowCopyToProductionAction %}
+    <li>
+        <a href="{{ path('entity_copy', {manageId: action.id, targetEnvironment: 'production'}) }}">
+            <i class="fa fa-copy" aria-hidden="true"></i>
+            {{ 'entity.list.action.copy_to_production'|trans }}
+        </a>
+    </li>
+{% endif %}

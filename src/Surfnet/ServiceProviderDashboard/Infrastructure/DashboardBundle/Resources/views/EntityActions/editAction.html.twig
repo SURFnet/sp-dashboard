@@ -1,0 +1,15 @@
+{% if action.allowEditAction %}
+    <li>
+        <a href="{{ path('entity_edit', {id: action.id, environment: action.environment}) }}">
+            <i class="fa fa-pencil-square" aria-hidden="true"></i>
+            {{ 'entity.list.action.edit'|trans }}
+        </a>
+    </li>
+{% elseif action.allowCopyAction %}
+    <li>
+        <a href="{{ path('entity_copy', {manageId: action.id, targetEnvironment: action.environment, sourceEnvironment: action.environment}) }}">
+            <i class="fa fa-pencil-square" aria-hidden="true"></i>
+            {{ 'entity.list.action.edit'|trans }}
+        </a>
+    </li>
+{% endif %}

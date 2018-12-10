@@ -63,6 +63,11 @@ class Entity
     private $router;
 
     /**
+     * @var EntityActions
+     */
+    private $actions;
+
+    /**
      * @param string $id
      * @param string $entityId
      * @param string $name
@@ -80,6 +85,7 @@ class Entity
         $this->state = $state;
         $this->environment = $environment;
         $this->router = $router;
+        $this->actions = new EntityActions($id, $state, $environment);
     }
 
     public static function fromEntity(DomainEntity $entity, RouterInterface $router)
@@ -230,60 +236,6 @@ class Entity
         return 'SAML';
     }
 
-    /**
-     * @return bool
-     */
-    public function allowEditAction()
-    {
-        return $this->state == 'draft';
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowCopyAction()
-    {
-        $isPublishedTestEntity = ($this->state == 'published' && $this->environment == 'test');
-        $isPublishedProdEntity = ($this->state == 'requested' && $this->environment == 'production');
-        if ($isPublishedTestEntity || $isPublishedProdEntity) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowCopyToProductionAction()
-    {
-        if ($this->state == 'published' && $this->environment == 'test') {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowCloneAction()
-    {
-        if ($this->state == 'published' && $this->environment == 'production') {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowDeleteAction()
-    {
-        return true;
-    }
-
     public function isPublishedToProduction()
     {
         return $this->state == 'published' && $this->environment == 'production';
@@ -310,15 +262,15 @@ class Entity
      */
     public function getLink()
     {
-        if ($this->allowEditAction()) {
+        if ($this->getActions()->allowEditAction()) {
             return $this->router->generate('entity_edit', ['id' => $this->getId()]);
-        } elseif ($this->allowCopyAction()) {
+        } elseif ($this->getActions()->allowCopyAction()) {
             return $this->router->generate('entity_copy', [
                 'manageId' => $this->getId(),
                 'targetEnvironment' => $this->environment,
                 'sourceEnvironment' => $this->environment,
             ]);
-        } else if ($this->allowCloneAction()) {
+        } else if ($this->getActions()->allowCloneAction()) {
             return $this->router->generate('entity_copy', [
                 'manageId' => $this->getId(),
                 'targetEnvironment' => 'production',
@@ -327,5 +279,13 @@ class Entity
         }
 
         return '#';
+    }
+
+    /**
+     * @return EntityActions
+     */
+    public function getActions()
+    {
+        return $this->actions;
     }
 }

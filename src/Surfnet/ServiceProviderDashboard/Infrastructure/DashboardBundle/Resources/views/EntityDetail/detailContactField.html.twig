@@ -1,0 +1,29 @@
+{% if value is not empty %}
+<h3>{{ label }}</h3>
+<div class="container contact">
+    {% if value.firstName is not empty %}
+    <div class="detail">
+        <label>{{ 'entity.detail.contact.first_name'|trans }}</label>
+        <span>{{ value.firstName }}</span>
+    </div>
+    {% endif %}
+    {% if value.lastName is not empty %}
+    <div class="detail">
+        <label>{{ 'entity.detail.contact.last_name'|trans }}</label>
+        <span>{{ value.lastName }}</span>
+    </div>
+    {% endif %}
+    {% if value.email is not empty %}
+    <div class="detail">
+        <label>{{ 'entity.detail.contact.email'|trans }}</label>
+        <span>{{ value.email }}</span>
+    </div>
+    {% endif %}
+    {% if value.phone is not empty %}
+    <div class="detail">
+        <label>{{ 'entity.detail.contact.phone'|trans }}</label>
+        <span>{{ value.phone }}</span>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
