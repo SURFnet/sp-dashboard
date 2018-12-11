@@ -1151,7 +1151,7 @@ class SaveSamlEntityCommand implements Command
     /**
      * @param Service $service
      */
-    public function setService($service)
+    public function setService(Service $service)
     {
         $this->service = $service;
     }

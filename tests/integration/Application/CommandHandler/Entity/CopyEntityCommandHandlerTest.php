@@ -21,10 +21,10 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Command
 use League\Tactician\CommandBus;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopySamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadSamlMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopySamlEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -36,7 +36,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 class CopyEntityCommandHandlerTest extends MockeryTestCase
 {
     /**
-     * @var CopyEntityCommandHandler
+     * @var CopySamlEntityCommandHandler
      */
     private $commandHandler;
 
@@ -83,7 +83,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
         $this->service = new Service();
         $this->service->setTeamName('testteam');
 
-        $this->commandHandler = new CopyEntityCommandHandler(
+        $this->commandHandler = new CopySamlEntityCommandHandler(
             $this->commandBus,
             $this->entityRepository,
             $this->manageTestClient,
@@ -105,7 +105,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
         $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
-            new CopyEntityCommand(
+            new CopySamlEntityCommand(
                 $saveCommand,
                 'dashboardid',
                 'manageid',
@@ -133,7 +133,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
         $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
-            new CopyEntityCommand(
+            new CopySamlEntityCommand(
                 $saveCommand,
                 'dashboardid',
                 'manageid',
@@ -175,7 +175,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
 
         $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
         $this->commandHandler->handle(
-            new CopyEntityCommand(
+            new CopySamlEntityCommand(
                 $saveCommand,
                 'dashboardid',
                 'manageid',
@@ -234,7 +234,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->andReturn('xml');
 
         $this->commandBus->shouldReceive('handle')
-            ->with(m::type(LoadMetadataCommand::class))
+            ->with(m::type(LoadSamlMetadataCommand::class))
             ->andReturn('xml');
 
         $this->attributesMetadataRepository->shouldReceive('findAll')
@@ -277,7 +277,7 @@ JSON
         $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
-            new CopyEntityCommand(
+            new CopySamlEntityCommand(
                 $saveCommand,
                 'dashboardid',
                 'manageid',
@@ -343,7 +343,7 @@ JSON
             ->andReturn('xml');
 
         $this->commandBus->shouldReceive('handle')
-            ->with(m::type(LoadMetadataCommand::class))
+            ->with(m::type(LoadSamlMetadataCommand::class))
             ->andReturn('xml');
 
         $this->attributesMetadataRepository->shouldReceive('findAll')
@@ -386,7 +386,7 @@ JSON
         $saveCommand = SaveSamlEntityCommand::forCreateAction(m::mock(Service::class));
 
         $this->commandHandler->handle(
-            new CopyEntityCommand(
+            new CopySamlEntityCommand(
                 $saveCommand,
                 'dashboardid',
                 'manageid',

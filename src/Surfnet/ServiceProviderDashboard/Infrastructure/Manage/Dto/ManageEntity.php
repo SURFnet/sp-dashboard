@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 
 class ManageEntity
 {
@@ -54,7 +54,7 @@ class ManageEntity
     private function __construct($id, AttributeList $attributes, MetaData $metaData)
     {
         $this->id = $id;
-        $this->status = Entity::STATE_PUBLISHED;
+        $this->status = DomainEntity::STATE_PUBLISHED;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
     }
@@ -82,5 +82,16 @@ class ManageEntity
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        if ($this->getMetaData()->getCoin()->getOidcClient()) {
+            return DomainEntity::TYPE_OPENID_CONNECT;
+        }
+        return DomainEntity::TYPE_SAML;
     }
 }
