@@ -99,6 +99,7 @@ class EntityTest extends MockeryTestCase
         return new Entity(
             '116252ea-c19a-4842-9bb1-c8830cca780f',
             'https://example.com/saml/metadata',
+            1,
             'example-entity',
             'John Doe',
             $state,

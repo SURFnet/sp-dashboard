@@ -70,14 +70,23 @@ class Entity
     /**
      * @param string $id
      * @param string $entityId
+     * @param int $serviceId
      * @param string $name
      * @param string $contact
      * @param string $state
      * @param string $environment
      * @param RouterInterface $router
      */
-    public function __construct($id, $entityId, $name, $contact, $state, $environment, RouterInterface $router)
-    {
+    public function __construct(
+        $id,
+        $entityId,
+        $serviceId,
+        $name,
+        $contact,
+        $state,
+        $environment,
+        RouterInterface $router
+    ) {
         $this->id = $id;
         $this->entityId = $entityId;
         $this->name = $name;
@@ -85,7 +94,7 @@ class Entity
         $this->state = $state;
         $this->environment = $environment;
         $this->router = $router;
-        $this->actions = new EntityActions($id, $state, $environment);
+        $this->actions = new EntityActions($id, $serviceId, $state, $environment);
     }
 
     public static function fromEntity(DomainEntity $entity, RouterInterface $router)
@@ -101,6 +110,7 @@ class Entity
         return new self(
             $entity->getId(),
             $entity->getEntityId(),
+            $entity->getService()->getId(),
             $entity->getNameEn(),
             $formattedContact,
             $entity->getStatus(),
@@ -109,13 +119,20 @@ class Entity
         );
     }
 
-    public static function fromManageTestResult(ManageEntity $result, RouterInterface $router)
+    /**
+     * @param ManageEntity $result
+     * @param RouterInterface $router
+     * @param int $serviceId
+     * @return Entity
+     */
+    public static function fromManageTestResult(ManageEntity $result, RouterInterface $router, $serviceId)
     {
         $formattedContact = self::formatManageContact($result);
 
         return new self(
             $result->getId(),
             $result->getMetaData()->getEntityId(),
+            $serviceId,
             $result->getMetaData()->getNameEn(),
             $formattedContact,
             'published',
@@ -124,7 +141,13 @@ class Entity
         );
     }
 
-    public static function fromManageProductionResult(ManageEntity $result, RouterInterface $router)
+    /**
+     * @param ManageEntity $result
+     * @param RouterInterface $router
+     * @param int $serviceId
+     * @return Entity
+     */
+    public static function fromManageProductionResult(ManageEntity $result, RouterInterface $router, $serviceId)
     {
         $formattedContact = self::formatManageContact($result);
 
@@ -141,6 +164,7 @@ class Entity
         return new self(
             $result->getId(),
             $result->getMetaData()->getEntityId(),
+            $serviceId,
             $result->getMetaData()->getNameEn(),
             $formattedContact,
             $status,
@@ -262,7 +286,14 @@ class Entity
      */
     public function getLink()
     {
-        return $this->router->generate('entity_detail', ['id' => $this->getId()]);
+        return $this->router->generate(
+            'entity_detail',
+            [
+                'id' => $this->getId(),
+                'serviceId' => $this->getActions()->getServiceId(),
+                'manageTarget' => $this->getEnvironment()
+            ]
+        );
     }
 
     /**

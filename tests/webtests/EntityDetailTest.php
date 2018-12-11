@@ -34,7 +34,7 @@ class EntityDetailTest extends WebTestCase
 
         $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
 
-        $crawler = $this->client->request('GET', sprintf('/entity/detail/%s', $entity->getId()));
+        $crawler = $this->client->request('GET', sprintf('/entity/detail/1/%s', $entity->getId()));
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -71,7 +71,7 @@ class EntityDetailTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entity/detail/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
+        $crawler = $this->client->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
 
         $pageTitle = $crawler->filter('.page-container h1');
 

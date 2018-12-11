@@ -165,7 +165,7 @@ class ServiceController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/service/edit/{serviceId}", name="service_edit")
+     * @Route("/service/{serviceId}/edit", name="service_edit")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
      *
@@ -235,7 +235,7 @@ class ServiceController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/service/delete/{serviceId}", name="service_delete")
+     * @Route("/service/{serviceId}/delete", name="service_delete")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
      *

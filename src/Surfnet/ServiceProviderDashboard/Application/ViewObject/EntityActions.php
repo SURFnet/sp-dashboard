@@ -26,6 +26,11 @@ class EntityActions
     private $id;
 
     /**
+     * @var int
+     */
+    private $serviceId;
+
+    /**
      * @var string
      */
     private $status;
@@ -40,9 +45,10 @@ class EntityActions
      * @param string $status
      * @param string $environment
      */
-    public function __construct($id, $status, $environment)
+    public function __construct($id, $serviceId, $status, $environment)
     {
         $this->id = $id;
+        $this->serviceId = $serviceId;
         $this->status = $status;
         $this->environment = $environment;
     }
@@ -50,6 +56,14 @@ class EntityActions
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getServiceId()
+    {
+        return $this->serviceId;
     }
 
     public function getEnvironment()

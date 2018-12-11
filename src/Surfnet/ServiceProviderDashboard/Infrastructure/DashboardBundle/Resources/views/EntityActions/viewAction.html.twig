@@ -1,5 +1,5 @@
 <li>
-    <a href="{{ path('entity_detail', {id: action.id, manageTarget: action.environment}) }}">
+    <a href="{{ path('entity_detail', {id: action.id, serviceId: action.serviceId, manageTarget: action.environment}) }}">
         <i class="fa fa-book" aria-hidden="true"></i>
         {{ 'entity.list.action.view'|trans }}
     </a>

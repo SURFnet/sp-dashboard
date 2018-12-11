@@ -50,7 +50,7 @@ class ServiceDeleteTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', '/service/edit');
+        $crawler = $this->client->request('GET', '/service/1/edit');
 
         $form = $crawler
             ->selectButton('Delete')
@@ -66,7 +66,7 @@ class ServiceDeleteTest extends WebTestCase
         $crawler = $this->client->followRedirect();
 
         $this->assertEquals(
-            '/service/delete',
+            '/service/1/delete',
             $this->client->getRequest()->getRequestUri(),
             "Expected to be on the service delete confirmation page"
         );

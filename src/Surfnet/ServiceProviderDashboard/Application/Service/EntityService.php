@@ -59,7 +59,7 @@ class EntityService implements EntityServiceInterface
         return $this->queryRepositoryProvider->getEntityRepository()->findById($id);
     }
 
-    public function getEntityByIdAndTarget($id, $manageTarget)
+    public function getEntityByIdAndTarget($id, $manageTarget, $serviceId)
     {
         switch ($manageTarget) {
             case 'production':
@@ -67,13 +67,13 @@ class EntityService implements EntityServiceInterface
                     ->getManageProductionQueryClient()
                     ->findByManageId($id);
 
-                return Entity::fromManageResponse($entity, $manageTarget);
+                return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
                 break;
             case 'test':
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
-                return Entity::fromManageResponse($entity, $manageTarget);
+                return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
                 break;
             default:
                 return $this->getEntityById($id);
@@ -92,12 +92,12 @@ class EntityService implements EntityServiceInterface
 
         $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
         foreach ($testEntities as $result) {
-            $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router);
+            $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router, $service->getId());
         }
 
         $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
         foreach ($productionEntities as $result) {
-            $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router);
+            $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
         }
 
         return new ViewObject\EntityList($entities);

@@ -40,20 +40,21 @@ class EntityDetailController extends Controller
 
     /**
      * @Method("GET")
-     * @Route("/entity/detail/{id}/{manageTarget}", name="entity_detail", defaults={"manageTarget" = false})
+     * @Route("/entity/detail/{serviceId}/{id}/{manageTarget}", name="entity_detail", defaults={"manageTarget" = false})
      * @Security("has_role('ROLE_USER')")
      * @Template("@Dashboard/EntityDetail/detail.html.twig")
      *
-     * @param $id
-     * @param $manageTarget
+     * @param string $id
+     * @param int $serviceId
+     * @param string $manageTarget
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function detailAction($id, $manageTarget)
+    public function detailAction($id, $serviceId, $manageTarget)
     {
         // First try to read the entity from the local storage
         $entity = $this->entityService->getEntityById($id);
         if (!$entity) {
-            $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget);
+            $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $serviceId);
         }
         $viewObject = EntityDetail::fromEntity($entity);
 

@@ -164,7 +164,7 @@ class EntityCreateController extends Controller
                     // Only trigger form validation on publish
                     $this->commandBus->handle($command);
 
-                    return $this->redirectToRoute('entity_list');
+                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
                 } elseif ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
@@ -184,7 +184,7 @@ class EntityCreateController extends Controller
                     $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('entity_list');
+                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
