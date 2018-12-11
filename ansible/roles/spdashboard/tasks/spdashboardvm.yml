@@ -38,4 +38,4 @@
   lineinfile:
     dest: /etc/hosts
     state: present
-    line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl aa.dev.support.surfconext.nl authz.dev.support.surfconext.nl teams.dev.support.surfconext.nl voot.dev.support.surfconext.nl manage.dev.support.surfconext.nl'
+    line: '127.0.0.1 dev.support.surfconext.nl engine.dev.support.surfconext.nl mujina-idp.dev.support.surfconext.nl mujina-sp.dev.support.surfconext.nl engine-api.dev.support.surfconext.nl aa.dev.support.surfconext.nl authz.dev.support.surfconext.nl teams.dev.support.surfconext.nl voot.dev.support.surfconext.nl manage.dev.support.surfconext.nl oidc.dev.support.surfconext.nl'
