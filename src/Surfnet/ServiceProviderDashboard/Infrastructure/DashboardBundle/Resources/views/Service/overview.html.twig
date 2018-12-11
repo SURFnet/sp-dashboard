@@ -13,12 +13,14 @@
                         {{ 'service.overview.action.entityList'|trans }}
                     </a>
                 </li>
+                {% if service.arePrivacyQuestionsEnabled %}
                 <li>
                     <a href="{{ path('privacy_questions', {'serviceId': service.id}) }}">
                         <i class="fa fa-key" aria-hidden="true"></i>
                         {{ 'service.overview.action.privacyQuestions'|trans }}
                     </a>
                 </li>
+                {% endif %}
                 <li>
                     <a href="{{ path('service_edit', {'serviceId': service.id}) }}">
                         <i class="fa fa-pencil-square" aria-hidden="true"></i>

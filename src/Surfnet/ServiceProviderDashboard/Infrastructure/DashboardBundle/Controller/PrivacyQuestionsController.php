@@ -60,7 +60,7 @@ class PrivacyQuestionsController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/service/privacy", name="privacy_questions")
+     * @Route("/service/{serviceId}/privacy", name="privacy_questions")
      * @Security("has_role('ROLE_USER')")
      *
      * @param int $serviceId
@@ -69,7 +69,7 @@ class PrivacyQuestionsController extends Controller
     public function privacyAction($serviceId)
     {
         $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        // Test if the active user is allowed to view entities of this service
+        // Test if the active user is allowed to access privacy questions of this service
         if (!isset($serviceOptions[$serviceId])) {
             throw $this->createNotFoundException('Unable to open the privacy questions for this service');
         }
@@ -87,58 +87,74 @@ class PrivacyQuestionsController extends Controller
 
         // Test if the questions have already been filled
         if ($service->getPrivacyQuestions() instanceof PrivacyQuestions) {
-            return $this->forward('DashboardBundle:PrivacyQuestions:edit');
+            return $this->forward('DashboardBundle:PrivacyQuestions:edit', ['serviceId' => $serviceId]);
         }
-        return $this->forward('DashboardBundle:PrivacyQuestions:create');
+        return $this->forward('DashboardBundle:PrivacyQuestions:create', ['serviceId' => $serviceId]);
     }
 
     /**
-     * @Route("/service/privacy/create", name="privacy_questions_create")
+     * @Route("/service/{serviceId}/privacy/create", name="privacy_questions_create")
      * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
      *
+     * @param $serviceId
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $serviceId)
     {
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
+        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
+        // Test if the active user is allowed to access privacy questions of this service
+        if (!isset($serviceOptions[$serviceId])) {
+            throw $this->createNotFoundException('Unable to create privacy questions for this service');
+        }
+
+        $service = $this->serviceService->getServiceById($serviceId);
 
         $command = PrivacyQuestionsCommand::fromService($service);
 
-        return $this->renderForm($request, $command);
+        return $this->renderForm($request, $command, $serviceId);
     }
 
     /**
-     * @Route("/service/privacy/edit", name="privacy_questions_edit")
+     * @Route("/service/{serviceId}/privacy/edit", name="privacy_questions_edit")
      * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
      *
+     * @param $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request, $serviceId)
     {
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
+        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
+        // Test if the active user is allowed to access privacy questions of this service
+        if (!isset($serviceOptions[$serviceId])) {
+            throw $this->createNotFoundException('Unable to edit the privacy questions for this service');
+        }
+
+        $service = $this->serviceService->getServiceById($serviceId);
         $questions = $service->getPrivacyQuestions();
 
         $command = PrivacyQuestionsCommand::fromQuestions($questions);
 
-        return $this->renderForm($request, $command);
+        return $this->renderForm($request, $command, $serviceId);
     }
 
-    private function renderForm(Request $request, PrivacyQuestionsCommand $command)
+    /**
+     * @param Request $request
+     * @param PrivacyQuestionsCommand $command
+     * @param int $serviceId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    private function renderForm(Request $request, PrivacyQuestionsCommand $command, $serviceId)
     {
         $form = $this->createForm(PrivacyQuestionsType::class, $command);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commandBus->handle($command);
-            return $this->redirectToRoute('privacy_questions');
+            return $this->redirectToRoute('privacy_questions', ['serviceId' => $serviceId]);
         }
 
         return $this->render('@Dashboard/Privacy/form.html.twig', array(

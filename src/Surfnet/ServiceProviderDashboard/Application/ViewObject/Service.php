@@ -33,6 +33,11 @@ class Service
     private $name;
 
     /**
+     * @var bool
+     */
+    private $privacyQuestionsEnabled;
+
+    /**
      * @var EntityList
      */
     private $entityList;
@@ -45,13 +50,15 @@ class Service
     /**
      * @param string $id
      * @param string $name
+     * @param $privacyQuestionsEnabled
      * @param EntityList $entityList
      * @param RouterInterface $router
      */
-    public function __construct($id, $name, EntityList $entityList, RouterInterface $router)
+    public function __construct($id, $name, $privacyQuestionsEnabled, EntityList $entityList, RouterInterface $router)
     {
         $this->id = $id;
         $this->name = $name;
+        $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
         $this->entityList = $entityList;
         $this->router = $router;
     }
@@ -61,6 +68,7 @@ class Service
         return new self(
             $service->getId(),
             $service->getName(),
+            $service->isPrivacyQuestionsEnabled(),
             $entityList,
             $router
         );
@@ -96,5 +104,13 @@ class Service
     public function getLink()
     {
         return $this->router->generate('select_service', ['service' => $this->getId()]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function arePrivacyQuestionsEnabled()
+    {
+        return $this->privacyQuestionsEnabled;
     }
 }

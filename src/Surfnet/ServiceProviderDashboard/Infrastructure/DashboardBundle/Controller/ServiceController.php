@@ -115,7 +115,6 @@ class ServiceController extends Controller
             return $this->redirectToRoute('service_add');
         }
 
-
         $serviceObjects = [];
         foreach ($services as $service) {
             $entityList = $this->entityService->getEntityListForService($service);
