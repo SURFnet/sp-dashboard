@@ -262,23 +262,7 @@ class Entity
      */
     public function getLink()
     {
-        if ($this->getActions()->allowEditAction()) {
-            return $this->router->generate('entity_edit', ['id' => $this->getId()]);
-        } elseif ($this->getActions()->allowCopyAction()) {
-            return $this->router->generate('entity_copy', [
-                'manageId' => $this->getId(),
-                'targetEnvironment' => $this->environment,
-                'sourceEnvironment' => $this->environment,
-            ]);
-        } else if ($this->getActions()->allowCloneAction()) {
-            return $this->router->generate('entity_copy', [
-                'manageId' => $this->getId(),
-                'targetEnvironment' => 'production',
-                'sourceEnvironment' => 'production',
-            ]);
-        }
-
-        return '#';
+        return $this->router->generate('entity_detail', ['id' => $this->getId()]);
     }
 
     /**
