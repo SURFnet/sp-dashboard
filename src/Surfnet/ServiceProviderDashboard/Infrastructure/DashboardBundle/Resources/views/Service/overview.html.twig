@@ -21,6 +21,8 @@
                     </a>
                 </li>
                 {% endif %}
+
+                {% if isAdmin %}
                 <li>
                     <a href="{{ path('service_edit', {'serviceId': service.id}) }}">
                         <i class="fa fa-pencil-square" aria-hidden="true"></i>
@@ -33,6 +35,7 @@
                         {{ 'service.overview.action.serviceDelete'|trans }}
                     </a>
                 </li>
+                {% endif %}
             </ul>
         </div>
 

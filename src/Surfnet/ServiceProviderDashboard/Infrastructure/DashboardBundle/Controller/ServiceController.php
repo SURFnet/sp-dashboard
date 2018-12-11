@@ -123,7 +123,8 @@ class ServiceController extends Controller
         $serviceList = new ServiceList($serviceObjects);
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [
-            'services' => $serviceList
+            'services' => $serviceList,
+            'isAdmin' => $this->authorizationService->isAdministrator()
         ]);
     }
     
