@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -85,8 +85,6 @@ class CopyEntityCommandHandler implements CommandHandler
     /**
      * @param CopyEntityCommand $command
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) - The different copy actions should be broken into different
-     *                                                 commands.
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
      */
@@ -94,7 +92,6 @@ class CopyEntityCommandHandler implements CommandHandler
     {
         $dashboardId = $command->getDashboardId();
         $manageId = $command->getManageId();
-        $saveEntityCommand = $command->getSaveEntityCommand();
 
         if (!$this->entityRepository->isUnique($dashboardId)) {
             throw new InvalidArgumentException(
@@ -116,7 +113,6 @@ class CopyEntityCommandHandler implements CommandHandler
         }
 
         $manageTeamName = $manageEntity->getMetaData()->getCoin()->getServiceTeamId();
-
         $manageStagingState = $this->getManageStagingState($manageEntity->getMetaData()->getCoin());
 
         if ($manageTeamName !== $command->getService()->getTeamName()) {
@@ -129,36 +125,28 @@ class CopyEntityCommandHandler implements CommandHandler
             );
         }
 
-        $saveEntityCommand->setStatus(Entity::STATE_PUBLISHED);
-        $saveEntityCommand->setId($dashboardId);
-        $saveEntityCommand->setService($command->getService());
-        $saveEntityCommand->setManageId($command->getManageId());
+        // Convert manage entity to domain entity
+        $domainEntity = Entity::fromManageResponse($manageEntity);
+
+        // Set some defaults
+        $domainEntity->setStatus(Entity::STATE_PUBLISHED);
+        $domainEntity->setId($dashboardId);
+        $domainEntity->setService($command->getService());
+        $domainEntity->setManageId($command->getManageId());
 
         // Published production entities must be cloned, not copied
         $isProductionClone = $command->getEnvironment() == 'production' && $manageStagingState === 0;
         // Entities copied from test to prod should not have a manage id either
         $isCopyToProduction = $command->getEnvironment() == 'production' && $command->getSourceEnvironment() == 'test';
         if ($isProductionClone || $isCopyToProduction) {
-            $saveEntityCommand->setManageId(null);
+            $domainEntity->setManageId(null);
         }
-
-        $this->commandBus->handle(
-            new LoadMetadataCommand(
-                $saveEntityCommand,
-                ['metadata' => ['pastedMetadata' => $manageClient->getMetadataXmlByManageId($manageId)]]
-            )
-        );
-
-        $this->setManageMetadataOn($saveEntityCommand, $manageEntity);
-
-        if (!empty($manageEntity->getMetaData()->getMetaDataUrl())) {
-            $saveEntityCommand->setMetadataUrl($manageEntity->getMetaData()->getMetaDataUrl());
-        }
-
-        $this->setAttributesOn($saveEntityCommand, $manageEntity->getAttributes());
 
         // Set the target environment
-        $saveEntityCommand->setEnvironment($command->getEnvironment());
+        $domainEntity->setEnvironment($command->getEnvironment());
+
+        // Store the entity
+        $this->entityRepository->save($domainEntity);
     }
 
     /**
@@ -178,43 +166,5 @@ class CopyEntityCommandHandler implements CommandHandler
             return 1;
         }
         return 0;
-    }
-
-    private function setManageMetadataOn(SaveSamlEntityCommand $saveEntityCommand, ManageEntity $manageMetadata)
-    {
-        if (!empty($manageMetadata->getMetaData()->getCoin()->getApplicationUrl())) {
-            $saveEntityCommand->setApplicationUrl($manageMetadata->getMetaData()->getCoin()->getApplicationUrl());
-        }
-
-        if (!empty($manageMetadata->getMetaData()->getCoin()->getEula())) {
-            $saveEntityCommand->setEulaUrl($manageMetadata->getMetaData()->getCoin()->getEula());
-        }
-
-        if (!empty($manageMetadata->getMetaData()->getCoin()->getOriginalMetadataUrl())) {
-            $saveEntityCommand->setImportUrl($manageMetadata->getMetaData()->getCoin()->getOriginalMetadataUrl());
-        }
-    }
-
-    private function setAttributesOn($saveEntityCommand, AttributeList $attributeList)
-    {
-        // Copy the ARP attributes to the new entity based on the data from manage.
-        foreach ($this->attributeMetadataRepository->findAll() as $attributeDefinition) {
-            $urn = reset($attributeDefinition->urns);
-            $manageAttribute = $attributeList->findByUrn($urn);
-            if (!$manageAttribute) {
-                continue;
-            }
-
-            $setter = $attributeDefinition->setterName;
-            if (empty($setter)) {
-                continue;
-            }
-
-            $attribute = new Attribute();
-            $attribute->setRequested(true);
-            $attribute->setMotivation($manageAttribute->getMotivation());
-
-            $saveEntityCommand->{$setter}($attribute);
-        }
     }
 }

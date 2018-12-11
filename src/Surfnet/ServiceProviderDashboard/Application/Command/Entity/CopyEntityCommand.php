@@ -57,12 +57,6 @@ class CopyEntityCommand implements Command
     private $sourceEnvironment;
 
     /**
-     * @var SaveSamlEntityCommand
-     */
-    private $saveEntityCommand;
-
-    /**
-     * @param SaveSamlEntityCommand $saveEntityCommand
      * @param string $dashboardId
      * @param string $manageId
      * @param Service $service
@@ -70,14 +64,12 @@ class CopyEntityCommand implements Command
      * @param string $sourceEnvironment
      */
     public function __construct(
-        SaveSamlEntityCommand $saveEntityCommand,
         $dashboardId,
         $manageId,
         Service $service,
         $environment,
         $sourceEnvironment
     ) {
-        $this->saveEntityCommand = $saveEntityCommand;
         $this->dashboardId = $dashboardId;
         $this->manageId = $manageId;
         $this->service = $service;
@@ -123,10 +115,5 @@ class CopyEntityCommand implements Command
     public function getSourceEnvironment()
     {
         return $this->sourceEnvironment;
-    }
-
-    public function getSaveEntityCommand()
-    {
-        return $this->saveEntityCommand;
     }
 }

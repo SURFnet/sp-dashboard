@@ -23,16 +23,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopySamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -191,11 +189,19 @@ class EntityCreateController extends Controller
 
         $service = $this->getService();
 
-        $form = $this->entityTypeFactory->createCreateForm(Entity::TYPE_SAML, $service, $targetEnvironment);
+        $entity = $this->entityService->getManageEntityById($manageId, $sourceEnvironment);
+
+        $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment);
         $command = $form->getData();
 
         if (!$request->isMethod('post')) {
-            $form = $this->handleCopy($command, $service, $manageId, $targetEnvironment, $sourceEnvironment);
+            $entityId = $this->entityService->createEntityUuid();
+
+            $this->commandBus->handle(
+                new CopyEntityCommand($entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment)
+            );
+
+            $form->remove('save');
         }
 
         // A copy can never be saved as draft: changes are published directly to manage.
@@ -261,35 +267,5 @@ class EntityCreateController extends Controller
             );
         }
         throw new ServiceNotFoundException('Please select a service before adding/copying an entity.');
-    }
-
-    /**
-     * @param SaveSamlEntityCommand $command
-     * @param Service $service
-     * @param $manageId
-     * @param string $targetEnvironment
-     * @param string $sourceEnvironment the env where the copy command originated from
-     *
-     * @return FormInterface|RedirectResponse
-     *
-     * @throws InvalidArgumentException
-     */
-    private function handleCopy(
-        SaveSamlEntityCommand $command,
-        Service $service,
-        $manageId,
-        $targetEnvironment,
-        $sourceEnvironment
-    ) {
-        $entityId = $this->entityService->createEntityUuid();
-
-        $this->commandBus->handle(
-            new CopyEntityCommand($command, $entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment)
-        );
-
-        $form = $this->createForm(SamlEntityType::class, $command, $this->buildOptions($targetEnvironment));
-        $form->remove('save');
-
-        return $form;
     }
 }
