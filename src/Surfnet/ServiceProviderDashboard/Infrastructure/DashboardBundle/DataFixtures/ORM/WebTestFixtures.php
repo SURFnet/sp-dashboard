@@ -80,6 +80,7 @@ class WebTestFixtures extends Fixture
         $entity->setId(Uuid::uuid4());
         $entity->setNameEn($name);
         $entity->setEntityId($name);
+        $entity->setProtocol(Entity::TYPE_SAML);
         $entity->setEnvironment('test');
         $entity->setAdministrativeContact(
             $this->createContact('John', 'Doe', 'jdoe@example.org')

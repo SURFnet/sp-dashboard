@@ -335,7 +335,7 @@ class EntityCreateTest extends WebTestCase
         $row = $crawler->filter('table tbody tr')->eq(0);
 
         $this->assertEquals('https://entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
-        $this->assertEquals('production', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
+        $this->assertEquals('production', $row->filter('td')->eq(5)->text(), 'Environment not found in entity list');
     }
 
     public function test_it_imports_multiple_entity_descriptor_metadata_with_a_single_entity()

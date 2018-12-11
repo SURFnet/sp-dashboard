@@ -41,16 +41,11 @@ class EntityCopyTest extends WebTestCase
             __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
         );
         $this->testMockHandler->append(new Response(200, [], $response));
+        $this->testMockHandler->append(new Response(200, [], $response));
         $this->prodMockHandler->append(new Response(200, [], $response));
-
-        $response = file_get_contents(
-            __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
-        );
-        $this->testMockHandler->append(new Response(200, [], json_decode($response)));
 
         $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
-        $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $pageTitle = $crawler->filter('.page-container h1');
@@ -104,7 +99,7 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
-            'https://spdashboard.dev.support.surfconext.nl/images/surfconext-logo.png',
+            'http://www.example.org/logo.png',
             $form->get('dashboard_bundle_entity_type[metadata][logoUrl]')->getValue()
         );
 
@@ -124,7 +119,7 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
-            'https://engine.dev.support.surfconext.nl/authentication/sp/metadata',
+            'https://engine.dev.support.surfconext.nl/authentication/sp/metadata/1430',
             $form->get('dashboard_bundle_entity_type[metadata][importUrl]')->getValue()
         );
 
@@ -162,10 +157,8 @@ class EntityCopyTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], $response));
         $this->prodMockHandler->append(new Response(200, [], $response));
 
-        $response = file_get_contents(
-            __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
-        );
-        $this->testMockHandler->append(new Response(200, [], json_decode($response)));
+        $this->testMockHandler->append(new Response(200, [], $response));
+        $this->testMockHandler->append(new Response(200, [], $response));
 
         $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 

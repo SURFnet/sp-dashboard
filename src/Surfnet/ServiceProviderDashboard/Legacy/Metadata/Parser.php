@@ -270,12 +270,11 @@ class Parser implements ParserInterface
     private function parseContactPersons($persons, Metadata $metadata)
     {
         foreach ($persons as $person) {
-            $contact = new Contact(
-                (string)$person->GivenName,
-                (string)$person->SurName,
-                (string)$person->EmailAddress,
-                (string)$person->TelephoneNumber
-            );
+            $contact = new Contact();
+            $contact->setFirstName((string)$person->GivenName);
+            $contact->setLastName((string)$person->SurName);
+            $contact->setEmail((string)$person->EmailAddress);
+            $contact->setPhone((string)$person->TelephoneNumber);
 
             $type = $person->attributes();
             switch ($type['contactType']) {
