@@ -395,9 +395,11 @@ class Entity
      * @param ManageEntity $manageEntity
      * @param string $environment
      * @param int $serviceId
+     * @param string $playGroundUriProd
+     * @param string $playGroundUriTest
      * @return Entity
      */
-    public static function fromManageResponse(ManageEntity $manageEntity, $environment, $serviceId)
+    public static function fromManageResponse(ManageEntity $manageEntity, $environment, $serviceId, $playGroundUriProd = '', $playGroundUriTest = '')
     {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
@@ -408,12 +410,8 @@ class Entity
         $entity->setEnvironment($environment);
         $entity->setStatus('published');
 
-        $entity->setManageId($manageEntity->getId());
         $entity->setEntityId($metaData->getEntityId());
-        $entity->setMetadataUrl($metaData->getMetaDataUrl());
-        $entity->setAcsLocation($metaData->getAcsLocation());
-        $entity->setNameIdFormat($metaData->getNameIdFormat());
-        $entity->setCertificate($metaData->getCertData());
+        $entity->setManageId($manageEntity->getId());
         $entity->setDescriptionEn($metaData->getDescriptionEn());
         $entity->setDescriptionNl($metaData->getDescriptionNl());
         $entity->setNameEn($metaData->getNameEn());
@@ -427,6 +425,29 @@ class Entity
         $entity->setOrganizationUrlNl($metaData->getOrganization()->getUrlNl());
         $entity->setApplicationUrl($coin->getApplicationUrl());
         $entity->setEulaUrl($coin->getEula());
+
+        if ($metaData->getCoin()->getOidcClient()) {
+            $oidcClient = $manageEntity->getOidcClient();
+
+            $entity->setClientSecret($oidcClient->getClientSecret());
+            $entity->setRedirectUris($oidcClient->getRedirectUris());
+            $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+
+            $playGroundUri = ($environment == self::ENVIRONMENT_PRODUCTION ? $playGroundUriProd : $playGroundUriTest);
+            $entity->setEnablePlayground(false);
+            if (in_array($playGroundUri, $oidcClient->getRedirectUris())) {
+                $entity->setEnablePlayground(true);
+            }
+
+            $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+        } else {
+            $entity->setProtocol(Entity::TYPE_SAML);
+
+            $entity->setMetadataUrl($metaData->getMetaDataUrl());
+            $entity->setAcsLocation($metaData->getAcsLocation());
+            $entity->setNameIdFormat($metaData->getNameIdFormat());
+            $entity->setCertificate($metaData->getCertData());
+        }
 
         $administrative = $metaData->getContacts()->findAdministrativeContact();
         if ($administrative) {

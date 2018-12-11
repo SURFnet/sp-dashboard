@@ -34,23 +34,31 @@ class ManageEntity
      */
     private $metaData;
 
+    /**
+     * @var OidcClient
+     */
+    private $oidcClient;
+
     public static function fromApiResponse($data)
     {
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
-        return new self($data['id'], $attributeList, $metaData);
+        $oidcClient = OidcClient::fromApiResponse($data);
+        return new self($data['id'], $attributeList, $metaData, $oidcClient);
     }
 
     /**
      * @param string $id
      * @param AttributeList $attributes
      * @param MetaData $metaData
+     * @param OidcClient $oidcClient
      */
-    private function __construct($id, AttributeList $attributes, MetaData $metaData)
+    private function __construct($id, AttributeList $attributes, MetaData $metaData, OidcClient $oidcClient = null)
     {
         $this->id = $id;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
+        $this->oidcClient = $oidcClient;
     }
 
     public function getId()
@@ -66,6 +74,14 @@ class ManageEntity
     public function getMetaData()
     {
         return $this->metaData;
+    }
+
+    /**
+     * @return OidcClient|null
+     */
+    public function getOidcClient()
+    {
+        return $this->oidcClient;
     }
 
     /**

@@ -24,6 +24,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopySamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -201,7 +203,10 @@ class EntityCreateController extends Controller
                 new CopyEntityCommand($entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment)
             );
 
-            $form->remove('save');
+            // load entity
+            $entity = $this->entityService->getEntityById($entityId);
+            $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
+            $command = $form->getData();
         }
 
         // A copy can never be saved as draft: changes are published directly to manage.
