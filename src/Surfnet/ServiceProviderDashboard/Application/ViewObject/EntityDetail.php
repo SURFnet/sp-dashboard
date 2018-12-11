@@ -30,6 +30,18 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 class EntityDetail
 {
     /**
+     * The local storage id
+     * @var string
+     */
+    private $id;
+
+    /**
+     * The manage id
+     * @var string
+     */
+    private $manageId;
+
+    /**
      * @var string
      */
     private $metadataUrl;
@@ -210,11 +222,6 @@ class EntityDetail
     private $organizationUrlEn;
 
     /**
-     * @var string
-     */
-    private $manageId;
-
-    /**
      * @var EntityActions
      */
     private $actions;
@@ -231,6 +238,7 @@ class EntityDetail
     public static function fromEntity(DomainEntity $entity)
     {
         $entityDetail = new self();
+        $entityDetail->id = $entity->getId();
         $entityDetail->manageId = $entity->getManageId();
         $entityDetail->metadataUrl = $entity->getMetadataUrl();
         $entityDetail->acsLocation = $entity->getAcsLocation();
@@ -268,8 +276,18 @@ class EntityDetail
         $entityDetail->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
         $entityDetail->organizationUrlNl = $entity->getOrganizationUrlNl();
         $entityDetail->organizationUrlEn = $entity->getOrganizationUrlEn();
-        $entityDetail->actions = new EntityActions($entity->getManageId(), $entity->getStatus(), $entity->getEnvironment());
+
+        $actionId = $entityDetail->manageId;
+        if ($entityDetail->isLocalEntity()) {
+            $actionId = $entityDetail->id;
+        }
+        $entityDetail->actions = new EntityActions($actionId, $entity->getStatus(), $entity->getEnvironment());
         return $entityDetail;
+    }
+
+    public function isLocalEntity()
+    {
+        return !is_null($this->id);
     }
 
     /**

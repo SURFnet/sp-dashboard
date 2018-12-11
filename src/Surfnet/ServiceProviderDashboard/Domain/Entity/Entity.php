@@ -22,7 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -363,7 +365,12 @@ class Entity
      */
     private $service;
 
-    public static function fromManageResponse(ManageEntity $manageEntity)
+    /**
+     * @param ManageEntity $manageEntity
+     * @param string $environment
+     * @return Entity
+     */
+    public static function fromManageResponse(ManageEntity $manageEntity, $environment)
     {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
@@ -371,8 +378,7 @@ class Entity
 
         $entity = new self();
 
-        // Todo set env & state
-        $entity->setEnvironment('production');
+        $entity->setEnvironment($environment);
         $entity->setStatus('published');
 
         $entity->setManageId($manageEntity->getId());
@@ -397,43 +403,61 @@ class Entity
 
         $administrative = $metaData->getContacts()->findAdministrativeContact();
         if ($administrative) {
-            $entity->setAdministrativeContact(
-                new ContactPerson(
-                    $administrative->getGivenName(),
-                    $administrative->getSurName(),
-                    $administrative->getEmail(),
-                    $administrative->getPhone()
-                )
-            );
+            $contact = new ContactPerson();
+            $contact->setFirstName($administrative->getGivenName());
+            $contact->setLastName($administrative->getSurName());
+            $contact->setEmail($administrative->getEmail());
+            $contact->setPhone($administrative->getPhone());
+            $entity->setAdministrativeContact($contact);
         }
 
         $technical = $metaData->getContacts()->findTechnicalContact();
         if ($technical) {
-            $entity->setTechnicalContact(
-                new ContactPerson(
-                    $technical->getGivenName(),
-                    $technical->getSurName(),
-                    $technical->getEmail(),
-                    $technical->getPhone()
-                )
-            );
+            $contact = new ContactPerson();
+            $contact->setFirstName($technical->getGivenName());
+            $contact->setLastName($technical->getSurName());
+            $contact->setEmail($technical->getEmail());
+            $contact->setPhone($technical->getPhone());
+            $entity->setTechnicalContact($contact);
         }
 
         $support = $metaData->getContacts()->findSupportContact();
         if ($support) {
-            $entity->setSupportContact(
-                new ContactPerson(
-                    $support->getGivenName(),
-                    $support->getSurName(),
-                    $support->getEmail(),
-                    $support->getPhone()
-                )
-            );
+            $contact = new ContactPerson();
+            $contact->setFirstName($support->getGivenName());
+            $contact->setLastName($support->getSurName());
+            $contact->setEmail($support->getEmail());
+            $contact->setPhone($support->getPhone());
+            $entity->setSupportContact($contact);
         }
 
-        // Todo attributes
+        self::setAttributesOn($entity, $arp);
 
         return $entity;
+    }
+
+    private static function setAttributesOn($entity, AttributeList $attributeList)
+    {
+        $attributeRepository = new AttributesMetadataRepository('../app/Resources');
+        // Copy the ARP attributes to the new entity based on the data from manage.
+        foreach ($attributeRepository->findAll() as $attributeDefinition) {
+            $urn = reset($attributeDefinition->urns);
+            $manageAttribute = $attributeList->findByUrn($urn);
+            if (!$manageAttribute) {
+                continue;
+            }
+
+            $setter = $attributeDefinition->setterName;
+            if (empty($setter)) {
+                continue;
+            }
+
+            $attribute = new Attribute();
+            $attribute->setRequested(true);
+            $attribute->setMotivation($manageAttribute->getMotivation());
+
+            $entity->{$setter}($attribute);
+        }
     }
 
     /**

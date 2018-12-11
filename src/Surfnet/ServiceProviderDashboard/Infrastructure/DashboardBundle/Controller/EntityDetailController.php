@@ -50,7 +50,11 @@ class EntityDetailController extends Controller
      */
     public function detailAction($id, $manageTarget)
     {
-        $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget);
+        // First try to read the entity from the local storage
+        $entity = $this->entityService->getEntityById($id);
+        if (!$entity) {
+            $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget);
+        }
         $viewObject = EntityDetail::fromEntity($entity);
 
         return ['entity' => $viewObject];

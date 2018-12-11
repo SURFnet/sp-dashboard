@@ -9,18 +9,6 @@ form {
     border: none;
   }
 
-  .help-button {
-    i.fa {
-      color: $blue;
-    }
-
-    cursor: pointer;
-    display: block;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-
   .button-wrapper {
     margin-top: 25px;
 
@@ -40,6 +28,18 @@ form {
     }
   }
 
+}
+
+.help-button {
+  i.fa {
+    color: $blue;
+  }
+
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .tippy-tooltip.light-theme {

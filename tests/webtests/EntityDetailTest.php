@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\DomCrawler\Crawler;
 
 class EntityDetailTest extends WebTestCase
 {
@@ -39,15 +40,10 @@ class EntityDetailTest extends WebTestCase
 
         $this->assertContains("Entity details", $pageTitle->text());
 
-        $rows = $crawler->filter('div.detail');
-        $this->assertEquals('Entity ID', $rows->eq(0)->filter('label')->text());
-        $this->assertEquals('SP1', $rows->eq(0)->filter('span')->text());
-        $this->assertEquals('Name EN', $rows->eq(1)->filter('label')->text());
-        $this->assertEquals('SP1', $rows->eq(1)->filter('span')->text());
-        $this->assertEquals('First name', $rows->eq(2)->filter('label')->text());
-        $this->assertEquals('John', $rows->eq(2)->filter('span')->text());
-        $this->assertEquals('Last name', $rows->eq(3)->filter('label')->text());
-        $this->assertEquals('Doe', $rows->eq(3)->filter('span')->text());
+        $this->assertDetailEquals(0, 'Entity ID', 'SP1');
+        $this->assertDetailEquals(1, 'Name EN', 'SP1');
+        $this->assertDetailEquals(2, 'First name', 'John', false);
+        $this->assertDetailEquals(3, 'Last name', 'Doe', false);
     }
 
     public function test_render_details_of_manage_entity()
@@ -69,26 +65,48 @@ class EntityDetailTest extends WebTestCase
             ],
         ]);
 
-        $this->testMockHandler->append(new Response(200, [], $sp3QueryResponse));
+        $this->prodMockHandler->append(new Response(200, [], $sp3QueryResponse));
 
         $this->getAuthorizationService()->setSelectedServiceId(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entity/detail/production/9729d851-cfdd-4283-a8f1-a29ba5036261');
+        $crawler = $this->client->request('GET', '/entity/detail/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
 
         $pageTitle = $crawler->filter('.page-container h1');
 
         $this->assertContains("Entity details", $pageTitle->text());
 
-        $rows = $crawler->filter('div.detail');
-        $this->assertEquals('Entity ID', $rows->eq(0)->filter('label')->text());
-        $this->assertEquals('SP3', $rows->eq(0)->filter('span')->text());
-        $this->assertEquals('Name EN', $rows->eq(1)->filter('label')->text());
-        $this->assertEquals('SP3', $rows->eq(1)->filter('span')->text());
-        $this->assertEquals('First name', $rows->eq(2)->filter('label')->text());
-        $this->assertEquals('Test', $rows->eq(2)->filter('span')->text());
-        $this->assertEquals('Last name', $rows->eq(3)->filter('label')->text());
-        $this->assertEquals('Test', $rows->eq(3)->filter('span')->text());
+        $this->assertDetailEquals(0, 'Entity ID', 'SP3');
+        $this->assertDetailEquals(1, 'Name EN', 'SP3');
+        $this->assertDetailEquals(2, 'First name', 'Test', false);
+        $this->assertDetailEquals(3, 'Last name', 'Test', false);
+    }
+
+    private function assertDetailEquals($position, $expectedLabel, $expectedValue, $hasTooltip = true)
+    {
+        $rows = $this->client->getCrawler()->filter('div.detail');
+        $row = $rows->eq($position);
+        $label = $row->filter('label')->text();
+        $spans = $row->filter('span');
+        if ($hasTooltip) {
+            $this->assertCount(2, $spans);
+            $valueSpan = $spans->eq(1)->text();
+        } else {
+            $this->assertCount(1, $spans);
+            // If the tooltip is not present, there is only one span in the div.
+            $valueSpan = $spans->text();
+        }
+
+        $this->assertEquals(
+            $expectedLabel,
+            $label,
+            sprintf('Expected label "%s" at the row on position %d', $expectedLabel, $position)
+        );
+        $this->assertEquals(
+            $expectedValue,
+            $valueSpan,
+            sprintf('Expected span "%s" at the row on position %d', $expectedValue, $position)
+        );
     }
 }
