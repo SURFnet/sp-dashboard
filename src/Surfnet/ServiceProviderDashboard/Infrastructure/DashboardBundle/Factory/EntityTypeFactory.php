@@ -42,17 +42,26 @@ class EntityTypeFactory
      * @param $type
      * @param Service $service
      * @param $environment
+     * @param Entity|null $entity
      * @return EntityTypeInterface
      */
-    public function createCreateForm($type, Service $service, $environment)
+    public function createCreateForm($type, Service $service, $environment, Entity $entity = null)
     {
         switch (true) {
             case ($type == Entity::TYPE_OPENID_CONNECT):
-                $command = SaveOidcEntityCommand::forCreateAction($service);
+                if ($entity) {
+                    $command = SaveOidcEntityCommand::fromEntity($entity);
+                } else {
+                    $command = SaveOidcEntityCommand::forCreateAction($service);
+                }
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(OidcEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_SAML):
-                $command = SaveSamlEntityCommand::forCreateAction($service);
+                if ($entity) {
+                    $command = SaveOidcEntityCommand::fromEntity($entity);
+                } else {
+                    $command = SaveSamlEntityCommand::forCreateAction($service);
+                }
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
         }

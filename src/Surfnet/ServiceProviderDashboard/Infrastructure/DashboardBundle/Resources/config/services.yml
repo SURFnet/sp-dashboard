@@ -18,6 +18,8 @@ services:
            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
            - '@surfnet.manage.client.query_client.prod_environment'
            - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+           - '%playground_uri_prod%'
+           - '%playground_uri_test%'
 
         public: true
         tags:

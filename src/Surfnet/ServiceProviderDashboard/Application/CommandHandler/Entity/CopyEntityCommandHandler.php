@@ -60,6 +60,14 @@ class CopyEntityCommandHandler implements CommandHandler
      * @var AttributesMetadataRepository
      */
     private $attributeMetadataRepository;
+    /**
+     * @var string
+     */
+    private $oidcPlaygroundUriTest;
+    /**
+     * @var string
+     */
+    private $oidcPlaygroundUriProd;
 
     /**
      * @param CommandBus $commandBus
@@ -67,19 +75,25 @@ class CopyEntityCommandHandler implements CommandHandler
      * @param ManageClient $manageTestClient
      * @param ManageClient $manageProductionClient
      * @param AttributesMetadataRepository $attributeMetadataRepository
+     * @param string $oidcPlaygroundUriTest
+     * @param string $oidcPlaygroundUriProd
      */
     public function __construct(
         CommandBus $commandBus,
         EntityRepository $entityRepository,
         ManageClient $manageTestClient,
         ManageClient $manageProductionClient,
-        AttributesMetadataRepository $attributeMetadataRepository
+        AttributesMetadataRepository $attributeMetadataRepository,
+        $oidcPlaygroundUriTest,
+        $oidcPlaygroundUriProd
     ) {
         $this->commandBus = $commandBus;
         $this->entityRepository = $entityRepository;
         $this->manageTestClient = $manageTestClient;
         $this->manageProductionClient = $manageProductionClient;
         $this->attributeMetadataRepository = $attributeMetadataRepository;
+        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
+        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
     /**
@@ -126,7 +140,12 @@ class CopyEntityCommandHandler implements CommandHandler
         }
 
         // Convert manage entity to domain entity
-        $domainEntity = Entity::fromManageResponse($manageEntity);
+        $domainEntity = Entity::fromManageResponse(
+            $manageEntity,
+            $command->getEnvironment(),
+            $this->oidcPlaygroundUriProd,
+            $this->oidcPlaygroundUriTest
+        );
 
         // Set some defaults
         $domainEntity->setStatus(Entity::STATE_PUBLISHED);
