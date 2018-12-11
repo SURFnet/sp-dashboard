@@ -63,10 +63,20 @@ class PrivacyQuestionsController extends Controller
      * @Route("/service/privacy", name="privacy_questions")
      * @Security("has_role('ROLE_USER')")
      *
+     * @param int $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function privacyAction()
+    public function privacyAction($serviceId)
     {
+        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
+        // Test if the active user is allowed to view entities of this service
+        if (!isset($serviceOptions[$serviceId])) {
+            throw $this->createNotFoundException('Unable to open the privacy questions for this service');
+        }
+
+        // Activate the service
+        $this->authorizationService->setSelectedServiceId($serviceId);
+
         if (!$this->authorizationService->hasActivatedPrivacyQuestions()) {
             throw $this->createNotFoundException('Privacy questions are disabled');
         }
