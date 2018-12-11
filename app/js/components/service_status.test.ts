@@ -63,7 +63,7 @@ jest
 describe('validate donut status graph', function() {
 
     let stateHtml = `
-        <div id="service-states">
+        <div class="fieldset card">
             <div class="service-status-container"> <div class="service-status-graph" data-service-id="2"></div></div>
             <div class="service-status-container"> <div class="service-status-graph" data-service-id="1"></div></div>
         </div>`;
@@ -77,7 +77,7 @@ describe('validate donut status graph', function() {
             <div class="service-status-container"> <div class="service-status-graph" data-service-id="1"><div class="service-status-canvas"><div style="display: block;" class="chartjs-render-monitor"></div></div><div class="service-status-legend"><div class="legend-item" style="background-color: rgb(209, 210, 214);"></div><div class="legend-item" style="background-color: rgb(246, 170, 97);"></div><div class="legend-item" style="background-color: rgb(103, 169, 121);"></div></div><div class="service-status-percentage"></div></div></div>
         `;
 
-        let actual = $('#service-states').html();
+        let actual = $('.fieldset.card').html();
 
         expect(actual).toBe(expected);
     });

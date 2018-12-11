@@ -259,7 +259,7 @@ export class ServiceStatus {
 }
 
 export function loadServiceStatus() {
-  if ($('#service-states').length > 0) {
+  if ($('.service-status-container').length > 0) {
 
     const elements = document.getElementsByClassName('service-status-graph');
     Array.prototype.forEach.call(elements,  (el: HTMLCanvasElement) => {
