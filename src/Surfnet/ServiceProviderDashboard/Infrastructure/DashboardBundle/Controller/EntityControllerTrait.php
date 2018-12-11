@@ -97,7 +97,7 @@ trait EntityControllerTrait
     private function handleImport(Request $request, SaveSamlEntityCommand $command)
     {
         // Handle an import action based on the posted xml or import url.
-        $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_saml_type'));
+        $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
         try {
             $this->commandBus->handle($metadataCommand);
         } catch (MetadataFetchException $e) {

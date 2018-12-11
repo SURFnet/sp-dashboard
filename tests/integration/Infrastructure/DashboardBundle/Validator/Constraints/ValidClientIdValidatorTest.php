@@ -124,28 +124,6 @@ class ValidClientIdValidatorTest extends ConstraintValidatorTestCase
         );
     }
 
-    public function test_invalid_domain()
-    {
-        $domainA = 'invalid domain\.com';
-        $domainB = 'domain.org';
-
-        $entityCommand = m::mock(SaveOidcEntityCommand::class);
-        $entityCommand->shouldReceive('isForProduction')->andReturn(false);
-
-        $this->setRoot($entityCommand);
-
-        $constraint = new ValidEntityId();
-        $this->validator->validate('https://sub.' . $domainB, $constraint);
-
-        $violations = $this->context->getViolations();
-        $this->assertCount(1, $violations);
-        $this->assertEquals(
-            'validator.entity_id.invalid_url',
-            $violations->get(0)->getMessageTemplate(),
-            'Expected certain violation but dit not receive it.'
-        );
-    }
-
     public function test_invalid_client_id_url()
     {
         $entityCommand = m::mock(SaveOidcEntityCommand::class);
@@ -153,13 +131,13 @@ class ValidClientIdValidatorTest extends ConstraintValidatorTestCase
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
         $this->setRoot($entityCommand);
 
-        $constraint = new ValidEntityId();
+        $constraint = new ValidClientId();
         $this->validator->validate('q$:\₪.3%$', $constraint);
 
         $violations = $this->context->getViolations();
         $this->assertCount(1, $violations);
         $this->assertEquals(
-            'validator.entity_id.invalid_entity_id',
+            'validator.entity_id.invalid_url',
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );

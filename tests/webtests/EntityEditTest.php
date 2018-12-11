@@ -46,6 +46,7 @@ class EntityEditTest extends WebTestCase
     public function test_it_renders_the_form()
     {
         $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
+
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();

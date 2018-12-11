@@ -46,8 +46,9 @@ class EntityListTest extends WebTestCase
         $this->assertEquals('SP1', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
         $this->assertEquals('SP1', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
         $this->assertEquals('John Doe (jdoe@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
-        $this->assertEquals('draft', $row->filter('td')->eq(3)->text(), 'State not found in entity list');
-        $this->assertEquals('test', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
+        $this->assertEquals('saml20', $row->filter('td')->eq(3)->text(), 'Type not found in entity list');
+        $this->assertEquals('draft', $row->filter('td')->eq(4)->text(), 'State not found in entity list');
+        $this->assertEquals('test', $row->filter('td')->eq(5)->text(), 'Environment not found in entity list');
 
         $row = $crawler->filter('table tr')->eq(2);
         $this->assertEquals('SP2', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
@@ -98,8 +99,9 @@ class EntityListTest extends WebTestCase
         $this->assertEquals('SP3', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
         $this->assertEquals('SP3', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
         $this->assertEquals('Test Test (test@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
-        $this->assertEquals('published', $row->filter('td')->eq(3)->text(), 'State not found in entity list');
-        $this->assertEquals('test', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
+        $this->assertEquals('saml20', $row->filter('td')->eq(3)->text(), 'Type not found in entity list');
+        $this->assertEquals('published', $row->filter('td')->eq(4)->text(), 'State not found in entity list');
+        $this->assertEquals('test', $row->filter('td')->eq(5)->text(), 'Environment not found in entity list');
     }
 
     public function test_entity_list_shows_add_to_test_link()

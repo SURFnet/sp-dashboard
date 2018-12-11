@@ -186,17 +186,12 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->createOidcEntity()
         );
 
-        //TODO: test acs location
-
         $this->assertTrue($metadata['active']);
         $this->assertTrue($metadata['allowedall']);
         $this->assertEmpty($metadata['allowedEntities']);
 
-        $this->assertEquals('oidc', $metadata['type']);
-
         $this->assertEquals('http://entityid', $metadata['entityid']);
         $this->assertEquals('testaccepted', $metadata['state']);
-        $this->assertEquals('oidc', $metadata['type']);
         $this->assertEquals('revisionnote', $metadata['revisionnote']);
         $this->assertEquals(['arp' => 'arp'], $metadata['arp']);
 
@@ -206,8 +201,8 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('privacy', $fields['privacy']);
         $this->assertEquals('sp', $fields['sp']);
         //$this->assertEquals('http://acs', $fields['AssertionConsumerService:0:Location']);
-        $this->assertEquals(Entity::BINDING_HTTP_POST, $fields['AssertionConsumerService:0:Binding']);
-        $this->assertEquals('nameidformat', $fields['NameIDFormat']);
+        $this->assertNotContains('AssertionConsumerService:0:Binding', $fields);
+        $this->assertNotContains('NameIDFormat', $fields);
         $this->assertEquals('name en', $fields['name:en']);
         $this->assertEquals('name nl', $fields['name:nl']);
         $this->assertEquals('description en', $fields['description:en']);
@@ -250,8 +245,6 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->createOidcEntity()
         );
 
-        //TODO: test acs location
-
         $this->assertArrayNotHasKey('active', $metadata);
         $this->assertArrayNotHasKey('allowedall', $metadata);
         $this->assertArrayNotHasKey('allowedEntities', $metadata);
@@ -267,8 +260,8 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('privacy', $metadata['metaDataFields.privacy']);
         $this->assertEquals('sp', $metadata['metaDataFields.sp']);
         //$this->assertEquals('http://acs', $metadata['metaDataFields.AssertionConsumerService:0:Location']);
-        $this->assertEquals(Entity::BINDING_HTTP_POST, $metadata['metaDataFields.AssertionConsumerService:0:Binding']);
-        $this->assertEquals('nameidformat', $metadata['metaDataFields.NameIDFormat']);
+        $this->assertNotContains('metaDataFields.AssertionConsumerService:0:Binding', $metadata);
+        $this->assertNotContains('metaDataFields.NameIDFormat', $metadata);
         $this->assertEquals('name en', $metadata['metaDataFields.name:en']);
         $this->assertEquals('name nl', $metadata['metaDataFields.name:nl']);
         $this->assertEquals('description en', $metadata['metaDataFields.description:en']);

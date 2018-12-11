@@ -428,6 +428,7 @@ class Entity
         $entity->setApplicationUrl($coin->getApplicationUrl());
         $entity->setEulaUrl($coin->getEula());
 
+        // OIDC specific
         if ($metaData->getCoin()->getOidcClient()) {
             $oidcClient = $manageEntity->getOidcClient();
 
@@ -442,9 +443,13 @@ class Entity
             }
 
             $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
-        } else {
+        }
+
+        // SAML specific
+        if (!$metaData->getCoin()->getOidcClient()) {
             $entity->setProtocol(Entity::TYPE_SAML);
 
+            $entity->setImportUrl($metaData->getEntityId());
             $entity->setMetadataUrl($metaData->getMetaDataUrl());
             $entity->setAcsLocation($metaData->getAcsLocation());
             $entity->setNameIdFormat($metaData->getNameIdFormat());
@@ -492,7 +497,8 @@ class Entity
 
     private static function setAttributesOn($entity, AttributeList $attributeList)
     {
-        $attributeRepository = new AttributesMetadataRepository('../app/Resources');
+        $resourcePath = realpath(__DIR__.'/../../../../../app/Resources');
+        $attributeRepository = new AttributesMetadataRepository($resourcePath);
         // Copy the ARP attributes to the new entity based on the data from manage.
         foreach ($attributeRepository->findAll() as $attributeDefinition) {
             $urn = reset($attributeDefinition->urns);
