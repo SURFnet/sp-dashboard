@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class EntityCreateTest extends WebTestCase
+class EntityOidcCreateTest extends WebTestCase
 {
     public function setUp()
     {
@@ -40,60 +40,23 @@ class EntityCreateTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
 
         $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
-        $nameIdFormat = $form->get('dashboard_bundle_entity_type[metadata][nameIdFormat]');
 
         $this->assertEquals(
             '',
             $nameEnfield->getValue(),
             'Expect the NameEN field to be empty'
         );
-
-        $this->assertInstanceOf(
-            ChoiceFormField::class,
-            $nameIdFormat,
-            'Expect the NameIdFormat to be a radio group'
-        );
-    }
-    public function test_it_imports_metadata()
-    {
-        $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
-                ],
-            ],
-        ];
-
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
-
-        $form = $crawler
-            ->selectButton('Import')
-            ->form();
-
-        $crawler = $this->client->submit($form, $formData);
-
-        $form = $crawler->selectButton('Publish')->form();
-
-        // The imported metadata is loaded in the form (see: /fixtures/metadata/valid_metadata.xml)
-        $this->assertEquals(
-            'DNNL',
-            $form->get('dashboard_bundle_entity_type[metadata][nameNl]')->getValue()
-        );
-        $this->assertEquals(
-            'DNEN',
-            $form->get('dashboard_bundle_entity_type[metadata][nameEn]')->getValue()
-        );
     }
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
@@ -121,7 +84,7 @@ class EntityCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
 
         $form = $crawler
             ->selectButton('Save')
@@ -146,39 +109,11 @@ class EntityCreateTest extends WebTestCase
         $this->assertRegexp('/https:\/\/entity-id/', $entityTr->text());
     }
 
-    public function test_it_can_save_the_form_without_name_id_format()
-    {
-        $formData = $this->buildValidFormData();
-        // Unset the name id format for this test, this is the case when the SP Dashboard user fills in the form
-        // manually (not using the import feature).
-        unset($formData['dashboard_bundle_entity_type']['nameIdFormat']);
-
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
-        );
-
-        // Test if the entity has got the correct default name id format by loading it from the repository
-        $entities = $this->getEntityRepository()->findAll();
-        /** @var Entity $entity */
-        $entity = end($entities);
-        $this->assertEquals(Entity::NAME_ID_FORMAT_DEFAULT, $entity->getNameIdFormat());
-    }
-
     public function test_it_can_publish_the_form()
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -211,12 +146,14 @@ class EntityCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
 
+        // ClientId validator
+        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
@@ -233,6 +170,7 @@ class EntityCreateTest extends WebTestCase
         $crawler = $this->client->followRedirect();
         // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
+
         $this->assertEquals('Service Provider registration form', $pageTitle);
 
         $errorMessage = $crawler->filter('div.message.error')->first()->text();
@@ -242,54 +180,6 @@ class EntityCreateTest extends WebTestCase
         $this->assertRegExp('/\/entity\/edit/', $uri);
     }
 
-    public function test_it_shows_flash_message_on_importing_invalid_metadata()
-    {
-        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata.xml');
-        $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
-        ];
-
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
-
-        $form = $crawler
-            ->selectButton('Import')
-            ->form();
-
-        $crawler = $this->client->submit($form, $formData);
-        $message = $crawler->filter('.message.error')->first();
-
-        $this->assertEquals(
-            'The provided metadata is invalid.',
-            trim($message->text()),
-            'Expected an error message for this invalid importUrl'
-        );
-
-        $genericMessage = $crawler->filter('.message.preformatted')->eq(0);
-        $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(1);
-        $missingMessage = $crawler->filter('.message.preformatted')->eq(2);
-
-        $this->assertContains(
-            "The metadata XML is invalid considering the associated XSD",
-            $genericMessage->text(),
-            'Expected an XML parse error.'
-        );
-        $this->assertContains(
-            "EntityDescriptor', attribute 'entityED': The attribute 'entityED' is not allowed.",
-            $notAllowedMessage->text(),
-            'Expected an XML parse error.'
-        );
-        $this->assertContains(
-            "EntityDescriptor': The attribute 'entityID' is required but missing.",
-            $missingMessage->text(),
-            'Expected an XML parse error.'
-        );
-    }
-
     public function test_creating_draft_for_production_is_not_allowed()
     {
         // SURFnet is not allowed to create production entities.
@@ -297,7 +187,7 @@ class EntityCreateTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entity/create/saml20/production');
+        $crawler = $this->client->request('GET', '/entity/create/oidc/production');
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -311,7 +201,7 @@ class EntityCreateTest extends WebTestCase
 
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', '/entity/create/saml20/production');
+        $crawler = $this->client->request('GET', '/entity/create/oidc/production');
 
         $form = $crawler
             ->selectButton('Save')
@@ -338,74 +228,19 @@ class EntityCreateTest extends WebTestCase
         $this->assertEquals('production', $row->filter('td')->eq(5)->text(), 'Environment not found in entity list');
     }
 
-    public function test_it_imports_multiple_entity_descriptor_metadata_with_a_single_entity()
-    {
-        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata_entities_descriptor.xml');
-        $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
-        ];
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
-
-        $form = $crawler
-            ->selectButton('Import')
-            ->form();
-
-        $crawler = $this->client->submit($form, $formData);
-
-        $form = $crawler->selectButton('Publish')->form();
-
-        // The imported metadata is loaded in the form (see: /fixtures/metadata/valid_metadata_entities_descriptor.xml)
-        $this->assertEquals(
-            'FooBar: test instance',
-            $form->get('dashboard_bundle_entity_type[metadata][nameEn]')->getValue()
-        );
-    }
-
-    public function test_it_does_not_import_multiple_entity_descriptor_metadata_with_a_multiple_entities()
-    {
-        $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata_entities_descriptor.xml');
-        $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
-        ];
-        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
-
-        $form = $crawler
-            ->selectButton('Import')
-            ->form();
-
-        $crawler = $this->client->submit($form, $formData);
-        $notSupportedMultipleEntitiesMessage = $crawler->filter('.message.preformatted')->first();
-
-        $this->assertContains(
-            'Using metadata that describes multiple entities is not supported. Please provide metadata describing a single SP entity.',
-            $notSupportedMultipleEntitiesMessage->text(),
-            'Expected an error message for unsupported multiple entities in metadata.'
-        );
-    }
     private function buildValidFormData()
     {
         return [
             'dashboard_bundle_entity_type' => [
                 'metadata' => [
-                    'nameIdFormat' => Entity::NAME_ID_FORMAT_DEFAULT,
                     'descriptionNl' => 'Description NL',
                     'descriptionEn' => 'Description EN',
                     'nameEn' => 'The A Team',
                     'nameNl' => 'The A Team',
-                    'metadataUrl' => 'https://metadata-url',
-                    'acsLocation' => 'https://acs-location',
-                    'entityId' => 'https://entity-id',
-                    'certificate' => file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'),
+                    'clientId' => 'https://entity-id',
+                    // The webtestcase doesn't support coumpunt collection fields
+                    // 'redirectUris' => ['https://entity-id/redirect1', 'https://entity-id/redirect2'],
+                    'grantType' => 'implicit',
                     'logoUrl' => 'https://logo-url',
                 ],
                 'contactInformation' => [
