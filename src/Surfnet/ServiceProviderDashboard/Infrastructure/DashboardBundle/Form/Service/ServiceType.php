@@ -75,7 +75,6 @@ class ServiceType extends AbstractType
                 )
                     ->add('serviceType', ServiceTypeType::class)
                     ->add('intakeStatus', IntakeStatusType::class)
-                    ->add('entityPublished', EntityPublishedType::class)
                     ->add('contractSigned', ContractSignedType::class)
                     ->add('surfconextRepresentativeApproved', RepresentativeApprovedType::class)
                     ->add('connectionStatus', ConnectionStatusType::class)
