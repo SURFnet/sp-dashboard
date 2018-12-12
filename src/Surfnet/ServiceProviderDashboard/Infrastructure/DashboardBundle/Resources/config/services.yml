@@ -180,10 +180,6 @@ services:
     Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
         arguments:  ['%kernel.root_dir%/Resources']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRemovalRequestRepository:
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\EntityRemovalRequest]
-
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Entity]

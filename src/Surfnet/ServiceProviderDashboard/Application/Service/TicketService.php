@@ -21,13 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 use JiraRestApi\Issue\Issue;
 use JiraRestApi\JiraException;
 use JsonMapper_Exception;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityRemovalRequest;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRemovalRequestRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
-use Webmozart\Assert\Assert;
 
 class TicketService
 {
@@ -41,36 +37,12 @@ class TicketService
      */
     private $issueFactory;
 
-    /**
-     * @var EntityRemovalRequestRepository
-     */
-    private $entityRemovalRequestRepository;
-
     public function __construct(
         JiraServiceFactory $serviceFactory,
-        IssueFieldFactory $issueFactory,
-        EntityRemovalRequestRepository $entityRemovalRequestRepository
+        IssueFieldFactory $issueFactory
     ) {
         $this->serviceFactory = $serviceFactory;
         $this->issueFactory = $issueFactory;
-        $this->entityRemovalRequestRepository = $entityRemovalRequestRepository;
-    }
-
-    /**
-     * Store a EntityRemovalRequest
-     *
-     * Creates the entity and stores it.
-     *
-     * @param string $jiraIssueKey
-     * @param string $manageId
-     */
-    public function storeTicket($jiraIssueKey, $manageId)
-    {
-        Assert::string($jiraIssueKey, 'jiraIssueKey id must be a string');
-        Assert::string($manageId, 'manageId id must be a string');
-
-        $entityRemovalRequest = new EntityRemovalRequest($jiraIssueKey, $manageId);
-        $this->entityRemovalRequestRepository->save($entityRemovalRequest);
     }
 
     /**
