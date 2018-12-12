@@ -1053,6 +1053,16 @@ class Entity
     }
 
     /**
+     * The client id is the entity id where the semicolon in the protocol has been replaced with an at sign.
+     *
+     * @return string
+     */
+    public function getClientId()
+    {
+        return str_replace('://', '@//', $this->entityId);
+    }
+
+    /**
      * @return string
      */
     public function getCertificate()
