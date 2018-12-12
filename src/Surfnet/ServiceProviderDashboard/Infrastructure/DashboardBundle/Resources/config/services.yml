@@ -263,6 +263,8 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@router'
             - '@logger'
+            - '%playground_uri_test%'
+            - '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider:
         arguments:

@@ -143,6 +143,7 @@ class CopyEntityCommandHandler implements CommandHandler
         $domainEntity = Entity::fromManageResponse(
             $manageEntity,
             $command->getEnvironment(),
+            $command->getService(),
             $this->oidcPlaygroundUriProd,
             $this->oidcPlaygroundUriTest
         );
@@ -150,7 +151,6 @@ class CopyEntityCommandHandler implements CommandHandler
         // Set some defaults
         $domainEntity->setStatus(Entity::STATE_PUBLISHED);
         $domainEntity->setId($dashboardId);
-        $domainEntity->setService($command->getService());
         $domainEntity->setManageId($command->getManageId());
 
         // Published production entities must be cloned, not copied

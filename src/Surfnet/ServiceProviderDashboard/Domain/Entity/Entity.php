@@ -396,13 +396,18 @@ class Entity
     /**
      * @param ManageEntity $manageEntity
      * @param string $environment
-     * @param int $serviceId
+     * @param Service $service
      * @param string $playGroundUriProd
      * @param string $playGroundUriTest
      * @return Entity
      */
-    public static function fromManageResponse(ManageEntity $manageEntity, $environment, $serviceId, $playGroundUriProd = '', $playGroundUriTest = '')
-    {
+    public static function fromManageResponse(
+        ManageEntity $manageEntity,
+        $environment,
+        Service $service,
+        $playGroundUriTest = '',
+        $playGroundUriProd = ''
+    ) {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
         $arp = $manageEntity->getAttributes();
@@ -488,8 +493,6 @@ class Entity
 
         self::setAttributesOn($entity, $arp);
 
-        $service = new Service();
-        $service->setId($serviceId);
         $entity->setService($service);
 
         return $entity;
