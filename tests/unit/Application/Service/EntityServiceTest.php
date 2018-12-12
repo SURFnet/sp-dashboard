@@ -64,7 +64,7 @@ class EntityServiceTest extends MockeryTestCase
         $provider = new EntityQueryRepositoryProvider($this->repository, $this->manageTest, $this->manageProd);
 
         $this->router = m::mock(RouterInterface::class);
-        $this->service = new EntityService($provider, $this->router);
+        $this->service = new EntityService($provider, $this->router, 'playgroundUriTest', 'playgroundUriProd');
     }
 
     public function test_it_can_search_manage_test_by_manage_id()
