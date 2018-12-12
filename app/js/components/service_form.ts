@@ -1,25 +1,17 @@
 import * as $ from 'jquery';
 
 class ServiceForm {
-  private $privacyQuestionsEnabledToggle: JQuery;
-  private $privacyQuestionsStatusContainer: JQuery;
   private $contractSignedToggle: JQuery;
   private $contractSignedContainer: JQuery;
 
   /**
-   * @param $privacyQuestionToggle The selectbox to toggle the privacy question on
-   * @param $privacyQuestionContainer The form-row twith the privacy enabled question to show/hide
    * @param $contractSignedToggle The container with radio buttons to toggle on
    * @param $contractSignedContainer The form-row with the signed-contract questions to show/hide
    */
   constructor(
-    $privacyQuestionToggle: JQuery,
-    $privacyQuestionContainer: JQuery,
     $contractSignedToggle: JQuery,
     $contractSignedContainer: JQuery,
   ) {
-    this.$privacyQuestionsEnabledToggle = $privacyQuestionToggle;
-    this.$privacyQuestionsStatusContainer = $privacyQuestionContainer;
     this.$contractSignedToggle = $contractSignedToggle;
     this.$contractSignedContainer = $contractSignedContainer;
   }
@@ -28,9 +20,6 @@ class ServiceForm {
    * Init the eventhandlers on the elements
    */
   public registerEventHandlers() {
-    // Init the privacy questions answered toggle
-    this.initTogglePrivacyQuestionsAnsweredStatusField();
-
     // Init the contract signed toggle
     this.initToggleContractSignedStatusField();
   }
@@ -50,21 +39,6 @@ class ServiceForm {
 
     this.$contractSignedToggle.on('change', toggleContractSigned);
     toggleContractSigned();
-  }
-
-  /**
-   * Disable the privacy questions answered field when the privact question enabled checkbox is unchecked
-   */
-  private initTogglePrivacyQuestionsAnsweredStatusField() {
-    const togglePrivacyQuestions = () => {
-      if (this.$privacyQuestionsEnabledToggle.is(':checked')) {
-        this.showElement(this.$privacyQuestionsStatusContainer.parent());
-      } else {
-        this.hideElement(this.$privacyQuestionsStatusContainer.parent());
-      }
-    };
-    this.$privacyQuestionsEnabledToggle.on('change', togglePrivacyQuestions);
-    togglePrivacyQuestions();
   }
 
   /**
@@ -89,8 +63,6 @@ export function loadServiceForm() {
   if ($('#dashboard_bundle_edit_service_type').length > 0 || $('#dashboard_bundle_service_type').length > 0) {
     const serviceForm = new ServiceForm(
       $('.privacy-questions-toggle'),
-      $('.privacy-questions-container'),
-      $('.contract-signed-toggle'),
       $('.contract-signed-container'),
     );
     serviceForm.registerEventHandlers();

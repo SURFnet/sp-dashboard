@@ -11,19 +11,6 @@ describe('validate visibility toggling of service status fields on the service e
 
     let editFormHtml = require('fs').readFileSync('./app/js/components/mock/service_edit_form.html').toString();
 
-    it('hides the privacy question answered fields when the privacy questions checkbox is disabled', function() {
-        document.body.innerHTML = editFormHtml;
-        loadServiceForm();
-
-         expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-    });
-
     it('hides the contract signed fields when the service type is institution', function() {
         document.body.innerHTML = editFormHtml;
         loadServiceForm();
@@ -42,20 +29,6 @@ describe('validate visibility toggling of service status fields on the service e
 describe('validate visibility toggling of service status fields on the service create form', function() {
 
     let createFormHtml = require('fs').readFileSync('./app/js/components/mock/service_create_form.html').toString();
-
-    it('hides the privacy question answered fields when the privacy questions checkbox is disabled', function() {
-        document.body.innerHTML = createFormHtml;
-        loadServiceForm();
-
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-
-    });
 
     it('hides the contract signed fields when the service type is institution', function() {
         document.body.innerHTML = createFormHtml;

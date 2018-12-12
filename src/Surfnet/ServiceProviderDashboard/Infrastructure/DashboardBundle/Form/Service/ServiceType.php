@@ -78,7 +78,6 @@ class ServiceType extends AbstractType
                     ->add('entityPublished', EntityPublishedType::class)
                     ->add('contractSigned', ContractSignedType::class)
                     ->add('surfconextRepresentativeApproved', RepresentativeApprovedType::class)
-                    ->add('privacyQuestionsAnswered', PrivacyQuestionAnsweredType::class)
                     ->add('connectionStatus', ConnectionStatusType::class)
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
