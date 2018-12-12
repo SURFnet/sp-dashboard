@@ -74,7 +74,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForNewEntity(
+        $metadata = $generator->generateDataForNewEntity(
             $this->createSamlEntity()
         );
 
@@ -129,7 +129,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForExistingEntity(
+        $metadata = $generator->generateDataForExistingEntity(
             $this->createSamlEntity()
         );
 
@@ -182,7 +182,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForNewEntity(
+        $metadata = $generator->generateDataForNewEntity(
             $this->createOidcEntity()
         );
 
@@ -241,7 +241,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForExistingEntity(
+        $metadata = $generator->generateDataForExistingEntity(
             $this->createOidcEntity()
         );
 
@@ -281,17 +281,278 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('emailaddress', $metadata['metaDataFields.contacts:0:emailAddress']);
         $this->assertEquals('telephonenumber', $metadata['metaDataFields.contacts:0:telephoneNumber']);
 
-        $this->assertEquals([
-            'clientId' => 'http://entityid',
-            'clientSecret' => 'test',
-            'redirectUris' => ['uri1','uri2','uri3','http://playground-test'],
-            'grantType' => 'implicit',
-            'scope' => ['openid'],
-        ], $metadata['oidcClient']);
+        $this->assertNotContains('oidcClient', $metadata);
     }
 
 
-    /**
+
+
+
+
+
+
+
+
+
+
+
+    public function test_it_can_build_saml_entity_data_for_new_entities()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $data = $generator->generateForNewEntity(
+            $this->createSamlEntity()
+        );
+
+        $this->assertEquals(array (
+            'data' =>
+                array (
+                    'arp' =>
+                        array (
+                            'arp' => 'arp',
+                        ),
+                    'type' => 'saml20-sp',
+                    'entityid' => 'http://entityid',
+                    'active' => true,
+                    'allowedEntities' =>
+                        array (
+                        ),
+                    'allowedall' => true,
+                    'state' => 'testaccepted',
+                    'metaDataFields' =>
+                        array (
+                            'description:en' => 'description en',
+                            'description:nl' => 'description nl',
+                            'name:en' => 'name en',
+                            'name:nl' => 'name nl',
+                            'contacts:0:contactType' => 'support',
+                            'contacts:0:givenName' => 'givenname',
+                            'contacts:0:surName' => 'surname',
+                            'contacts:0:emailAddress' => 'emailaddress',
+                            'contacts:0:telephoneNumber' => 'telephonenumber',
+                            'OrganizationName:en' => 'orgen',
+                            'OrganizationDisplayName:en' => 'orgdisen',
+                            'OrganizationURL:en' => 'http://orgen',
+                            'OrganizationName:nl' => 'orgnl',
+                            'OrganizationDisplayName:nl' => 'orgdisnl',
+                            'OrganizationURL:nl' => 'http://orgnl',
+                            'privacy' => 'privacy',
+                            'sp' => 'sp',
+                            'AssertionConsumerService:0:Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+                            'AssertionConsumerService:0:Location' => 'http://acs',
+                            'NameIDFormat' => 'nameidformat',
+                            'coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+                            'certData' => 'certdata',
+                        ),
+                    'metadataurl' => 'http://metadata',
+                    'revisionnote' => 'revisionnote',
+                ),
+            'type' => 'saml20_sp',
+        ), $data);
+    }
+
+    public function test_it_can_build_saml_data_for_existing_entities()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $data = $generator->generateForExistingEntity(
+            $this->createSamlEntity()
+        );
+
+        $this->assertEquals(array (
+            'pathUpdates' =>
+                array (
+                    'arp' =>
+                        array (
+                            'arp' => 'arp',
+                        ),
+                    'entityid' => 'http://entityid',
+                    'metadataurl' => 'http://metadata',
+                    'metaDataFields.description:en' => 'description en',
+                    'metaDataFields.description:nl' => 'description nl',
+                    'metaDataFields.name:en' => 'name en',
+                    'metaDataFields.name:nl' => 'name nl',
+                    'metaDataFields.contacts:0:contactType' => 'support',
+                    'metaDataFields.contacts:0:givenName' => 'givenname',
+                    'metaDataFields.contacts:0:surName' => 'surname',
+                    'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
+                    'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
+                    'metaDataFields.OrganizationName:en' => 'orgen',
+                    'metaDataFields.OrganizationDisplayName:en' => 'orgdisen',
+                    'metaDataFields.OrganizationURL:en' => 'http://orgen',
+                    'metaDataFields.OrganizationName:nl' => 'orgnl',
+                    'metaDataFields.OrganizationDisplayName:nl' => 'orgdisnl',
+                    'metaDataFields.OrganizationURL:nl' => 'http://orgnl',
+                    'metaDataFields.privacy' => 'privacy',
+                    'metaDataFields.sp' => 'sp',
+                    'metaDataFields.AssertionConsumerService:0:Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+                    'metaDataFields.AssertionConsumerService:0:Location' => 'http://acs',
+                    'metaDataFields.NameIDFormat' => 'nameidformat',
+                    'metaDataFields.coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+                    'metaDataFields.certData' => 'certdata',
+                    'revisionnote' => 'revisionnote',
+                ),
+            'type' => 'saml20_sp',
+            'id' => 'manageId',
+        ), $data);
+    }
+
+
+
+    public function test_it_can_build_oidc_entity_data_for_new_entities()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $data = $generator->generateForNewEntity(
+            $this->createOidcEntity()
+        );
+
+        $this->assertEquals(array (
+            'data' =>
+                array (
+                    'arp' =>
+                        array (
+                            'arp' => 'arp',
+                        ),
+                    'type' => 'saml20-sp',
+                    'entityid' => 'http://entityid',
+                    'active' => true,
+                    'allowedEntities' =>
+                        array (
+                        ),
+                    'allowedall' => true,
+                    'state' => 'testaccepted',
+                    'metaDataFields' =>
+                        array (
+                            'description:en' => 'description en',
+                            'description:nl' => 'description nl',
+                            'name:en' => 'name en',
+                            'name:nl' => 'name nl',
+                            'contacts:0:contactType' => 'support',
+                            'contacts:0:givenName' => 'givenname',
+                            'contacts:0:surName' => 'surname',
+                            'contacts:0:emailAddress' => 'emailaddress',
+                            'contacts:0:telephoneNumber' => 'telephonenumber',
+                            'OrganizationName:en' => 'orgen',
+                            'OrganizationDisplayName:en' => 'orgdisen',
+                            'OrganizationURL:en' => 'http://orgen',
+                            'OrganizationName:nl' => 'orgnl',
+                            'OrganizationDisplayName:nl' => 'orgdisnl',
+                            'OrganizationURL:nl' => 'http://orgnl',
+                            'privacy' => 'privacy',
+                            'sp' => 'sp',
+                            'coin:oidc_client' => '1',
+                        ),
+                    'oidcClient' =>
+                        array (
+                            'clientId' => 'http://entityid',
+                            'clientSecret' => 'test',
+                            'redirectUris' =>
+                                array (
+                                    0 => 'uri1',
+                                    1 => 'uri2',
+                                    2 => 'uri3',
+                                    3 => 'http://playground-test',
+                                ),
+                            'grantType' => 'implicit',
+                            'scope' =>
+                                array (
+                                    0 => 'openid',
+                                ),
+                        ),
+                    'revisionnote' => 'revisionnote',
+                ),
+            'type' => 'saml20_sp',
+        ), $data);
+    }
+
+    public function test_it_can_build_oidc_data_for_existing_entities()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $data = $generator->generateForExistingEntity(
+            $this->createOidcEntity()
+        );
+
+        $this->assertEquals(array (
+            'pathUpdates' =>
+                array (
+                    'arp' =>
+                        array (
+                            'arp' => 'arp',
+                        ),
+                    'entityid' => 'http://entityid',
+                    'metaDataFields.description:en' => 'description en',
+                    'metaDataFields.description:nl' => 'description nl',
+                    'metaDataFields.name:en' => 'name en',
+                    'metaDataFields.name:nl' => 'name nl',
+                    'metaDataFields.contacts:0:contactType' => 'support',
+                    'metaDataFields.contacts:0:givenName' => 'givenname',
+                    'metaDataFields.contacts:0:surName' => 'surname',
+                    'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
+                    'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
+                    'metaDataFields.OrganizationName:en' => 'orgen',
+                    'metaDataFields.OrganizationDisplayName:en' => 'orgdisen',
+                    'metaDataFields.OrganizationURL:en' => 'http://orgen',
+                    'metaDataFields.OrganizationName:nl' => 'orgnl',
+                    'metaDataFields.OrganizationDisplayName:nl' => 'orgdisnl',
+                    'metaDataFields.OrganizationURL:nl' => 'http://orgnl',
+                    'metaDataFields.privacy' => 'privacy',
+                    'metaDataFields.sp' => 'sp',
+                    'metaDataFields.coin:oidc_client' => '1',
+                    'revisionnote' => 'revisionnote',
+                ),
+            'type' => 'saml20_sp',
+            'id' => 'manageId',
+            'externalReferenceData' =>
+                array (
+                    'oidcClient' =>
+                        array (
+                            'clientId' => 'http://entityid',
+                            'clientSecret' => 'test',
+                            'redirectUris' =>
+                                array (
+                                    0 => 'uri1',
+                                    1 => 'uri2',
+                                    2 => 'uri3',
+                                    3 => 'http://playground-test',
+                                ),
+                            'grantType' => 'implicit',
+                            'scope' =>
+                                array (
+                                    0 => 'openid',
+                                ),
+                        ),
+                ),
+        ), $data);
+    }
+
+
+        /**
      * @return Entity
      */
     private function createSamlEntity()
@@ -300,6 +561,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $entity->setProtocol('saml20');
 
+        $entity->setManageId('manageId');
         $entity->setMetadataUrl('http://metadata');
         $entity->setEntityId('http://entityid');
         $entity->setComments('revisionnote');
@@ -349,6 +611,7 @@ CERT
         $entity->setProtocol('oidc');
         $entity->setGrantType(new OidcGrantType(OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE));
 
+        $entity->setManageId('manageId');
         $entity->setEntityId('http://entityid');
         $entity->setComments('revisionnote');
         $entity->setNameEn('name en');
