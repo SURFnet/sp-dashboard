@@ -1,0 +1,12 @@
+{% if value is not empty and value.requested %}
+<h3>{{ label }}</h3>
+<div class="detail attribute">
+    {% if informationPopup is defined %}
+        <span title="{{ informationPopup|trans }}" class="help-button">
+            <i class="fa fa-question-circle"></i>
+        </span>
+    {% endif %}
+    <label>{{ 'entity.detail.attribute.motivation'|trans }}</label>
+    <span>{{ value }}</span>
+</div>
+{% endif %}

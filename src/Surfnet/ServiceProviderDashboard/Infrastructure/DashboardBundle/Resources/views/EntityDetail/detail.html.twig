@@ -1,0 +1,66 @@
+{% extends '::base.html.twig' %}
+
+{% block body_container %}
+
+    <h1>{% block page_heading %}{{ 'entity.detail.title'|trans }}{% endblock %}</h1>
+
+    <div class="fieldset card action">
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}
+    </div>
+    <div class="fieldset card">
+        <h2>{{ 'entity.detail.info.title'|trans }}</h2>
+        <div class="wysiwyg">{{ 'entity.detail.info.html'|trans|raw }}</div>
+    </div>
+
+    <div class="fieldset card">
+        <h2>{{ 'entity.detail.metadata.title'|trans }}</h2>
+        <div class="wysiwyg">{{ 'entity.detail.metadata.html'|trans|raw }}</div>
+
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.metadata_url'|trans, value: entity.metadataUrl, informationPopup: 'entity.edit.information.metadataUrl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.acs_location'|trans, value: entity.acsLocation, informationPopup: 'entity.edit.information.acsLocation'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.entity_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.entityId'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_id_format'|trans, value: entity.nameIdFormat, informationPopup: 'entity.edit.information.nameIdFormat'} %}
+        {% include '@Dashboard/EntityDetail/detailFormattedField.html.twig' with {label: 'entity.detail.metadata.certificate'|trans, value: entity.certificate, informationPopup: 'entity.edit.information.certificate'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.logo_url'|trans, value: entity.logoUrl, informationPopup: 'entity.edit.information.logoUrl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_nl'|trans, value: entity.nameNl, informationPopup: 'entity.edit.information.nameNl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.description_nl'|trans, value: entity.descriptionNl, informationPopup: 'entity.edit.information.descriptionNl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_en'|trans, value: entity.nameEn, informationPopup: 'entity.edit.information.nameEn'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.description_en'|trans, value: entity.descriptionEn, informationPopup: 'entity.edit.information.descriptionEn'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.application_url'|trans, value: entity.applicationUrl, informationPopup: 'entity.edit.information.applicationUrl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.eula_url'|trans, value: entity.eulaUrl, informationPopup: 'entity.edit.information.eulaUrl'} %}
+
+    </div>
+
+    <div class="fieldset card">
+        <h2>{{ 'entity.detail.contact.title'|trans }}</h2>
+        <div class="wysiwyg">{{ 'entity.detail.contact.html'|trans|raw }}</div>
+
+        {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.administrative'|trans, value: entity.administrativeContact, informationPopup: 'entity.edit.information.administrativeContact'} %}
+        {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.technical'|trans, value: entity.technicalContact, informationPopup: 'entity.edit.information.technicalContact'} %}
+        {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.support'|trans, value: entity.supportContact, informationPopup: 'entity.edit.information.supportContact'} %}
+
+    </div>
+
+    <div class="fieldset card">
+        <h2>{{ 'entity.detail.attribute.title'|trans }}</h2>
+        <div class="wysiwyg">{{ 'entity.detail.attribute.html'|trans|raw }}</div>
+
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.given_name'|trans, value: entity.givenNameAttribute, informationPopup: 'entity.edit.information.givenNameAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.surname'|trans, value: entity.surNameAttribute, informationPopup: 'entity.edit.information.surNameAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.common_name'|trans, value: entity.commonNameAttribute, informationPopup: 'entity.edit.information.commonNameAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.display_name'|trans, value: entity.displayNameAttribute, informationPopup: 'entity.edit.information.displayNameAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.email_address'|trans, value: entity.emailAddressAttribute, informationPopup: 'entity.edit.information.emailAddressAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.organization'|trans, value: entity.organizationAttribute, informationPopup: 'entity.edit.information.organizationAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.organization_type'|trans, value: entity.organizationTypeAttribute, informationPopup: 'entity.edit.information.organizationTypeAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.affiliation'|trans, value: entity.affiliationAttribute, informationPopup: 'entity.edit.information.affiliationAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.entitlement'|trans, value: entity.entitlementAttribute, informationPopup: 'entity.edit.information.entitlementAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.principle_name'|trans, value: entity.principleNameAttribute, informationPopup: 'entity.edit.information.principleNameAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.uid'|trans, value: entity.uidAttribute, informationPopup: 'entity.edit.information.uidAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.prefered_language'|trans, value: entity.preferredLanguageAttribute, informationPopup: 'entity.edit.information.preferredLanguageAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.personal_code'|trans, value: entity.personalCodeAttribute, informationPopup: 'entity.edit.information.personalCodeAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.scoped_affiliation'|trans, value: entity.scopedAffiliationAttribute, informationPopup: 'entity.edit.information.scopedAffiliationAttribute'} %}
+        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: 'entity.detail.attribute.edu_person_targetted_id'|trans, value: entity.eduPersonTargetedIDAttribute, informationPopup: 'entity.edit.information.eduPersonTargetedIDAttribute'} %}
+
+    </div>
+
+{% endblock %}

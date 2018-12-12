@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
@@ -109,16 +110,20 @@ class QueryClient implements QueryEntityRepository
     /**
      * @param string $manageId
      *
-     * @return array|null
+     * @return ManageEntity|null
      *
      * @throws QueryServiceProviderException
      */
     public function findByManageId($manageId)
     {
         try {
-            return $this->client->read(
+            $data = $this->client->read(
                 sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId)
             );
+            if (empty($data)) {
+                return null;
+            }
+            return ManageEntity::fromApiResponse($data);
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
                 sprintf('Unable to find entity with internal manage ID: "%s"', $manageId),
@@ -133,7 +138,7 @@ class QueryClient implements QueryEntityRepository
      *
      * @param string $teamName
      *
-     * @return array|null
+     * @return ManageEntity[]|null
      *
      * @throws QueryServiceProviderException
      */
@@ -164,10 +169,7 @@ class QueryClient implements QueryEntityRepository
 
     /**
      * @param array $params
-     * @param string $url
-     *
      * @return array|null
-     *
      * @throws HttpException
      */
     private function doSearchQuery(array $params)

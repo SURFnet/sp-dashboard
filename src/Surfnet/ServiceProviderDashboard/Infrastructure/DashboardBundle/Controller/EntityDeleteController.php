@@ -95,7 +95,7 @@ class EntityDeleteController extends Controller
                 );
             }
 
-            return $this->redirectToRoute('entity_list');
+            return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
         }
 
         return [
@@ -129,12 +129,8 @@ class EntityDeleteController extends Controller
         $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
 
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
-        $nameEn = $entity['data']['metaDataFields']['name:en'];
-
-        $excludeFromPush = 0;
-        if (isset($entity['data']['metaDataFields']['coin:exclude_from_push'])) {
-            $excludeFromPush = $entity['data']['metaDataFields']['coin:exclude_from_push'];
-        }
+        $nameEn = $entity->getMetaData()->getNameEn();
+        $excludeFromPush = $entity->getMetaData()->getCoin()->getExcludeFromPush();
 
         $form = $this->createForm(DeleteEntityType::class);
         $form->handleRequest($request);
@@ -148,7 +144,8 @@ class EntityDeleteController extends Controller
                 $this->commandBus->handle($command);
             }
 
-            return $this->redirectToRoute('entity_list');
+            $serviceId = $this->authorizationService->getActiveServiceId();
+            return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
         }
 
         return [
@@ -182,8 +179,7 @@ class EntityDeleteController extends Controller
         $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
 
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
-        $nameEn = $entity['data']['metaDataFields']['name:en'];
-
+        $nameEn = $entity->getMetaData()->getNameEn();
 
         $form = $this->createForm(DeleteEntityType::class);
         $form->handleRequest($request);
@@ -195,8 +191,8 @@ class EntityDeleteController extends Controller
                     $this->commandFactory->buildRequestDeletePublishedEntityCommand($manageId, $contact)
                 );
             }
-
-            return $this->redirectToRoute('entity_list');
+            $serviceId = $this->authorizationService->getActiveServiceId();
+            return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
         }
 
         return [

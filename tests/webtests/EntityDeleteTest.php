@@ -191,11 +191,11 @@ class EntityDeleteTest extends WebTestCase
      */
     public function test_request_delete_a_published_production_entity_jira_not_available()
     {
-        $queryResponse = json_encode((object)[
+        $queryResponse = json_encode([
             'id' => 'a8e7cffd-0409-45c7-a37a-000000000000',
             'data' => (object)[
                 'entityid' => 'SP1',
-                'metaDataFields' => (object) [
+                'metaDataFields' => [
                     'name:en' => 'SP1',
                     'contacts:0:contactType' => 'administrative',
                     'contacts:0:givenName' => 'Test',
@@ -210,6 +210,8 @@ class EntityDeleteTest extends WebTestCase
         // Handling the form also requires retrieval of the manage entity
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
+        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
+        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
         // Successful deleting an entity from manage results in return type boolean : true
         $this->prodMockHandler->append(new Response(200, [], json_encode(true)));
 
@@ -221,7 +223,7 @@ class EntityDeleteTest extends WebTestCase
 
         $crawler = $this->client->request('GET', "/entity/delete/request/a8e7cffd-0409-45c7-a37a-000000000000");
 
-        $pageTitle = $crawler->filter('.page-container h1');
+        $pageTitle = $crawler->filter('h1');
 
         $this->assertEquals('Delete entity', $pageTitle->text());
 

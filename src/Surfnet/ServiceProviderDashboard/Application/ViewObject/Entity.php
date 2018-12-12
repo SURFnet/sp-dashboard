@@ -19,6 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -62,16 +63,30 @@ class Entity
     private $router;
 
     /**
+     * @var EntityActions
+     */
+    private $actions;
+
+    /**
      * @param string $id
      * @param string $entityId
+     * @param int $serviceId
      * @param string $name
      * @param string $contact
      * @param string $state
      * @param string $environment
      * @param RouterInterface $router
      */
-    public function __construct($id, $entityId, $name, $contact, $state, $environment, RouterInterface $router)
-    {
+    public function __construct(
+        $id,
+        $entityId,
+        $serviceId,
+        $name,
+        $contact,
+        $state,
+        $environment,
+        RouterInterface $router
+    ) {
         $this->id = $id;
         $this->entityId = $entityId;
         $this->name = $name;
@@ -79,6 +94,7 @@ class Entity
         $this->state = $state;
         $this->environment = $environment;
         $this->router = $router;
+        $this->actions = new EntityActions($id, $serviceId, $state, $environment);
     }
 
     public static function fromEntity(DomainEntity $entity, RouterInterface $router)
@@ -94,6 +110,7 @@ class Entity
         return new self(
             $entity->getId(),
             $entity->getEntityId(),
+            $entity->getService()->getId(),
             $entity->getNameEn(),
             $formattedContact,
             $entity->getStatus(),
@@ -102,16 +119,21 @@ class Entity
         );
     }
 
-    public static function fromManageTestResult(array $result, RouterInterface $router)
+    /**
+     * @param ManageEntity $result
+     * @param RouterInterface $router
+     * @param int $serviceId
+     * @return Entity
+     */
+    public static function fromManageTestResult(ManageEntity $result, RouterInterface $router, $serviceId)
     {
-        $metadata = $result['data']['metaDataFields'];
-
-        $formattedContact = self::formatManageContact($metadata);
+        $formattedContact = self::formatManageContact($result);
 
         return new self(
-            $result['id'],
-            $result['data']['entityid'],
-            $metadata['name:en'],
+            $result->getId(),
+            $result->getMetaData()->getEntityId(),
+            $serviceId,
+            $result->getMetaData()->getNameEn(),
             $formattedContact,
             'published',
             'test',
@@ -119,24 +141,31 @@ class Entity
         );
     }
 
-    public static function fromManageProductionResult(array $result, RouterInterface $router)
+    /**
+     * @param ManageEntity $result
+     * @param RouterInterface $router
+     * @param int $serviceId
+     * @return Entity
+     */
+    public static function fromManageProductionResult(ManageEntity $result, RouterInterface $router, $serviceId)
     {
-        $metadata = $result['data']['metaDataFields'];
-
-        $formattedContact = self::formatManageContact($metadata);
+        $formattedContact = self::formatManageContact($result);
 
         // As long as the coin:exclude_from_push metadata is present, allow modifications to the entity by
         // copying it from manage and merging the changes. The view status text: requested is set when an entity
         // can still be edited.
         $status = 'published';
-        if (isset($metadata['coin:exclude_from_push']) && $metadata['coin:exclude_from_push'] == 1) {
+
+        $excludeFromPush = $result->getMetaData()->getCoin()->getExcludeFromPush();
+        if ($excludeFromPush === 1) {
             $status = 'requested';
         }
 
         return new self(
-            $result['id'],
-            $result['data']['entityid'],
-            $metadata['name:en'],
+            $result->getId(),
+            $result->getMetaData()->getEntityId(),
+            $serviceId,
+            $result->getMetaData()->getNameEn(),
             $formattedContact,
             $status,
             'production',
@@ -147,19 +176,16 @@ class Entity
     /**
      * @return string
      */
-    private static function formatManageContact(array $metadata)
+    private static function formatManageContact(ManageEntity $metadata)
     {
-        for ($i=0; $i<=2; $i++) {
-            $attrPrefix = sprintf('contacts:%d:', $i);
-
-            if (isset($metadata[$attrPrefix . 'contactType']) && $metadata[$attrPrefix . 'contactType'] === 'administrative') {
-                return sprintf(
-                    '%s %s (%s)',
-                    $metadata[$attrPrefix . 'givenName'],
-                    $metadata[$attrPrefix . 'surName'],
-                    $metadata[$attrPrefix . 'emailAddress']
-                );
-            }
+        $administrative = $metadata->getMetaData()->getContacts()->findAdministrativeContact();
+        if ($administrative) {
+            return sprintf(
+                '%s %s (%s)',
+                $administrative->getGivenName(),
+                $administrative->getSurName(),
+                $administrative->getEmail()
+            );
         }
 
         return '';
@@ -234,60 +260,6 @@ class Entity
         return 'SAML';
     }
 
-    /**
-     * @return bool
-     */
-    public function allowEditAction()
-    {
-        return $this->state == 'draft';
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowCopyAction()
-    {
-        $isPublishedTestEntity = ($this->state == 'published' && $this->environment == 'test');
-        $isPublishedProdEntity = ($this->state == 'requested' && $this->environment == 'production');
-        if ($isPublishedTestEntity || $isPublishedProdEntity) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowCopyToProductionAction()
-    {
-        if ($this->state == 'published' && $this->environment == 'test') {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowCloneAction()
-    {
-        if ($this->state == 'published' && $this->environment == 'production') {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowDeleteAction()
-    {
-        return true;
-    }
-
     public function isPublishedToProduction()
     {
         return $this->state == 'published' && $this->environment == 'production';
@@ -314,22 +286,21 @@ class Entity
      */
     public function getLink()
     {
-        if ($this->allowEditAction()) {
-            return $this->router->generate('entity_edit', ['id' => $this->getId()]);
-        } elseif ($this->allowCopyAction()) {
-            return $this->router->generate('entity_copy', [
-                'manageId' => $this->getId(),
-                'targetEnvironment' => $this->environment,
-                'sourceEnvironment' => $this->environment,
-            ]);
-        } else if ($this->allowCloneAction()) {
-            return $this->router->generate('entity_copy', [
-                'manageId' => $this->getId(),
-                'targetEnvironment' => 'production',
-                'sourceEnvironment' => 'production',
-            ]);
-        }
+        return $this->router->generate(
+            'entity_detail',
+            [
+                'id' => $this->getId(),
+                'serviceId' => $this->getActions()->getServiceId(),
+                'manageTarget' => $this->getEnvironment()
+            ]
+        );
+    }
 
-        return '#';
+    /**
+     * @return EntityActions
+     */
+    public function getActions()
+    {
+        return $this->actions;
     }
 }

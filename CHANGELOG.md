@@ -1,3 +1,15 @@
+## 1.5.0
+
+**New features:**
+ - Improved service overview #192
+ - Entity details can now be displayed #193 #188
+ 
+**Improvements**
+ - Add missing favicon #187
+ - Security updates where installed #194
+ - OIDC support was added to the dev vm #191
+ - Manage responses are converted to DTO #190
+
 ## 1.4.1
 
 **Bugfixes:**

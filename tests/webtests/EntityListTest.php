@@ -35,7 +35,7 @@ class EntityListTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entities');
+        $crawler = $this->client->request('GET', '/entities/1');
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -87,7 +87,7 @@ class EntityListTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entities');
+        $crawler = $this->client->request('GET', '/entities/1');
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -117,7 +117,7 @@ class EntityListTest extends WebTestCase
             $service->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entities');
+        $crawler = $this->client->request('GET', '/entities/1');
 
         $actions = $crawler->filter('div.add-entity-actions a');
 
@@ -140,7 +140,7 @@ class EntityListTest extends WebTestCase
             $service->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entities');
+        $crawler = $this->client->request('GET', '/entities/2');
 
         $actions = $crawler->filter('div.add-entity-actions a');
 
@@ -164,7 +164,7 @@ class EntityListTest extends WebTestCase
             $service->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entities');
+        $crawler = $this->client->request('GET', '/entities/2');
 
         // Assert the two modal windows are on the page and have a form with appropriate form actions.
         $modalTest = $crawler->filter('#add-for-test form');

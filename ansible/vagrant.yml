@@ -9,6 +9,8 @@
      include_vars: "group_vars/override.yml"
    - name: "Include OpenConext-deploy all group vars"
      include_vars: "../../OpenConext-deploy/group_vars/all.yml"
+   - name: "Include OpenConext-deploy java vars"
+     include_vars: "../../OpenConext-deploy/group_vars/java-apps-common.yml"
    - name: Set base_domain  
      set_fact: 
        base_domain: dev.support.surfconext.nl
@@ -31,7 +33,7 @@
     - { role: ../OpenConext-deploy/roles/mysql,             tags: ['mysql'] }
     - { role: ../OpenConext-deploy/roles/engineblock,       tags: ['eb'] }
     - { role: ../OpenConext-deploy/roles/java,              tags: ['java' ] }
-    - { role: spdashboard,                                  tags: ['spdashboard'] } 
+      #    - { role: spdashboard,                                  tags: ['spdashboard'] } 
     - { role: ../OpenConext-deploy/roles/mujina-idp,        tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/shibboleth,        tags: ['shib' ] }
@@ -47,4 +49,13 @@
     - { role: ../OpenConext-deploy/roles/teams-server,                 tags: ['teams', 'teams-server'  ] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-gui,    tags: ['attribute-aggregation', 'attribute-aggregation-gui'] }
     - { role: ../OpenConext-deploy/roles/attribute-aggregation-server, tags: ['attribute-aggregation', 'attribute-aggregation-server'] }
+    - { role: ../OpenConext-deploy/roles/tomcat, tags: ['tomcat'] }
+    - { role: ../OpenConext-deploy/roles/oidc, tags: ['oidc'] }
     - { role: ../OpenConext-deploy/roles/vm_only_provision_manage_eb,  tags: ['vm_only_provision_manage_eb'] }
+
+
+- hosts: all
+  become: true
+  roles:
+    - { role: ../OpenConext-deploy/roles/vm_only_provision_manage_eb,  tags: ['vm_only_provision_manage_eb'] }
+

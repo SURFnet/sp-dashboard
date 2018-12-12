@@ -56,7 +56,7 @@ class EditServiceTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', '/service/edit');
+        $crawler = $this->client->request('GET', '/service/1/edit');
 
         $form = $crawler
             ->selectButton('Save')
@@ -85,7 +85,7 @@ class EditServiceTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', '/service/edit');
+        $crawler = $this->client->request('GET', '/service/1/edit');
 
         // Step 1: Admin sets privacy questions enabled to false
         $formData = [
@@ -106,12 +106,7 @@ class EditServiceTest extends WebTestCase
         $surfNet = $serviceRepository->findByName('SURFnet');
         $this->logIn('ROLE_USER', [$surfNet]);
 
-        $crawler = $this->client->request('GET', '/');
-        $navTexts = $crawler->filterXPath('//div[@class="navigation"]/ul/li/a/text()')->extract(['_text']);
-
-        $this->assertNotContains('Privacy', $navTexts, 'The Privacy Questions entry should not be in the navigation panel.');
-
-        $this->client->request('GET', '/service/privacy');
+        $this->client->request('GET', '/service/1/privacy');
 
         $this->assertEquals(
             404,
@@ -128,7 +123,7 @@ class EditServiceTest extends WebTestCase
         $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', '/service/edit');
+        $crawler = $this->client->request('GET', '/service/1/edit');
 
         $formData = [
             'dashboard_bundle_edit_service_type' => [
@@ -147,13 +142,7 @@ class EditServiceTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->followRedirect();
-
-        $navTexts = $crawler->filterXPath('//div[@class="navigation"]/ul/li/a/text()')->extract(['_text']);
-
-        $this->assertContains('Privacy', $navTexts);
-
-        $this->client->request('GET', '/service/privacy');
+        $this->client->request('GET', '/service/1/privacy');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -168,7 +157,7 @@ class EditServiceTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', '/service/edit');
+        $crawler = $this->client->request('GET', '/service/1/edit');
 
         $radio = $crawler->filter('#dashboard_bundle_edit_service_type_serviceStatus_privacyQuestionsAnswered_1');
         // The checked element should be the 'Yes' radio option as the ibuildings service has a privacy questions entity

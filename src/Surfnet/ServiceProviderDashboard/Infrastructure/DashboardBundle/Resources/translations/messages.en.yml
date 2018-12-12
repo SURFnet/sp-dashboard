@@ -14,6 +14,58 @@ entity.delete.request.ticket.description: "h2. Details
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
+
+entity:
+  detail:
+    title: Entity details
+    info:
+      title: Information
+      html: <strong>information about this view</strong>
+    metadata:
+      title: Metadata
+      html: <strong>information about the metadata fields</strong>
+      metadata_url: Metadata URL
+      acs_location: ACS location
+      entity_id: Entity ID
+      name_id_format: NameID format
+      certificate: Certificate
+      logo_url: Logo URL
+      name_nl: Name NL
+      description_nl: Description NL
+      name_en: Name EN
+      description_en: Description EN
+      application_url: Application URL
+      eula_url: EULA URL
+    contact:
+      title: Contact information
+      html: <strong>information about the contact information fields</strong>
+      administrative: Administrative contact
+      technical: Technical contact
+      support: Support contact
+      first_name: First name
+      last_name: Last name
+      email: Email
+      phone: Phone
+    attribute:
+      title: Attributes
+      html: <strong>information about the attribute fields</strong>
+      motivation: Motivation
+      given_name: Given name
+      surname: Surname
+      common_name: Common name attribute
+      display_name: Display name attribute
+      email_address: Email address attribute
+      organization: Organization attribute
+      organization_type: Organization type attribute
+      affiliation: Affiliation attribute
+      entitlement: Entitlement attribute
+      principle_name: Principle name attribute
+      uid: Uid attribute
+      prefered_language: Preferred language attribute
+      personal_code: Personal code attribute
+      scoped_affiliation: Scoped affiliation attribute
+      edu_person_targetted_id: Edu person targeted ID attribute
+
 entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
@@ -25,6 +77,7 @@ entity.list.entity_id: Entity ID
 entity.list.primary_contact: Primary contact
 entity.list.environment: Environment
 entity.list.state: State
+entity.list.action.back: Back to overview
 entity.list.action.view: View
 entity.list.action.edit: Edit
 entity.list.action.copy: Copy
@@ -201,13 +254,10 @@ service.form.label.service_type: Type of service
 service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
 service.overview.title: My services
-mail.confirmation.publish_production.comment: Comments
-mail.confirmation.publish_production.entity_id: EntityID
-mail.confirmation.publish_production.entity_name_en: Entity name (en)
-mail.confirmation.publish_production.service_name: Service name
-mail.confirmation.publish_production.publish_date: Publish date
-mail.confirmation.publish_production.team_id: Team id
-mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'
+service.overview.action.entityList: Detailed entities overview
+service.overview.action.privacyQuestions: Privacy questions
+service.overview.action.serviceEdit: Edit service
+service.overview.action.serviceDelete: Delete service
 service.overview.entitylist.title: Entities of service %name%
 service.overview.entitylist.test.title: Entities @ test environment
 service.overview.entitylist.production.title: Entities @ production environment
@@ -239,3 +289,10 @@ service.overview.progress.tooltip.privacy-questions.info.html: "Are the privacy 
 service.overview.progress.tooltip.production-connection.info.html: "Is a production connection active?"
 service.overview.progress.tooltip.production-connection.in-progress.html: "The deployment to the production environment is in progress"
 service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
+mail.confirmation.publish_production.comment: Comments
+mail.confirmation.publish_production.entity_id: EntityID
+mail.confirmation.publish_production.entity_name_en: Entity name (en)
+mail.confirmation.publish_production.service_name: Service name
+mail.confirmation.publish_production.publish_date: Publish date
+mail.confirmation.publish_production.team_id: Team id
+mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'

@@ -22,6 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -361,6 +364,106 @@ class Entity
      * @ORM\JoinColumn(nullable=false)
      */
     private $service;
+
+    /**
+     * @param ManageEntity $manageEntity
+     * @param string $environment
+     * @param int $serviceId
+     * @return Entity
+     */
+    public static function fromManageResponse(ManageEntity $manageEntity, $environment, $serviceId)
+    {
+        $metaData = $manageEntity->getMetaData();
+        $coin = $metaData->getCoin();
+        $arp = $manageEntity->getAttributes();
+
+        $entity = new self();
+
+        $entity->setEnvironment($environment);
+        $entity->setStatus('published');
+
+        $entity->setManageId($manageEntity->getId());
+        $entity->setEntityId($metaData->getEntityId());
+        $entity->setMetadataUrl($metaData->getMetaDataUrl());
+        $entity->setAcsLocation($metaData->getAcsLocation());
+        $entity->setNameIdFormat($metaData->getNameIdFormat());
+        $entity->setCertificate($metaData->getCertData());
+        $entity->setDescriptionEn($metaData->getDescriptionEn());
+        $entity->setDescriptionNl($metaData->getDescriptionNl());
+        $entity->setNameEn($metaData->getNameEn());
+        $entity->setNameNl($metaData->getNameNl());
+        $entity->setLogoUrl($metaData->getLogo()->getUrl());
+        $entity->setOrganizationDisplayNameEn($metaData->getOrganization()->getDisplayNameEn());
+        $entity->setOrganizationDisplayNameNl($metaData->getOrganization()->getDisplayNameNl());
+        $entity->setOrganizationNameEn($metaData->getOrganization()->getNameEn());
+        $entity->setOrganizationNameNl($metaData->getOrganization()->getNameNl());
+        $entity->setOrganizationUrlEn($metaData->getOrganization()->getUrlEn());
+        $entity->setOrganizationUrlNl($metaData->getOrganization()->getUrlNl());
+        $entity->setApplicationUrl($coin->getApplicationUrl());
+        $entity->setEulaUrl($coin->getEula());
+
+        $administrative = $metaData->getContacts()->findAdministrativeContact();
+        if ($administrative) {
+            $contact = new ContactPerson();
+            $contact->setFirstName($administrative->getGivenName());
+            $contact->setLastName($administrative->getSurName());
+            $contact->setEmail($administrative->getEmail());
+            $contact->setPhone($administrative->getPhone());
+            $entity->setAdministrativeContact($contact);
+        }
+
+        $technical = $metaData->getContacts()->findTechnicalContact();
+        if ($technical) {
+            $contact = new ContactPerson();
+            $contact->setFirstName($technical->getGivenName());
+            $contact->setLastName($technical->getSurName());
+            $contact->setEmail($technical->getEmail());
+            $contact->setPhone($technical->getPhone());
+            $entity->setTechnicalContact($contact);
+        }
+
+        $support = $metaData->getContacts()->findSupportContact();
+        if ($support) {
+            $contact = new ContactPerson();
+            $contact->setFirstName($support->getGivenName());
+            $contact->setLastName($support->getSurName());
+            $contact->setEmail($support->getEmail());
+            $contact->setPhone($support->getPhone());
+            $entity->setSupportContact($contact);
+        }
+
+        self::setAttributesOn($entity, $arp);
+
+        $service = new Service();
+        $service->setId($serviceId);
+        $entity->setService($service);
+
+        return $entity;
+    }
+
+    private static function setAttributesOn($entity, AttributeList $attributeList)
+    {
+        $attributeRepository = new AttributesMetadataRepository('../app/Resources');
+        // Copy the ARP attributes to the new entity based on the data from manage.
+        foreach ($attributeRepository->findAll() as $attributeDefinition) {
+            $urn = reset($attributeDefinition->urns);
+            $manageAttribute = $attributeList->findByUrn($urn);
+            if (!$manageAttribute) {
+                continue;
+            }
+
+            $setter = $attributeDefinition->setterName;
+            if (empty($setter)) {
+                continue;
+            }
+
+            $attribute = new Attribute();
+            $attribute->setRequested(true);
+            $attribute->setMotivation($manageAttribute->getMotivation());
+
+            $entity->{$setter}($attribute);
+        }
+    }
 
     /**
      * @param string $id

@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryP
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -58,6 +59,28 @@ class EntityService implements EntityServiceInterface
         return $this->queryRepositoryProvider->getEntityRepository()->findById($id);
     }
 
+    public function getEntityByIdAndTarget($id, $manageTarget, $serviceId)
+    {
+        switch ($manageTarget) {
+            case 'production':
+                $entity = $this->queryRepositoryProvider
+                    ->getManageProductionQueryClient()
+                    ->findByManageId($id);
+
+                return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
+                break;
+            case 'test':
+                $entity = $this->queryRepositoryProvider
+                    ->getManageTestQueryClient()
+                    ->findByManageId($id);
+                return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
+                break;
+            default:
+                return $this->getEntityById($id);
+                break;
+        }
+    }
+
     public function getEntityListForService(Service $service)
     {
         $entities = [];
@@ -69,12 +92,12 @@ class EntityService implements EntityServiceInterface
 
         $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
         foreach ($testEntities as $result) {
-            $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router);
+            $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router, $service->getId());
         }
 
         $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
         foreach ($productionEntities as $result) {
-            $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router);
+            $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
         }
 
         return new ViewObject\EntityList($entities);
@@ -106,7 +129,7 @@ class EntityService implements EntityServiceInterface
      * @param string $manageId
      * @param string $env
      *
-     * @return array|null
+     * @return ManageEntity|null
      *
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException

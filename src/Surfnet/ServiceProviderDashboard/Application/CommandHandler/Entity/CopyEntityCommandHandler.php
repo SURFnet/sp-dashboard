@@ -29,6 +29,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 
 class CopyEntityCommandHandler implements CommandHandler
@@ -112,10 +115,9 @@ class CopyEntityCommandHandler implements CommandHandler
             );
         }
 
-        $manageMetadata = $manageEntity['data']['metaDataFields'];
-        $manageTeamName = $manageMetadata['coin:service_team_id'];
+        $manageTeamName = $manageEntity->getMetaData()->getCoin()->getServiceTeamId();
 
-        $manageStagingState = $this->getManageStagingState($manageMetadata);
+        $manageStagingState = $this->getManageStagingState($manageEntity->getMetaData()->getCoin());
 
         if ($manageTeamName !== $command->getService()->getTeamName()) {
             throw new InvalidArgumentException(
@@ -147,14 +149,13 @@ class CopyEntityCommandHandler implements CommandHandler
             )
         );
 
-        $this->setManageMetadataOn($saveEntityCommand, $manageMetadata);
+        $this->setManageMetadataOn($saveEntityCommand, $manageEntity);
 
-        if (isset($manageEntity['data']['metadataurl'])) {
-            $saveEntityCommand->setMetadataUrl($manageEntity['data']['metadataurl']);
+        if (!empty($manageEntity->getMetaData()->getMetaDataUrl())) {
+            $saveEntityCommand->setMetadataUrl($manageEntity->getMetaData()->getMetaDataUrl());
         }
 
-        $arp = isset($manageEntity['data']['arp']['attributes']) ? $manageEntity['data']['arp']['attributes'] : [];
-        $this->setAttributesOn($saveEntityCommand, $arp);
+        $this->setAttributesOn($saveEntityCommand, $manageEntity->getAttributes());
 
         // Set the target environment
         $saveEntityCommand->setEnvironment($command->getEnvironment());
@@ -168,39 +169,39 @@ class CopyEntityCommandHandler implements CommandHandler
      * 0 means this is a production entity.
      * 1 means the entity is still in staging (access was requested).
      *
-     * @param $manageMetadata
+     * @param Coin $coin
      * @return int
      */
-    private function getManageStagingState($manageMetadata)
+    private function getManageStagingState(Coin $coin)
     {
-        if (isset($manageMetadata['coin:exclude_from_push']) && $manageMetadata['coin:exclude_from_push'] == 1) {
+        if ($coin->getExcludeFromPush() === 1) {
             return 1;
         }
         return 0;
     }
 
-    private function setManageMetadataOn(SaveEntityCommand $saveEntityCommand, array $manageMetadata)
+    private function setManageMetadataOn(SaveEntityCommand $saveEntityCommand, ManageEntity $manageMetadata)
     {
-        if (isset($manageMetadata['coin:application_url'])) {
-            $saveEntityCommand->setApplicationUrl($manageMetadata['coin:application_url']);
+        if (!empty($manageMetadata->getMetaData()->getCoin()->getApplicationUrl())) {
+            $saveEntityCommand->setApplicationUrl($manageMetadata->getMetaData()->getCoin()->getApplicationUrl());
         }
 
-        if (isset($manageMetadata['coin:eula'])) {
-            $saveEntityCommand->setEulaUrl($manageMetadata['coin:eula']);
+        if (!empty($manageMetadata->getMetaData()->getCoin()->getEula())) {
+            $saveEntityCommand->setEulaUrl($manageMetadata->getMetaData()->getCoin()->getEula());
         }
 
-        if (isset($manageMetadata['coin:original_metadata_url'])) {
-            $saveEntityCommand->setImportUrl($manageMetadata['coin:original_metadata_url']);
+        if (!empty($manageMetadata->getMetaData()->getCoin()->getOriginalMetadataUrl())) {
+            $saveEntityCommand->setImportUrl($manageMetadata->getMetaData()->getCoin()->getOriginalMetadataUrl());
         }
     }
 
-    private function setAttributesOn($saveEntityCommand, $arp)
+    private function setAttributesOn($saveEntityCommand, AttributeList $attributeList)
     {
         // Copy the ARP attributes to the new entity based on the data from manage.
         foreach ($this->attributeMetadataRepository->findAll() as $attributeDefinition) {
             $urn = reset($attributeDefinition->urns);
-
-            if (!isset($arp[$urn])) {
+            $manageAttribute = $attributeList->findByUrn($urn);
+            if (!$manageAttribute) {
                 continue;
             }
 
@@ -209,14 +210,9 @@ class CopyEntityCommandHandler implements CommandHandler
                 continue;
             }
 
-            $motivation = isset($arp[$urn][0]['motivation']) ? $arp[$urn][0]['motivation'] : false;
-
             $attribute = new Attribute();
             $attribute->setRequested(true);
-
-            if ($motivation) {
-                $attribute->setMotivation($motivation);
-            }
+            $attribute->setMotivation($manageAttribute->getMotivation());
 
             $saveEntityCommand->{$setter}($attribute);
         }

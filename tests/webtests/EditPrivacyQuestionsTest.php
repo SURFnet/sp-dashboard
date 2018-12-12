@@ -40,7 +40,7 @@ class EditPrivacyQuestionsTest extends WebTestCase
 
         $this->logIn('ROLE_USER', [$service]);
 
-        $crawler = $this->client->request('GET', '/service/privacy');
+        $crawler = $this->client->request('GET', '/service/1/privacy');
 
         $this->assertEquals('GDPR related questions', $crawler->filter('h1')->first()->text());
         $formRows = $crawler->filter('div.form-row');
@@ -65,7 +65,7 @@ class EditPrivacyQuestionsTest extends WebTestCase
 
         $this->logIn('ROLE_USER', [$service]);
 
-        $crawler = $this->client->request('GET', '/service/privacy');
+        $crawler = $this->client->request('GET', '/service/1/privacy');
 
         $form = $crawler
             ->selectButton('Save')
