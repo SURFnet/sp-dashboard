@@ -16,13 +16,12 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
 use League\Tactician\CommandBus;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Service\CopyEntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -31,17 +30,12 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
-class CopyEntityCommandHandlerTest extends MockeryTestCase
+class CopyEntityServiceTest extends MockeryTestCase
 {
     /**
-     * @var CopyEntityCommandHandler
+     * @var CopyEntityService
      */
-    private $commandHandler;
-
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
+    private $copyService;
 
     /**
      * @var EntityRepository|m\Mock
@@ -72,7 +66,6 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->commandBus = m::mock(CommandBus::class);
         $this->entityRepository = m::mock(EntityRepository::class);
         $this->manageTestClient = m::mock(ManageClient::class);
         $this->manageProdClient = m::mock(ManageClient::class);
@@ -81,8 +74,7 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
         $this->service = new Service();
         $this->service->setTeamName('testteam');
 
-        $this->commandHandler = new CopyEntityCommandHandler(
-            $this->commandBus,
+        $this->copyService = new CopyEntityService(
             $this->entityRepository,
             $this->manageTestClient,
             $this->manageProdClient,
@@ -96,20 +88,18 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
      * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @expectedExceptionMessage The id that was generated for the entity was not unique
      */
-    public function test_handler_works_on_new_entities_only()
+    public function test_service_works_on_new_entities_only()
     {
         $this->entityRepository->shouldReceive('isUnique')
             ->with('dashboardid')
             ->andReturn(false);
 
-        $this->commandHandler->handle(
-            new CopyEntityCommand(
-                'dashboardid',
-                'manageid',
-                $this->service,
-                Entity::ENVIRONMENT_TEST,
-                Entity::ENVIRONMENT_TEST
-            )
+        $this->copyService->copy(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_TEST
         );
     }
 
@@ -127,14 +117,12 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn([]);
 
-        $this->commandHandler->handle(
-            new CopyEntityCommand(
-                'dashboardid',
-                'manageid',
-                $this->service,
-                Entity::ENVIRONMENT_TEST,
-                Entity::ENVIRONMENT_TEST
-            )
+        $this->copyService->copy(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_TEST
         );
     }
 
@@ -167,14 +155,12 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn($manageEntity);
 
-        $this->commandHandler->handle(
-            new CopyEntityCommand(
-                'dashboardid',
-                'manageid',
-                $this->service,
-                Entity::ENVIRONMENT_PRODUCTION,
-                Entity::ENVIRONMENT_PRODUCTION
-            )
+        $this->copyService->copy(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_PRODUCTION,
+            Entity::ENVIRONMENT_PRODUCTION
         );
     }
 
@@ -271,14 +257,12 @@ class CopyEntityCommandHandlerTest extends MockeryTestCase
 JSON
             ));
 
-        $this->commandHandler->handle(
-            new CopyEntityCommand(
-                'dashboardid',
-                'manageid',
-                $this->service,
-                Entity::ENVIRONMENT_TEST,
-                Entity::ENVIRONMENT_TEST
-            )
+        $this->copyService->copy(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_TEST
         );
     }
 
@@ -375,14 +359,12 @@ JSON
 JSON
             ));
 
-        $this->commandHandler->handle(
-            new CopyEntityCommand(
-                'dashboardid',
-                'manageid',
-                $this->service,
-                Entity::ENVIRONMENT_PRODUCTION,
-                Entity::ENVIRONMENT_PRODUCTION
-            )
+        $this->copyService->copy(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_PRODUCTION,
+            Entity::ENVIRONMENT_PRODUCTION
         );
     }
 }
