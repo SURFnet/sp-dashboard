@@ -83,7 +83,6 @@ class SaveOidcEntityCommandHandler implements CommandHandler
         $entity->setEnvironment($command->getEnvironment());
         $entity->setEntityId($command->getClientId());
         $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
-        $entity->setClientSecret('');
         $entity->setRedirectUris($command->getRedirectUris());
         $entity->setGrantType(new OidcGrantType($command->getGrantType()));
         $entity->setEnablePlayground($command->isEnablePlayground());
