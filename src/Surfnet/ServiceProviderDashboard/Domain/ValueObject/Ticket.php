@@ -30,15 +30,18 @@ class Ticket
     /** @var string */
     private $entityId;
     /** @var string */
+    private $manageId;
+    /** @var string */
     private $entityName;
     /** @var string */
     private $applicantName;
     /** @var string */
     private $applicantEmail;
 
-    public function __construct($entityId, $nameEn, $applicantName, $applicantEmail)
+    public function __construct($entityId, $manageId, $nameEn, $applicantName, $applicantEmail)
     {
         $this->entityId = $entityId;
+        $this->manageId = $manageId;
         $this->entityName = $nameEn;
         $this->applicantName = $applicantName;
         $this->applicantEmail = $applicantEmail;
@@ -49,15 +52,23 @@ class Ticket
         $entityId = $entity->getMetaData()->getEntityId();
         $nameEn = $entity->getMetaData()->getNameEn();
 
-        return new self($entityId, $nameEn, $applicant->getDisplayName(), $applicant->getEmailAddress());
+        return new self(
+            $entityId,
+            $entity->getId(),
+            $nameEn,
+            $applicant->getDisplayName(),
+            $applicant->getEmailAddress()
+        );
     }
 
-    /**
-     * @return string
-     */
     public function getEntityId()
     {
         return $this->entityId;
+    }
+
+    public function getManageId()
+    {
+        return $this->manageId;
     }
 
     public function getEntityName()
