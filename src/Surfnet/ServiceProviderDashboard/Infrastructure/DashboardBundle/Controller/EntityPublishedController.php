@@ -34,32 +34,11 @@ class EntityPublishedController extends Controller
     /**
      * @Method("GET")
      * @Route("/entity/published/production", name="entity_published_production")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
-     */
-    public function publishedProductionAction()
-    {
-        /** @var Entity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
-
-        // Redirects OIDC published entity confirmations to the entity list page and shows a confirmation dialog in a
-        // modal window that renders the oidcConfirmationModalAction
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
-            return $this->redirectToRoute('entity_list');
-        }
-
-        return [
-            'entityName' => $entity->getNameEn(),
-        ];
-    }
-
-    /**
-     * @Method("GET")
      * @Route("/entity/published/test", name="entity_published_test")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function publishedTestAction()
+    public function publishedAction()
     {
         /** @var Entity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
@@ -70,9 +49,12 @@ class EntityPublishedController extends Controller
             return $this->redirectToRoute('entity_list');
         }
 
-        return [
-            'entityName' => $entity->getNameEn(),
-        ];
+        $parameters = ['entityName' => $entity->getNameEn()];
+
+        if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+            return $this->render('@Dashboard/EntityPublished/publishedTest.html.twig', $parameters);
+        }
+        return $this->render('@Dashboard/EntityPublished/publishedProduction.html.twig', $parameters);
     }
 
     /**
