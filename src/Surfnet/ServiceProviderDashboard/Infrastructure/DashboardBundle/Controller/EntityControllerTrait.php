@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityPro
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\CopyEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -66,6 +67,10 @@ trait EntityControllerTrait
      * @var EntityTypeFactory
      */
     private $entityTypeFactory;
+    /**
+     * @var CopyEntityService
+     */
+    private $copyEntityService;
 
     /**
      * @param CommandBus $commandBus
@@ -79,13 +84,15 @@ trait EntityControllerTrait
         EntityService $entityService,
         ServiceService $serviceService,
         AuthorizationService $authorizationService,
-        EntityTypeFactory $entityTypeFactory
+        EntityTypeFactory $entityTypeFactory,
+        CopyEntityService $copyEntityService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->serviceService = $serviceService;
         $this->authorizationService = $authorizationService;
         $this->entityTypeFactory = $entityTypeFactory;
+        $this->copyEntityService = $copyEntityService;
     }
 
     /**

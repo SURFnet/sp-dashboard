@@ -10,21 +10,6 @@ services:
         resource: '../../Security/Voter'
         tags: ['security.voter']
 
-    surfnet.dashboard.command_handler.copy_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
-        arguments:
-           - '@tactician.commandbus.default'
-           - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-           - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
-           - '@surfnet.manage.client.query_client.prod_environment'
-           - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
-           - '%playground_uri_test%'
-           - '%playground_uri_prod%'
-
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand }
-
     surfnet.dashboard.command_handler.create_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
         public: true
@@ -263,6 +248,15 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@router'
             - '@logger'
+            - '%playground_uri_test%'
+            - '%playground_uri_prod%'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\CopyEntityService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
 

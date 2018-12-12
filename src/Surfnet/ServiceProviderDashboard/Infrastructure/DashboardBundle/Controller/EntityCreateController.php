@@ -22,7 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -196,12 +195,10 @@ class EntityCreateController extends Controller
         if (!$request->isMethod('post')) {
             $entityId = $this->entityService->createEntityUuid();
 
-            $this->commandBus->handle(
-                new CopyEntityCommand($entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment)
-            );
+            // copy entity
+            $entity = $this->copyEntityService->copy($entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment);
 
             // load entity
-            $entity = $this->entityService->getEntityById($entityId);
             $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
             $command = $form->getData();
         }

@@ -16,31 +16,20 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
+namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 
-class CopyEntityCommandHandler implements CommandHandler
+class CopyEntityService
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
     /**
      * @var EntityRepository
      */
@@ -70,7 +59,6 @@ class CopyEntityCommandHandler implements CommandHandler
     private $oidcPlaygroundUriProd;
 
     /**
-     * @param CommandBus $commandBus
      * @param EntityRepository $entityRepository
      * @param ManageClient $manageTestClient
      * @param ManageClient $manageProductionClient
@@ -79,7 +67,6 @@ class CopyEntityCommandHandler implements CommandHandler
      * @param string $oidcPlaygroundUriProd
      */
     public function __construct(
-        CommandBus $commandBus,
         EntityRepository $entityRepository,
         ManageClient $manageTestClient,
         ManageClient $manageProductionClient,
@@ -87,7 +74,6 @@ class CopyEntityCommandHandler implements CommandHandler
         $oidcPlaygroundUriTest,
         $oidcPlaygroundUriProd
     ) {
-        $this->commandBus = $commandBus;
         $this->entityRepository = $entityRepository;
         $this->manageTestClient = $manageTestClient;
         $this->manageProductionClient = $manageProductionClient;
@@ -97,16 +83,17 @@ class CopyEntityCommandHandler implements CommandHandler
     }
 
     /**
-     * @param CopyEntityCommand $command
-     *
+     * @param int $dashboardId
+     * @param string $manageId
+     * @param Service $service
+     * @param string $sourceEnvironment
+     * @param string $environment
+     * @return Entity
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
      */
-    public function handle(CopyEntityCommand $command)
+    public function copy($dashboardId, $manageId, Service $service, $sourceEnvironment, $environment)
     {
-        $dashboardId = $command->getDashboardId();
-        $manageId = $command->getManageId();
-
         if (!$this->entityRepository->isUnique($dashboardId)) {
             throw new InvalidArgumentException(
                 'The id that was generated for the entity was not unique, please try again'
@@ -114,7 +101,7 @@ class CopyEntityCommandHandler implements CommandHandler
         }
 
         $manageClient = $this->manageProductionClient;
-        if ($command->getSourceEnvironment() == 'test') {
+        if ($sourceEnvironment == 'test') {
             $manageClient = $this->manageTestClient;
         }
 
@@ -129,12 +116,12 @@ class CopyEntityCommandHandler implements CommandHandler
         $manageTeamName = $manageEntity->getMetaData()->getCoin()->getServiceTeamId();
         $manageStagingState = $this->getManageStagingState($manageEntity->getMetaData()->getCoin());
 
-        if ($manageTeamName !== $command->getService()->getTeamName()) {
+        if ($manageTeamName !== $service->getTeamName()) {
             throw new InvalidArgumentException(
                 sprintf(
                     'The entity you are about to copy does not belong to the selected team: %s != %s',
                     $manageTeamName,
-                    $command->getService()->getTeamName()
+                    $service->getTeamName()
                 )
             );
         }
@@ -142,8 +129,8 @@ class CopyEntityCommandHandler implements CommandHandler
         // Convert manage entity to domain entity
         $domainEntity = Entity::fromManageResponse(
             $manageEntity,
-            $command->getEnvironment(),
-            $command->getService(),
+            $environment,
+            $service,
             $this->oidcPlaygroundUriProd,
             $this->oidcPlaygroundUriTest
         );
@@ -151,21 +138,21 @@ class CopyEntityCommandHandler implements CommandHandler
         // Set some defaults
         $domainEntity->setStatus(Entity::STATE_PUBLISHED);
         $domainEntity->setId($dashboardId);
-        $domainEntity->setManageId($command->getManageId());
+        $domainEntity->setManageId($manageId);
 
         // Published production entities must be cloned, not copied
-        $isProductionClone = $command->getEnvironment() == 'production' && $manageStagingState === 0;
+        $isProductionClone = $environment == 'production' && $manageStagingState === 0;
         // Entities copied from test to prod should not have a manage id either
-        $isCopyToProduction = $command->getEnvironment() == 'production' && $command->getSourceEnvironment() == 'test';
+        $isCopyToProduction = $environment == 'production' && $sourceEnvironment == 'test';
         if ($isProductionClone || $isCopyToProduction) {
             $domainEntity->setManageId(null);
         }
 
         // Set the target environment
-        $domainEntity->setEnvironment($command->getEnvironment());
+        $domainEntity->setEnvironment($environment);
 
-        // Store the entity
-        $this->entityRepository->save($domainEntity);
+        // Return the entity
+        return $domainEntity;
     }
 
     /**
