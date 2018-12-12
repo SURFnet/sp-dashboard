@@ -123,7 +123,7 @@ class ExplicitSessionTimeoutHandler implements AuthenticationHandler
             }
 
             // log the user out using Symfony methodology, see the LogoutListener
-            $event->setResponse(new RedirectResponse($this->router->generate('entity_list')));
+            $event->setResponse(new RedirectResponse($this->router->generate('service_overview')));
 
             $this->sessionLogoutHandler->logout($request, $event->getResponse(), $token);
             $this->cookieClearingLogoutHandler->logout($request, $event->getResponse(), $token);
