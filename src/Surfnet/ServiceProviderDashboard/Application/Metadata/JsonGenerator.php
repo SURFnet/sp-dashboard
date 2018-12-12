@@ -193,6 +193,9 @@ class JsonGenerator implements GeneratorInterface
             $metadata = array_merge($metadata, $this->generateSecurityMetadata($entity));
         } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
             $metadata["coin:oidc_client"] = '1';
+//            $metadata['AssertionConsumerService:0:Binding'] = $entity->getAcsBinding();
+//            $metadata['AssertionConsumerService:0:Location'] = 'https://oidc.test2.surfconext.nl/saml/SSO'; // todo: make configurable
+//            $metadata['NameIDFormat'] = $entity->getNameIdFormat();
         }
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the

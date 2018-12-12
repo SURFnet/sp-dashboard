@@ -71,7 +71,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                     ]),
                     '/manage/api/internal/metadata'
                 );
-            } else {
+            } else if ($entity->getProtocol() == Entity::TYPE_SAML) {
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
 
                 $response = $this->client->put(
@@ -81,6 +81,19 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                         'id' => $entity->getManageId(),
                     ]),
                     '/manage/api/internal/merge'
+                );
+            } else {
+                // This is how manage entities should be updated in manage according to the documentation
+                // but this don't seem to work and needs some additional effort to get this working.
+                $data = json_encode([
+                    'id' => $entity->getManageId(),
+                    'data' => $this->generator->generateForNewEntity($entity),
+                    'type' => 'saml20_sp',
+                    'id' => $entity->getManageId(),
+                ]);
+                $response = $this->client->put(
+                    $data,
+                    '/manage/api/internal/metadata'
                 );
             }
 
