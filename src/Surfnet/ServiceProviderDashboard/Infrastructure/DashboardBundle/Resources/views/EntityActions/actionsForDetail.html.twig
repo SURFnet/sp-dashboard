@@ -1,6 +1,6 @@
 <ul>
     <li>
-        <a href="{{ path('entity_list') }}">
+        <a href="{{ path('entity_list', {'serviceId': entity.serviceId}) }}">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
             {{ 'entity.list.action.back'|trans }}
         </a>

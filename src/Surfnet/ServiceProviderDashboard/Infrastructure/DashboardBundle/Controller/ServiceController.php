@@ -32,9 +32,9 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Service;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\ServiceList;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
@@ -115,7 +115,6 @@ class ServiceController extends Controller
             return $this->redirectToRoute('service_add');
         }
 
-
         $serviceObjects = [];
         foreach ($services as $service) {
             $entityList = $this->entityService->getEntityListForService($service);
@@ -124,7 +123,8 @@ class ServiceController extends Controller
         $serviceList = new ServiceList($serviceObjects);
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [
-            'services' => $serviceList
+            'services' => $serviceList,
+            'isAdmin' => $this->authorizationService->isAdministrator()
         ]);
     }
     
@@ -152,7 +152,7 @@ class ServiceController extends Controller
             $logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
             try {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('entity_list');
+                return $this->redirectToRoute('service_overview');
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
             }
@@ -165,15 +165,25 @@ class ServiceController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/service/edit", name="service_edit")
+     * @Route("/service/{serviceId}/edit", name="service_edit")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
      *
      * @param Request $request
+     * @param int $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request, $serviceId)
     {
+        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
+        // Test if the active user is allowed to view entities of this service
+        if (!isset($serviceOptions[$serviceId])) {
+            throw $this->createNotFoundException('You are not allowed to edit this service');
+        }
+
+        // Activate the service
+        $this->authorizationService->setSelectedServiceId($serviceId);
+
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
@@ -204,13 +214,13 @@ class ServiceController extends Controller
             // On delete, forward to the service delete confirmation page.
             if ($this->isDeleteAction($form)) {
                 $logger->info('Forwarding to the delete confirmation page');
-                return $this->redirectToRoute('service_delete');
+                return $this->redirectToRoute('service_delete', ['serviceId' => $serviceId]);
             }
 
             $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('entity_list');
+                return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
             } catch (EntityNotFoundException $e) {
@@ -225,14 +235,24 @@ class ServiceController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/service/delete", name="service_delete")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/service/{serviceId}/delete", name="service_delete")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
      *
+     * @param Request $request
+     * @param $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request, $serviceId)
     {
+        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
+        // Test if the active user is allowed to view entities of this service
+        if (!isset($serviceOptions[$serviceId])) {
+            throw $this->createNotFoundException('You are not allowed to delete this service');
+        }
+        // Activate the service
+        $this->authorizationService->setSelectedServiceId($serviceId);
+
         $form = $this->createForm(DeleteServiceType::class);
         $form->handleRequest($request);
 
@@ -278,7 +298,7 @@ class ServiceController extends Controller
 
         $this->commandBus->handle($command);
 
-        return $this->redirectToRoute('entity_list');
+        return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
     }
 
     /**

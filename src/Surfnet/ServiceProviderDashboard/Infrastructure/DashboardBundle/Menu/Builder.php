@@ -39,29 +39,10 @@ class Builder
 
         $menu->addChild('Services', ['route' => 'service_overview']);
 
-        if ($this->authorizationService->hasActiveServiceId()) {
-            $menu->addChild('My entities', array('route' => 'entity_list'));
-
-            if ($this->authorizationService->hasActivatedPrivacyQuestions()) {
-                $menu->addChild(
-                    'Privacy',
-                    array(
-                        'route' => 'privacy_questions',
-                    )
-                );
-            }
-        }
-
         if ($this->authorizationService->isAdministrator()) {
             $menu->addChild('Add new service', array(
                 'route' => 'service_add',
             ));
-
-            if ($this->authorizationService->hasActiveServiceId()) {
-                $menu->addChild('Edit service', array(
-                    'route' => 'service_edit',
-                ));
-            }
 
             $menu->addChild('Translations', array(
                 'route' => 'lexik_translation_overview',

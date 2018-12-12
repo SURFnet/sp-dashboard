@@ -281,7 +281,7 @@ class EntityDetail
         if ($entityDetail->isLocalEntity()) {
             $actionId = $entityDetail->id;
         }
-        $entityDetail->actions = new EntityActions($actionId, $entity->getStatus(), $entity->getEnvironment());
+        $entityDetail->actions = new EntityActions($actionId, $entity->getService()->getId(), $entity->getStatus(), $entity->getEnvironment());
         return $entityDetail;
     }
 

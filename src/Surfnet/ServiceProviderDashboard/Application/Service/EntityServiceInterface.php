@@ -35,9 +35,10 @@ interface EntityServiceInterface
     /**
      * @param string $id
      * @param string $manageTarget
+     * @param int $serviceId
      * @return mixed
      */
-    public function getEntityByIdAndTarget($id, $manageTarget);
+    public function getEntityByIdAndTarget($id, $manageTarget, $serviceId);
 
     /**
      * @param $id

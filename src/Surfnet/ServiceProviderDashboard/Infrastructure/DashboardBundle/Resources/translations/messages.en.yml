@@ -254,13 +254,10 @@ service.form.label.service_type: Type of service
 service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
 service.overview.title: My services
-mail.confirmation.publish_production.comment: Comments
-mail.confirmation.publish_production.entity_id: EntityID
-mail.confirmation.publish_production.entity_name_en: Entity name (en)
-mail.confirmation.publish_production.service_name: Service name
-mail.confirmation.publish_production.publish_date: Publish date
-mail.confirmation.publish_production.team_id: Team id
-mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'
+service.overview.action.entityList: Detailed entities overview
+service.overview.action.privacyQuestions: Privacy questions
+service.overview.action.serviceEdit: Edit service
+service.overview.action.serviceDelete: Delete service
 service.overview.entitylist.title: Entities of service %name%
 service.overview.entitylist.test.title: Entities @ test environment
 service.overview.entitylist.production.title: Entities @ production environment
@@ -292,3 +289,10 @@ service.overview.progress.tooltip.privacy-questions.info.html: "Are the privacy 
 service.overview.progress.tooltip.production-connection.info.html: "Is a production connection active?"
 service.overview.progress.tooltip.production-connection.in-progress.html: "The deployment to the production environment is in progress"
 service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
+mail.confirmation.publish_production.comment: Comments
+mail.confirmation.publish_production.entity_id: EntityID
+mail.confirmation.publish_production.entity_name_en: Entity name (en)
+mail.confirmation.publish_production.service_name: Service name
+mail.confirmation.publish_production.publish_date: Publish date
+mail.confirmation.publish_production.team_id: Team id
+mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'

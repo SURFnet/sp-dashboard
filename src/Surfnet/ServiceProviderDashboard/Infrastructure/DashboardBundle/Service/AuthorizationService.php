@@ -78,22 +78,6 @@ class AuthorizationService
     }
 
     /**
-     * Does the user have access to a single supplier, or select a supplier in the swithcer?
-     *
-     * @return bool
-     */
-    public function hasActiveServiceId()
-    {
-        if (!$this->isLoggedIn()) {
-            return false;
-        }
-
-        $activeServiceId = $this->getActiveServiceId();
-
-        return !empty($activeServiceId);
-    }
-
-    /**
      * Get the service the user is currently working on.
      *
      * The service can be active in two ways:

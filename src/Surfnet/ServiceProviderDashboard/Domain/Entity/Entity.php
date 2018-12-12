@@ -368,9 +368,10 @@ class Entity
     /**
      * @param ManageEntity $manageEntity
      * @param string $environment
+     * @param int $serviceId
      * @return Entity
      */
-    public static function fromManageResponse(ManageEntity $manageEntity, $environment)
+    public static function fromManageResponse(ManageEntity $manageEntity, $environment, $serviceId)
     {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
@@ -432,6 +433,10 @@ class Entity
         }
 
         self::setAttributesOn($entity, $arp);
+
+        $service = new Service();
+        $service->setId($serviceId);
+        $entity->setService($service);
 
         return $entity;
     }
