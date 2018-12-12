@@ -83,8 +83,42 @@ class JsonGenerator implements GeneratorInterface
      */
     public function generateForNewEntity(Entity $entity)
     {
+        return [
+            'data' => $this->generateDataForNewEntity($entity),
+            'type' => 'saml20_sp',
+        ];
+    }
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    public function generateForExistingEntity(Entity $entity)
+    {
+        $data = [
+            'pathUpdates' => $this->generateDataForExistingEntity($entity),
+            'type' => 'saml20_sp',
+            'id' => $entity->getManageId(),
+        ];
+
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
+            $data['externalReferenceData'] = [
+                'oidcClient' => $this->generateOidcClient($entity),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    public function generateDataForNewEntity(Entity $entity)
+    {
         $metadata = [
             'arp'             => $this->arpMetadataGenerator->build($entity),
+            'type'            => 'saml20-sp',
             'entityid'        => $entity->getEntityId(),
             'active'          => true,
             'allowedEntities' => [],
@@ -114,7 +148,7 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity)
+    public function generateDataForExistingEntity(Entity $entity)
     {
         $metadata = [
             'arp'             => $this->arpMetadataGenerator->build($entity),
@@ -123,8 +157,6 @@ class JsonGenerator implements GeneratorInterface
 
         if ($entity->getProtocol() == Entity::TYPE_SAML) {
             $metadata['metadataurl'] = $entity->getMetadataUrl();
-        } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
-            $metadata['oidcClient'] = $this->generateOidcClient($entity);
         }
 
         $metadata += $this->flattenMetadataFields(
