@@ -151,7 +151,7 @@ class EntityDeleteController extends Controller
         return [
             'form' => $form->createView(),
             'environment' => $environment,
-            'status' => $excludeFromPush === "1" ? 'requested' : 'published',
+            'status' => $excludeFromPush === "1" ? Entity::STATE_PUBLICATION_REQUESTED : Entity::STATE_PUBLISHED,
             'entityName' => $nameEn,
         ];
     }
@@ -198,7 +198,7 @@ class EntityDeleteController extends Controller
         return [
             'form' => $form->createView(),
             'environment' => $environment,
-            'status' => 'published',
+            'status' => Entity::STATE_PUBLISHED,
             'entityName' => $nameEn,
         ];
     }
