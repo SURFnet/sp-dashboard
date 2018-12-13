@@ -1,70 +1,51 @@
 import * as $ from 'jquery';
 
 class ServiceForm {
-  private $privacyQuestionsEnabledToggle: JQuery;
-  private $privacyQuestionsStatusContainer: JQuery;
-  private $contractSignedToggle: JQuery;
+  private $toggle: JQuery;
   private $contractSignedContainer: JQuery;
+  private $repApprovedContainer: JQuery;
 
   /**
-   * @param $privacyQuestionToggle The selectbox to toggle the privacy question on
-   * @param $privacyQuestionContainer The form-row twith the privacy enabled question to show/hide
-   * @param $contractSignedToggle The container with radio buttons to toggle on
+   * @param $toggle The container with radio buttons to toggle on
    * @param $contractSignedContainer The form-row with the signed-contract questions to show/hide
+   * @param $repApprovedContainer The form-row with the representative approved radio buttons to show/hide
    */
   constructor(
-    $privacyQuestionToggle: JQuery,
-    $privacyQuestionContainer: JQuery,
-    $contractSignedToggle: JQuery,
+    $toggle: JQuery,
     $contractSignedContainer: JQuery,
+    $repApprovedContainer: JQuery,
   ) {
-    this.$privacyQuestionsEnabledToggle = $privacyQuestionToggle;
-    this.$privacyQuestionsStatusContainer = $privacyQuestionContainer;
-    this.$contractSignedToggle = $contractSignedToggle;
+    this.$toggle = $toggle;
     this.$contractSignedContainer = $contractSignedContainer;
+    this.$repApprovedContainer = $repApprovedContainer;
   }
 
   /**
    * Init the eventhandlers on the elements
    */
   public registerEventHandlers() {
-    // Init the privacy questions answered toggle
-    this.initTogglePrivacyQuestionsAnsweredStatusField();
-
-    // Init the contract signed toggle
-    this.initToggleContractSignedStatusField();
+    // Init the container fields
+    this.initToggleField();
   }
 
   /**
-   * Disable the contract signed field when the type of service is for an institute
+   * Show the Representative approved container when institute is checked
+   * Show the Contract signed container when the non-institute is checked
    */
-  private initToggleContractSignedStatusField() {
+  private initToggleField() {
     const toggleContractSigned = () => {
-      const serviceTypeValue = this.$contractSignedToggle.find(':checked').val();
+      const serviceTypeValue = this.$toggle.find(':checked').val();
       if (serviceTypeValue === 'institute') {
-        this.showElement(this.$contractSignedContainer.parent());
-      } else {
+        this.showElement(this.$repApprovedContainer.parent());
         this.hideElement(this.$contractSignedContainer.parent());
-      }
-    };
-
-    this.$contractSignedToggle.on('change', toggleContractSigned);
-    toggleContractSigned();
-  }
-
-  /**
-   * Disable the privacy questions answered field when the privact question enabled checkbox is unchecked
-   */
-  private initTogglePrivacyQuestionsAnsweredStatusField() {
-    const togglePrivacyQuestions = () => {
-      if (this.$privacyQuestionsEnabledToggle.is(':checked')) {
-        this.showElement(this.$privacyQuestionsStatusContainer.parent());
       } else {
-        this.hideElement(this.$privacyQuestionsStatusContainer.parent());
+        this.showElement(this.$contractSignedContainer.parent());
+        this.hideElement(this.$repApprovedContainer.parent());
       }
     };
-    this.$privacyQuestionsEnabledToggle.on('change', togglePrivacyQuestions);
-    togglePrivacyQuestions();
+
+    this.$toggle.on('change', toggleContractSigned);
+    toggleContractSigned();
   }
 
   /**
@@ -86,12 +67,15 @@ class ServiceForm {
 }
 
 export function loadServiceForm() {
-  if ($('#dashboard_bundle_edit_service_type').length > 0 || $('#dashboard_bundle_service_type').length > 0) {
+
+  const createFormOnPage = $('form[name="dashboard_bundle_service_type"]').length > 0;
+  const editFormOnPage = $('form[name="dashboard_bundle_edit_service_type"]').length > 0;
+
+  if (createFormOnPage || editFormOnPage) {
     const serviceForm = new ServiceForm(
-      $('.privacy-questions-toggle'),
-      $('.privacy-questions-container'),
       $('.contract-signed-toggle'),
       $('.contract-signed-container'),
+      $('.representative-signed-container'),
     );
     serviceForm.registerEventHandlers();
   }

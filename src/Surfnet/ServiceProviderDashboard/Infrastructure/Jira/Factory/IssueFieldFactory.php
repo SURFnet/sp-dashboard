@@ -39,6 +39,11 @@ class IssueFieldFactory
     /**
      * @var string
      */
+    private $manageIdFieldName;
+
+    /**
+     * @var string
+     */
     private $issueType;
 
     /**
@@ -64,6 +69,7 @@ class IssueFieldFactory
     /**
      * @param string $assignee
      * @param string $entityIdFieldName
+     * @param string $manageIdFieldName
      * @param string $issueType
      * @param string $priority
      * @param string $projectKey
@@ -73,6 +79,7 @@ class IssueFieldFactory
     public function __construct(
         $assignee,
         $entityIdFieldName,
+        $manageIdFieldName,
         $issueType,
         $priority,
         $projectKey,
@@ -84,6 +91,10 @@ class IssueFieldFactory
             $entityIdFieldName,
             'The entity id field name may not be empty, configure in parameters.yml'
         );
+        Assert::stringNotEmpty(
+            $manageIdFieldName,
+            'The manage id field name may not be empty, configure in parameters.yml'
+        );
         Assert::stringNotEmpty($issueType, 'The issue type may not be empty, configure in arameters.yml');
         Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in parameters.yml');
         Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in parameters.yml');
@@ -91,6 +102,7 @@ class IssueFieldFactory
 
         $this->assignee = $assignee;
         $this->entityIdFieldName = $entityIdFieldName;
+        $this->manageIdFieldName = $manageIdFieldName;
         $this->issueType = $issueType;
         $this->priority = $priority;
         $this->projectKey = $projectKey;
@@ -109,6 +121,7 @@ class IssueFieldFactory
             ->setAssigneeName($this->assignee)
             ->setReporterName($this->reporter)
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
+            ->addCustomField($this->manageIdFieldName, $ticket->getManageId())
         ;
 
         return $issueField;

@@ -11,29 +11,23 @@ describe('validate visibility toggling of service status fields on the service e
 
     let editFormHtml = require('fs').readFileSync('./app/js/components/mock/service_edit_form.html').toString();
 
-    it('hides the privacy question answered fields when the privacy questions checkbox is disabled', function() {
-        document.body.innerHTML = editFormHtml;
-        loadServiceForm();
-
-         expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-    });
-
     it('hides the contract signed fields when the service type is institution', function() {
         document.body.innerHTML = editFormHtml;
         loadServiceForm();
 
-        expect($('.contract-signed-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.contract-signed-toggle :radio[value="institute"]').trigger('click');
+        // On page load the type of service is set to 'Not an institute' so the 'Contract signed' radiogroup should
+        // be visible
+        expect($('.representative-signed-container').parent().hasClass('hidden')).toBeTruthy();
         expect($('.contract-signed-container').parent().hasClass('hidden')).toBeFalsy();
-        $('.contract-signed-toggle :radio[value="non-institute"]').trigger('click');
-        expect($('.contract-signed-container').parent().hasClass('hidden')).toBeTruthy();
+
+        // When institute is selected the 'SURFconext representative approved' radiogroup should be visible
         $('.contract-signed-toggle :radio[value="institute"]').trigger('click');
+        expect($('.contract-signed-container').parent().hasClass('hidden')).toBeTruthy();
+        expect($('.representative-signed-container').parent().hasClass('hidden')).toBeFalsy();
+
+        // When institute is selected the 'Contract signed' radiogroup should be visible
+        $('.contract-signed-toggle :radio[value="non-institute"]').trigger('click');
+        expect($('.representative-signed-container').parent().hasClass('hidden')).toBeTruthy();
         expect($('.contract-signed-container').parent().hasClass('hidden')).toBeFalsy();
     });
 
@@ -43,31 +37,25 @@ describe('validate visibility toggling of service status fields on the service c
 
     let createFormHtml = require('fs').readFileSync('./app/js/components/mock/service_create_form.html').toString();
 
-    it('hides the privacy question answered fields when the privacy questions checkbox is disabled', function() {
-        document.body.innerHTML = createFormHtml;
-        loadServiceForm();
-
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeFalsy();
-        $('.privacy-questions-toggle').click();
-        expect($('.privacy-questions-container').parent().hasClass('hidden')).toBeTruthy();
-
-    });
-
     it('hides the contract signed fields when the service type is institution', function() {
         document.body.innerHTML = createFormHtml;
         loadServiceForm();
 
+        // On page load the type of service is set to 'institute' so the 'Contract signed' radiogroup should
+        // be visible
         expect($('.contract-signed-container').parent().hasClass('hidden')).toBeTruthy();
+        expect($('.representative-signed-container').parent().hasClass('hidden')).toBeFalsy();
+
+        // When institute is selected the 'SURFconext representative approved' radiogroup should be visible
         $('.contract-signed-toggle :radio[value="institute"]').trigger('click');
-        expect($('.contract-signed-container').parent().hasClass('hidden')).toBeFalsy();
+        expect($('.contract-signed-container').parent().hasClass('hidden')).toBeTruthy();
+        expect($('.representative-signed-container').parent().hasClass('hidden')).toBeFalsy();
+
+        // When non-institute is selected the 'Contract signed' radiogroup should be visible
         $('.contract-signed-toggle :radio[value="non-institute"]').trigger('click');
-        expect($('.contract-signed-container').parent().hasClass('hidden')).toBeTruthy();
-        $('.contract-signed-toggle :radio[value="institute"]').trigger('click');
+        expect($('.representative-signed-container').parent().hasClass('hidden')).toBeTruthy();
         expect($('.contract-signed-container').parent().hasClass('hidden')).toBeFalsy();
+
     });
 
 });

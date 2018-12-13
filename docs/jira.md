@@ -4,7 +4,10 @@ This how to is based on the ivantichy Jira Docker image [1]
 
 ## Installation
 In a to be determined folder:
- - `$ docker run -d --name jira -p 8888:8080 ivantichy/jira:7.12.3`
+ - For a setup with persistent storage on your host machine: 
+    - `docker run --cidfile ~/jiracid --rm -p 8080:8888 -v /var/docker-data/postgres:/var/lib/postgresql/9.6/main -v /var/docker-data/jira-app:/var/atlassian/jira-app -v /var/docker-data/jira-home:/var/atlassian/jira-home ivantichy/jira:7.13.0 "$@" &`
+ - For a one off run: (your data will be lost after the guest is taken down)
+    - `$ docker run -d --name jira -p 8080:8888 ivantichy/jira:7.13.0`
 
 Jira will now be available on `http://localhost:8888`
 
@@ -15,7 +18,7 @@ Visit Jira for the first time and the installation wizard will be triggered:
 
  - Set Application Title: 'SP Dashboard | development environment'
  - Set Mode: Private
- - Set Base URL: http://localhost:8888
+ - Set Base URL: http://172.17.0.2:8080
 
 Next generate a licence key with your atlassian account. note that this will only work for 90 days..
 
@@ -65,14 +68,16 @@ Next we need to configure the project to use the freshly made issue type.
 
 We need to be able to set the entity id of an entity that is refered to in the story.
 
-- Go to the settings page
-- Open the Issues tab
-- In the menu on the left, in the FIELDS section, click 'Custom fields'
-- Click on 'Add custom field' on the top right of the page
-- Choose the 'Text Field (single line)' option
-- Set the name to: EntityID
-- Set the description to: entityID of the Service
-- Click the Create button
+1. Go to the settings page
+1. Open the Issues tab
+1. In the menu on the left, in the FIELDS section, click 'Custom fields'
+1. Click on 'Add custom field' on the top right of the page
+1. Choose the 'Text Field (single line)' option
+1. Set the name to: EntityID
+1. Set the description to: entityID of the Service
+1. Click the Create button
+
+Repeat steps 4 through 8 with the 'Manage Id' custom field
 
 Next we need the field to show up on the add/edit screens
 

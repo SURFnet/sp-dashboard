@@ -145,24 +145,4 @@ class EditServiceTest extends WebTestCase
         $this->client->request('GET', '/service/1/privacy');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
-
-    public function test_privacy_questions_filled_status_is_reflected_correctly()
-    {
-        // Log in with Ibuildings
-        $this->logIn('ROLE_ADMINISTRATOR');
-        $this->loadFixtures();
-        $this->switchToService('Ibuildings B.V.');
-
-        // EntityService::getEntityListForService -> findByTeamName
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->request('GET', '/service/1/edit');
-
-        $radio = $crawler->filter('#dashboard_bundle_edit_service_type_serviceStatus_privacyQuestionsAnswered_1');
-        // The checked element should be the 'Yes' radio option as the ibuildings service has a privacy questions entity
-        $this->assertEquals(1, $radio->attr('value'));
-        // The radio is disabled
-        $this->assertEquals('disabled', $radio->attr('disabled'));
-    }
 }

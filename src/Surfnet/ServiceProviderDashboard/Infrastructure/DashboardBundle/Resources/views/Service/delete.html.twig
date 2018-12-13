@@ -8,6 +8,35 @@
     <p>{{ 'service.delete.confirmation'|trans({ '%name%': serviceName }) }}</p>
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
+    {% if entityList.entities|length > 0 %}
+
+    <p class="m-t-1">{{ 'service.delete.entity_list_text'|trans }}</p>
+
+    <table class="entities">
+        <thead>
+        <tr>
+            <th>{{ 'entity.list.name'|trans }}</th>
+            <th>{{ 'entity.list.entity_id'|trans }}</th>
+            <th>{{ 'entity.list.primary_contact'|trans }}</th>
+            <th>{{ 'entity.list.state'|trans }}</th>
+            <th>{{ 'entity.list.environment'|trans }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entityList %}
+            <tr>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.entityId }}</td>
+                <td>{{ entity.contact }}</td>
+                <td>{{ entity.state }}</td>
+                <td>{{ entity.environment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endif %}
+
     <div class="button-wrapper">
         {{ form_end(form) }}
     </div>
