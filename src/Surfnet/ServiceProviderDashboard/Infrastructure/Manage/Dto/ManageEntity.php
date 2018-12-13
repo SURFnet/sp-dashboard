@@ -18,9 +18,16 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+
 class ManageEntity
 {
     private $id;
+
+    /**
+     * @var string
+     */
+    private $status;
 
     /**
      * @var AttributeList
@@ -47,6 +54,7 @@ class ManageEntity
     private function __construct($id, AttributeList $attributes, MetaData $metaData)
     {
         $this->id = $id;
+        $this->status = Entity::STATE_PUBLISHED;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
     }
@@ -64,5 +72,15 @@ class ManageEntity
     public function getMetaData()
     {
         return $this->metaData;
+    }
+
+    public function updateStatus($newStatus)
+    {
+        $this->status = $newStatus;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

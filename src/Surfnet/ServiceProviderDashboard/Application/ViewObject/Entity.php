@@ -135,7 +135,7 @@ class Entity
             $serviceId,
             $result->getMetaData()->getNameEn(),
             $formattedContact,
-            'published',
+            $result->getStatus(),
             'test',
             $router
         );
@@ -154,11 +154,11 @@ class Entity
         // As long as the coin:exclude_from_push metadata is present, allow modifications to the entity by
         // copying it from manage and merging the changes. The view status text: requested is set when an entity
         // can still be edited.
-        $status = 'published';
+        $status = $result->getStatus();
 
         $excludeFromPush = $result->getMetaData()->getCoin()->getExcludeFromPush();
         if ($excludeFromPush === 1) {
-            $status = 'requested';
+            $status = DomainEntity::STATE_PUBLICATION_REQUESTED;
         }
 
         return new self(
