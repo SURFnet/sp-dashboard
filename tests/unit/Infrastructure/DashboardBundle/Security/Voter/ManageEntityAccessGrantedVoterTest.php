@@ -105,6 +105,14 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
                 VoterInterface::ACCESS_DENIED,
             ],
             [
+                'non-existing-manage-entity',
+                ['manageId' => 'id', 'environment' => 'test'],
+                [ManageEntityAccessGrantedVoter::MANAGE_ENTITY_ACCESS],
+                $this->buildToken(['ROLE_USER'], true),
+                null,
+                VoterInterface::ACCESS_DENIED,
+            ],
+            [
                 'valid',
                 ['manageId' => 'id', 'environment' => 'test'],
                 [ManageEntityAccessGrantedVoter::MANAGE_ENTITY_ACCESS],

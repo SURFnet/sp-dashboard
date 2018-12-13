@@ -50,6 +50,8 @@ class Entity
 
     const STATE_DRAFT = 'draft';
     const STATE_PUBLISHED = 'published';
+    const STATE_PUBLICATION_REQUESTED = 'requested';
+    const STATE_REMOVAL_REQUESTED = 'removal requested';
 
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT = 'oidc';
@@ -380,8 +382,7 @@ class Entity
         $entity = new self();
 
         $entity->setEnvironment($environment);
-        $entity->setStatus('published');
-
+        $entity->setStatus($manageEntity->getStatus());
         $entity->setManageId($manageEntity->getId());
         $entity->setEntityId($metaData->getEntityId());
         $entity->setMetadataUrl($metaData->getMetaDataUrl());

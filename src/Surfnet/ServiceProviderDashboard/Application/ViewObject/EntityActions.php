@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
+
 class EntityActions
 {
     /**
@@ -42,6 +44,7 @@ class EntityActions
 
     /**
      * @param string $id
+     * @param int $serviceId
      * @param string $status
      * @param string $environment
      */
@@ -76,7 +79,7 @@ class EntityActions
      */
     public function allowEditAction()
     {
-        return $this->status == 'draft';
+        return $this->status == DomainEntity::STATE_DRAFT;
     }
 
     /**
@@ -84,38 +87,47 @@ class EntityActions
      */
     public function allowCopyAction()
     {
-        $isPublishedTestEntity = ($this->status == 'published' && $this->environment == 'test');
-        $isPublishedProdEntity = ($this->status == 'requested' && $this->environment == 'production');
+        $isPublishedTestEntity = ($this->status == DomainEntity::STATE_PUBLISHED
+            && $this->environment == DomainEntity::ENVIRONMENT_TEST);
+
+        $isPublishedProdEntity = ($this->status == DomainEntity::STATE_PUBLICATION_REQUESTED
+            && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION);
+
         return $isPublishedTestEntity || $isPublishedProdEntity;
     }
 
     public function allowCopyToProductionAction()
     {
-        return $this->status == 'published' && $this->environment == 'test';
+        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
     }
 
     public function allowCloneAction()
     {
-        return $this->status == 'published' && $this->environment == 'production';
+        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION;
     }
 
     public function allowDeleteAction()
     {
-        return true;
+        return !$this->isDeleteRequested();
     }
 
     public function isPublishedToProduction()
     {
-        return $this->status == 'published' && $this->environment == 'production';
+        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION;
     }
 
     public function isPublished()
     {
-        return $this->status === 'published';
+        return $this->status === DomainEntity::STATE_PUBLISHED;
     }
 
     public function isRequested()
     {
-        return $this->status === 'requested';
+        return $this->status === DomainEntity::STATE_PUBLICATION_REQUESTED;
+    }
+
+    public function isDeleteRequested()
+    {
+        return $this->status === DomainEntity::STATE_REMOVAL_REQUESTED;
     }
 }

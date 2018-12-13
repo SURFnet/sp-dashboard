@@ -18,6 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Exception;
+use JiraRestApi\Issue\Issue;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -37,16 +40,30 @@ class EntityService implements EntityServiceInterface
     private $queryRepositoryProvider;
 
     /**
+     * @var TicketServiceInterface
+     */
+    private $ticketService;
+
+    /**
      * @var RouterInterface
      */
     private $router;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
-        RouterInterface $router
+        TicketServiceInterface $ticketService,
+        RouterInterface $router,
+        LoggerInterface $logger
     ) {
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
+        $this->ticketService = $ticketService;
         $this->router = $router;
+        $this->logger = $logger;
     }
 
     public function createEntityUuid()
@@ -67,12 +84,23 @@ class EntityService implements EntityServiceInterface
                     ->getManageProductionQueryClient()
                     ->findByManageId($id);
 
+                // Entities that are still excluded from push are not realy published, but have a publication request
+                // with the service desk.
+                if ($entity->getMetaData()->getCoin()->getExcludeFromPush()) {
+                    $entity->updateStatus(Entity::STATE_PUBLICATION_REQUESTED);
+                }
+
+                $issue = $this->findIssueBy($entity);
+                if ($issue) {
+                    $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
+                }
                 return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
                 break;
             case 'test':
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
+
                 return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
                 break;
             default:
@@ -165,14 +193,74 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
+     * Find a collection of published manage entities
+     *
+     * - Finds published entities in Manage (from the 'production' client)
+     * - Tries to match Jira issues that mention one of the manage entity id's
+     *
      * @param $teamName
      * @return array|null
      * @throws QueryServiceProviderException
      */
     private function findPublishedProductionEntitiesByTeamName($teamName)
     {
-        return $this->queryRepositoryProvider
+        $entities = $this->queryRepositoryProvider
             ->getManageProductionQueryClient()
             ->findByTeamName($teamName);
+
+        // Try to find the tickets in Jira that match the manageIds. If Jira is down or otherwise unavailable, the
+        // entities are returned without updating their status. This might result in a 're request for delete'
+        try {
+            // Extract the Manage entity id's
+            $manageIds = [];
+            foreach ($entities as $entity) {
+                $manageIds[] = $entity->getId();
+            }
+            $tickets = $this->ticketService->findByManageIds($manageIds);
+            // Update the entity status to STATE_REMOVAL_REQUESTED if the Jira ticket matches one of the published
+            // entities
+            if (count($tickets->issues) > 0) {
+                foreach ($entities as $entity) {
+                    if (array_key_exists($entity->getId(), $tickets->issues)) {
+                        $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $this->logger->warning(
+                'Unable to find Jira issue to monitor the status of published tickets with a remove request.',
+                [$e->getMessage()]
+            );
+        }
+
+        return $entities;
+    }
+
+    /**
+     * @param $entity
+     * @return Issue|null
+     */
+    private function findIssueBy($entity)
+    {
+        try {
+            return $this->ticketService->findByManageId($entity->getId());
+        } catch (Exception $e) {
+            $this->logger->warning(
+                sprintf(
+                    'Unable to find Jira issue with manage id "%s" to monitor the status of published tickets with a
+                    remove request.',
+                    $entity->getId()
+                ),
+                [$e->getMessage()]
+            );
+        }
+        return null;
+    }
+
+    private function updateEntityStatusWithJiraTicketStatus(ManageEntity $entity, Issue $issue)
+    {
+        if ($issue instanceof Issue) {
+            $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
+        }
     }
 }

@@ -281,7 +281,8 @@ class ServiceController extends Controller
 
         return [
             'form' => $form->createView(),
-            'serviceName' => $service->getName()
+            'serviceName' => $service->getName(),
+            'entityList' => $this->entityService->getEntityListForService($service),
         ];
     }
     /**

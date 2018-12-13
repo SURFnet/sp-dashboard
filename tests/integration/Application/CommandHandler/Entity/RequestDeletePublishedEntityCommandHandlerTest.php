@@ -24,19 +24,16 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Monolog\Logger;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\RequestDeletePublishedEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRemovalRequestRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 {
@@ -66,11 +63,6 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
     private $commandHandler;
 
     /**
-     * @var TranslatorInterface|Mock
-     */
-    private $translator;
-
-    /**
      * @var EntityRemovalRequestRepository|Mock
      */
     private $entityRemovalRequestRepository;
@@ -80,18 +72,22 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
      */
     private $jiraServiceFactory;
 
+    /**
+     * @var IssueRepository|Mock
+     */
+    private $issueRepository;
+
     public function setUp()
     {
         $this->queryClient = m::mock(QueryClient::class);
-        $this->translator = m::mock(TranslatorInterface::class);
         $this->logger = m::mock(Logger::class);
         $this->entityRemovalRequestRepository = m::mock(EntityRemovalRequestRepository::class);
         $this->jiraServiceFactory = m::mock(JiraServiceFactory::class);
+        $this->issueRepository = m::mock(IssueRepository::class);
 
         // As part of the integration test, the TicketService and IssueFieldFactory is not mocked but included in the test.
         $this->ticketService = new TicketService(
-            $this->jiraServiceFactory,
-            new IssueFieldFactory('John Doe', 'fieldnam', 'Bug', 'Critical', 'CXT', 'Jane Doe', $this->translator),
+            $this->issueRepository,
             $this->entityRemovalRequestRepository
         );
 
@@ -133,21 +129,11 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
             ->andReturn($manageDto);
 
-        $this->translator
-            ->shouldReceive('trans')
-            ->twice();
-
-        $issueService = m::mock(IssueService::class);
-
-        $this->jiraServiceFactory
-            ->shouldReceive('buildIssueService')
-            ->andReturn($issueService);
-
         $issue = m::mock(Issue::class)->makePartial();
         $issue->key = 'CXT-999';
 
-        $issueService
-            ->shouldReceive('create')
+        $this->issueRepository
+            ->shouldReceive('createIssueFrom')
             ->andReturn($issue);
 
         $this->entityRemovalRequestRepository
@@ -185,10 +171,6 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
             ->andReturn($managetDto);
 
-        $this->translator
-            ->shouldReceive('trans')
-            ->twice();
-
         $issueService = m::mock(IssueService::class);
 
         $this->jiraServiceFactory
@@ -198,8 +180,8 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
         $issue = m::mock(Issue::class)->makePartial();
         $issue->key = 'CXT-999';
 
-        $issueService
-            ->shouldReceive('create')
+        $this->issueRepository
+            ->shouldReceive('createIssueFrom')
             ->andThrow(JiraException::class);
 
         $this->flashBag

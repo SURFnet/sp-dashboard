@@ -46,6 +46,12 @@ class ServiceDeleteTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
+        // The entities are listed on the delete confirmation page (page is visited twice)
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+
         // EntityService::getEntityListForService -> getEntityListForService
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
@@ -70,6 +76,11 @@ class ServiceDeleteTest extends WebTestCase
             $this->client->getRequest()->getRequestUri(),
             "Expected to be on the service delete confirmation page"
         );
+
+        // Assert the entities of the service are listed on the page
+        $entities = $crawler->filter('table.entities tbody tr');
+        // The two SURFnet entities are in the list.
+        $this->assertCount(2, $entities, 'The two pre configured entities should be listed on the confirmation page');
 
         $form = $crawler
             ->selectButton('Delete')

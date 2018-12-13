@@ -22,4 +22,6 @@ spdashboard_jira_issue_priority: Medium
 spdashboard_jira_issue_reporter: sp-dashboard
 spdashboard_jira_issue_type: spd-delete-production-entity
 spdashboard_jira_entityid_fieldname: customfield_12914
+spdashboard_jira_manageid_fieldname: customfield_13401
+spdashboard_jira_manageid_field_label: "Manage entity ID"
 spdashboard_jira_project_key: CXT

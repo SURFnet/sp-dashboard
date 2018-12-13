@@ -35,7 +35,7 @@ class RepresentativeApprovedType extends AbstractType
                 'service.form.label.representative_approved_no' => Service::SURFCONEXT_APPROVED_NO,
                 'service.form.label.representative_approved_yes' => Service::SURFCONEXT_APPROVED_YES,
             ],
-            'attr' => ['class' => 'service-status-container'],
+            'attr' => ['class' => 'service-status-container representative-signed-container'],
         ]);
     }
 

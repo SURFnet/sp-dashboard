@@ -42,6 +42,7 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
         $this->factory = new IssueFieldFactory(
             'Jane Doe',
             'customfield_10107',
+            'customfield_10108',
             'bug',
             'Critical',
             'SPD',
@@ -52,7 +53,7 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_build_issue_field_from_ticket()
     {
-        $ticket = new Ticket('https://example.com', 'Test Service', 'John Doe', 'john@example.com');
+        $ticket = new Ticket('https://example.com', 'manage-id', 'Test Service', 'John Doe', 'john@example.com');
 
         $this->translator
             ->shouldReceive('trans')

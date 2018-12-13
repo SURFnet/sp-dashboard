@@ -54,7 +54,7 @@ class ManageEntityAccessGrantedVoter extends Voter
         // Fetch the entity and test if the team associated with the entity is one of the user's teams.
         $entity = $this->entityService->getManageEntityById($subject['manageId'], $subject['environment']);
 
-        if (!empty($entity->getMetaData()->getCoin()->getServiceTeamId())) {
+        if ($entity && !empty($entity->getMetaData()->getCoin()->getServiceTeamId())) {
             $team = $entity->getMetaData()->getCoin()->getServiceTeamId();
             $user = $token->getUser();
             return $user->isPartOfTeam($team);
