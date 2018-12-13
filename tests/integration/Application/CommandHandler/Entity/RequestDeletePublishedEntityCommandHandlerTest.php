@@ -91,7 +91,16 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
         // As part of the integration test, the TicketService and IssueFieldFactory is not mocked but included in the test.
         $this->ticketService = new TicketService(
             $this->jiraServiceFactory,
-            new IssueFieldFactory('John Doe', 'fieldnam', 'Bug', 'Critical', 'CXT', 'Jane Doe', $this->translator),
+            new IssueFieldFactory(
+                'John Doe',
+                'entityIdFieldName',
+                'manageIdFieldName',
+                'Bug',
+                'Critical',
+                'CXT',
+                'Jane Doe',
+                $this->translator
+            ),
             $this->entityRemovalRequestRepository
         );
 

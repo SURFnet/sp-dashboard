@@ -180,10 +180,6 @@ services:
     Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
         arguments:  ['%kernel.root_dir%/Resources']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRemovalRequestRepository:
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\EntityRemovalRequest]
-
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Entity]
@@ -309,6 +305,7 @@ services:
         arguments:
             - '%jira_issue_assignee%'
             - '%jira_issue_entityid_fieldname%'
+            - '%jira_issue_manageid_fieldname%'
             - '%jira_issue_type%'
             - '%jira_issue_priority%'
             - '%jira_issue_project_key%'
