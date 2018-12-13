@@ -1,3 +1,17 @@
+## 1.5.1
+
+The main focus of this release was on the Jira integration for entity removal request issue tracking. In order to make 
+this release work update the parameters.yml according to the example given in the dist file.
+
+**New feature**
+ - Read the Jira delete request status #200
+ - Save the Manage entity id on the Jira issue #199
+ - Show entities on service delete confirmation page #198 (thanks @femke)
+ 
+**Improvements**
+ - Make ManageEntityAccessGrantedVoter more robust #196
+ - Update service status indicators #197
+
 ## 1.5.0
 
 **New features:**
