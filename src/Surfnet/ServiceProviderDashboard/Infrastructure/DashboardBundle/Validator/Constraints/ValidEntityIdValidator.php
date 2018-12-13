@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Exception;
 use Pdp\Parser;
 use Pdp\PublicSuffixListManager;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -89,14 +90,14 @@ class ValidEntityIdValidator extends ConstraintValidator
 
         try {
             $parser->parseUrl($metadataUrl);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->context->addViolation('validator.entity_id.invalid_url');
             return;
         }
 
         try {
             $parser->parseUrl($value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->context->addViolation('validator.entity_id.invalid_entity_id');
             return;
         }
@@ -108,7 +109,7 @@ class ValidEntityIdValidator extends ConstraintValidator
 
         try {
             $manageId = $manage->findManageIdByEntityId($value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->context->addViolation('validator.entity_id.registry_failure');
             return;
         }

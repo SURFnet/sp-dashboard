@@ -28,6 +28,37 @@ class SecretTest extends TestCase
         $secret = new Secret(20);
 
         $this->assertEquals(20, strlen($secret->getSecret()));
+
+        // The charlist should match characters in Secret::$requiredChars
         $this->assertNotFalse(strpbrk($secret->getSecret(), '~!@#$%^&*_+='));
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage The secret length should be a value greater then 7
+     */
+    public function test_secret_generation_with_length_of_0_should_fail()
+    {
+        $secret = new Secret(0);
+    }
+
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage The secret length should be a value greater then 7
+     */
+    public function test_secret_generation_with_length_of_7_should_fail()
+    {
+        $secret = new Secret(7);
+    }
+
+    public function test_secret_generation_with_length_of_8_should_succeed()
+    {
+        $secret = new Secret(8);
+
+        // The charlist should match characters in Secret::$requiredChars
+        $this->assertNotFalse(strpbrk($secret->getSecret(), '~!@#$%^&*_+='));
+
+        $this->assertInstanceOf(Secret::class, $secret);
     }
 }

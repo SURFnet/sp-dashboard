@@ -94,7 +94,7 @@ class CopyEntityServiceTest extends MockeryTestCase
             ->with('dashboardid')
             ->andReturn(false);
 
-        $this->copyService->copy(
+        $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,
@@ -117,7 +117,7 @@ class CopyEntityServiceTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn([]);
 
-        $this->copyService->copy(
+        $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,
@@ -155,7 +155,7 @@ class CopyEntityServiceTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn($manageEntity);
 
-        $this->copyService->copy(
+        $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,
@@ -257,7 +257,7 @@ class CopyEntityServiceTest extends MockeryTestCase
 JSON
             ));
 
-        $this->copyService->copy(
+        $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,
@@ -359,7 +359,7 @@ JSON
 JSON
             ));
 
-        $this->copyService->copy(
+        $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,

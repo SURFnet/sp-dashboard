@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ class ValidClientIdValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $this->assertCount(1, $violations);
         $this->assertEquals(
-            'validator.entity_id.invalid_url',
+            'validator.client_id.empty',
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );
@@ -137,7 +137,7 @@ class ValidClientIdValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $this->assertCount(1, $violations);
         $this->assertEquals(
-            'validator.entity_id.invalid_url',
+            'validator.client_id.invalid_url',
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );

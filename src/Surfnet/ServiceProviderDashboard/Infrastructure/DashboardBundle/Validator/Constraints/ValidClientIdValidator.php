@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Exception;
 use Pdp\Parser;
 use Pdp\PublicSuffixListManager;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
@@ -74,13 +75,18 @@ class ValidClientIdValidator extends ConstraintValidator
             $entityCommand = $root->getData();
         }
 
+        if (empty($value)) {
+            $this->context->addViolation('validator.client_id.empty');
+            return;
+        }
+
         $pslManager = new PublicSuffixListManager();
         $parser = new Parser($pslManager->getList());
 
         try {
             $parser->parseUrl($value);
-        } catch (\Exception $e) {
-            $this->context->addViolation('validator.entity_id.invalid_url');
+        } catch (Exception $e) {
+            $this->context->addViolation('validator.client_id.invalid_url');
             return;
         }
 
@@ -91,14 +97,14 @@ class ValidClientIdValidator extends ConstraintValidator
 
         try {
             $manageId = $manage->findManageIdByEntityId($value);
-        } catch (\Exception $e) {
-            $this->context->addViolation('validator.entity_id.registry_failure');
+        } catch (Exception $e) {
+            $this->context->addViolation('validator.client_id.registry_failure');
             return;
         }
 
         // Prevent publishing entities with existing entityId in Manage.
         if ($manageId && (!$entityCommand->getManageId() || $manageId !== $entityCommand->getManageId())) {
-            $this->context->addViolation('validator.entity_id.already_exists');
+            $this->context->addViolation('validator.client_id.already_exists');
         }
     }
 }

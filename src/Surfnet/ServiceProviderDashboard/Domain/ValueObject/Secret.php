@@ -17,6 +17,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use Exception;
+
 class Secret
 {
     /**
@@ -36,6 +38,9 @@ class Secret
      */
     public function __construct($length)
     {
+        if ($length < 8) {
+            throw new Exception('The secret length should be a value greater then 7');
+        }
         do {
             $this->secret = '';
             $nofAllowedChars = strlen(self::$allowedChars) - 1;

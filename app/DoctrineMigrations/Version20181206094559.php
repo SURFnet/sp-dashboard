@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * This migration will add the fields necessary to support oidc entities
  */
 class Version20181206094559 extends AbstractMigration
 {

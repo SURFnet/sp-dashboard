@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * This migration will drop the jira ticket number field which is obsolete because of the connection with jira
  */
 class Version20181207104950 extends AbstractMigration
 {
