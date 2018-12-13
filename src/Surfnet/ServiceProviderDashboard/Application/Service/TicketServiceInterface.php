@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,35 +18,31 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use JiraRestApi\Issue\Issue;
+use JiraRestApi\Issue\IssueSearchResult;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 
-class TicketService implements TicketServiceInterface
+interface TicketServiceInterface
 {
     /**
-     * @var TicketServiceInterface
+     * Create a Jira issue from a Ticket VO
+     *
+     * @param Ticket $ticket
+     * @return Issue|object
      */
-    private $issueRepository;
+    public function createIssueFrom(Ticket $ticket);
 
     /**
-     * @param TicketServiceInterface $repository
+     * Query Jira for issues that have a manageId that matches the provided array of manage id's.
+     *
+     * @param array $manageIds
+     * @return IssueSearchResult
      */
-    public function __construct(TicketServiceInterface $repository)
-    {
-        $this->issueRepository = $repository;
-    }
+    public function findByManageIds(array $manageIds);
 
-    public function createIssueFrom(Ticket $ticket)
-    {
-        return $this->issueRepository->createIssueFrom($ticket);
-    }
-
-    public function findByManageIds(array $manageIds)
-    {
-        return $this->issueRepository->findByManageIds($manageIds);
-    }
-
-    public function findByManageId($id)
-    {
-        return $this->issueRepository->findByManageId($id);
-    }
+    /**
+     * @param $id
+     * @return Issue|null
+     */
+    public function findByManageId($id);
 }

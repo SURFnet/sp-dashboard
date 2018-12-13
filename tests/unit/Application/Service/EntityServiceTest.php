@@ -18,11 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
+use JiraRestApi\Issue\IssueSearchResult;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
+use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
@@ -55,6 +58,11 @@ class EntityServiceTest extends MockeryTestCase
      */
     private $service;
 
+    /**
+     * @var TicketServiceInterface
+     */
+    private $ticketService;
+
     public function setUp()
     {
         $this->repository = m::mock(EntityRepository::class);
@@ -64,7 +72,10 @@ class EntityServiceTest extends MockeryTestCase
         $provider = new EntityQueryRepositoryProvider($this->repository, $this->manageTest, $this->manageProd);
 
         $this->router = m::mock(RouterInterface::class);
-        $this->service = new EntityService($provider, $this->router);
+        $this->router = m::mock(RouterInterface::class);
+        $logger = m::mock(LoggerInterface::class);
+        $this->ticketService = m::mock(TicketServiceInterface::class);
+        $this->service = new EntityService($provider, $this->ticketService, $this->router, $logger);
     }
 
     public function test_it_can_search_manage_test_by_manage_id()
@@ -129,6 +140,10 @@ class EntityServiceTest extends MockeryTestCase
             ->shouldReceive('findByTeamName')
             ->with($teamName)
             ->andReturn([]);
+
+        $this->ticketService
+            ->shouldReceive('findByManageIds')
+            ->andReturn(new IssueSearchResult());
 
         $entityList = $this->service->getEntityListForService($service);
 
