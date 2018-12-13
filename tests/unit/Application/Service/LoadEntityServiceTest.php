@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 use League\Tactician\CommandBus;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Service\CopyEntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -30,10 +30,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
-class CopyEntityServiceTest extends MockeryTestCase
+class LoadEntityServiceTest extends MockeryTestCase
 {
     /**
-     * @var CopyEntityService
+     * @var LoadEntityService
      */
     private $copyService;
 
@@ -74,7 +74,7 @@ class CopyEntityServiceTest extends MockeryTestCase
         $this->service = new Service();
         $this->service->setTeamName('testteam');
 
-        $this->copyService = new CopyEntityService(
+        $this->copyService = new LoadEntityService(
             $this->entityRepository,
             $this->manageTestClient,
             $this->manageProdClient,

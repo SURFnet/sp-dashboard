@@ -83,6 +83,7 @@ class JsonGenerator implements GeneratorInterface
      */
     public function generateForNewEntity(Entity $entity)
     {
+        // the type for entities is always saml because manage is using saml internally
         return [
             'data' => $this->generateDataForNewEntity($entity),
             'type' => 'saml20_sp',
@@ -95,6 +96,7 @@ class JsonGenerator implements GeneratorInterface
      */
     public function generateForExistingEntity(Entity $entity)
     {
+        // the type for entities is always saml because manage is using saml internally
         $data = [
             'pathUpdates' => $this->generateDataForExistingEntity($entity),
             'type' => 'saml20_sp',
@@ -116,6 +118,7 @@ class JsonGenerator implements GeneratorInterface
      */
     public function generateDataForNewEntity(Entity $entity)
     {
+        // the type for entities is always saml because manage is using saml internally
         $metadata = [
             'arp'             => $this->arpMetadataGenerator->build($entity),
             'type'            => 'saml20-sp',
@@ -129,7 +132,6 @@ class JsonGenerator implements GeneratorInterface
 
         switch (true) {
             case ($entity->getProtocol() == Entity::TYPE_SAML):
-                $metadata['type']        = 'saml20-sp';
                 $metadata['metadataurl'] = $entity->getMetadataUrl();
                 break;
             case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):

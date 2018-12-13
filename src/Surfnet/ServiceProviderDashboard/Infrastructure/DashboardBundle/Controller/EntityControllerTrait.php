@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityPro
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Service\CopyEntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -68,9 +68,9 @@ trait EntityControllerTrait
      */
     private $entityTypeFactory;
     /**
-     * @var CopyEntityService
+     * @var LoadEntityService
      */
-    private $copyEntityService;
+    private $loadEntityService;
 
     /**
      * @param CommandBus $commandBus
@@ -78,6 +78,7 @@ trait EntityControllerTrait
      * @param ServiceService $serviceService
      * @param AuthorizationService $authorizationService
      * @param EntityTypeFactory $entityTypeFactory
+     * @param LoadEntityService $loadEntityService
      */
     public function __construct(
         CommandBus $commandBus,
@@ -85,14 +86,14 @@ trait EntityControllerTrait
         ServiceService $serviceService,
         AuthorizationService $authorizationService,
         EntityTypeFactory $entityTypeFactory,
-        CopyEntityService $copyEntityService
+        LoadEntityService $loadEntityService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->serviceService = $serviceService;
         $this->authorizationService = $authorizationService;
         $this->entityTypeFactory = $entityTypeFactory;
-        $this->copyEntityService = $copyEntityService;
+        $this->loadEntityService = $loadEntityService;
     }
 
     /**

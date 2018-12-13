@@ -17,6 +17,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory;
 
+use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -39,9 +40,9 @@ class EntityTypeFactory
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @param Service $service
-     * @param $environment
+     * @param string $environment
      * @param Entity|null $entity
      * @return EntityTypeInterface
      */
@@ -64,7 +65,7 @@ class EntityTypeFactory
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
         }
 
-        throw new \InvalidArgumentException("invalid form type requested: " . $type);
+        throw new InvalidArgumentException("invalid form type requested: " . $type);
     }
 
 
@@ -87,7 +88,7 @@ class EntityTypeFactory
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
         }
 
-        throw new \InvalidArgumentException("invalid form type requested");
+        throw new InvalidArgumentException("invalid form type requested");
     }
 
 

@@ -44,8 +44,6 @@ class OidcClient
     private $scope;
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
-     * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
      * @param array $data
      * @return OidcClient|null
      */

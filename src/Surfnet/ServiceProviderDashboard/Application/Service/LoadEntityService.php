@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -28,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 
-class CopyEntityService
+class LoadEntityService
 {
     /**
      * @var EntityRepository
@@ -92,7 +91,7 @@ class CopyEntityService
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
      */
-    public function copy($dashboardId, $manageId, Service $service, $sourceEnvironment, $environment)
+    public function load($dashboardId, $manageId, Service $service, $sourceEnvironment, $environment)
     {
         if (!$this->entityRepository->isUnique($dashboardId)) {
             throw new InvalidArgumentException(

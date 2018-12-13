@@ -195,10 +195,10 @@ class EntityCreateController extends Controller
         if (!$request->isMethod('post')) {
             $entityId = $this->entityService->createEntityUuid();
 
-            // copy entity
-            $entity = $this->copyEntityService->copy($entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment);
-
             // load entity
+            $entity = $this->loadEntityService->load($entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment);
+
+            // load entity into form
             $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
             $command = $form->getData();
         }

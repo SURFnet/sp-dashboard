@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityOidcCreateTest extends WebTestCase

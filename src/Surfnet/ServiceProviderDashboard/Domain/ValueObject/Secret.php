@@ -34,7 +34,7 @@ class Secret
 
     /**
      * @param int $length
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct($length)
     {

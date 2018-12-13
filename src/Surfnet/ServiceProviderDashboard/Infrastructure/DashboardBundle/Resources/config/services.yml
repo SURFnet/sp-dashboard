@@ -251,7 +251,7 @@ services:
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
 
-    Surfnet\ServiceProviderDashboard\Application\Service\CopyEntityService:
+    Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'

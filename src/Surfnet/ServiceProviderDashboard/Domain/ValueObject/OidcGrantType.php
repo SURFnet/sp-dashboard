@@ -28,9 +28,9 @@ class OidcGrantType
     ];
 
     /**
-     * @var string|null
+     * @var string
      */
-    private $grantType = null;
+    private $grantType;
 
     /**
      * @param string $grantType
@@ -38,7 +38,7 @@ class OidcGrantType
     public function __construct($grantType = self::GRANT_TYPE_AUTHORIZATION_CODE)
     {
         if (!in_array($grantType, self::$validGrantTypes)) {
-            throw new \InvalidArgumentException("invalid response type");
+            throw new \InvalidArgumentException("invalid grant type");
         }
 
         $this->grantType = $grantType;

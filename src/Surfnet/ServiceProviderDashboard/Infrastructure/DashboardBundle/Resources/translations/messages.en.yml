@@ -282,7 +282,7 @@ service.overview.progress.label.entity-on-test: "Entity\non\ntest"
 service.overview.progress.label.contract-signed: "Contract\nsigned"
 service.overview.progress.label.representative-approved: "Approved\nby\nrepresentative"
 service.overview.progress.label.privacy-questions: "Privacy\nquestions\nanswered"
-service.overview.progress.label.production-connection: "Production\nconnection\naquired"
+service.overview.progress.label.production-connection: "Production\nconnection\nacquired"
 service.overview.progress.tooltip.intake-conducted.success.html: "Thank you\nthe intake was completed"
 service.overview.progress.tooltip.intake-conducted.info.html: "Is the intake done?"
 service.overview.progress.tooltip.entity-on-test.success.html: 'Thank you<br> there is a entity on the test environment<br><a href="/">more info</a>'
