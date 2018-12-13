@@ -226,6 +226,7 @@ service.create.title: Add new service
 service.edit.title: Edit service
 service.delete.title: "Delete service"
 service.delete.confirmation: "You are about to delete '%name%'. Are you sure?"
+service.delete.entity_list_text: "With this, you are also deleting the following entities:"
 service.form.general.title: General
 service.form.status.title: Service status
 service.form.label.connection_status: Connection status
