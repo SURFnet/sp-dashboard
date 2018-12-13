@@ -46,7 +46,7 @@ class EntityPublishedController extends Controller
         // Redirects OIDC published entity confirmations to the entity list page and shows a confirmation dialog in a
         // modal window that renders the oidcConfirmationModalAction
         if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
-            return $this->redirectToRoute('entity_list');
+            return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
         }
 
         $parameters = ['entityName' => $entity->getNameEn()];
