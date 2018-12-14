@@ -1,3 +1,11 @@
+## 1.5.2
+
+The main focus of this release was to fix some minor bugs to make a production ready release.
+
+**Bugfixes:**
+ - Fix route after session timeout
+ - Temporarily disable the oidc entity type in modal
+
 ## 1.5.1
 
 The main focus of this release was on the Jira integration for entity removal request issue tracking. In order to make 
