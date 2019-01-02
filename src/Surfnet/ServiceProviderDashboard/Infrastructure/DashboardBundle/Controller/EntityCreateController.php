@@ -196,7 +196,7 @@ class EntityCreateController extends Controller
             $entityId = $this->entityService->createEntityUuid();
 
             // load entity
-            $entity = $this->loadEntityService->load($entityId, $manageId, $service, $targetEnvironment, $sourceEnvironment);
+            $entity = $this->loadEntityService->load($entityId, $manageId, $service, $sourceEnvironment, $targetEnvironment);
 
             // load entity into form
             $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
