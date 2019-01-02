@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -99,11 +100,21 @@ class EntityListController extends Controller
             $serviceName = $service->getName();
         }
 
+        // Try to get a published entity from the session, if there is one, we just published an entity and might need
+        // to display the oidc confirmation popup.
+        $publishedEntity = $this->get('session')->get('published.entity.clone');
+        $showOidcPopup = false;
+        if ($publishedEntity && $publishedEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
+            $showOidcPopup = true;
+        }
+
         return [
             'no_service_selected' => empty($service),
             'production_entities_enabled' => $productionEntitiesEnabled,
             'entity_list' => $entityList,
             'serviceName' => $serviceName,
+            'showOidcPopup' => $showOidcPopup,
+            'publishedEntity' => $publishedEntity
         ];
     }
 }
