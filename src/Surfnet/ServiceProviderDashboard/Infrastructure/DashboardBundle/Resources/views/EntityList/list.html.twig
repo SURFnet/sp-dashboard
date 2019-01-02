@@ -82,4 +82,10 @@
         {{ render(controller('DashboardBundle:EntityCreate:type', {targetEnvironment: "production"})) }}
     </div>
 
+    {% if showOidcPopup %}
+    <div class="modal" id="oidc-published-popup">
+        {{ render(controller('DashboardBundle:EntityPublished:oidcConfirmationModal')) }}
+    </div>
+    {% endif %}
+
 {% endblock %}
