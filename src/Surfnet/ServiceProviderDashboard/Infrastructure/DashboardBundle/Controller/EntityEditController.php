@@ -116,6 +116,7 @@ class EntityEditController extends Controller
 
         return [
             'form' => $form->createView(),
+            'type' => $entity->getProtocol(),
         ];
     }
 

@@ -260,6 +260,7 @@ class SamlEntityType extends AbstractType
                         'givenNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.givenNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.givenNameAttribute'],
@@ -269,6 +270,7 @@ class SamlEntityType extends AbstractType
                         'surNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.surNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.surNameAttribute'],
@@ -278,6 +280,7 @@ class SamlEntityType extends AbstractType
                         'commonNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.commonNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.commonNameAttribute'],
@@ -287,6 +290,7 @@ class SamlEntityType extends AbstractType
                         'displayNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.displayNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.displayNameAttribute'],
@@ -296,6 +300,7 @@ class SamlEntityType extends AbstractType
                         'emailAddressAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.emailAddressAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.emailAddressAttribute'],
@@ -305,6 +310,7 @@ class SamlEntityType extends AbstractType
                         'organizationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.organizationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.organizationAttribute'],
@@ -314,6 +320,7 @@ class SamlEntityType extends AbstractType
                         'organizationTypeAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.organizationTypeAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.organizationTypeAttribute'],
@@ -323,6 +330,7 @@ class SamlEntityType extends AbstractType
                         'affiliationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.affiliationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.affiliationAttribute'],
@@ -332,6 +340,7 @@ class SamlEntityType extends AbstractType
                         'entitlementAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.entitlementAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.entitlementAttribute'],
@@ -341,6 +350,7 @@ class SamlEntityType extends AbstractType
                         'principleNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.principleNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.principleNameAttribute'],
@@ -350,6 +360,7 @@ class SamlEntityType extends AbstractType
                         'uidAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.uidAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.uidAttribute'],
@@ -359,6 +370,7 @@ class SamlEntityType extends AbstractType
                         'preferredLanguageAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.preferredLanguageAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.preferredLanguageAttribute'],
@@ -368,6 +380,7 @@ class SamlEntityType extends AbstractType
                         'personalCodeAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.personalCodeAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.personalCodeAttribute'],
@@ -377,6 +390,7 @@ class SamlEntityType extends AbstractType
                         'scopedAffiliationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.scopedAffiliationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.scopedAffiliationAttribute'],
@@ -386,6 +400,7 @@ class SamlEntityType extends AbstractType
                         'eduPersonTargetedIDAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.eduPersonTargetedIDAttribute'],

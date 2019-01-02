@@ -212,6 +212,7 @@ class OidcEntityType extends AbstractType
                         'givenNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.givenNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.givenNameAttribute'],
@@ -221,6 +222,7 @@ class OidcEntityType extends AbstractType
                         'surNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.surNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.surNameAttribute'],
@@ -230,6 +232,7 @@ class OidcEntityType extends AbstractType
                         'commonNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.commonNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.commonNameAttribute'],
@@ -239,6 +242,7 @@ class OidcEntityType extends AbstractType
                         'displayNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.displayNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.displayNameAttribute'],
@@ -248,6 +252,7 @@ class OidcEntityType extends AbstractType
                         'emailAddressAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.emailAddressAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.emailAddressAttribute'],
@@ -257,6 +262,7 @@ class OidcEntityType extends AbstractType
                         'organizationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.organizationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.organizationAttribute'],
@@ -266,6 +272,7 @@ class OidcEntityType extends AbstractType
                         'organizationTypeAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.organizationTypeAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.organizationTypeAttribute'],
@@ -275,6 +282,7 @@ class OidcEntityType extends AbstractType
                         'affiliationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.affiliationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.affiliationAttribute'],
@@ -284,6 +292,7 @@ class OidcEntityType extends AbstractType
                         'entitlementAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.entitlementAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.entitlementAttribute'],
@@ -293,6 +302,7 @@ class OidcEntityType extends AbstractType
                         'principleNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.principleNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.principleNameAttribute'],
@@ -302,6 +312,7 @@ class OidcEntityType extends AbstractType
                         'uidAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.uidAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.uidAttribute'],
@@ -311,6 +322,7 @@ class OidcEntityType extends AbstractType
                         'preferredLanguageAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.preferredLanguageAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.preferredLanguageAttribute'],
@@ -320,6 +332,7 @@ class OidcEntityType extends AbstractType
                         'personalCodeAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.personalCodeAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.personalCodeAttribute'],
@@ -329,6 +342,7 @@ class OidcEntityType extends AbstractType
                         'scopedAffiliationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.scopedAffiliationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.scopedAffiliationAttribute'],
@@ -338,6 +352,7 @@ class OidcEntityType extends AbstractType
                         'eduPersonTargetedIDAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.eduPersonTargetedIDAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.eduPersonTargetedIDAttribute'],
