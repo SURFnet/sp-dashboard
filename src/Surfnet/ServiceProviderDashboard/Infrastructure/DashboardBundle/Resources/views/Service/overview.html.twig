@@ -72,7 +72,7 @@
                                     <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
                                     <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
                                     <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                                    <td><a href="{{ entity.link }}">{{ entity.state|trans }}</a></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -107,7 +107,7 @@
                                     <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
                                     <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
                                     <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                                    <td><a href="{{ entity.link }}">{{ entity.state|trans }}</a></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

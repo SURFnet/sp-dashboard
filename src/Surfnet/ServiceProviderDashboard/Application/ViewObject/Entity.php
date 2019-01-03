@@ -247,7 +247,7 @@ class Entity
      */
     public function getState()
     {
-        return $this->state;
+        return 'entity.state.'.$this->environment . '.' . str_replace(' ','_', $this->state);
     }
 
     /**

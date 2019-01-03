@@ -314,3 +314,9 @@ mail.confirmation.publish_production.service_name: Service name
 mail.confirmation.publish_production.publish_date: Publish date
 mail.confirmation.publish_production.team_id: Team id
 mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'
+entity.state.test.draft: draft
+entity.state.test.published: live in test
+entity.state.production.draft: draft
+entity.state.production.published: live
+entity.state.production.requested: under review
+entity.state.production.removal_requested: removal requested
