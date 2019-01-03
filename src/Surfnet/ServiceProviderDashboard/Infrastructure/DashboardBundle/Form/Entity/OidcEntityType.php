@@ -47,144 +47,150 @@ class OidcEntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
+        $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
+
+        if ($options['data']->getClientId() == "") {
+            $metadata
+                ->add(
+                    'clientId',
+                    TextType::class,
+                    [
+                        'required' => false,
+                        'attr' => [
+                            'data-help' => 'entity.edit.information.clientId',
+                            'data-parsley-uri' => null,
+                            'data-parsley-trigger' => 'blur',
+                        ],
+                    ]
+                );
+        }
+
+        $metadata
             ->add(
-                $builder->create('metadata', FormType::class, ['inherit_data' => true])
-                    ->add(
-                        'clientId',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.clientId',
-                                'data-parsley-uri' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'redirectUris',
-                        CollectionType::class,
-                        [
-                            'error_bubbling' => false,
-                            'prototype' => true,
-                            'allow_add' => true,
-                            'allow_delete' => true,
-                            'required' => false,
-                            'entry_type' => TextType::class,
-                            'entry_options' => [
-                                'attr' => [
-                                    'data-parsley-redirecturis' => null,
-                                    'data-parsley-uri' => null,
-                                    'data-parsley-trigger' => 'blur',
-                                    'data-parsley-validate-if-empty' => null,
-                                ],
-                            ],
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.redirectUris',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'grantType',
-                        ChoiceType::class,
-                        [
-                            'expanded' => true,
-                            'multiple' => false,
-                            'choices'  => [
-                                'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
-                                'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT,
-                            ],
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.grantType',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'logoUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.logoUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'nameNl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.nameNl'],
-                        ]
-                    )
-                    ->add(
-                        'descriptionNl',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.descriptionNl',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'nameEn',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.nameEn'],
-                        ]
-                    )
-                    ->add(
-                        'descriptionEn',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.descriptionEn',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'applicationUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.applicationUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'eulaUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.eulaUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'enablePlayground',
-                        CheckboxType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'class' => 'requested'
-                            ]
-                        ]
-                    )
+                'redirectUris',
+                CollectionType::class,
+                [
+                    'error_bubbling' => false,
+                    'prototype' => true,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'entry_type' => TextType::class,
+                    'entry_options' => [
+                        'attr' => [
+                            'data-parsley-redirecturis' => null,
+                            'data-parsley-uri' => null,
+                            'data-parsley-trigger' => 'blur',
+                            'data-parsley-validate-if-empty' => null,
+                        ],
+                    ],
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.redirectUris',
+                    ],
+                ]
             )
+            ->add(
+                'grantType',
+                ChoiceType::class,
+                [
+                    'expanded' => true,
+                    'multiple' => false,
+                    'choices'  => [
+                        'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
+                        'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT,
+                    ],
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.grantType',
+                    ],
+                ]
+            )
+            ->add(
+                'logoUrl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.logoUrl',
+                        'data-parsley-urlstrict' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            )
+            ->add(
+                'nameNl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => ['data-help' => 'entity.edit.information.nameNl'],
+                ]
+            )
+            ->add(
+                'descriptionNl',
+                TextareaType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.descriptionNl',
+                        'rows' => 10,
+                    ],
+                ]
+            )
+            ->add(
+                'nameEn',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => ['data-help' => 'entity.edit.information.nameEn'],
+                ]
+            )
+            ->add(
+                'descriptionEn',
+                TextareaType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.descriptionEn',
+                        'rows' => 10,
+                    ],
+                ]
+            )
+            ->add(
+                'applicationUrl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.applicationUrl',
+                        'data-parsley-urlstrict' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            )
+            ->add(
+                'eulaUrl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.eulaUrl',
+                        'data-parsley-urlstrict' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            )
+            ->add(
+                'enablePlayground',
+                CheckboxType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'requested'
+                    ]
+                ]
+            );
+
+        $builder
+            ->add($metadata)
             ->add(
                 $builder->create('contactInformation', FormType::class, ['inherit_data' => true])
                     ->add(

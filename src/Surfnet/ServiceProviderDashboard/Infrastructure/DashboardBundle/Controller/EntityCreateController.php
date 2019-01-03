@@ -188,21 +188,11 @@ class EntityCreateController extends Controller
 
         $service = $this->getService();
 
-        $entity = $this->entityService->getManageEntityById($manageId, $sourceEnvironment);
+        $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
 
-        $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment);
+        // load entity into form
+        $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
         $command = $form->getData();
-
-        if (!$request->isMethod('post')) {
-            $entityId = $this->entityService->createEntityUuid();
-
-            // load entity
-            $entity = $this->loadEntityService->load($entityId, $manageId, $service, $sourceEnvironment, $targetEnvironment);
-
-            // load entity into form
-            $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
-            $command = $form->getData();
-        }
 
         // A copy can never be saved as draft: changes are published directly to manage.
         $form->remove('save');
