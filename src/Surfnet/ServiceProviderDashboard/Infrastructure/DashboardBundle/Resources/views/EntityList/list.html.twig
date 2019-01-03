@@ -10,10 +10,10 @@
             {% endif %}
     {% endblock %}</h1>
 
-    {% set messages = app.session.flashbag.all %}
-    {% if messages is not empty %}
+    {% set flashes = app.session.flashbag.all %}
+    {% if flashes is not empty %}
     <div class="card">
-        {% for type, messages in app.session.flashbag.all %}
+        {% for type, messages in flashes %}
             {% for message in messages %}
                 <div class="message {{ type }}">{{ message|trans }}</div>
             {% endfor %}
