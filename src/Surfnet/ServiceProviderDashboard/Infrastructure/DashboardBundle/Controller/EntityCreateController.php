@@ -151,6 +151,7 @@ class EntityCreateController extends Controller
 
         return [
             'form' => $form->createView(),
+            'type' => $entity->getProtocol(),
         ];
     }
 
@@ -250,6 +251,7 @@ class EntityCreateController extends Controller
 
         return [
             'form' => $form->createView(),
+            'type' => $entity->getProtocol(),
         ];
     }
 
