@@ -70,8 +70,8 @@ entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
 entity.list.no_service_selected: Please select a service
-entity.list.add_to_test: Add for test
-entity.list.add_to_production: Add for production
+entity.list.add_to_test: Add new entity
+entity.list.add_to_production: Add new entity
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
 entity.list.primary_contact: Primary contact
@@ -84,6 +84,8 @@ entity.list.action.edit: Edit
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
+entity.list.table.title.test: Test environment (engine.test.surfconext.nl)
+entity.list.table.title.prod: Production environment (engine.surfconext.nl)
 entity.list.modal.oidc_confirmation:
   title: Confirmation
   client_id:
