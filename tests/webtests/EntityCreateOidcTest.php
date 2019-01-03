@@ -134,10 +134,17 @@ class EntityOidcCreateTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->followRedirect();
+        $this->client->followRedirect(); // redirect to published page
+        $crawler = $this->client->followRedirect(); // redirect to list page to show secret
+
         // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
-        $pageTitle = $crawler->filter('h1')->first()->text();
-        $this->assertEquals('Successfully published the entity to test', $pageTitle);
+        $confirmation = $crawler->filter('.oidc-confirmation');
+        $label = $confirmation->filter('label')->text();
+        $span = $confirmation->filter('span')->text();
+
+        // A secret should be displayed
+        $this->assertEquals('Secret', $label);
+        $this->assertSame(20, strlen($span));
     }
 
     public function test_it_forwards_to_edit_action_when_publish_failed()
