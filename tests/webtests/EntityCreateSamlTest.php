@@ -111,7 +111,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         $crawler = $this->client->followRedirect();
         $pageTitle = $crawler->filter('h1')->first()->text();
-        $message = $crawler->filter('.page-container .card')->first()->text();
+        $message = $crawler->filter('.page-container .card')->eq(1)->text();
 
         $this->assertContains("Entities of service 'Ibuildings B.V.'", $pageTitle);
         $this->assertContains('There are no entities configured', $message);
@@ -332,10 +332,9 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $crawler = $this->client->followRedirect();
 
         // Assert the entity is saved for the production environment.
-        $row = $crawler->filter('table tbody tr')->eq(0);
+        $row = $crawler->filter('table tbody tr')->eq(1);
 
         $this->assertEquals('https://entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
-        $this->assertEquals('production', $row->filter('td')->eq(5)->text(), 'Environment not found in entity list');
     }
 
     public function test_it_imports_multiple_entity_descriptor_metadata_with_a_single_entity()
