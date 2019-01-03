@@ -34,31 +34,49 @@ class EntityPublishedController extends Controller
     /**
      * @Method("GET")
      * @Route("/entity/published/production", name="entity_published_production")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
-     */
-    public function publishedProductionAction()
-    {
-        /** @var Entity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
-        return [
-            'entityName' => $entity->getNameEn(),
-        ];
-    }
-
-    /**
-     * @Method("GET")
      * @Route("/entity/published/test", name="entity_published_test")
      * @Security("has_role('ROLE_USER')")
      * @Template()
      */
-    public function publishedTestAction()
+    public function publishedAction()
     {
         /** @var Entity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
 
-        return [
-            'entityName' => $entity->getNameEn(),
-        ];
+        // Redirects OIDC published entity confirmations to the entity list page and shows a confirmation dialog in a
+        // modal window that renders the oidcConfirmationModalAction
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
+            return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
+        }
+
+        $parameters = ['entityName' => $entity->getNameEn()];
+
+        if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+            return $this->render('@Dashboard/EntityPublished/publishedTest.html.twig', $parameters);
+        }
+        return $this->render('@Dashboard/EntityPublished/publishedProduction.html.twig', $parameters);
+    }
+
+    /**
+     * Show the confirmation popup for an OpenID connect entity
+     *
+     * In this popup the client id and the secret are displayed (once)
+     *
+     * This action is rendered inside a modal window, and is triggered from the
+     * entity list action.
+     *
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function oidcConfirmationModalAction()
+    {
+        /** @var Entity $entity */
+        $entity = $this->get('session')->get('published.entity.clone');
+
+        // Show the confirmation modal only once in this request
+        $this->get('session')->remove('published.entity.clone');
+
+        return ['entity' => $entity];
     }
 }

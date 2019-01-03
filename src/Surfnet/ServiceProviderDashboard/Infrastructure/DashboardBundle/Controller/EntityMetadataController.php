@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -76,9 +77,14 @@ class EntityMetadataController extends Controller
                 'Service cannot be in draft when generating the Metadata'
             );
         }
+        if ($entity->getProtocol() !== Entity::TYPE_SAML) {
+            throw new BadRequestHttpException(
+                'Only entities of type SAML have Metadata'
+            );
+        }
 
         return new JsonResponse(
-            $this->generator->generateForNewEntity($entity)
+            $this->generator->generateDataForNewEntity($entity)
         );
     }
 }

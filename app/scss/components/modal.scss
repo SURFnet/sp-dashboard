@@ -24,3 +24,27 @@
     padding: 15px 30px;
   }
 }
+
+.oidc-confirmation {
+  .detail {
+    margin-bottom: 0.3em;
+    label {
+      font-weight: bold;
+      text-transform: none;
+      width: 100px;
+      display: inline-block;
+    }
+  }
+  .button-row {
+    height: 3em;
+  }
+}
+
+.warning {
+  margin-bottom: 1em;
+  font-weight: bolder;
+  i {
+    color: $orange;
+    margin-right: 0.5em;
+  }
+}

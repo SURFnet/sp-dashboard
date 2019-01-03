@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityListTest extends WebTestCase
@@ -40,18 +41,31 @@ class EntityListTest extends WebTestCase
         $pageTitle = $crawler->filter('.page-container h1');
 
         $this->assertContains("Entities of service 'SURFnet'", $pageTitle->text());
-        $this->assertCount(3, $crawler->filter('table tr'), 'Expecting three rows (including header)');
+        $data =  $this->rowsToArray($crawler->filter('table'));
 
-        $row = $crawler->filter('table tr')->eq(1);
-        $this->assertEquals('SP1', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
-        $this->assertEquals('SP1', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
-        $this->assertEquals('John Doe (jdoe@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
-        $this->assertEquals('draft', $row->filter('td')->eq(3)->text(), 'State not found in entity list');
-        $this->assertEquals('test', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
+        $this->assertCount(3, $data, 'Expecting three rows (including header)');
 
-        $row = $crawler->filter('table tr')->eq(2);
-        $this->assertEquals('SP2', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
-        $this->assertEquals('SP2', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
+        unset($data[0][5]); // remove buttons
+        $this->assertEquals([
+            'SP1',
+            'SP1',
+            'John Doe (jdoe@example.org)',
+            'saml20',
+            'draft',
+        ], $data[0]);
+
+        unset($data[1][5]); // remove buttons
+        $this->assertEquals([
+            'SP2',
+            'SP2',
+            'John Doe (jdoe@example.org)',
+            'saml20',
+            'draft',
+        ], $data[1]);
+
+        $this->assertEquals([
+            'There are no entities configured',
+        ], $data[2]);
     }
 
     public function test_entity_list_shows_test_entities()
@@ -92,14 +106,40 @@ class EntityListTest extends WebTestCase
         $pageTitle = $crawler->filter('.page-container h1');
 
         $this->assertContains("Entities of service 'SURFnet'", $pageTitle->text());
-        $this->assertCount(4, $crawler->filter('table tr'), 'Expecting three rows (including header)');
+        $data =  $this->rowsToArray($crawler->filter('table'));
 
-        $row = $crawler->filter('table tr')->eq(3);
-        $this->assertEquals('SP3', $row->filter('td')->eq(0)->text(), 'Name not found in entity list');
-        $this->assertEquals('SP3', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
-        $this->assertEquals('Test Test (test@example.org)', $row->filter('td')->eq(2)->text(), 'Primary contact should be listed');
-        $this->assertEquals('published', $row->filter('td')->eq(3)->text(), 'State not found in entity list');
-        $this->assertEquals('test', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
+        $this->assertCount(4, $data, 'Expecting three rows (including header)');
+
+        unset($data[0][5]); // remove buttons
+        $this->assertEquals([
+            'SP1',
+            'SP1',
+            'John Doe (jdoe@example.org)',
+            'saml20',
+            'draft',
+        ], $data[0]);
+
+        unset($data[1][5]); // remove buttons
+        $this->assertEquals([
+            'SP2',
+            'SP2',
+            'John Doe (jdoe@example.org)',
+            'saml20',
+            'draft',
+        ], $data[1]);
+
+        unset($data[2][5]); // remove buttons
+        $this->assertEquals([
+            'SP3',
+            'SP3',
+            'Test Test (test@example.org)',
+            'saml20',
+            'published',
+        ], $data[2]);
+
+        $this->assertEquals([
+            'There are no entities configured',
+        ], $data[3]);
     }
 
     public function test_entity_list_shows_add_to_test_link()
@@ -118,10 +158,9 @@ class EntityListTest extends WebTestCase
         );
 
         $crawler = $this->client->request('GET', '/entities/1');
+        $actions = $crawler->filter('a[href="#add-for-test"]');
 
-        $actions = $crawler->filter('div.add-entity-actions a');
-
-        $this->assertContains('Add for test', $actions->eq(0)->text(), 'Add for test link not found');
+        $this->assertContains('Add new entity', $actions->eq(0)->text(), 'Add for test link not found');
         $this->assertEquals(1, $actions->count(), 'There should be only one add link');
     }
 
@@ -142,10 +181,9 @@ class EntityListTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/entities/2');
 
-        $actions = $crawler->filter('div.add-entity-actions a');
+        $actions = $crawler->filter('a[href="#add-for-production"]');
 
-        $this->assertContains('Add for test', $actions->eq(0)->text(), 'Add for test link not found');
-        $this->assertContains('Add for production', $actions->eq(1)->text(), 'Add for production link not found');
+        $this->assertContains('Add new entity', $actions->eq(0)->text(), 'Add for production link not found');
     }
 
     public function test_create_entity_buttons_trigger_the_entity_type_dialog()
@@ -188,5 +226,23 @@ class EntityListTest extends WebTestCase
         $this->assertRegExp('/\/entity\/create\/type/', $this->client->getRequest()->getRequestUri());
 
         // TODO: test submitting to the openidconnect form that is yet to be created
+    }
+
+    private function rowsToArray(Crawler $crawler)
+    {
+        $result = [];
+        $rows = $crawler->filter('tr');
+        $r = 0;
+        for ($rowId = 0; $rowId <= $rows->count(); $rowId++) {
+            $columns = $rows->eq($rowId)->filter('td');
+            if (count($columns) > 0) {
+                foreach ($columns as $columnId => $column) {
+                    /** @var $column \DOMElement */
+                    $result[$r][$columnId] = trim($column->textContent);
+                }
+                $r++;
+            }
+        }
+        return $result;
     }
 }

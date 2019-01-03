@@ -7,8 +7,6 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
 
-    {{ form_widget(form.default) }}
-
     <div class="fieldset card">
 
         {% for type, messages in app.session.flashbag.all %}
@@ -19,19 +17,13 @@
 
         {{ form_errors(form) }}
 
-        <h2>{{ 'entity.edit.info.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.edit.info.html'|trans|raw }}</div>
+        <h2>{{ ('entity.edit.info.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.edit.info.' ~ type ~ '.html')|trans|raw }}</div>
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'entity.edit.general.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.edit.general.html'|trans|raw }}</div>
-        {{ form_widget(form.general) }}
-    </div>
-
-    <div class="fieldset card">
-        <h2>{{ 'entity.edit.metadata.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.edit.metadata.html'|trans|raw }}</div>
+        <h2>{{ ('entity.edit.metadata.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.edit.metadata.' ~ type ~ '.html')|trans|raw }}</div>
         {{ form_widget(form.metadata) }}
     </div>
 
@@ -42,8 +34,8 @@
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'entity.edit.attributes.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.edit.attributes.html'|trans|raw }}</div>
+        <h2>{{ ('entity.edit.attributes.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.edit.attributes.' ~ type ~ '.html')|trans|raw }}</div>
         {{ form_widget(form.attributes) }}
     </div>
 

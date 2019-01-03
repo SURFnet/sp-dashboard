@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class EntityCreateTest extends WebTestCase
+class EntitySamlCreateSamlTest extends WebTestCase
 {
     public function setUp()
     {
@@ -40,7 +40,7 @@ class EntityCreateTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
@@ -70,7 +70,7 @@ class EntityCreateTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
@@ -93,7 +93,7 @@ class EntityCreateTest extends WebTestCase
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
@@ -111,7 +111,7 @@ class EntityCreateTest extends WebTestCase
 
         $crawler = $this->client->followRedirect();
         $pageTitle = $crawler->filter('h1')->first()->text();
-        $message = $crawler->filter('.page-container .card')->first()->text();
+        $message = $crawler->filter('.page-container .card')->eq(1)->text();
 
         $this->assertContains("Entities of service 'Ibuildings B.V.'", $pageTitle);
         $this->assertContains('There are no entities configured', $message);
@@ -121,7 +121,7 @@ class EntityCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Save')
@@ -153,7 +153,7 @@ class EntityCreateTest extends WebTestCase
         // manually (not using the import feature).
         unset($formData['dashboard_bundle_entity_type']['nameIdFormat']);
 
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Save')
@@ -178,7 +178,7 @@ class EntityCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -211,7 +211,7 @@ class EntityCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -254,7 +254,7 @@ class EntityCreateTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
@@ -297,7 +297,7 @@ class EntityCreateTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entity/create/production');
+        $crawler = $this->client->request('GET', '/entity/create/saml20/production');
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -311,7 +311,7 @@ class EntityCreateTest extends WebTestCase
 
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', '/entity/create/production');
+        $crawler = $this->client->request('GET', '/entity/create/saml20/production');
 
         $form = $crawler
             ->selectButton('Save')
@@ -332,10 +332,9 @@ class EntityCreateTest extends WebTestCase
         $crawler = $this->client->followRedirect();
 
         // Assert the entity is saved for the production environment.
-        $row = $crawler->filter('table tbody tr')->eq(0);
+        $row = $crawler->filter('table tbody tr')->eq(1);
 
         $this->assertEquals('https://entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
-        $this->assertEquals('production', $row->filter('td')->eq(4)->text(), 'Environment not found in entity list');
     }
 
     public function test_it_imports_multiple_entity_descriptor_metadata_with_a_single_entity()
@@ -349,7 +348,7 @@ class EntityCreateTest extends WebTestCase
                 ],
             ],
         ];
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
@@ -377,7 +376,7 @@ class EntityCreateTest extends WebTestCase
                 ],
             ],
         ];
-        $crawler = $this->client->request('GET', "/entity/create");
+        $crawler = $this->client->request('GET', "/entity/create/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
@@ -392,12 +391,13 @@ class EntityCreateTest extends WebTestCase
             'Expected an error message for unsupported multiple entities in metadata.'
         );
     }
+    
+
     private function buildValidFormData()
     {
         return [
             'dashboard_bundle_entity_type' => [
                 'metadata' => [
-                    'nameIdFormat' => Entity::NAME_ID_FORMAT_DEFAULT,
                     'descriptionNl' => 'Description NL',
                     'descriptionEn' => 'Description EN',
                     'nameEn' => 'The A Team',

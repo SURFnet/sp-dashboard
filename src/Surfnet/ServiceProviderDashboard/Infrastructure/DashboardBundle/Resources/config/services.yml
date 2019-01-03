@@ -10,19 +10,6 @@ services:
         resource: '../../Security/Voter'
         tags: ['security.voter']
 
-    surfnet.dashboard.command_handler.copy_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CopyEntityCommandHandler
-        arguments:
-           - '@tactician.commandbus.default'
-           - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-           - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
-           - '@surfnet.manage.client.query_client.prod_environment'
-           - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
-
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CopyEntityCommand }
-
     surfnet.dashboard.command_handler.create_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
         public: true
@@ -64,11 +51,17 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand }
 
-    surfnet.dashboard.command_handler.edit_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveEntityCommandHandler
+    surfnet.dashboard.command_handler.edit_saml_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveSamlEntityCommandHandler
         public: true
         tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand }
+
+    surfnet.dashboard.command_handler.edit_oidc_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand }
 
     surfnet.dashboard.command_handler.edit_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
@@ -162,6 +155,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
@@ -209,6 +205,14 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: entity_id }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidClientIdValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+        tags:
+            - { name: validator.constraint_validator, alias: client_id }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
         arguments:  ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper']
         tags:
@@ -244,6 +248,17 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@router'
             - '@logger'
+            - '%playground_uri_test%'
+            - '%playground_uri_prod%'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+            - '%playground_uri_test%'
+            - '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider:
         arguments:

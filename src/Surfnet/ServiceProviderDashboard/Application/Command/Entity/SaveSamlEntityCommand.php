@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @SpDashboardAssert\HasAttributes()
  */
-class SaveEntityCommand implements Command
+class SaveSamlEntityCommand implements Command
 {
     /**
      * @var string
@@ -52,11 +52,6 @@ class SaveEntityCommand implements Command
      * @var Service
      */
     private $service;
-
-    /**
-     * @var string
-     */
-    private $ticketNumber;
 
     /**
      * @var bool
@@ -375,7 +370,7 @@ class SaveEntityCommand implements Command
 
     /**
      * @param Service $service
-     * @return SaveEntityCommand
+     * @return SaveSamlEntityCommand
      */
     public static function forCreateAction(Service $service)
     {
@@ -387,7 +382,7 @@ class SaveEntityCommand implements Command
     /**
      * @param Entity $entity
      *
-     * @return SaveEntityCommand
+     * @return SaveSamlEntityCommand
      */
     public static function fromEntity(Entity $entity)
     {
@@ -396,7 +391,6 @@ class SaveEntityCommand implements Command
         $command->status = $entity->getStatus();
         $command->manageId = $entity->getManageId();
         $command->service = $entity->getService();
-        $command->ticketNumber = $entity->getTicketNumber();
         $command->archived = $entity->isArchived();
         $command->environment = $entity->getEnvironment();
         $command->importUrl = $entity->getImportUrl();
@@ -467,14 +461,6 @@ class SaveEntityCommand implements Command
     }
 
     /**
-     * @return string
-     */
-    public function getTicketNumber()
-    {
-        return $this->ticketNumber;
-    }
-
-    /**
      * @return bool
      */
     public function isArchived()
@@ -513,14 +499,6 @@ class SaveEntityCommand implements Command
         }
 
         $this->environment = $environment;
-    }
-
-    /**
-     * @param string $ticketNo
-     */
-    public function setTicketNumber($ticketNo)
-    {
-        $this->ticketNumber = $ticketNo;
     }
 
     /**
@@ -1173,7 +1151,7 @@ class SaveEntityCommand implements Command
     /**
      * @param Service $service
      */
-    public function setService($service)
+    public function setService(Service $service)
     {
         $this->service = $service;
     }

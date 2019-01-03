@@ -3,3 +3,7 @@ interface JQueryStatic {
   // The modal function is used to override the modal default configuration settings: `$.modal.defaults = {}`
   modal: any;
 }
+
+interface JQuery {
+  modal(): JQueryStatic;
+}

@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Mockery as m;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\HasAttributes;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\HasAttributesValidator;
@@ -37,7 +37,7 @@ class HasAttributesValidatorTest extends ConstraintValidatorTestCase
         $attribute = new Attribute();
         $attribute->setRequested(true);
 
-        $command = m::mock(SaveEntityCommand::class);
+        $command = m::mock(SaveSamlEntityCommand::class);
         $command->makePartial();
         $command->shouldReceive('getGivenNameAttribute')->andReturn($attribute);
 
@@ -51,7 +51,7 @@ class HasAttributesValidatorTest extends ConstraintValidatorTestCase
         $attribute = new Attribute();
         $attribute->setRequested(false);
 
-        $command = m::mock(SaveEntityCommand::class);
+        $command = m::mock(SaveSamlEntityCommand::class);
         $command->makePartial();
         $command->shouldReceive('getGivenNameAttribute')->andReturn($attribute);
 
@@ -65,7 +65,7 @@ class HasAttributesValidatorTest extends ConstraintValidatorTestCase
 
     public function test_failure_null_values()
     {
-        $command = m::mock(SaveEntityCommand::class);
+        $command = m::mock(SaveSamlEntityCommand::class);
         $command->makePartial();
         $command->shouldReceive('getGivenNameAttribute')->andReturn(null);
 

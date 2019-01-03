@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -32,10 +33,15 @@ class EntityDetailController extends Controller
      * @var EntityServiceInterface
      */
     private $entityService;
+    /**
+     * @var ServiceService
+     */
+    private $serviceService;
 
-    public function __construct(EntityServiceInterface $entityService)
+    public function __construct(EntityServiceInterface $entityService, ServiceService $serviceService)
     {
         $this->entityService = $entityService;
+        $this->serviceService = $serviceService;
     }
 
     /**
@@ -54,7 +60,8 @@ class EntityDetailController extends Controller
         // First try to read the entity from the local storage
         $entity = $this->entityService->getEntityById($id);
         if (!$entity) {
-            $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $serviceId);
+            $service = $this->serviceService->getServiceById($serviceId);
+            $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
         }
         $viewObject = EntityDetail::fromEntity($entity);
 

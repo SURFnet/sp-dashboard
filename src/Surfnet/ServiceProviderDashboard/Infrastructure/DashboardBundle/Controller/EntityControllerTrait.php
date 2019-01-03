@@ -23,13 +23,14 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntit
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
@@ -62,33 +63,46 @@ trait EntityControllerTrait
      * @var AuthorizationService
      */
     private $authorizationService;
+    /**
+     * @var EntityTypeFactory
+     */
+    private $entityTypeFactory;
+    /**
+     * @var LoadEntityService
+     */
+    private $loadEntityService;
 
     /**
      * @param CommandBus $commandBus
      * @param EntityService $entityService
      * @param ServiceService $serviceService
      * @param AuthorizationService $authorizationService
-     * @param MailMessageFactory $mailMessageFactory
+     * @param EntityTypeFactory $entityTypeFactory
+     * @param LoadEntityService $loadEntityService
      */
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         ServiceService $serviceService,
-        AuthorizationService $authorizationService
+        AuthorizationService $authorizationService,
+        EntityTypeFactory $entityTypeFactory,
+        LoadEntityService $loadEntityService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->serviceService = $serviceService;
         $this->authorizationService = $authorizationService;
+        $this->entityTypeFactory = $entityTypeFactory;
+        $this->loadEntityService = $loadEntityService;
     }
 
     /**
      * @param Request $request
-     * @param SaveEntityCommand $command
+     * @param SaveSamlEntityCommand $command
      *
      * @return Form
      */
-    private function handleImport(Request $request, SaveEntityCommand $command)
+    private function handleImport(Request $request, SaveSamlEntityCommand $command)
     {
         // Handle an import action based on the posted xml or import url.
         $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
@@ -107,7 +121,7 @@ trait EntityControllerTrait
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
         }
 
-        $form = $this->createForm(EntityType::class, $command);
+        $form = $this->createForm(SamlEntityType::class, $command);
 
         if ($command->getStatus() === Entity::STATE_PUBLISHED) {
             $form->remove('save');
@@ -221,14 +235,5 @@ trait EntityControllerTrait
     private function isCancelAction(Form $form)
     {
         return $this->assertUsedSubmitButton($form, 'cancel');
-    }
-
-    private function buildOptions($environment)
-    {
-        $options = [];
-        if ($environment === Entity::ENVIRONMENT_PRODUCTION) {
-            $options = ['validation_groups' => ['Default', 'production']];
-        }
-        return $options;
     }
 }

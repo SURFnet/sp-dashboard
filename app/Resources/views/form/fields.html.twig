@@ -40,7 +40,6 @@
     {%- endfor -%}
 {%- endblock attributes -%}
 
-
 {%- block form_row -%}
     <div class="form-row{% if errors is not empty %} error {% endif %}">
         {{- form_label(form) -}}
@@ -114,6 +113,21 @@
         {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded -%}
+
+{# A collection widget is used to add multiple redirect uris #}
+{%- block collection_widget -%}
+    <div class="collection-widget" data-prototype="{{ form_widget(form.vars.prototype)|e }}">
+        <ul class="collection-list">
+            {%- for child in form %}
+                <li class="collection-entry">
+                    {{- form_widget(child,  {'attr': {'readonly': 'readonly'}}) -}}
+                    <button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button>
+                    {{- form_errors(child) -}}
+                </li>
+            {% endfor -%}
+        </ul>
+    </div>
+{%- endblock collection_widget -%}
 
 {# Override the form_label to enable us to output anchors in form labels. #}
 {%- block form_label -%}

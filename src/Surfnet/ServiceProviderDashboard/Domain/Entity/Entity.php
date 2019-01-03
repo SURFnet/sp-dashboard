@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
@@ -44,6 +45,7 @@ class Entity
     // When adding valid name id formats, don't forget to add them to self::getValidNameIdFormats()
     const NAME_ID_FORMAT_DEFAULT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
     const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
+    const NAME_ID_FORMAT_UNSPECIFIED = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
 
     const ENVIRONMENT_TEST = 'test';
     const ENVIRONMENT_PRODUCTION = 'production';
@@ -103,12 +105,6 @@ class Entity
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    private $ticketNo;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
     private $manageId;
 
     /**
@@ -130,6 +126,36 @@ class Entity
      * @ORM\Column(type="text", nullable=true)
      */
     private $pastedMetadata;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, length=50)
+     */
+    private $clientSecret;
+
+    /**
+     * @var string[]
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    private $redirectUris;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, length=50)
+     */
+    private $grantType;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enablePlayground;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, length=50)
+     */
+    private $protocol;
 
     /**
      * SAML XML Metadata for entity.
@@ -370,11 +396,18 @@ class Entity
     /**
      * @param ManageEntity $manageEntity
      * @param string $environment
-     * @param int $serviceId
+     * @param Service $service
+     * @param string $playGroundUriProd
+     * @param string $playGroundUriTest
      * @return Entity
      */
-    public static function fromManageResponse(ManageEntity $manageEntity, $environment, $serviceId)
-    {
+    public static function fromManageResponse(
+        ManageEntity $manageEntity,
+        $environment,
+        Service $service,
+        $playGroundUriTest = '',
+        $playGroundUriProd = ''
+    ) {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
         $arp = $manageEntity->getAttributes();
@@ -385,10 +418,7 @@ class Entity
         $entity->setStatus($manageEntity->getStatus());
         $entity->setManageId($manageEntity->getId());
         $entity->setEntityId($metaData->getEntityId());
-        $entity->setMetadataUrl($metaData->getMetaDataUrl());
-        $entity->setAcsLocation($metaData->getAcsLocation());
-        $entity->setNameIdFormat($metaData->getNameIdFormat());
-        $entity->setCertificate($metaData->getCertData());
+        $entity->setManageId($manageEntity->getId());
         $entity->setDescriptionEn($metaData->getDescriptionEn());
         $entity->setDescriptionNl($metaData->getDescriptionNl());
         $entity->setNameEn($metaData->getNameEn());
@@ -402,6 +432,34 @@ class Entity
         $entity->setOrganizationUrlNl($metaData->getOrganization()->getUrlNl());
         $entity->setApplicationUrl($coin->getApplicationUrl());
         $entity->setEulaUrl($coin->getEula());
+
+        // OIDC specific
+        if ($metaData->getCoin()->getOidcClient()) {
+            $oidcClient = $manageEntity->getOidcClient();
+
+            $entity->setClientSecret($oidcClient->getClientSecret());
+            $entity->setRedirectUris($oidcClient->getRedirectUris());
+            $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+
+            $playGroundUri = ($environment == self::ENVIRONMENT_PRODUCTION ? $playGroundUriProd : $playGroundUriTest);
+            $entity->setEnablePlayground(false);
+            if (in_array($playGroundUri, $oidcClient->getRedirectUris())) {
+                $entity->setEnablePlayground(true);
+            }
+
+            $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+        }
+
+        // SAML specific
+        if (!$metaData->getCoin()->getOidcClient()) {
+            $entity->setProtocol(Entity::TYPE_SAML);
+
+            $entity->setImportUrl($metaData->getEntityId());
+            $entity->setMetadataUrl($metaData->getMetaDataUrl());
+            $entity->setAcsLocation($metaData->getAcsLocation());
+            $entity->setNameIdFormat($metaData->getNameIdFormat());
+            $entity->setCertificate($metaData->getCertData());
+        }
 
         $administrative = $metaData->getContacts()->findAdministrativeContact();
         if ($administrative) {
@@ -435,8 +493,6 @@ class Entity
 
         self::setAttributesOn($entity, $arp);
 
-        $service = new Service();
-        $service->setId($serviceId);
         $entity->setService($service);
 
         return $entity;
@@ -444,7 +500,8 @@ class Entity
 
     private static function setAttributesOn($entity, AttributeList $attributeList)
     {
-        $attributeRepository = new AttributesMetadataRepository('../app/Resources');
+        $resourcePath = realpath(__DIR__.'/../../../../../app/Resources');
+        $attributeRepository = new AttributesMetadataRepository($resourcePath);
         // Copy the ARP attributes to the new entity based on the data from manage.
         foreach ($attributeRepository->findAll() as $attributeDefinition) {
             $urn = reset($attributeDefinition->urns);
@@ -480,14 +537,6 @@ class Entity
     public function setService($service)
     {
         $this->service = $service;
-    }
-
-    /**
-     * @param string $ticketNumber
-     */
-    public function setTicketNumber($ticketNumber)
-    {
-        $this->ticketNo = $ticketNumber;
     }
 
     /**
@@ -805,14 +854,6 @@ class Entity
     /**
      * @return string
      */
-    public function getTicketNumber()
-    {
-        return $this->ticketNo;
-    }
-
-    /**
-     * @return string
-     */
     public function getEnvironment()
     {
         return $this->environment;
@@ -891,6 +932,86 @@ class Entity
     }
 
     /**
+     * @return string
+     */
+    public function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
+
+    /**
+     * @param string $clientSecret
+     */
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRedirectUris()
+    {
+        return $this->redirectUris;
+    }
+
+    /**
+     * @param string[] $redirectUris
+     */
+    public function setRedirectUris($redirectUris)
+    {
+        $this->redirectUris = $redirectUris;
+    }
+
+    /**
+     * @return OidcGrantType
+     */
+    public function getGrantType()
+    {
+        return new OidcGrantType($this->grantType);
+    }
+
+    /**
+     * @param OidcGrantType $grantType
+     */
+    public function setGrantType(OidcGrantType $grantType)
+    {
+        $this->grantType = $grantType->getGrantType();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnablePlayground()
+    {
+        return $this->enablePlayground;
+    }
+
+    /**
+     * @param bool $enablePlayground
+     */
+    public function setEnablePlayground($enablePlayground)
+    {
+        $this->enablePlayground = $enablePlayground;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+
+    /**
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
+    }
+
+    /**
      * The binding of the ACS URL is always POST.
      *
      * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
@@ -929,6 +1050,16 @@ class Entity
     public function getEntityId()
     {
         return $this->entityId;
+    }
+
+    /**
+     * The client id is the entity id where the semicolon in the protocol has been replaced with an at sign.
+     *
+     * @return string
+     */
+    public function getClientId()
+    {
+        return str_replace('://', '@//', $this->entityId);
     }
 
     /**

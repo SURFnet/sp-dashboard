@@ -47,34 +47,55 @@ entity:
       email: Email
       phone: Phone
     attribute:
-      title: Attributes
-      html: <strong>information about the attribute fields</strong>
-      motivation: Motivation
-      given_name: Given name
-      surname: Surname
-      common_name: Common name attribute
-      display_name: Display name attribute
-      email_address: Email address attribute
-      organization: Organization attribute
-      organization_type: Organization type attribute
-      affiliation: Affiliation attribute
-      entitlement: Entitlement attribute
-      principle_name: Principle name attribute
-      uid: Uid attribute
-      prefered_language: Preferred language attribute
-      personal_code: Personal code attribute
-      scoped_affiliation: Scoped affiliation attribute
-      edu_person_targetted_id: Edu person targeted ID attribute
+      saml20:
+        title: Attributes
+        html: <strong>information about the attribute fields</strong>
+        motivation: Motivation
+        given_name: Given name
+        surname: Surname
+        common_name: Common name attribute
+        display_name: Display name attribute
+        email_address: Email address attribute
+        organization: Organization attribute
+        organization_type: Organization type attribute
+        affiliation: Affiliation attribute
+        entitlement: Entitlement attribute
+        principle_name: Principle name attribute
+        uid: Uid attribute
+        prefered_language: Preferred language attribute
+        personal_code: Personal code attribute
+        scoped_affiliation: Scoped affiliation attribute
+        edu_person_targetted_id: Edu person targeted ID attribute
+      oidc:
+        title: Attributes
+        html: <strong>information about the attribute fields</strong>
+        motivation: Motivation
+        given_name: Given name
+        surname: Surname
+        common_name: Common name attribute
+        display_name: Display name attribute
+        email_address: Email address attribute
+        organization: Organization attribute
+        organization_type: Organization type attribute
+        affiliation: Affiliation attribute
+        entitlement: Entitlement attribute
+        principle_name: Principle name attribute
+        uid: Uid attribute
+        prefered_language: Preferred language attribute
+        personal_code: Personal code attribute
+        scoped_affiliation: Scoped affiliation attribute
+        edu_person_targetted_id: Edu person targeted ID attribute
 
 entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
 entity.list.no_service_selected: Please select a service
-entity.list.add_to_test: Add for test
-entity.list.add_to_production: Add for production
+entity.list.add_to_test: Add new entity
+entity.list.add_to_production: Add new entity
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
 entity.list.primary_contact: Primary contact
+entity.list.protocol: State
 entity.list.environment: Environment
 entity.list.state: State
 entity.list.action.back: Back to overview
@@ -83,11 +104,55 @@ entity.list.action.edit: Edit
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
+entity.list.table.title.test: Test environment (engine.test.surfconext.nl)
+entity.list.table.title.prod: Production environment (engine.surfconext.nl)
+entity.list.modal.oidc_confirmation:
+  title: Confirmation
+  client_id:
+    label: ClientID
+  client_secret:
+    label: Secret
+  warning: This message will be displayed only once
+  info.html: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 entity.edit.error.publish: "Unable to publish the entity, try again later"
 entity.edit.error.push: "Unable to publish the entity, try again later"
 entity.edit.title: Service Provider registration form
-entity.edit.info.title: Info
-entity.edit.info.html: "
+entity.edit.info.saml20.title: Info
+entity.edit.info.saml20.html: "
+<p>Documentation about this SP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
+
+<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
+In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
+<ul>
+<li>Various contacts responsible for the entity. Support, administrative and technical
+should be present.</li>
+<li>Information about SAML 2.0 configuration.</li>
+<li>Metadata information including URL, certificate and logo of your entity.</li>
+<li>A list of the attributes your Service Provider requires to operate.</li>
+</ul>
+
+<p>
+<strong>Publish</strong>
+When all fields are filled in correctly you can publish the configuration to the SURFconext test environment. The service will be available directly for testing.
+</p>
+
+<p>
+<strong>Update</strong>
+The configuration can be modified whenever you see fit. Just change the fields, press 'update' and 'confirm'. The changes are available instantenously.
+</p>
+
+
+<p>
+<strong>Production</strong>
+When tests are successful you can request a production connection. Simply press the button 'to production' to initiate this process.
+<strong>Note:</strong> your service can get production status only if the required contracts are in place.
+</p>
+
+<p>If there are any questions during completion of the form don’t hesitate to mail to support@surfconext.nl. Please add the ticket number to the subject (CXT-...).</p>
+"
+entity.edit.info.oidc.title: Info
+entity.edit.info.oidc.html: "
 <p>Documentation about this SP registration form can be found at:
 <a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
 
@@ -123,10 +188,12 @@ When tests are successful you can request a production connection. Simply press 
 entity.edit.general.title: General
 entity.edit.general.html: "<p>Enter/edit your contact information below. We will use this information in case we have additional questions.</p>"
 entity.edit.metadata.fetch.exception: "Unable to load the metadata from the provided import url."
-entity.edit.metadata.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
+entity.edit.metadata.saml20.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
+entity.edit.metadata.oidc.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
 entity.edit.metadata.validation-failed: "Warning! Some entries are missing or incorrect. Please review and fix those entries below."
-entity.edit.metadata.title: Metadata
+entity.edit.metadata.saml20.title: Metadata
+entity.edit.metadata.oidc.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
 entity.edit.contact_information.title: Contact information
 entity.edit.contact_information.html: "
@@ -141,8 +208,16 @@ entity.edit.contact_information.html: "
 <p><i>Technical and administrative contact details will not be communicated to end-users.</i></p>
 "
 entity.edit.attribute_input_placeholder: The service will use this attribute to...
-entity.edit.attributes.title: Attributes
-entity.edit.attributes.html: "
+entity.edit.attributes.saml20.title: Attributes
+entity.edit.attributes.saml20.html: "
+<p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a entity. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
+
+<p>Possibly some boxes have already been checked. This information is reused from the metadata.</p>
+
+<p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
+"
+entity.edit.attributes.oidc.title: Attributes
+entity.edit.attributes.oidc.html: "
 <p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a entity. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
 
 <p>Possibly some boxes have already been checked. This information is reused from the metadata.</p>
@@ -151,11 +226,12 @@ entity.edit.attributes.html: "
 "
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
-entity.edit.information.ticketNumber: Text should be set in web translations
 entity.edit.information.importUrl: Text should be set in web translations
 entity.edit.information.metadataUrl: Text should be set in web translations
 entity.edit.information.acsLocation: Text should be set in web translations
 entity.edit.information.entityId: Text should be set in web translations
+entity.edit.information.clientId: Text should be set in web translations
+entity.edit.information.redirectUris: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations
 entity.edit.information.logoUrl: Text should be set in web translations
@@ -188,6 +264,11 @@ entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.motivation.keep_talking: 'Please provide a more detailed motivation.'
 entity.edit.label.transient: Transient
 entity.edit.label.persistent: Persistent
+entity.edit.label.authorization_code: Authorization code
+entity.edit.label.implicit: Implicit
+entity.edit.label.authorization_code_token: response_type=id_token
+entity.edit.label.implicit_id_token_token: response_type=id_token token
+entity.edit.label.implicit_id_token: response_type=id_token
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
@@ -275,7 +356,7 @@ service.overview.progress.label.entity-on-test: "Entity\non\ntest"
 service.overview.progress.label.contract-signed: "Contract\nsigned"
 service.overview.progress.label.representative-approved: "Approved\nby\nrepresentative"
 service.overview.progress.label.privacy-questions: "Privacy\nquestions\nanswered"
-service.overview.progress.label.production-connection: "Production\nconnection\naquired"
+service.overview.progress.label.production-connection: "Production\nconnection\nacquired"
 service.overview.progress.tooltip.intake-conducted.success.html: "Thank you\nthe intake was completed"
 service.overview.progress.tooltip.intake-conducted.info.html: "Is the intake done?"
 service.overview.progress.tooltip.entity-on-test.success.html: 'Thank you<br> there is a entity on the test environment<br><a href="/">more info</a>'
@@ -297,3 +378,35 @@ mail.confirmation.publish_production.service_name: Service name
 mail.confirmation.publish_production.publish_date: Publish date
 mail.confirmation.publish_production.team_id: Team id
 mail.confirmation.publish_production.subject: 'Production connection has been requested (%entityId%)'
+
+entity.edit.form.attributes.oidc.givenNameAttribute: Given name attribute
+entity.edit.form.attributes.oidc.surNameAttribute: Sur name attribute
+entity.edit.form.attributes.oidc.commonNameAttribute: Common name attribute
+entity.edit.form.attributes.oidc.displayNameAttribute: Display name attribute
+entity.edit.form.attributes.oidc.emailAddressAttribute: Email address attribute
+entity.edit.form.attributes.oidc.organizationAttribute: Organization attribute
+entity.edit.form.attributes.oidc.organizationTypeAttribute: Organization type attribute
+entity.edit.form.attributes.oidc.affiliationAttribute: Affiliation attribute
+entity.edit.form.attributes.oidc.entitlementAttribute: Entitlement attribute
+entity.edit.form.attributes.oidc.principleNameAttribute: Principle name attribute
+entity.edit.form.attributes.oidc.uidAttribute: Uid attribute
+entity.edit.form.attributes.oidc.preferredLanguageAttribute: Preferred language attribute
+entity.edit.form.attributes.oidc.personalCodeAttribute: Personal code attribute
+entity.edit.form.attributes.oidc.scopedAffiliationAttribute: Scoped affiliation attribute
+entity.edit.form.attributes.oidc.eduPersonTargetedIDAttribute: Edu person targeted ID attribute
+
+entity.edit.form.attributes.saml20.givenNameAttribute: Given name attribute
+entity.edit.form.attributes.saml20.surNameAttribute: Sur name attribute
+entity.edit.form.attributes.saml20.commonNameAttribute: Common name attribute
+entity.edit.form.attributes.saml20.displayNameAttribute: Display name attribute
+entity.edit.form.attributes.saml20.emailAddressAttribute: Email address attribute
+entity.edit.form.attributes.saml20.organizationAttribute: Organization attribute
+entity.edit.form.attributes.saml20.organizationTypeAttribute: Organization type attribute
+entity.edit.form.attributes.saml20.affiliationAttribute: Affiliation attribute
+entity.edit.form.attributes.saml20.entitlementAttribute: Entitlement attribute
+entity.edit.form.attributes.saml20.principleNameAttribute: Principle name attribute
+entity.edit.form.attributes.saml20.uidAttribute: Uid attribute
+entity.edit.form.attributes.saml20.preferredLanguageAttribute: Preferred language attribute
+entity.edit.form.attributes.saml20.personalCodeAttribute: Personal code attribute
+entity.edit.form.attributes.saml20.scopedAffiliationAttribute: Scoped affiliation attribute
+entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute: Edu person targeted ID attribute
