@@ -85,7 +85,8 @@ class SaveOidcEntityCommand implements Command
      * @var string[]
      * @Assert\Count(
      *      min = 1,
-     *      max = 1000
+     *      max = 1000,
+     *      minMessage = "You need to add a minimum of {{ limit }} redirect URI.|You need to add a minimum of {{ limit }} redirect URI's.",
      * )
      * @Assert\All({
      *     @Assert\NotBlank(),

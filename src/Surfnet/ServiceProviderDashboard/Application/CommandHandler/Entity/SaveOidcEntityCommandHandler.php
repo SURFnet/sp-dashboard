@@ -68,7 +68,6 @@ class SaveOidcEntityCommandHandler implements CommandHandler
             $entity->setService($command->getService());
             $entity->setClientSecret($secret->getSecret());
             $command->setId($id);
-            $command->setClientSecret($secret->getSecret());
         } else {
             $entity = $this->repository->findById($command->getId());
         }

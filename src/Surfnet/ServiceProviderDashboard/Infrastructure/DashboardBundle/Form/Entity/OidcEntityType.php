@@ -66,6 +66,7 @@ class OidcEntityType extends AbstractType
                         'redirectUris',
                         CollectionType::class,
                         [
+                            'error_bubbling' => false,
                             'prototype' => true,
                             'allow_add' => true,
                             'allow_delete' => true,
