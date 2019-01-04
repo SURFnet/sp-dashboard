@@ -115,7 +115,6 @@ class CollectionWidget {
     $addEntryButton.on('click', handleAddClick);
   }
 
-
   /**
    * Add submit handler to add data entered but ot already added to the collection
    * @param $addEntryButton
@@ -127,7 +126,7 @@ class CollectionWidget {
         $addEntryButton.click();
       }
     };
-    let $form = this.$collectionWidget.closest("form");
+    const $form = this.$collectionWidget.closest('form');
     $form.on('submit', handleBeforeSubmit);
   }
 }
