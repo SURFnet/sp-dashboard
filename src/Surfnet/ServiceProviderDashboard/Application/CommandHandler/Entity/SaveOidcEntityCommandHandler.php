@@ -61,12 +61,9 @@ class SaveOidcEntityCommandHandler implements CommandHandler
                 );
             }
 
-            $secret = new Secret(20);
-
             $entity = new Entity();
             $entity->setId($id);
             $entity->setService($command->getService());
-            $entity->setClientSecret($secret->getSecret());
             $command->setId($id);
         } else {
             $entity = $this->repository->findById($command->getId());
@@ -74,6 +71,11 @@ class SaveOidcEntityCommandHandler implements CommandHandler
 
         if (is_null($entity)) {
             throw new EntityNotFoundException('The requested Service cannot be found');
+        }
+
+        if (!$command->getManageId()) {
+            $secret = new Secret(Entity::OIDC_SECRET_LENGTH);
+            $entity->setClientSecret($secret->getSecret());
         }
 
         $entity->setService($command->getService());
