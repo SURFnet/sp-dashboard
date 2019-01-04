@@ -20,6 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class EntityActions
 {
     /**
@@ -43,17 +46,23 @@ class EntityActions
     private $environment;
 
     /**
+     * @var string
+     */
+    private $protocol;
+
+    /**
      * @param string $id
      * @param int $serviceId
      * @param string $status
      * @param string $environment
      */
-    public function __construct($id, $serviceId, $status, $environment)
+    public function __construct($id, $serviceId, $status, $environment, $protocol)
     {
         $this->id = $id;
         $this->serviceId = $serviceId;
         $this->status = $status;
         $this->environment = $environment;
+        $this->protocol = $protocol;
     }
 
     public function getId()
@@ -110,6 +119,16 @@ class EntityActions
     {
         return !$this->isDeleteRequested();
     }
+
+    /**
+     * @return bool
+     */
+    public function allowSecretResetAction()
+    {
+        return $this->protocol == DomainEntity::TYPE_OPENID_CONNECT &&
+            ($this->status == DomainEntity::STATE_PUBLISHED || $this->status == DomainEntity::STATE_PUBLICATION_REQUESTED);
+    }
+
 
     public function isPublishedToProduction()
     {

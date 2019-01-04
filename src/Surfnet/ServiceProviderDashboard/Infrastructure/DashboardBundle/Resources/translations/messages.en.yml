@@ -85,7 +85,6 @@ entity:
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
         edu_person_targetted_id: Edu person targeted ID attribute
-
 entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
@@ -104,6 +103,7 @@ entity.list.action.edit: Edit
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
+entity.list.action.reset_secret: Reset client secret
 entity.list.table.title.test: Test environment (engine.test.surfconext.nl)
 entity.list.table.title.prod: Production environment (engine.surfconext.nl)
 entity.list.modal.oidc_confirmation:
@@ -410,3 +410,7 @@ entity.edit.form.attributes.saml20.preferredLanguageAttribute: Preferred languag
 entity.edit.form.attributes.saml20.personalCodeAttribute: Personal code attribute
 entity.edit.form.attributes.saml20.scopedAffiliationAttribute: Scoped affiliation attribute
 entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute: Edu person targeted ID attribute
+
+entity.actions.modal.oidc_client_reset.title: Confirmation
+entity.actions.modal.oidc_client_reset.warning: This action cannot be undone
+entity.actions.modal.oidc_client_reset.info.html: <p>Are you sure you would like to reset the openid connect client secret.</p>

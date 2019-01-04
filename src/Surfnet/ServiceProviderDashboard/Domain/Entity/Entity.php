@@ -58,6 +58,8 @@ class Entity
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT = 'oidc';
 
+    const OIDC_SECRET_LENGTH = 20;
+
     /**
      * @var string
      *

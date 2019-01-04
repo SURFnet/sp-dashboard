@@ -116,6 +116,15 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
 
+    surfnet.dashboard.command_handler.reset_oidc_secret:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\ResetOidcSecretCommandHandler
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand }
+
     surfnet.dashboard.command_handler.reset_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service\ResetServiceCommandHandler
         public: true
