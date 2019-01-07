@@ -72,6 +72,14 @@ class OidcEntityType extends AbstractType
                             'allow_delete' => true,
                             'required' => false,
                             'entry_type' => TextType::class,
+                            'entry_options' => [
+                                'attr' => [
+                                    'data-parsley-redirecturis' => null,
+                                    'data-parsley-uri' => null,
+                                    'data-parsley-trigger' => 'blur',
+                                    'data-parsley-validate-if-empty' => null,
+                                ],
+                            ],
                             'attr' => [
                                 'data-help' => 'entity.edit.information.redirectUris',
                             ],

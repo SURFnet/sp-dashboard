@@ -78,6 +78,11 @@ class SaveOidcEntityCommandHandler implements CommandHandler
             throw new EntityNotFoundException('The requested Service cannot be found');
         }
 
+        if (!$command->getManageId()) {
+            $secret = new Secret(Entity::OIDC_SECRET_LENGTH);
+            $entity->setClientSecret($secret->getSecret());
+        }
+
         $entity->setService($command->getService());
         $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());

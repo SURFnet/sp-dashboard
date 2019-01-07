@@ -52,6 +52,7 @@ class CollectionWidget {
     });
 
     this.registerAddClickHandler($addEntryButton);
+    this.registerBeforeSubmitHandler($addEntryButton);
   }
 
   /**
@@ -112,6 +113,21 @@ class CollectionWidget {
       this.addCollectionEntry();
     };
     $addEntryButton.on('click', handleAddClick);
+  }
+
+  /**
+   * Add submit handler to add data entered but ot already added to the collection
+   * @param $addEntryButton
+   */
+  private registerBeforeSubmitHandler($addEntryButton: JQuery<HTMLElement>) {
+    const handleBeforeSubmit = () => {
+      const value = String(this.$input.val());
+      if (value.length > 0) {
+        $addEntryButton.click();
+      }
+    };
+    const $form = this.$collectionWidget.closest('form');
+    $form.on('submit', handleBeforeSubmit);
   }
 }
 
