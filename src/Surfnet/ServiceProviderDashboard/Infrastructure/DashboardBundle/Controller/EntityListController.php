@@ -104,7 +104,7 @@ class EntityListController extends Controller
         // to display the oidc confirmation popup.
         $publishedEntity = $this->get('session')->get('published.entity.clone');
         $showOidcPopup = false;
-        if ($publishedEntity && $publishedEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
+        if ($publishedEntity && $publishedEntity->getClientSecret()) {
             $showOidcPopup = true;
         }
 
