@@ -92,13 +92,6 @@ class ManageEntity
         return $this->status;
     }
 
-    public function getEntityId(){
-        if ($this->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT) {
-            return $this->getOidcClient()->getClientId();
-        }
-        return $this->getMetaData()->getEntityId();
-    }
-
     /**
      * @return OidcClient|null
      */

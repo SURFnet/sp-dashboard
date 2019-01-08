@@ -49,33 +49,33 @@ class OidcEntityType extends AbstractType
     {
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
 
-        if ($options['data']->getManageId() == "") {
+        $metadata
+            ->add(
+                'clientId',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.clientId',
+                        'data-parsley-uri' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            );
+
+        $manageId = $options['data']->getManageId();
+        if (!empty($manageId)) {
+            $metadata->remove('clientId');
             $metadata
                 ->add(
                     'clientId',
                     TextType::class,
                     [
                         'required' => false,
-                        'attr' => [
-                            'data-help' => 'entity.edit.information.clientId',
-                            'data-parsley-uri' => null,
-                            'data-parsley-trigger' => 'blur',
-                        ],
-                    ]
-                );
-        } else {
-            $metadata
-                ->add(
-                    'clientId',
-                    TextType::class,
-                    [
-                        'required' => false,
-                        'disabled' => false,
+                        'disabled' => true,
                         'attr' => [
                             'readonly' => 'readonly',
                             'data-help' => 'entity.edit.information.clientId',
-                            'data-parsley-uri' => null,
-                            'data-parsley-trigger' => 'blur',
                         ],
                     ]
                 );
