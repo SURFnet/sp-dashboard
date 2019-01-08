@@ -138,9 +138,14 @@ class Entity
     {
         $formattedContact = self::formatManageContact($result);
 
+        $entityId = $result->getMetaData()->getEntityId();
+        if ($result->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT) {
+            $entityId = $result->getOidcClient()->getClientId();
+        }
+
         return new self(
             $result->getId(),
-            $result->getEntityId(),
+            $entityId,
             $serviceId,
             $result->getMetaData()->getNameEn(),
             $formattedContact,
@@ -171,9 +176,14 @@ class Entity
             $status = DomainEntity::STATE_PUBLICATION_REQUESTED;
         }
 
+        $entityId = $result->getMetaData()->getEntityId();
+        if ($result->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT) {
+            $entityId = $result->getOidcClient()->getClientId();
+        }
+
         return new self(
             $result->getId(),
-            $result->getEntityId(),
+            $entityId,
             $serviceId,
             $result->getMetaData()->getNameEn(),
             $formattedContact,
