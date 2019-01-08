@@ -140,7 +140,7 @@ class Entity
 
         return new self(
             $result->getId(),
-            $result->getMetaData()->getEntityId(),
+            $result->getEntityId(),
             $serviceId,
             $result->getMetaData()->getNameEn(),
             $formattedContact,
@@ -173,7 +173,7 @@ class Entity
 
         return new self(
             $result->getId(),
-            $result->getMetaData()->getEntityId(),
+            $result->getEntityId(),
             $serviceId,
             $result->getMetaData()->getNameEn(),
             $formattedContact,

@@ -443,6 +443,8 @@ class Entity
             $entity->setRedirectUris($oidcClient->getRedirectUris());
             $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
 
+            $entity->setEntityId($oidcClient->getClientId());
+
             $playGroundUri = ($environment == self::ENVIRONMENT_PRODUCTION ? $playGroundUriProd : $playGroundUriTest);
             $entity->setEnablePlayground(false);
             if (in_array($playGroundUri, $oidcClient->getRedirectUris())) {

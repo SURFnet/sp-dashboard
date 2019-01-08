@@ -265,7 +265,7 @@ class JsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
-        $metadata['clientId'] = str_replace(':', '@', $entity->getEntityId());
+        $metadata['clientId'] = $entity->getEntityId();
         $metadata['clientSecret'] = $entity->getClientSecret();
         $metadata['redirectUris'] = $entity->getRedirectUris();
         $metadata['grantType'] = $entity->getGrantType()->getGrantType();
