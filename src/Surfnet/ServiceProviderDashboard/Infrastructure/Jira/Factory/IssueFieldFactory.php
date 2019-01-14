@@ -112,11 +112,17 @@ class IssueFieldFactory
 
     public function fromTicket(Ticket $ticket)
     {
+        $issueType = $this->issueType;
+        // If the issueType is set on the ticket, override it with that value.
+        if ($ticket->getIssueType()) {
+            $issueType = $ticket->getIssueType();
+        }
+
         $issueField = new IssueField();
         $issueField->setProjectKey("CXT")
             ->setDescription($this->translateDescription($ticket))
             ->setSummary($this->translateSummary($ticket))
-            ->setIssueType($this->issueType)
+            ->setIssueType($issueType)
             ->setPriorityName($this->priority)
             ->setAssigneeName($this->assignee)
             ->setReporterName($this->reporter)

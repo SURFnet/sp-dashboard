@@ -23,6 +23,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
  */
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class Ticket
@@ -37,14 +38,17 @@ class Ticket
     private $applicantName;
     /** @var string */
     private $applicantEmail;
+    /** @var string|null */
+    private $issueType;
 
-    public function __construct($entityId, $manageId, $nameEn, $applicantName, $applicantEmail)
+    public function __construct($entityId, $manageId, $nameEn, $applicantName, $applicantEmail, $issueType)
     {
         $this->entityId = $entityId;
         $this->manageId = $manageId;
         $this->entityName = $nameEn;
         $this->applicantName = $applicantName;
         $this->applicantEmail = $applicantEmail;
+        $this->issueType = $issueType;
     }
 
     public static function fromManageResponse(ManageEntity $entity, Applicant $applicant)
@@ -57,7 +61,26 @@ class Ticket
             $entity->getId(),
             $nameEn,
             $applicant->getDisplayName(),
-            $applicant->getEmailAddress()
+            $applicant->getEmailAddress(),
+            null
+        );
+    }
+
+    /**
+     * @param Entity $entity
+     * @param Applicant $applicant
+     * @param string $issueType
+     * @return Ticket
+     */
+    public static function fromEntity(Entity $entity, Applicant $applicant, $issueType)
+    {
+        return new self(
+            $entity->getEntityId(),
+            $entity->getId(),
+            $entity->getNameEn(),
+            $applicant->getDisplayName(),
+            $applicant->getEmailAddress(),
+            $issueType
         );
     }
 
@@ -84,5 +107,10 @@ class Ticket
     public function getApplicantEmail()
     {
         return $this->applicantEmail;
+    }
+
+    public function getIssueType()
+    {
+        return $this->issueType;
     }
 }

@@ -100,11 +100,10 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
             - '@surfnet.manage.client.publish_client.prod_environment'
-            - '@tactician.commandbus.default'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
-            - '@security.token_storage'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@session.flash_bag'
             - '@logger'
+            - '%jira_issue_type_publication_request%'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
