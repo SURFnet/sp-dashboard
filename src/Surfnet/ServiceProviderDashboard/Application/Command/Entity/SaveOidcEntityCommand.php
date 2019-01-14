@@ -74,7 +74,7 @@ class SaveOidcEntityCommand implements Command
      * @Assert\Url()
      * @SpDashboardAssert\ValidClientId()
      */
-    private $clientId;
+    private $entityId;
 
     /**
      * @var string
@@ -372,7 +372,7 @@ class SaveOidcEntityCommand implements Command
         $command->service = $entity->getService();
         $command->archived = $entity->isArchived();
         $command->environment = $entity->getEnvironment();
-        $command->clientId = $entity->getEntityId();
+        $command->entityId = $entity->getEntityId();
         $command->clientSecret = $entity->getClientSecret();
         $command->redirectUris = $entity->getRedirectUris();
         $command->grantType = $entity->getGrantType();
@@ -482,17 +482,25 @@ class SaveOidcEntityCommand implements Command
     /**
      * @return string
      */
-    public function getClientId()
+    public function getEntityId()
     {
-        return $this->clientId;
+        return $this->entityId;
     }
 
     /**
-     * @param string $clientId
+     * @param string $entityId
      */
-    public function setClientId($clientId)
+    public function setEntityId($entityId)
     {
-        $this->clientId = $clientId;
+        $this->entityId = $entityId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientId()
+    {
+        return str_replace('://', '@//', $this->entityId);
     }
 
     /**

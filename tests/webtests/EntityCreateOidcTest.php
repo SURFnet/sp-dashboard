@@ -104,7 +104,7 @@ class EntityOidcCreateTest extends WebTestCase
 
         // Assert the entity id is in one of the td's of the first table row.
         $entityTr = $crawler->filter('.page-container table tbody tr')->first();
-        $this->assertRegexp('/https:\/\/entity-id/', $entityTr->text());
+        $this->assertRegexp('/https@\/\/entity-id/', $entityTr->text());
     }
 
     public function test_it_can_publish_the_form()
@@ -229,7 +229,7 @@ class EntityOidcCreateTest extends WebTestCase
         // Assert the entity is saved for the production environment.
         $row = $crawler->filter('table tbody tr')->eq(1);
 
-        $this->assertEquals('https://entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
+        $this->assertEquals('https@//entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
     }
 
     private function buildValidFormData()
