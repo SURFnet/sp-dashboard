@@ -156,11 +156,11 @@
     {% endif %}
 
     <div class="modal" id="add-for-test">
-        {{ render(controller('DashboardBundle:EntityCreate:type', {targetEnvironment: "test"})) }}
+        {{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test"})) }}
     </div>
 
     <div class="modal" id="add-for-production">
-        {{ render(controller('DashboardBundle:EntityCreate:type', {targetEnvironment: "production"})) }}
+        {{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production"})) }}
     </div>
 
     {% if showOidcPopup %}

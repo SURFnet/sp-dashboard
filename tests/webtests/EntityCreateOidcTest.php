@@ -19,10 +19,16 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityOidcCreateTest extends WebTestCase
 {
+    /**
+     * @var Service
+     */
+    private $service;
+
     public function setUp()
     {
         parent::setUp();
@@ -31,14 +37,18 @@ class EntityOidcCreateTest extends WebTestCase
 
         $this->logIn('ROLE_ADMINISTRATOR');
 
+        $this->service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+
         $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
+            $this->service->getId()
         );
+
+        $this->service = $this->getServiceRepository()->findByName('SURFnet');
     }
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
@@ -54,7 +64,7 @@ class EntityOidcCreateTest extends WebTestCase
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
@@ -82,7 +92,7 @@ class EntityOidcCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
 
         $form = $crawler
             ->selectButton('Save')
@@ -111,7 +121,7 @@ class EntityOidcCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -151,7 +161,7 @@ class EntityOidcCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/test");
+        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -192,21 +202,16 @@ class EntityOidcCreateTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entity/create/oidc/production');
+        $crawler = $this->client->request('GET', "/entity/create/oidc/1/production");
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_a_privileged_user_can_create_a_production_draft()
     {
-        // Ibuildings is allowed to create production entities.
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
-        );
-
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', '/entity/create/oidc/production');
+        $crawler = $this->client->request('GET', "/entity/create/oidc/2/production");
 
         $form = $crawler
             ->selectButton('Save')

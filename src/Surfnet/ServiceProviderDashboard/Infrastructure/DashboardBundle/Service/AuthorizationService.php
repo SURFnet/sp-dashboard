@@ -18,6 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service;
 
 use RuntimeException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -227,7 +228,26 @@ class AuthorizationService
     }
 
     /**
+     * @param $serviceId
+     * @return \Surfnet\ServiceProviderDashboard\Domain\Entity\Service
+     * @throws ServiceNotFoundException
+     */
+    public function getServiceById($serviceId)
+    {
+        $service = $this->serviceService->getServiceById($serviceId);
+
+        if (!$service || !$this->hasAccessToService($serviceId)) {
+            throw new ServiceNotFoundException('Unable to find service.');
+        }
+
+        $this->setSelectedServiceId($service->getId());
+
+        return $service;
+    }
+
+    /**
      * @param string $serviceId
+     * @return bool
      */
     private function hasAccessToService($serviceId)
     {

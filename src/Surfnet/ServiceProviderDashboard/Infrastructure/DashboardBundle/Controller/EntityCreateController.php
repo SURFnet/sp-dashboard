@@ -23,9 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -44,7 +42,7 @@ class EntityCreateController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route(
-     *     "/entity/create/type/{targetEnvironment}",
+     *     "/entity/create/type/{serviceId}/{targetEnvironment}",
      *     defaults={
      *          "targetEnvironment" = "test",
      *     },
@@ -55,31 +53,40 @@ class EntityCreateController extends Controller
      *
      * @param Request $request
      *
-     * @param $targetEnvironment
+     * @param int $serviceId
+     * @param string $targetEnvironment
      * @return array|RedirectResponse
      */
-    public function typeAction(Request $request, $targetEnvironment)
+    public function typeAction(Request $request, $serviceId, $targetEnvironment)
     {
         $command = new ChooseEntityTypeCommand();
         $form = $this->createForm(ChooseEntityTypeType::class, $command);
 
+        $service = $this->authorizationService->getServiceById($serviceId);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // forward to create action.
-            return $this->redirectToRoute('entity_add', ['targetEnvironment' => $targetEnvironment, 'type' => $form->get('type')->getData()]);
+            return $this->redirectToRoute('entity_add', [
+                'serviceId' => $service->getId(),
+                'targetEnvironment' => $targetEnvironment,
+                'type' => $form->get('type')->getData()
+            ]);
         }
 
         return [
             'form' => $form->createView(),
+            'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
         ];
     }
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/entity/create/{type}/{targetEnvironment}", name="entity_add")
+     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add")
      * @Template("@Dashboard/EntityEdit/edit.html.twig")
      * @param Request $request
+     * @param int $serviceId
      * @param null|string $targetEnvironment
      * @param null|string $type
      *
@@ -89,12 +96,12 @@ class EntityCreateController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function createAction(Request $request, $targetEnvironment, $type)
+    public function createAction(Request $request, $serviceId, $targetEnvironment, $type)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
 
-        $service = $this->getService();
+        $service = $this->authorizationService->getServiceById($serviceId);
 
         if (!$service->isProductionEntitiesEnabled() &&
             $targetEnvironment !== Entity::ENVIRONMENT_TEST
@@ -158,7 +165,7 @@ class EntityCreateController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/entity/copy/{manageId}/{targetEnvironment}/{sourceEnvironment}",
+     * @Route("/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}",
      *      defaults={
      *          "manageId" = null,
      *          "targetEnvironment" = "test",
@@ -171,22 +178,25 @@ class EntityCreateController extends Controller
      *
      * @param Request $request
      *
+     * @param int $serviceId
      * @param null|string $manageId set from the entity_copy route
      * @param null|string $targetEnvironment set from the entity_copy route
      * @param null|string $sourceEnvironment indicates where the copy command originated from
      *
      * @return RedirectResponse|Response
      *
+     * @throws InvalidArgumentException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function copyAction(Request $request, $manageId, $targetEnvironment, $sourceEnvironment)
+    public function copyAction(Request $request, $serviceId, $manageId, $targetEnvironment, $sourceEnvironment)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
 
-        $service = $this->getService();
+        $service = $this->authorizationService->getServiceById($serviceId);
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
 
@@ -243,20 +253,5 @@ class EntityCreateController extends Controller
             'form' => $form->createView(),
             'type' => $entity->getProtocol(),
         ];
-    }
-
-    /**
-     * @return Service
-     * @throws ServiceNotFoundException
-     */
-    private function getService()
-    {
-        $activeServiceId = $this->authorizationService->getActiveServiceId();
-        if ($activeServiceId) {
-            return $this->serviceService->getServiceById(
-                $this->authorizationService->getActiveServiceId()
-            );
-        }
-        throw new ServiceNotFoundException('Please select a service before adding/copying an entity.');
     }
 }

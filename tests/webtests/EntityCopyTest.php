@@ -19,10 +19,16 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCopyTest extends WebTestCase
 {
+    /**
+     * @var Service
+     */
+    private $service;
+
     public function setUp()
     {
         parent::setUp();
@@ -44,7 +50,7 @@ class EntityCopyTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], $response));
         $this->prodMockHandler->append(new Response(200, [], $response));
 
-        $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
+        $crawler = $this->client->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
@@ -160,7 +166,7 @@ class EntityCopyTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], $response));
         $this->testMockHandler->append(new Response(200, [], $response));
 
-        $crawler = $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
+        $crawler = $this->client->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
         $formData = [
             'dashboard_bundle_entity_type' => [

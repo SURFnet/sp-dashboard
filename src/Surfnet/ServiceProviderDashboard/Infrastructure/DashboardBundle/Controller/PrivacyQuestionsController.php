@@ -68,22 +68,11 @@ class PrivacyQuestionsController extends Controller
      */
     public function privacyAction($serviceId)
     {
-        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        // Test if the active user is allowed to access privacy questions of this service
-        if (!isset($serviceOptions[$serviceId])) {
-            throw $this->createNotFoundException('Unable to open the privacy questions for this service');
-        }
-
-        // Activate the service
-        $this->authorizationService->setSelectedServiceId($serviceId);
+        $service = $this->authorizationService->getServiceById($serviceId);
 
         if (!$this->authorizationService->hasActivatedPrivacyQuestions()) {
             throw $this->createNotFoundException('Privacy questions are disabled');
         }
-
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
 
         // Test if the questions have already been filled
         if ($service->getPrivacyQuestions() instanceof PrivacyQuestions) {
@@ -103,13 +92,7 @@ class PrivacyQuestionsController extends Controller
      */
     public function createAction(Request $request, $serviceId)
     {
-        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        // Test if the active user is allowed to access privacy questions of this service
-        if (!isset($serviceOptions[$serviceId])) {
-            throw $this->createNotFoundException('Unable to create privacy questions for this service');
-        }
-
-        $service = $this->serviceService->getServiceById($serviceId);
+        $service = $this->authorizationService->getServiceById($serviceId);
 
         $command = PrivacyQuestionsCommand::fromService($service);
 
@@ -127,13 +110,8 @@ class PrivacyQuestionsController extends Controller
      */
     public function editAction(Request $request, $serviceId)
     {
-        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        // Test if the active user is allowed to access privacy questions of this service
-        if (!isset($serviceOptions[$serviceId])) {
-            throw $this->createNotFoundException('Unable to edit the privacy questions for this service');
-        }
-
         $service = $this->serviceService->getServiceById($serviceId);
+
         $questions = $service->getPrivacyQuestions();
 
         $command = PrivacyQuestionsCommand::fromQuestions($questions);
