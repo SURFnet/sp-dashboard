@@ -407,8 +407,8 @@ class Entity
         ManageEntity $manageEntity,
         $environment,
         Service $service,
-        $playGroundUriTest = '',
-        $playGroundUriProd = ''
+        $playGroundUriTest,
+        $playGroundUriProd
     ) {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
@@ -442,14 +442,9 @@ class Entity
             $entity->setClientSecret($oidcClient->getClientSecret());
             $entity->setRedirectUris($oidcClient->getRedirectUris());
             $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-
-            $playGroundUri = ($environment == self::ENVIRONMENT_PRODUCTION ? $playGroundUriProd : $playGroundUriTest);
-            $entity->setEnablePlayground(false);
-            if (in_array($playGroundUri, $oidcClient->getRedirectUris())) {
-                $entity->setEnablePlayground(true);
-            }
-
+            $entity->setEntityId($oidcClient->getClientId());
             $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+            self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
         }
 
         // SAML specific
@@ -498,6 +493,25 @@ class Entity
         $entity->setService($service);
 
         return $entity;
+    }
+
+    private static function setRedirectUrisFromManageResponse(
+        Entity $entity,
+        ManageEntity $manageEntity,
+        $environment,
+        $playGroundUriTest,
+        $playGroundUriProd
+    ) {
+        $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
+        $playGroundUri = ($environment == self::ENVIRONMENT_PRODUCTION ? $playGroundUriProd : $playGroundUriTest);
+        $entity->setEnablePlayground(false);
+        if (in_array($playGroundUri, $redirectUris)) {
+            $entity->setEnablePlayground(true);
+            if (($key = array_search($playGroundUri, $redirectUris)) !== false) {
+                unset($redirectUris[$key]);
+            }
+        }
+        $entity->setRedirectUris($redirectUris);
     }
 
     private static function setAttributesOn($entity, AttributeList $attributeList)

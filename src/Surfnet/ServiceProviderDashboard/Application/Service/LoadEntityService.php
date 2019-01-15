@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
+use Webmozart\Assert\Assert;
 
 class LoadEntityService
 {
@@ -73,6 +74,9 @@ class LoadEntityService
         $oidcPlaygroundUriTest,
         $oidcPlaygroundUriProd
     ) {
+        Assert::stringNotEmpty($oidcPlaygroundUriTest, 'Please set "playground_uri_test" in parameters.yml');
+        Assert::stringNotEmpty($oidcPlaygroundUriProd, 'Please set "playground_uri_prod" in parameters.yml');
+
         $this->entityRepository = $entityRepository;
         $this->manageTestClient = $manageTestClient;
         $this->manageProductionClient = $manageProductionClient;
@@ -130,8 +134,8 @@ class LoadEntityService
             $manageEntity,
             $environment,
             $service,
-            $this->oidcPlaygroundUriProd,
-            $this->oidcPlaygroundUriTest
+            $this->oidcPlaygroundUriTest,
+            $this->oidcPlaygroundUriProd
         );
 
         // Set some defaults
