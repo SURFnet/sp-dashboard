@@ -87,7 +87,7 @@ class SaveOidcEntityCommandHandler implements CommandHandler
         $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());
         $entity->setEnvironment($command->getEnvironment());
-        $entity->setEntityId($command->getClientId());
+        $entity->setEntityId($command->getEntityId());
         $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
         $entity->setRedirectUris($command->getRedirectUris());
         $entity->setGrantType(new OidcGrantType($command->getGrantType()));

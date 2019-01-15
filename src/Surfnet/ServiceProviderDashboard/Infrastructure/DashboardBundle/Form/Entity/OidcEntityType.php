@@ -54,6 +54,7 @@ class OidcEntityType extends AbstractType
                 'clientId',
                 TextType::class,
                 [
+                    'property_path' => 'entityId',
                     'required' => false,
                     'attr' => [
                         'data-help' => 'entity.edit.information.clientId',
@@ -72,6 +73,7 @@ class OidcEntityType extends AbstractType
                     TextType::class,
                     [
                         'required' => false,
+                        'validation_groups' => false,
                         'disabled' => true,
                         'attr' => [
                             'readonly' => 'readonly',

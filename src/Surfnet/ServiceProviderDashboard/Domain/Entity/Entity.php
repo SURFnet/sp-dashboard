@@ -443,8 +443,6 @@ class Entity
             $entity->setRedirectUris($oidcClient->getRedirectUris());
             $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
 
-            $entity->setEntityId($oidcClient->getClientId());
-
             $playGroundUri = ($environment == self::ENVIRONMENT_PRODUCTION ? $playGroundUriProd : $playGroundUriTest);
             $entity->setEnablePlayground(false);
             if (in_array($playGroundUri, $oidcClient->getRedirectUris())) {
@@ -1054,16 +1052,6 @@ class Entity
     public function getEntityId()
     {
         return $this->entityId;
-    }
-
-    /**
-     * The client id is the entity id where the semicolon in the protocol has been replaced with an at sign.
-     *
-     * @return string
-     */
-    public function getClientId()
-    {
-        return str_replace('://', '@//', $this->entityId);
     }
 
     /**

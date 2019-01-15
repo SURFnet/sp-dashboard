@@ -223,7 +223,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('telephonenumber', $fields['contacts:0:telephoneNumber']);
 
         $this->assertEquals([
-            'clientId' => 'http://entityid',
+            'clientId' => 'http@//entityid',
             'clientSecret' => 'test',
             'redirectUris' => ['uri1','uri2','uri3','http://playground-test'],
             'grantType' => 'implicit',
@@ -463,7 +463,7 @@ class JsonGeneratorTest extends MockeryTestCase
                         ),
                     'oidcClient' =>
                         array (
-                            'clientId' => 'http://entityid',
+                            'clientId' => 'http@//entityid',
                             'clientSecret' => 'test',
                             'redirectUris' =>
                                 array (
@@ -532,7 +532,7 @@ class JsonGeneratorTest extends MockeryTestCase
                 array (
                     'oidcClient' =>
                         array (
-                            'clientId' => 'http://entityid',
+                            'clientId' => 'http@//entityid',
                             'clientSecret' => 'test',
                             'redirectUris' =>
                                 array (
