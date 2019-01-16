@@ -129,6 +129,18 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer:
+        arguments: ['@mailer']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory:
+        arguments:
+            - '%mail_from%'
+            - '%mail_receiver%'
+            - '%mail_no_reply%'
+            - '@translator'
+            - '@templating'
+
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder:
         tags:
             - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
