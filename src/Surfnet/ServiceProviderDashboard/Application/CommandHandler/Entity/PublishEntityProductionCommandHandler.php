@@ -76,6 +76,16 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $mailer;
 
     /**
+     * @var string
+     */
+    private $summaryTranslationKey;
+
+    /**
+     * @var string
+     */
+    private $descriptionTranslationKey;
+
+    /**
      * @param EntityRepository $entityRepository
      * @param PublishEntityRepository $publishClient
      * @param TicketService $ticketService
@@ -104,6 +114,8 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         $this->flashBag = $flashBag;
         $this->logger = $logger;
         $this->issueType = $issueType;
+        $this->summaryTranslationKey = 'entity.publish.request.ticket.summary';
+        $this->descriptionTranslationKey = 'entity.publish.request.ticket.description';
     }
 
     /**
@@ -126,8 +138,8 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $entity,
             $command->getApplicant(),
             $this->issueType,
-            'entity.publish.request.ticket.summary',
-            'entity.publish.request.ticket.description'
+            $this->summaryTranslationKey,
+            $this->descriptionTranslationKey
         );
 
         $this->logger->info(

@@ -95,6 +95,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 
         $this->commandHandler = new RequestDeletePublishedEntityCommandHandler(
             $this->queryClient,
+            'arbitrary-issue-type',
             $this->ticketService,
             $this->flashBag,
             $this->logger
@@ -106,10 +107,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
         $command = new RequestDeletePublishedEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
-            $applicant,
-            'arbitrary-issue-type',
-            'arbitrary-summary-key',
-            'arbitrary-description-key'
+            $applicant
         );
 
         $this->logger
@@ -153,10 +151,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
         $command = new RequestDeletePublishedEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
-            $applicant,
-            'arbitrary-issue-type',
-            'arbitrary-summary-key',
-            'arbitrary-description-key'
+            $applicant
         );
 
         $this->logger
