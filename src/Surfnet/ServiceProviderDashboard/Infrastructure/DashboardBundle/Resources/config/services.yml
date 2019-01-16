@@ -102,6 +102,8 @@ services:
             - '@surfnet.manage.client.publish_client.prod_environment'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@session.flash_bag'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer'
             - '@logger'
             - '%jira_issue_type_publication_request%'
         public: true

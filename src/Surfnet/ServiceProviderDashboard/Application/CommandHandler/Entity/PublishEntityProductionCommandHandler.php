@@ -25,9 +25,11 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\NotAuthenticatedException;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
@@ -64,11 +66,22 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $issueType;
 
     /**
-     * PublishEntityProductionCommandHandler constructor.
+     * @var MailMessageFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    /**
      * @param EntityRepository $entityRepository
      * @param PublishEntityRepository $publishClient
      * @param TicketService $ticketService
      * @param FlashBagInterface $flashBag
+     * @param MailMessageFactory $mailFactory
+     * @param Mailer $mailer
      * @param LoggerInterface $logger
      * @param string $issueType
      */
@@ -77,6 +90,8 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         PublishEntityRepository $publishClient,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
+        MailMessageFactory $mailFactory,
+        Mailer $mailer,
         LoggerInterface $logger,
         $issueType
     ) {
@@ -84,6 +99,8 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         $this->repository = $entityRepository;
         $this->publishClient = $publishClient;
         $this->ticketService = $ticketService;
+        $this->mailFactory = $mailFactory;
+        $this->mailer = $mailer;
         $this->flashBag = $flashBag;
         $this->logger = $logger;
         $this->issueType = $issueType;
@@ -122,6 +139,12 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
+
+            // Inform the service desk of the unavailability of Jira
+            $message = $this->mailFactory->buildJiraIssueFailedMessage($e);
+            $this->mailer->send($message);
+
+            // Customer is presented an error message with the invitation to try again at a later stage
             $this->flashBag->add('error', 'entity.edit.error.publish');
             // Stop execution
             return;

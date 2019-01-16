@@ -29,8 +29,11 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEn
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
+use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -69,6 +72,16 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
      */
     private $ticketService;
 
+    /**
+     * @var Mailer|Mock
+     */
+    private $mailer;
+
+    /**
+     * @var MailMessageFactory|Mock
+     */
+    private $mailFactory;
+
     public function setUp()
     {
 
@@ -78,11 +91,16 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->flashBag = m::mock(FlashBagInterface::class);
         $this->logger = m::mock(LoggerInterface::class);
 
+        $this->mailer = m::mock(Mailer::class);
+        $this->mailFactory = m::mock(MailMessageFactory::class);
+
         $this->commandHandler = new PublishEntityProductionCommandHandler(
             $this->repository,
             $this->publishEntityClient,
             $this->ticketService,
             $this->flashBag,
+            $this->mailFactory,
+            $this->mailer,
             $this->logger,
             'customIssueType'
         );
@@ -173,6 +191,15 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->ticketService
             ->shouldReceive('createIssueFrom')
             ->andThrow(JiraException::class);
+
+        $message = m::mock(Message::class);
+        $this->mailFactory
+            ->shouldReceive('buildJiraIssueFailedMessage')
+            ->andReturn($message);
+
+        $this->mailer
+            ->shouldReceive('send')
+            ->with($message);
 
         $this->logger
             ->shouldReceive('info')
