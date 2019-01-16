@@ -145,6 +145,7 @@ class EntityDeleteController extends Controller
             }
 
             $serviceId = $this->authorizationService->getActiveServiceId();
+
             return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
         }
 
@@ -188,10 +189,16 @@ class EntityDeleteController extends Controller
             if ($form->getClickedButton()->getName() === 'delete') {
                 $contact = $this->authorizationService->getContact();
                 $this->commandBus->handle(
-                    $this->commandFactory->buildRequestDeletePublishedEntityCommand($manageId, $contact)
+                    $this->commandFactory->buildRequestDeletePublishedEntityCommand(
+                        $manageId,
+                        $contact,
+                        'entity.delete.request.ticket.summary',
+                        'entity.delete.request.ticket.description'
+                    )
                 );
             }
             $serviceId = $this->authorizationService->getActiveServiceId();
+
             return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
         }
 

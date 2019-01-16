@@ -64,7 +64,12 @@ class DeleteCommandFactory
             return $this->buildDeletePublishedProductionEntityCommand($entity->getId());
         }
         if ($isRequestDelete) {
-            return $this->buildRequestDeletePublishedEntityCommand($entity->getId(), $entity->getContact());
+            return $this->buildRequestDeletePublishedEntityCommand(
+                $entity->getId(),
+                $entity->getContact(),
+                'entity.delete.request.ticket.summary',
+                'entity.delete.request.ticket.description'
+            );
         }
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
     }
@@ -84,8 +89,18 @@ class DeleteCommandFactory
         return new DeletePublishedProductionEntityCommand($manageId);
     }
 
-    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact)
-    {
-        return new RequestDeletePublishedEntityCommand($manageId, $contact, $this->issueType);
+    public function buildRequestDeletePublishedEntityCommand(
+        $manageId,
+        Contact $contact,
+        $issueSummaryTranslationKey,
+        $issueDescriptionTranslationKey
+    ) {
+        return new RequestDeletePublishedEntityCommand(
+            $manageId,
+            $contact,
+            $this->issueType,
+            $issueSummaryTranslationKey,
+            $issueDescriptionTranslationKey
+        );
     }
 }

@@ -42,15 +42,34 @@ class RequestDeletePublishedEntityCommand implements Command
     private $issueType;
 
     /**
+     * @var string
+     */
+    private $issueSummaryTranslationKey;
+
+    /**
+     * @var string
+     */
+    private $issueDescriptionTranslationKey;
+
+    /**
      * @param string $manageId
      * @param Contact $applicant
      * @param string $issueType
+     * @param string $issueSummaryTranslationKey
+     * @param string $issueDescriptionTranslationKey
      */
-    public function __construct($manageId, Contact $applicant, $issueType)
-    {
+    public function __construct(
+        $manageId,
+        Contact $applicant,
+        $issueType,
+        $issueSummaryTranslationKey,
+        $issueDescriptionTranslationKey
+    ) {
         $this->manageId = $manageId;
         $this->applicant = $applicant;
         $this->issueType = $issueType;
+        $this->issueSummaryTranslationKey = $issueSummaryTranslationKey;
+        $this->issueDescriptionTranslationKey = $issueDescriptionTranslationKey;
     }
 
     public function getManageId()
@@ -66,5 +85,15 @@ class RequestDeletePublishedEntityCommand implements Command
     public function getIssueType()
     {
         return $this->issueType;
+    }
+
+    public function getIssueDescriptionTranslationKey()
+    {
+        return $this->issueDescriptionTranslationKey;
+    }
+
+    public function getIssueSummaryTranslationKey()
+    {
+        return $this->issueSummaryTranslationKey;
     }
 }
