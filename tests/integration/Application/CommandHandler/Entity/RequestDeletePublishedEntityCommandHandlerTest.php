@@ -104,7 +104,13 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
     public function test_handle()
     {
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
-        $command = new RequestDeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant, 'arbitrary-issue-type');
+        $command = new RequestDeletePublishedEntityCommand(
+            'd6f394b2-08b1-4882-8b32-81688c15c489',
+            $applicant,
+            'arbitrary-issue-type',
+            'arbitrary-summary-key',
+            'arbitrary-description-key'
+        );
 
         $this->logger
             ->shouldReceive('info')
@@ -145,7 +151,13 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
     public function test_jira_down()
     {
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
-        $command = new RequestDeletePublishedEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant, 'arbitrary-issue-type');
+        $command = new RequestDeletePublishedEntityCommand(
+            'd6f394b2-08b1-4882-8b32-81688c15c489',
+            $applicant,
+            'arbitrary-issue-type',
+            'arbitrary-summary-key',
+            'arbitrary-description-key'
+        );
 
         $this->logger
             ->shouldReceive('info')

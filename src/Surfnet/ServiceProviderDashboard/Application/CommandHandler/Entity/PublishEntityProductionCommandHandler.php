@@ -116,7 +116,13 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     sprintf('Sending publish request mail to service desk for "%s".', $entity->getNameEn())
                 );
 
-                $ticket = Ticket::fromEntity($entity, $command->getApplicant(), $this->issueType);
+                $ticket = Ticket::fromEntity(
+                    $entity,
+                    $command->getApplicant(),
+                    $this->issueType,
+                    'entity.publish.request.ticket.summary',
+                    'entity.publish.request.ticket.description'
+                );
                 try {
                     $issue = $this->ticketService->createIssueFrom($ticket);
                     $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));

@@ -52,12 +52,21 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_build_issue_field_from_ticket()
     {
-        $ticket = new Ticket('https://example.com', 'manage-id', 'Test Service', 'John Doe', 'john@example.com', 'arbitrary-issue-type');
+        $ticket = new Ticket(
+            'https://example.com',
+            'manage-id',
+            'Test Service',
+            'arbitrary-summary-key',
+            'arbitrary-description-key',
+            'John Doe',
+            'john@example.com',
+            'arbitrary-issue-type'
+        );
 
         $this->translator
             ->shouldReceive('trans')
             ->with(
-                'entity.delete.request.ticket.description',
+                'arbitrary-description-key',
                 [
                     '%applicant_name%' => 'John Doe',
                     '%applicant_email%' => 'john@example.com',
@@ -69,7 +78,7 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->translator
             ->shouldReceive('trans')
-            ->with('entity.delete.request.ticket.summary', ['%entity_name%' => 'Test Service'])
+            ->with('arbitrary-summary-key', ['%entity_name%' => 'Test Service'])
             ->andReturn('Summary')
             ->once();
 

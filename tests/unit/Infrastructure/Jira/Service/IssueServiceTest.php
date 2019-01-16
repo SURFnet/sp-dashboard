@@ -76,7 +76,16 @@ class IssueServiceTest extends MockeryTestCase
             ->andReturn($this->jiraIssueService)
             ->once();
 
-        $ticket = new Ticket('Summary', 'Description', 'https://example.com', 'John Doe', 'john@example.com', null);
+        $ticket = new Ticket(
+            'Summary',
+            'Description',
+            'https://example.com',
+            'arbitrary-summary-key',
+            'arbitrary-description-key',
+            'John Doe',
+            'john@example.com',
+            null
+        );
 
         $issue = new Issue();
         $issueField = new IssueField();

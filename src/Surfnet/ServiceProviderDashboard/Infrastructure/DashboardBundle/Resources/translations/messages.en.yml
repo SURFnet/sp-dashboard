@@ -269,6 +269,13 @@ entity.edit.label.implicit: Implicit
 entity.edit.label.authorization_code_token: response_type=id_token
 entity.edit.label.implicit_id_token_token: response_type=id_token token
 entity.edit.label.implicit_id_token: response_type=id_token
+entity.publish.request.ticket.summary: "Request to publish %entity_name% to production"
+entity.publish.request.ticket.description: "h2. Details
+
+*Applicant name*: %applicant_name%
+*Applicant email*: %applicant_email%.
+*Entity name (en)*: %entity_name%."
+
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
