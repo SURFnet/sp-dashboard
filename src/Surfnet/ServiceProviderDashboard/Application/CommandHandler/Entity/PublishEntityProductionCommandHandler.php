@@ -141,7 +141,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
 
             // Inform the service desk of the unavailability of Jira
-            $message = $this->mailFactory->buildJiraIssueFailedMessage($e);
+            $message = $this->mailFactory->buildJiraIssueFailedMessage($e, $entity);
             $this->mailer->send($message);
 
             // Customer is presented an error message with the invitation to try again at a later stage

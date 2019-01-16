@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
 use Symfony\Component\Templating\EngineInterface;
@@ -74,7 +75,14 @@ class MailMessageFactoryTest extends MockeryTestCase
             ->shouldReceive('getTrace')
             ->andReturn([]);
 
-        $message = $this->factory->buildJiraIssueFailedMessage($e);
+        $entity = m::mock(Entity::class);
+        $entity->shouldReceive('getService->getName')
+            ->andReturn('ACME corporation');
+
+        $entity->shouldReceive('getEntityId')
+            ->andReturn('https://www.acme.com/metadata');
+
+        $message = $this->factory->buildJiraIssueFailedMessage($e, $entity);
 
         $this->assertInstanceOf(Message::class, $message);
     }

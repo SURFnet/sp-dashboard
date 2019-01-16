@@ -79,7 +79,7 @@ class MailMessageFactory
         $this->templating = $templating;
     }
 
-    public function buildJiraIssueFailedMessage(Exception $exception)
+    public function buildJiraIssueFailedMessage(Exception $exception, Entity $entity)
     {
         $message = $this->createNewMessage();
         $message->setSubject($this->translator->trans('mail.jira.publish_production_failed.subject'));
@@ -87,7 +87,9 @@ class MailMessageFactory
         $template = $this->renderView(
             '@Dashboard/Mail/jiraPublicationFailed.html.twig',
             [
-                'exception' => $exception
+                'exception' => $exception,
+                'entityId' => $entity->getEntityId(),
+                'serviceName' => $entity->getService()->getName(),
             ]
         );
 
