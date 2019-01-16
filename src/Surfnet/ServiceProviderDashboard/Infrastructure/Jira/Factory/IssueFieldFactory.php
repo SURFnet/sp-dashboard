@@ -120,7 +120,7 @@ class IssueFieldFactory
 
     private function translateDescription(Ticket $ticket)
     {
-        return $this->translator->trans('entity.delete.request.ticket.description', [
+        return $this->translator->trans($ticket->getDescriptionTranslationKey(), [
             '%applicant_name%' => $ticket->getApplicantName(),
             '%applicant_email%' =>  $ticket->getApplicantEmail(),
             '%entity_name%' => $ticket->getEntityName()
@@ -129,7 +129,7 @@ class IssueFieldFactory
 
     private function translateSummary(Ticket $ticket)
     {
-        return $this->translator->trans('entity.delete.request.ticket.summary', [
+        return $this->translator->trans($ticket->getSummaryTranslationKey(), [
             '%entity_name%' => $ticket->getEntityName()
         ]);
     }
