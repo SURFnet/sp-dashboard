@@ -43,7 +43,6 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
             'Jane Doe',
             'customfield_10107',
             'customfield_10108',
-            'bug',
             'Critical',
             'SPD',
             'John Doe',
@@ -53,7 +52,7 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_build_issue_field_from_ticket()
     {
-        $ticket = new Ticket('https://example.com', 'manage-id', 'Test Service', 'John Doe', 'john@example.com', null);
+        $ticket = new Ticket('https://example.com', 'manage-id', 'Test Service', 'John Doe', 'john@example.com', 'arbitrary-issue-type');
 
         $this->translator
             ->shouldReceive('trans')
@@ -81,7 +80,7 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Jane Doe', $issueField->assignee->name);
         // The custom field is used for saving the entity id.
         $this->assertEquals('https://example.com', $issueField->customFields['customfield_10107']);
-        $this->assertEquals('bug', $issueField->getIssueType()->name);
+        $this->assertEquals('arbitrary-issue-type', $ticket->getIssueType());
         $this->assertEquals('Critical', $issueField->priority->name);
         $this->assertEquals('John Doe', $issueField->reporter->name);
     }

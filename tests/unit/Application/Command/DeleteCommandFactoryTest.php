@@ -37,7 +37,7 @@ class DeleteCommandFactoryTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->factory = new DeleteCommandFactory();
+        $this->factory = new DeleteCommandFactory('arbitrary-issue-type');
     }
 
     /**

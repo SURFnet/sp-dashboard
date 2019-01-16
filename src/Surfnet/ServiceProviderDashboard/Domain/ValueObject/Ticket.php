@@ -38,7 +38,7 @@ class Ticket
     private $applicantName;
     /** @var string */
     private $applicantEmail;
-    /** @var string|null */
+    /** @var string */
     private $issueType;
 
     public function __construct($entityId, $manageId, $nameEn, $applicantName, $applicantEmail, $issueType)
@@ -51,7 +51,13 @@ class Ticket
         $this->issueType = $issueType;
     }
 
-    public static function fromManageResponse(ManageEntity $entity, Applicant $applicant)
+    /**
+     * @param ManageEntity $entity
+     * @param Applicant $applicant
+     * @param $issueType
+     * @return Ticket
+     */
+    public static function fromManageResponse(ManageEntity $entity, Applicant $applicant, $issueType)
     {
         $entityId = $entity->getMetaData()->getEntityId();
         $nameEn = $entity->getMetaData()->getNameEn();
@@ -62,7 +68,7 @@ class Ticket
             $nameEn,
             $applicant->getDisplayName(),
             $applicant->getEmailAddress(),
-            null
+            $issueType
         );
     }
 
