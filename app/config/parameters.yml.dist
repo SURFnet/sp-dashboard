@@ -51,11 +51,6 @@ parameters:
     manage_prod_username: sp-dashboard
     manage_prod_password: secret
 
-    # Mail default settings
-    mail_from: support@surfconext.nl
-    mail_receiver: support@surfconext.nl
-    mail_no_reply: no-reply@surfconext.nl
-
     # Jira settings
     jira_host: https://jira.example.com
     jira_username: sp-dashboard
@@ -66,6 +61,7 @@ parameters:
     jira_issue_priority: Medium
     jira_issue_reporter: sp-dashboard
     jira_issue_type: spd-delete-production-entity
+    jira_issue_type_publication_request: spd-request-production-entity
     jira_issue_entityid_fieldname: customfield_13018
     jira_issue_manageid_fieldname: customfield_13401
     # The label that is set for the manage id field, used to compose the JQL which identifies a custom field by its label

@@ -1,3 +1,8 @@
+## Next release
+
+**New feature**
+ - Publishing of production entities results in Jira ticket
+
 ## 1.5.2
 
 The main focus of this release was to fix some minor bugs to make a production ready release.

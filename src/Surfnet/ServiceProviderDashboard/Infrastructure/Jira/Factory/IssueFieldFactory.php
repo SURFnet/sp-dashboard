@@ -44,11 +44,6 @@ class IssueFieldFactory
     /**
      * @var string
      */
-    private $issueType;
-
-    /**
-     * @var string
-     */
     private $priority;
 
     /**
@@ -70,7 +65,6 @@ class IssueFieldFactory
      * @param string $assignee
      * @param string $entityIdFieldName
      * @param string $manageIdFieldName
-     * @param string $issueType
      * @param string $priority
      * @param string $projectKey
      * @param string $reporter
@@ -80,7 +74,6 @@ class IssueFieldFactory
         $assignee,
         $entityIdFieldName,
         $manageIdFieldName,
-        $issueType,
         $priority,
         $projectKey,
         $reporter,
@@ -95,7 +88,6 @@ class IssueFieldFactory
             $manageIdFieldName,
             'The manage id field name may not be empty, configure in parameters.yml'
         );
-        Assert::stringNotEmpty($issueType, 'The issue type may not be empty, configure in arameters.yml');
         Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in parameters.yml');
         Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in parameters.yml');
         Assert::stringNotEmpty($reporter, 'The reporter may not be empty, configure in parameters.yml');
@@ -103,7 +95,6 @@ class IssueFieldFactory
         $this->assignee = $assignee;
         $this->entityIdFieldName = $entityIdFieldName;
         $this->manageIdFieldName = $manageIdFieldName;
-        $this->issueType = $issueType;
         $this->priority = $priority;
         $this->projectKey = $projectKey;
         $this->reporter = $reporter;
@@ -113,10 +104,10 @@ class IssueFieldFactory
     public function fromTicket(Ticket $ticket)
     {
         $issueField = new IssueField();
-        $issueField->setProjectKey("CXT")
+        $issueField->setProjectKey($this->projectKey)
             ->setDescription($this->translateDescription($ticket))
             ->setSummary($this->translateSummary($ticket))
-            ->setIssueType($this->issueType)
+            ->setIssueType($ticket->getIssueType())
             ->setPriorityName($this->priority)
             ->setAssigneeName($this->assignee)
             ->setReporterName($this->reporter)
@@ -129,7 +120,7 @@ class IssueFieldFactory
 
     private function translateDescription(Ticket $ticket)
     {
-        return $this->translator->trans('entity.delete.request.ticket.description', [
+        return $this->translator->trans($ticket->getDescriptionTranslationKey(), [
             '%applicant_name%' => $ticket->getApplicantName(),
             '%applicant_email%' =>  $ticket->getApplicantEmail(),
             '%entity_name%' => $ticket->getEntityName()
@@ -138,7 +129,7 @@ class IssueFieldFactory
 
     private function translateSummary(Ticket $ticket)
     {
-        return $this->translator->trans('entity.delete.request.ticket.summary', [
+        return $this->translator->trans($ticket->getSummaryTranslationKey(), [
             '%entity_name%' => $ticket->getEntityName()
         ]);
     }

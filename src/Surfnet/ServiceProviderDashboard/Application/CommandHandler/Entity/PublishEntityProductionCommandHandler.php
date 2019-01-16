@@ -18,24 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
-use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Mail\PublishToProductionMailCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\NotAuthenticatedException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Webmozart\Assert\Assert;
 
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
@@ -48,21 +42,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      * @var PublishEntityRepository
      */
     private $publishClient;
-
     /**
-     * @var CommandBus
+     * @var TicketService
      */
-    private $commandBus;
-
-    /**
-     * @var MailMessageFactory
-     */
-    private $mailMessageFactory;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private $ticketService;
 
     /**
      * @var FlashBagInterface
@@ -74,22 +57,35 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      */
     private $logger;
 
+    /**
+     * @var string
+     */
+    private $issueType;
+
+    /**
+     * PublishEntityProductionCommandHandler constructor.
+     * @param EntityRepository $entityRepository
+     * @param PublishEntityRepository $publishClient
+     * @param TicketService $ticketService
+     * @param FlashBagInterface $flashBag
+     * @param LoggerInterface $logger
+     * @param string $issueType
+     */
     public function __construct(
         EntityRepository $entityRepository,
         PublishEntityRepository $publishClient,
-        CommandBus $commandBus,
-        MailMessageFactory $mailMessageFactory,
-        TokenStorageInterface $tokenStorage,
+        TicketService $ticketService,
         FlashBagInterface $flashBag,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        $issueType
     ) {
+        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_publication_request" in parameters.yml');
         $this->repository = $entityRepository;
         $this->publishClient = $publishClient;
-        $this->commandBus = $commandBus;
-        $this->mailMessageFactory = $mailMessageFactory;
-        $this->tokenStorage = $tokenStorage;
+        $this->ticketService = $ticketService;
         $this->flashBag = $flashBag;
         $this->logger = $logger;
+        $this->issueType = $issueType;
     }
 
     /**
@@ -98,7 +94,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      * Some remarks:
      *  - The production manage connection is used to publish to production
      *  - In addition to a test publish; the coin:exclude_from_push attribute is passed with value 1
-     *  - The mail message is still sent to the service desk.
+     *  - A jira ticket is created to inform the service desk of the pending publication request
      *
      * @param PublishEntityProductionCommand $command
      * @throws NotAuthenticatedException
@@ -109,7 +105,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
 
         try {
             $this->logger->info(
-                sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameNl())
+                sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameEn())
             );
 
             $publishResponse = $this->publishClient->publish($entity);
@@ -117,18 +113,28 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             if (array_key_exists('id', $publishResponse)) {
                 // Send the confirmation mail
                 $this->logger->info(
-                    sprintf('Sending publish request mail to service desk for "%s".', $entity->getNameNl())
+                    sprintf('Sending publish request mail to service desk for "%s".', $entity->getNameEn())
                 );
-                $mailCommand = new PublishToProductionMailCommand(
-                    $this->buildMailMessage($entity)
+
+                $ticket = Ticket::fromEntity(
+                    $entity,
+                    $command->getApplicant(),
+                    $this->issueType,
+                    'entity.publish.request.ticket.summary',
+                    'entity.publish.request.ticket.description'
                 );
-                $this->commandBus->handle($mailCommand);
+                try {
+                    $issue = $this->ticketService->createIssueFrom($ticket);
+                    $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+                } catch (JiraException $e) {
+                    $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
+                }
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $entity->getNameNl(),
+                    $entity->getNameEn(),
                     $e->getMessage()
                 )
             );
@@ -137,40 +143,9 @@ class PublishEntityProductionCommandHandler implements CommandHandler
 
         // Set entity status to published
         $entity->setStatus(Entity::STATE_PUBLISHED);
-        $this->logger->info(sprintf('Updating status of "%s" to published.', $entity->getNameNl()));
+        $this->logger->info(sprintf('Updating status of "%s" to published.', $entity->getNameEn()));
 
         // Save changes made to entity
         $this->repository->save($entity);
-    }
-
-    /**
-     * @param Entity $entity
-     * @return Message
-     * @throws NotAuthenticatedException
-     */
-    private function buildMailMessage(Entity $entity)
-    {
-        $token = $this->tokenStorage->getToken();
-        if (!$token instanceof TokenInterface) {
-            throw new NotAuthenticatedException(
-                'No authentication token found'
-            );
-        }
-
-        $user = $token->getUser();
-        if (!$user instanceof Identity) {
-            throw new NotAuthenticatedException(
-                'No user found in authentication token'
-            );
-        }
-
-        $contact = $user->getContact();
-        if (!$contact instanceof Contact) {
-            throw new NotAuthenticatedException(
-                'Unable to determine contact information of authenticated user'
-            );
-        }
-
-        return $this->mailMessageFactory->buildPublishToProductionMessage($entity, $contact);
     }
 }

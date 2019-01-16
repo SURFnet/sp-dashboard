@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Webmozart\Assert\Assert;
 
 /**
  * DeleteCommandFactory builds entity delete commands
@@ -35,6 +36,17 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
  */
 class DeleteCommandFactory
 {
+    /**
+     * @var string
+     */
+    private $issueType;
+
+    public function __construct($issueType)
+    {
+        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in parameters.yml');
+        $this->issueType = $issueType;
+    }
+
     public function from(EntityDto $entity)
     {
         $isDraft = $entity->getState() === 'draft';
@@ -52,7 +64,12 @@ class DeleteCommandFactory
             return $this->buildDeletePublishedProductionEntityCommand($entity->getId());
         }
         if ($isRequestDelete) {
-            return $this->buildRequestDeletePublishedEntityCommand($entity->getId(), $entity->getContact());
+            return $this->buildRequestDeletePublishedEntityCommand(
+                $entity->getId(),
+                $entity->getContact(),
+                'entity.delete.request.ticket.summary',
+                'entity.delete.request.ticket.description'
+            );
         }
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
     }
@@ -72,8 +89,18 @@ class DeleteCommandFactory
         return new DeletePublishedProductionEntityCommand($manageId);
     }
 
-    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact)
-    {
-        return new RequestDeletePublishedEntityCommand($manageId, $contact);
+    public function buildRequestDeletePublishedEntityCommand(
+        $manageId,
+        Contact $contact,
+        $issueSummaryTranslationKey,
+        $issueDescriptionTranslationKey
+    ) {
+        return new RequestDeletePublishedEntityCommand(
+            $manageId,
+            $contact,
+            $this->issueType,
+            $issueSummaryTranslationKey,
+            $issueDescriptionTranslationKey
+        );
     }
 }

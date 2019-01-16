@@ -11,7 +11,6 @@ spdashboard_saml_sp_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-
 spdashboard_saml_sp_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
 spdashboard_saml_metadata_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_publickey.cer"
 spdashboard_saml_metadata_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
-spdashboard_support_email: coin-logs-dev@list.surfnet.nl
 spdashboard_manage_prod_host: "https://manage-prod.{{ base_domain }}"
 spdashboard_nodejs_rpm_url: "https://rpm.nodesource.com/pub_11.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm"
 spdashboard_jira_host: https://jira-test.surfnet.nl
@@ -21,6 +20,7 @@ spdashboard_jira_issue_assignee: sp-dashboard
 spdashboard_jira_issue_priority: Medium
 spdashboard_jira_issue_reporter: sp-dashboard
 spdashboard_jira_issue_type: spd-delete-production-entity
+spdashboard_jira_issue_type_publication_request: spd-request-production-entity
 spdashboard_jira_entityid_fieldname: customfield_12914
 spdashboard_jira_manageid_fieldname: customfield_13401
 spdashboard_jira_manageid_field_label: "SURFconext Manage ID"

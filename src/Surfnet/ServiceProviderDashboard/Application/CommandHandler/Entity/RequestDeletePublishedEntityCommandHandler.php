@@ -70,7 +70,13 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
             )
         );
         $entity = $this->queryClient->findByManageId($command->getManageId());
-        $ticket = Ticket::fromManageResponse($entity, $command->getApplicant());
+        $ticket = Ticket::fromManageResponse(
+            $entity,
+            $command->getApplicant(),
+            $command->getIssueType(),
+            $command->getIssueSummaryTranslationKey(),
+            $command->getIssueDescriptionTranslationKey()
+        );
         try {
             $issue = $this->ticketService->createIssueFrom($ticket);
             $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));

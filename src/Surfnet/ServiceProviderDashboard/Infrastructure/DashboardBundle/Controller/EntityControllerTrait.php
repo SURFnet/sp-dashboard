@@ -144,7 +144,8 @@ trait EntityControllerTrait
                 break;
 
             case Entity::ENVIRONMENT_PRODUCTION:
-                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId());
+                $applicant = $this->authorizationService->getContact();
+                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $applicant);
                 $destination = 'entity_published_production';
                 break;
         }
