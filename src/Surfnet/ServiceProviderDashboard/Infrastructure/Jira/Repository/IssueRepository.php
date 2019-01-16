@@ -154,4 +154,10 @@ class IssueRepository implements TicketServiceInterface
         $issueService = $this->jiraFactory->buildIssueService();
         return $issueService->create($issueField);
     }
+
+    public function delete($issueKey)
+    {
+        $issueService = $this->jiraFactory->buildIssueService();
+        $issueService->deleteIssue($issueKey);
+    }
 }

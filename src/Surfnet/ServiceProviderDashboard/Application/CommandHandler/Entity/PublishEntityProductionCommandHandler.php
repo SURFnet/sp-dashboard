@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
@@ -103,32 +104,43 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     {
         $entity = $this->repository->findById($command->getId());
 
+        // 1. Create the Jira ticket
+        $ticket = Ticket::fromEntity(
+            $entity,
+            $command->getApplicant(),
+            $this->issueType,
+            'entity.publish.request.ticket.summary',
+            'entity.publish.request.ticket.description'
+        );
+
+        $this->logger->info(
+            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getNameEn())
+        );
+
+        try {
+            $issue = $this->ticketService->createIssueFrom($ticket);
+            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+        } catch (Exception $e) {
+            $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
+            $this->flashBag->add('error', 'entity.edit.error.publish');
+            // Stop execution
+            return;
+        }
+
+        // 2. On success, publish the entity to production
         try {
             $this->logger->info(
                 sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameEn())
             );
-
             $publishResponse = $this->publishClient->publish($entity);
-
             if (array_key_exists('id', $publishResponse)) {
-                // Send the confirmation mail
-                $this->logger->info(
-                    sprintf('Sending publish request mail to service desk for "%s".', $entity->getNameEn())
-                );
-
-                $ticket = Ticket::fromEntity(
-                    $entity,
-                    $command->getApplicant(),
-                    $this->issueType,
-                    'entity.publish.request.ticket.summary',
-                    'entity.publish.request.ticket.description'
-                );
-                try {
-                    $issue = $this->ticketService->createIssueFrom($ticket);
-                    $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
-                } catch (JiraException $e) {
-                    $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
-                }
+                // Set entity status to published
+                $entity->setStatus(Entity::STATE_PUBLISHED);
+                $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
+                // Save changes made to entity
+                $this->repository->save($entity);
+                // Publishing succeeded, stop execution
+                return;
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(
@@ -141,11 +153,8 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->flashBag->add('error', 'entity.edit.error.publish');
         }
 
-        // Set entity status to published
-        $entity->setStatus(Entity::STATE_PUBLISHED);
-        $this->logger->info(sprintf('Updating status of "%s" to published.', $entity->getNameEn()));
-
-        // Save changes made to entity
-        $this->repository->save($entity);
+        // 3. On failure, remove the Jira ticket that was previously created. The user must retry at a later stage
+        $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->key));
+        $this->ticketService->delete($issue->key);
     }
 }
