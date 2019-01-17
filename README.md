@@ -10,7 +10,7 @@
 
 The Service Provider Dashboard is a dashboard application where
 [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/index.html) Service Providers can register and manage
-their services.
+their services. This can be both SAML 2.0 and OpenID Connect entities.
 
 ## Prerequisites
 

@@ -1,7 +1,22 @@
 ## Next release
 
+## 2.0.0
+
+This release sees the actual addition of OpenID Connect support (OIDC) in SP Dashboard. In release 1.5.x  we already 
+hinted to the OIDC addition but this release finally adds support for said protocol. In addition to adding OIDC support,  
+some security related chores have been undertaken. Most notable is the addition of Yarn Audit to the QA (build) tooling. 
+
 **New feature**
- - Publishing of production entities results in Jira ticket
+ - Add OIDC support #189 #204 #206 
+ - Create Jira issue after publishing to manage prod #221 #225
+ - Split the entity overview page on environment #207
+
+**Bugfixes:**
+ - OpenID Connect related bugfixes: #205 #209 #216 #217 #219 #220 #203 #223
+
+**Chores**
+ - Upgrade npm dependencies #218
+ - Improve security tests #224
 
 ## 1.5.2
 
@@ -9,7 +24,7 @@ The main focus of this release was to fix some minor bugs to make a production r
 
 **Bugfixes:**
  - Fix route after session timeout
- - Temporarily disable the oidc entity type in modal
+ - Temporarily disable the OIDC entity type in modal
 
 ## 1.5.1
 
