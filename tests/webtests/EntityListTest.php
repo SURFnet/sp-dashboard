@@ -210,8 +210,8 @@ class EntityListTest extends WebTestCase
         $testAction = $modalTest->first()->attr('action');
         $prodAction = $modalProd->first()->attr('action');
 
-        $this->assertEquals('/entity/create/type', $testAction);
-        $this->assertEquals('/entity/create/type/production', $prodAction);
+        $this->assertEquals('/entity/create/type/2', $testAction);
+        $this->assertEquals('/entity/create/type/2/production', $prodAction);
 
         // Now submit one of the forms and ascertain we ended up on the edit entity form
         $form = $crawler->filter('#add-for-test')
@@ -223,7 +223,7 @@ class EntityListTest extends WebTestCase
             'Expected a redirect to the /entity/create/type action'
         );
 
-        $this->assertRegExp('/\/entity\/create\/type/', $this->client->getRequest()->getRequestUri());
+        $this->assertRegExp('/\/entity\/create\/type\/2/', $this->client->getRequest()->getRequestUri());
 
         // TODO: test submitting to the openidconnect form that is yet to be created
     }

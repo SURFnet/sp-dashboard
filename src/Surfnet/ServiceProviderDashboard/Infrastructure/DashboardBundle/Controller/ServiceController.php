@@ -175,21 +175,11 @@ class ServiceController extends Controller
      */
     public function editAction(Request $request, $serviceId)
     {
-        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        // Test if the active user is allowed to view entities of this service
-        if (!isset($serviceOptions[$serviceId])) {
-            throw $this->createNotFoundException('You are not allowed to edit this service');
-        }
-
-        // Activate the service
-        $this->authorizationService->setSelectedServiceId($serviceId);
+        $service = $this->authorizationService->getServiceById($serviceId);
 
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
 
         $command = new EditServiceCommand(
             $service->getId(),
@@ -245,26 +235,14 @@ class ServiceController extends Controller
      */
     public function deleteAction(Request $request, $serviceId)
     {
-        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        // Test if the active user is allowed to view entities of this service
-        if (!isset($serviceOptions[$serviceId])) {
-            throw $this->createNotFoundException('You are not allowed to delete this service');
-        }
-        // Activate the service
-        $this->authorizationService->setSelectedServiceId($serviceId);
+        $service = $this->authorizationService->getServiceById($serviceId);
 
         $form = $this->createForm(DeleteServiceType::class);
         $form->handleRequest($request);
 
-        $service = $this->serviceService->getServiceById(
-            $this->authorizationService->getActiveServiceId()
-        );
-
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
-                $service = $this->serviceService->getServiceById(
-                    $this->authorizationService->getActiveServiceId()
-                );
+                $service = $this->serviceService->getServiceById($serviceId);
 
                 // Remove the service
                 $contact = $this->authorizationService->getContact();

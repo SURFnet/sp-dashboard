@@ -9,7 +9,7 @@
     <div class="wysiwyg">{{ 'entity.type.description.html'|trans|raw }}</div>
 
     <div class="row entity-type">
-        {{ form_start(form, {'action': path('entity_type', {'targetEnvironment': environment})}) }}
+        {{ form_start(form, {'action': path('entity_type', {'serviceId': serviceId, 'targetEnvironment': environment})}) }}
         {{ form_widget(form) }}
 
         <div class="button-row">

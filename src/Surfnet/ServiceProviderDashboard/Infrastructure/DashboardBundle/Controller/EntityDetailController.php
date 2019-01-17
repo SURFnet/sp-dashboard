@@ -23,8 +23,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class EntityDetailController extends Controller
@@ -34,14 +34,14 @@ class EntityDetailController extends Controller
      */
     private $entityService;
     /**
-     * @var ServiceService
+     * @var AuthorizationService
      */
-    private $serviceService;
+    private $authorizationService;
 
-    public function __construct(EntityServiceInterface $entityService, ServiceService $serviceService)
+    public function __construct(EntityServiceInterface $entityService, AuthorizationService $authorizationService)
     {
         $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
+        $this->authorizationService = $authorizationService;
     }
 
     /**
@@ -57,10 +57,11 @@ class EntityDetailController extends Controller
      */
     public function detailAction($id, $serviceId, $manageTarget)
     {
+        $service = $this->authorizationService->getServiceById($serviceId);
+
         // First try to read the entity from the local storage
         $entity = $this->entityService->getEntityById($id);
         if (!$entity) {
-            $service = $this->serviceService->getServiceById($serviceId);
             $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
         }
         $viewObject = EntityDetail::fromEntity($entity);
