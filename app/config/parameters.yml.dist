@@ -51,6 +51,11 @@ parameters:
     manage_prod_username: sp-dashboard
     manage_prod_password: secret
 
+    # Mail default settings
+    mail_from: support@surfconext.nl
+    mail_receiver: support@surfconext.nl
+    mail_no_reply: no-reply@surfconext.nl
+
     # Jira settings
     jira_host: https://jira.example.com
     jira_username: sp-dashboard

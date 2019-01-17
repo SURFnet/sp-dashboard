@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Webmozart\Assert\Assert;
 
 class RequestDeletePublishedEntityCommandHandler implements CommandHandler
 {
@@ -49,16 +50,43 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
      */
     private $logger;
 
+    /**
+     * @var string
+     */
+    private $summaryTranslationKey;
+
+    /**
+     * @var string
+     */
+    private $descriptionTranslationKey;
+
+    /**
+     * @var string
+     */
+    private $issueType;
+
+    /**
+     * @param ManageQueryClient $manageProductionQueryClient
+     * @param string $issueType
+     * @param TicketService $ticketService
+     * @param FlashBagInterface $flashBag
+     * @param LoggerInterface $logger
+     */
     public function __construct(
         ManageQueryClient $manageProductionQueryClient,
+        $issueType,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
         LoggerInterface $logger
     ) {
+        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in parameters.yml');
         $this->queryClient = $manageProductionQueryClient;
         $this->ticketService = $ticketService;
         $this->flashBag = $flashBag;
         $this->logger = $logger;
+        $this->summaryTranslationKey = 'entity.delete.request.ticket.summary';
+        $this->descriptionTranslationKey = 'entity.delete.request.ticket.description';
+        $this->issueType = $issueType;
     }
 
     public function handle(RequestDeletePublishedEntityCommand $command)
@@ -73,9 +101,9 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
         $ticket = Ticket::fromManageResponse(
             $entity,
             $command->getApplicant(),
-            $command->getIssueType(),
-            $command->getIssueSummaryTranslationKey(),
-            $command->getIssueDescriptionTranslationKey()
+            $this->issueType,
+            $this->summaryTranslationKey,
+            $this->descriptionTranslationKey
         );
         try {
             $issue = $this->ticketService->createIssueFrom($ticket);

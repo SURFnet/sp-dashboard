@@ -14,6 +14,10 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Mailer\FakeMailer
+        public: true
+
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
         class: Surfnet\ServiceProviderDashboard\Webtests\Metadata\FakeFetcher
 

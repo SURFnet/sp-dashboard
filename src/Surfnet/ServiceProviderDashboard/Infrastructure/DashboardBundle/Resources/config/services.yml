@@ -48,6 +48,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\RequestDeletePublishedEntityCommandHandler
         arguments:
             - '@surfnet.manage.client.query_client.prod_environment'
+            - '%jira_issue_type%'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand }
 
@@ -102,6 +103,8 @@ services:
             - '@surfnet.manage.client.publish_client.prod_environment'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@session.flash_bag'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer'
             - '@logger'
             - '%jira_issue_type_publication_request%'
         public: true
@@ -128,6 +131,18 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer:
+        arguments: ['@mailer']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory:
+        arguments:
+            - '%mail_from%'
+            - '%mail_receiver%'
+            - '%mail_no_reply%'
+            - '@translator'
+            - '@templating'
+
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder:
         tags:

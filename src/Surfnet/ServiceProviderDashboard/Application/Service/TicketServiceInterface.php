@@ -45,4 +45,9 @@ interface TicketServiceInterface
      * @return Issue|null
      */
     public function findByManageId($id);
+
+    /**
+     * @param string $issueKey
+     */
+    public function delete($issueKey);
 }

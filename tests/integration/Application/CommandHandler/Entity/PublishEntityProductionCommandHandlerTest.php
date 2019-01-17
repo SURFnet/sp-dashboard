@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
 
 use JiraRestApi\Issue\Issue;
+use JiraRestApi\JiraException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
@@ -28,8 +29,11 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEn
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
+use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -64,9 +68,19 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
     private $logger;
 
     /**
-     * @var TicketService
+     * @var TicketService|Mock
      */
     private $ticketService;
+
+    /**
+     * @var Mailer|Mock
+     */
+    private $mailer;
+
+    /**
+     * @var MailMessageFactory|Mock
+     */
+    private $mailFactory;
 
     public function setUp()
     {
@@ -77,11 +91,16 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->flashBag = m::mock(FlashBagInterface::class);
         $this->logger = m::mock(LoggerInterface::class);
 
+        $this->mailer = m::mock(Mailer::class);
+        $this->mailFactory = m::mock(MailMessageFactory::class);
+
         $this->commandHandler = new PublishEntityProductionCommandHandler(
             $this->repository,
             $this->publishEntityClient,
             $this->ticketService,
             $this->flashBag,
+            $this->mailFactory,
+            $this->mailer,
             $this->logger,
             'customIssueType'
         );
@@ -145,16 +164,83 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
-    public function test_it_handles_failing_publish()
+    public function test_failing_jira_ticket_creation()
     {
+        $contact = new Contact('nameid', 'name@example.org', 'display name');
+        $user = new Identity($contact);
+
+        $token = new SamlToken([]);
+        $token->setUser($user);
+
         $entity = m::mock(Entity::class);
+        $entity
+            ->shouldReceive('getId')
+            ->andReturn('123');
         $entity
             ->shouldReceive('getNameEn')
             ->andReturn('Test Entity Name');
+        $entity
+            ->shouldReceive('getEntityId')
+            ->andReturn('https://app.example.com/');
 
+        $this->repository
+            ->shouldReceive('findById')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->andReturn($entity);
+
+        $this->ticketService
+            ->shouldReceive('createIssueFrom')
+            ->andThrow(JiraException::class);
+
+        $message = m::mock(Message::class);
+        $this->mailFactory
+            ->shouldReceive('buildJiraIssueFailedMessage')
+            ->andReturn($message);
+
+        $this->mailer
+            ->shouldReceive('send')
+            ->with($message);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('critical')
+            ->once();
+
+        $this->flashBag
+            ->shouldReceive('add')
+            ->with('error', 'entity.edit.error.publish');
+
+        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+
+        $command = new PublishEntityProductionCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
+        $this->commandHandler->handle($command);
+    }
+
+    public function test_it_handles_failing_publish_and_cleans_up_ticket()
+    {
+        $entity = m::mock(Entity::class);
+        $entity
+            ->shouldReceive('getId')
+            ->andReturn('123');
+        $entity
+            ->shouldReceive('getNameEn')
+            ->andReturn('Test Entity Name');
         $entity
             ->shouldReceive('setStatus')
             ->with(Entity::STATE_PUBLISHED);
+        $entity
+            ->shouldReceive('getEntityId')
+            ->andReturn('https://app.example.com/');
+
+        $issue = m::mock(Issue::class)->makePartial();
+        $issue->key = 'CXT-999';
+
+        $this->ticketService
+            ->shouldReceive('createIssueFrom')
+            ->andReturn($issue);
 
         $this->repository
             ->shouldReceive('findById')
@@ -167,7 +253,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $this->logger
             ->shouldReceive('info')
-            ->times(2);
+            ->times(4);
 
         $this->logger
             ->shouldReceive('error')
@@ -182,6 +268,9 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->flashBag
             ->shouldReceive('add')
             ->with('error', 'entity.edit.error.publish');
+
+        $this->ticketService
+            ->shouldReceive('delete');
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
         $command = new PublishEntityProductionCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
