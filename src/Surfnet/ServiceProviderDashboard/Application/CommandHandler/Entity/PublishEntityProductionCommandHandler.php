@@ -128,6 +128,8 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      *
      * @param PublishEntityProductionCommand $command
      * @throws NotAuthenticatedException
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function handle(PublishEntityProductionCommand $command)
     {
@@ -174,9 +176,19 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                 $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
                 // Save changes made to entity
                 $this->repository->save($entity);
-                // Publishing succeeded, stop execution
-                return;
+            } else {
+                $this->logger->error(
+                    sprintf(
+                        'Publishing to Manage failed for: "%s". Message: "%s"',
+                        $entity->getNameEn(),
+                        'Manage did not return an id. See the context for more details.'
+                    ),
+                    [$publishResponse]
+                );
+                $this->flashBag->add('error', 'entity.edit.error.publish');
             }
+
+            return;
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(
