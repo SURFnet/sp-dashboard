@@ -31,6 +31,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
+use Webmozart\Assert\Assert;
 
 class EntityService implements EntityServiceInterface
 {
@@ -54,16 +55,33 @@ class EntityService implements EntityServiceInterface
      */
     private $logger;
 
+    /**
+     * @var string
+     */
+    private $oidcPlaygroundUriTest;
+
+    /**
+     * @var string
+     */
+    private $oidcPlaygroundUriProd;
+
     public function __construct(
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         TicketServiceInterface $ticketService,
         RouterInterface $router,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        $oidcPlaygroundUriTest,
+        $oidcPlaygroundUriProd
     ) {
+        Assert::stringNotEmpty($oidcPlaygroundUriTest, 'Please set "playground_uri_test" in parameters.yml');
+        Assert::stringNotEmpty($oidcPlaygroundUriProd, 'Please set "playground_uri_prod" in parameters.yml');
+
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
         $this->router = $router;
         $this->logger = $logger;
+        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
+        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
     public function createEntityUuid()
@@ -76,7 +94,14 @@ class EntityService implements EntityServiceInterface
         return $this->queryRepositoryProvider->getEntityRepository()->findById($id);
     }
 
-    public function getEntityByIdAndTarget($id, $manageTarget, $serviceId)
+    /**
+     * @param string $id
+     * @param string $manageTarget
+     * @param Service $service
+     * @return mixed|Entity|null
+     * @throws QueryServiceProviderException
+     */
+    public function getEntityByIdAndTarget($id, $manageTarget, Service $service)
     {
         switch ($manageTarget) {
             case 'production':
@@ -94,14 +119,15 @@ class EntityService implements EntityServiceInterface
                 if ($issue) {
                     $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
                 }
-                return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
+
+                return Entity::fromManageResponse($entity, $manageTarget, $service, $this->oidcPlaygroundUriTest, $this->oidcPlaygroundUriProd);
                 break;
             case 'test':
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
 
-                return Entity::fromManageResponse($entity, $manageTarget, $serviceId);
+                return Entity::fromManageResponse($entity, $manageTarget, $service, $this->oidcPlaygroundUriTest, $this->oidcPlaygroundUriProd);
                 break;
             default:
                 return $this->getEntityById($id);

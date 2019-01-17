@@ -40,12 +40,6 @@ class ChooseEntityTypeType extends AbstractType
                     'SAML 2.0' => Entity::TYPE_SAML,
                     'OpenID Connect' => Entity::TYPE_OPENID_CONNECT
                 ],
-                'choice_attr' => function ($val, $key, $index) {
-                    if ($val == Entity::TYPE_OPENID_CONNECT) {
-                        return ['disabled' => 'disabled'];
-                    }
-                    return [];
-                },
                 'label' => false,
                 'expanded' => true,
                 'multiple' => false,

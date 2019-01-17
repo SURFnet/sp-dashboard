@@ -7,7 +7,7 @@
     </li>
 {% elseif action.allowCopyAction %}
     <li>
-        <a href="{{ path('entity_copy', {manageId: action.id, targetEnvironment: action.environment, sourceEnvironment: action.environment}) }}">
+        <a href="{{ path('entity_copy', {manageId: action.id, serviceId: action.serviceId, targetEnvironment: action.environment, sourceEnvironment: action.environment}) }}">
             <i class="fa fa-pencil-square" aria-hidden="true"></i>
             {{ 'entity.list.action.edit'|trans }}
         </a>

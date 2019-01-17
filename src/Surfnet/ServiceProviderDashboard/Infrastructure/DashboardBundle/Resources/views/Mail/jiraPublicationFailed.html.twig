@@ -1,0 +1,24 @@
+<style type="text/css">.dl-horizontal dt{float:left;width:160px;overflow:hidden;clear:left;text-align:right;text-overflow:ellipsis;white-space:nowrap}.dl-horizontal dd{margin-left:180px}</style>
+Hi,<br/>
+
+<p>
+    SP Dashboard heeft getracht een 'spd-request-production-entity' Jira issue aan te maken. Maar dit is mislukt. De volgende
+    exception message is opgegooid.
+</p>
+
+<pre>
+    {{ exception.message }}
+    {{ dump(exception.trace) }}
+</pre>
+
+<p>
+    De entity "{{ entityId }}" van Service {{ serviceName }} is niet in Manage opgenomen, omdat JIRA niet beschikbaar was om een ticket aan te maken. Los het JIRA probleem op, daarna kan de entity alsnog worden gepubliceerd.
+</p>
+
+<p>
+    Met vriendelijke groet,
+</p>
+
+<p>
+    SURFconext
+</p>

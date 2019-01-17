@@ -121,7 +121,7 @@ class EntityDeleteTest extends WebTestCase
         // Successfull deleting an entity from manage results in return type boolean : true
         $this->testMockHandler->append(new Response(200, [], json_encode(true)));
 
-        $crawler = $this->client->request('GET', "/entity/delete/published/a8e7cffd-0409-45c7-a37a-000000000000");
+        $crawler = $this->client->request('GET', "/entity/delete/published/1/a8e7cffd-0409-45c7-a37a-000000000000");
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -133,8 +133,9 @@ class EntityDeleteTest extends WebTestCase
 
         $this->client->submit($form);
 
+        $response = $this->client->getResponse();
         $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
+            $response instanceof RedirectResponse,
             'Expecting a redirect response after editing an entity'
         );
     }
@@ -167,7 +168,7 @@ class EntityDeleteTest extends WebTestCase
         // Successfull deleting an entity from manage results in return type boolean : true
         $this->prodMockHandler->append(new Response(200, [], json_encode(true)));
 
-        $crawler = $this->client->request('GET', "/entity/delete/published/a8e7cffd-0409-45c7-a37a-000000000000/production");
+        $crawler = $this->client->request('GET', "/entity/delete/published/1/a8e7cffd-0409-45c7-a37a-000000000000/production");
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -221,7 +222,7 @@ class EntityDeleteTest extends WebTestCase
         $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $crawler = $this->client->request('GET', "/entity/delete/request/a8e7cffd-0409-45c7-a37a-000000000000");
+        $crawler = $this->client->request('GET', "/entity/delete/request/1/a8e7cffd-0409-45c7-a37a-000000000000");
 
         $pageTitle = $crawler->filter('h1');
 

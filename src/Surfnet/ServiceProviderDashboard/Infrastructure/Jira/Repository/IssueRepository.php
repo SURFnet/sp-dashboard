@@ -77,7 +77,6 @@ class IssueRepository implements TicketServiceInterface
         $manageIdFieldLabel
     ) {
         Assert::stringNotEmpty($projectKey, 'Please set "jira_issue_project_key" in parameters.yml');
-        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in parameters.yml');
         Assert::stringNotEmpty($manageIdFieldName, 'Please set "jira_issue_manageid_fieldname" in parameters.yml');
         Assert::stringNotEmpty(
             $manageIdFieldLabel,
@@ -154,5 +153,11 @@ class IssueRepository implements TicketServiceInterface
         $issueField = $this->issueFactory->fromTicket($ticket);
         $issueService = $this->jiraFactory->buildIssueService();
         return $issueService->create($issueField);
+    }
+
+    public function delete($issueKey)
+    {
+        $issueService = $this->jiraFactory->buildIssueService();
+        $issueService->deleteIssue($issueKey);
     }
 }

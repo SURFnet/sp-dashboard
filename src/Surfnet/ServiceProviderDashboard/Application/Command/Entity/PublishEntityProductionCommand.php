@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityProductionCommand implements Command
@@ -31,11 +32,17 @@ class PublishEntityProductionCommand implements Command
     private $id;
 
     /**
+     * @var Contact
+     */
+    private $applicant;
+
+    /**
      * @param string $id
      */
-    public function __construct($id)
+    public function __construct($id, Contact $applicatant)
     {
         $this->id = $id;
+        $this->applicant = $applicatant;
     }
 
     /**
@@ -44,5 +51,10 @@ class PublishEntityProductionCommand implements Command
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getApplicant()
+    {
+        return $this->applicant;
     }
 }

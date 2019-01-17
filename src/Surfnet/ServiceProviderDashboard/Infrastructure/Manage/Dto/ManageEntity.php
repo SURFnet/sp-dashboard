@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 
 class ManageEntity
 {
@@ -39,24 +39,32 @@ class ManageEntity
      */
     private $metaData;
 
+    /**
+     * @var OidcClient
+     */
+    private $oidcClient;
+
     public static function fromApiResponse($data)
     {
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
-        return new self($data['id'], $attributeList, $metaData);
+        $oidcClient = OidcClient::fromApiResponse($data);
+        return new self($data['id'], $attributeList, $metaData, $oidcClient);
     }
 
     /**
      * @param string $id
      * @param AttributeList $attributes
      * @param MetaData $metaData
+     * @param OidcClient $oidcClient
      */
-    private function __construct($id, AttributeList $attributes, MetaData $metaData)
+    private function __construct($id, AttributeList $attributes, MetaData $metaData, OidcClient $oidcClient = null)
     {
         $this->id = $id;
-        $this->status = Entity::STATE_PUBLISHED;
+        $this->status = DomainEntity::STATE_PUBLISHED;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
+        $this->oidcClient = $oidcClient;
     }
 
     public function getId()
@@ -82,5 +90,24 @@ class ManageEntity
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return OidcClient|null
+     */
+    public function getOidcClient()
+    {
+        return $this->oidcClient;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        if ($this->getMetaData()->getCoin()->getOidcClient()) {
+            return DomainEntity::TYPE_OPENID_CONNECT;
+        }
+        return DomainEntity::TYPE_SAML;
     }
 }

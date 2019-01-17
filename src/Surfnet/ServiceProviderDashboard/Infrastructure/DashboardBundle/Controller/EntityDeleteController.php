@@ -26,6 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -56,19 +57,22 @@ class EntityDeleteController extends Controller
     private $authorizationService;
 
     /**
-     * @param CommandBus $commandBus
+     * @var ServiceService
      */
+    private $serviceService;
 
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         DeleteCommandFactory $commandFactory,
-        AuthorizationService $authorizationService
+        AuthorizationService $authorizationService,
+        ServiceService $serviceService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
         $this->commandFactory = $commandFactory;
+        $this->serviceService = $serviceService;
     }
 
     /**
@@ -109,7 +113,7 @@ class EntityDeleteController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route(
-     *     "/entity/delete/published/{manageId}/{environment}",
+     *     "/entity/delete/published/{serviceId}/{manageId}/{environment}",
      *     name="entity_delete_published",
      *     defaults={
      *          "manageId": null,
@@ -120,11 +124,14 @@ class EntityDeleteController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @param Request $request
      *
-     * @param $manageId
-     * @param $environment
+     * @param int $serviceId
+     * @param string|null $manageId
+     * @param string|null$environment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
      */
-    public function deletePublishedAction(Request $request, $manageId, $environment)
+    public function deletePublishedAction(Request $request, $serviceId, $manageId, $environment)
     {
         $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
 
@@ -144,8 +151,8 @@ class EntityDeleteController extends Controller
                 $this->commandBus->handle($command);
             }
 
-            $serviceId = $this->authorizationService->getActiveServiceId();
-            return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
+            $service = $this->authorizationService->getServiceById($serviceId);
+            return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
         }
 
         return [
@@ -159,7 +166,7 @@ class EntityDeleteController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route(
-     *     "/entity/delete/request/{manageId}/{environment}",
+     *     "/entity/delete/request/{serviceId}/{manageId}/{environment}",
      *     name="entity_delete_request",
      *     defaults={
      *          "manageId": null,
@@ -170,11 +177,14 @@ class EntityDeleteController extends Controller
      * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
-     * @param $manageId
-     * @param $environment
+     * @param int $serviceId
+     * @param string|null $manageId
+     * @param string|null $environment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
      */
-    public function deleteRequestAction(Request $request, $manageId, $environment)
+    public function deleteRequestAction(Request $request, $serviceId, $manageId, $environment)
     {
         $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
 
@@ -188,11 +198,16 @@ class EntityDeleteController extends Controller
             if ($form->getClickedButton()->getName() === 'delete') {
                 $contact = $this->authorizationService->getContact();
                 $this->commandBus->handle(
-                    $this->commandFactory->buildRequestDeletePublishedEntityCommand($manageId, $contact)
+                    $this->commandFactory->buildRequestDeletePublishedEntityCommand(
+                        $manageId,
+                        $contact,
+                        'entity.delete.request.ticket.summary',
+                        'entity.delete.request.ticket.description'
+                    )
                 );
             }
-            $serviceId = $this->authorizationService->getActiveServiceId();
-            return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
+            $service = $this->authorizationService->getServiceById($serviceId);
+            return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
         }
 
         return [

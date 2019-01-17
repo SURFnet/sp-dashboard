@@ -18,9 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Mailer;
 
+use Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
@@ -58,24 +58,31 @@ class MailMessageFactoryTest extends MockeryTestCase
         );
     }
 
-    public function test_build_publish_to_production_message()
+    public function test_build_jira_ticket_creation_failed()
     {
-        $entity = m::mock(Entity::class);
-        $entity
-            ->shouldReceive('getEntityId')
-            ->once()
-            ->andReturn('1123132-1231231-12312312123');
-
         $this->translator
             ->shouldReceive('trans');
 
         $this->templateEngine
             ->shouldReceive('render');
 
-        $message = $this->factory->buildPublishToProductionMessage(
-            $entity,
-            new Contact('nameid', 'name@example.org', 'display name')
-        );
+        $e = m::mock(Exception::class);
+
+        $e
+            ->shouldReceive('getMessage')
+            ->andReturn('Something went terribly wrong!');
+        $e
+            ->shouldReceive('getTrace')
+            ->andReturn([]);
+
+        $entity = m::mock(Entity::class);
+        $entity->shouldReceive('getService->getName')
+            ->andReturn('ACME corporation');
+
+        $entity->shouldReceive('getEntityId')
+            ->andReturn('https://www.acme.com/metadata');
+
+        $message = $this->factory->buildJiraIssueFailedMessage($e, $entity);
 
         $this->assertInstanceOf(Message::class, $message);
     }

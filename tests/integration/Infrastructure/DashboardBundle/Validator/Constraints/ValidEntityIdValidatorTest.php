@@ -23,7 +23,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Psr\Log\NullLogger;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator;
@@ -70,7 +70,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         // record in the service registry with the given entityId.
         $this->mockHandler->append(new Response(200, [], '[]'));
 
-        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https://www.domain.org');
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
         $entityCommand->shouldReceive('getId')->andReturn(1);
@@ -91,7 +91,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         // record in the service registry with the given entityId.
         $this->mockHandler->append(new Response(200, [], '[]'));
 
-        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https://www.domain.org');
         $entityCommand->shouldReceive('isForProduction')->andReturn(true);
         $entityCommand->shouldReceive('getId')->andReturn(1);
@@ -108,7 +108,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_empty_entity_id()
     {
-        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https://www.domain.org');
 
         $this->setRoot($entityCommand);
@@ -120,7 +120,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_empty_metadata_url()
     {
-        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('');
 
         $this->setRoot($entityCommand);
@@ -135,7 +135,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
         $domainA = 'invalid domain\.com';
         $domainB = 'domain.org';
 
-        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('https:///www.' . $domainA);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
 
@@ -155,7 +155,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_invalid_entity_id_url()
     {
-        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand = m::mock(SaveSamlEntityCommand::class);
 
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('www.domain.org');
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
@@ -175,7 +175,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_invalid_metadata_url()
     {
-        $entityCommand = m::mock(SaveEntityCommand::class);
+        $entityCommand = m::mock(SaveSamlEntityCommand::class);
 
         $entityCommand->shouldReceive('getMetadataUrl')->andReturn('q$:\₪.3%$');
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
-class SaveEntityCommandHandler implements CommandHandler
+class SaveOidcEntityCommandHandler implements CommandHandler
 {
     /**
      * @var EntityRepository
@@ -42,13 +44,13 @@ class SaveEntityCommandHandler implements CommandHandler
     }
 
     /**
-     * @param SaveEntityCommand $command
+     * @param SaveOidcEntityCommand $command
      * @throws EntityNotFoundException
      * @throws InvalidArgumentException
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(SaveEntityCommand $command)
+    public function handle(SaveOidcEntityCommand $command)
     {
         // If the entity does not exist yet, create it on the fly
         if (is_null($command->getId())) {
@@ -62,8 +64,12 @@ class SaveEntityCommandHandler implements CommandHandler
             $entity = new Entity();
             $entity->setId($id);
             $entity->setService($command->getService());
-            $entity->setTicketNumber($command->getTicketNumber());
             $command->setId($id);
+
+            if (empty($command->getManageId())) {
+                $secret = new Secret(20);
+                $entity->setClientSecret($secret->getSecret());
+            }
         } else {
             $entity = $this->repository->findById($command->getId());
         }
@@ -72,16 +78,20 @@ class SaveEntityCommandHandler implements CommandHandler
             throw new EntityNotFoundException('The requested Service cannot be found');
         }
 
+        if (!$command->getManageId()) {
+            $secret = new Secret(Entity::OIDC_SECRET_LENGTH);
+            $entity->setClientSecret($secret->getSecret());
+        }
+
         $entity->setService($command->getService());
         $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());
         $entity->setEnvironment($command->getEnvironment());
-        $entity->setImportUrl($command->getImportUrl());
-        $entity->setPastedMetadata($command->getPastedMetadata());
-        $entity->setMetadataUrl($command->getMetadataUrl());
-        $entity->setAcsLocation($command->getAcsLocation());
         $entity->setEntityId($command->getEntityId());
-        $entity->setCertificate($command->getCertificate());
+        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+        $entity->setRedirectUris($command->getRedirectUris());
+        $entity->setGrantType(new OidcGrantType($command->getGrantType()));
+        $entity->setEnablePlayground($command->isEnablePlayground());
         $entity->setLogoUrl($command->getLogoUrl());
         $entity->setNameNl($command->getNameNl());
         $entity->setNameEn($command->getNameEn());
@@ -109,13 +119,8 @@ class SaveEntityCommandHandler implements CommandHandler
         $entity->setEduPersonTargetedIDAttribute($command->getEduPersonTargetedIDAttribute());
         $entity->setComments($command->getComments());
 
-        // Set the name id format, fall back on the most sensible default (transient). This is only for users not
-        // utilizing the import feature.
-        if ($command->hasNameIdFormat()) {
-            $entity->setNameIdFormat($command->getNameIdFormat());
-        } else {
-            $entity->setNameIdFormat(Entity::NAME_ID_FORMAT_DEFAULT);
-        }
+        // Set the name id format to unspecified.
+        $entity->setNameIdFormat(Entity::NAME_ID_FORMAT_UNSPECIFIED);
 
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());
         $entity->setOrganizationNameEn($command->getOrganizationNameEn());

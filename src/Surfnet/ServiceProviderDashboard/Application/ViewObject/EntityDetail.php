@@ -59,6 +59,11 @@ class EntityDetail
     /**
      * @var string
      */
+    private $protocol;
+
+    /**
+     * @var string
+     */
     private $certificate;
 
     /**
@@ -240,6 +245,7 @@ class EntityDetail
         $entityDetail = new self();
         $entityDetail->id = $entity->getId();
         $entityDetail->manageId = $entity->getManageId();
+        $entityDetail->protocol = $entity->getProtocol();
         $entityDetail->metadataUrl = $entity->getMetadataUrl();
         $entityDetail->acsLocation = $entity->getAcsLocation();
         $entityDetail->entityId = $entity->getEntityId();
@@ -281,7 +287,13 @@ class EntityDetail
         if ($entityDetail->isLocalEntity()) {
             $actionId = $entityDetail->id;
         }
-        $entityDetail->actions = new EntityActions($actionId, $entity->getService()->getId(), $entity->getStatus(), $entity->getEnvironment());
+        $entityDetail->actions = new EntityActions(
+            $actionId,
+            $entity->getService()->getId(),
+            $entity->getStatus(),
+            $entity->getEnvironment(),
+            $entity->getProtocol()
+        );
         return $entityDetail;
     }
 
@@ -592,5 +604,13 @@ class EntityDetail
     public function getActions()
     {
         return $this->actions;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
     }
 }

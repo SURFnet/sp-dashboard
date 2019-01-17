@@ -52,7 +52,10 @@ class DeleteCommandFactory
             return $this->buildDeletePublishedProductionEntityCommand($entity->getId());
         }
         if ($isRequestDelete) {
-            return $this->buildRequestDeletePublishedEntityCommand($entity->getId(), $entity->getContact());
+            return $this->buildRequestDeletePublishedEntityCommand(
+                $entity->getId(),
+                $entity->getContact()
+            );
         }
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
     }

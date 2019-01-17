@@ -43,7 +43,6 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
             'Jane Doe',
             'customfield_10107',
             'customfield_10108',
-            'bug',
             'Critical',
             'SPD',
             'John Doe',
@@ -53,12 +52,21 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
     public function test_build_issue_field_from_ticket()
     {
-        $ticket = new Ticket('https://example.com', 'manage-id', 'Test Service', 'John Doe', 'john@example.com');
+        $ticket = new Ticket(
+            'https://example.com',
+            'manage-id',
+            'Test Service',
+            'arbitrary-summary-key',
+            'arbitrary-description-key',
+            'John Doe',
+            'john@example.com',
+            'arbitrary-issue-type'
+        );
 
         $this->translator
             ->shouldReceive('trans')
             ->with(
-                'entity.delete.request.ticket.description',
+                'arbitrary-description-key',
                 [
                     '%applicant_name%' => 'John Doe',
                     '%applicant_email%' => 'john@example.com',
@@ -70,7 +78,7 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->translator
             ->shouldReceive('trans')
-            ->with('entity.delete.request.ticket.summary', ['%entity_name%' => 'Test Service'])
+            ->with('arbitrary-summary-key', ['%entity_name%' => 'Test Service'])
             ->andReturn('Summary')
             ->once();
 
@@ -81,7 +89,7 @@ class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Jane Doe', $issueField->assignee->name);
         // The custom field is used for saving the entity id.
         $this->assertEquals('https://example.com', $issueField->customFields['customfield_10107']);
-        $this->assertEquals('bug', $issueField->getIssueType()->name);
+        $this->assertEquals('arbitrary-issue-type', $ticket->getIssueType());
         $this->assertEquals('Critical', $issueField->priority->name);
         $this->assertEquals('John Doe', $issueField->reporter->name);
     }

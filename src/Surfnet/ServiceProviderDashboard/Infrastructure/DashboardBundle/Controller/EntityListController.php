@@ -22,8 +22,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -69,41 +71,29 @@ class EntityListController extends Controller
      */
     public function listAction($serviceId)
     {
-        $serviceOptions = $this->authorizationService->getAllowedServiceNamesById();
-        // Test if the active user is allowed to view entities of this service
-        if (!isset($serviceOptions[$serviceId])) {
-            throw $this->createNotFoundException('Unable to open the entity overview for this service');
-        }
-        // Activate the service
-        $this->authorizationService->setSelectedServiceId($serviceId);
+        $service = $this->authorizationService->getServiceById($serviceId);
 
-        if (empty($serviceOptions)) {
-            return $this->redirectToRoute('service_add');
-        }
+        $entityList = $this->entityService->getEntityListForService($service);
+        $productionEntitiesEnabled = $service->isProductionEntitiesEnabled();
+        $serviceName = $service->getName();
 
-        $service = null;
-        $entityList = [];
-        $serviceName = false;
-        $productionEntitiesEnabled = false;
-
-        $activeServiceId = $this->authorizationService->getActiveServiceId();
-        if ($activeServiceId) {
-            $service = $this->serviceService->getServiceById(
-                $this->authorizationService->getActiveServiceId()
-            );
-        }
-
-        if ($service) {
-            $entityList = $this->entityService->getEntityListForService($service);
-            $productionEntitiesEnabled = $service->isProductionEntitiesEnabled();
-            $serviceName = $service->getName();
+        // Try to get a published entity from the session, if there is one, we just published an entity and might need
+        // to display the oidc confirmation popup.
+        /** @var Entity $publishedEntity */
+        $publishedEntity = $this->get('session')->get('published.entity.clone');
+        $showOidcPopup = false;
+        if ($publishedEntity && $publishedEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT && $publishedEntity->getClientSecret()) {
+            $showOidcPopup = true;
         }
 
         return [
             'no_service_selected' => empty($service),
+            'service' => $service,
             'production_entities_enabled' => $productionEntitiesEnabled,
             'entity_list' => $entityList,
             'serviceName' => $serviceName,
+            'showOidcPopup' => $showOidcPopup,
+            'publishedEntity' => $publishedEntity
         ];
     }
 }

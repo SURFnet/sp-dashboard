@@ -65,26 +65,19 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getEntityId()));
 
                 $response = $this->client->post(
-                    json_encode([
-                        'data' => $this->generator->generateForNewEntity($entity),
-                        'type' => 'saml20_sp',
-                    ]),
+                    json_encode($this->generator->generateForNewEntity($entity)),
                     '/manage/api/internal/metadata'
                 );
             } else {
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
 
                 $response = $this->client->put(
-                    json_encode([
-                        'pathUpdates' => $this->generator->generateForExistingEntity($entity),
-                        'type' => 'saml20_sp',
-                        'id' => $entity->getManageId(),
-                    ]),
+                    json_encode($this->generator->generateForExistingEntity($entity)),
                     '/manage/api/internal/merge'
                 );
             }
 
-            if (isset($response['status']) && $response['status'] == 400) {
+            if (isset($response['status']) && $response['status'] != "OK") {
                 throw new PublishMetadataException('Unable to publish the metadata to Manage');
             }
 

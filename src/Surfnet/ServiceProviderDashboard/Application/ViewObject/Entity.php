@@ -58,6 +58,11 @@ class Entity
     private $environment;
 
     /**
+     * @var string
+     */
+    private $protocol;
+
+    /**
      * @var RouterInterface
      */
     private $router;
@@ -75,6 +80,7 @@ class Entity
      * @param string $contact
      * @param string $state
      * @param string $environment
+     * @param string $protocol
      * @param RouterInterface $router
      */
     public function __construct(
@@ -85,6 +91,7 @@ class Entity
         $contact,
         $state,
         $environment,
+        $protocol,
         RouterInterface $router
     ) {
         $this->id = $id;
@@ -93,8 +100,9 @@ class Entity
         $this->contact = $contact;
         $this->state = $state;
         $this->environment = $environment;
+        $this->protocol = $protocol;
         $this->router = $router;
-        $this->actions = new EntityActions($id, $serviceId, $state, $environment);
+        $this->actions = new EntityActions($id, $serviceId, $state, $environment, $protocol);
     }
 
     public static function fromEntity(DomainEntity $entity, RouterInterface $router)
@@ -115,6 +123,7 @@ class Entity
             $formattedContact,
             $entity->getStatus(),
             $entity->getEnvironment(),
+            $entity->getProtocol(),
             $router
         );
     }
@@ -137,6 +146,7 @@ class Entity
             $formattedContact,
             $result->getStatus(),
             'test',
+            $result->getProtocol(),
             $router
         );
     }
@@ -169,6 +179,7 @@ class Entity
             $formattedContact,
             $status,
             'production',
+            $result->getProtocol(),
             $router
         );
     }
@@ -217,7 +228,10 @@ class Entity
      */
     public function getEntityId()
     {
-        return $this->entityId;
+        if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
+            return $this->entityId;
+        }
+        return str_replace('://', '@//', $this->entityId);
     }
 
     /**
@@ -257,7 +271,7 @@ class Entity
      */
     public function getProtocol()
     {
-        return 'SAML';
+        return $this->protocol;
     }
 
     public function isPublishedToProduction()

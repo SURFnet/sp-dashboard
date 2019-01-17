@@ -18,24 +18,21 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
-use League\Tactician\CommandBus;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Mail\PublishToProductionMailCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\NotAuthenticatedException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Webmozart\Assert\Assert;
 
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
@@ -48,21 +45,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      * @var PublishEntityRepository
      */
     private $publishClient;
-
     /**
-     * @var CommandBus
+     * @var TicketService
      */
-    private $commandBus;
-
-    /**
-     * @var MailMessageFactory
-     */
-    private $mailMessageFactory;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private $ticketService;
 
     /**
      * @var FlashBagInterface
@@ -74,22 +60,62 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      */
     private $logger;
 
+    /**
+     * @var string
+     */
+    private $issueType;
+
+    /**
+     * @var MailMessageFactory
+     */
+    private $mailFactory;
+
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    /**
+     * @var string
+     */
+    private $summaryTranslationKey;
+
+    /**
+     * @var string
+     */
+    private $descriptionTranslationKey;
+
+    /**
+     * @param EntityRepository $entityRepository
+     * @param PublishEntityRepository $publishClient
+     * @param TicketService $ticketService
+     * @param FlashBagInterface $flashBag
+     * @param MailMessageFactory $mailFactory
+     * @param Mailer $mailer
+     * @param LoggerInterface $logger
+     * @param string $issueType
+     */
     public function __construct(
         EntityRepository $entityRepository,
         PublishEntityRepository $publishClient,
-        CommandBus $commandBus,
-        MailMessageFactory $mailMessageFactory,
-        TokenStorageInterface $tokenStorage,
+        TicketService $ticketService,
         FlashBagInterface $flashBag,
-        LoggerInterface $logger
+        MailMessageFactory $mailFactory,
+        Mailer $mailer,
+        LoggerInterface $logger,
+        $issueType
     ) {
+        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_publication_request" in parameters.yml');
         $this->repository = $entityRepository;
         $this->publishClient = $publishClient;
-        $this->commandBus = $commandBus;
-        $this->mailMessageFactory = $mailMessageFactory;
-        $this->tokenStorage = $tokenStorage;
+        $this->ticketService = $ticketService;
+        $this->mailFactory = $mailFactory;
+        $this->mailer = $mailer;
         $this->flashBag = $flashBag;
         $this->logger = $logger;
+        $this->issueType = $issueType;
+        $this->summaryTranslationKey = 'entity.publish.request.ticket.summary';
+        $this->descriptionTranslationKey = 'entity.publish.request.ticket.description';
     }
 
     /**
@@ -98,79 +124,84 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      * Some remarks:
      *  - The production manage connection is used to publish to production
      *  - In addition to a test publish; the coin:exclude_from_push attribute is passed with value 1
-     *  - The mail message is still sent to the service desk.
+     *  - A jira ticket is created to inform the service desk of the pending publication request
      *
      * @param PublishEntityProductionCommand $command
      * @throws NotAuthenticatedException
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function handle(PublishEntityProductionCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
 
+        // 1. Create the Jira ticket
+        $ticket = Ticket::fromEntity(
+            $entity,
+            $command->getApplicant(),
+            $this->issueType,
+            $this->summaryTranslationKey,
+            $this->descriptionTranslationKey
+        );
+
+        $this->logger->info(
+            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getNameEn())
+        );
+
+        try {
+            $issue = $this->ticketService->createIssueFrom($ticket);
+            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+        } catch (Exception $e) {
+            $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
+
+            // Inform the service desk of the unavailability of Jira
+            $message = $this->mailFactory->buildJiraIssueFailedMessage($e, $entity);
+            $this->mailer->send($message);
+
+            // Customer is presented an error message with the invitation to try again at a later stage
+            $this->flashBag->add('error', 'entity.edit.error.publish');
+            // Stop execution
+            return;
+        }
+
+        // 2. On success, publish the entity to production
         try {
             $this->logger->info(
-                sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameNl())
+                sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameEn())
             );
-
             $publishResponse = $this->publishClient->publish($entity);
-
             if (array_key_exists('id', $publishResponse)) {
-                // Send the confirmation mail
-                $this->logger->info(
-                    sprintf('Sending publish request mail to service desk for "%s".', $entity->getNameNl())
+                // Set entity status to published
+                $entity->setStatus(Entity::STATE_PUBLISHED);
+                $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
+                // Save changes made to entity
+                $this->repository->save($entity);
+            } else {
+                $this->logger->error(
+                    sprintf(
+                        'Publishing to Manage failed for: "%s". Message: "%s"',
+                        $entity->getNameEn(),
+                        'Manage did not return an id. See the context for more details.'
+                    ),
+                    [$publishResponse]
                 );
-                $mailCommand = new PublishToProductionMailCommand(
-                    $this->buildMailMessage($entity)
-                );
-                $this->commandBus->handle($mailCommand);
+                $this->flashBag->add('error', 'entity.edit.error.publish');
             }
+
+            return;
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $entity->getNameNl(),
+                    $entity->getNameEn(),
                     $e->getMessage()
                 )
             );
             $this->flashBag->add('error', 'entity.edit.error.publish');
         }
 
-        // Set entity status to published
-        $entity->setStatus(Entity::STATE_PUBLISHED);
-        $this->logger->info(sprintf('Updating status of "%s" to published.', $entity->getNameNl()));
-
-        // Save changes made to entity
-        $this->repository->save($entity);
-    }
-
-    /**
-     * @param Entity $entity
-     * @return Message
-     * @throws NotAuthenticatedException
-     */
-    private function buildMailMessage(Entity $entity)
-    {
-        $token = $this->tokenStorage->getToken();
-        if (!$token instanceof TokenInterface) {
-            throw new NotAuthenticatedException(
-                'No authentication token found'
-            );
-        }
-
-        $user = $token->getUser();
-        if (!$user instanceof Identity) {
-            throw new NotAuthenticatedException(
-                'No user found in authentication token'
-            );
-        }
-
-        $contact = $user->getContact();
-        if (!$contact instanceof Contact) {
-            throw new NotAuthenticatedException(
-                'Unable to determine contact information of authenticated user'
-            );
-        }
-
-        return $this->mailMessageFactory->buildPublishToProductionMessage($entity, $contact);
+        // 3. On failure, remove the Jira ticket that was previously created. The user must retry at a later stage
+        $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->key));
+        $this->ticketService->delete($issue->key);
     }
 }

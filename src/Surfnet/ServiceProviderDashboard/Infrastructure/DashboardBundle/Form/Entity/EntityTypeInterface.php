@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Command\Mail;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message;
+use Symfony\Component\Form\FormInterface;
 
-interface MailCommand extends Command
+interface EntityTypeInterface extends FormInterface
 {
     /**
-     * @return Message
+     * @return Command
      */
-    public function getMessage();
+    public function getData();
 }

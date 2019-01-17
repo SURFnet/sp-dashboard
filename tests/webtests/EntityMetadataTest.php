@@ -43,19 +43,20 @@ class EntityMetadataTest extends WebTestCase
         $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
         $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp');
         $entity->setCertificate('B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds');
+        $entity->setProtocol(Entity::TYPE_SAML);
         $entity->setService(
             $this->getServiceRepository()->findByName('SURFnet')
         );
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
-        $entity->setTicketNumber('IID-9');
         $entity->setStatus(Entity::STATE_PUBLISHED);
 
         $this->getEntityRepository()->save($entity);
 
         $this->client->request('GET', '/entity/metadata/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
 
-        $json = json_decode($this->client->getResponse()->getContent(), true);
+        $content = $this->client->getResponse()->getContent();
+        $json = json_decode($content, true);
 
         $this->assertEquals('MijnService', $json['metaDataFields']['name:nl']);
         $this->assertEquals('MyService', $json['metaDataFields']['name:en']);
@@ -76,7 +77,6 @@ class EntityMetadataTest extends WebTestCase
         );
         $entity->setNameEn('MyService');
         $entity->setNameNl('MijnService');
-        $entity->setTicketNumber('IID-9');
         $entity->setStatus(Entity::STATE_DRAFT);
 
         $this->getEntityRepository()->save($entity);

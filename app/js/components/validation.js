@@ -131,3 +131,19 @@ function validateUrn(value) {
 
     return regExp.test(value);
 }
+
+window.Parsley.addValidator('redirecturis', {
+    validateString: function(value, requirement, instance) {
+        let count  = 0;
+        instance.$element.closest('.collection-widget').find('input').each(function (idx, value) {
+            if ($(value).val().length > 0) {
+                count++;
+            }
+        });
+        return count > 0;
+    },
+    messages: {
+        en: 'At least one redirecturi must be set.',
+    }
+}, 32);
+

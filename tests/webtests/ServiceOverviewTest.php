@@ -138,8 +138,8 @@ class ServiceOverviewTest extends WebTestCase
             ['No entities found.'],
             [""],
             ['Entities @ test environment'],
-            ["SP1", "SP1", "SAML", "draft"],
-            ["SP2", "SP2", "SAML", "draft"],
+            ["SP1", "SP1", "saml20", "draft"],
+            ["SP2", "SP2", "saml20", "draft"],
         ], $result2);
     }
 

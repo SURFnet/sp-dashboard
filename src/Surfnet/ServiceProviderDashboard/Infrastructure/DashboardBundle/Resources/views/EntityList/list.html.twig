@@ -1,83 +1,176 @@
 {% extends '::base.html.twig' %}
 
-{% block page_heading %}
-    {% if not serviceName %}
-        {{ 'entity.list.title_no_service_selected'|trans }}
-    {% else %}
-        {{ 'entity.list.title'|trans({'%serviceName%': serviceName }) }}
-    {% endif %}
-{%endblock%}
+{% block body_container %}
 
-{% block body %}
-    {% if not no_service_selected %}
-    <div class="add-entity-actions">
-        <a href="#add-for-test" rel="modal:open">
-            <i class="fa fa-plus"></i>
-            {{ 'entity.list.add_to_test'|trans}}
-        </a>
-        {% if production_entities_enabled %}
-            <a href="#add-for-production" rel="modal:open">
-                <i class="fa fa-plus"></i>
-                {{ 'entity.list.add_to_production'|trans}}
-            </a>
-        {% endif %}
-    </div>
-    {% endif %}
+    <h1>{% block page_heading %}
+            {% if not serviceName %}
+                {{ 'entity.list.title_no_service_selected'|trans }}
+            {% else %}
+                {{ 'entity.list.title'|trans({'%serviceName%': serviceName }) }}
+            {% endif %}
+    {% endblock %}</h1>
 
-    {% for type, messages in app.session.flashbag.all %}
-        {% for message in messages %}
-            <div class="message {{ type }}">{{ message|trans }}</div>
+    {% set flashes = app.session.flashbag.all %}
+    {% if flashes is not empty %}
+    <div class="card">
+        {% for type, messages in flashes %}
+            {% for message in messages %}
+                <div class="message {{ type }}">{{ message|trans }}</div>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
+    </div>
+    {%  endif %}
+
+    <br/>
 
     {% if no_service_selected %}
+        <div class="card">
         {{ 'entity.list.no_service_selected'|trans }}
-    {% elseif entity_list.entities is empty %}
-        {{ 'entity.list.empty'|trans }}
+        </div>
     {% else %}
 
-    <table>
-        <thead>
+    <div class="fieldset card action">
+        <ul>
+            <li>
+                <a href="#add-for-test" rel="modal:open">
+                    <i class="fa fa-plus"></i>
+                    {{ 'entity.list.add_to_test'|trans}}
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="fieldset card">
+
+        <h3>{{ 'entity.list.table.title.test'|trans }}</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>{{ 'entity.list.name'|trans }}</th>
+                    <th>{{ 'entity.list.entity_id'|trans }}</th>
+                    <th>{{ 'entity.list.primary_contact'|trans }}</th>
+                    <th>{{ 'entity.list.protocol'|trans }}</th>
+                    <th>{{ 'entity.list.state'|trans }}</th>
+                    <th>{{ ''|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set hasEntities = false %}
+                {% for entity in entity_list.entities %}
+                    {% if entity.environment == 'test' %}
+                    {% set hasEntities = true %}
+                    <tr>
+                        <td>{{ entity.name }}</td>
+                        <td>{{ entity.entityId }}</td>
+                        <td>{{ entity.contact }}</td>
+                        <td>{{ entity.protocol }}</td>
+                        <td>{{ entity.state }}</td>
+                        <td>
+                            <div class="actions">
+                                <a class="opener" href="#">
+                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </a>
+
+                                {% include '@Dashboard/EntityActions/actionsForList.html.twig' with {entity: entity.actions} %}
+
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if hasEntities == false %}
+                    <tr>
+                        <td colspan="5">{{ 'entity.list.empty'|trans }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <br/>
+
+    {% if production_entities_enabled %}
+        <div class="fieldset card action">
+            <ul>
+                <li>
+                    <a href="#add-for-production" rel="modal:open">
+                        <i class="fa fa-plus"></i>
+                        {{ 'entity.list.add_to_production'|trans}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="fieldset card">
+
+        <h3>{{ 'entity.list.table.title.prod'|trans }}</h3>
+
+        <table>
+            <thead>
             <tr>
                 <th>{{ 'entity.list.name'|trans }}</th>
                 <th>{{ 'entity.list.entity_id'|trans }}</th>
                 <th>{{ 'entity.list.primary_contact'|trans }}</th>
+                <th>{{ 'entity.list.protocol'|trans }}</th>
                 <th>{{ 'entity.list.state'|trans }}</th>
-                <th>{{ 'entity.list.environment'|trans }}</th>
                 <th>{{ ''|trans }}</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
+            {% set hasEntities = false %}
             {% for entity in entity_list.entities %}
-            <tr>
-                <td>{{ entity.name }}</td>
-                <td>{{ entity.entityId }}</td>
-                <td>{{ entity.contact }}</td>
-                <td>{{ entity.state }}</td>
-                <td>{{ entity.environment }}</td>
-                <td>
-                    <div class="actions">
-                        <a class="opener" href="#">
-                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                            <i class="fa fa-caret-down" aria-hidden="true"></i>
-                        </a>
+                {% if entity.environment == 'production' %}
+                {% set hasEntities = true %}
+                <tr>
+                    <td>{{ entity.name }}</td>
+                    <td>{{ entity.entityId }}</td>
+                    <td>{{ entity.contact }}</td>
+                    <td>{{ entity.protocol }}</td>
+                    <td>{{ entity.state }}</td>
+                    <td>
+                        <div class="actions">
+                            <a class="opener" href="#">
+                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                            </a>
 
-                        {% include '@Dashboard/EntityActions/actionsForList.html.twig' with {entity: entity.actions} %}
+                            {% include '@Dashboard/EntityActions/actionsForList.html.twig' with {entity: entity.actions} %}
 
-                    </div>
-                </td>
-            </tr>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
             {% endfor %}
-        </tbody>
-    </table>
+            {% if hasEntities == false %}
+                <tr>
+                    <td colspan="5">{{ 'entity.list.empty'|trans }}</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
     {% endif %}
 
     <div class="modal" id="add-for-test">
-        {{ render(controller('DashboardBundle:EntityCreate:type', {targetEnvironment: "test"})) }}
+        {{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test"})) }}
     </div>
 
     <div class="modal" id="add-for-production">
-        {{ render(controller('DashboardBundle:EntityCreate:type', {targetEnvironment: "production"})) }}
+        {{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production"})) }}
+    </div>
+
+    {% if showOidcPopup %}
+        <div class="modal" id="oidc-published-popup">
+            {{ render(controller('DashboardBundle:EntityPublished:oidcConfirmationModal')) }}
+        </div>
+    {% endif %}
+
+    <div class="modal" id="reset-secret-confirmation">
+        {% include "@Dashboard/EntityModal/secretResetModal.html.twig" %}
     </div>
 
 {% endblock %}

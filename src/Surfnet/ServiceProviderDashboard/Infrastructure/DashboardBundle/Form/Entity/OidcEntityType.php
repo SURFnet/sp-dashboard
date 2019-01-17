@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -33,8 +35,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityType extends AbstractType
+class OidcEntityType extends AbstractType
 {
+
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
@@ -44,205 +47,168 @@ class EntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            // The first button in a form defines the default behaviour when
-            // submitting the form by pressing ENTER. We add a 'default
-            // action' button on top of the form so the controller action
-            // handling the form submission can choose what action to
-            // perform. This is to prevent the import action when submitting
-            // the form (the import button is now the second button on the
-            // form).
-            ->add('default', SubmitType::class, ['attr' => ['style' => 'display: none']])
+        $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
+
+        $metadata
             ->add(
-                $builder->create(
-                    'general',
-                    FormType::class,
+                'clientId',
+                TextType::class,
+                [
+                    'property_path' => 'entityId',
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.clientId',
+                        'data-parsley-uri' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            );
+
+        $manageId = $options['data']->getManageId();
+        if (!empty($manageId)) {
+            $metadata->remove('clientId');
+            $metadata
+                ->add(
+                    'clientId',
+                    TextType::class,
                     [
-                        'inherit_data' => true,
-                        'label' => 'General information',
+                        'required' => false,
+                        'validation_groups' => false,
+                        'disabled' => true,
+                        'attr' => [
+                            'readonly' => 'readonly',
+                            'data-help' => 'entity.edit.information.clientId',
+                        ],
                     ]
-                )
-                    ->add(
-                        'ticketNumber',
-                        TextType::class,
-                        [
-                            'disabled' => true,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.ticketNumber'],
-                        ]
-                    )
+                );
+        }
+
+        $metadata
+            ->add(
+                'redirectUris',
+                CollectionType::class,
+                [
+                    'error_bubbling' => false,
+                    'prototype' => true,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'entry_type' => TextType::class,
+                    'entry_options' => [
+                        'attr' => [
+                            'data-parsley-redirecturis' => null,
+                            'data-parsley-uri' => null,
+                            'data-parsley-trigger' => 'blur',
+                            'data-parsley-validate-if-empty' => null,
+                        ],
+                    ],
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.redirectUris',
+                    ],
+                ]
             )
             ->add(
-                $builder->create('metadata', FormType::class, ['inherit_data' => true])
-                    ->add(
-                        'importUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.importUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'pastedMetadata',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.pastedMetadata',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'importButton',
-                        SubmitType::class,
-                        [
-                            'label' => 'Import',
-                            'attr' => ['class' => 'button'],
-                        ]
-                    )
-                    ->add(
-                        'metadataUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.metadataUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'acsLocation',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.acsLocation',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'entityId',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.entityId',
-                                'data-parsley-uri' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'nameIdFormat',
-                        ChoiceType::class,
-                        [
-                            'expanded' => true,
-                            'multiple' => false,
-                            'choices'  => [
-                                'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_DEFAULT,
-                                'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
-                            ],
-                            'attr' => [
-                                'class' => 'nameidformat-container',
-                                'data-help' => 'entity.edit.information.nameIdFormat',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'certificate',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.certificate',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'logoUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.logoUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'nameNl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.nameNl'],
-                        ]
-                    )
-                    ->add(
-                        'descriptionNl',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.descriptionNl',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'nameEn',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.nameEn'],
-                        ]
-                    )
-                    ->add(
-                        'descriptionEn',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.descriptionEn',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'applicationUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.applicationUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
-                    ->add(
-                        'eulaUrl',
-                        TextType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.eulaUrl',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
-                            ],
-                        ]
-                    )
+                'grantType',
+                ChoiceType::class,
+                [
+                    'expanded' => true,
+                    'multiple' => false,
+                    'choices'  => [
+                        'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
+                        'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT,
+                    ],
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.grantType',
+                    ],
+                ]
             )
+            ->add(
+                'logoUrl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.logoUrl',
+                        'data-parsley-urlstrict' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            )
+            ->add(
+                'nameNl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => ['data-help' => 'entity.edit.information.nameNl'],
+                ]
+            )
+            ->add(
+                'descriptionNl',
+                TextareaType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.descriptionNl',
+                        'rows' => 10,
+                    ],
+                ]
+            )
+            ->add(
+                'nameEn',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => ['data-help' => 'entity.edit.information.nameEn'],
+                ]
+            )
+            ->add(
+                'descriptionEn',
+                TextareaType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.descriptionEn',
+                        'rows' => 10,
+                    ],
+                ]
+            )
+            ->add(
+                'applicationUrl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.applicationUrl',
+                        'data-parsley-urlstrict' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            )
+            ->add(
+                'eulaUrl',
+                TextType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'data-help' => 'entity.edit.information.eulaUrl',
+                        'data-parsley-urlstrict' => null,
+                        'data-parsley-trigger' => 'blur',
+                    ],
+                ]
+            )
+            ->add(
+                'enablePlayground',
+                CheckboxType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'requested'
+                    ]
+                ]
+            );
+
+        $builder
+            ->add($metadata)
             ->add(
                 $builder->create('contactInformation', FormType::class, ['inherit_data' => true])
                     ->add(
@@ -279,6 +245,7 @@ class EntityType extends AbstractType
                         'givenNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.givenNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.givenNameAttribute'],
@@ -288,6 +255,7 @@ class EntityType extends AbstractType
                         'surNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.surNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.surNameAttribute'],
@@ -297,6 +265,7 @@ class EntityType extends AbstractType
                         'commonNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.commonNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.commonNameAttribute'],
@@ -306,6 +275,7 @@ class EntityType extends AbstractType
                         'displayNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.displayNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.displayNameAttribute'],
@@ -315,6 +285,7 @@ class EntityType extends AbstractType
                         'emailAddressAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.emailAddressAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.emailAddressAttribute'],
@@ -324,6 +295,7 @@ class EntityType extends AbstractType
                         'organizationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.organizationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.organizationAttribute'],
@@ -333,6 +305,7 @@ class EntityType extends AbstractType
                         'organizationTypeAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.organizationTypeAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.organizationTypeAttribute'],
@@ -342,6 +315,7 @@ class EntityType extends AbstractType
                         'affiliationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.affiliationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.affiliationAttribute'],
@@ -351,6 +325,7 @@ class EntityType extends AbstractType
                         'entitlementAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.entitlementAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.entitlementAttribute'],
@@ -360,6 +335,7 @@ class EntityType extends AbstractType
                         'principleNameAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.principleNameAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.principleNameAttribute'],
@@ -369,6 +345,7 @@ class EntityType extends AbstractType
                         'uidAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.uidAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.uidAttribute'],
@@ -378,6 +355,7 @@ class EntityType extends AbstractType
                         'preferredLanguageAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.preferredLanguageAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.preferredLanguageAttribute'],
@@ -387,6 +365,7 @@ class EntityType extends AbstractType
                         'personalCodeAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.personalCodeAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.personalCodeAttribute'],
@@ -396,6 +375,7 @@ class EntityType extends AbstractType
                         'scopedAffiliationAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.scopedAffiliationAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.scopedAffiliationAttribute'],
@@ -405,6 +385,7 @@ class EntityType extends AbstractType
                         'eduPersonTargetedIDAttribute',
                         AttributeType::class,
                         [
+                            'label' => 'entity.edit.form.attributes.oidc.eduPersonTargetedIDAttribute',
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.eduPersonTargetedIDAttribute'],
@@ -444,7 +425,7 @@ class EntityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => SaveEntityCommand::class
+            'data_class' => SaveOidcEntityCommand::class
         ));
     }
 

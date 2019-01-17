@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory;
 
+use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
@@ -78,21 +79,17 @@ class MailMessageFactory
         $this->templating = $templating;
     }
 
-    public function buildPublishToProductionMessage(Entity $entity, Contact $contact)
+    public function buildJiraIssueFailedMessage(Exception $exception, Entity $entity)
     {
         $message = $this->createNewMessage();
-        $message->setSubject(
-            $this->translator->trans(
-                'mail.confirmation.publish_production.subject',
-                ['%entityId%' => $entity->getEntityId()]
-            )
-        );
+        $message->setSubject($this->translator->trans('mail.jira.publish_production_failed.subject'));
 
         $template = $this->renderView(
-            '@Dashboard/Mail/published.html.twig',
+            '@Dashboard/Mail/jiraPublicationFailed.html.twig',
             [
-                'entity' => $entity,
-                'contact' => $contact,
+                'exception' => $exception,
+                'entityId' => $entity->getEntityId(),
+                'serviceName' => $entity->getService()->getName(),
             ]
         );
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @SpDashboardAssert\HasAttributes()
  */
-class SaveEntityCommand implements Command
+class SaveOidcEntityCommand implements Command
 {
     /**
      * @var string
@@ -54,11 +55,6 @@ class SaveEntityCommand implements Command
     private $service;
 
     /**
-     * @var string
-     */
-    private $ticketNumber;
-
-    /**
      * @var bool
      */
     private $archived = false;
@@ -72,55 +68,39 @@ class SaveEntityCommand implements Command
     private $environment = Entity::ENVIRONMENT_TEST;
 
     /**
-     * Metadata URL that import last happened from.
-     *
-     * @var string
-
-     */
-    private $importUrl;
-
-    /**
-     * @var string
-     *
-     * @Assert\Url(
-     *      protocols={"https"},
-     *      message = "url.notSecure"
-     * )
-     */
-    private $metadataUrl;
-
-    /**
-     * @var string
-     */
-    private $pastedMetadata;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Url(protocols={"https","http"})
-     * @Assert\Url(
-     *      protocols={"https"},
-     *      message = "url.notSecure"
-     * )
-     */
-    private $acsLocation;
-
-    /**
      * @var string
      *
      * @Assert\NotBlank()
      * @Assert\Url()
-     * @SpDashboardAssert\ValidEntityId()
+     * @SpDashboardAssert\ValidClientId()
      */
     private $entityId;
 
     /**
      * @var string
-     *
-     * @SpDashboardAssert\ValidSSLCertificate()
      */
-    private $certificate;
+    private $clientSecret;
+
+    /**
+     * @var string[]
+     * @Assert\Count(
+     *      min = 1,
+     *      max = 1000,
+     *      minMessage = "You need to add a minimum of {{ limit }} redirect URI.|You need to add a minimum of {{ limit }} redirect URI's.",
+     * )
+     * @Assert\All({
+     *     @Assert\NotBlank(),
+     *     @Assert\Url(),
+     * })
+     */
+    private $redirectUris;
+
+    /**
+     * @var OidcGrantType
+     *
+     * @Assert\NotBlank()
+     */
+    private $grantType;
 
     /**
      * @var string
@@ -324,18 +304,6 @@ class SaveEntityCommand implements Command
 
     /**
      * @var string
-     * @Assert\Choice(
-     *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Entity",
-     *         "getValidNameIdFormats"
-     *     },
-     *     strict=true
-     * )
-     */
-    private $nameIdFormat = Entity::NAME_ID_FORMAT_DEFAULT;
-
-    /**
-     * @var string
      */
     private $organizationNameNl;
 
@@ -365,17 +333,23 @@ class SaveEntityCommand implements Command
     private $organizationUrlEn;
 
     /**
+     * @var bool
+     */
+    private $enablePlayground;
+
+    /**
      * @var string
      */
     private $manageId;
 
     private function __construct()
     {
+        $this->grantType = new OidcGrantType();
     }
 
     /**
      * @param Service $service
-     * @return SaveEntityCommand
+     * @return SaveOidcEntityCommand
      */
     public static function forCreateAction(Service $service)
     {
@@ -387,7 +361,7 @@ class SaveEntityCommand implements Command
     /**
      * @param Entity $entity
      *
-     * @return SaveEntityCommand
+     * @return SaveOidcEntityCommand
      */
     public static function fromEntity(Entity $entity)
     {
@@ -396,15 +370,13 @@ class SaveEntityCommand implements Command
         $command->status = $entity->getStatus();
         $command->manageId = $entity->getManageId();
         $command->service = $entity->getService();
-        $command->ticketNumber = $entity->getTicketNumber();
         $command->archived = $entity->isArchived();
         $command->environment = $entity->getEnvironment();
-        $command->importUrl = $entity->getImportUrl();
-        $command->pastedMetadata = $entity->getPastedMetadata();
-        $command->metadataUrl = $entity->getMetadataUrl();
-        $command->acsLocation = $entity->getAcsLocation();
         $command->entityId = $entity->getEntityId();
-        $command->certificate = $entity->getCertificate();
+        $command->clientSecret = $entity->getClientSecret();
+        $command->redirectUris = $entity->getRedirectUris();
+        $command->grantType = $entity->getGrantType();
+        $command->enablePlayground = $entity->isEnablePlayground();
         $command->logoUrl = $entity->getLogoUrl();
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
@@ -431,7 +403,6 @@ class SaveEntityCommand implements Command
         $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
         $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
         $command->comments = $entity->getComments();
-        $command->nameIdFormat = $entity->getNameIdFormat();
         $command->organizationNameNl = $entity->getOrganizationNameNl();
         $command->organizationNameEn = $entity->getOrganizationNameEn();
         $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
@@ -466,13 +437,6 @@ class SaveEntityCommand implements Command
         return $this->service;
     }
 
-    /**
-     * @return string
-     */
-    public function getTicketNumber()
-    {
-        return $this->ticketNumber;
-    }
 
     /**
      * @return bool
@@ -516,78 +480,6 @@ class SaveEntityCommand implements Command
     }
 
     /**
-     * @param string $ticketNo
-     */
-    public function setTicketNumber($ticketNo)
-    {
-        $this->ticketNumber = $ticketNo;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImportUrl()
-    {
-        return $this->importUrl;
-    }
-
-    /**
-     * @param string $importUrl
-     */
-    public function setImportUrl($importUrl)
-    {
-        $this->importUrl = $importUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMetadataUrl()
-    {
-        return $this->metadataUrl;
-    }
-
-    /**
-     * @param string $metadataUrl
-     */
-    public function setMetadataUrl($metadataUrl)
-    {
-        $this->metadataUrl = $metadataUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPastedMetadata()
-    {
-        return $this->pastedMetadata;
-    }
-
-    /**
-     * @param string $pastedMetadata
-     */
-    public function setPastedMetadata($pastedMetadata)
-    {
-        $this->pastedMetadata = $pastedMetadata;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAcsLocation()
-    {
-        return $this->acsLocation;
-    }
-
-    /**
-     * @param string $acsLocation
-     */
-    public function setAcsLocation($acsLocation)
-    {
-        $this->acsLocation = $acsLocation;
-    }
-
-    /**
      * @return string
      */
     public function getEntityId()
@@ -606,17 +498,76 @@ class SaveEntityCommand implements Command
     /**
      * @return string
      */
-    public function getCertificate()
+    public function getClientId()
     {
-        return $this->certificate;
+        return str_replace('://', '@//', $this->entityId);
     }
 
     /**
-     * @param string $certificate
+     * @return string
      */
-    public function setCertificate($certificate)
+    public function getClientSecret()
     {
-        $this->certificate = $certificate;
+        return $this->clientSecret;
+    }
+
+    /**
+     * @param string $clientSecret
+     */
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRedirectUris()
+    {
+        if (!is_array($this->redirectUris)) {
+            return [];
+        }
+        return array_values($this->redirectUris);
+    }
+
+    /**
+     * @param string $redirectUris
+     */
+    public function setRedirectUris($redirectUris)
+    {
+        $this->redirectUris = $redirectUris;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGrantType()
+    {
+        return $this->grantType->getGrantType();
+    }
+
+    /**
+     * @param string
+     */
+    public function setGrantType($grantType)
+    {
+        $this->grantType = new OidcGrantType($grantType);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnablePlayground()
+    {
+        return $this->enablePlayground;
+    }
+
+    /**
+     * @param bool $enablePlayground
+     */
+    public function setEnablePlayground($enablePlayground)
+    {
+        $this->enablePlayground = $enablePlayground;
     }
 
     /**
@@ -1036,22 +987,6 @@ class SaveEntityCommand implements Command
     }
 
     /**
-     * @return string
-     */
-    public function getNameIdFormat()
-    {
-        return $this->nameIdFormat;
-    }
-
-    /**
-     * @param string $nameIdFormat
-     */
-    public function setNameIdFormat($nameIdFormat)
-    {
-        $this->nameIdFormat = $nameIdFormat;
-    }
-
-    /**
      * @return bool
      */
     public function hasNameIdFormat()
@@ -1173,7 +1108,7 @@ class SaveEntityCommand implements Command
     /**
      * @param Service $service
      */
-    public function setService($service)
+    public function setService(Service $service)
     {
         $this->service = $service;
     }
