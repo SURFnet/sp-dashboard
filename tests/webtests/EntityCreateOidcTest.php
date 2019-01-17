@@ -48,7 +48,7 @@ class EntityOidcCreateTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oidc/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
@@ -64,7 +64,7 @@ class EntityOidcCreateTest extends WebTestCase
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oidc/test");
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
@@ -92,7 +92,7 @@ class EntityOidcCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oidc/test");
 
         $form = $crawler
             ->selectButton('Save')
@@ -121,7 +121,7 @@ class EntityOidcCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oidc/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -161,7 +161,7 @@ class EntityOidcCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oidc/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -202,7 +202,7 @@ class EntityOidcCreateTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/1/production");
+        $crawler = $this->client->request('GET', "/entity/create/1/oidc/production");
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
@@ -211,7 +211,7 @@ class EntityOidcCreateTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/oidc/2/production");
+        $crawler = $this->client->request('GET', "/entity/create/2/oidc/production");
 
         $form = $crawler
             ->selectButton('Save')
