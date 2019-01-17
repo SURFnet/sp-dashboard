@@ -40,7 +40,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
@@ -70,7 +70,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
@@ -93,7 +93,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
@@ -121,7 +121,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Save')
@@ -153,7 +153,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
         // manually (not using the import feature).
         unset($formData['dashboard_bundle_entity_type']['nameIdFormat']);
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Save')
@@ -178,7 +178,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -211,7 +211,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
     {
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -254,7 +254,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
@@ -297,9 +297,9 @@ class EntitySamlCreateSamlTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entity/create/saml20/1/production');
+        $crawler = $this->client->request('GET', '/entity/create/1/saml20production');
 
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_a_privileged_user_can_create_a_production_draft()
@@ -311,7 +311,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', '/entity/create/saml20/2/production');
+        $crawler = $this->client->request('GET', '/entity/create/2/saml20/production');
 
         $form = $crawler
             ->selectButton('Save')
@@ -348,7 +348,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
                 ],
             ],
         ];
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
@@ -376,7 +376,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
                 ],
             ],
         ];
-        $crawler = $this->client->request('GET', "/entity/create/saml20/2/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
