@@ -442,7 +442,6 @@ class Entity
             $entity->setClientSecret($oidcClient->getClientSecret());
             $entity->setRedirectUris($oidcClient->getRedirectUris());
             $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-            $entity->setEntityId($oidcClient->getClientId());
             $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
             self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
         }

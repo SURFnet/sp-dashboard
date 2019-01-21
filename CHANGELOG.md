@@ -1,5 +1,13 @@
 ## Next release
 
+## 2.0.1
+
+The main focus of this release was to fix some minor bugs to make a production ready release.
+
+**Bugfixes:**
+ - Fix use of dump method in twig template
+ - Fix setting entityId from clientId for OIDC entities from manage response.
+
 ## 2.0.0
 
 This release sees the actual addition of OpenID Connect support (OIDC) in SP Dashboard. In release 1.5.x  we already 
