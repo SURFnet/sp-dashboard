@@ -47,6 +47,15 @@ interface TicketServiceInterface
     public function findByManageId($id);
 
     /**
+     * Find a Jira issue by issue type and manage id.
+     *
+     * @param $manageId
+     * @param $issueType
+     * @return mixed
+     */
+    public function findByManageIdAndIssueType($manageId, $issueType);
+
+    /**
      * @param string $issueKey
      */
     public function delete($issueKey);
