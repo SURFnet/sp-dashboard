@@ -1,5 +1,8 @@
 ## Next release
 
+
+## 2.0.3
+
 **Bugfix**
  - Prevent new entities for checking Jira ticket #232
 
