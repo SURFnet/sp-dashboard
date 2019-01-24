@@ -57,4 +57,9 @@ class TicketService implements TicketServiceInterface
     {
         $this->issueRepository->delete($issueKey);
     }
+
+    public function findByManageIdAndIssueType($manageId, $issueType)
+    {
+        return $this->issueRepository->findByManageIdAndIssueType($manageId, $issueType);
+    }
 }

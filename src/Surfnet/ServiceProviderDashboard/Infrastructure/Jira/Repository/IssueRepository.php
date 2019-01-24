@@ -141,6 +141,33 @@ class IssueRepository implements TicketServiceInterface
     }
 
     /**
+     * @param string $manageId
+     * @param string $issueType
+     * @return Issue|null
+     * @throws JiraException
+     * @throws JsonMapper_Exception
+     */
+    public function findByManageIdAndIssueType($manageId, $issueType)
+    {
+        $issueService = $this->jiraFactory->buildIssueService();
+        // Search CTX: "$issueType" issues with manage id as provided in the $manageId parameter
+        $issues = $issueService->search(
+            sprintf(
+                'project = %s AND issuetype = %s AND "%s" ~ %s',
+                $this->projectKey,
+                $issueType,
+                $this->manageIdFieldLabel,
+                $manageId
+            )
+        );
+        $result = reset($issues->issues);
+        if ($result instanceof Issue) {
+            return $result;
+        }
+        return null;
+    }
+
+    /**
      * Create a Jira issue from a Ticket VO
      *
      * @param Ticket $ticket
