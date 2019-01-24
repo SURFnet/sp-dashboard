@@ -1,5 +1,8 @@
 ## Next release
 
+**Bugfix**
+ - Prevent new entities for checking Jira ticket #232
+
 ## 2.0.2
 
 The main focus of this release was to fix some minor bugs to make a production ready release.
