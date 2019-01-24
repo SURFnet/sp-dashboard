@@ -37,6 +37,14 @@ class ValidSSLCertificateValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
+    public function test_key_without_envelope()
+    {
+        $cert = file_get_contents(__DIR__ . '/fixture/certificate_validator/certificate_without_envelope.cer');
+        $this->validator->validate($cert, new ValidSSLCertificate());
+
+        $this->assertNoViolation();
+    }
+
     public function test_empty_value()
     {
         $this->validator->validate(null, new ValidSSLCertificate());

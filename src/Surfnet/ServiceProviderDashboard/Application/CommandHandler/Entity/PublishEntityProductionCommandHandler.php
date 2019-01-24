@@ -149,8 +149,15 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         );
 
         try {
-            $issue = $this->ticketService->createIssueFrom($ticket);
-            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+            // Before creating an issue, test if we didn't previously create this ticket (users can apply changes to
+            // requested published entities).
+            $issue = $this->ticketService->findByManageIdAndIssueType($entity->getManageId(), $this->issueType);
+            if (is_null($issue)) {
+                $issue = $this->ticketService->createIssueFrom($ticket);
+                $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+            } else {
+                $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->key));
+            }
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
 

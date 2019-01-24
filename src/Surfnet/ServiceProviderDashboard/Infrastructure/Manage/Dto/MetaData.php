@@ -57,6 +57,11 @@ class MetaData
     private $logo;
 
     /**
+     * @var string
+     */
+    private $signatureMethod;
+
+    /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
      * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
      * @param array $data

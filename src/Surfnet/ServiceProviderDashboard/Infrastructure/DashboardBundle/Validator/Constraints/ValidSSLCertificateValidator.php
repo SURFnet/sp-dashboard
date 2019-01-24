@@ -34,6 +34,8 @@ class ValidSSLCertificateValidator extends ConstraintValidator
             return;
         }
 
+        $value = $this->setCertificateEnvelope($value);
+
         $cert = openssl_x509_parse($value);
 
         if ($cert === false) {
@@ -44,7 +46,7 @@ class ValidSSLCertificateValidator extends ConstraintValidator
 
         openssl_x509_export($value, $cert, false);
 
-        if (!preg_match('~(\d+) bit~', $cert, $matches)) {
+        if (!preg_match('~Public-Key: \((\d+) bit\)~', $cert, $matches)) {
             $this->context->addViolation('validator.ssl_certificate.unknown_key_length');
 
             return;
@@ -60,5 +62,26 @@ class ValidSSLCertificateValidator extends ConstraintValidator
 
             return;
         }
+    }
+
+    private function setCertificateEnvelope($certData)
+    {
+        $certData = $this->stripCertificateEnvelope($certData);
+        $certData = $this->addCertificateEnvelope($certData);
+
+        return $certData;
+    }
+
+    private function stripCertificateEnvelope($certData)
+    {
+        $certData = str_replace('-----BEGIN CERTIFICATE-----', '', $certData);
+        $certData = str_replace('-----END CERTIFICATE-----', '', $certData);
+
+        return trim($certData);
+    }
+
+    private function addCertificateEnvelope($certData)
+    {
+        return "-----BEGIN CERTIFICATE-----" . PHP_EOL . $certData . PHP_EOL . "-----END CERTIFICATE-----";
     }
 }
