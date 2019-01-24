@@ -74,6 +74,7 @@ rm -rf ${PROJECT_DIR}/ci &&
 rm -rf ${PROJECT_DIR}/.travis.yml &&
 rm -rf ${PROJECT_DIR}/ansible &&
 rm -rf ${PROJECT_DIR}/Vagrantfile &&
+rm -rf ${PROJECT_DIR}/node_modules &&
 
 echo "Create tarball" &&
 cd ${RELEASE_DIR} &&

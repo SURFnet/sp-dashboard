@@ -323,7 +323,10 @@ class EntityDetail
      */
     public function getEntityId()
     {
-        return $this->entityId;
+        if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
+            return $this->entityId;
+        }
+        return str_replace('://', '@//', $this->entityId);
     }
 
     /**

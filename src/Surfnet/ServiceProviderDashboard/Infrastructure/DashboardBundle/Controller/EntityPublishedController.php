@@ -19,16 +19,13 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class EntityPublishedController extends Controller
 {
     /**
@@ -77,6 +74,8 @@ class EntityPublishedController extends Controller
         // Show the confirmation modal only once in this request
         $this->get('session')->remove('published.entity.clone');
 
-        return ['entity' => $entity];
+        $viewObject = EntityOidcConfirmation::fromEntity($entity);
+
+        return ['entity' => $viewObject];
     }
 }
