@@ -1,12 +1,23 @@
 ## Next release
 
+## 2.0.2
+
+The main focus of this release was to fix some minor bugs to make a production ready release.
+
+**Bugfixes:**
+ - Fix manage certificate metadata #227
+ - Ensure Jira tickets are created once #228
+ - Fix oidc client id on detail page #229
+ - Fix oidc client id on confirmation popup #230 
+ - Makerelease: Make sure the node_modules dir is removed #231
+ 
 ## 2.0.1
 
 The main focus of this release was to fix some minor bugs to make a production ready release.
 
 **Bugfixes:**
- - Fix use of dump method in twig template
- - Fix setting entityId from clientId for OIDC entities from manage response.
+ - Fix the dump method in twig template for prod #226
+ - Fix setting entityId from clientId for OIDC entities from manage response. #220
 
 ## 2.0.0
 
