@@ -1,5 +1,7 @@
 ## Next release
 
+## 2.0.4
+
 **Bugfix**
  - Correctly publish OIDC redirect URIs to Manage #233
 
