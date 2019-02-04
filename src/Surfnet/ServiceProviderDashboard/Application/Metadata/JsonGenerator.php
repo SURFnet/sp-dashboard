@@ -267,6 +267,7 @@ class JsonGenerator implements GeneratorInterface
     {
         $metadata['clientId'] = str_replace('://', '@//', $entity->getEntityId());
         $metadata['clientSecret'] = $entity->getClientSecret();
+        // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
         $metadata['redirectUris'] = $entity->getRedirectUris();
         $metadata['grantType'] = $entity->getGrantType()->getGrantType();
         $metadata['scope'] = ['openid'];

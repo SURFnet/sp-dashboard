@@ -115,6 +115,10 @@ class ServiceController extends Controller
             return $this->redirectToRoute('service_add');
         }
 
+        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+            return $this->render("@Dashboard/Service/admin_overview.html.twig");
+        }
+
         $serviceObjects = [];
         foreach ($services as $service) {
             $entityList = $this->entityService->getEntityListForService($service);
