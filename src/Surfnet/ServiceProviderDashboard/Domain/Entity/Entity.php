@@ -975,7 +975,7 @@ class Entity
      */
     public function setRedirectUris($redirectUris)
     {
-        $this->redirectUris = $redirectUris;
+        $this->redirectUris = array_values($redirectUris);
     }
 
     /**

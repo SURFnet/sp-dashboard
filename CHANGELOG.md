@@ -1,5 +1,8 @@
 ## Next release
 
+**Bugfix**
+ - Correctly publish OIDC redirect URIs to Manage #233
+
 **Improvement**
  - Provide a custom service overview for admin #234
 
