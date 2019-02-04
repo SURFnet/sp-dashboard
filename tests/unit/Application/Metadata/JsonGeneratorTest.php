@@ -467,10 +467,10 @@ class JsonGeneratorTest extends MockeryTestCase
                             'clientSecret' => 'test',
                             'redirectUris' =>
                                 array (
-                                    0 => 'uri1',
-                                    1 => 'uri2',
-                                    2 => 'uri3',
-                                    3 => 'http://playground-test',
+                                    'uri1',
+                                    'uri2',
+                                    'uri3',
+                                    'http://playground-test',
                                 ),
                             'grantType' => 'implicit',
                             'scope' =>
@@ -628,7 +628,7 @@ CERT
         $entity->setOrganizationUrlNl('http://orgnl');
 
         $entity->setClientSecret('test');
-        $entity->setRedirectUris(['uri1','uri2', 'uri3']);
+        $entity->setRedirectUris([0 => 'uri1', 2 => 'uri2', 8 => 'uri3']);
         $entity->setGrantType(new OidcGrantType('implicit'));
         $entity->setEnablePlayground(true);
 
