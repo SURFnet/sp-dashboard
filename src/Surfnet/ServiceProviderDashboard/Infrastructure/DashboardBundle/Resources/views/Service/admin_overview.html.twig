@@ -1,0 +1,10 @@
+{% extends '::base.html.twig' %}
+
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'service.admin_overview.title'|trans }}{%endblock%}</h1>
+
+    <div class="fieldset card">
+        <div class="wysiwyg">{{ 'service.admin_overview.introduction.html'|trans|raw }}</div>
+    </div>
+
+{% endblock %}
