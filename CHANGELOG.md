@@ -1,5 +1,7 @@
 ## Next release
 
+**Improvement**
+ - Provide a custom service overview for admin #234
 
 ## 2.0.3
 

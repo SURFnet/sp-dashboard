@@ -161,16 +161,14 @@ class ServiceOverviewTest extends WebTestCase
 
     public function test_service_overview_shows_message_when_no_service_selected()
     {
-        $this->markTestSkipped('TODO: Determine what the Administrator should see when authenticated');
-
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
         $this->client->request('GET', '/');
         $response = $this->client->getResponse();
 
-        $this->assertContains('No service selected', $response->getContent());
-        $this->assertContains('Please select a service', $response->getContent());
+        $this->assertContains('Service overview', $response->getContent());
+        $this->assertContains('Please use the service switcher to manage the entities of one of the services.', $response->getContent());
     }
 
 
