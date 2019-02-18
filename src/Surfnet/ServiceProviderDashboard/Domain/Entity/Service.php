@@ -47,7 +47,7 @@ class Service
     const SURFCONEXT_APPROVED_YES = 'yes';
     const SURFCONEXT_APPROVED_NO = 'no';
 
-    // Production connection status: (not-requested|requested|active|surfconext-informed)
+    // Production connection status: (not-requested|requested|active)
     const CONNECTION_STATUS_NOT_REQUESTED = 'not-requested';
     const CONNECTION_STATUS_REQUESTED = 'requested';
     const CONNECTION_STATUS_ACTIVE = 'active';
