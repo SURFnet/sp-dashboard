@@ -50,7 +50,6 @@ class Service
     // Production connection status: (not-requested|requested|active|surfconext-informed)
     const CONNECTION_STATUS_NOT_REQUESTED = 'not-requested';
     const CONNECTION_STATUS_REQUESTED = 'requested';
-    const CONNECTION_STATUS_SURFCONEXT_INFORMED = 'surfconext-informed';
     const CONNECTION_STATUS_ACTIVE = 'active';
 
     const ENTITY_PUBLISHED_NO = 'no';

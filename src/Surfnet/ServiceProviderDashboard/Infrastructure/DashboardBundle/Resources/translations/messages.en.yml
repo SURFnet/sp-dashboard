@@ -325,7 +325,6 @@ service.form.status.title: Service status
 service.form.label.connection_status: Connection status
 service.form.label.connection_status_not_requested: Not requested
 service.form.label.connection_status_requested: Requested
-service.form.label.connection_status_informed: Informed
 service.form.label.connection_status_active: Active
 service.form.label.contract_signed: Contract signed
 service.form.label.contract_signed_no: No

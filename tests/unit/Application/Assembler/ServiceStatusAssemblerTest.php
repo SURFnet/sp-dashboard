@@ -450,7 +450,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'representativeApproved' => Service::SURFCONEXT_APPROVED_YES,
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => true,
-                    'connectionStatus' => Service::CONNECTION_STATUS_SURFCONEXT_INFORMED,
+                    'connectionStatus' => Service::CONNECTION_STATUS_NOT_REQUESTED,
                     'entities' => [],
                 ],
                 'statusService' => [
@@ -462,7 +462,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     "entity-on-test": "in-progress",
     "representative-approved": "success",
     "privacy-questions": "info",
-    "production-connection": "in-progress"
+    "production-connection": "info"
   },
   "labels": {
     "intake-conducted": "service.overview.progress.label.intake-conducted",
@@ -476,7 +476,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     "entity-on-test": "service.overview.progress.tooltip.entity-on-test.in-progress.html",
     "representative-approved": "service.overview.progress.tooltip.representative-approved.success.html",
     "privacy-questions": "service.overview.progress.tooltip.privacy-questions.info.html",
-    "production-connection": "service.overview.progress.tooltip.production-connection.in-progress.html"
+    "production-connection": "service.overview.progress.tooltip.production-connection.info.html"
   },
   "legend": {
     "info": {
