@@ -280,6 +280,16 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
 
+    Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory
+
+    # For details, see the DasboardExtension.
+    surfnet.manage.configuration.test:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config
+
+    surfnet.manage.configuration.production:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config
+
     surfnet.manage.client.publish_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
         arguments:
@@ -309,11 +319,14 @@ services:
         - '@surfnet.manage.http.http_client.prod_environment'
         - '@logger'
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory:
+        public: false
+
     surfnet.manage.http.guzzle.test_environment:
         class: GuzzleHttp\Client
+        factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\ManageClientFactory:createClient"
         arguments:
-        - base_uri: "%manage_test_host%"
-          auth: ["%manage_test_username%", "%manage_test_password%", "Basic"]
+            - "@surfnet.manage.configuration.test"
 
     surfnet.manage.http.http_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
@@ -324,9 +337,9 @@ services:
 
     surfnet.manage.http.guzzle.prod_environment:
         class: GuzzleHttp\Client
+        factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\ManageClientFactory:createClient"
         arguments:
-        - base_uri: "%manage_prod_host%"
-          auth: ["%manage_prod_username%", "%manage_prod_password%", "Basic"]
+            - "@surfnet.manage.configuration.production"
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand
