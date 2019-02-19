@@ -74,9 +74,8 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateDataForNewEntity(
-            $this->createSamlEntity()
-        );
+        $metadata = $generator->generateForNewEntity($this->createSamlEntity(), 'testaccepted');
+        $metadata = $metadata['data'];
 
         $this->assertEquals('saml20-sp', $metadata['type']);
 
@@ -129,14 +128,12 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateDataForExistingEntity(
-            $this->createSamlEntity()
-        );
+        $metadata = $generator->generateForExistingEntity($this->createSamlEntity(), 'testaccepted');
+        $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
         $this->assertArrayNotHasKey('allowedall', $metadata);
         $this->assertArrayNotHasKey('allowedEntities', $metadata);
-        $this->assertArrayNotHasKey('state', $metadata);
         $this->assertArrayNotHasKey('type', $metadata);
 
         $this->assertEquals('http://entityid', $metadata['entityid']);
@@ -182,9 +179,8 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateDataForNewEntity(
-            $this->createOidcEntity()
-        );
+        $metadata = $generator->generateForNewEntity($this->createOidcEntity(), 'testaccepted');
+        $metadata = $metadata['data'];
 
         $this->assertTrue($metadata['active']);
         $this->assertTrue($metadata['allowedall']);
@@ -241,14 +237,12 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateDataForExistingEntity(
-            $this->createOidcEntity()
-        );
+        $metadata = $generator->generateForExistingEntity($this->createOidcEntity(), 'testaccepted');
+        $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
         $this->assertArrayNotHasKey('allowedall', $metadata);
         $this->assertArrayNotHasKey('allowedEntities', $metadata);
-        $this->assertArrayNotHasKey('state', $metadata);
         $this->assertArrayNotHasKey('type', $metadata);
 
         $this->assertEquals('http://entityid', $metadata['entityid']);
@@ -284,18 +278,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertNotContains('oidcClient', $metadata);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     public function test_it_can_build_saml_entity_data_for_new_entities()
     {
         $generator = new JsonGenerator(
@@ -306,9 +288,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForNewEntity(
-            $this->createSamlEntity()
-        );
+        $data = $generator->generateForNewEntity($this->createSamlEntity(), 'prodaccepted');
 
         $this->assertEquals(array (
             'data' =>
@@ -324,7 +304,7 @@ class JsonGeneratorTest extends MockeryTestCase
                         array (
                         ),
                     'allowedall' => true,
-                    'state' => 'testaccepted',
+                    'state' => 'prodaccepted',
                     'metaDataFields' =>
                         array (
                             'description:en' => 'description en',
@@ -367,9 +347,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForExistingEntity(
-            $this->createSamlEntity()
-        );
+        $data = $generator->generateForExistingEntity($this->createSamlEntity(), 'testaccepted');
 
         $this->assertEquals(array (
             'pathUpdates' =>
@@ -402,6 +380,7 @@ class JsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.NameIDFormat' => 'nameidformat',
                     'metaDataFields.coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
                     'metaDataFields.certData' => 'certdata',
+                    'state' => 'testaccepted',
                     'revisionnote' => 'revisionnote',
                 ),
             'type' => 'saml20_sp',
@@ -421,9 +400,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForNewEntity(
-            $this->createOidcEntity()
-        );
+        $data = $generator->generateForNewEntity($this->createOidcEntity(), 'testaccepted');
 
         $this->assertEquals(array (
             'data' =>
@@ -433,13 +410,13 @@ class JsonGeneratorTest extends MockeryTestCase
                             'arp' => 'arp',
                         ),
                     'type' => 'saml20-sp',
+                    'state' => 'testaccepted',
                     'entityid' => 'http://entityid',
                     'active' => true,
                     'allowedEntities' =>
                         array (
                         ),
                     'allowedall' => true,
-                    'state' => 'testaccepted',
                     'metaDataFields' =>
                         array (
                             'description:en' => 'description en',
@@ -494,9 +471,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForExistingEntity(
-            $this->createOidcEntity()
-        );
+        $data = $generator->generateForExistingEntity($this->createOidcEntity(), 'testaccepted');
 
         $this->assertEquals(array (
             'pathUpdates' =>
@@ -525,6 +500,7 @@ class JsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.sp' => 'sp',
                     'metaDataFields.coin:oidc_client' => '1',
                     'revisionnote' => 'revisionnote',
+                    'state' => 'testaccepted',
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
