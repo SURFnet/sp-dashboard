@@ -281,7 +281,7 @@ class ServiceController extends Controller
 
         $this->commandBus->handle($command);
 
-        return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
+        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
     }
 
     /**
