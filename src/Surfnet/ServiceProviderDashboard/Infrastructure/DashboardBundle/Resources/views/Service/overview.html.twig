@@ -2,7 +2,12 @@
 
 {% block body_container %}
 
-    <h1>{% block page_heading %}{{ 'service.overview.title'|trans }}{% endblock %}</h1>
+    <h1>{% block page_heading %}{% spaceless %}
+        {% if isAdmin %}
+        {{ 'service.admin_overview.title'|trans }}
+        {% else %}
+        {{ 'service.overview.title'|trans }}
+        {% endif %}{% endspaceless %}{% endblock %}</h1>
 
     {% for service in services %}
         <div class="fieldset card action">

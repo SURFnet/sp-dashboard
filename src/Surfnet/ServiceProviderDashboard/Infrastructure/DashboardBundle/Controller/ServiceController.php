@@ -128,10 +128,10 @@ class ServiceController extends Controller
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [
             'services' => $serviceList,
-            'isAdmin' => $this->authorizationService->isAdministrator()
+            'isAdmin' => false
         ]);
     }
-    
+
     /**
      * @Method({"GET", "POST"})
      * @Route("/service/create", name="service_add")
@@ -282,6 +282,34 @@ class ServiceController extends Controller
         $this->commandBus->handle($command);
 
         return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route("/service/{serviceId}", name="service_admin_overview")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Template("@Dashboard/Service/overview.html.twig")
+     */
+    public function adminOverviewAction($serviceId)
+    {
+        $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
+        if (!isset($allowedServices[$serviceId])) {
+            throw $this->createNotFoundException(sprintf('Service with id "%s" cannot be found', $serviceId));
+        }
+        $allowedServices = [$serviceId => $allowedServices[$serviceId]];
+        $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
+
+        $serviceObjects = [];
+        foreach ($services as $service) {
+            $entityList = $this->entityService->getEntityListForService($service);
+            $serviceObjects[] = Service::fromService($service, $entityList, $this->router);
+        }
+        $serviceList = new ServiceList($serviceObjects);
+
+        return $this->render('DashboardBundle:Service:overview.html.twig', [
+            'services' => $serviceList,
+            'isAdmin' => true
+        ]);
     }
 
     /**

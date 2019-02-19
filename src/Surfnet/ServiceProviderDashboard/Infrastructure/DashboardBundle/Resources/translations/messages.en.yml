@@ -346,6 +346,7 @@ service.form.label.representative_approved_yes: Yes
 service.form.label.service_type: Type of service
 service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
+service.admin_overview.title: Service overview
 service.overview.title: My services
 service.overview.action.entityList: Detailed entities overview
 service.overview.action.privacyQuestions: Privacy questions
