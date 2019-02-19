@@ -274,6 +274,7 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
             - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator'
+            - '@surfnet.manage.configuration.test'
             - '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
@@ -295,6 +296,7 @@ services:
         arguments:
         - '@surfnet.manage.http.http_client.prod_environment'
         - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator'
+        - '@surfnet.manage.configuration.production'
         - '@logger'
 
     surfnet.manage.client.query_client.prod_environment:
