@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 
 class Builder
@@ -29,6 +30,12 @@ class Builder
         $this->authorizationService = $authorizationService;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ElseExpression) Using else in this situation is preferable over another less expressive
+     *                                         solution
+     * @param array $options
+     * @return ItemInterface
+     */
     public function mainMenu(array $options)
     {
         $menu = $this->factory->createItem('root');
@@ -37,8 +44,14 @@ class Builder
             return $menu;
         }
 
-        $menu->addChild('Services', ['route' => 'service_overview']);
-
+        if ($this->authorizationService->isAdministrator() && $this->authorizationService->getActiveServiceId()) {
+            $menu->addChild('Service overview', [
+                'route' => 'service_admin_overview',
+                'routeParameters' => ['serviceId' => $this->authorizationService->getActiveServiceId()],
+            ]);
+        } else {
+            $menu->addChild('Services', ['route' => 'service_overview']);
+        }
         if ($this->authorizationService->isAdministrator()) {
             $menu->addChild('Add new service', array(
                 'route' => 'service_add',
