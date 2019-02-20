@@ -35,7 +35,6 @@ class ConnectionStatusType extends AbstractType
                 'choices' => [
                     'service.form.label.connection_status_not_requested' => Service::CONNECTION_STATUS_NOT_REQUESTED,
                     'service.form.label.connection_status_requested' => Service::CONNECTION_STATUS_REQUESTED,
-                    'service.form.label.connection_status_informed' => Service::CONNECTION_STATUS_SURFCONEXT_INFORMED,
                     'service.form.label.connection_status_active' => Service::CONNECTION_STATUS_ACTIVE,
                 ],
                 'attr' => ['class' => 'service-status-container'],

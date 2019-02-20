@@ -79,26 +79,28 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param $workflowState
      * @return array
      */
-    public function generateForNewEntity(Entity $entity)
+    public function generateForNewEntity(Entity $entity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         return [
-            'data' => $this->generateDataForNewEntity($entity),
+            'data' => $this->generateDataForNewEntity($entity, $workflowState),
             'type' => 'saml20_sp',
         ];
     }
 
     /**
      * @param Entity $entity
+     * @param $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity)
+    public function generateForExistingEntity(Entity $entity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         $data = [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
             'type' => 'saml20_sp',
             'id' => $entity->getManageId(),
         ];
@@ -114,9 +116,10 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param $workflowState
      * @return array
      */
-    public function generateDataForNewEntity(Entity $entity)
+    private function generateDataForNewEntity(Entity $entity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         $metadata = [
@@ -126,7 +129,7 @@ class JsonGenerator implements GeneratorInterface
             'active'          => true,
             'allowedEntities' => [],
             'allowedall'      => true,
-            'state'           => 'testaccepted',
+            'state'           => $workflowState,
             'metaDataFields'  => $this->generateMetadataFields($entity),
         ];
 
@@ -148,13 +151,15 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param $workflowState
      * @return array
      */
-    public function generateDataForExistingEntity(Entity $entity)
+    private function generateDataForExistingEntity(Entity $entity, $workflowState)
     {
         $metadata = [
             'arp'             => $this->arpMetadataGenerator->build($entity),
             'entityid'        => $entity->getEntityId(),
+            'state'           => $workflowState,
         ];
 
         if ($entity->getProtocol() == Entity::TYPE_SAML) {

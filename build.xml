@@ -153,7 +153,7 @@
             <arg line="security:check" />
         </exec>
 
-        <exec executable="yarn" failonerror="true">
+        <exec executable="yarn" failonerror="false">
             <arg line="audit" />
         </exec>
     </target>
