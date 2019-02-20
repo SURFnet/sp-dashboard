@@ -128,10 +128,10 @@ class ServiceController extends Controller
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [
             'services' => $serviceList,
-            'isAdmin' => $this->authorizationService->isAdministrator()
+            'isAdmin' => false
         ]);
     }
-    
+
     /**
      * @Method({"GET", "POST"})
      * @Route("/service/create", name="service_add")
@@ -281,7 +281,29 @@ class ServiceController extends Controller
 
         $this->commandBus->handle($command);
 
-        return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
+        if (!$serviceId) {
+            return $this->redirectToRoute('service_overview');
+        }
+
+        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
+    }
+
+    /**
+     * @Method({"GET"})
+     * @Route("/service/{serviceId}", name="service_admin_overview")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Template("@Dashboard/Service/overview.html.twig")
+     */
+    public function adminOverviewAction($serviceId)
+    {
+        $service = $this->authorizationService->getServiceById($serviceId);
+        $entityList = $this->entityService->getEntityListForService($service);
+        $serviceList = new ServiceList([Service::fromService($service, $entityList, $this->router)]);
+
+        return $this->render('DashboardBundle:Service:overview.html.twig', [
+            'services' => $serviceList,
+            'isAdmin' => true
+        ]);
     }
 
     /**
