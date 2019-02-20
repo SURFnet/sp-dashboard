@@ -18,8 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection;
 
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Environment;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -32,7 +35,7 @@ class DashboardExtension extends Extension
     {
         $configuration = new Configuration();
 
-        $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(
             __DIR__.'/../Resources/config'
@@ -44,7 +47,31 @@ class DashboardExtension extends Extension
         $rootDir = $serviceContainer->getParameter('kernel.root_dir');
 
         if ($environment === 'test') {
-            $loader->load($rootDir . '/../tests/webtests/Resources/config/services.yml');
+            $loader->load($rootDir.'/../tests/webtests/Resources/config/services.yml');
         }
+
+        foreach ($config['manage'] as $environment => $manageConfig) {
+            $this->parseManageConfiguration($environment, $manageConfig, $container);
+        }
+    }
+
+    /**
+     * Creates a manage config aggregate based on the configuration in config.yml.
+     *
+     * Each environment will get a separate service named:
+     *
+     * surfnet.manage.configuration.%env_name
+     *
+     * @param $environment
+     * @param $config
+     * @param $container
+     */
+    public function parseManageConfiguration($environment, $config, $container)
+    {
+        $manageConfiguration = new Definition(Config::class);
+        $manageConfiguration->setClass(Config::class);
+        $manageConfiguration->setFactory('Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory::fromConfig');
+        $manageConfiguration->setArguments([$environment, $config]);
+        $container->setDefinition('surfnet.manage.configuration.' . $environment, $manageConfiguration);
     }
 }

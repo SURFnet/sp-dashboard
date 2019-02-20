@@ -27,6 +27,7 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
@@ -43,6 +44,11 @@ class PublishEntityClientTest extends MockeryTestCase
      * @var MockHandler
      */
     private $mockHandler;
+
+    /**
+     * @var Config|Mock
+     */
+    private $manageConfig;
 
     /**
      * @var LoggerInterface|Mock
@@ -63,12 +69,15 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->logger = m::mock(LoggerInterface::class);
 
+        $this->manageConfig = m::mock(Config::class);
+
         $this->client = new PublishEntityClient(
             new HttpClient(
                 $guzzle,
                 new NullLogger()
             ),
             $this->generator,
+            $this->manageConfig,
             $this->logger
         );
     }
@@ -87,6 +96,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getManageId')
             ->andReturn(null);
+
+        $this->manageConfig
+            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->once();
 
         $this->logger
             ->shouldReceive('info');
@@ -113,6 +126,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getManageId')
             ->andReturn('25055635-8c2c-4f54-95a6-68891a554e95');
+
+        $this->manageConfig
+            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->once();
 
         $this->logger
             ->shouldReceive('info');
@@ -145,6 +162,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getManageId')
             ->andReturn(null);
+
+        $this->manageConfig
+            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->once();
 
         $this->logger
             ->shouldReceive('info');

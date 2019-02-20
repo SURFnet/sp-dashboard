@@ -30,8 +30,40 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('dashboard');
+        $rootNode = $treeBuilder->root('dashboard');
+        $childNodes = $rootNode->children();
+        $this->appendManageConfiguration($childNodes);
 
         return $treeBuilder;
+    }
+
+    /**
+     * @param NodeBuilder $childNodes
+     */
+    private function appendManageConfiguration(NodeBuilder $childNodes)
+    {
+        $childNodes
+            ->arrayNode('manage')
+                ->info('The manage configuration root')
+                ->isRequired()
+                ->useAttributeAsKey('environment')
+                ->arrayPrototype()
+                    ->children()
+                        ->arrayNode('connection')
+                            ->children()
+                                ->scalarNode('host')->end()
+                                ->scalarNode('username')->end()
+                                ->scalarNode('password')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('publication_status')
+                            ->children()
+                                ->scalarNode('create')->end()
+                                ->scalarNode('update')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }
