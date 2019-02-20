@@ -296,19 +296,9 @@ class ServiceController extends Controller
      */
     public function adminOverviewAction($serviceId)
     {
-        $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
-        if (!isset($allowedServices[$serviceId])) {
-            throw $this->createNotFoundException(sprintf('Service with id "%s" cannot be found', $serviceId));
-        }
-        $allowedServices = [$serviceId => $allowedServices[$serviceId]];
-        $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
-
-        $serviceObjects = [];
-        foreach ($services as $service) {
-            $entityList = $this->entityService->getEntityListForService($service);
-            $serviceObjects[] = Service::fromService($service, $entityList, $this->router);
-        }
-        $serviceList = new ServiceList($serviceObjects);
+        $service = $this->authorizationService->getServiceById($serviceId);
+        $entityList = $this->entityService->getEntityListForService($service);
+        $serviceList = new ServiceList([Service::fromService($service, $entityList, $this->router)]);
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [
             'services' => $serviceList,
