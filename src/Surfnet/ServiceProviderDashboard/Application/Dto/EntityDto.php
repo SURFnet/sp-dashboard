@@ -74,8 +74,8 @@ class EntityDto
         return new self(
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
-            'published',
-            'test'
+            'test',
+            'published'
         );
     }
 
@@ -84,8 +84,8 @@ class EntityDto
         return new self(
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
-            'published',
-            'production'
+            'production',
+            'published'
         );
     }
 
