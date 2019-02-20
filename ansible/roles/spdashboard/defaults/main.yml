@@ -13,6 +13,8 @@ spdashboard_saml_metadata_publickey: "%kernel.root_dir%/../vendor/surfnet/stepup
 spdashboard_saml_metadata_privatekey: "%kernel.root_dir%/../vendor/surfnet/stepup-saml-bundle/src/Resources/keys/development_privatekey.pem"
 spdashboard_support_email: coin-logs-dev@list.surfnet.nl
 spdashboard_manage_prod_host: "https://manage-prod.{{ base_domain }}"
+spdashboard_manage_test_publication_status: testaccepted
+spdashboard_manage_prod_publication_status: prodaccepted
 spdashboard_nodejs_rpm_url: "https://rpm.nodesource.com/pub_11.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm"
 spdashboard_jira_host: https://jira-test.surfnet.nl
 spdashboard_jira_username: username

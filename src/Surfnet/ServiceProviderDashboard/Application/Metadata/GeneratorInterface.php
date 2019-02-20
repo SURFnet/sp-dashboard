@@ -23,12 +23,13 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 interface GeneratorInterface
 {
     /**
-     * Convert an new, unpublished entity to json-serializable array.
+     * Convert a new, unpublished entity to json-serializable array.
      *
      * @param Entity $entity
+     * @param string $workflowState
      * @return array
      */
-    public function generateForNewEntity(Entity $entity);
+    public function generateForNewEntity(Entity $entity, $workflowState);
 
     /**
      * Convert entity to an array for the manage merge-write API call.
@@ -39,33 +40,8 @@ interface GeneratorInterface
      * entities).
      *
      * @param Entity $entity
+     * @param string $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity);
-
-    /**
-     * Convert entity to a metadata array for the manage merge-write API call.
-     *
-     * The resulting array is almost identical to the one created by
-     * generateNew(), but only contains fields stored in SP-dashboard, and
-     * never overwrites fields not managed by the dashboard (such as allowed
-     * entities).
-     *
-     * @param Entity $entity
-     * @return array
-     */
-    public function generateDataForNewEntity(Entity $entity);
-
-    /**
-     * Convert entity to an array for the manage merge-write API call.
-     *
-     * The resulting array is almost identical to the one created by
-     * generateNew(), but only contains fields stored in SP-dashboard, and
-     * never overwrites fields not managed by the dashboard (such as allowed
-     * entities).
-     *
-     * @param Entity $entity
-     * @return array
-     */
-    public function generateDataForExistingEntity(Entity $entity);
+    public function generateForExistingEntity(Entity $entity, $workflowState);
 }

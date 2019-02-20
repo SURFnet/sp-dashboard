@@ -55,6 +55,8 @@ class ServiceOverviewTest extends WebTestCase
         $crawler = $this->client->request('GET', '/');
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
+        $h1 = $crawler->filter('.page-container h1');
+        $this->assertContains('My services', $h1->first()->text());
         $nodes = $crawler->filter('.service-status-container .service-status-title');
         $serviceNode = $nodes->first();
 

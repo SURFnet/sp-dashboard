@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -44,10 +45,20 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      */
     private $logger;
 
-    public function __construct(HttpClient $client, GeneratorInterface $generator, LoggerInterface $logger)
-    {
+    /**
+     * @var Config
+     */
+    private $manageConfig;
+
+    public function __construct(
+        HttpClient $client,
+        GeneratorInterface $generator,
+        Config $manageConfig,
+        LoggerInterface $logger
+    ) {
         $this->client = $client;
         $this->generator = $generator;
+        $this->manageConfig = $manageConfig;
         $this->logger = $logger;
     }
 
@@ -65,14 +76,20 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getEntityId()));
 
                 $response = $this->client->post(
-                    json_encode($this->generator->generateForNewEntity($entity)),
+                    json_encode($this->generator->generateForNewEntity(
+                        $entity,
+                        $this->manageConfig->getPublicationStatus()->getCreateStatus()
+                    )),
                     '/manage/api/internal/metadata'
                 );
             } else {
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
 
                 $response = $this->client->put(
-                    json_encode($this->generator->generateForExistingEntity($entity)),
+                    json_encode($this->generator->generateForExistingEntity(
+                        $entity,
+                        $this->manageConfig->getPublicationStatus()->getCreateStatus()
+                    )),
                     '/manage/api/internal/merge'
                 );
             }

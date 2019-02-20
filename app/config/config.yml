@@ -125,9 +125,27 @@ surfnet_saml:
             sso_url: "%saml_remote_idp_sso_url%"
             certificate: "%saml_remote_idp_certificate%"
 
+dashboard:
+    manage:
+        test:
+            connection:
+                host: "%manage_test_host%"
+                username: "%manage_test_username%"
+                password: "%manage_test_password%"
+            publication_status:
+                create: "%manage_test_publication_status_create%"
+                update: "%manage_test_publication_status_update%"
+        production:
+            connection:
+                host: "%manage_prod_host%"
+                username: "%manage_prod_username%"
+                password: "%manage_prod_password%"
+            publication_status:
+                create: "%manage_prod_publication_status_create%"
+                update: "%manage_prod_publication_status_update%"
+
 dashboard_saml:
     session_lifetimes:
         max_absolute_lifetime: "%session_max_absolute_lifetime%"
         max_relative_lifetime: "%session_max_relative_lifetime%"
     administrator_teams: "%administrator_teams%"
-

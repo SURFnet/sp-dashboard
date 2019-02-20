@@ -1,5 +1,18 @@
 ## Next release
 
+## 2.0.5
+
+**Feature**
+ * Change service switcher behavior #236
+ * Drop 'surfconext-informed' support as a service status #235
+ * Make the workflow state configurable #238
+ 
+**Bugfix**
+ - Fix donut status issue by replacing environment with status in DTO #237
+
+**Chore**
+ * Temporarily disable yarn audits build breaking capability #239
+
 ## 2.0.4
 
 **Bugfix**
