@@ -173,6 +173,29 @@ class ServiceOverviewTest extends WebTestCase
         $this->assertContains('Please use the service switcher to manage the entities of one of the services.', $response->getContent());
     }
 
+    public function test_users_redirect_to_entity_overview_on_title_click()
+    {
+        $serviceRepository = $this->getServiceRepository();
+        $surfNet = $serviceRepository->findByName('SURFnet');
+
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+
+        $this->logIn('ROLE_USER', [$surfNet]);
+        $crawler = $this->client->request('GET', '/');
+
+        $link = $crawler->filter('.service-status-title > a:nth-child(1)');
+        $this->client->request('GET', $link->attr('href'));
+
+        $uri = $this->client->getRequest()->getRequestUri();
+        $this->assertRegExp(
+            '/\/entities\/1/',
+            $uri,
+            'Visiting the anchor on the service title should end up on the entity detail page'
+        );
+    }
 
     private function rowsToArray(Crawler $crawler)
     {

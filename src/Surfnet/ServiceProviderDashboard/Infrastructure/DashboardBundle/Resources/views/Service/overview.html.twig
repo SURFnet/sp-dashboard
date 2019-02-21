@@ -49,7 +49,7 @@
             <div class="service-status-container">
 
                 <div class="service-status-title">
-                    <a href="{{ path('select_service', {service: service.id }) }}">{{ service.name }}</a>
+                    <a href="{{ path('entity_list', {serviceId: service.id }) }}">{{ service.name }}</a>
                 </div>
                 <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
                 <div class="service-status-entities">
