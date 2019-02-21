@@ -25,9 +25,11 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\NotAuthenticatedException;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -40,6 +42,11 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      * @var EntityRepository
      */
     private $repository;
+
+    /**
+     * @var EntityRepository
+     */
+    private $serviceRepository;
 
     /**
      * @var PublishEntityRepository
@@ -87,6 +94,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
 
     /**
      * @param EntityRepository $entityRepository
+     * @param ServiceRepository $serviceRepository
      * @param PublishEntityRepository $publishClient
      * @param TicketService $ticketService
      * @param FlashBagInterface $flashBag
@@ -97,6 +105,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      */
     public function __construct(
         EntityRepository $entityRepository,
+        ServiceRepository $serviceRepository,
         PublishEntityRepository $publishClient,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
@@ -107,6 +116,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     ) {
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_publication_request" in parameters.yml');
         $this->repository = $entityRepository;
+        $this->serviceRepository = $serviceRepository;
         $this->publishClient = $publishClient;
         $this->ticketService = $ticketService;
         $this->mailFactory = $mailFactory;
@@ -183,6 +193,14 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             if (array_key_exists('id', $publishResponse)) {
                 // Set entity status to published
                 $entity->setStatus(Entity::STATE_PUBLISHED);
+
+                // Also update the service status to requested, but only if current status is not-requested
+                $service = $entity->getService();
+                if ($service->getConnectionStatus() == Service::CONNECTION_STATUS_NOT_REQUESTED) {
+                    $service->setConnectionStatus(Service::CONNECTION_STATUS_REQUESTED);
+                    $this->serviceRepository->save($service);
+                }
+
                 $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
                 // Save changes made to entity
                 $this->repository->save($entity);
