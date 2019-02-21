@@ -1,5 +1,11 @@
 ## Next release
 
+## 2.0.6
+
+**Bugfixes**
+ * Change route on overview page to prevent 403 #241
+ * Update the production connection status on publication #240
+
 ## 2.0.5
 
 **Feature**
