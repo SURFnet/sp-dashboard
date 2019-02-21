@@ -33,6 +33,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
@@ -82,10 +83,16 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
      */
     private $mailFactory;
 
+    /**
+     * @var ServiceRepository|Mock
+     */
+    private $serviceRepository;
+
     public function setUp()
     {
 
         $this->repository = m::mock(EntityRepository::class);
+        $this->serviceRepository = m::mock(ServiceRepository::class);
         $this->publishEntityClient = m::mock(PublishEntityRepository::class);
         $this->ticketService = m::mock(TicketService::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
@@ -96,6 +103,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $this->commandHandler = new PublishEntityProductionCommandHandler(
             $this->repository,
+            $this->serviceRepository,
             $this->publishEntityClient,
             $this->ticketService,
             $this->flashBag,
@@ -132,6 +140,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $entity
             ->shouldReceive('setStatus')
             ->with(Entity::STATE_PUBLISHED);
+        $entity
+            ->shouldReceive('getService->getConnectionStatus');
 
         $issue = m::mock(Issue::class)->makePartial();
         $issue->key = 'CXT-999';
@@ -199,6 +209,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $entity
             ->shouldReceive('setStatus')
             ->with(Entity::STATE_PUBLISHED);
+        $entity
+            ->shouldReceive('getService->getConnectionStatus');
 
         $issue = m::mock(Issue::class)->makePartial();
         $issue->key = 'CXT-999';
