@@ -255,6 +255,8 @@ services:
             - '@logger'
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
+            - '%manage_test_publication_status_update%'
+            - '%manage_prod_publication_status_update%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:

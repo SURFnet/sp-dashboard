@@ -75,7 +75,16 @@ class EntityServiceTest extends MockeryTestCase
         $this->router = m::mock(RouterInterface::class);
         $logger = m::mock(LoggerInterface::class);
         $this->ticketService = m::mock(TicketServiceInterface::class);
-        $this->service = new EntityService($provider, $this->ticketService, $this->router, $logger, 'playgroundUriTest', 'playgroundUriProd');
+        $this->service = new EntityService(
+            $provider,
+            $this->ticketService,
+            $this->router,
+            $logger,
+            'playgroundUriTest',
+            'playgroundUriProd',
+            'testaccepted',
+            'prodaccepted'
+        );
     }
 
     public function test_it_can_search_manage_test_by_manage_id()
@@ -133,12 +142,12 @@ class EntityServiceTest extends MockeryTestCase
 
         $this->manageTest
             ->shouldReceive('findByTeamName')
-            ->with($teamName)
+            ->with($teamName, 'testaccepted')
             ->andReturn([]);
 
         $this->manageProd
             ->shouldReceive('findByTeamName')
-            ->with($teamName)
+            ->with($teamName, 'prodaccepted')
             ->andReturn([]);
 
         $this->ticketService
