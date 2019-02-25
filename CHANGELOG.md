@@ -1,5 +1,9 @@
 ## Next release
 
+## 2.0.7
+**Bugfix**
+ * Fix Manage query workflow state #242
+
 ## 2.0.6
 
 **Bugfixes**

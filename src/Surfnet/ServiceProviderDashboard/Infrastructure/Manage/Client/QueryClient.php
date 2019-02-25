@@ -137,18 +137,19 @@ class QueryClient implements QueryEntityRepository
      * Query manage for all test entities by given team name.
      *
      * @param string $teamName
+     * @param string $state
      *
      * @return ManageEntity[]|null
      *
      * @throws QueryServiceProviderException
      */
-    public function findByTeamName($teamName)
+    public function findByTeamName($teamName, $state)
     {
         try {
             // Query manage to get the internal id of every SP entity with given team ID.
             $searchResults = $this->doSearchQuery([
                 'metaDataFields.coin:service_team_id' => $teamName,
-                'state' => 'testaccepted'
+                'state' => $state
             ]);
 
             // For each search result, query manage to get the full SP entity data.

@@ -42,9 +42,10 @@ interface QueryEntityRepository
     public function getMetadataXmlByManageId($manageId);
 
     /**
-     * @param string $teamname
+     * @param string $teamName
+     * @param string $state
      *
      * @return array|null
      */
-    public function findByTeamName($teamName);
+    public function findByTeamName($teamName, $state);
 }
