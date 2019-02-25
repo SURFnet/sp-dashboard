@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
@@ -65,9 +66,21 @@ class EntityService implements EntityServiceInterface
      */
     private $oidcPlaygroundUriProd;
 
+    /**
+     * @var Config
+     */
+    private $testManageConfig;
+
+    /**
+     * @var Config
+     */
+    private $prodManageConfig;
+
     public function __construct(
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         TicketServiceInterface $ticketService,
+        Config $testConfig,
+        Config $productionConfig,
         RouterInterface $router,
         LoggerInterface $logger,
         $oidcPlaygroundUriTest,
@@ -82,6 +95,8 @@ class EntityService implements EntityServiceInterface
         $this->logger = $logger;
         $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
         $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
+        $this->testManageConfig = $testConfig;
+        $this->prodManageConfig = $productionConfig;
     }
 
     public function createEntityUuid()
@@ -144,12 +159,18 @@ class EntityService implements EntityServiceInterface
             $entities[] = ViewObject\Entity::fromEntity($entity, $this->router);
         }
 
-        $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
+        $testEntities = $this->findPublishedTestEntitiesByTeamName(
+            $service->getTeamName(),
+            $this->testManageConfig->getPublicationStatus()->getCreateStatus()
+        );
         foreach ($testEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router, $service->getId());
         }
 
-        $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
+        $productionEntities = $this->findPublishedProductionEntitiesByTeamName(
+            $service->getTeamName(),
+            $this->prodManageConfig->getPublicationStatus()->getCreateStatus()
+        );
         foreach ($productionEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
         }
@@ -215,7 +236,7 @@ class EntityService implements EntityServiceInterface
     {
         return $this->queryRepositoryProvider
             ->getManageTestQueryClient()
-            ->findByTeamName($teamName);
+            ->findByTeamName($teamName, $this->testManageConfig->getPublicationStatus()->getCreateStatus());
     }
 
     /**
@@ -232,7 +253,7 @@ class EntityService implements EntityServiceInterface
     {
         $entities = $this->queryRepositoryProvider
             ->getManageProductionQueryClient()
-            ->findByTeamName($teamName);
+            ->findByTeamName($teamName, $this->prodManageConfig->getPublicationStatus()->getCreateStatus());
 
         // Try to find the tickets in Jira that match the manageIds. If Jira is down or otherwise unavailable, the
         // entities are returned without updating their status. This might result in a 're request for delete'
