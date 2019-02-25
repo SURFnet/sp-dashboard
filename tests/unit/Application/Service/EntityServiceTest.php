@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
@@ -71,11 +72,30 @@ class EntityServiceTest extends MockeryTestCase
 
         $provider = new EntityQueryRepositoryProvider($this->repository, $this->manageTest, $this->manageProd);
 
+        $manageConfigTest = m::mock(Config::class);
+        $manageConfigTest
+            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->andReturn('testaccepted');
+
+        $manageConfigProd = m::mock(Config::class);
+        $manageConfigProd
+            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->andReturn('prodaccepted');
+
         $this->router = m::mock(RouterInterface::class);
         $this->router = m::mock(RouterInterface::class);
         $logger = m::mock(LoggerInterface::class);
         $this->ticketService = m::mock(TicketServiceInterface::class);
-        $this->service = new EntityService($provider, $this->ticketService, $this->router, $logger, 'playgroundUriTest', 'playgroundUriProd');
+        $this->service = new EntityService(
+            $provider,
+            $this->ticketService,
+            $manageConfigTest,
+            $manageConfigProd,
+            $this->router,
+            $logger,
+            'playgroundUriTest',
+            'playgroundUriProd'
+        );
     }
 
     public function test_it_can_search_manage_test_by_manage_id()
@@ -133,12 +153,12 @@ class EntityServiceTest extends MockeryTestCase
 
         $this->manageTest
             ->shouldReceive('findByTeamName')
-            ->with($teamName)
+            ->with($teamName, 'testaccepted')
             ->andReturn([]);
 
         $this->manageProd
             ->shouldReceive('findByTeamName')
-            ->with($teamName)
+            ->with($teamName, 'prodaccepted')
             ->andReturn([]);
 
         $this->ticketService

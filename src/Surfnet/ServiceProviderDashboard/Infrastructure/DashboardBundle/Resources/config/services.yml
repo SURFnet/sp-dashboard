@@ -251,6 +251,8 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
+            - '@surfnet.manage.configuration.test'
+            - '@surfnet.manage.configuration.production'
             - '@router'
             - '@logger'
             - '%playground_uri_test%'
