@@ -19,11 +19,13 @@ entity:
   detail:
     title: Entity details
     info:
-      title: Information
-      html: <strong>information about this view</strong>
+      saml20:
+        title: Information
+        html: <strong>information about this view</strong>
+      oidc:
+        title: Information
+        html: <strong>information about this view</strong>
     metadata:
-      title: Metadata
-      html: <strong>information about the metadata fields</strong>
       metadata_url: Metadata URL
       acs_location: ACS location
       entity_id: Entity ID
@@ -36,9 +38,13 @@ entity:
       description_en: Description EN
       application_url: Application URL
       eula_url: EULA URL
+      saml20:
+        title: Metadata
+        html: <strong>information about the metadata fields</strong>
+      oidc:
+        title: Metadata
+        html: <strong>information about the metadata fields</strong>
     contact:
-      title: Contact information
-      html: <strong>information about the contact information fields</strong>
       administrative: Administrative contact
       technical: Technical contact
       support: Support contact
@@ -46,11 +52,17 @@ entity:
       last_name: Last name
       email: Email
       phone: Phone
+      saml20:
+        title: Contact information
+        html: <strong>information about the contact information fields</strong>
+      oidc:
+        title: Contact information
+        html: <strong>information about the contact information fields</strong>
     attribute:
+      motivation: Motivation
       saml20:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        motivation: Motivation
         given_name: Given name
         surname: Surname
         common_name: Common name attribute
@@ -69,7 +81,6 @@ entity:
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        motivation: Motivation
         given_name: Given name
         surname: Surname
         common_name: Common name attribute
@@ -244,21 +255,36 @@ entity.edit.information.eulaUrl: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
 entity.edit.information.technicalContact: Text should be set in web translations
-entity.edit.information.givenNameAttribute: Text should be set in web translations
-entity.edit.information.surNameAttribute: Text should be set in web translations
-entity.edit.information.commonNameAttribute: Text should be set in web translations
-entity.edit.information.displayNameAttribute: Text should be set in web translations
-entity.edit.information.emailAddressAttribute: Text should be set in web translations
-entity.edit.information.organizationAttribute: Text should be set in web translations
-entity.edit.information.organizationTypeAttribute: Text should be set in web translations
-entity.edit.information.affiliationAttribute: Text should be set in web translations
-entity.edit.information.entitlementAttribute: Text should be set in web translations
-entity.edit.information.principleNameAttribute: Text should be set in web translations
-entity.edit.information.uidAttribute: Text should be set in web translations
-entity.edit.information.preferredLanguageAttribute: Text should be set in web translations
-entity.edit.information.personalCodeAttribute: Text should be set in web translations
-entity.edit.information.scopedAffiliationAttribute: Text should be set in web translations
-entity.edit.information.eduPersonTargetedIDAttribute: Text should be set in web translations
+entity.edit.information.saml20.givenNameAttribute: Text should be set in web translations
+entity.edit.information.saml20.surNameAttribute: Text should be set in web translations
+entity.edit.information.saml20.commonNameAttribute: Text should be set in web translations
+entity.edit.information.saml20.displayNameAttribute: Text should be set in web translations
+entity.edit.information.saml20.emailAddressAttribute: Text should be set in web translations
+entity.edit.information.saml20.organizationAttribute: Text should be set in web translations
+entity.edit.information.saml20.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.saml20.affiliationAttribute: Text should be set in web translations
+entity.edit.information.saml20.entitlementAttribute: Text should be set in web translations
+entity.edit.information.saml20.principleNameAttribute: Text should be set in web translations
+entity.edit.information.saml20.uidAttribute: Text should be set in web translations
+entity.edit.information.saml20.preferredLanguageAttribute: Text should be set in web translations
+entity.edit.information.saml20.personalCodeAttribute: Text should be set in web translations
+entity.edit.information.saml20.scopedAffiliationAttribute: Text should be set in web translations
+entity.edit.information.saml20.eduPersonTargetedIDAttribute: Text should be set in web translations
+entity.edit.information.oidc.givenNameAttribute: Text should be set in web translations
+entity.edit.information.oidc.surNameAttribute: Text should be set in web translations
+entity.edit.information.oidc.commonNameAttribute: Text should be set in web translations
+entity.edit.information.oidc.displayNameAttribute: Text should be set in web translations
+entity.edit.information.oidc.emailAddressAttribute: Text should be set in web translations
+entity.edit.information.oidc.organizationAttribute: Text should be set in web translations
+entity.edit.information.oidc.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.oidc.affiliationAttribute: Text should be set in web translations
+entity.edit.information.oidc.entitlementAttribute: Text should be set in web translations
+entity.edit.information.oidc.principleNameAttribute: Text should be set in web translations
+entity.edit.information.oidc.uidAttribute: Text should be set in web translations
+entity.edit.information.oidc.preferredLanguageAttribute: Text should be set in web translations
+entity.edit.information.oidc.personalCodeAttribute: Text should be set in web translations
+entity.edit.information.oidc.scopedAffiliationAttribute: Text should be set in web translations
+entity.edit.information.oidc.eduPersonTargetedIDAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
 entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.motivation.keep_talking: 'Please provide a more detailed motivation.'
