@@ -9,13 +9,13 @@
         {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}
     </div>
     <div class="fieldset card">
-        <h2>{{ 'entity.detail.info.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.detail.info.html'|trans|raw }}</div>
+        <h2>{{ ('entity.detail.info.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.info.' ~ type ~ '.html')|trans|raw }}</div>
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'entity.detail.metadata.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.detail.metadata.html'|trans|raw }}</div>
+        <h2>{{ ('entity.detail.metadata.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.metadata.' ~ type ~ '.html')|trans|raw }}</div>
 
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.metadata_url'|trans, value: entity.metadataUrl, informationPopup: 'entity.edit.information.metadataUrl'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.acs_location'|trans, value: entity.acsLocation, informationPopup: 'entity.edit.information.acsLocation'} %}
@@ -33,8 +33,8 @@
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'entity.detail.contact.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.detail.contact.html'|trans|raw }}</div>
+        <h2>{{ ('entity.detail.contact.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.contact.' ~ type ~ '.html')|trans|raw }}</div>
 
         {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.administrative'|trans, value: entity.administrativeContact, informationPopup: 'entity.edit.information.administrativeContact'} %}
         {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.technical'|trans, value: entity.technicalContact, informationPopup: 'entity.edit.information.technicalContact'} %}
@@ -43,8 +43,8 @@
     </div>
 
     <div class="fieldset card">
-        <h2>{{ 'entity.detail.attribute.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.detail.attribute.html'|trans|raw }}</div>
+        <h2>{{ ('entity.detail.attribute.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.attribute.' ~ type ~ '.html')|trans|raw }}</div>
 
         {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.given_name')|trans, value: entity.givenNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.givenNameAttribute'} %}
         {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.surname')|trans, value: entity.surNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.surNameAttribute'} %}
