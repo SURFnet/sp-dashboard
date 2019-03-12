@@ -1,5 +1,9 @@
 ## Next release
 
+## 2.0.8
+**Bugfix**
+ * Add missing translations for the OIDC screens
+
 ## 2.0.7
 **Bugfix**
  * Fix Manage query workflow state #242
