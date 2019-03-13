@@ -243,6 +243,7 @@ entity.edit.information.acsLocation: Text should be set in web translations
 entity.edit.information.entityId: Text should be set in web translations
 entity.edit.information.clientId: Text should be set in web translations
 entity.edit.information.redirectUris: Text should be set in web translations
+entity.edit.information.grantType: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations
 entity.edit.information.logoUrl: Text should be set in web translations
