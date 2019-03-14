@@ -1,8 +1,15 @@
 ## Next release
 
+## 2.0.9
+**Bugfix**
+ * Add missing translations for the OIDC screens part 2 #244
+
+**Chore**
+ * Update twig to fix CVE-NONE-0001 #245
+
 ## 2.0.8
 **Bugfix**
- * Add missing translations for the OIDC screens
+ * Add missing translations for the OIDC screens #243
 
 ## 2.0.7
 **Bugfix**
