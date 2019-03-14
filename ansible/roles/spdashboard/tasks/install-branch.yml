@@ -11,9 +11,7 @@
     - cache
 
 - name: Install git
-  yum: name={{ item }} state=present
-  with_items:
-     - git
+  yum: name=git state=present
 
 - name: Copy makerelease.sh
   copy: src=makeRelease.sh dest={{spdashboard_branch_dir}} mode=770
