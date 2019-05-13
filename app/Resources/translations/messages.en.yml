@@ -1,3 +1,5 @@
+page.footer.contact_link: "#!contact"
+page.footer.privacy_link: "#!privacy"
 page.header.help: Help
 page.header.help_link: https://wiki.surfnet.nl/
 page.header.logout: Logout
