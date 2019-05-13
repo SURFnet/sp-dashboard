@@ -56,15 +56,13 @@ class ServiceStatusService
     }
 
     /**
-     * - Status: "No" when no test entity, not production entity and no draft is present
-     * - Status: "In progress" when there is no entity on test or production but a draft entity is present
-     * - Status: "Yes" when either:
-     *   - A test entity is published
-     *   - A production entity is published
+     * - Status: "No" when no test entity, and no draft on test is present
+     * - Status: "In progress" when there is no entity on test but a draft test entity is present
+     * - Status: "Yes" when a test entity is published
      * @param Service $service
      * @return string
      */
-    public function getEntityStatus(Service $service)
+    public function getEntityStatusOnTest(Service $service)
     {
         $entities = $this->entityService->getEntitiesForService($service);
 
@@ -72,13 +70,16 @@ class ServiceStatusService
         $publishedList = [];
 
         foreach ($entities as $entity) {
-            if ($entity->getState() == Entity::STATE_PUBLISHED) {
-                $publishedList[] = $entity;
-            }
-            if ($entity->getState() == Entity::STATE_DRAFT) {
-                $inProgressList[] = $entity;
+            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+                if ($entity->getState() == Entity::STATE_PUBLISHED) {
+                    $publishedList[] = $entity;
+                }
+                if ($entity->getState() == Entity::STATE_DRAFT) {
+                    $inProgressList[] = $entity;
+                }
             }
         }
+
         // Was one of the entities published?
         if (count($publishedList) > 0) {
             return Service::ENTITY_PUBLISHED_YES;
