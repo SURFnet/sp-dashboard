@@ -140,7 +140,7 @@ class Service
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Entity", mappedBy="service", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Entity", mappedBy="service", cascade={"persist"})
      */
     private $entities;
 
