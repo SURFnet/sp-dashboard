@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use Exception;
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
@@ -119,6 +120,8 @@ trait EntityControllerTrait
             }
         } catch (InvalidArgumentException $e) {
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
+        } catch (Exception $e) {
+            $this->addFlash('error', 'entity.edit.metadata.unknown.exception');
         }
 
         $form = $this->createForm(SamlEntityType::class, $command);
@@ -150,7 +153,11 @@ trait EntityControllerTrait
                 break;
         }
 
-        $this->commandBus->handle($publishEntityCommand);
+        try {
+            $this->commandBus->handle($publishEntityCommand);
+        } catch (Exception $e) {
+            $flashBag->add('error', 'entity.edit.error.publish');
+        }
 
         if (!$flashBag->has('error')) {
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting

@@ -10,6 +10,9 @@ services:
         resource: '../../Security/Voter'
         tags: ['security.voter']
 
+    surfnet.dashboard.middleware.doctrine_transaction:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Middleware\DoctrineTransactionMiddleware
+
     surfnet.dashboard.command_handler.create_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
         public: true
