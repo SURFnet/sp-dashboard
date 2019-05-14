@@ -187,5 +187,4 @@ class ServiceDeleteTest extends WebTestCase
             "The Ibuildings B.V. Service has been removed and should no longer be on the service overview page"
         );
     }
-
 }
