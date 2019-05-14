@@ -29,6 +29,9 @@ entity:
       metadata_url: Metadata URL
       acs_location: ACS location
       entity_id: Entity ID
+      grant_type: Grant type
+      redirect_uris: Redirect URIs
+      playground_enabled: Playground enabled?
       name_id_format: NameID format
       certificate: Certificate
       logo_url: Logo URL

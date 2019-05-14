@@ -1,0 +1,15 @@
+{% if value is not empty %}
+<div class="detail">
+    {% if informationPopup is defined %}
+        <span title="{{ informationPopup|trans }}" class="help-button">
+            <i class="fa fa-question-circle"></i>
+        </span>
+    {% endif %}
+    <label>{{ label }}</label>
+    {% if value %}
+        <i class="fa fa-check-square"></i>
+    {% else %}
+        <i class="fa fa-square"></i>
+    {% endif %}
+</div>
+{% endif %}
