@@ -90,11 +90,6 @@ class EditServiceCommand implements Command
     private $connectionStatus;
 
     /**
-     * @var string
-     */
-    private $entityPublished;
-
-    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      *
      * @param int $id
@@ -109,7 +104,6 @@ class EditServiceCommand implements Command
      * @param string $surfconextRepresentativeApproved
      * @param string $privacyQuestionsAnswered
      * @param string $connectionStatus
-     * @param string $entityPublished
      */
     public function __construct(
         $id,
@@ -123,8 +117,7 @@ class EditServiceCommand implements Command
         $contractSigned,
         $surfconextRepresentativeApproved,
         $privacyQuestionsAnswered,
-        $connectionStatus,
-        $entityPublished
+        $connectionStatus
     ) {
         $this->id = $id;
         $this->guid = $guid;
@@ -138,7 +131,6 @@ class EditServiceCommand implements Command
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
         $this->connectionStatus = $connectionStatus;
-        $this->entityPublished = $entityPublished;
     }
 
 
@@ -332,13 +324,5 @@ class EditServiceCommand implements Command
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityPublished()
-    {
-        return $this->entityPublished;
     }
 }

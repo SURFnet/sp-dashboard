@@ -194,8 +194,6 @@ class ServiceStatusAssembler
         return $states;
     }
 
-
-
     /**
      * @param array $states
      * @return array
