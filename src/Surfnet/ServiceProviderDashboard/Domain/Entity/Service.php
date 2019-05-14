@@ -147,7 +147,7 @@ class Service
     /**
      * @var PrivacyQuestions
      *
-     * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service")
+     * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service", cascade={"remove"}, orphanRemoval=true)
      */
     private $privacyQuestions;
 
