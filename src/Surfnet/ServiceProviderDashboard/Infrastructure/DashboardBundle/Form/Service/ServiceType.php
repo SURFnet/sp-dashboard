@@ -46,7 +46,7 @@ class ServiceType extends AbstractType
                     ]
                 )
                     ->add('name')
-                    ->add('teamName')
+                    ->add('teamName', null, ['label' => 'team identifier'])
                     ->add(
                         'productionEntitiesEnabled',
                         CheckboxType::class,
