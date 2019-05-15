@@ -194,13 +194,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                 // Set entity status to published
                 $entity->setStatus(Entity::STATE_PUBLISHED);
 
-                // Also update the service status to requested, but only if current status is not-requested
-                $service = $entity->getService();
-                if ($service->getConnectionStatus() == Service::CONNECTION_STATUS_NOT_REQUESTED) {
-                    $service->setConnectionStatus(Service::CONNECTION_STATUS_REQUESTED);
-                    $this->serviceRepository->save($service);
-                }
-
                 $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
                 // Save changes made to entity
                 $this->repository->save($entity);

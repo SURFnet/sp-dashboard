@@ -70,6 +70,26 @@ class ServiceStatusServiceTest extends MockeryTestCase
         $this->assertEquals($expectedStatus, $actualStatus, $dataProviderContext);
     }
 
+    /**
+     * @dataProvider createConnectionStatus
+     * @param EntityList $entities
+     * @param string $expectedStatus
+     * @param string $dataProviderContext provides information on what test data was used
+     */
+    public function test_it_displays_correct_connection_status(array $entities, $expectedStatus, $dataProviderContext)
+    {
+        $service = m::mock(Service::class);
+
+        $this->entityService
+            ->shouldReceive('getEntitiesForService')
+            ->with($service)
+            ->andReturn($entities);
+
+        $actualStatus = $this->service->getConnectionStatus($service);
+        $this->assertEquals($expectedStatus, $actualStatus, $dataProviderContext);
+    }
+
+
     public function createEntityStatus()
     {
         return [
@@ -142,6 +162,61 @@ class ServiceStatusServiceTest extends MockeryTestCase
             ],
         ];
     }
+
+    public function createConnectionStatus()
+    {
+        return [
+            [
+                $this->buildEntities(
+                    [],
+                    Entity::ENVIRONMENT_PRODUCTION
+                ),
+                Service::CONNECTION_STATUS_NOT_REQUESTED,
+                'No entities are available for this service, so none are published.',
+            ],
+            [
+                $this->buildEntities(
+                    [0 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION]]
+                ),
+                Service::CONNECTION_STATUS_REQUESTED,
+                'One drafted entity should result in "in progress"',
+            ],
+            [
+                $this->buildEntities([
+                    0 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
+                    1 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
+                    2 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
+                ]),
+                Service::CONNECTION_STATUS_REQUESTED,
+                'Multiple drafted entity should result in "in progress"',
+            ],
+            [
+                $this->buildEntities([
+                    0 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
+                ]),
+                Service::CONNECTION_STATUS_ACTIVE,
+                'One published entity should result in "yes"',
+            ],
+            [
+                $this->buildEntities([
+                    0 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
+                    1 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
+                ]),
+                Service::CONNECTION_STATUS_ACTIVE,
+                'Multiple published entity should result in "yes"',
+            ],
+            [
+                $this->buildEntities([
+                    0 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_PRODUCTION],
+                    1 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
+                    2 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
+                ]),
+                Service::CONNECTION_STATUS_ACTIVE,
+                'Multiple mixed value published entity should result in "yes"',
+            ],
+        ];
+    }
+
 
     private function buildEntities(array $entities)
     {

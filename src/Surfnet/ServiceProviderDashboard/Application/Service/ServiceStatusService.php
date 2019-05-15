@@ -93,4 +93,44 @@ class ServiceStatusService
         // No published or drafted entities discovered, state "No"
         return Service::ENTITY_PUBLISHED_NO;
     }
+
+
+    /**
+     * - Status: "Not requested" when no production entity, is published or has a publish requested status
+     * - Status: "Requested" when there is a least 1 entity on production manage with a publication requested status
+     * - Status: "Active" when a production entity is published
+     * @param Service $service
+     * @return string
+     */
+    public function getConnectionStatus(Service $service)
+    {
+        $entities = $this->entityService->getEntitiesForService($service);
+
+        $inProgressList = [];
+        $publishedList = [];
+
+        foreach ($entities as $entity) {
+            if ($entity->getEnvironment() === Entity::ENVIRONMENT_PRODUCTION) {
+                if ($entity->getState() == Entity::STATE_PUBLISHED) {
+                    $publishedList[] = $entity;
+                }
+                if ($entity->getState() == Entity::STATE_PUBLICATION_REQUESTED) {
+                    $inProgressList[] = $entity;
+                }
+            }
+        }
+
+        // Was one of the entities published?
+        if (count($publishedList) > 0) {
+            return Service::CONNECTION_STATUS_ACTIVE;
+        }
+
+        // Was one of the entities requested?
+        if (count($inProgressList) > 0) {
+            return Service::CONNECTION_STATUS_REQUESTED;
+        }
+
+        // No published or requested entities discovered
+        return Service::CONNECTION_STATUS_NOT_REQUESTED;
+    }
 }
