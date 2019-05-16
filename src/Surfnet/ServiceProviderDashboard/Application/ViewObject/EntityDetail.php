@@ -231,6 +231,21 @@ class EntityDetail
      */
     private $actions;
 
+    /**
+     * @var string[]
+     */
+    private $redirectUris;
+
+    /**
+     * @var string
+     */
+    private $grantType;
+
+    /**
+     * @var bool
+     */
+    private $playgroundEnabled;
+
     private function __construct()
     {
     }
@@ -246,6 +261,11 @@ class EntityDetail
         $entityDetail->id = $entity->getId();
         $entityDetail->manageId = $entity->getManageId();
         $entityDetail->protocol = $entity->getProtocol();
+        if ($entity->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT) {
+            $entityDetail->grantType = $entity->getGrantType()->getGrantType();
+            $entityDetail->redirectUris = $entity->getRedirectUris();
+            $entityDetail->playgroundEnabled = $entity->isEnablePlayground();
+        }
         $entityDetail->metadataUrl = $entity->getMetadataUrl();
         $entityDetail->acsLocation = $entity->getAcsLocation();
         $entityDetail->entityId = $entity->getEntityId();
@@ -615,5 +635,29 @@ class EntityDetail
     public function getProtocol()
     {
         return $this->protocol;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRedirectUris()
+    {
+        return $this->redirectUris;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGrantType()
+    {
+        return $this->grantType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPlaygroundEnabled()
+    {
+        return $this->playgroundEnabled;
     }
 }
