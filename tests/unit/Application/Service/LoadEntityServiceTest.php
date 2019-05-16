@@ -62,6 +62,9 @@ class LoadEntityServiceTest extends MockeryTestCase
      */
     private $service;
 
+    const OIDC_PLAYGROUN_URL_TEST = 'http://playground-test';
+    const OIDC_PLAYGROUN_URL_PROD = 'http://playground-prod';
+
     public function setUp()
     {
         parent::setUp();
@@ -79,8 +82,8 @@ class LoadEntityServiceTest extends MockeryTestCase
             $this->manageTestClient,
             $this->manageProdClient,
             $this->attributesMetadataRepository,
-            'playgroundUriTest',
-            'playgroundUriProd'
+            self::OIDC_PLAYGROUN_URL_TEST,
+            self::OIDC_PLAYGROUN_URL_PROD
         );
     }
 
@@ -366,5 +369,95 @@ JSON
             Entity::ENVIRONMENT_PRODUCTION,
             Entity::ENVIRONMENT_PRODUCTION
         );
+    }
+
+    /**
+     * @dataProvider providePlaygroundUrls
+     */
+    public function test_handler_should_handle_playground_redirect_url_for_production($testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground)
+    {
+        $this->entityRepository->shouldReceive('isUnique')
+            ->with('dashboardid')
+            ->andReturn(true);
+
+        $manageDto = ManageEntity::fromApiResponse([
+            'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
+            'data' => [
+                'entityid' => 'http://example.com',
+                'arp' => [
+                    'attributes' => [
+                        'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test1',
+                        ]],
+                        'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test2',
+                        ]],
+                        'urn:mace:dir:attribute-def:displayName' => [[
+                            'source' => 'idp',
+                            'value' => '*',
+                            'motivation' => 'test3',
+                        ]],
+                    ],
+                ],
+                'metaDataFields' => [
+                    'name:en' => 'name en',
+                    'name:nl' => 'name nl',
+                    'description:en' => 'description en',
+                    'description:nl' => 'description nl',
+                    'coin:service_team_id' => 'testteam',
+                    'coin:oidc_client' => '1',
+                ],
+                'oidcClient' => [
+                    'clientId' => 'http@//entityid',
+                    'clientSecret' => 'test',
+                    'redirectUris' => $redirectUris,
+                    'grantType' => 'implicit',
+                    'scope' => ['openid'],
+                ],
+            ],
+        ]);
+
+        $this->manageProdClient->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn($manageDto);
+
+        $this->manageTestClient->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn($manageDto);
+
+        $entity =$this->copyService->load(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            $sourceEnviroment,
+            $destinationEvironment
+        );
+
+        $redirectUris = $entity->getRedirectUris();
+        $playgroundEnabled = $entity->isEnablePlayground();
+
+        $messageFormat = 'Unexpected outcome for the "%s" test in scenario "%s".';
+
+        $this->assertSame($excpectedUris, $redirectUris, sprintf($messageFormat, 'expectedUris', $testName));
+        $this->assertSame($expectedEnabledPlayground, $playgroundEnabled, sprintf($messageFormat, 'playgroundEnabled', $testName));
+    }
+
+    public function providePlaygroundUrls()
+    {
+        //$testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground
+        return [
+            ['prod-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
+            ['prod-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
+            ['prod-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
+            ['prod-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
+            ['test-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
+            ['test-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
+            ['test-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
+            ['test-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
+        ];
     }
 }
