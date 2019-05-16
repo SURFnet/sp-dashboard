@@ -63,6 +63,7 @@ entity:
         html: <strong>information about the contact information fields</strong>
     attribute:
       motivation: Motivation
+      no_motivation_set: No motivation set
       saml20:
         title: Attributes
         html: <strong>information about the attribute fields</strong>

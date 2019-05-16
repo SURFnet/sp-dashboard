@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 
@@ -111,6 +112,41 @@ class EntityDetailTest extends WebTestCase
         $this->assertDetailEquals(3, 'Last name', 'Test', false);
     }
 
+
+    /**
+     * @see https://www.pivotaltracker.com/story/show/165597382
+     */
+    public function test_it_shows_attributes_without_motivation()
+    {
+        $this->loadFixtures();
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $this->getAuthorizationService()->setSelectedServiceId(
+            $this->getServiceRepository()->findByName('SURFnet')->getId()
+        );
+
+        /** @var \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity $entity */
+        $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
+
+        $commonNameAttribute = new Attribute();
+        $commonNameAttribute->setRequested(true);
+        $commonNameAttribute->setMotivation('Hi there, we want to know your name!');
+
+        // No motivation is set on this attribute
+        $organizationAttribute = new Attribute();
+        $organizationAttribute->setRequested(true);
+
+        $entity->setCommonNameAttribute($commonNameAttribute);
+        $entity->setOrganizationAttribute($organizationAttribute);
+
+        $this->getEntityRepository()->save($entity);
+
+        $this->client->request('GET', sprintf('/entity/detail/1/%s', $entity->getId()));
+
+        $this->assertAttributeDetailEquals(0, 'Common name attribute', 'Hi there, we want to know your name!');
+        $this->assertAttributeDetailEquals(1, 'Organization attribute', 'No motivation set');
+    }
+
     private function assertListContains($position, $expectedLabel, array $expectedValues)
     {
         $rows = $this->client->getCrawler()->filter('div.detail');
@@ -178,6 +214,28 @@ class EntityDetailTest extends WebTestCase
             $expectedValue,
             $valueSpan,
             sprintf('Expected span "%s" at the row on position %d', $expectedValue, $position)
+        );
+    }
+
+    private function assertAttributeDetailEquals($position, $expectedTitle, $expectedValue)
+    {
+        $rows = $this->client->getCrawler()->filter('div.detail.attribute');
+        $headings = $this->client->getCrawler()->filter('h3.attribute-title');
+        $row = $rows->eq($position);
+        $heading = $headings->eq($position);
+
+        $attributeValue = $row->filter('span')->last()->text();
+        $attributeTitle = $heading->text();
+
+        $this->assertEquals(
+            $expectedTitle,
+            $attributeTitle,
+            sprintf('Expected attribute name "%s" at the row on position %d', $attributeTitle, $position)
+        );
+        $this->assertEquals(
+            $expectedValue,
+            $attributeValue,
+            sprintf('Expected attribute value "%s" at the row on position %d', $expectedValue, $position)
         );
     }
 }
