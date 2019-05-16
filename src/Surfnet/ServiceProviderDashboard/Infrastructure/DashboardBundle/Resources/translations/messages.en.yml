@@ -222,6 +222,9 @@ entity.edit.contact_information.html: "
 
 <p><i>Technical and administrative contact details will not be communicated to end-users.</i></p>
 "
+entity.edit.contact_information.administrativeContact.email.placeholder: "Email address of administrative contact"
+entity.edit.contact_information.technicalContact.email.placeholder: "Email address of technical contact"
+entity.edit.contact_information.supportContact.email.placeholder: "Emailsaddress of support contact"
 entity.edit.attribute_input_placeholder: The service will use this attribute to...
 entity.edit.attributes.saml20.title: Attributes
 entity.edit.attributes.saml20.html: "
