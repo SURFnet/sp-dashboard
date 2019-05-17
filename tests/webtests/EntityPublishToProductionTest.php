@@ -105,7 +105,9 @@ class EntityPublishToProductionTest extends WebTestCase
     public function test_it_publishes_to_production()
     {
         // Entity id validation
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->prodMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        // Unique validation
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         // Build and save an entity to work with
         $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
@@ -131,7 +133,8 @@ class EntityPublishToProductionTest extends WebTestCase
 
     public function test_it_validates_at_least_one_attribute_present()
     {
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->prodMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         // Build and save an entity to work with
         $entity = $this->buildEntityWithoutAttribute($this->getServiceRepository()->findByName('SURFnet'));

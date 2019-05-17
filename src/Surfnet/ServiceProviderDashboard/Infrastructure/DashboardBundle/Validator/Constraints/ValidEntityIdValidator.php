@@ -21,102 +21,52 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 use Exception;
 use Pdp\Parser;
 use Pdp\PublicSuffixListManager;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-/**
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.NPathComplexity)
- */
 class ValidEntityIdValidator extends ConstraintValidator
 {
     /**
-     * @var QueryEntityRepository
-     */
-    private $manageTestRepository;
-
-    /**
-     * @var QueryEntityRepository
-     */
-    private $manageProductionRepository;
-
-    /**
-     * @var EntityRepository
-     */
-    private $doctrineRepository;
-
-    /**
-     * @param QueryEntityRepository $manageTestRepository
-     * @param QueryEntityRepository $manageProductionRepository
-     * @param DoctrineRepository $doctrineRepository
-     */
-    public function __construct(
-        QueryEntityRepository $manageTestRepository,
-        QueryEntityRepository $manageProductionRepository,
-        DoctrineRepository $doctrineRepository
-    ) {
-        $this->manageTestRepository = $manageTestRepository;
-        $this->manageProductionRepository = $manageProductionRepository;
-        $this->doctrineRepository = $doctrineRepository;
-    }
-
-    /**
      * @param string     $value
      * @param Constraint $constraint
-     *
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function validate($value, Constraint $constraint)
     {
-        $root = $this->context->getRoot();
-
-        if ($root instanceof SaveSamlEntityCommand) {
-            $entityCommand = $root;
-        } else {
-            $entityCommand = $root->getData();
-        }
-
-        $metadataUrl = $entityCommand->getMetadataUrl();
-
-        if (empty($metadataUrl) || empty($value)) {
+        if (empty($value)) {
+            $this->context->addViolation('validator.entity_id.empty');
             return;
         }
 
-        $pslManager = new PublicSuffixListManager();
-        $parser = new Parser($pslManager->getList());
-
-        try {
-            $parser->parseUrl($metadataUrl);
-        } catch (Exception $e) {
-            $this->context->addViolation('validator.entity_id.invalid_url');
-            return;
-        }
-
-        try {
-            $parser->parseUrl($value);
-        } catch (Exception $e) {
+        if (!$this->validateUri($value) && !$this->validateUrn($value)) {
             $this->context->addViolation('validator.entity_id.invalid_entity_id');
             return;
         }
+    }
 
-        $manage = $this->manageTestRepository;
-        if ($entityCommand->isForProduction()) {
-            $manage = $this->manageProductionRepository;
-        }
+    /**
+     * @param $value
+     * @return bool
+     */
+    private function validateUrn($value)
+    {
+        $regex = "/^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\-.:=@;\$_!*'%\/?#]+$/i";
+        $match = preg_match($regex, $value);
+        return (bool)$match;
+    }
 
+    /**
+     * @param $value
+     * @return bool
+     */
+    private function validateUri($value)
+    {
         try {
-            $manageId = $manage->findManageIdByEntityId($value);
+            $pslManager = new PublicSuffixListManager();
+            $parser = new Parser($pslManager->getList());
+            $parser->parseUrl($value);
         } catch (Exception $e) {
-            $this->context->addViolation('validator.entity_id.registry_failure');
-            return;
+            return false;
         }
-
-        // Prevent publishing entities with existing entityId in Manage.
-        if ($manageId && (!$entityCommand->getManageId() || $manageId !== $entityCommand->getManageId())) {
-            $this->context->addViolation('validator.entity_id.already_exists');
-        }
+        return true;
     }
 }

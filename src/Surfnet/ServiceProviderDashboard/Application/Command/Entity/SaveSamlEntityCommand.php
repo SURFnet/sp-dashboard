@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -35,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @SpDashboardAssert\HasAttributes()
  */
-class SaveSamlEntityCommand implements Command
+class SaveSamlEntityCommand implements SaveEntityCommandInterface
 {
     /**
      * @var string
@@ -77,10 +76,7 @@ class SaveSamlEntityCommand implements Command
     /**
      * @var string
      *
-     * @Assert\Url(
-     *      protocols={"https"},
-     *      message = "url.notSecure"
-     * )
+     * @SpDashboardAssert\ValidMetadataUrl()
      */
     private $metadataUrl;
 
@@ -93,7 +89,6 @@ class SaveSamlEntityCommand implements Command
      * @var string
      *
      * @Assert\NotBlank()
-     * @Assert\Url(protocols={"https","http"})
      * @Assert\Url(
      *      protocols={"https"},
      *      message = "url.notSecure"
@@ -105,8 +100,8 @@ class SaveSamlEntityCommand implements Command
      * @var string
      *
      * @Assert\NotBlank()
-     * @Assert\Url()
      * @SpDashboardAssert\ValidEntityId()
+     * @SpDashboardAssert\UniqueEntityId(groups={"production"})
      */
     private $entityId;
 

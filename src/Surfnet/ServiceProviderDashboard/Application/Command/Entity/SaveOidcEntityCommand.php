@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -36,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @SpDashboardAssert\HasAttributes()
  */
-class SaveOidcEntityCommand implements Command
+class SaveOidcEntityCommand implements SaveEntityCommandInterface
 {
     /**
      * @var string
@@ -71,8 +70,8 @@ class SaveOidcEntityCommand implements Command
      * @var string
      *
      * @Assert\NotBlank()
-     * @Assert\Url()
      * @SpDashboardAssert\ValidClientId()
+     * @SpDashboardAssert\UniqueEntityId(groups={"production"})
      */
     private $entityId;
 
