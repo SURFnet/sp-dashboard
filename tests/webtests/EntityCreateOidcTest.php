@@ -172,7 +172,7 @@ class EntityOidcCreateTest extends WebTestCase
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
-        $this->testMockHandler->append(new Response(404, [], '{"status":"failed"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"status":"failed"}'));
 
         $this->client->submit($form, $formData);
 
