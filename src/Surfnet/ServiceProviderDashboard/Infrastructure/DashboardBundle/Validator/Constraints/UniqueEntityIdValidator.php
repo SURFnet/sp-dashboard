@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
-use Pdp\Parser;
-use Pdp\PublicSuffixListManager;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Symfony\Component\Validator\Constraint;

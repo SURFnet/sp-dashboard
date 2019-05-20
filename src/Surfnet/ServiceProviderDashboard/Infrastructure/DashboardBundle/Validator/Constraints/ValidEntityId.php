@@ -30,6 +30,6 @@ class ValidEntityId extends Constraint
      */
     public function validatedBy()
     {
-        return 'entity_id';
+        return 'valid_entity_id';
     }
 }

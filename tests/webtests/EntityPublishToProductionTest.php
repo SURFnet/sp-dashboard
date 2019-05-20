@@ -104,9 +104,9 @@ class EntityPublishToProductionTest extends WebTestCase
 
     public function test_it_publishes_to_production()
     {
-        // Entity id validation
-        $this->prodMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Unique validation
+        // Unique entity id validation (default)
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        // Unique entity id (production)
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         // Build and save an entity to work with
@@ -133,7 +133,9 @@ class EntityPublishToProductionTest extends WebTestCase
 
     public function test_it_validates_at_least_one_attribute_present()
     {
-        $this->prodMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        // Unique entity id validation (default)
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        // Unique entity id (production)
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         // Build and save an entity to work with

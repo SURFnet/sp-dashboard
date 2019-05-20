@@ -101,7 +101,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      *
      * @Assert\NotBlank()
      * @SpDashboardAssert\ValidEntityId()
-     * @SpDashboardAssert\UniqueEntityId(groups={"production"})
+     * @SpDashboardAssert\UniqueEntityId()
      */
     private $entityId;
 

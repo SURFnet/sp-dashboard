@@ -30,6 +30,6 @@ class ValidClientId extends Constraint
      */
     public function validatedBy()
     {
-        return 'client_id';
+        return 'valid_client_id';
     }
 }

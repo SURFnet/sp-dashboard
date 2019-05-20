@@ -84,7 +84,7 @@ class PublishEntityClientTest extends MockeryTestCase
 
     public function test_it_can_publish_to_manage()
     {
-        $this->mockHandler->append(new Response(200, [], json_encode(['status' => 'OK'])));
+        $this->mockHandler->append(new Response(200, [], json_encode(['id' => '1'])));
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
@@ -109,12 +109,12 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn($json);
 
         $response = $this->client->publish($entity);
-        $this->assertEquals('OK', $response['status']);
+        $this->assertEquals('1', $response['id']);
     }
 
     public function test_it_can_update_to_manage()
     {
-        $this->mockHandler->append(new Response(200, [], json_encode(['status' => 'OK'])));
+        $this->mockHandler->append(new Response(200, [], json_encode(['id' => '1'])));
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
@@ -139,7 +139,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn($json);
 
         $response = $this->client->publish($entity);
-        $this->assertEquals('OK', $response['status']);
+        $this->assertEquals('1', $response['id']);
     }
 
     /**

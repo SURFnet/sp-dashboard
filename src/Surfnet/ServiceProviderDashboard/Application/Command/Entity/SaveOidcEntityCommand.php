@@ -71,7 +71,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
      *
      * @Assert\NotBlank()
      * @SpDashboardAssert\ValidClientId()
-     * @SpDashboardAssert\UniqueEntityId(groups={"production"})
+     * @SpDashboardAssert\UniqueEntityId()
      */
     private $entityId;
 
