@@ -63,11 +63,6 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
     private $commandHandler;
 
     /**
-     * @var EntityRemovalRequestRepository|Mock
-     */
-    private $entityRemovalRequestRepository;
-
-    /**
      * @var JiraServiceFactory|Mock
      */
     private $jiraServiceFactory;
@@ -81,15 +76,11 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
     {
         $this->queryClient = m::mock(QueryClient::class);
         $this->logger = m::mock(Logger::class);
-        $this->entityRemovalRequestRepository = m::mock(EntityRemovalRequestRepository::class);
         $this->jiraServiceFactory = m::mock(JiraServiceFactory::class);
         $this->issueRepository = m::mock(IssueRepository::class);
 
         // As part of the integration test, the TicketService and IssueFieldFactory is not mocked but included in the test.
-        $this->ticketService = new TicketService(
-            $this->issueRepository,
-            $this->entityRemovalRequestRepository
-        );
+        $this->ticketService = new TicketService($this->issueRepository);
 
         $this->flashBag = m::mock(FlashBagInterface::class);
 
@@ -141,9 +132,6 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('createIssueFrom')
             ->andReturn($issue);
 
-        $this->entityRemovalRequestRepository
-            ->shouldReceive('save');
-
         $this->commandHandler->handle($command);
     }
 
@@ -184,9 +172,6 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
         $this->jiraServiceFactory
             ->shouldReceive('buildIssueService')
             ->andReturn($issueService);
-
-        $issue = m::mock(Issue::class)->makePartial();
-        $issue->key = 'CXT-999';
 
         $this->issueRepository
             ->shouldReceive('createIssueFrom')
