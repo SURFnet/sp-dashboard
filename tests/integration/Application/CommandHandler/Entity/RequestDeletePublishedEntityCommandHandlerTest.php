@@ -134,7 +134,8 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->andReturn($manageDto);
 
         $issue = m::mock(Issue::class)->makePartial();
-        $issue->key = 'CXT-999';
+        $issue->shouldReceive('getKey')
+            ->andReturn('CXT-999');
 
         $this->issueRepository
             ->shouldReceive('createIssueFrom')

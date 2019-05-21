@@ -236,9 +236,10 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
         arguments:
-          - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository'
+            - '@surfnet.dashboard.repository.issue'
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository:
+    surfnet.dashboard.repository.issue:
+        class: 'Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository'
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory'

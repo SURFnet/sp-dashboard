@@ -167,9 +167,9 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             }
             if (is_null($issue)) {
                 $issue = $this->ticketService->createIssueFrom($ticket);
-                $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+                $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
             } else {
-                $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->key));
+                $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->getKey()));
             }
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
@@ -229,7 +229,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         }
 
         // 3. On failure, remove the Jira ticket that was previously created. The user must retry at a later stage
-        $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->key));
-        $this->ticketService->delete($issue->key);
+        $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->getKey()));
+        $this->ticketService->delete($issue->getKey());
     }
 }

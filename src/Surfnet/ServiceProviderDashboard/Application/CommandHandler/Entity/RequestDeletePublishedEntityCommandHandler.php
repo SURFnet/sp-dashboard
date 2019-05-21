@@ -107,7 +107,7 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
         );
         try {
             $issue = $this->ticketService->createIssueFrom($ticket);
-            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
         } catch (JiraException $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
             $this->flashBag->add('error', 'entity.delete.request.failed');
