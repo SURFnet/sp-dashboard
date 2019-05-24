@@ -16,14 +16,24 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 
-interface IdentityProviderRepository
+class IdentityProviderFactory
 {
+
     /**
-     * @return IdentityProvider[]
+     * @param $manageResult
+     * @return IdentityProvider
      */
-    public function findAll();
+    public static function fromManageResult($manageResult)
+    {
+        return new IdentityProvider(
+            $manageResult['_id'],
+            $manageResult['data']['entityid'],
+            $manageResult['data']['metaDataFields']['name:nl'],
+            $manageResult['data']['metaDataFields']['name:en']
+        );
+    }
 }

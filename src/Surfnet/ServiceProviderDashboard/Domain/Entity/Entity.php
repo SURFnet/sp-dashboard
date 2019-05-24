@@ -396,6 +396,16 @@ class Entity
     private $service;
 
     /**
+     * @var string[]
+     */
+    private $idpWhitelist = [];
+
+    /**
+     * @var bool
+     */
+    private $idpAllowAll = true;
+
+    /**
      * @param ManageEntity $manageEntity
      * @param string $environment
      * @param Service $service
@@ -490,6 +500,9 @@ class Entity
         self::setAttributesOn($entity, $arp);
 
         $entity->setService($service);
+
+        $entity->idpAllowAll =  $manageEntity->getAllowedIdentityProviders()->isAllowAll();
+        $entity->idpWhitelist = $manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders();
 
         return $entity;
     }
@@ -1443,5 +1456,49 @@ class Entity
             static::NAME_ID_FORMAT_DEFAULT,
             static::NAME_ID_FORMAT_PERSISTENT,
         ];
+    }
+
+    /**
+     * @param IdentityProvider $provider
+     * @return bool
+     */
+    public function isWhitelisted(IdentityProvider $provider)
+    {
+        return in_array($provider->getEntityId(), $this->idpWhitelist);
+    }
+
+    /**
+     * @param IdentityProvider[] $providers
+     */
+    public function setIdpWhitelist(array $providers)
+    {
+        $this->idpWhitelist = [];
+        foreach ($providers as $provider) {
+            $this->idpWhitelist[] = $provider->getEntityId();
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIdpWhitelist()
+    {
+        return $this->idpWhitelist;
+    }
+
+    /**
+     * @param bool $idpAllowAll
+     */
+    public function setIdpAllowAll($idpAllowAll)
+    {
+        $this->idpAllowAll = (bool) $idpAllowAll;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIdpAllowAll()
+    {
+        return $this->idpAllowAll;
     }
 }

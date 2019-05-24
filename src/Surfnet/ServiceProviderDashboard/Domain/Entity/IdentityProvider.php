@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
-use Symfony\Component\Validator\Constraints as Assert;
+use Webmozart\Assert\Assert;
 
 class IdentityProvider
 {
@@ -55,6 +47,11 @@ class IdentityProvider
      */
     public function __construct($manageId, $entityId, $nameNl, $nameEn)
     {
+        Assert::stringNotEmpty($manageId);
+        Assert::stringNotEmpty($entityId);
+        Assert::string($nameNl);
+        Assert::string($nameEn);
+
         $this->manageId = $manageId;
         $this->entityId = $entityId;
         $this->nameNl = $nameNl;
@@ -98,6 +95,6 @@ class IdentityProvider
      */
     public function getName()
     {
-        return (empty($this->nameNl) ? $this->nameEn : $this->nameNl);
+        return (empty($this->nameEn) ? $this->nameNl: $this->nameEn);
     }
 }

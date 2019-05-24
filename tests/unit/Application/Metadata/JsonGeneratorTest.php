@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 
@@ -132,9 +133,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
-        $this->assertArrayNotHasKey('allowedall', $metadata);
-        $this->assertArrayNotHasKey('allowedEntities', $metadata);
         $this->assertArrayNotHasKey('type', $metadata);
+
+        $this->assertEquals(true, $metadata['allowedall']);
+        $this->assertEquals([], $metadata['allowedEntities']);
 
         $this->assertEquals('http://entityid', $metadata['entityid']);
         $this->assertEquals('http://metadata', $metadata['metadataurl']);
@@ -197,8 +199,8 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('privacy', $fields['privacy']);
         $this->assertEquals('sp', $fields['sp']);
         //$this->assertEquals('http://acs', $fields['AssertionConsumerService:0:Location']);
-        $this->assertNotContains('AssertionConsumerService:0:Binding', $fields);
-        $this->assertNotContains('NameIDFormat', $fields);
+        $this->assertArrayNotHasKey('AssertionConsumerService:0:Binding', $fields);
+        $this->assertArrayNotHasKey('NameIDFormat', $fields);
         $this->assertEquals('name en', $fields['name:en']);
         $this->assertEquals('name nl', $fields['name:nl']);
         $this->assertEquals('description en', $fields['description:en']);
@@ -241,9 +243,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
-        $this->assertArrayNotHasKey('allowedall', $metadata);
-        $this->assertArrayNotHasKey('allowedEntities', $metadata);
         $this->assertArrayNotHasKey('type', $metadata);
+
+        $this->assertEquals(true, $metadata['allowedall']);
+        $this->assertEquals([], $metadata['allowedEntities']);
 
         $this->assertEquals('http://entityid', $metadata['entityid']);
         $this->assertEquals('revisionnote', $metadata['revisionnote']);
@@ -254,8 +257,8 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('privacy', $metadata['metaDataFields.privacy']);
         $this->assertEquals('sp', $metadata['metaDataFields.sp']);
         //$this->assertEquals('http://acs', $metadata['metaDataFields.AssertionConsumerService:0:Location']);
-        $this->assertNotContains('metaDataFields.AssertionConsumerService:0:Binding', $metadata);
-        $this->assertNotContains('metaDataFields.NameIDFormat', $metadata);
+        $this->assertArrayNotHasKey('metaDataFields.AssertionConsumerService:0:Binding', $metadata);
+        $this->assertArrayNotHasKey('metaDataFields.NameIDFormat', $metadata);
         $this->assertEquals('name en', $metadata['metaDataFields.name:en']);
         $this->assertEquals('name nl', $metadata['metaDataFields.name:nl']);
         $this->assertEquals('description en', $metadata['metaDataFields.description:en']);
@@ -275,7 +278,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('emailaddress', $metadata['metaDataFields.contacts:0:emailAddress']);
         $this->assertEquals('telephonenumber', $metadata['metaDataFields.contacts:0:telephoneNumber']);
 
-        $this->assertNotContains('oidcClient', $metadata);
+        $this->assertArrayNotHasKey('oidcClient', $metadata);
     }
 
     public function test_it_can_build_saml_entity_data_for_new_entities()
@@ -382,6 +385,8 @@ class JsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.certData' => 'certdata',
                     'state' => 'testaccepted',
                     'revisionnote' => 'revisionnote',
+                    'allowedEntities' => [],
+                    'allowedall' => true,
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
@@ -501,6 +506,8 @@ class JsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.coin:oidc_client' => '1',
                     'revisionnote' => 'revisionnote',
                     'state' => 'testaccepted',
+                    'allowedEntities' => [],
+                    'allowedall' => true,
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
@@ -527,12 +534,129 @@ class JsonGeneratorTest extends MockeryTestCase
         ), $data);
     }
 
+    public function test_it_can_build_acl_whitelist_for_existing_entities_default_allow_all()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
 
-        /**
+        $entity = $this->createSamlEntity();
+
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+
+
+        $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
+        $this->assertSame(true, $data['pathUpdates']['allowedall']);
+        $this->assertArrayHasKey('allowedEntities', $data['pathUpdates']);
+        $this->assertSame([], $data['pathUpdates']['allowedEntities']);
+    }
+
+    public function test_it_can_build_acl_whitelist_for_existing_entities_allow_all()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $entity = $this->createSamlEntity();
+        $entity->setIdpAllowAll(true);
+
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+
+        $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
+        $this->assertSame(true, $data['pathUpdates']['allowedall']);
+        $this->assertArrayHasKey('allowedEntities', $data['pathUpdates']);
+        $this->assertSame([], $data['pathUpdates']['allowedEntities']);
+    }
+
+    public function test_it_can_build_acl_whitelist_for_existing_entities_none()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $entity = $this->createSamlEntity();
+        $entity->setIdpAllowAll(false);
+
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+
+
+        $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
+        $this->assertSame(false, $data['pathUpdates']['allowedall']);
+        $this->assertArrayHasKey('allowedEntities', $data['pathUpdates']);
+        $this->assertSame([], $data['pathUpdates']['allowedEntities']);
+    }
+
+    public function test_it_can_build_acl_whitelist_for_existing_entities_allow_single()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $entity = $this->createSamlEntity();
+        $entity->setIdpAllowAll(false);
+        $entity->setIdpWhitelist([
+            new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
+        ]);
+
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+
+
+        $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
+        $this->assertSame(false, $data['pathUpdates']['allowedall']);
+        $this->assertArrayHasKey('allowedEntities', $data['pathUpdates']);
+        $this->assertSame([['name' => 'entity-id']], $data['pathUpdates']['allowedEntities']);
+    }
+
+
+    public function test_it_can_build_acl_whitelist_for_existing_entities_allow_multiple()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $entity = $this->createSamlEntity();
+        $entity->setIdpAllowAll(false);
+        $entity->setIdpWhitelist([
+            new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
+            new IdentityProvider('manage-id2', 'entity-id2', 'name-nl2', 'name-en2'),
+        ]);
+
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+
+
+        $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
+        $this->assertSame(false, $data['pathUpdates']['allowedall']);
+        $this->assertArrayHasKey('allowedEntities', $data['pathUpdates']);
+        $this->assertSame([['name' => 'entity-id'], ['name' => 'entity-id2'],], $data['pathUpdates']['allowedEntities']);
+    }
+
+
+    /**
      * @return Entity
      */
     private function createSamlEntity()
     {
+        /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
 
         $entity->setProtocol('saml20');
@@ -572,17 +696,14 @@ CERT
         return $entity;
     }
 
-
-
     /**
      * @return Entity
      */
     private function createOidcEntity()
     {
+        /** @var Entity $entity */
+
         $entity = m::mock(Entity::class)->makePartial();
-        //$entity->setMetadataUrl('http://metadata');
-        //$entity->setEntityId('http://entityid');
-        //$entity->setAcsLocation('http://acs');
 
         $entity->setProtocol('oidc');
         $entity->setGrantType(new OidcGrantType(OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE));

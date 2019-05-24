@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\AclEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,34 +29,21 @@ class AclEntityType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var AclEntityCommand $data */
-        $data = $builder->getData();
-
-        $builder->add('selected', ChoiceType::class, [
-            'choices' => $data->getAvailable(),
-            'choice_label' => function(IdentityProvider $idp, $key, $value) {
-                return strtoupper($idp->getName());
-            },
-            'choice_attr' => function(IdentityProvider $idp, $key, $value) {
-                return ['class' => 'category_'.strtolower($idp->getManageId())];
-            },
-            'expanded' => true,
-            'multiple' => true,
-        ])
+        $builder->add(
+            'selectAll',
+            CheckboxType::class,
+            [
+                'required' => false,
+            ]
+        )
+            ->add('selected', AclListType::class)
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => AclEntityCommand::class,
-            'error_bubbling' => false,
+            'data_class' => UpdateEntityAclCommand::class
         ));
-    }
-
-    public function getBlockPrefix()
-    {
-        return 'identity_providers';
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,25 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryIdentityProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProviderFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 /**
- * The QueryClient can be used to perform queries on the manage /manage/api/internal/search/saml20_sp endpoint. Queries
- * will return a hard coded return set per application.
- *
- * Example response (json formatted for readability)
- *  [{
- *      "_id": "db2e5c63-3c54-4962-bf4a-d6ced1e9cf33",
- *      "version": 0,
- *      "data": {
- *          "entityid": "https://example.com/saml/metadata",
- *          "state": "prodaccepted",
- *          "metaDataFields": {
- *              "name:en": "My example SP"
- *          }
- *      }
- *  }]
+ * The IdentityProviderClient can be used to perform queries on the manage /manage/api/internal/search/saml20_idp endpoint.
+ * Queries will return the domain objects.
  */
 class IdentityProviderClient implements IdentityProviderRepository
 {
@@ -70,7 +58,7 @@ class IdentityProviderClient implements IdentityProviderRepository
 
             $list = [];
             foreach ($result as $manageResult) {
-                $list[] = $this->parseManageResult($manageResult);
+                $list[] = IdentityProviderFactory::fromManageResult($manageResult);
             }
             return $list;
         } catch (HttpException $e) {
@@ -93,18 +81,5 @@ class IdentityProviderClient implements IdentityProviderRepository
             json_encode($params),
             '/manage/api/internal/search/saml20_idp'
         );
-    }
-
-    /**
-     * @param $manageResult
-     * @return IdentityProvider
-     */
-    private function parseManageResult($manageResult)
-    {
-        return new IdentityProvider(
-            $manageResult['_id'],
-            $manageResult['data']['entityid'],
-            $manageResult['data']['metaDataFields']['name:nl'],
-            $manageResult['data']['metaDataFields']['name:en']);
     }
 }

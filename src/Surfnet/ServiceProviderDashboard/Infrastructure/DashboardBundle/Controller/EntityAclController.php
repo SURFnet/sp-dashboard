@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\AclEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -47,25 +47,25 @@ class EntityAclController extends Controller
      */
     private $entityService;
     /**
-     * @var IdentityProviderRepository
-     */
-    private $identityProviderRepository;
-    /**
      * @var AuthorizationService
      */
     private $authorizationService;
+    /**
+     * @var EntityAclService
+     */
+    private $entityAclService;
 
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         AuthorizationService $authorizationService,
-        IdentityProviderRepository $identityProviderRepository
+        EntityAclService $entityAclService
     ) {
 
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
-        $this->identityProviderRepository = $identityProviderRepository;
+        $this->entityAclService = $entityAclService;
     }
 
     /**
@@ -81,29 +81,23 @@ class EntityAclController extends Controller
      */
     public function aclAction(Request $request, $serviceId, $id)
     {
-        $flashBag = $this->get('session')->getFlashBag();
-
         $service = $this->authorizationService->getServiceById($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Entity::ENVIRONMENT_TEST, $service);
 
-        $availableIdps = $this->identityProviderRepository->findAll();
+        $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 
-        $command = new AclEntityCommand($availableIdps);
+        $command = new UpdateEntityAclCommand($entity->getManageId(), $service->getId(), $selectedIdps, $entity->isIdpAllowAll());
         $form = $this->createForm(AclEntityType::class, $command);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            $selected = $command->getSelected();
-
-            // handle selected in commandbus
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->commandBus->handle($command);
         }
         $viewObject = EntityDetail::fromEntity($entity);
-
 
         return [
             'form' => $form->createView(),
             'entity' => $viewObject,
-            'availableIdps' => $availableIdps,
         ];
     }
 }

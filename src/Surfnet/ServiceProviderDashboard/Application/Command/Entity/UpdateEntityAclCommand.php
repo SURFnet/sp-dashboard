@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- *
- */
-class AclEntityCommand implements Command
+class UpdateEntityAclCommand implements Command
 {
-    /** @var IdentityProvider[] */
-    private $providers;
+    /** @var string */
+    private $entityManageId;
+
+    /** @var string */
+    private $serviceId;
 
     /**
      * @var IdentityProvider[]
@@ -39,17 +39,39 @@ class AclEntityCommand implements Command
      */
     private $selected;
 
-    public function __construct(array $availableProviders)
+    /**
+     * @var bool
+     */
+    private $selectAll = false;
+
+    /**
+     * @param string $entityManageId
+     * @param string $serviceId
+     * @param IdentityProvider[] $selectedIdps
+     * @param bool $selectAll
+     */
+    public function __construct($entityManageId, $serviceId, array $selectedIdps, $selectAll)
     {
-        $this->providers = $availableProviders;
+        $this->entityManageId = $entityManageId;
+        $this->serviceId = $serviceId;
+        $this->selected = $selectedIdps;
+        $this->selectAll = (bool) $selectAll;
     }
 
     /**
-     * @return IdentityProvider[]
+     * @return string
      */
-    public function getAvailable()
+    public function getEntityManageId()
     {
-        return $this->providers;
+        return $this->entityManageId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceId()
+    {
+        return $this->serviceId;
     }
 
     /**
@@ -61,10 +83,26 @@ class AclEntityCommand implements Command
     }
 
     /**
-     * @param array $idps
+     * @param IdentityProvider[] $idps
      */
     public function setSelected(array $idps)
     {
         $this->selected = $idps;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSelectAll()
+    {
+        return $this->selectAll;
+    }
+
+    /**
+     * @param bool $selectAll
+     */
+    public function setSelectAll($selectAll)
+    {
+        $this->selectAll = (bool)$selectAll;
     }
 }
