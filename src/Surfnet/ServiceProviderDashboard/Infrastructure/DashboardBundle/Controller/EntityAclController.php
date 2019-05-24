@@ -20,13 +20,14 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\AclEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,13 +84,25 @@ class EntityAclController extends Controller
         $flashBag = $this->get('session')->getFlashBag();
 
         $service = $this->authorizationService->getServiceById($serviceId);
-
         $entity = $this->entityService->getEntityByIdAndTarget($id, Entity::ENVIRONMENT_TEST, $service);
 
         $availableIdps = $this->identityProviderRepository->findAll();
 
+        $command = new AclEntityCommand($availableIdps);
+        $form = $this->createForm(AclEntityType::class, $command);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $selected = $command->getSelected();
+
+            // handle selected in commandbus
+        }
+        $viewObject = EntityDetail::fromEntity($entity);
+
+
         return [
-            'entity' => $entity,
+            'form' => $form->createView(),
+            'entity' => $viewObject,
             'availableIdps' => $availableIdps,
         ];
     }

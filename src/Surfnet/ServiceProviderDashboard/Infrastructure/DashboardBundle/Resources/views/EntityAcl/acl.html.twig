@@ -5,10 +5,28 @@
 {% block body_container %}
     <h1>{% block page_heading %}{{ 'entity.acl.title'|trans }}{%endblock%}</h1>
 
-   {{ dump(entity) }}
+   {{ entity.nameNl }}
 
     <hr/>
 
-    {{ dump(availableIdps) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
+
+    <div class="fieldset card">
+
+        {% for type, messages in app.session.flashbag.all %}
+            {% for message in messages %}
+                <div class="message {{ type }}">{{ message|trans }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        {{ form_errors(form) }}
+
+        {{ form_rest(form) }}
+    </div>
+
+    <div class="button-wrapper">
+        {{ form_end(form) }}
+    </div>
+
 
 {% endblock %}
