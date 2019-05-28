@@ -106,6 +106,17 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         if (!is_file($this->filePath)) {
             file_put_contents($this->filePath, '{}');
         }
-        $this->data = json_decode(file_get_contents($this->filePath), true);
+        $rawData = json_decode(file_get_contents($this->filePath), true);
+        $this->data = $this->loadIssues($rawData);
+    }
+
+    private function loadIssues(array $rawData)
+    {
+        $output = [];
+        foreach ($rawData as $issueData) {
+            $output[$issueData['key']] = Issue::fromSerializedData($issueData);
+        }
+
+        return $output;
     }
 }

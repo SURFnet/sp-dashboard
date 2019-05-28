@@ -19,9 +19,13 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use InvalidArgumentException;
+use JsonSerializable;
 
-class Issue
+class Issue implements JsonSerializable
 {
+    const IDENTIFIER_KEY = 'key';
+    const IDENTIFIER_ISSUE_TYPE = 'issueType';
+
     /**
      * @var string
      */
@@ -49,6 +53,11 @@ class Issue
         $this->issueType = $issueType;
     }
 
+    public static function fromSerializedData($issueData)
+    {
+        return new self($issueData[self::IDENTIFIER_KEY], $issueData[self::IDENTIFIER_ISSUE_TYPE]);
+    }
+
     /**
      * @return string
      */
@@ -63,5 +72,13 @@ class Issue
     public function getIssueType()
     {
         return $this->issueType;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            self::IDENTIFIER_KEY => $this->key,
+            self::IDENTIFIER_ISSUE_TYPE => $this->issueType
+        ];
     }
 }
