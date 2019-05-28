@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use InvalidArgumentException;
+
 class Issue
 {
     /**
@@ -35,6 +37,14 @@ class Issue
      */
     public function __construct($key, $issueType)
     {
+        if (!is_string($key) || empty($key)) {
+            throw new InvalidArgumentException("An invalid issue key is provided, must be a non empty string");
+        }
+
+        if (!is_string($issueType) || empty($issueType)) {
+            throw new InvalidArgumentException("An invalid issue type is provided, must be a non empty string");
+        }
+
         $this->key = $key;
         $this->issueType = $issueType;
     }
