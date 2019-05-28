@@ -123,6 +123,14 @@ class EntityActions
     /**
      * @return bool
      */
+    public function allowAclAction()
+    {
+        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
+    }
+
+    /**
+     * @return bool
+     */
     public function allowSecretResetAction()
     {
         return $this->protocol == DomainEntity::TYPE_OPENID_CONNECT &&

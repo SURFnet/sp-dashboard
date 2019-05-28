@@ -115,6 +115,7 @@ entity.list.state: State
 entity.list.action.back: Back to overview
 entity.list.action.view: View
 entity.list.action.edit: Edit
+entity.list.action.acl: Edit IdP whitelist
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
