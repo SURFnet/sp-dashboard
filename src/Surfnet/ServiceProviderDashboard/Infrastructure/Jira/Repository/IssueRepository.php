@@ -18,11 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository;
 
-use JiraRestApi\Issue\Issue;
-use JiraRestApi\Issue\IssueSearchResult;
-use JiraRestApi\JiraException;
-use JsonMapper_Exception;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
@@ -91,12 +89,6 @@ class IssueRepository implements TicketServiceInterface
         $this->manageIdFieldLabel = $manageIdFieldLabel;
     }
 
-    /**
-     * @param array $manageIds
-     * @return IssueSearchResult
-     * @throws JiraException
-     * @throws JsonMapper_Exception
-     */
     public function findByManageIds(array $manageIds)
     {
         $issueService = $this->jiraFactory->buildIssueService();
@@ -104,22 +96,16 @@ class IssueRepository implements TicketServiceInterface
         $issues = $issueService->search(
             sprintf('project = %s AND issuetype = %s', $this->projectKey, $this->issueType)
         );
-        $issueResult = new IssueSearchResult();
+        $collection = [];
         foreach ($issues->issues as $issue) {
             $manageId = $issue->fields->customFields[$this->manageIdFieldName];
             if (in_array($manageId, $manageIds)) {
-                $issueResult->issues[$manageId] = $issue;
+                $collection[$manageId] = new Issue($issue->key, $this->issueType);
             }
         }
-        return $issueResult;
+        return new IssueCollection($collection);
     }
 
-    /**
-     * @param string $manageId
-     * @return Issue|null
-     * @throws JiraException
-     * @throws JsonMapper_Exception
-     */
     public function findByManageId($manageId)
     {
         $issueService = $this->jiraFactory->buildIssueService();
@@ -133,20 +119,12 @@ class IssueRepository implements TicketServiceInterface
                 $manageId
             )
         );
-        $result = reset($issues->issues);
-        if ($result instanceof Issue) {
-            return $result;
+        if ($issues->getTotal() > 0) {
+            return new Issue($issues->getIssue(0)->key, $this->issueType);
         }
         return null;
     }
 
-    /**
-     * @param string $manageId
-     * @param string $issueType
-     * @return Issue|null
-     * @throws JiraException
-     * @throws JsonMapper_Exception
-     */
     public function findByManageIdAndIssueType($manageId, $issueType)
     {
         $issueService = $this->jiraFactory->buildIssueService();
@@ -160,26 +138,18 @@ class IssueRepository implements TicketServiceInterface
                 $manageId
             )
         );
-        $result = reset($issues->issues);
-        if ($result instanceof Issue) {
-            return $result;
+        if ($issues->getTotal() > 0) {
+            return new Issue($issues->getIssue(0)->key, $issueType);
         }
         return null;
     }
 
-    /**
-     * Create a Jira issue from a Ticket VO
-     *
-     * @param Ticket $ticket
-     * @return Issue|object
-     * @throws JiraException
-     * @throws JsonMapper_Exception
-     */
     public function createIssueFrom(Ticket $ticket)
     {
         $issueField = $this->issueFactory->fromTicket($ticket);
         $issueService = $this->jiraFactory->buildIssueService();
-        return $issueService->create($issueField);
+        $issue = $issueService->create($issueField);
+        return new Issue($issue->key, $ticket->getIssueType());
     }
 
     public function delete($issueKey)

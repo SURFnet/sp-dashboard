@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use JiraRestApi\Issue\Issue;
-use JiraRestApi\Issue\IssueSearchResult;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 
 interface TicketServiceInterface
@@ -36,7 +36,7 @@ interface TicketServiceInterface
      * Query Jira for issues that have a manageId that matches the provided array of manage id's.
      *
      * @param array $manageIds
-     * @return IssueSearchResult
+     * @return IssueCollection
      */
     public function findByManageIds(array $manageIds);
 

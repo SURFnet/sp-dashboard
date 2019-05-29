@@ -144,7 +144,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getService->getConnectionStatus');
 
         $issue = m::mock(Issue::class)->makePartial();
-        $issue->key = 'CXT-999';
+        $issue->shouldReceive('getKey')
+            ->andReturn('CXT-999');
 
         $this->ticketService
             ->shouldReceive('createIssueFrom')
@@ -213,7 +214,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getService->getConnectionStatus');
 
         $issue = m::mock(Issue::class)->makePartial();
-        $issue->key = 'CXT-999';
+        $issue->shouldReceive('getKey')
+            ->andReturn('CXT-999');
 
         $this->ticketService
             ->shouldReceive('findByManageIdAndIssueType')
@@ -328,7 +330,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('the-manage-id');
 
         $issue = m::mock(Issue::class)->makePartial();
-        $issue->key = 'CXT-999';
+        $issue->shouldReceive('getKey')
+            ->andReturn('CXT-999');
 
         $this->ticketService
             ->shouldReceive('findByManageIdAndIssueType')
