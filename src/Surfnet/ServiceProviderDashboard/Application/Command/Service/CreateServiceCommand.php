@@ -81,11 +81,6 @@ class CreateServiceCommand implements Command
     private $connectionStatus = Service::CONNECTION_STATUS_NOT_REQUESTED;
 
     /**
-     * @var string
-     */
-    private $entityPublished = Service::ENTITY_PUBLISHED_NO;
-
-    /**
      * @param string $guid
      */
     public function setGuid($guid)
@@ -252,13 +247,5 @@ class CreateServiceCommand implements Command
     public function hasPrivacyQuestionsAnswered()
     {
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityPublished()
-    {
-        return $this->entityPublished;
     }
 }

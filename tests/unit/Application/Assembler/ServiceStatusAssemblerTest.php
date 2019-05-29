@@ -107,7 +107,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     ],
                 ],
                 'statusService' => [
-                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
@@ -166,7 +166,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     ],
                 ],
                 'statusService' => [
-                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
@@ -226,7 +226,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     ],
                 ],
                 'statusService' => [
-                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
@@ -283,7 +283,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
@@ -338,7 +338,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatus' => Service::ENTITY_PUBLISHED_NO,
+                    'entityStatusTest' => Service::ENTITY_PUBLISHED_NO,
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
@@ -395,7 +395,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatus' => Service::ENTITY_PUBLISHED_NO,
+                    'entityStatusTest' => Service::ENTITY_PUBLISHED_NO,
                     'privacyQuestions' => false,
                 ],
                 'result' => '
@@ -454,7 +454,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatus' => Service::ENTITY_PUBLISHED_IN_PROGRESS,
+                    'entityStatusTest' => Service::ENTITY_PUBLISHED_IN_PROGRESS,
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
@@ -501,8 +501,8 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
 
     private function createStatusServiceMock($data)
     {
-        $this->serviceStatusService->shouldReceive('getEntityStatus')
-            ->andReturn($data['entityStatus']);
+        $this->serviceStatusService->shouldReceive('getEntityStatusOnTest')
+            ->andReturn($data['entityStatusTest']);
 
         $this->serviceStatusService->shouldReceive('hasPrivacyQuestions')
             ->andReturn($data['privacyQuestions']);

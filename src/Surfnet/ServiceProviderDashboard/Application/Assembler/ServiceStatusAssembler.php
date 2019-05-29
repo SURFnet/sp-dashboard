@@ -175,7 +175,7 @@ class ServiceStatusAssembler
             $states[self::SERVICE_STATE_INTAKE_CONDUCTED] = $intakeStatus;
         }
 
-        $states[self::SERVICE_STATE_ENTITY_ON_TEST] = $serviceStatusService->getEntityStatus($service);
+        $states[self::SERVICE_STATE_ENTITY_ON_TEST] = $serviceStatusService->getEntityStatusOnTest($service);
 
         if ($type == Service::SERVICE_TYPE_NON_INSTITUTE) {
             $states[self::SERVICE_STATE_CONTRACT_SIGNED] = $service->getContractSigned();

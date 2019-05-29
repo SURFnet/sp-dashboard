@@ -363,10 +363,6 @@ service.form.label.connection_status_active: Active
 service.form.label.contract_signed: Contract signed
 service.form.label.contract_signed_no: No
 service.form.label.contract_signed_yes: Yes
-service.form.label.entity_published: Entity published?
-service.form.label.entity_published_no: No
-service.form.label.entity_published_in_progress: In progress
-service.form.label.entity_published_yes: Yes
 service.form.label.intake_status: Intake finished
 service.form.label.intake_status_no: No
 service.form.label.intake_status_yes: Yes
