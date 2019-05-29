@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,9 @@ use Pdp\PublicSuffixListManager;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class ValidClientIdValidator extends ConstraintValidator
+class ValidMetadataUrlValidator extends ConstraintValidator
 {
+
     /**
      * @param string     $value
      * @param Constraint $constraint
@@ -33,7 +34,6 @@ class ValidClientIdValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         if (empty($value)) {
-            $this->context->addViolation('validator.client_id.empty');
             return;
         }
 
@@ -43,7 +43,7 @@ class ValidClientIdValidator extends ConstraintValidator
         try {
             $parser->parseUrl($value);
         } catch (Exception $e) {
-            $this->context->addViolation('validator.client_id.invalid_url');
+            $this->context->addViolation('validator.entity_id.invalid_url');
             return;
         }
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class ValidEntityId extends Constraint
+class ValidMetadataUrl extends Constraint
 {
     /**
      * @return string
      */
     public function validatedBy()
     {
-        return 'valid_entity_id';
+        return 'metadata_url';
     }
 }

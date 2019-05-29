@@ -203,20 +203,24 @@ services:
         tags: [twig.extension]
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator:
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
-            - '@surfnet.manage.client.query_client.prod_environment'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
         tags:
-            - { name: validator.constraint_validator, alias: entity_id }
+            - { name: validator.constraint_validator, alias: valid_entity_id }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidClientIdValidator:
+        tags:
+            - { name: validator.constraint_validator, alias: valid_client_id }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityIdValidator:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
         tags:
-            - { name: validator.constraint_validator, alias: client_id }
+            - { name: validator.constraint_validator, alias: unique_entity_id }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator:
+        tags:
+            - { name: validator.constraint_validator, alias: metadata_url }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
         arguments:  ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper']

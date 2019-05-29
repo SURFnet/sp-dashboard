@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,20 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Validation of existance of entity id's in Manage is omitted in the web tests. This is utilized in the create entity
- * web test.
+ * @Annotation
  */
-class MockEntityIdValidator extends ConstraintValidator
+class UniqueEntityId extends Constraint
 {
-    public function validate($value, Constraint $constraint)
+    /**
+     * @return string
+     */
+    public function validatedBy()
     {
-        return;
+        return 'unique_entity_id';
     }
 }

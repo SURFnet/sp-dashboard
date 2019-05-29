@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,19 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
+namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
-use Symfony\Component\Validator\Constraint;
+use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 
-/**
- * @Annotation
- */
-class ValidEntityId extends Constraint
+interface SaveEntityCommandInterface extends Command
 {
+    /**
+     * @return bool
+     */
+    public function isForProduction();
+
     /**
      * @return string
      */
-    public function validatedBy()
-    {
-        return 'valid_entity_id';
-    }
+    public function getManageId();
 }

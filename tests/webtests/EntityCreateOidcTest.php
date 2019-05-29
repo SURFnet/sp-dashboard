@@ -127,9 +127,11 @@ class EntityOidcCreateTest extends WebTestCase
             ->selectButton('Publish')
             ->form();
 
+        // ClientId validator
+        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Push to Manage
+        // Push to EB through manage
         $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         $this->client->submit($form, $formData);
@@ -172,7 +174,14 @@ class EntityOidcCreateTest extends WebTestCase
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
-        $this->testMockHandler->append(new Response(404, [], '{"status":"failed"}'));
+        $this->testMockHandler->append(new Response(400, [], '{
+            "timestamp": 1558969891003,
+            "status": "400",
+            "error": "org.springframework.web.client.HttpClientErrorException",
+            "exception": "org.springframework.web.client.HttpClientErrorException",
+            "message": "{\"error\":\"ClientId is already used\"}",
+            "path": "//internal/metadata/"
+        }'));
 
         $this->client->submit($form, $formData);
 

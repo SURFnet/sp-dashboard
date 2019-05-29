@@ -94,7 +94,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 );
             }
 
-            if (isset($response['status']) && $response['status'] != "OK") {
+            if (!isset($response['id'])) {
                 throw new PublishMetadataException('Unable to publish the metadata to Manage');
             }
 
