@@ -75,12 +75,6 @@ class CreateServiceCommand implements Command
     private $surfconextRepresentativeApproved = Service::SURFCONEXT_APPROVED_NO;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $connectionStatus = Service::CONNECTION_STATUS_NOT_REQUESTED;
-
-    /**
      * @param string $guid
      */
     public function setGuid($guid)
@@ -153,14 +147,6 @@ class CreateServiceCommand implements Command
     }
 
     /**
-     * @param string $connectionStatus
-     */
-    public function setConnectionStatus($connectionStatus)
-    {
-        $this->connectionStatus = $connectionStatus;
-    }
-
-    /**
      * @return string
      */
     public function getGuid()
@@ -230,14 +216,6 @@ class CreateServiceCommand implements Command
     public function getSurfconextRepresentativeApproved()
     {
         return $this->surfconextRepresentativeApproved;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConnectionStatus()
-    {
-        return $this->connectionStatus;
     }
 
     /**

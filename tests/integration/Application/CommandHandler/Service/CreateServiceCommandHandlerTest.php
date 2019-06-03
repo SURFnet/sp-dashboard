@@ -56,7 +56,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setServiceType('institution');
         $service->setIntakeStatus('yes');
         $service->setSurfconextRepresentativeApproved('yes');
-        $service->setConnectionStatus('requested');
         $service->setContractSigned('yes');
 
         $command = new CreateServiceCommand();
@@ -69,7 +68,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setServiceType($service->getServiceType());
         $command->setIntakeStatus($service->getIntakeStatus());
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
-        $command->setConnectionStatus($service->getConnectionStatus());
         $command->setContractSigned($service->getContractSigned());
 
         $this->repository->shouldReceive('save')->with(equalTo($service))->once();
@@ -95,7 +93,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setServiceType('institution');
         $command->setIntakeStatus('yes');
         $command->setSurfconextRepresentativeApproved('yes');
-        $command->setConnectionStatus('requested');
         $command->setContractSigned('yes');
 
         $this->repository

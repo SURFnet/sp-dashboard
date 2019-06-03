@@ -77,7 +77,6 @@ class ServiceType extends AbstractType
                     ->add('intakeStatus', IntakeStatusType::class)
                     ->add('contractSigned', ContractSignedType::class)
                     ->add('surfconextRepresentativeApproved', RepresentativeApprovedType::class)
-                    ->add('connectionStatus', ConnectionStatusType::class)
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }

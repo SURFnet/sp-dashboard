@@ -74,18 +74,22 @@ class EntityDto
         return new self(
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
-            'test',
-            'published'
+            Entity::ENVIRONMENT_TEST,
+            Entity::STATE_PUBLISHED
         );
     }
 
     public static function fromManageProductionResult(ManageEntity $manageResponse)
     {
+        $state = Entity::STATE_PUBLISHED;
+        if ($manageResponse->getMetaData()->getCoin()->getExcludeFromPush()) {
+            $state = Entity::STATE_PUBLICATION_REQUESTED;
+        }
         return new self(
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
-            'production',
-            'published'
+            Entity::ENVIRONMENT_PRODUCTION,
+            $state
         );
     }
 

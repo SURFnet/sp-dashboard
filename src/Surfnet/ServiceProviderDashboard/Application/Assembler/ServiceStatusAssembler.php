@@ -189,7 +189,7 @@ class ServiceStatusAssembler
             $states[self::SERVICE_STATE_PRIVACY_QUESTIONS] = $serviceStatusService->hasPrivacyQuestions($service);
         }
 
-        $states[self::SERVICE_STATE_PRODUCTION_CONNECTION] = $service->getConnectionStatus();
+        $states[self::SERVICE_STATE_PRODUCTION_CONNECTION] = $serviceStatusService->getConnectionStatus($service);
 
         return $states;
     }

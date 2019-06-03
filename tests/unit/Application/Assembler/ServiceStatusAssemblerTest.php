@@ -101,13 +101,13 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'representativeApproved' => Service::SURFCONEXT_APPROVED_YES,
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => true,
-                    'connectionStatus' => Service::CONNECTION_STATUS_ACTIVE,
                     'entities' => [
                         ['id' => 1, 'name' => 'entity-1', 'environment' => Entity::ENVIRONMENT_PRODUCTION],
                     ],
                 ],
                 'statusService' => [
-                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusProd' => Service::CONNECTION_STATUS_ACTIVE,
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
@@ -160,13 +160,13 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'representativeApproved' => null,
                     'contractSigned' => Service::CONTRACT_SIGNED_YES,
                     'isPrivacyQuestionsEnabled' => true,
-                    'connectionStatus' => Service::CONNECTION_STATUS_ACTIVE,
                     'entities' => [
                         ['id' => 1, 'name' => 'entity-1', 'environment' => Entity::ENVIRONMENT_PRODUCTION],
                     ],
                 ],
                 'statusService' => [
-                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusProd' => Service::CONNECTION_STATUS_ACTIVE,
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
@@ -218,7 +218,6 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'representativeApproved' => Service::SURFCONEXT_APPROVED_YES,
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => true,
-                    'connectionStatus' => Service::CONNECTION_STATUS_ACTIVE,
                     'entities' => [
                         ['id' => 1, 'name' => 'entity-1', 'environment' => Entity::ENVIRONMENT_PRODUCTION],
                         ['id' => 2, 'name' => 'entity-2', 'environment' => Entity::ENVIRONMENT_TEST],
@@ -226,7 +225,8 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     ],
                 ],
                 'statusService' => [
-                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusProd' => Service::CONNECTION_STATUS_ACTIVE,
                     'privacyQuestions' => true,
                 ],
                 'result' => '{
@@ -279,11 +279,11 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'representativeApproved' => Service::SURFCONEXT_APPROVED_YES,
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => false,
-                    'connectionStatus' => Service::CONNECTION_STATUS_ACTIVE,
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatusTest' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatus' => Service::ENTITY_PUBLISHED_YES,
+                    'entityStatusProd' => Service::CONNECTION_STATUS_ACTIVE,
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
@@ -334,11 +334,11 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'representativeApproved' => Service::SURFCONEXT_APPROVED_NO,
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => true,
-                    'connectionStatus' => Service::CONNECTION_STATUS_NOT_REQUESTED,
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatusTest' => Service::ENTITY_PUBLISHED_NO,
+                    'entityStatus' => Service::ENTITY_PUBLISHED_NO,
+                    'entityStatusProd' => Service::CONNECTION_STATUS_NOT_REQUESTED,
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
@@ -395,7 +395,8 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatusTest' => Service::ENTITY_PUBLISHED_NO,
+                    'entityStatus' => Service::ENTITY_PUBLISHED_NO,
+                    'entityStatusProd' => Service::CONNECTION_STATUS_NOT_REQUESTED,
                     'privacyQuestions' => false,
                 ],
                 'result' => '
@@ -450,11 +451,11 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'representativeApproved' => Service::SURFCONEXT_APPROVED_YES,
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => true,
-                    'connectionStatus' => Service::CONNECTION_STATUS_NOT_REQUESTED,
                     'entities' => [],
                 ],
                 'statusService' => [
-                    'entityStatusTest' => Service::ENTITY_PUBLISHED_IN_PROGRESS,
+                    'entityStatus' => Service::ENTITY_PUBLISHED_IN_PROGRESS,
+                    'entityStatusProd' => Service::CONNECTION_STATUS_NOT_REQUESTED,
                     'privacyQuestions' => false,
                 ],
                 'result' => '{
@@ -502,7 +503,10 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     private function createStatusServiceMock($data)
     {
         $this->serviceStatusService->shouldReceive('getEntityStatusOnTest')
-            ->andReturn($data['entityStatusTest']);
+            ->andReturn($data['entityStatus']);
+
+        $this->serviceStatusService->shouldReceive('getConnectionStatus')
+            ->andReturn($data['entityStatusProd']);
 
         $this->serviceStatusService->shouldReceive('hasPrivacyQuestions')
             ->andReturn($data['privacyQuestions']);
@@ -530,9 +534,6 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
 
         $this->service->shouldReceive('isPrivacyQuestionsEnabled')
             ->andReturn($data['isPrivacyQuestionsEnabled']);
-
-        $this->service->shouldReceive('getConnectionStatus')
-            ->andReturn($data['connectionStatus']);
     }
 
     private function createEntityMock($id, $name, $environment)
