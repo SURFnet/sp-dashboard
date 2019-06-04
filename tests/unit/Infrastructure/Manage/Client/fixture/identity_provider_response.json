@@ -22,7 +22,6 @@
       "metaDataFields": {
         "name:en": "OpenConext Engine EN",
         "name:nl": ""
-
       }
     }
   },
@@ -34,8 +33,21 @@
       "state": "prodaccepted",
       "notes": null,
       "metaDataFields": {
-        "name:en": "",
+        "name:en": " ",
         "name:nl": "OpenConext Engine 2 NL"
+      }
+    }
+  },
+  {
+    "_id": "0c3febd2-3f67-4b8a-b90d-ce56a3b0abb6",
+    "version": 0,
+    "data": {
+      "entityid": "https://engine.dev.support.surfconext.nl/authentication/idp/metadata2",
+      "state": "prodaccepted",
+      "notes": null,
+      "metaDataFields": {
+        "name:en": "OpenConext Engine 3 EN",
+        "name:nl": null
       }
     }
   }
