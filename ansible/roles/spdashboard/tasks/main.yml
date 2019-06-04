@@ -10,10 +10,11 @@
   yum: pkg="{{ spdashboard_nodejs_rpm_url }}" state=present
 
 - name: Install some packages needed for installation
-  yum: pkg={{ item }} state=present
-  with_items:
-    - nodejs
-    - yarn
+  yum: 
+    name: 
+      - nodejs
+      - yarn
+    state: present
 
 - name: Add group {{ spdashboard_fpm_user }}
   group: name={{ spdashboard_fpm_user }} state=present

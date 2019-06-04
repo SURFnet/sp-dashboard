@@ -151,3 +151,23 @@
         <label{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>{{ translation_domain is same as(false) ? label|striptags('<a>')|raw : label|trans({}, translation_domain)|striptags('<a>')|raw }}</label>
     {%- endif -%}
 {%- endblock form_label -%}
+
+{# Use a table to display the list of idp's for the entity acl's. #}
+{% block acl_list_widget %}
+    {% spaceless %}
+        <table {{ block('widget_container_attributes') }}>
+            <tr>
+                <th>&nbsp;</th>
+                <th>{{ 'entity.acl.name.title'|trans }}</th>
+                <th>{{ 'entity.acl.entity-id.title'|trans }}</th>
+            </tr>
+            {% for name, choice in form.vars.choices %}
+                <tr>
+                    <td>{{ form_widget(form[name]) }}</td>
+                    <td>{{ form_label(form[name]) }}</td>
+                    <td>{{ choice.data.entityId }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endspaceless %}
+{% endblock %}

@@ -44,12 +44,18 @@ class ManageEntity
      */
     private $oidcClient;
 
+    /**
+     * @var AllowedIdentityProviders
+     */
+    private $allowedIdentityProviders;
+
     public static function fromApiResponse($data)
     {
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
         $oidcClient = OidcClient::fromApiResponse($data);
-        return new self($data['id'], $attributeList, $metaData, $oidcClient);
+        $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
+        return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $oidcClient);
     }
 
     /**
@@ -57,14 +63,21 @@ class ManageEntity
      * @param AttributeList $attributes
      * @param MetaData $metaData
      * @param OidcClient $oidcClient
+     * @param AllowedIdentityProviders $allowedIdentityProviders
      */
-    private function __construct($id, AttributeList $attributes, MetaData $metaData, OidcClient $oidcClient = null)
-    {
+    private function __construct(
+        $id,
+        AttributeList $attributes,
+        MetaData $metaData,
+        AllowedIdentityProviders $allowedIdentityProviders,
+        OidcClient $oidcClient = null
+    ) {
         $this->id = $id;
         $this->status = DomainEntity::STATE_PUBLISHED;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
         $this->oidcClient = $oidcClient;
+        $this->allowedIdentityProviders = $allowedIdentityProviders;
     }
 
     public function getId()
@@ -98,6 +111,14 @@ class ManageEntity
     public function getOidcClient()
     {
         return $this->oidcClient;
+    }
+
+    /**
+     * @return AllowedIdentityProviders
+     */
+    public function getAllowedIdentityProviders()
+    {
+        return $this->allowedIdentityProviders;
     }
 
     /**

@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Exception;
-use JiraRestApi\Issue\Issue;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
@@ -29,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
@@ -263,12 +263,12 @@ class EntityService implements EntityServiceInterface
             foreach ($entities as $entity) {
                 $manageIds[] = $entity->getId();
             }
-            $tickets = $this->ticketService->findByManageIds($manageIds);
+            $issueCollection = $this->ticketService->findByManageIds($manageIds);
             // Update the entity status to STATE_REMOVAL_REQUESTED if the Jira ticket matches one of the published
             // entities
-            if (count($tickets->issues) > 0) {
+            if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
-                    if (array_key_exists($entity->getId(), $tickets->issues)) {
+                    if ($issueCollection->getIssueByKey($entity->getId())) {
                         $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
                     }
                 }

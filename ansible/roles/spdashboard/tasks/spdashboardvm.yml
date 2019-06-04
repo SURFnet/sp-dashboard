@@ -1,11 +1,12 @@
 ---
 - name: Install some packages needed for development
-  yum: pkg={{ item }} state=present
-  with_items:
-    - ruby-devel
-    - gcc-c++
-    - sqlite-devel
-    - ant
+  yum: 
+    name: 
+      - ruby-devel
+      - gcc-c++
+      - sqlite-devel
+      - ant
+    state: present
 
 - name: Install Mailcatcher
   action: command gem install mailcatcher creates=/usr/local/bin/mailcatcher
@@ -25,9 +26,7 @@
   when: ca_update.changed
 
 - name: Install PHP Xdebug extension
-  yum: name={{ item }} state=present
-  with_items:
-    - php-pecl-xdebug
+  yum: name=php-pecl-xdebug state=present
     
 - name: Configure PHP Xdebug
   template: src=xdebug.ini.j2 dest=/etc/php.d/15-xdebug.ini

@@ -127,7 +127,7 @@ function validateUrl(value) {
 }
 
 function validateUrn(value) {
-    var regExp = /^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\-.:=@;$_!*'%/?#]+$/i;
+    var regExp = /^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\-.:=@;$_!*'%\/?#]+$/i;
 
     return regExp.test(value);
 }

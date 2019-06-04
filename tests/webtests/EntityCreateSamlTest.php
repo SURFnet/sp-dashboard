@@ -184,9 +184,11 @@ class EntitySamlCreateSamlTest extends WebTestCase
             ->selectButton('Publish')
             ->form();
 
+        // Unique entity validator
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Push to Manage
+        // Push to EB through manage
         $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         $this->client->submit($form, $formData);
@@ -217,10 +219,12 @@ class EntitySamlCreateSamlTest extends WebTestCase
             ->selectButton('Publish')
             ->form();
 
+        // Unique entity validator
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to Manage
-        $this->testMockHandler->append(new Response(404, [], '{"status":"failed"}'));
+        $this->testMockHandler->append(new Response(200, [], '{"status":"failed"}'));
 
         $this->client->submit($form, $formData);
 

@@ -167,9 +167,9 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             }
             if (is_null($issue)) {
                 $issue = $this->ticketService->createIssueFrom($ticket);
-                $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->key));
+                $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
             } else {
-                $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->key));
+                $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->getKey()));
             }
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
@@ -193,13 +193,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             if (array_key_exists('id', $publishResponse)) {
                 // Set entity status to published
                 $entity->setStatus(Entity::STATE_PUBLISHED);
-
-                // Also update the service status to requested, but only if current status is not-requested
-                $service = $entity->getService();
-                if ($service->getConnectionStatus() == Service::CONNECTION_STATUS_NOT_REQUESTED) {
-                    $service->setConnectionStatus(Service::CONNECTION_STATUS_REQUESTED);
-                    $this->serviceRepository->save($service);
-                }
 
                 $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
                 // Save changes made to entity
@@ -229,7 +222,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         }
 
         // 3. On failure, remove the Jira ticket that was previously created. The user must retry at a later stage
-        $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->key));
-        $this->ticketService->delete($issue->key);
+        $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->getKey()));
+        $this->ticketService->delete($issue->getKey());
     }
 }

@@ -75,17 +75,6 @@ class CreateServiceCommand implements Command
     private $surfconextRepresentativeApproved = Service::SURFCONEXT_APPROVED_NO;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $connectionStatus = Service::CONNECTION_STATUS_NOT_REQUESTED;
-
-    /**
-     * @var string
-     */
-    private $entityPublished = Service::ENTITY_PUBLISHED_NO;
-
-    /**
      * @param string $guid
      */
     public function setGuid($guid)
@@ -155,14 +144,6 @@ class CreateServiceCommand implements Command
     public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
-    }
-
-    /**
-     * @param string $connectionStatus
-     */
-    public function setConnectionStatus($connectionStatus)
-    {
-        $this->connectionStatus = $connectionStatus;
     }
 
     /**
@@ -238,27 +219,11 @@ class CreateServiceCommand implements Command
     }
 
     /**
-     * @return string
-     */
-    public function getConnectionStatus()
-    {
-        return $this->connectionStatus;
-    }
-
-    /**
      * New services have no privacy questions answers yet.
      * @return bool
      */
     public function hasPrivacyQuestionsAnswered()
     {
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityPublished()
-    {
-        return $this->entityPublished;
     }
 }

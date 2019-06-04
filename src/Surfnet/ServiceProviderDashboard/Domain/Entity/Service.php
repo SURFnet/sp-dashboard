@@ -125,12 +125,6 @@ class Service
     private $surfconextRepresentativeApproved;
 
     /**
-     * @var string
-     * @ORM\Column(length=50)
-     */
-    private $connectionStatus = self::CONNECTION_STATUS_NOT_REQUESTED;
-
-    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Contact", mappedBy="services", cascade={"persist"}, orphanRemoval=true)
@@ -140,14 +134,14 @@ class Service
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Entity", mappedBy="service", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Entity", mappedBy="service", cascade={"persist"})
      */
     private $entities;
 
     /**
      * @var PrivacyQuestions
      *
-     * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service")
+     * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service", cascade={"remove"}, orphanRemoval=true)
      */
     private $privacyQuestions;
 
@@ -364,21 +358,5 @@ class Service
     public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConnectionStatus()
-    {
-        return $this->connectionStatus;
-    }
-
-    /**
-     * @param string $connectionStatus
-     */
-    public function setConnectionStatus($connectionStatus)
-    {
-        $this->connectionStatus = $connectionStatus;
     }
 }
