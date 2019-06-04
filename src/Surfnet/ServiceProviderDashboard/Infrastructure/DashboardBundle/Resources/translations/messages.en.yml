@@ -115,6 +115,7 @@ entity.list.state: State
 entity.list.action.back: Back to overview
 entity.list.action.view: View
 entity.list.action.edit: Edit
+entity.list.action.acl: Edit IdP whitelist
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
@@ -304,6 +305,16 @@ entity.edit.label.implicit: Implicit
 entity.edit.label.authorization_code_token: response_type=id_token
 entity.edit.label.implicit_id_token_token: response_type=id_token token
 entity.edit.label.implicit_id_token: response_type=id_token
+entity.acl.title: Entity Idp access
+entity.acl.info.title: Info
+entity.acl.info.html: "
+<p>Define which test identity providers have access to this entity.</p>
+"
+entity.acl.select-all.title: Select all
+entity.acl.select.title: Select
+entity.acl.name.title: Name
+entity.acl.entity-id.title: Entity ID
+entity.acl.error.publish: "Unable to publish the entity, try again later"
 entity.publish.request.ticket.summary: "Request to publish %entity_name% to production"
 entity.publish.request.ticket.description: "h2. Details
 

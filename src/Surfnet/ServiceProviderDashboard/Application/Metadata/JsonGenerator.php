@@ -123,15 +123,15 @@ class JsonGenerator implements GeneratorInterface
     {
         // the type for entities is always saml because manage is using saml internally
         $metadata = [
-            'arp'             => $this->arpMetadataGenerator->build($entity),
-            'type'            => 'saml20-sp',
-            'entityid'        => $entity->getEntityId(),
-            'active'          => true,
-            'allowedEntities' => [],
-            'allowedall'      => true,
-            'state'           => $workflowState,
-            'metaDataFields'  => $this->generateMetadataFields($entity),
+            'arp' => $this->arpMetadataGenerator->build($entity),
+            'type' => 'saml20-sp',
+            'entityid' => $entity->getEntityId(),
+            'active' => true,
+            'state' => $workflowState,
+            'metaDataFields' => $this->generateMetadataFields($entity),
         ];
+
+        $metadata += $this->generateAclData($entity);
 
         switch (true) {
             case ($entity->getProtocol() == Entity::TYPE_SAML):
@@ -157,10 +157,12 @@ class JsonGenerator implements GeneratorInterface
     private function generateDataForExistingEntity(Entity $entity, $workflowState)
     {
         $metadata = [
-            'arp'             => $this->arpMetadataGenerator->build($entity),
-            'entityid'        => $entity->getEntityId(),
-            'state'           => $workflowState,
+            'arp' => $this->arpMetadataGenerator->build($entity),
+            'entityid' => $entity->getEntityId(),
+            'state' => $workflowState,
         ];
+
+        $metadata += $this->generateAclData($entity);
 
         if ($entity->getProtocol() == Entity::TYPE_SAML) {
             $metadata['metadataurl'] = $entity->getMetadataUrl();
@@ -357,27 +359,19 @@ class JsonGenerator implements GeneratorInterface
         ];
 
         if (!empty($contact->getFirstName())) {
-            $metadata[
-                sprintf('contacts:%d:givenName', $index)
-            ] = $contact->getFirstName();
+            $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getFirstName();
         }
 
         if (!empty($contact->getLastName())) {
-            $metadata[
-                sprintf('contacts:%d:surName', $index)
-            ] = $contact->getLastName();
+            $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getLastName();
         }
 
         if (!empty($contact->getEmail())) {
-            $metadata[
-                sprintf('contacts:%d:emailAddress', $index)
-            ] = $contact->getEmail();
+            $metadata[sprintf('contacts:%d:emailAddress', $index)] = $contact->getEmail();
         }
 
         if (!empty($contact->getPhone())) {
-            $metadata[
-                sprintf('contacts:%d:telephoneNumber', $index)
-            ] = $contact->getPhone();
+            $metadata[sprintf('contacts:%d:telephoneNumber', $index)] = $contact->getPhone();
         }
 
         return $metadata;
@@ -410,9 +404,36 @@ class JsonGenerator implements GeneratorInterface
             $height = 50;
         }
 
-        $metadata['logo:0:width'] = (string) $width;
-        $metadata['logo:0:height'] = (string) $height;
+        $metadata['logo:0:width'] = (string)$width;
+        $metadata['logo:0:height'] = (string)$height;
 
         return $metadata;
+    }
+
+
+    /**
+     * @param Entity $entity
+     * @return array
+     */
+    private function generateAclData(Entity $entity)
+    {
+        if ($entity->isIdpAllowAll()) {
+            return [
+                'allowedEntities' => [],
+                'allowedall' => true,
+            ];
+        }
+
+        $providers = [];
+        foreach ($entity->getIdpWhitelist() as $entityId) {
+            $providers[] = [
+                'name' => $entityId,
+            ];
+        }
+
+        return [
+            'allowedEntities' => $providers,
+            'allowedall' => false,
+        ];
     }
 }

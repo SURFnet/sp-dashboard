@@ -22,7 +22,7 @@ use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class EntityOidcCreateTest extends WebTestCase
+class EntityCreateOidcTest extends WebTestCase
 {
     /**
      * @var Service

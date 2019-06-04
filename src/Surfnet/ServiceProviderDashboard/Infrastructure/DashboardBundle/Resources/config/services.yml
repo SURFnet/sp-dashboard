@@ -115,6 +115,19 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
 
+    surfnet.dashboard.command_handler.update_entity_acl:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityAclCommandHandler
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+            - '@logger'
+            - '@session.flash_bag'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand }
+
+
     surfnet.dashboard.command_handler.reset_oidc_secret:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\ResetOidcSecretCommandHandler
         arguments:
@@ -275,6 +288,10 @@ services:
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
 
+    Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService:
+        arguments:
+            - '@surfnet.manage.client.identity_provider_client.test_environment'
+
     Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
@@ -325,6 +342,11 @@ services:
         arguments:
         - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
         - '@logger'
+
+    surfnet.manage.client.identity_provider_client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
 
     surfnet.manage.client.delete_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
@@ -380,3 +402,8 @@ services:
             - '%jira_username%'
             - '%jira_password%'
             - '@logger'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclListType:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
+        tags: ['form.type']
