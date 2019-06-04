@@ -1,3 +1,11 @@
+## 2.1.1
+ * Add UI for entity ACL page #263
+ * Add transactions middleware to commandbus #250
+ * Fetch connection status for production entities from manage #257
+ * Fix entity validators #260
+ * Change the donutstate with empty service #252
+ * Add issue repository for testing #261
+
 ## 2.1.0
  * Add translatable contact email placeholder #259
  * Rename 'team name' to 'team identifier' #258
