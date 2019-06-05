@@ -1,4 +1,10 @@
+## 2.1.3
+**Bugfix**
+ * Bump fstream from 1.0.11 to 1.0.12 #266
+ * Add default value for `representative_approved` column. #265
+
 ## 2.1.2
+**Bugfix**
  * Fix idp validation from manage result #264
 
 ## 2.1.1
