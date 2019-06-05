@@ -34,7 +34,7 @@ class UpdateEntityAclCommand implements Command
      * @var IdentityProvider[]
      * @Assert\All({
      *     @Assert\NotBlank(),
-     *     @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdentityProvider")
+     *     @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider")
      * })
      */
     private $selected;

@@ -49,13 +49,13 @@ class IdentityProvider
     {
         Assert::stringNotEmpty($manageId);
         Assert::stringNotEmpty($entityId);
-        Assert::string($nameNl);
-        Assert::string($nameEn);
+        Assert::nullOrString($nameNl);
+        Assert::stringNotEmpty($nameEn);
 
         $this->manageId = $manageId;
         $this->entityId = $entityId;
-        $this->nameNl = $nameNl;
-        $this->nameEn = $nameEn;
+        $this->nameNl = (string) $nameNl;
+        $this->nameEn = (string) $nameEn;
     }
 
     /**
@@ -95,6 +95,6 @@ class IdentityProvider
      */
     public function getName()
     {
-        return (empty($this->nameEn) ? $this->nameNl: $this->nameEn);
+        return (empty($this->nameNl) ? $this->nameEn : $this->nameNl);
     }
 }

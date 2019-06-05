@@ -58,14 +58,14 @@ class IdentityProviderClientTest extends MockeryTestCase
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/identity_provider_response.json'))
             );
         $idps = $this->client->findAll();
-        $this->assertCount(3, $idps);
+        $this->assertCount(4, $idps);
 
         $this->assertInstanceOf(IdentityProvider::class, $idps[0]);
         $this->assertSame('http://mock-idp', $idps[0]->getEntityId());
         $this->assertSame('bfe8f00d-317a-4fbc-9cf8-ad2f3b2af578', $idps[0]->getManageId());
         $this->assertSame('OpenConext Mujina IDP EN', $idps[0]->getNameEn());
         $this->assertSame('OpenConext Mujina IDP NL', $idps[0]->getNameNl());
-        $this->assertSame('OpenConext Mujina IDP EN', $idps[0]->getName());
+        $this->assertSame('OpenConext Mujina IDP NL', $idps[0]->getName());
 
         $this->assertInstanceOf(IdentityProvider::class, $idps[1]);
         $this->assertSame('https://engine.dev.support.surfconext.nl/authentication/idp/metadata', $idps[1]->getEntityId());
@@ -77,8 +77,15 @@ class IdentityProviderClientTest extends MockeryTestCase
         $this->assertInstanceOf(IdentityProvider::class, $idps[2]);
         $this->assertSame('https://engine.dev.support.surfconext.nl/authentication/idp/metadata2', $idps[2]->getEntityId());
         $this->assertSame('0c3febd2-3f67-4b8a-b90d-ce56a3b0abb5', $idps[2]->getManageId());
-        $this->assertSame('', $idps[2]->getNameEn());
+        $this->assertSame(' ', $idps[2]->getNameEn());
         $this->assertSame('OpenConext Engine 2 NL', $idps[2]->getNameNl());
         $this->assertSame('OpenConext Engine 2 NL', $idps[2]->getName());
+
+        $this->assertInstanceOf(IdentityProvider::class, $idps[3]);
+        $this->assertSame('https://engine.dev.support.surfconext.nl/authentication/idp/metadata2', $idps[3]->getEntityId());
+        $this->assertSame('0c3febd2-3f67-4b8a-b90d-ce56a3b0abb6', $idps[3]->getManageId());
+        $this->assertSame('OpenConext Engine 3 EN', $idps[3]->getNameEn());
+        $this->assertSame('', $idps[3]->getNameNl());
+        $this->assertSame('OpenConext Engine 3 EN', $idps[3]->getName());
     }
 }
