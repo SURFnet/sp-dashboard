@@ -1,3 +1,6 @@
+## 2.1.2
+ * Fix idp validation from manage result #264
+
 ## 2.1.1
  * Add UI for entity ACL page #263
  * Add transactions middleware to commandbus #250
