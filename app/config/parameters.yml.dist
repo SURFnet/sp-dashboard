@@ -45,15 +45,13 @@ parameters:
     manage_test_host: 'https://manage.dev.support.surfconext.nl'
     manage_test_username: sp-dashboard
     manage_test_password: secret
-    manage_test_publication_status_create: testaccepted
-    manage_test_publication_status_update: testaccepted
+    manage_test_publication_status: testaccepted
 
     ## Manage production instance
     manage_prod_host: 'https://manage-prod.dev.support.surfconext.nl'
     manage_prod_username: sp-dashboard
     manage_prod_password: secret
-    manage_prod_publication_status_create: prodaccepted
-    manage_prod_publication_status_update: prodaccepted
+    manage_prod_publication_status: prodaccepted
 
     # Mail default settings
     mail_from: support@surfconext.nl

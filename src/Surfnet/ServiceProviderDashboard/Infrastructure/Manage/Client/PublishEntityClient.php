@@ -78,7 +78,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 $response = $this->client->post(
                     json_encode($this->generator->generateForNewEntity(
                         $entity,
-                        $this->manageConfig->getPublicationStatus()->getCreateStatus()
+                        $this->manageConfig->getPublicationStatus()->getStatus()
                     )),
                     '/manage/api/internal/metadata'
                 );
@@ -88,7 +88,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 $response = $this->client->put(
                     json_encode($this->generator->generateForExistingEntity(
                         $entity,
-                        $this->manageConfig->getPublicationStatus()->getCreateStatus()
+                        $this->manageConfig->getPublicationStatus()->getStatus()
                     )),
                     '/manage/api/internal/merge'
                 );

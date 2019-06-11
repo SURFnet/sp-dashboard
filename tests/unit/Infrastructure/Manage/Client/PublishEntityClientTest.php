@@ -97,7 +97,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn(null);
 
         $this->manageConfig
-            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->shouldReceive('getPublicationStatus')
             ->once();
 
         $this->logger
@@ -127,7 +127,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn('25055635-8c2c-4f54-95a6-68891a554e95');
 
         $this->manageConfig
-            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->shouldReceive('getPublicationStatus')
             ->once();
 
         $this->logger
@@ -163,7 +163,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn(null);
 
         $this->manageConfig
-            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->shouldReceive('getPublicationStatus')
             ->once();
 
         $this->logger

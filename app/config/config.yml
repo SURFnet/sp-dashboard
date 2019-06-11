@@ -132,17 +132,13 @@ dashboard:
                 host: "%manage_test_host%"
                 username: "%manage_test_username%"
                 password: "%manage_test_password%"
-            publication_status:
-                create: "%manage_test_publication_status_create%"
-                update: "%manage_test_publication_status_update%"
+            publication_status: "%manage_test_publication_status%"
         production:
             connection:
                 host: "%manage_prod_host%"
                 username: "%manage_prod_username%"
                 password: "%manage_prod_password%"
-            publication_status:
-                create: "%manage_prod_publication_status_create%"
-                update: "%manage_prod_publication_status_update%"
+            publication_status: "%manage_prod_publication_status%"
 
 dashboard_saml:
     session_lifetimes:

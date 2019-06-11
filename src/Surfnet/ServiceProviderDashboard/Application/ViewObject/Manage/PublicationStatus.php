@@ -25,33 +25,20 @@ class PublicationStatus
     /**
      * @var string
      */
-    private $createStatus;
+    private $status;
 
     /**
-     * @var string
+     * @param string $status
      */
-    private $updateStatus;
-
-    /**
-     * @param string $updateStatus
-     * @param string $createStatus
-     */
-    public function __construct($createStatus = '', $updateStatus = '')
+    public function __construct($status = '')
     {
-        Assert::stringNotEmpty($createStatus, 'Please set the create publication status in parameters.yml');
-        Assert::stringNotEmpty($updateStatus, 'Please set the update publication status in parameters.yml');
+        Assert::stringNotEmpty($status, 'Please set the publication status in parameters.yml');
 
-        $this->createStatus = $createStatus;
-        $this->updateStatus = $updateStatus;
+        $this->status = $status;
     }
 
-    public function getCreateStatus()
+    public function __toString()
     {
-        return $this->createStatus;
-    }
-
-    public function getUpdateStatus()
-    {
-        return $this->updateStatus;
+        return $this->status;
     }
 }
