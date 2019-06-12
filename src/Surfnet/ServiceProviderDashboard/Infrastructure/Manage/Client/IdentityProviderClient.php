@@ -42,9 +42,6 @@ class IdentityProviderClient implements IdentityProviderRepository
      */
     private $manageConfig;
 
-    /**
-     * @param HttpClient $client
-     */
     public function __construct(HttpClient $client, Config $manageConfig)
     {
         $this->client = $client;
@@ -59,8 +56,9 @@ class IdentityProviderClient implements IdentityProviderRepository
     public function findAll()
     {
         try {
+            // Based on the manage config set (prod or test) we retrieve the correct results from the manage idp client.
             $result = $this->doSearchQuery([
-                "state" => (string) $this->manageConfig->getPublicationStatus(),
+                "state" => $this->manageConfig->getPublicationStatus()->getStatus(),
             ]);
 
             $list = [];

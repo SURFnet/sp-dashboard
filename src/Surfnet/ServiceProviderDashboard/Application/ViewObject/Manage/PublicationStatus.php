@@ -37,7 +37,7 @@ class PublicationStatus
         $this->status = $status;
     }
 
-    public function __toString()
+    public function getStatus()
     {
         return $this->status;
     }

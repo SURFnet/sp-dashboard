@@ -347,6 +347,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@surfnet.manage.configuration.test'
 
     surfnet.manage.client.delete_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
