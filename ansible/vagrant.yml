@@ -29,7 +29,7 @@
     - ../OpenConext-deploy/roles/common
     - ../OpenConext-deploy/roles/openconext-common
     - ../OpenConext-deploy/roles/httpd
-    - ../OpenConext-deploy/roles/php56fpm
+    - ../OpenConext-deploy/roles/php
     - { role: ../OpenConext-deploy/roles/mysql,             tags: ['mysql'] }
     - { role: ../OpenConext-deploy/roles/engineblock,       tags: ['eb'] }
     - { role: ../OpenConext-deploy/roles/java,              tags: ['java' ] }
