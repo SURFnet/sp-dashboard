@@ -10,11 +10,19 @@
     - sessions
     - cache
 
+- name: Create spdashboard branch dir
+  file:
+    path: "{{spdashboard_branch_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 755
+
 - name: Install git
   yum: name=git state=present
 
 - name: Copy makerelease.sh
-  copy: src=makeRelease.sh dest={{spdashboard_branch_dir}} mode=770
+  copy: src=makeRelease.sh dest={{spdashboard_branch_dir}}/makeRelease.sh mode=770
 
 - name: Make release
   command: "./makeRelease.sh {{ spdashboard_branch }}"

@@ -26,8 +26,13 @@ shibboleth_apps:
     baseurl: ""
 
 mongo:
-  manage_user: managerw
-  manage_password: "{{ mongo_passwords.manage }}" 
-  manage_database: manage
+  users:
+    - { name: managerw, db_name: metadata, password: "{{ mongo_passwords.manage }}" }
+    - { name: oidcngrw, db_name: oidcng, password: "{{ mongo_passwords.oidcng }}" }
   manage_database_prod: manage-prod
   manage_prod_user: manage-prod
+  manage_password: "{{ mongo_passwords.manage }}" 
+  manage_user: managerw
+  manage_password: "{{ mongo_passwords.manage }}"
+  manage_database: manage
+
