@@ -72,7 +72,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
         $command->setServiceType('institution');
         $command->setIntakeStatus('not-applicable');
         $command->setSurfconextRepresentativeApproved('no');
-        $command->setConnectionStatus('active');
         $command->setContractSigned('no');
 
         $mockEntity = m::mock(Service::class)->makePartial();
@@ -86,7 +85,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
                 $this->assertEquals('team-foobar', $arg->getTeamName());
                 $this->assertEquals('30dd879c-ee2f-11db-8314-0800200c9a66', $arg->getGuid());
                 $this->assertEquals(false, $arg->isPrivacyQuestionsEnabled());
-                $this->assertEquals('active', $arg->getConnectionStatus());
                 $this->assertEquals('no', $arg->getContractSigned());
                 $this->assertEquals('no', $arg->getSurfconextRepresentativeApproved());
                 $this->assertEquals('not-applicable', $arg->getIntakeStatus());

@@ -10,13 +10,19 @@
     - sessions
     - cache
 
+- name: Create spdashboard branch dir
+  file:
+    path: "{{spdashboard_branch_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 755
+
 - name: Install git
-  yum: name={{ item }} state=present
-  with_items:
-     - git
+  yum: name=git state=present
 
 - name: Copy makerelease.sh
-  copy: src=makeRelease.sh dest={{spdashboard_branch_dir}} mode=770
+  copy: src=makeRelease.sh dest={{spdashboard_branch_dir}}/makeRelease.sh mode=770
 
 - name: Make release
   command: "./makeRelease.sh {{ spdashboard_branch }}"
@@ -65,16 +71,6 @@
 
 - name: Run translation import
   command: bin/console lexik:translations:import
-  args:
-    chdir: "{{ spdashboard_data_dir }}/current/"
-
-- name: Run translation import DashboardBundle
-  command: bin/console lexik:translations:import DashboardBundle
-  args:
-    chdir: "{{ spdashboard_data_dir }}/current/"
-
-- name: Run translation import DashboardiSamlBundle
-  command: bin/console lexik:translations:import DashboardSamlBundle
   args:
     chdir: "{{ spdashboard_data_dir }}/current/"
 

@@ -33,11 +33,6 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: logo }
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints\MockEntityIdValidator
-        tags:
-            - { name: validator.constraint_validator, alias: entity_id }
-
     surfnet.manage.http.guzzle.mock_handler:
         class: GuzzleHttp\Handler\MockHandler
         public: true

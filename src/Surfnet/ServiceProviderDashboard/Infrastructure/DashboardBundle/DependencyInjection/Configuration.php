@@ -56,12 +56,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('password')->end()
                             ->end()
                         ->end()
-                        ->arrayNode('publication_status')
-                            ->children()
-                                ->scalarNode('create')->end()
-                                ->scalarNode('update')->end()
-                            ->end()
-                        ->end()
+                        ->scalarNode('publication_status')->end()
                     ->end()
                 ->end()
             ->end();

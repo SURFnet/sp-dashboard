@@ -46,7 +46,7 @@ class ServiceType extends AbstractType
                     ]
                 )
                     ->add('name')
-                    ->add('teamName')
+                    ->add('teamName', null, ['label' => 'team identifier'])
                     ->add(
                         'productionEntitiesEnabled',
                         CheckboxType::class,
@@ -77,7 +77,6 @@ class ServiceType extends AbstractType
                     ->add('intakeStatus', IntakeStatusType::class)
                     ->add('contractSigned', ContractSignedType::class)
                     ->add('surfconextRepresentativeApproved', RepresentativeApprovedType::class)
-                    ->add('connectionStatus', ConnectionStatusType::class)
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }

@@ -21,60 +21,17 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 use Exception;
 use Pdp\Parser;
 use Pdp\PublicSuffixListManager;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class ValidClientIdValidator extends ConstraintValidator
 {
     /**
-     * @var QueryEntityRepository
-     */
-    private $manageTestRepository;
-
-    /**
-     * @var QueryEntityRepository
-     */
-    private $manageProductionRepository;
-
-    /**
-     * @var EntityRepository
-     */
-    private $doctrineRepository;
-
-    /**
-     * @param QueryEntityRepository $manageTestRepository
-     * @param QueryEntityRepository $manageProductionRepository
-     * @param DoctrineRepository $doctrineRepository
-     */
-    public function __construct(
-        QueryEntityRepository $manageTestRepository,
-        QueryEntityRepository $manageProductionRepository,
-        DoctrineRepository $doctrineRepository
-    ) {
-        $this->manageTestRepository = $manageTestRepository;
-        $this->manageProductionRepository = $manageProductionRepository;
-        $this->doctrineRepository = $doctrineRepository;
-    }
-
-    /**
      * @param string     $value
      * @param Constraint $constraint
-     *
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function validate($value, Constraint $constraint)
     {
-        $root = $this->context->getRoot();
-
-        if ($root instanceof SaveOidcEntityCommand) {
-            $entityCommand = $root;
-        } else {
-            $entityCommand = $root->getData();
-        }
-
         if (empty($value)) {
             $this->context->addViolation('validator.client_id.empty');
             return;
@@ -88,23 +45,6 @@ class ValidClientIdValidator extends ConstraintValidator
         } catch (Exception $e) {
             $this->context->addViolation('validator.client_id.invalid_url');
             return;
-        }
-
-        $manage = $this->manageTestRepository;
-        if ($entityCommand->isForProduction()) {
-            $manage = $this->manageProductionRepository;
-        }
-
-        try {
-            $manageId = $manage->findManageIdByEntityId($value);
-        } catch (Exception $e) {
-            $this->context->addViolation('validator.client_id.registry_failure');
-            return;
-        }
-
-        // Prevent publishing entities with existing entityId in Manage.
-        if ($manageId && (!$entityCommand->getManageId() || $manageId !== $entityCommand->getManageId())) {
-            $this->context->addViolation('validator.client_id.already_exists');
         }
     }
 }

@@ -84,17 +84,6 @@ class EditServiceCommand implements Command
     private $privacyQuestionsAnswered;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $connectionStatus;
-
-    /**
-     * @var string
-     */
-    private $entityPublished;
-
-    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      *
      * @param int $id
@@ -108,8 +97,6 @@ class EditServiceCommand implements Command
      * @param string $contractSigned
      * @param string $surfconextRepresentativeApproved
      * @param string $privacyQuestionsAnswered
-     * @param string $connectionStatus
-     * @param string $entityPublished
      */
     public function __construct(
         $id,
@@ -122,9 +109,7 @@ class EditServiceCommand implements Command
         $intakeStatus,
         $contractSigned,
         $surfconextRepresentativeApproved,
-        $privacyQuestionsAnswered,
-        $connectionStatus,
-        $entityPublished
+        $privacyQuestionsAnswered
     ) {
         $this->id = $id;
         $this->guid = $guid;
@@ -137,8 +122,6 @@ class EditServiceCommand implements Command
         $this->contractSigned = $contractSigned;
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
-        $this->connectionStatus = $connectionStatus;
-        $this->entityPublished = $entityPublished;
     }
 
 
@@ -229,15 +212,6 @@ class EditServiceCommand implements Command
     {
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
     }
-
-    /**
-     * @param string $connectionStatus
-     */
-    public function setConnectionStatus($connectionStatus)
-    {
-        $this->connectionStatus = $connectionStatus;
-    }
-
     /**
      * @return string
      */
@@ -311,14 +285,6 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @return string
-     */
-    public function getConnectionStatus()
-    {
-        return $this->connectionStatus;
-    }
-
-    /**
      * @return bool
      */
     public function isProductionEntitiesEnabled()
@@ -332,13 +298,5 @@ class EditServiceCommand implements Command
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityPublished()
-    {
-        return $this->entityPublished;
     }
 }

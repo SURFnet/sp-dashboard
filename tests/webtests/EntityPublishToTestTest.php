@@ -100,8 +100,10 @@ class EntityPublishToTestTest extends WebTestCase
     public function test_it_published_metadata_to_manage()
     {
         // Entity id validation
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         // Push to Manage
+        $this->testMockHandler->append(new Response(200, [], '{"id":"1"}'));
+        // Push to EB through manage
         $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         // Build and save an entity to work with
@@ -138,7 +140,7 @@ class EntityPublishToTestTest extends WebTestCase
     public function test_it_validates_the_from_on_publish()
     {
         // Entity id validation
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
 
         $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
         $entity->setCertificate('-----BEGIN CERTIFICATE-----THIS IS NOT A VALID CERTIFICATE-----END CERTIFICATE-----');
@@ -161,7 +163,7 @@ class EntityPublishToTestTest extends WebTestCase
 
     public function test_it_validates_at_least_one_attribute_present()
     {
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
 
         $entity = $this->buildEntityWithoutAttribute($this->getServiceRepository()->findByName('SURFnet'));
 
@@ -180,5 +182,52 @@ class EntityPublishToTestTest extends WebTestCase
 
         $this->assertCount(1, $errors);
         $this->assertEquals('At least one attribute must be enabled.', $error);
+    }
+
+    public function test_it_validates_on_non_existent_entity_id_on_publish()
+    {
+        // Entity id validation
+        $this->testMockHandler->append(new Response(200, [], '[{"_id":"another"}]'));
+
+        $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
+
+        $this->getEntityRepository()->save($entity);
+
+        $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $crawler = $this->client->submit($form);
+
+        $errors = $crawler->filter('div.form-row.error');
+        $error = $errors->first()->filter('li.error')->first()->text();
+
+        $this->assertCount(1, $errors);
+        $this->assertEquals('Entity has already been registered.', $error);
+    }
+
+    public function test_it_validates_on_unique_entity_id_without_self_on_publish()
+    {
+        // Entity id validation
+        $this->testMockHandler->append(new Response(200, [], '[{"_id":"own-manage-id"}]'));
+
+        $entity = $this->buildEntityWithAttribute($this->getServiceRepository()->findByName('SURFnet'));
+        $entity->setManageId('own-manage-id');
+
+        $this->getEntityRepository()->save($entity);
+
+        $crawler = $this->client->request('GET', '/entity/edit/a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $crawler = $this->client->submit($form);
+
+        $errors = $crawler->filter('div.form-row.error');
+
+        $this->assertCount(0, $errors);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,14 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Webtests\Validator\Constraints;
+namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 
-/**
- * Validation of existance of entity id's in Manage is omitted in the web tests. This is utilized in the create entity
- * web test.
- */
-class MockEntityIdValidator extends ConstraintValidator
+interface IdentityProviderRepository
 {
-    public function validate($value, Constraint $constraint)
-    {
-        return;
-    }
+    /**
+     * @return IdentityProvider[]
+     */
+    public function findAll();
 }

@@ -1,4 +1,45 @@
-## Next release
+## 2.1.4
+
+**Bugfix**
+ * Do not save a local duplicate upon client reset #267
+ * Consider IdP workflow state when retrieving IdP's for ACL action #270
+ * Import correct invalid argument and throw it #272
+
+**Security updates**
+ * Bump js-yaml from 3.12.0 to 3.13.1 #269
+ * Bump handlebars from 4.0.12 to 4.1.2 #268
+
+**Other**
+ * Ansible update #271
+
+## 2.1.3
+**Bugfix**
+ * Bump fstream from 1.0.11 to 1.0.12 #266
+ * Add default value for `representative_approved` column. #265
+
+## 2.1.2
+**Bugfix**
+ * Fix idp validation from manage result #264
+
+## 2.1.1
+ * Add UI for entity ACL page #263
+ * Add transactions middleware to commandbus #250
+ * Fetch connection status for production entities from manage #257
+ * Fix entity validators #260
+ * Change the donutstate with empty service #252
+ * Add issue repository for testing #261
+
+## 2.1.0
+ * Add translatable contact email placeholder #259
+ * Rename 'team name' to 'team identifier' #258
+ * Add translatable footer links #253
+ * Show motivationless attributes on entity detail #255
+ * Show OIDC items on entity details #256
+ * Fix urn validator regex #251
+ * Fix the playground url after copy to production #247
+ * Prevent a space in the secret when copying #248
+ * Update composer dependencies #249
+ * Ansible cleanup #246
 
 ## 2.0.9
 **Bugfix**

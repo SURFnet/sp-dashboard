@@ -1,0 +1,26 @@
+<form name="acl_entity" method="post" novalidate="novalidate" data-parsley-validate="">
+
+    <div class="fieldset card">
+
+        <h2>Info</h2>
+        <div class="wysiwyg"> <p>Define which test identity providers have access to this entity.</p> </div>
+    </div>
+
+    <div class="fieldset card">
+        <h2>
+            Select all
+
+            <input type="checkbox" id="acl_entity_selectAll" name="acl_entity[selectAll]" class="hidden" />
+        </h2>
+
+        <div id="acl-container" class="hidden">
+            <table id="acl_entity_selected"><tr><th>&nbsp;</th><th>Name</th><th>Entity ID</th></tr><tr><td><input type="checkbox" id="acl_entity_selected_bfe8f00d-317a-4fbc-9cf8-ad2f3b2af578" name="acl_entity[selected][]" value="bfe8f00d-317a-4fbc-9cf8-ad2f3b2af578" /></td><td><label for="acl_entity_selected_bfe8f00d-317a-4fbc-9cf8-ad2f3b2af578">OpenConext Mujina IDP</label></td><td>http://mock-idp</td></tr><tr><td><input type="checkbox" id="acl_entity_selected_0c3febd2-3f67-4b8a-b90d-ce56a3b0abb4" name="acl_entity[selected][]" value="0c3febd2-3f67-4b8a-b90d-ce56a3b0abb4" checked="checked" /></td><td><label for="acl_entity_selected_0c3febd2-3f67-4b8a-b90d-ce56a3b0abb4">OpenConext Engine</label></td><td>https://engine.dev.support.surfconext.nl/authentication/idp/metadata</td></tr></table>
+        </div>
+
+    </div>
+
+    <div class="button-wrapper">
+        <div><button type="submit" id="acl_entity_save" name="acl_entity[save]" class="button">Save</button></div>
+        <input type="hidden" id="acl_entity__token" name="acl_entity[_token]" value="M_DAzAQi6QYxrX6JFjEsOweF5Oqdg1aUEKAXj2LvSaI"  /></form>
+    </div>
+</div>

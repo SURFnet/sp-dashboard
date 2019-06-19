@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         $secret = new Secret(Entity::OIDC_SECRET_LENGTH);
 
         $entity->setClientSecret($secret->getSecret());
-
+        $entity->setManageId($command->getManageId());
         $this->repository->save($entity);
     }
 }

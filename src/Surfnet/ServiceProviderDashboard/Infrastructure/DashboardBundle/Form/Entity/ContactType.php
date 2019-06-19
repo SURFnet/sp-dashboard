@@ -52,6 +52,7 @@ class ContactType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'data-parsley-trigger' => 'blur',
+                    'placeholder' => 'entity.edit.contact_information.' . $builder->getName().'.email.placeholder',
                 ],
             ]
         );

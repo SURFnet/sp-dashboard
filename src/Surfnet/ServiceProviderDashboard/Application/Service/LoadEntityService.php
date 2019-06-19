@@ -132,7 +132,7 @@ class LoadEntityService
         // Convert manage entity to domain entity
         $domainEntity = Entity::fromManageResponse(
             $manageEntity,
-            $environment,
+            $sourceEnvironment,
             $service,
             $this->oidcPlaygroundUriTest,
             $this->oidcPlaygroundUriProd

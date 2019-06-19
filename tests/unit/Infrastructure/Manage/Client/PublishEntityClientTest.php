@@ -29,7 +29,6 @@ use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
@@ -84,7 +83,7 @@ class PublishEntityClientTest extends MockeryTestCase
 
     public function test_it_can_publish_to_manage()
     {
-        $this->mockHandler->append(new Response(200, [], json_encode(['test' => 'OK'])));
+        $this->mockHandler->append(new Response(200, [], json_encode(['id' => '1'])));
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
@@ -98,7 +97,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn(null);
 
         $this->manageConfig
-            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->shouldReceive('getPublicationStatus->getStatus')
             ->once();
 
         $this->logger
@@ -109,12 +108,12 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn($json);
 
         $response = $this->client->publish($entity);
-        $this->assertEquals('OK', $response['test']);
+        $this->assertEquals('1', $response['id']);
     }
 
     public function test_it_can_update_to_manage()
     {
-        $this->mockHandler->append(new Response(200, [], json_encode(['test' => 'OK'])));
+        $this->mockHandler->append(new Response(200, [], json_encode(['id' => '1'])));
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
@@ -128,7 +127,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn('25055635-8c2c-4f54-95a6-68891a554e95');
 
         $this->manageConfig
-            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->shouldReceive('getPublicationStatus->getStatus')
             ->once();
 
         $this->logger
@@ -139,7 +138,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn($json);
 
         $response = $this->client->publish($entity);
-        $this->assertEquals('OK', $response['test']);
+        $this->assertEquals('1', $response['id']);
     }
 
     /**
@@ -164,7 +163,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->andReturn(null);
 
         $this->manageConfig
-            ->shouldReceive('getPublicationStatus->getCreateStatus')
+            ->shouldReceive('getPublicationStatus->getStatus')
             ->once();
 
         $this->logger

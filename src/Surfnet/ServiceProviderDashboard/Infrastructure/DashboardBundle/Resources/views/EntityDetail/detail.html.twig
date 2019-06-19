@@ -20,6 +20,11 @@
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.metadata_url'|trans, value: entity.metadataUrl, informationPopup: 'entity.edit.information.metadataUrl'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.acs_location'|trans, value: entity.acsLocation, informationPopup: 'entity.edit.information.acsLocation'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.entity_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.entityId'} %}
+        {% if entity.protocol == "oidc" %}
+            {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.redirect_uris'|trans, value: entity.redirectUris, informationPopup: 'entity.edit.information.redirectUris'} %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.grant_type'|trans, value: ('entity.edit.label.' ~ entity.grantType)|trans, informationPopup: 'entity.edit.information.grantType'} %}
+            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.playgroundEnabled'} %}
+        {% endif %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_id_format'|trans, value: entity.nameIdFormat, informationPopup: 'entity.edit.information.nameIdFormat'} %}
         {% include '@Dashboard/EntityDetail/detailFormattedField.html.twig' with {label: 'entity.detail.metadata.certificate'|trans, value: entity.certificate, informationPopup: 'entity.edit.information.certificate'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.logo_url'|trans, value: entity.logoUrl, informationPopup: 'entity.edit.information.logoUrl'} %}
@@ -64,7 +69,7 @@
 
     </div>
 
-    <div class="modal" id="reset-secret-confirmation">
+    <div class="modal oidc-confirmation" id="reset-secret-confirmation">
         {% include "@Dashboard/EntityModal/secretResetModal.html.twig" %}
     </div>
 

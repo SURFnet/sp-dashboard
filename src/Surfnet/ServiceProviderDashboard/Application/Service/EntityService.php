@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Exception;
-use JiraRestApi\Issue\Issue;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
@@ -29,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
@@ -161,7 +161,7 @@ class EntityService implements EntityServiceInterface
 
         $testEntities = $this->findPublishedTestEntitiesByTeamName(
             $service->getTeamName(),
-            $this->testManageConfig->getPublicationStatus()->getCreateStatus()
+            $this->testManageConfig->getPublicationStatus()->getStatus()
         );
         foreach ($testEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router, $service->getId());
@@ -169,7 +169,7 @@ class EntityService implements EntityServiceInterface
 
         $productionEntities = $this->findPublishedProductionEntitiesByTeamName(
             $service->getTeamName(),
-            $this->prodManageConfig->getPublicationStatus()->getCreateStatus()
+            $this->prodManageConfig->getPublicationStatus()->getStatus()
         );
         foreach ($productionEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
@@ -236,7 +236,7 @@ class EntityService implements EntityServiceInterface
     {
         return $this->queryRepositoryProvider
             ->getManageTestQueryClient()
-            ->findByTeamName($teamName, $this->testManageConfig->getPublicationStatus()->getCreateStatus());
+            ->findByTeamName($teamName, $this->testManageConfig->getPublicationStatus()->getStatus());
     }
 
     /**
@@ -253,7 +253,7 @@ class EntityService implements EntityServiceInterface
     {
         $entities = $this->queryRepositoryProvider
             ->getManageProductionQueryClient()
-            ->findByTeamName($teamName, $this->prodManageConfig->getPublicationStatus()->getCreateStatus());
+            ->findByTeamName($teamName, $this->prodManageConfig->getPublicationStatus()->getStatus());
 
         // Try to find the tickets in Jira that match the manageIds. If Jira is down or otherwise unavailable, the
         // entities are returned without updating their status. This might result in a 're request for delete'
@@ -263,12 +263,12 @@ class EntityService implements EntityServiceInterface
             foreach ($entities as $entity) {
                 $manageIds[] = $entity->getId();
             }
-            $tickets = $this->ticketService->findByManageIds($manageIds);
+            $issueCollection = $this->ticketService->findByManageIds($manageIds);
             // Update the entity status to STATE_REMOVAL_REQUESTED if the Jira ticket matches one of the published
             // entities
-            if (count($tickets->issues) > 0) {
+            if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
-                    if (array_key_exists($entity->getId(), $tickets->issues)) {
+                    if ($issueCollection->getIssueByKey($entity->getId())) {
                         $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
                     }
                 }

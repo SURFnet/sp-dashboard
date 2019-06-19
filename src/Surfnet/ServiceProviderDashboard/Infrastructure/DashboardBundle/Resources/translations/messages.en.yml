@@ -29,6 +29,9 @@ entity:
       metadata_url: Metadata URL
       acs_location: ACS location
       entity_id: Entity ID
+      grant_type: Grant type
+      redirect_uris: Redirect URIs
+      playground_enabled: Playground enabled?
       name_id_format: NameID format
       certificate: Certificate
       logo_url: Logo URL
@@ -60,6 +63,7 @@ entity:
         html: <strong>information about the contact information fields</strong>
     attribute:
       motivation: Motivation
+      no_motivation_set: No motivation set
       saml20:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
@@ -111,6 +115,7 @@ entity.list.state: State
 entity.list.action.back: Back to overview
 entity.list.action.view: View
 entity.list.action.edit: Edit
+entity.list.action.acl: Edit IdP whitelist
 entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
@@ -203,6 +208,7 @@ entity.edit.metadata.saml20.html: "Please provide the metadata URL of your entit
 entity.edit.metadata.oidc.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
 entity.edit.metadata.validation-failed: "Warning! Some entries are missing or incorrect. Please review and fix those entries below."
+entity.edit.metadata.unknown.exception: "An unknown error occurred while importing the metadata."
 entity.edit.metadata.saml20.title: Metadata
 entity.edit.metadata.oidc.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
@@ -218,6 +224,9 @@ entity.edit.contact_information.html: "
 
 <p><i>Technical and administrative contact details will not be communicated to end-users.</i></p>
 "
+entity.edit.contact_information.administrativeContact.email.placeholder: "Email address of administrative contact"
+entity.edit.contact_information.technicalContact.email.placeholder: "Email address of technical contact"
+entity.edit.contact_information.supportContact.email.placeholder: "Emailsaddress of support contact"
 entity.edit.attribute_input_placeholder: The service will use this attribute to...
 entity.edit.attributes.saml20.title: Attributes
 entity.edit.attributes.saml20.html: "
@@ -296,6 +305,16 @@ entity.edit.label.implicit: Implicit
 entity.edit.label.authorization_code_token: response_type=id_token
 entity.edit.label.implicit_id_token_token: response_type=id_token token
 entity.edit.label.implicit_id_token: response_type=id_token
+entity.acl.title: Entity Idp access
+entity.acl.info.title: Info
+entity.acl.info.html: "
+<p>Define which test identity providers have access to this entity.</p>
+"
+entity.acl.select-all.title: Select all
+entity.acl.select.title: Select
+entity.acl.name.title: Name
+entity.acl.entity-id.title: Entity ID
+entity.acl.error.publish: "Unable to publish the entity, try again later"
 entity.publish.request.ticket.summary: "Request to publish %entity_name% to production"
 entity.publish.request.ticket.description: "h2. Details
 
@@ -356,10 +375,6 @@ service.form.label.connection_status_active: Active
 service.form.label.contract_signed: Contract signed
 service.form.label.contract_signed_no: No
 service.form.label.contract_signed_yes: Yes
-service.form.label.entity_published: Entity published?
-service.form.label.entity_published_no: No
-service.form.label.entity_published_in_progress: In progress
-service.form.label.entity_published_yes: Yes
 service.form.label.intake_status: Intake finished
 service.form.label.intake_status_no: No
 service.form.label.intake_status_yes: Yes
