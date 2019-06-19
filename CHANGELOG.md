@@ -1,3 +1,17 @@
+## 2.1.4
+
+**Bugfix**
+ * Do not save a local duplicate upon client reset #267
+ * Consider IdP workflow state when retrieving IdP's for ACL action #270
+ * Import correct invalid argument and throw it #272
+
+**Security updates**
+ * Bump js-yaml from 3.12.0 to 3.13.1 #269
+ * Bump handlebars from 4.0.12 to 4.1.2 #268
+
+**Other**
+ * Ansible update #271
+
 ## 2.1.3
 **Bugfix**
  * Bump fstream from 1.0.11 to 1.0.12 #266
