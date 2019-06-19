@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Va
 
 use DateInterval;
 use DateTime as CoreDateTime;
-use InvalidArgumentException;
+use Surfnet\SamlBundle\Exception\InvalidArgumentException;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods) due to comparison methods
@@ -59,7 +59,7 @@ class DateTime
     public static function fromString($string)
     {
         if (!is_string($string)) {
-            InvalidArgumentException::invalidType('string', 'string', $string);
+            throw InvalidArgumentException::invalidType('string', 'string', $string);
         }
 
         $dateTime = CoreDateTime::createFromFormat(self::FORMAT, $string);
