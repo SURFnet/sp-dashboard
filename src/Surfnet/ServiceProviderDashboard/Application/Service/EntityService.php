@@ -161,7 +161,7 @@ class EntityService implements EntityServiceInterface
 
         $testEntities = $this->findPublishedTestEntitiesByTeamName(
             $service->getTeamName(),
-            $this->testManageConfig->getPublicationStatus()->getCreateStatus()
+            $this->testManageConfig->getPublicationStatus()->getStatus()
         );
         foreach ($testEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router, $service->getId());
@@ -169,7 +169,7 @@ class EntityService implements EntityServiceInterface
 
         $productionEntities = $this->findPublishedProductionEntitiesByTeamName(
             $service->getTeamName(),
-            $this->prodManageConfig->getPublicationStatus()->getCreateStatus()
+            $this->prodManageConfig->getPublicationStatus()->getStatus()
         );
         foreach ($productionEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
@@ -236,7 +236,7 @@ class EntityService implements EntityServiceInterface
     {
         return $this->queryRepositoryProvider
             ->getManageTestQueryClient()
-            ->findByTeamName($teamName, $this->testManageConfig->getPublicationStatus()->getCreateStatus());
+            ->findByTeamName($teamName, $this->testManageConfig->getPublicationStatus()->getStatus());
     }
 
     /**
@@ -253,7 +253,7 @@ class EntityService implements EntityServiceInterface
     {
         $entities = $this->queryRepositoryProvider
             ->getManageProductionQueryClient()
-            ->findByTeamName($teamName, $this->prodManageConfig->getPublicationStatus()->getCreateStatus());
+            ->findByTeamName($teamName, $this->prodManageConfig->getPublicationStatus()->getStatus());
 
         // Try to find the tickets in Jira that match the manageIds. If Jira is down or otherwise unavailable, the
         // entities are returned without updating their status. This might result in a 're request for delete'

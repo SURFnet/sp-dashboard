@@ -21,8 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\Mock;
 use Psr\Log\NullLogger;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
@@ -38,15 +41,22 @@ class IdentityProviderClientTest extends MockeryTestCase
      */
     private $mockHandler;
 
+    /**
+     * @var Config&Mock
+     */
+    private $config;
+
     public function setUp()
     {
+        $this->config = m::mock(Config::class);
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
         $this->client = new IdentityProviderClient(
             new HttpClient(
                 $guzzle,
                 new NullLogger()
-            )
+            ),
+            $this->config
         );
     }
 
@@ -57,6 +67,11 @@ class IdentityProviderClientTest extends MockeryTestCase
             ->append(
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/identity_provider_response.json'))
             );
+
+        $this->config
+            ->shouldReceive('getPublicationStatus->getStatus')
+            ->andReturn('testaccepted');
+
         $idps = $this->client->findAll();
         $this->assertCount(4, $idps);
 

@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryIdentityProviderException;
@@ -26,8 +27,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpEx
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 /**
- * The IdentityProviderClient can be used to perform queries on the manage /manage/api/internal/search/saml20_idp endpoint.
- * Queries will return the domain objects.
+ * The IdentityProviderClient can be used to perform queries on the Manage
+ * /manage/api/internal/search/saml20_idp endpoint. Queries will return the domain objects.
  */
 class IdentityProviderClient implements IdentityProviderRepository
 {
@@ -37,11 +38,14 @@ class IdentityProviderClient implements IdentityProviderRepository
     private $client;
 
     /**
-     * @param HttpClient $client
+     * @var Config
      */
-    public function __construct(HttpClient $client)
+    private $manageConfig;
+
+    public function __construct(HttpClient $client, Config $manageConfig)
     {
         $this->client = $client;
+        $this->manageConfig = $manageConfig;
     }
 
     /**
@@ -52,8 +56,9 @@ class IdentityProviderClient implements IdentityProviderRepository
     public function findAll()
     {
         try {
+            // Based on the manage config set (prod or test) we retrieve the correct results from the manage idp client.
             $result = $this->doSearchQuery([
-                "state" => "prodaccepted",
+                "state" => $this->manageConfig->getPublicationStatus()->getStatus(),
             ]);
 
             $list = [];

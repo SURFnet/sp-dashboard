@@ -34,8 +34,7 @@ class ConfigFactory
         );
 
         $publicationStatus = new PublicationStatus(
-            $config['publication_status']['create'],
-            $config['publication_status']['update']
+            $config['publication_status']
         );
 
         return new Config($environment, $connection, $publicationStatus);
