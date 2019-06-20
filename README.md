@@ -1,5 +1,5 @@
 <a href="https://www.surf.nl/over-surf/werkmaatschappijen/surfnet">
-    <img src="https://www.surf.nl/binaries/werkmaatschappijlogo/content/gallery/surf/logos/surfnet.png" alt="SURFnet"
+    <img src="https://www.surf.nl/themes/surf/logo.svg" alt="SURFnet"
          align="right" />
 </a>
 
