@@ -32,18 +32,18 @@ class IssueCollection implements Countable
      */
     public function __construct(array $issues)
     {
-        foreach ($issues as $issue) {
-            $this->issues[$issue->getKey()] = $issue;
+        foreach ($issues as $id => $issue) {
+            $this->issues[$id] = $issue;
         }
     }
 
     /**
      * @return Issue|null
      */
-    public function getIssueByKey($key)
+    public function getIssueById($id)
     {
-        if (array_key_exists($key, $this->issues)) {
-            return $this->issues[$key];
+        if (array_key_exists($id, $this->issues)) {
+            return $this->issues[$id];
         }
 
         return null;

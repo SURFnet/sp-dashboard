@@ -90,10 +90,10 @@ class IssueRepositoryTest extends PHPUnit_Framework_TestCase
         $this->assertCount(2, $results);
 
         // assert the two issues
-        $issue = $results->getIssueByKey('manageId-4');
+        $issue = $results->getIssueById('manageId-4');
         $this->assertSame('manageId-4', $issue->getKey());
         $this->assertSame('test', $issue->getIssueType());
-        $issue = $results->getIssueByKey('manageId-5');
+        $issue = $results->getIssueById('manageId-5');
         $this->assertSame('manageId-5', $issue->getKey());
         $this->assertSame('test2', $issue->getIssueType());
 

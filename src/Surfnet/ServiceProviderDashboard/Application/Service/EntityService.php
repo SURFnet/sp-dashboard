@@ -268,7 +268,7 @@ class EntityService implements EntityServiceInterface
             // entities
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
-                    if ($issueCollection->getIssueByKey($entity->getId())) {
+                    if ($issueCollection->getIssueById($entity->getId())) {
                         $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
                     }
                 }
