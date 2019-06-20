@@ -1,3 +1,7 @@
+## 2.1.5
+**Bugfix**
+ * Ensure the issues are indexed on Manage id #273
+
 ## 2.1.4
 
 **Bugfix**
