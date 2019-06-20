@@ -26,14 +26,16 @@ class IssueCollectionTest extends TestCase
 {
     public function test_get_issue_by_key()
     {
-        $issue1 = new Issue('00000000-0000-0000-0000-000000000000', 'issue-type-1');
-        $issue2 = new Issue('00000000-0000-0000-0000-000000000001', 'issue-type-2');
+        $issue1 = new Issue('CTX-0123', 'issue-type-1');
+        $issue2 = new Issue('CTX-0124', 'issue-type-2');
 
-        $collection = new IssueCollection([$issue1, $issue2]);
+        $collection = new IssueCollection(
+            ['00000000-0000-0000-0000-000000000000' => $issue1, '00000000-0000-0000-0000-000000000001' => $issue2]
+        );
 
-        $this->assertEquals($issue1, $collection->getIssueByKey('00000000-0000-0000-0000-000000000000'));
-        $this->assertEquals($issue2, $collection->getIssueByKey('00000000-0000-0000-0000-000000000001'));
-        $this->assertNull($collection->getIssueByKey('99999999-9999-9999-9999-999999999999'));
+        $this->assertEquals($issue1, $collection->getIssueById('00000000-0000-0000-0000-000000000000'));
+        $this->assertEquals($issue2, $collection->getIssueById('00000000-0000-0000-0000-000000000001'));
+        $this->assertNull($collection->getIssueById('99999999-9999-9999-9999-999999999999'));
     }
 
     public function test_count()
@@ -46,7 +48,14 @@ class IssueCollectionTest extends TestCase
         $issue5 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4');
         $issue6 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4');
 
-        $collection = new IssueCollection([$issue1, $issue2, $issue3, $issue4, $issue5, $issue6]);
+        $collection = new IssueCollection([
+            $issue1->getKey() => $issue1,
+            $issue2->getKey() => $issue2,
+            $issue3->getKey() => $issue3,
+            $issue4->getKey() => $issue4,
+            $issue5->getKey() => $issue5,
+            $issue6->getKey() => $issue6
+        ]);
 
         $this->assertCount(4, $collection);
     }
