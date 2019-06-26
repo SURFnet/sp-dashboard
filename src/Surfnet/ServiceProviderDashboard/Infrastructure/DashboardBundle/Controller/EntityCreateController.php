@@ -18,14 +18,21 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +45,28 @@ class EntityCreateController extends Controller
 {
     use EntityControllerTrait;
 
+    /**
+     * @var ProtocolChoiceFactory
+     */
+    private $protocolChoiceFactory;
+
+    public function __construct(
+        CommandBus $commandBus,
+        EntityService $entityService,
+        ServiceService $serviceService,
+        AuthorizationService $authorizationService,
+        EntityTypeFactory $entityTypeFactory,
+        LoadEntityService $loadEntityService,
+        ProtocolChoiceFactory $protocolChoiceFactory
+    ) {
+        $this->commandBus = $commandBus;
+        $this->entityService = $entityService;
+        $this->serviceService = $serviceService;
+        $this->authorizationService = $authorizationService;
+        $this->entityTypeFactory = $entityTypeFactory;
+        $this->loadEntityService = $loadEntityService;
+        $this->protocolChoiceFactory = $protocolChoiceFactory;
+    }
 
     /**
      * @Method({"GET", "POST"})
@@ -59,10 +88,15 @@ class EntityCreateController extends Controller
      */
     public function typeAction(Request $request, $serviceId, $targetEnvironment)
     {
-        $command = new ChooseEntityTypeCommand();
-        $form = $this->createForm(ChooseEntityTypeType::class, $command);
-
         $service = $this->authorizationService->changeActiveService($serviceId);
+
+        $this->protocolChoiceFactory->setService($service);
+        $choices = $this->protocolChoiceFactory->buildOptions($targetEnvironment);
+
+        $command = new ChooseEntityTypeCommand();
+        $command->setProtocolChoices($choices);
+
+        $form = $this->createForm(ChooseEntityTypeType::class, $command);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

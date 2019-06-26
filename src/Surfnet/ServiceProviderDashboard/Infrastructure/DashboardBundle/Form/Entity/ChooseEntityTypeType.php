@@ -27,6 +27,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ChooseEntityTypeType extends AbstractType
 {
+    private $formCount = 0;
+
     /**
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) $key, $index are never used in the choice_attr callback
      * @param FormBuilderInterface $builder
@@ -34,12 +36,16 @@ class ChooseEntityTypeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formCount++;
+
+        /** @var ChooseEntityTypeCommand $command */
+        $command = $builder->getData();
+        $choices = $command->getProtocolChoices();
+
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'SAML 2.0' => Entity::TYPE_SAML,
-                    'OpenID Connect' => Entity::TYPE_OPENID_CONNECT
-                ],
+                'choices' => $choices,
+                'choice_translation_domain' => true,
                 'label' => false,
                 'expanded' => true,
                 'multiple' => false,
@@ -55,6 +61,6 @@ class ChooseEntityTypeType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'dashboard_bundle_choose_entity_type';
+        return 'dashboard_bundle_choose_entity_type_' . $this->formCount;
     }
 }

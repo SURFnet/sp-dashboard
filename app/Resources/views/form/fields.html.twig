@@ -108,7 +108,7 @@
         {%- for child in form %}
             <div class="radio-container">
             {{- form_widget(child) -}}
-            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain, 'label_attr': {'for': child.vars.id}}) -}}
             </div>
         {% endfor -%}
     </div>

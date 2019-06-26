@@ -328,6 +328,9 @@ entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our 
 entity.published_test.title: "Successfully published the entity to test"
 entity.type.title: New entity?
 entity.type.description.html: "<p><strong>Lorem ipsum dolor sit amet</strong> Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <strong>ad minim</strong> veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.<p>"
+entity.type.saml20.title: SAML 2.0
+entity.type.oidc.title: OpenID Connect
+entity.type.oidcng.title: OpenID Connect - The Next Generation
 privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 privacy.form.label.accessData.html: 2. Who can access the data?
