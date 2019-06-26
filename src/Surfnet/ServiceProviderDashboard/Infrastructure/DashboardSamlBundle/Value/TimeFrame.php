@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value;
 
 use DateInterval;
-use InvalidArgumentException;
+use Surfnet\SamlBundle\Exception\InvalidArgumentException;
 
 final class TimeFrame
 {

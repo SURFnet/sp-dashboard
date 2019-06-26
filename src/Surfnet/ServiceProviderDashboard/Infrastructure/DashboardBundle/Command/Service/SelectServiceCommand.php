@@ -29,7 +29,7 @@ class SelectServiceCommand implements Command
     private $selectedServiceId;
 
     /**
-     * @param string $selectedService ID of selected service
+     * @param string $selectedServiceId ID of selected service
      */
     public function __construct($selectedServiceId)
     {

@@ -90,7 +90,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
             );
             $this->flashBag->add('error', 'entity.edit.error.publish');
         } catch (PushMetadataException $e) {
-            $this->logger->error(sprintf('Pushing to Engineblock failed with message: ', $e->getMessage()));
+            $this->logger->error(sprintf('Pushing to Engineblock failed with message: "%s"', $e->getMessage()));
             $this->flashBag->add('error', 'entity.edit.error.push');
         }
     }
