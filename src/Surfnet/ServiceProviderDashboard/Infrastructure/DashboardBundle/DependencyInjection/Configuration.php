@@ -57,6 +57,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->scalarNode('publication_status')->end()
+                        ->booleanNode('oidcng_enabled')->end()
                     ->end()
                 ->end()
             ->end();

@@ -18,29 +18,30 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage;
 
-class ConfigFactory
+use Webmozart\Assert\Assert;
+
+/**
+ * Indicates whether or not this Manage instance is capable of tracking oidcng entities.
+ */
+class OidcngEnabled
 {
     /**
-     * @param string $environment
-     * @param array $config
-     * @return Config
+     * @var string
      */
-    public static function fromConfig($environment, $config)
+    private $enabled;
+
+    /**
+     * @param string $status
+     */
+    public function __construct($enabled = '')
     {
-        $connection = new Connection(
-            $config['connection']['host'],
-            $config['connection']['username'],
-            $config['connection']['password']
-        );
+        Assert::boolean($enabled, 'Please set the oidcng enabled config value in parameters.yml');
 
-        $publicationStatus = new PublicationStatus(
-            $config['publication_status']
-        );
+        $this->enabled = $enabled;
+    }
 
-        $oidcEnabled = new OidcngEnabled(
-            $config['oidcng_enabled']
-        );
-
-        return new Config($environment, $connection, $publicationStatus, $oidcEnabled);
+    public function isEnabled()
+    {
+        return $this->enabled;
     }
 }
