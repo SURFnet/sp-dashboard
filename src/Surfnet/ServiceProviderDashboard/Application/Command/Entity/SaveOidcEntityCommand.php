@@ -341,6 +341,11 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
      */
     private $manageId;
 
+    /**
+     * @var string
+     */
+    private $protocol;
+
     private function __construct()
     {
         $this->grantType = new OidcGrantType();
@@ -1126,5 +1131,21 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
     public function setManageId($manageId)
     {
         $this->manageId = $manageId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+
+    /**
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
     }
 }

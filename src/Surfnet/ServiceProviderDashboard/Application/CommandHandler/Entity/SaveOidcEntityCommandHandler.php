@@ -28,6 +28,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
+/**
+ * Saves oidc and oidcng drafts
+ */
 class SaveOidcEntityCommandHandler implements CommandHandler
 {
     /**
@@ -88,7 +91,7 @@ class SaveOidcEntityCommandHandler implements CommandHandler
         $entity->setArchived($command->isArchived());
         $entity->setEnvironment($command->getEnvironment());
         $entity->setEntityId($command->getEntityId());
-        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+        $entity->setProtocol($command->getProtocol());
         $entity->setRedirectUris($command->getRedirectUris());
         $entity->setGrantType(new OidcGrantType($command->getGrantType()));
         $entity->setEnablePlayground($command->isEnablePlayground());

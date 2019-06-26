@@ -50,11 +50,13 @@ class EntityTypeFactory
     {
         switch (true) {
             case ($type == Entity::TYPE_OPENID_CONNECT):
+            case ($type == Entity::TYPE_OPENID_CONNECT_TNG):
                 $command = SaveOidcEntityCommand::forCreateAction($service);
                 if ($entity) {
                     $command = SaveOidcEntityCommand::fromEntity($entity);
                 }
                 $command->setEnvironment($environment);
+                $command->setProtocol($type);
                 return $this->formFactory->create(OidcEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_SAML):
                 $command = SaveSamlEntityCommand::forCreateAction($service);
@@ -79,7 +81,9 @@ class EntityTypeFactory
     {
         switch (true) {
             case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
+            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG):
                 $command = SaveOidcEntityCommand::fromEntity($entity);
+                $command->setProtocol($entity->getProtocol());
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(OidcEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
             case ($entity->getProtocol() == Entity::TYPE_SAML):
