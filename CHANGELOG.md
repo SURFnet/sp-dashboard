@@ -37,7 +37,7 @@
  * Add translatable contact email placeholder #259
  * Rename 'team name' to 'team identifier' #258
  * Add translatable footer links #253
- * Show motivationless attributes on entity detail #255
+ * Show motivationless attributes on entity detaOil #255
  * Show OIDC items on entity details #256
  * Fix urn validator regex #251
  * Fix the playground url after copy to production #247

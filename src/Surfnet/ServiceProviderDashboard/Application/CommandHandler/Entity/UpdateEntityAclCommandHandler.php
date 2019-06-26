@@ -77,15 +77,15 @@ class UpdateEntityAclCommandHandler implements CommandHandler
      */
     public function handle(UpdateEntityAclCommand $command)
     {
+        $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment to update ACL', $command->getEntityManageId()));
+
+        $service = $this->serviceRepository->findById($command->getServiceId());
+        $entity = $this->entityService->getEntityByIdAndTarget($command->getEntityManageId(), Entity::ENVIRONMENT_TEST, $service);
+
+        $entity->setIdpAllowAll($command->isSelectAll());
+        $entity->setIdpWhitelist($command->getSelected());
+
         try {
-            $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment to update ACL', $command->getEntityManageId()));
-
-            $service = $this->serviceRepository->findById($command->getServiceId());
-            $entity = $this->entityService->getEntityByIdAndTarget($command->getEntityManageId(), Entity::ENVIRONMENT_TEST, $service);
-
-            $entity->setIdpAllowAll($command->isSelectAll());
-            $entity->setIdpWhitelist($command->getSelected());
-
             $publishResponse = $this->publishClient->publish($entity);
 
             if (array_key_exists('id', $publishResponse)) {
@@ -102,7 +102,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
             );
             $this->flashBag->add('error', 'entity.edit.error.publish');
         } catch (PushMetadataException $e) {
-            $this->logger->error(sprintf('Pushing to Engineblock failed with message: ', $e->getMessage()));
+            $this->logger->error(sprintf('Pushing to Engineblock failed with message: "%s"', $e->getMessage()));
             $this->flashBag->add('error', 'entity.edit.error.push');
         }
     }

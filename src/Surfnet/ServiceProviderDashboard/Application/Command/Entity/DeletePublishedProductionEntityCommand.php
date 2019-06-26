@@ -31,7 +31,7 @@ class DeletePublishedProductionEntityCommand implements Command
     private $manageId;
 
     /**
-     * @param string $id
+     * @param string $manageId
      */
     public function __construct($manageId)
     {

@@ -79,7 +79,7 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
-     * @param $workflowState
+     * @param string $workflowState
      * @return array
      */
     public function generateForNewEntity(Entity $entity, $workflowState)
@@ -93,7 +93,7 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
-     * @param $workflowState
+     * @param string $workflowState
      * @return array
      */
     public function generateForExistingEntity(Entity $entity, $workflowState)
@@ -116,7 +116,7 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
-     * @param $workflowState
+     * @param string $workflowState
      * @return array
      */
     private function generateDataForNewEntity(Entity $entity, $workflowState)
@@ -151,7 +151,7 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
-     * @param $workflowState
+     * @param string $workflowState
      * @return array
      */
     private function generateDataForExistingEntity(Entity $entity, $workflowState)

@@ -41,7 +41,7 @@ interface EntityServiceInterface
     public function getEntityByIdAndTarget($id, $manageTarget, Service $service);
 
     /**
-     * @param $id
+     * @param int $id
      * @return Entity|null
      */
     public function getEntityById($id);
