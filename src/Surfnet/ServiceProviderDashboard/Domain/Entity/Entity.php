@@ -407,6 +407,16 @@ class Entity
     private $idpAllowAll = true;
 
     /**
+     * @var bool
+     */
+    private $isPublicClient;
+
+    /**
+     * @var int
+     */
+    private $accessTokenValidity;
+
+    /**
      * @param ManageEntity $manageEntity
      * @param string $environment
      * @param Service $service
@@ -1501,5 +1511,37 @@ class Entity
     public function isIdpAllowAll()
     {
         return $this->idpAllowAll;
+    }
+
+    /**
+     * @param bool $isPublic
+     */
+    public function setIsPublicClient($isPublic)
+    {
+        $this->isPublicClient = $isPublic;
+    }
+
+    /**
+     * @param int $accessTokenValidity
+     */
+    public function setAccessTokenValidity($accessTokenValidity)
+    {
+        $this->accessTokenValidity = $accessTokenValidity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAccessTokenValidity()
+    {
+        return $this->accessTokenValidity;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublicClient()
+    {
+        return $this->isPublicClient;
     }
 }

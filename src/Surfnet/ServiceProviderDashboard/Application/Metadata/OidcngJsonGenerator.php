@@ -72,7 +72,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         // the type for entities is always saml because manage is using saml internally
         return [
             'data' => $this->generateDataForNewEntity($entity, $workflowState),
-            'type' => 'oidc10-rp',
+            'type' => 'oidc10_rp',
         ];
     }
 
@@ -86,15 +86,9 @@ class OidcngJsonGenerator implements GeneratorInterface
         // the type for entities is always saml because manage is using saml internally
         $data = [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
-            'type' => 'oidc10-rp',
+            'type' => 'oidc10_rp',
             'id' => $entity->getManageId(),
         ];
-
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
-            $data['externalReferenceData'] = [
-                'oidcClient' => $this->generateOidcClient($entity),
-            ];
-        }
 
         return $data;
     }
@@ -118,15 +112,6 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata += $this->generateAclData($entity);
 
-        switch (true) {
-            case ($entity->getProtocol() == Entity::TYPE_SAML):
-                $metadata['metadataurl'] = $entity->getMetadataUrl();
-                break;
-            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
-                $metadata['oidcClient'] = $this->generateOidcClient($entity);
-                break;
-        }
-
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
         }
@@ -148,10 +133,6 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
 
         $metadata += $this->generateAclData($entity);
-
-        if ($entity->getProtocol() == Entity::TYPE_SAML) {
-            $metadata['metadataurl'] = $entity->getMetadataUrl();
-        }
 
         $metadata += $this->flattenMetadataFields(
             $this->generateMetadataFields($entity)
@@ -214,11 +195,16 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata['NameIDFormat'] = $entity->getNameIdFormat();
 
+        // Will become configurable some time in the future.
+        $metadata['scopes'] = ['openid'];
+
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to engineblock.
         if ($entity->isProduction()) {
             $metadata['coin:exclude_from_push'] = '1';
         }
+
+        $metadata += $this->generateOidcClient($entity);
 
         if (!empty($entity->getLogoUrl())) {
             $metadata += $this->generateLogoMetadata($entity);
@@ -233,20 +219,13 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
-        $metadata['clientId'] = str_replace('://', '@//', $entity->getEntityId());
-        $metadata['clientSecret'] = $entity->getClientSecret();
+        $metadata['secret'] = $entity->getClientSecret();
         // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
-        $metadata['redirectUris'] = $entity->getRedirectUris();
-        $metadata['grantType'] = $entity->getGrantType()->getGrantType();
-        $metadata['scope'] = ['openid'];
+        $metadata['redirectUrls'] = $entity->getRedirectUris();
+        $metadata['grants'] = [$entity->getGrantType()->getGrantType()];
+        $metadata['accessTokenValidity'] = $entity->getAccessTokenValidity();
+        $metadata['isPublicClient'] = $entity->isPublicClient();
 
-        if ($entity->isEnablePlayground()) {
-            if ($entity->isProduction()) {
-                $metadata['redirectUris'][] = $this->oidcPlaygroundUriProd;
-            } else {
-                $metadata['redirectUris'][] = $this->oidcPlaygroundUriTest;
-            }
-        }
 
         return $metadata;
     }
