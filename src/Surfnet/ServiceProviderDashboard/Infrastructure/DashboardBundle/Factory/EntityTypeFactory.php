@@ -19,11 +19,13 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factor
 
 use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityTypeInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcEntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Symfony\Component\Form\FormFactory;
 
@@ -50,7 +52,6 @@ class EntityTypeFactory
     {
         switch (true) {
             case ($type == Entity::TYPE_OPENID_CONNECT):
-            case ($type == Entity::TYPE_OPENID_CONNECT_TNG):
                 $command = SaveOidcEntityCommand::forCreateAction($service);
                 if ($entity) {
                     $command = SaveOidcEntityCommand::fromEntity($entity);
@@ -65,6 +66,14 @@ class EntityTypeFactory
                 }
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
+            case ($type == Entity::TYPE_OPENID_CONNECT_TNG):
+                $command = SaveOidcngEntityCommand::forCreateAction($service);
+                if ($entity) {
+                    $command = SaveOidcngEntityCommand::fromEntity($entity);
+                }
+                $command->setProtocol($type);
+                $command->setEnvironment($environment);
+                return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
         }
 
         throw new InvalidArgumentException("invalid form type requested: " . $type);
@@ -81,7 +90,6 @@ class EntityTypeFactory
     {
         switch (true) {
             case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
-            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG):
                 $command = SaveOidcEntityCommand::fromEntity($entity);
                 $command->setProtocol($entity->getProtocol());
                 $command->setEnvironment($entity->getEnvironment());
@@ -90,6 +98,11 @@ class EntityTypeFactory
                 $command = SaveSamlEntityCommand::fromEntity($entity);
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
+            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG):
+                $command = SaveOidcngEntityCommand::fromEntity($entity);
+                $command->setProtocol($entity->getProtocol());
+                $command->setEnvironment($entity->getEnvironment());
+                return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
         }
 
         throw new InvalidArgumentException("invalid form type requested");

@@ -171,3 +171,8 @@
         </table>
     {% endspaceless %}
 {% endblock %}
+
+{%- block number_widget -%}
+    {{ block('help_block') }}
+    <input type="number" {{ block('widget_attributes') }} {% if min is defined %} min="{{ min }}"{% endif %} {% if max is defined %} max="{{ max }}"{% endif %} {% if value is defined %} value="{{ value }}"{% endif %} />
+{%- endblock number_widget -%}

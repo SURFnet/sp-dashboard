@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,20 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Ramsey\Uuid\Uuid;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
 /**
- * Saves oidc drafts
+ * Saves oidcng drafts
  */
-class SaveOidcEntityCommandHandler implements CommandHandler
+class SaveOidcngEntityCommandHandler implements CommandHandler
 {
     /**
      * @var EntityRepository
@@ -47,13 +47,13 @@ class SaveOidcEntityCommandHandler implements CommandHandler
     }
 
     /**
-     * @param SaveOidcEntityCommand $command
+     * @param SaveOidcngEntityCommand $command
      * @throws EntityNotFoundException
      * @throws InvalidArgumentException
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(SaveOidcEntityCommand $command)
+    public function handle(SaveOidcngEntityCommand $command)
     {
         // If the entity does not exist yet, create it on the fly
         if (is_null($command->getId())) {
@@ -92,9 +92,12 @@ class SaveOidcEntityCommandHandler implements CommandHandler
         $entity->setEnvironment($command->getEnvironment());
         $entity->setEntityId($command->getEntityId());
         $entity->setProtocol($command->getProtocol());
-        $entity->setRedirectUris($command->getRedirectUris());
-        $entity->setGrantType(new OidcGrantType($command->getGrantType()));
-        $entity->setEnablePlayground($command->isEnablePlayground());
+        $entity->setRedirectUris($command->getRedirectUrls());
+        $entity->setAccessTokenValidity($command->getAccessTokenValidity());
+        $entity->setIsPublicClient($command->isPublicClient());
+        // Only one grant type is supported yet, use that one to create the OidcGrantType.
+        $grantTypes =  $command->getGrants();
+        $entity->setGrantType(new OidcGrantType(reset($grantTypes)));
         $entity->setLogoUrl($command->getLogoUrl());
         $entity->setNameNl($command->getNameNl());
         $entity->setNameEn($command->getNameEn());

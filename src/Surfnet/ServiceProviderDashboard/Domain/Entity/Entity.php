@@ -389,6 +389,18 @@ class Entity
     private $comments;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isPublicClient;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true, options={"unsigned"=true})
+     */
+    private $accessTokenValidity;
+
+    /**
      * @var Service
      *
      * @ORM\ManyToOne(targetEntity="Service", inversedBy="entities")
@@ -405,16 +417,6 @@ class Entity
      * @var bool
      */
     private $idpAllowAll = true;
-
-    /**
-     * @var bool
-     */
-    private $isPublicClient;
-
-    /**
-     * @var int
-     */
-    private $accessTokenValidity;
 
     /**
      * @param ManageEntity $manageEntity
