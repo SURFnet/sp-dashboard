@@ -46,4 +46,5 @@ security:
     access_control:
         - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         - { path: ^/entity/metadata, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/translations, roles: ROLE_ADMINISTRATOR, requires_channel: https }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
