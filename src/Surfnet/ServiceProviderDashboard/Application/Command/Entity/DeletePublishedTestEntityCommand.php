@@ -31,11 +31,17 @@ class DeletePublishedTestEntityCommand implements Command
     private $manageId;
 
     /**
+     * @var string
+     */
+    private $protocol;
+
+    /**
      * @param string $manageId
      */
-    public function __construct($manageId)
+    public function __construct($manageId, $protocol)
     {
         $this->manageId = $manageId;
+        $this->protocol = $protocol;
     }
 
     /**
@@ -44,5 +50,13 @@ class DeletePublishedTestEntityCommand implements Command
     public function getManageId()
     {
         return $this->manageId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
     }
 }

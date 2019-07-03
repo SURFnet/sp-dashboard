@@ -144,9 +144,12 @@ class EntityDeleteController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
-                $command = $this->commandFactory->buildDeletePublishedProductionEntityCommand($manageId);
+                $command = $this->commandFactory->buildDeletePublishedProductionEntityCommand(
+                    $manageId,
+                    $entity->getProtocol()->getProtocol()
+                );
                 if ($environment === 'test') {
-                    $command = $this->commandFactory->buildDeletePublishedTestEntityCommand($manageId);
+                    $command = $this->commandFactory->buildDeletePublishedTestEntityCommand($manageId, $entity->getProtocol()->getProtocol());
                 }
                 $this->commandBus->handle($command);
             }

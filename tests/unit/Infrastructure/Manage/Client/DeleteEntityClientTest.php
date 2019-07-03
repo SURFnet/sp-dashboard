@@ -27,6 +27,7 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
@@ -78,7 +79,7 @@ class DeleteEntityClientTest extends MockeryTestCase
             ->append(
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/delete_response_success.json'))
             );
-        $response = $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33');
+        $response = $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', Entity::TYPE_SAML);
         $this->assertEquals(DeleteEntityRepository::RESULT_SUCCESS, $response);
     }
 
@@ -93,6 +94,6 @@ class DeleteEntityClientTest extends MockeryTestCase
             ->append(
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/delete_response_failure.json'))
             );
-        $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33');
+        $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', Entity::TYPE_OPENID_CONNECT_TNG);
     }
 }

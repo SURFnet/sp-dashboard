@@ -20,8 +20,12 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository as DeleteEntityRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\DeleteEntityFromManageException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
@@ -51,20 +55,25 @@ class DeleteEntityClient implements DeleteEntityRepositoryInterface
      * an exception is thrown of type DeleteEntityFromManageException.
      *
      * @param string $manageId
+     * @param string $protocol
      *
      * @return string
      * @throws UnableToDeleteEntityException
+     * @throws RuntimeException
      */
-    public function delete($manageId)
+    public function delete($manageId, $protocol)
     {
         try {
-            $result = $this->client->delete(sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId));
+            $result = $this->client->delete(
+                sprintf('/manage/api/internal/metadata/%s/%s', $this->getProtocol($protocol), $manageId)
+            );
 
             if ($result !== true) {
                 throw new UnableToDeleteEntityException(
                     sprintf('Not allowed to delete entity with internal manage ID: "%s"', $manageId)
                 );
             }
+
             return self::RESULT_SUCCESS;
         } catch (HttpException $e) {
             throw new UnableToDeleteEntityException(
@@ -73,5 +82,22 @@ class DeleteEntityClient implements DeleteEntityRepositoryInterface
                 $e
             );
         }
+    }
+
+    private function getProtocol($dashboardProtocol)
+    {
+        $lookup = [
+            Entity::TYPE_OPENID_CONNECT_TNG => Protocol::OIDC10_RP,
+            Entity::TYPE_OPENID_CONNECT => Protocol::SAML20_SP,
+            Entity::TYPE_SAML => Protocol::SAML20_SP,
+        ];
+
+        if (!isset($lookup[$dashboardProtocol])) {
+            throw new RuntimeException(
+                sprintf('The protocol "%s" can not be mapped to a manage entity type', $dashboardProtocol)
+            );
+        }
+
+        return $lookup[$dashboardProtocol];
     }
 }
