@@ -33,6 +33,8 @@ entity:
       acs_location: ACS location
       entity_id: Entity ID
       grant_type: Grant type
+      is_public_client: Is public client
+      access_token_validity: Access token validitiy (seconds)
       redirect_uris: Redirect URIs
       playground_enabled: Playground enabled?
       name_id_format: NameID format
@@ -305,6 +307,8 @@ entity.edit.information.entityId: Text should be set in web translations
 entity.edit.information.clientId: Text should be set in web translations
 entity.edit.information.redirectUris: Text should be set in web translations
 entity.edit.information.grantType: Text should be set in web translations
+entity.edit.information.accessTokenValidity: Text should be set in web translations
+entity.edit.information.isPublicClient: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations
 entity.edit.information.logoUrl: Text should be set in web translations

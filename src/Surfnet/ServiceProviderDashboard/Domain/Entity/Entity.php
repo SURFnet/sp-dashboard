@@ -436,9 +436,7 @@ class Entity
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
         $arp = $manageEntity->getAttributes();
-
         $entity = new self();
-
         $entity->setEnvironment($environment);
         $entity->setStatus($manageEntity->getStatus());
         $entity->setManageId($manageEntity->getId());
@@ -458,26 +456,33 @@ class Entity
         $entity->setApplicationUrl($coin->getApplicationUrl());
         $entity->setEulaUrl($coin->getEula());
 
-        // OIDC specific
-        if ($metaData->getCoin()->getOidcClient()) {
-            $oidcClient = $manageEntity->getOidcClient();
-
-            $entity->setClientSecret($oidcClient->getClientSecret());
-            $entity->setRedirectUris($oidcClient->getRedirectUris());
-            $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-            $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
-            self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
-        }
-
-        // SAML specific
-        if (!$metaData->getCoin()->getOidcClient()) {
-            $entity->setProtocol(Entity::TYPE_SAML);
-
-            $entity->setImportUrl($metaData->getEntityId());
-            $entity->setMetadataUrl($metaData->getMetaDataUrl());
-            $entity->setAcsLocation($metaData->getAcsLocation());
-            $entity->setNameIdFormat($metaData->getNameIdFormat());
-            $entity->setCertificate($metaData->getCertData());
+        switch ($manageEntity->getProtocol()->getProtocol()) {
+            case (self::TYPE_OPENID_CONNECT):
+                $oidcClient = $manageEntity->getOidcClient();
+                $entity->setClientSecret($oidcClient->getClientSecret());
+                $entity->setRedirectUris($oidcClient->getRedirectUris());
+                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+                self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
+                break;
+            case (self::TYPE_OPENID_CONNECT_TNG):
+                $oidcClient = $manageEntity->getOidcClient();
+                $entity->setClientSecret($oidcClient->getClientSecret());
+                $entity->setRedirectUris($oidcClient->getRedirectUris());
+                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
+                $entity->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
+                $entity->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
+                self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
+                break;
+            case (self::TYPE_SAML):
+                $entity->setProtocol(Entity::TYPE_SAML);
+                $entity->setImportUrl($metaData->getEntityId());
+                $entity->setMetadataUrl($metaData->getMetaDataUrl());
+                $entity->setAcsLocation($metaData->getAcsLocation());
+                $entity->setNameIdFormat($metaData->getNameIdFormat());
+                $entity->setCertificate($metaData->getCertData());
+                break;
         }
 
         $administrative = $metaData->getContacts()->findAdministrativeContact();
@@ -511,9 +516,7 @@ class Entity
         }
 
         self::setAttributesOn($entity, $arp);
-
         $entity->setService($service);
-
         $entity->idpAllowAll =  $manageEntity->getAllowedIdentityProviders()->isAllowAll();
         $entity->idpWhitelist = $manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders();
 

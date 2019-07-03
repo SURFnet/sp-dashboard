@@ -1,1 +1,1 @@
-{"id":"db2e5c63-3c54-4962-bf4a-d6ced1e9cf33","version":0,"data":{"entityid":"https:\/\/engine.dev.support.surfconext.nl\/authentication\/sp\/metadata","state":"prodaccepted","metaDataFields":{"name:nl":"OpenConext Engine","name:en":"OpenConext Engine"}}}
+{"id":"db2e5c63-3c54-4962-bf4a-d6ced1e9cf33","type": "saml20_sp","version":0,"data":{"entityid":"https:\/\/engine.dev.support.surfconext.nl\/authentication\/sp\/metadata","state":"prodaccepted","metaDataFields":{"name:nl":"OpenConext Engine","name:en":"OpenConext Engine"}}}
