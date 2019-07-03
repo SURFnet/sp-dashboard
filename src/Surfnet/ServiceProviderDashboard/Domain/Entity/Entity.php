@@ -473,6 +473,7 @@ class Entity
                 $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
                 $entity->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
                 $entity->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
+                $entity->setNameIdFormat($metaData->getNameIdFormat());
                 self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
                 break;
             case (self::TYPE_SAML):

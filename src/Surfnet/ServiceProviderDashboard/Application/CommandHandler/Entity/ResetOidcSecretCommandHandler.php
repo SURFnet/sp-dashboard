@@ -68,7 +68,8 @@ class ResetOidcSecretCommandHandler implements CommandHandler
             throw new EntityNotFoundException('The requested entity could not be found');
         }
 
-        if ($entity->getProtocol() !== Entity::TYPE_OPENID_CONNECT) {
+        $protocol = $entity->getProtocol();
+        if ($protocol !== Entity::TYPE_OPENID_CONNECT && $protocol !== Entity::TYPE_OPENID_CONNECT_TNG) {
             throw new EntityNotFoundException('The requested entity could be found, invalid protocol');
         }
 
