@@ -219,7 +219,9 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
-        $metadata['secret'] = $entity->getClientSecret();
+        if ($entity->getClientSecret()) {
+            $metadata['secret'] = $entity->getClientSecret();
+        }
         // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
         $metadata['redirectUrls'] = $entity->getRedirectUris();
         $metadata['grants'] = [$entity->getGrantType()->getGrantType()];

@@ -421,6 +421,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
         $command->organizationUrlNl = $entity->getOrganizationUrlNl();
         $command->organizationUrlEn = $entity->getOrganizationUrlEn();
+        $command->isPublicClient = $entity->isPublicClient();
+        $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
 
         return $command;
     }
@@ -1173,6 +1175,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     public function setAccessTokenValidity($accessTokenValidity)
     {
-        $this->accessTokenValidity = $accessTokenValidity;
+        $this->accessTokenValidity = (int) $accessTokenValidity;
     }
 }
