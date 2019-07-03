@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
+            new Nelmio\SecurityBundle\NelmioSecurityBundle(),
         ];
 
         // The LexikTranslationBundle should be loaded *after* the

@@ -33,6 +33,7 @@
         "league/tactician-bundle": "^0.4.1",
         "lesstif/php-jira-rest-client": "^1.33",
         "lexik/translation-bundle": "^4.0",
+        "nelmio/security-bundle": "^2.7",
         "openconext/monitor-bundle": "^1.0",
         "ramsey/uuid": "^3.7",
         "sensio/framework-extra-bundle": "^3.0",
