@@ -105,6 +105,8 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
@@ -135,6 +137,8 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
@@ -184,6 +188,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         // Unique entity validator
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to EB through manage
@@ -199,6 +204,8 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
@@ -218,6 +225,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
             ->form();
 
         // Unique entity validator
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->testMockHandler->append(new Response(200, [], '[]'));
         // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
@@ -299,7 +307,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
-        $crawler = $this->client->request('GET', '/entity/create/1/saml20production');
+        $this->client->request('GET', '/entity/create/1/saml20production');
 
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
@@ -329,6 +337,8 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();

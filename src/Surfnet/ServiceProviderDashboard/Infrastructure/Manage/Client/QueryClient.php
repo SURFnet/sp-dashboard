@@ -192,10 +192,11 @@ class QueryClient implements QueryEntityRepository
     {
         $results = [];
         foreach ($this->protocolSupport as $protocol) {
-            $results += $this->client->post(
+            $response = $this->client->post(
                 json_encode($params),
                 sprintf('/manage/api/internal/search/%s', $protocol)
             );
+            $results += $response;
         }
         return $results;
     }
