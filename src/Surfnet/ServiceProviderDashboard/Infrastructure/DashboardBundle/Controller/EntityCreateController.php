@@ -179,8 +179,9 @@ class EntityCreateController extends Controller
 
                         // When publishing failed, forward to the edit action and show the error messages there
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                    } else {
+                        $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
-                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
@@ -272,8 +273,9 @@ class EntityCreateController extends Controller
 
                         // When publishing failed, forward to the edit action and show the error messages there
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                    } else {
+                        $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
-                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);

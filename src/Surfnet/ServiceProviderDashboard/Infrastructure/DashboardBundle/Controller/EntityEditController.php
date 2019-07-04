@@ -62,6 +62,7 @@ class EntityEditController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function editAction(Request $request, Entity $entity)
     {
@@ -103,8 +104,9 @@ class EntityEditController extends Controller
                         if ($response instanceof Response) {
                             return $response;
                         }
+                    } else {
+                        $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
-                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
