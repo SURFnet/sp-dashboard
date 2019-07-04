@@ -104,7 +104,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
             'type' => 'oidc10-rp',
-            'entityid' => $entity->getEntityId(),
+            'entityid' => $this->updateClientId($entity->getEntityId()),
             'active' => true,
             'state' => $workflowState,
             'metaDataFields' => $this->generateMetadataFields($entity),
@@ -128,7 +128,7 @@ class OidcngJsonGenerator implements GeneratorInterface
     {
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
-            'entityid' => $entity->getEntityId(),
+            'entityid' => $this->updateClientId($entity->getEntityId()),
             'state' => $workflowState,
         ];
 
@@ -362,5 +362,21 @@ class OidcngJsonGenerator implements GeneratorInterface
             'allowedEntities' => $providers,
             'allowedall' => false,
         ];
+    }
+
+    /**
+     * Takes the entity id and removes the protocol as per:
+     *
+     * https://www.pivotaltracker.com/story/show/166702113/comments/204130376
+     *
+     * @param $entityId
+     */
+    private function updateClientId($entityId)
+    {
+        $parts = parse_url($entityId);
+        // Remove the scheme (protocol) and the
+        $clientId = str_replace($parts['scheme'] . '://', '', $entityId);
+
+        return $clientId;
     }
 }

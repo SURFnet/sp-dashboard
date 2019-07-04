@@ -81,7 +81,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                     'arp' => ['arp' => 'arp'],
                     'type' => 'oidc10-rp',
                     'state' => 'testaccepted',
-                    'entityid' => 'http://entityid',
+                    'entityid' => 'entityid',
                     'active' => true,
                     'allowedEntities' => [],
                     'allowedall' => true,
@@ -118,7 +118,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                     ],
                     'revisionnote' => 'revisionnote',
                 ],
-                'type' => 'oidc10-rp',
+                'type' => 'oidc10_rp',
             ],
             $data
         );
@@ -142,7 +142,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                             array(
                                 'arp' => 'arp',
                             ),
-                        'entityid' => 'http://entityid',
+                        'entityid' => 'entityid',
                         'metaDataFields.accessTokenValidity' => 3600,
                         'metaDataFields.NameIDFormat' => 'nameidformat',
                         'metaDataFields.description:en' => 'description en',
@@ -177,7 +177,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'allowedEntities' => [],
                         'allowedall' => true,
                     ),
-                'type' => 'oidc10-rp',
+                'type' => 'oidc10_rp',
                 'id' => 'manageId',
             ),
             $data
