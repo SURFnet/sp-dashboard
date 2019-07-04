@@ -94,7 +94,9 @@ class EntityServiceTest extends MockeryTestCase
             $this->router,
             $logger,
             'playgroundUriTest',
-            'playgroundUriProd'
+            'playgroundUriProd',
+            'oidcngPlaygroundUriTest',
+            'oidcngPlaygroundUriProd'
         );
     }
 

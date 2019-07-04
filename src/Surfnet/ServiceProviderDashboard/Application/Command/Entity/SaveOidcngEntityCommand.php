@@ -352,6 +352,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $manageId;
 
     /**
+     * @var bool
+     */
+    private $enablePlayground;
+
+    /**
      * @var string
      */
     private $protocol = Entity::TYPE_OPENID_CONNECT_TNG;
@@ -423,6 +428,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->organizationUrlEn = $entity->getOrganizationUrlEn();
         $command->isPublicClient = $entity->isPublicClient();
         $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
+        $command->enablePlayground = $entity->isEnablePlayground();
 
         return $command;
     }
@@ -1176,5 +1182,21 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setAccessTokenValidity($accessTokenValidity)
     {
         $this->accessTokenValidity = (int) $accessTokenValidity;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnablePlayground()
+    {
+        return $this->enablePlayground;
+    }
+
+    /**
+     * @param bool $enablePlayground
+     */
+    public function setEnablePlayground($enablePlayground)
+    {
+        $this->enablePlayground = $enablePlayground;
     }
 }

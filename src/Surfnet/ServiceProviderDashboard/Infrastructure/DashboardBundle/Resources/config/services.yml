@@ -197,6 +197,9 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator
         tags:
             - { name: dashboard.json_generator, identifier: oidcng }
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
@@ -291,6 +294,8 @@ services:
             - '@logger'
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
+            - '%oidcng_playground_uri_test%'
+            - '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
@@ -300,6 +305,8 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
+            - '%oidcng_playground_uri_test%'
+            - '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService:
         arguments:

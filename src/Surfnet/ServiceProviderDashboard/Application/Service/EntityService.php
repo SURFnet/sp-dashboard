@@ -65,6 +65,15 @@ class EntityService implements EntityServiceInterface
      * @var string
      */
     private $oidcPlaygroundUriProd;
+    /**
+     * @var string
+     */
+    private $oidcngPlaygroundUriTest;
+
+    /**
+     * @var string
+     */
+    private $oidcngPlaygroundUriProd;
 
     /**
      * @var Config
@@ -76,6 +85,19 @@ class EntityService implements EntityServiceInterface
      */
     private $prodManageConfig;
 
+    /**
+     * @param EntityQueryRepositoryProvider $entityQueryRepositoryProvider
+     * @param TicketServiceInterface $ticketService
+     * @param Config $testConfig
+     * @param Config $productionConfig
+     * @param RouterInterface $router
+     * @param LoggerInterface $logger
+     * @param string $oidcPlaygroundUriTest
+     * @param string $oidcPlaygroundUriProd
+     * @param string $oidcngPlaygroundUriTest
+     * @param string $oidcngPlaygroundUriProd
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         TicketServiceInterface $ticketService,
@@ -84,10 +106,14 @@ class EntityService implements EntityServiceInterface
         RouterInterface $router,
         LoggerInterface $logger,
         $oidcPlaygroundUriTest,
-        $oidcPlaygroundUriProd
+        $oidcPlaygroundUriProd,
+        $oidcngPlaygroundUriTest,
+        $oidcngPlaygroundUriProd
     ) {
         Assert::stringNotEmpty($oidcPlaygroundUriTest, 'Please set "playground_uri_test" in parameters.yml');
         Assert::stringNotEmpty($oidcPlaygroundUriProd, 'Please set "playground_uri_prod" in parameters.yml');
+        Assert::stringNotEmpty($oidcngPlaygroundUriTest, 'Please set "oidcng_playground_uri_test" in parameters.yml');
+        Assert::stringNotEmpty($oidcngPlaygroundUriProd, 'Please set "oidcng_playground_uri_prod" in parameters.yml');
 
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
@@ -95,6 +121,8 @@ class EntityService implements EntityServiceInterface
         $this->logger = $logger;
         $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
         $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
+        $this->oidcngPlaygroundUriTest = $oidcngPlaygroundUriTest;
+        $this->oidcngPlaygroundUriProd = $oidcngPlaygroundUriProd;
         $this->testManageConfig = $testConfig;
         $this->prodManageConfig = $productionConfig;
     }
@@ -139,14 +167,30 @@ class EntityService implements EntityServiceInterface
                     $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
                 }
 
-                return Entity::fromManageResponse($entity, $manageTarget, $service, $this->oidcPlaygroundUriTest, $this->oidcPlaygroundUriProd);
+                return Entity::fromManageResponse(
+                    $entity,
+                    $manageTarget,
+                    $service,
+                    $this->oidcPlaygroundUriTest,
+                    $this->oidcPlaygroundUriProd,
+                    $this->oidcngPlaygroundUriTest,
+                    $this->oidcngPlaygroundUriProd
+                );
                 break;
             case 'test':
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
 
-                return Entity::fromManageResponse($entity, $manageTarget, $service, $this->oidcPlaygroundUriTest, $this->oidcPlaygroundUriProd);
+                return Entity::fromManageResponse(
+                    $entity,
+                    $manageTarget,
+                    $service,
+                    $this->oidcPlaygroundUriTest,
+                    $this->oidcPlaygroundUriProd,
+                    $this->oidcngPlaygroundUriTest,
+                    $this->oidcngPlaygroundUriProd
+                );
                 break;
             default:
                 return $this->getEntityById($id);

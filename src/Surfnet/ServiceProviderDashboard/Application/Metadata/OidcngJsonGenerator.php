@@ -48,18 +48,34 @@ class OidcngJsonGenerator implements GeneratorInterface
     private $spDashboardMetadataGenerator;
 
     /**
+     * @var string
+     */
+    private $oidcPlaygroundUriTest;
+
+    /**
+     * @var string
+     */
+    private $oidcPlaygroundUriProd;
+
+    /**
      * @param ArpGenerator $arpMetadataGenerator
      * @param PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator
      * @param SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+     * @param string $oidcPlaygroundUriTest
+     * @param string $oidcPlaygroundUriProd
      */
     public function __construct(
         ArpGenerator $arpMetadataGenerator,
         PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
+        $oidcPlaygroundUriTest,
+        $oidcPlaygroundUriProd
     ) {
         $this->arpMetadataGenerator = $arpMetadataGenerator;
         $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
+        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
+        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
     /**
@@ -208,6 +224,14 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         if (!empty($entity->getLogoUrl())) {
             $metadata += $this->generateLogoMetadata($entity);
+        }
+
+        if ($entity->isEnablePlayground()) {
+            if ($entity->isProduction()) {
+                $metadata['redirectUrls'][] = $this->oidcPlaygroundUriProd;
+            } else {
+                $metadata['redirectUrls'][] = $this->oidcPlaygroundUriTest;
+            }
         }
 
         return $metadata;
@@ -370,6 +394,7 @@ class OidcngJsonGenerator implements GeneratorInterface
      * https://www.pivotaltracker.com/story/show/166702113/comments/204130376
      *
      * @param $entityId
+     * @return mixed
      */
     private function updateClientId($entityId)
     {

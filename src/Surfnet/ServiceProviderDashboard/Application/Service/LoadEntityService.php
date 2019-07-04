@@ -57,6 +57,14 @@ class LoadEntityService
      * @var string
      */
     private $oidcPlaygroundUriProd;
+    /**
+     * @var string
+     */
+    private $oidcngPlaygroundUriTest;
+    /**
+     * @var string
+     */
+    private $oidcngPlaygroundUriProd;
 
     /**
      * @param EntityRepository $entityRepository
@@ -65,6 +73,8 @@ class LoadEntityService
      * @param AttributesMetadataRepository $attributeMetadataRepository
      * @param string $oidcPlaygroundUriTest
      * @param string $oidcPlaygroundUriProd
+     * @param string $oidcngPlaygroundUriTest
+     * @param string $oidcngPlaygroundUriProd
      */
     public function __construct(
         EntityRepository $entityRepository,
@@ -72,10 +82,14 @@ class LoadEntityService
         ManageClient $manageProductionClient,
         AttributesMetadataRepository $attributeMetadataRepository,
         $oidcPlaygroundUriTest,
-        $oidcPlaygroundUriProd
+        $oidcPlaygroundUriProd,
+        $oidcngPlaygroundUriTest,
+        $oidcngPlaygroundUriProd
     ) {
         Assert::stringNotEmpty($oidcPlaygroundUriTest, 'Please set "playground_uri_test" in parameters.yml');
         Assert::stringNotEmpty($oidcPlaygroundUriProd, 'Please set "playground_uri_prod" in parameters.yml');
+        Assert::stringNotEmpty($oidcngPlaygroundUriTest, 'Please set "oidcng_playground_uri_prod" in parameters.yml');
+        Assert::stringNotEmpty($oidcngPlaygroundUriProd, 'Please set "oidcng_playground_uri_prod" in parameters.yml');
 
         $this->entityRepository = $entityRepository;
         $this->manageTestClient = $manageTestClient;
@@ -83,6 +97,8 @@ class LoadEntityService
         $this->attributeMetadataRepository = $attributeMetadataRepository;
         $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
         $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
+        $this->oidcngPlaygroundUriTest = $oidcngPlaygroundUriTest;
+        $this->oidcngPlaygroundUriProd = $oidcngPlaygroundUriProd;
     }
 
     /**
@@ -135,7 +151,9 @@ class LoadEntityService
             $sourceEnvironment,
             $service,
             $this->oidcPlaygroundUriTest,
-            $this->oidcPlaygroundUriProd
+            $this->oidcPlaygroundUriProd,
+            $this->oidcngPlaygroundUriTest,
+            $this->oidcngPlaygroundUriProd
         );
 
         // Set some defaults

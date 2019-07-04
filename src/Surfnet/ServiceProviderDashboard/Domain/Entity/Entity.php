@@ -422,16 +422,22 @@ class Entity
      * @param ManageEntity $manageEntity
      * @param string $environment
      * @param Service $service
-     * @param string $playGroundUriProd
      * @param string $playGroundUriTest
+     * @param string $playGroundUriProd
+     * @param string $oidcngPlayGroundUriTest
+     * @param string $oidcngPlayGroundUriProd
      * @return Entity
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function fromManageResponse(
         ManageEntity $manageEntity,
         $environment,
         Service $service,
         $playGroundUriTest,
-        $playGroundUriProd
+        $playGroundUriProd,
+        $oidcngPlayGroundUriTest,
+        $oidcngPlayGroundUriProd
     ) {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
@@ -463,7 +469,13 @@ class Entity
                 $entity->setRedirectUris($oidcClient->getRedirectUris());
                 $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
                 $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
-                self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
+                self::setRedirectUrisFromManageResponse(
+                    $entity,
+                    $manageEntity,
+                    $environment,
+                    $playGroundUriTest,
+                    $playGroundUriProd
+                );
                 break;
             case (self::TYPE_OPENID_CONNECT_TNG):
                 $oidcClient = $manageEntity->getOidcClient();
@@ -474,7 +486,13 @@ class Entity
                 $entity->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
                 $entity->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
                 $entity->setNameIdFormat($metaData->getNameIdFormat());
-                self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
+                self::setRedirectUrisFromManageResponse(
+                    $entity,
+                    $manageEntity,
+                    $environment,
+                    $oidcngPlayGroundUriTest,
+                    $oidcngPlayGroundUriProd
+                );
                 break;
             case (self::TYPE_SAML):
                 $entity->setProtocol(Entity::TYPE_SAML);
