@@ -30,7 +30,7 @@ class EntityDetailTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
@@ -56,7 +56,7 @@ class EntityDetailTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
@@ -96,7 +96,7 @@ class EntityDetailTest extends WebTestCase
 
         $this->prodMockHandler->append(new Response(200, [], $sp3QueryResponse));
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
@@ -121,7 +121,7 @@ class EntityDetailTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 

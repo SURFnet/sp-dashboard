@@ -179,7 +179,7 @@ class ServiceController extends Controller
      */
     public function editAction(Request $request, $serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
@@ -237,7 +237,7 @@ class ServiceController extends Controller
      */
     public function deleteAction(Request $request, $serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $form = $this->createForm(DeleteServiceType::class);
         $form->handleRequest($request);
@@ -294,7 +294,7 @@ class ServiceController extends Controller
      */
     public function adminOverviewAction($serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
         $entityList = $this->entityService->getEntityListForService($service);
         $serviceList = new ServiceList([Service::fromService($service, $entityList, $this->router)]);
 

@@ -30,7 +30,7 @@ class EditServiceTest extends WebTestCase
 
         $this->loadFixtures();
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 

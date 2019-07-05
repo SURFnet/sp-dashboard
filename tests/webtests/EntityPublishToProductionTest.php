@@ -48,7 +48,7 @@ class EntityPublishToProductionTest extends WebTestCase
             ]
         );
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $surfNet->getId()
         );
     }

@@ -36,7 +36,7 @@ class EntityAclTest extends WebTestCase
 
         $service = $this->getServiceRepository()->findByName('SURFnet');
 
-        $this->getAuthorizationService()->setSelectedServiceId($service->getId());
+        $this->getAuthorizationService()->changeActiveService($service->getId());
 
         $entity = $service->getEntities()->first();
 

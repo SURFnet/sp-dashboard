@@ -36,7 +36,7 @@ class EntityEditTest extends WebTestCase
 
         $service = $this->getServiceRepository()->findByName('SURFnet');
 
-        $this->getAuthorizationService()->setSelectedServiceId($service->getId());
+        $this->getAuthorizationService()->changeActiveService($service->getId());
 
         $this->entityId = $service->getEntities()
             ->first()

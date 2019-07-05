@@ -32,7 +32,7 @@ class EntityDeleteTest extends WebTestCase
 
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
 
-        $this->getAuthorizationService()->setSelectedServiceId($this->service->getId());
+        $this->getAuthorizationService()->changeActiveService($this->service->getId());
     }
 
     public function test_a_normal_user_can_not_delete_entities()

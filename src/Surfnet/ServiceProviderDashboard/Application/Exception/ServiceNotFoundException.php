@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Exception;
 
-use Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ServiceNotFoundException extends Exception
+class ServiceNotFoundException extends NotFoundHttpException
 {
 }

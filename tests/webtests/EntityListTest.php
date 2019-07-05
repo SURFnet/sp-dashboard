@@ -32,7 +32,7 @@ class EntityListTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
@@ -97,7 +97,7 @@ class EntityListTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], $sp3QueryResponse));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
@@ -153,7 +153,7 @@ class EntityListTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $service->getId()
         );
 
@@ -175,7 +175,7 @@ class EntityListTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $service->getId()
         );
 
@@ -198,7 +198,7 @@ class EntityListTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $service->getId()
         );
 
