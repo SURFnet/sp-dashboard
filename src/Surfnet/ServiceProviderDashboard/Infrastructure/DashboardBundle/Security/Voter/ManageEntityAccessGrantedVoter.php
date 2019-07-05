@@ -38,10 +38,15 @@ class ManageEntityAccessGrantedVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        $supportedAttribute = $attribute === self::MANAGE_ENTITY_ACCESS;
-        $subjectFieldsPresent = isset($subject['manageId']) && isset($subject['environment']);
+        if ($attribute !== self::MANAGE_ENTITY_ACCESS) {
+            return false;
+        }
 
-        return $supportedAttribute && $subjectFieldsPresent;
+        if (!isset($subject['manageId']) || !isset($subject['environment'])) {
+            return false;
+        }
+
+        return true;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
