@@ -218,6 +218,9 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension:
         tags: [twig.extension]
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension:
+        tags: [twig.extension]
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator:
         tags:
             - { name: validator.constraint_validator, alias: valid_entity_id }

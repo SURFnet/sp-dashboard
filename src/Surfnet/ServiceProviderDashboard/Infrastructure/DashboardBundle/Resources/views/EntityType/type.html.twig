@@ -6,7 +6,7 @@
 
 {% block body %}
 
-    <div class="wysiwyg">{{ 'entity.type.description.html'|trans|raw }}</div>
+    <div class="wysiwyg">{{ 'entity.type.description.html'|trans|wysiwyg }}</div>
 
     <div class="row entity-type">
         {{ form_start(form, {'action': path('entity_type', {'serviceId': serviceId, 'targetEnvironment': environment})}) }}

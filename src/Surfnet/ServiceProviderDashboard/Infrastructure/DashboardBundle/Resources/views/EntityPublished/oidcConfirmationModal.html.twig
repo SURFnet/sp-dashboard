@@ -3,8 +3,8 @@
 {% block page_heading %} {{ 'entity.list.modal.oidc_confirmation.title'|trans }} {% endblock %}
 
 {% block body %}
-    <div class="warning"><i class="fa fa-exclamation-triangle"></i>{{ 'entity.list.modal.oidc_confirmation.warning'|trans|raw }}</div>
-    <div class="wysiwyg">{{ 'entity.list.modal.oidc_confirmation.info.html'|trans|raw }}</div>
+    <div class="warning"><i class="fa fa-exclamation-triangle"></i>{{ 'entity.list.modal.oidc_confirmation.warning'|trans }}</div>
+    <div class="wysiwyg">{{ 'entity.list.modal.oidc_confirmation.info.html'|trans|wysiwyg }}</div>
 
     <div class="row oidc-confirmation">
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.list.modal.oidc_confirmation.client_secret.label'|trans, value: entity.clientSecret} %}
