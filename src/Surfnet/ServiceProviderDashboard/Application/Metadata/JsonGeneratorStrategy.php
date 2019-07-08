@@ -24,7 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 /**
  * Determines which strategy to use when generating Manage json metadata
  */
-class JsonGeneratorStrategy implements GeneratorInterface
+class JsonGeneratorStrategy
 {
     /**
      * @var GeneratorInterface[] $strategies Keyed on the supported entity types
