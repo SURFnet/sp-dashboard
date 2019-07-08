@@ -35,6 +35,19 @@ class EntityDeleteTest extends WebTestCase
         $this->getAuthorizationService()->setSelectedServiceId($this->service->getId());
     }
 
+    public function test_a_normal_user_can_not_delete_entities()
+    {
+        $this->logIn('ROLE_USER');
+
+        $entity = $this->service->getEntities()->first();
+
+        $this->client->request('GET', "/entity/delete/{$entity->getId()}");
+
+        $statusCode = $this->client->getResponse()->getStatusCode();
+
+        $this->assertSame(403, $statusCode);
+    }
+
     public function test_delete_returns_to_entity_list()
     {
         $entity = $this->service->getEntities()->first();
@@ -111,12 +124,9 @@ class EntityDeleteTest extends WebTestCase
             ],
         ]);
 
-        // Authz test (ManageEntityAccessGrantedVoter) (tested twice for both controller entries)
-        $this->testMockHandler->append(new Response(200, [], $queryResponse));
+        // Authz test (ManageEntityAccessGrantedVoter)
         $this->testMockHandler->append(new Response(200, [], $queryResponse));
         // Rendering the form requires retrieval of the manage entity
-        $this->testMockHandler->append(new Response(200, [], $queryResponse));
-        // Handling the form also requires retrieval of the manage entity
         $this->testMockHandler->append(new Response(200, [], $queryResponse));
         // Successfull deleting an entity from manage results in return type boolean : true
         $this->testMockHandler->append(new Response(200, [], json_encode(true)));
@@ -159,12 +169,10 @@ class EntityDeleteTest extends WebTestCase
 
         // Authz test (ManageEntityAccessGrantedVoter) (tested twice for both controller entries)
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
-        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
 
         // Rendering the form requires retrieval of the manage entity
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
-        // Handling the form also requires retrieval of the manage entity
-        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
+
         // Successfull deleting an entity from manage results in return type boolean : true
         $this->prodMockHandler->append(new Response(200, [], json_encode(true)));
 
@@ -211,15 +219,10 @@ class EntityDeleteTest extends WebTestCase
         // Handling the form also requires retrieval of the manage entity
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
         $this->prodMockHandler->append(new Response(200, [], $queryResponse));
-        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
-        $this->prodMockHandler->append(new Response(200, [], $queryResponse));
-        // Successful deleting an entity from manage results in return type boolean : true
-        $this->prodMockHandler->append(new Response(200, [], json_encode(true)));
 
         // The entity list action
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', "/entity/delete/request/1/a8e7cffd-0409-45c7-a37a-000000000000");
@@ -240,6 +243,7 @@ class EntityDeleteTest extends WebTestCase
         );
 
         $crawler = $this->client->followRedirect();
+
 
         $flashMessage = $crawler->filter('div.message.error');
 
