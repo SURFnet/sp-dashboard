@@ -1137,14 +1137,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param string $protocol
-     */
-    public function setProtocol($protocol)
-    {
-        $this->protocol = $protocol;
-    }
-
-    /**
      * @return array
      */
     public function getScopes()

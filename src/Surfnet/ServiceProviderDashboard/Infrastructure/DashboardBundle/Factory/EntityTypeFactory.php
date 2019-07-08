@@ -57,7 +57,6 @@ class EntityTypeFactory
                     $command = SaveOidcEntityCommand::fromEntity($entity);
                 }
                 $command->setEnvironment($environment);
-                $command->setProtocol($type);
                 return $this->formFactory->create(OidcEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_SAML):
                 $command = SaveSamlEntityCommand::forCreateAction($service);
@@ -71,7 +70,6 @@ class EntityTypeFactory
                 if ($entity) {
                     $command = SaveOidcngEntityCommand::fromEntity($entity);
                 }
-                $command->setProtocol($type);
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
         }
@@ -91,7 +89,6 @@ class EntityTypeFactory
         switch (true) {
             case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
                 $command = SaveOidcEntityCommand::fromEntity($entity);
-                $command->setProtocol($entity->getProtocol());
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(OidcEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
             case ($entity->getProtocol() == Entity::TYPE_SAML):
@@ -100,7 +97,6 @@ class EntityTypeFactory
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
             case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG):
                 $command = SaveOidcngEntityCommand::fromEntity($entity);
-                $command->setProtocol($entity->getProtocol());
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
         }
