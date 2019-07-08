@@ -47,10 +47,6 @@ class EntityPublishToProductionTest extends WebTestCase
                 $surfNet,
             ]
         );
-
-        $this->getAuthorizationService()->changeActiveService(
-            $surfNet->getId()
-        );
     }
 
     private function buildEntityWithAttribute(Service $service)

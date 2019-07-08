@@ -33,9 +33,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->changeActiveService(
-            $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
-        );
+        $this->switchToService('Ibuildings B.V.');
     }
 
     public function test_it_renders_the_form()

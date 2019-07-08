@@ -39,9 +39,7 @@ class EntityCreateOidcTest extends WebTestCase
 
         $this->service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
 
-        $this->getAuthorizationService()->changeActiveService(
-            $this->service->getId()
-        );
+        $this->switchToService('Ibuildings B.V.');
 
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
     }

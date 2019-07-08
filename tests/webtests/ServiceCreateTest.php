@@ -29,10 +29,6 @@ class ServiceCreateTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-
-        $this->getAuthorizationService()->changeActiveService(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
     }
 
     public function test_it_validates_the_form()

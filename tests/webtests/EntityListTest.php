@@ -29,12 +29,10 @@ class EntityListTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
+        $this->switchToService('SURFnet');
+
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $this->getAuthorizationService()->changeActiveService(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
 
         $crawler = $this->client->request('GET', '/entities/1');
 
@@ -93,13 +91,11 @@ class EntityListTest extends WebTestCase
             ],
         ]);
 
+        $this->switchToService('SURFnet');
+
         $this->testMockHandler->append(new Response(200, [], $searchResponse));
         $this->testMockHandler->append(new Response(200, [], $sp3QueryResponse));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $this->getAuthorizationService()->changeActiveService(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
 
         $crawler = $this->client->request('GET', '/entities/1');
 
@@ -153,10 +149,6 @@ class EntityListTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
-        $this->getAuthorizationService()->changeActiveService(
-            $service->getId()
-        );
-
         $crawler = $this->client->request('GET', '/entities/1');
         $actions = $crawler->filter('a[href="#add-for-test"]');
 
@@ -174,10 +166,6 @@ class EntityListTest extends WebTestCase
 
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $this->getAuthorizationService()->changeActiveService(
-            $service->getId()
-        );
 
         $crawler = $this->client->request('GET', '/entities/2');
 
@@ -197,10 +185,6 @@ class EntityListTest extends WebTestCase
         $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $this->getAuthorizationService()->changeActiveService(
-            $service->getId()
-        );
 
         $crawler = $this->client->request('GET', '/entities/2');
 

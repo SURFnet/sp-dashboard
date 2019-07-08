@@ -38,7 +38,7 @@ class EntityCopyTest extends WebTestCase
 
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
 
-        $this->getAuthorizationService()->changeActiveService($this->service->getId());
+        $this->switchToService('SURFnet');
     }
 
     public function test_copy_does_not_create_new_entity()

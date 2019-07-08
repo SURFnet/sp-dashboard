@@ -35,8 +35,7 @@ class EntityAclTest extends WebTestCase
         $this->logIn('ROLE_ADMINISTRATOR');
 
         $service = $this->getServiceRepository()->findByName('SURFnet');
-
-        $this->getAuthorizationService()->changeActiveService($service->getId());
+        $this->switchToService('SURFnet');
 
         $entity = $service->getEntities()->first();
 

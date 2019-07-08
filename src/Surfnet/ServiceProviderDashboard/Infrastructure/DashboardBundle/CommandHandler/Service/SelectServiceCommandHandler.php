@@ -41,10 +41,6 @@ class SelectServiceCommandHandler implements CommandHandler
      */
     public function handle(SelectServiceCommand $command)
     {
-        try {
-            $this->service->changeActiveService($command->getSelectedServiceId());
-        } catch (ServiceNotFoundException $exception) {
-            throw new NotFoundHttpException($exception->getMessage());
-        }
+        $this->service->changeActiveService($command->getSelectedServiceId());
     }
 }

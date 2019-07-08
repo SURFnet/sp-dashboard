@@ -30,10 +30,6 @@ class EditServiceTest extends WebTestCase
 
         $this->loadFixtures();
 
-        $this->getAuthorizationService()->changeActiveService(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
-
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
     }
@@ -41,6 +37,7 @@ class EditServiceTest extends WebTestCase
     public function test_can_edit_existing_service()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
+        $this->switchToService('SURFnet');
 
         $formData = [
             'dashboard_bundle_edit_service_type' => [
@@ -80,6 +77,7 @@ class EditServiceTest extends WebTestCase
         $serviceRepository = $this->getServiceRepository();
 
         $this->logIn('ROLE_ADMINISTRATOR');
+        $this->switchToService('SURFnet');
 
         // EntityService::getEntityListForService -> findByTeamName
         $this->testMockHandler->append(new Response(200, [], '[]'));
