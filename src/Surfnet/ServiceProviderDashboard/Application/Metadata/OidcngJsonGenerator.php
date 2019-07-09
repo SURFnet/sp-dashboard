@@ -243,9 +243,7 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
-        if ($entity->getClientSecret()) {
-            $metadata['secret'] = $entity->getClientSecret();
-        }
+        $metadata['secret'] = $entity->getClientSecret();
         // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
         $metadata['redirectUrls'] = $entity->getRedirectUris();
         $metadata['grants'] = [$entity->getGrantType()->getGrantType()];
@@ -399,9 +397,14 @@ class OidcngJsonGenerator implements GeneratorInterface
     private function updateClientId($entityId)
     {
         $parts = parse_url($entityId);
-        // Remove the scheme (protocol) and the
-        $clientId = str_replace($parts['scheme'] . '://', '', $entityId);
 
+        // If no scheme is set, we are dealing with an entity that already had his scheme chopped off
+        if (!isset($parts['scheme'])) {
+            return $entityId;
+        }
+
+        // Remove the scheme (protocol) and the :// part
+        $clientId = str_replace($parts['scheme'] . '://', '', $entityId);
         return $clientId;
     }
 }

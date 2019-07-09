@@ -81,10 +81,6 @@ class EntityListController extends Controller
         // to display the oidc confirmation popup.
         /** @var Entity $publishedEntity */
         $publishedEntity = $this->get('session')->get('published.entity.clone');
-        $showOidcPopup = false;
-        if ($publishedEntity && $publishedEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT && $publishedEntity->getClientSecret()) {
-            $showOidcPopup = true;
-        }
 
         return [
             'no_service_selected' => empty($service),
@@ -92,8 +88,16 @@ class EntityListController extends Controller
             'production_entities_enabled' => $productionEntitiesEnabled,
             'entity_list' => $entityList,
             'serviceName' => $serviceName,
-            'showOidcPopup' => $showOidcPopup,
+            'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'publishedEntity' => $publishedEntity
         ];
+    }
+
+    private function showOidcPopup($publishedEntity)
+    {
+        $protocol = $publishedEntity->getProtocol();
+        $isOidcProtocol = $protocol === Entity::TYPE_OPENID_CONNECT_TNG || $protocol === Entity::TYPE_OPENID_CONNECT;
+
+        return $publishedEntity && $isOidcProtocol && $publishedEntity->getClientSecret();
     }
 }
