@@ -18,30 +18,30 @@
         {{ form_errors(form) }}
 
         <h2>{{ ('entity.edit.info.' ~ type ~ '.title')|trans }}</h2>
-        <div class="wysiwyg">{{ ('entity.edit.info.' ~ type ~ '.html')|trans|raw }}</div>
+        <div class="wysiwyg">{{ ('entity.edit.info.' ~ type ~ '.html')|trans|wysiwyg }}</div>
     </div>
 
     <div class="fieldset card">
         <h2>{{ ('entity.edit.metadata.' ~ type ~ '.title')|trans }}</h2>
-        <div class="wysiwyg">{{ ('entity.edit.metadata.' ~ type ~ '.html')|trans|raw }}</div>
+        <div class="wysiwyg">{{ ('entity.edit.metadata.' ~ type ~ '.html')|trans|wysiwyg }}</div>
         {{ form_widget(form.metadata) }}
     </div>
 
     <div class="fieldset card contact">
         <h2>{{ 'entity.edit.contact_information.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.edit.contact_information.html'|trans|raw }}</div>
+        <div class="wysiwyg">{{ 'entity.edit.contact_information.html'|trans|wysiwyg }}</div>
         {{ form_widget(form.contactInformation) }}
     </div>
 
     <div class="fieldset card">
         <h2>{{ ('entity.edit.attributes.' ~ type ~ '.title')|trans }}</h2>
-        <div class="wysiwyg">{{ ('entity.edit.attributes.' ~ type ~ '.html')|trans|raw }}</div>
+        <div class="wysiwyg">{{ ('entity.edit.attributes.' ~ type ~ '.html')|trans|wysiwyg }}</div>
         {{ form_widget(form.attributes) }}
     </div>
 
     <div class="fieldset card">
         <h2>{{ 'entity.edit.comments.title'|trans }}</h2>
-        <div class="wysiwyg">{{ 'entity.edit.comments.html'|trans|raw }}</div>
+        <div class="wysiwyg">{{ 'entity.edit.comments.html'|trans|wysiwyg }}</div>
         {{ form_widget(form.comments) }}
     </div>
 

@@ -60,7 +60,8 @@ nelmio_security:
             - '%saml_remote_idp_host%'
     csp:
         report_logger_service: monolog.logger.security
-        hosts: []
+        hosts:
+            - 'ajax.googleapis.com'
         content_types: []
         enforce:
             report-uri: [/csp/report]
