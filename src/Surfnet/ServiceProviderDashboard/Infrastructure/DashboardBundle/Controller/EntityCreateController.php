@@ -137,6 +137,15 @@ class EntityCreateController extends Controller
 
         $service = $this->authorizationService->changeActiveService($serviceId);
 
+
+        if ($type === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to create oidcng entities for this environment.'
+            );
+        }
+
         if (!$service->isProductionEntitiesEnabled() &&
             $targetEnvironment !== Entity::ENVIRONMENT_TEST
         ) {
@@ -234,6 +243,14 @@ class EntityCreateController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
+
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to copy oidcng entities to this environment.'
+            );
+        }
 
         // load entity into form
         $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);

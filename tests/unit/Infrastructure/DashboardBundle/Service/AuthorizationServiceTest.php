@@ -20,8 +20,11 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\ManageConfigNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -29,28 +32,40 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AuthorizationServiceTest extends MockeryTestCase
 {
-    /** @var ServiceService|m\MockInterface */
+    /** @var ServiceService|MockInterface */
     private $serviceService;
 
-    /** @var Session|m\MockInterface */
+    /** @var Session|MockInterface */
     private $session;
 
-    /** @var TokenStorageInterface|m\MockInterface */
+    /** @var TokenStorageInterface|MockInterface */
     private $tokenStorage;
 
     /** @var AuthorizationService */
     private $service;
+    /**
+     * @var MockInterface&Config
+     */
+    private $manageConfigTest;
+    /**
+     * @var MockInterface&Config
+     */
+    private $manageConfigProd;
 
     public function setUp()
     {
         $this->serviceService = m::mock(ServiceService::class);
         $this->session = m::mock(Session::class);
         $this->tokenStorage = m::mock(TokenStorageInterface::class);
+        $this->manageConfigTest = m::mock(Config::class);
+        $this->manageConfigProd = m::mock(Config::class);
 
         $this->service = new AuthorizationService(
             $this->serviceService,
             $this->session,
-            $this->tokenStorage
+            $this->tokenStorage,
+            $this->manageConfigTest,
+            $this->manageConfigProd
         );
     }
 
@@ -119,5 +134,52 @@ class AuthorizationServiceTest extends MockeryTestCase
             ->andReturn(2);
 
         $this->service->getSelectedServiceId();
+    }
+
+    /**
+     * @dataProvider oidcngTestEntries
+     * @param bool $expectation
+     * @param Service $service
+     * @param string $environment
+     * @param string $message
+     */
+    public function test_oidcng_access($expectation, Service $service, $environment, $allowedOnEnv, $message)
+    {
+        switch ($environment) {
+            case 'test':
+                $this->manageConfigTest->shouldReceive('getOidcngEnabled->isEnabled')->andReturn($allowedOnEnv);
+                break;
+            case 'prod':
+                $this->manageConfigProd->shouldReceive('getOidcngEnabled->isEnabled')->andReturn($allowedOnEnv);
+                break;
+        }
+        $this->assertEquals($expectation, $this->service->isOidcngAllowed($service, $environment), $message);
+    }
+
+    public function oidcngTestEntries()
+    {
+        $service = m::mock(Service::class);
+        $service->shouldReceive('isOidcngEnabled')->andReturn(true);
+
+        $serviceDisabled = m::mock(Service::class);
+        $serviceDisabled->shouldReceive('isOidcngEnabled')->andReturn(false);
+
+        return [
+            [true, $service, 'test', true, 'Both the service and the manage env has oidcng enabled (test)'],
+            [true, $service, 'prod', true, 'Both the service and the manage env has oidcng enabled (prod)'],
+            [false, $serviceDisabled, 'test', true, 'Service disabled, and the manage env has oidcng enabled (test)'],
+            [false, $serviceDisabled, 'prod', true, 'Service disabled, and the manage env has oidcng enabled (prod)'],
+            [false, $service, 'test', false, 'Service enabled, manage env disabled (test)'],
+            [false, $service, 'prod', false, 'Service enabled, manage env disabled (prod)'],
+            [false, $serviceDisabled, 'test', false, 'Service disabled, manage env has oidcng disabled (test)'],
+            [false, $serviceDisabled, 'prod', false, 'Service disabled, manage env has oidcng disabled (prod)'],
+        ];
+    }
+
+    public function test_oidcng_access_invalid_env()
+    {
+        $this->expectException(ManageConfigNotFoundException::class);
+        $this->expectExceptionMessage('The manage configuration for environment "mumbojumbo" can not be found.');
+        $this->service->isOidcngAllowed(m::mock(Service::class), 'mumbojumbo');
     }
 }

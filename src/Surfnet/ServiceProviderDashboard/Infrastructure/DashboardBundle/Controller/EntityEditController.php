@@ -68,6 +68,14 @@ class EntityEditController extends Controller
     {
         $flashBag = $this->get('session')->getFlashBag();
 
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to modify oidcng entities for this environment.'
+            );
+        }
+
         // Only clear the flash bag when this request did not come from the 'entity_add' action.
         if (!$this->requestFromCreateAction($request)) {
             $flashBag->clear();

@@ -232,6 +232,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
+        arguments:
+            $manageTestConfig: "@surfnet.manage.configuration.test"
+            $manageProdConfig: "@surfnet.manage.configuration.production"
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension:
         tags: [twig.extension]

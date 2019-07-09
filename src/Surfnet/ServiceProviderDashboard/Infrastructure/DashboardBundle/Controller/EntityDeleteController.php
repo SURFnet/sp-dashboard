@@ -92,6 +92,14 @@ class EntityDeleteController extends Controller
         $form = $this->createForm(DeleteEntityType::class);
         $form->handleRequest($request);
 
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to delete oidcng entities for this environment.'
+            );
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
                 $this->commandBus->handle(

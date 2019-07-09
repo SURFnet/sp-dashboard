@@ -20,6 +20,10 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Servic
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Service\OidcngEnabledMarshaller;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\ManageConfigNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -41,14 +45,32 @@ class AuthorizationService
      */
     private $tokenStorage;
 
+    /**
+     * @var OidcngEnabledMarshaller
+     */
+    private $oidcngMarshaller;
+
+    /**
+     * @var Config[]
+     */
+    private $manageConfig;
+
     public function __construct(
         ServiceService $serviceService,
         Session $session,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        Config $manageTestConfig,
+        Config $manageProdConfig
     ) {
         $this->serviceService = $serviceService;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
+        $this->manageConfig = [
+            'test' => $manageTestConfig,
+            'prod' => $manageProdConfig,
+            'production' => $manageProdConfig,
+        ];
+        $this->oidcngMarshaller = new OidcngEnabledMarshaller();
     }
 
     /**
@@ -229,7 +251,7 @@ class AuthorizationService
 
     /**
      * @param $serviceId
-     * @return \Surfnet\ServiceProviderDashboard\Domain\Entity\Service
+     * @return Service
      * @throws ServiceNotFoundException
      */
     public function changeActiveService($serviceId)
@@ -269,5 +291,25 @@ class AuthorizationService
         /** @var Identity $user */
         $user = $this->tokenStorage->getToken()->getUser();
         return $user->getContact();
+    }
+
+    /**
+     * @param Service $service
+     * @param string $environment
+     * @return bool
+     * @throws ManageConfigNotFoundException
+     */
+    public function isOidcngAllowed(Service $service, $environment)
+    {
+        if (!isset($this->manageConfig[$environment])) {
+            throw new ManageConfigNotFoundException(
+                sprintf('The manage configuration for environment "%s" can not be found.', $environment)
+            );
+        }
+
+        return $this->oidcngMarshaller->allowed(
+            $service,
+            $this->manageConfig[$environment]->getOidcngEnabled()->isEnabled()
+        );
     }
 }

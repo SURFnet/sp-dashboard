@@ -95,6 +95,9 @@ class EntityListController extends Controller
 
     private function showOidcPopup($publishedEntity)
     {
+        if (is_null($publishedEntity)) {
+            return false;
+        }
         $protocol = $publishedEntity->getProtocol();
         $isOidcProtocol = $protocol === Entity::TYPE_OPENID_CONNECT_TNG || $protocol === Entity::TYPE_OPENID_CONNECT;
 
