@@ -150,7 +150,7 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @param bool $productionEntitiesEnabled
+     * @param bool $enabled
      */
     public function setProductionEntitiesEnabled($enabled)
     {
@@ -171,6 +171,11 @@ class EditServiceCommand implements Command
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public static function __callStatic($name, $arguments)
+    {
+        // TODO: Implement __callStatic() method.
     }
 
     /**

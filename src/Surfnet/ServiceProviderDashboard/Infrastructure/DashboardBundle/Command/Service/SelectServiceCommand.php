@@ -29,18 +29,18 @@ class SelectServiceCommand implements Command
     private $selectedServiceId;
 
     /**
-     * @param string $selectedService ID of selected service
-     */
-    public function __construct($selectedServiceId)
-    {
-        $this->selectedServiceId = $selectedServiceId;
-    }
-
-    /**
      * @return string
      */
     public function getSelectedServiceId()
     {
         return $this->selectedServiceId;
+    }
+
+    /**
+     * @param string $selectedServiceId
+     */
+    public function setSelectedServiceId($selectedServiceId)
+    {
+        $this->selectedServiceId = $selectedServiceId;
     }
 }

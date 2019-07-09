@@ -12,5 +12,5 @@ To import the default translations into the lexik database, run the
 deployment.
 
 Translation tokens ending with `.html` will be loaded in a WYSIWYG editor in the translation interface. These
-translations are also to be outputted unescaped in the template. To do so in twig use the raw filter. For example:
-`{{ 'service.edit.comments.html'|trans|raw }}` 
+translations are stored without input validation or sanitization. Therefore we need to strip the allowed tags in the
+template. To do so in twig use the wysiwyg filter. For example: `{{ 'service.edit.comments.html'|trans|wysiwyg }}` 

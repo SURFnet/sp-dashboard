@@ -50,7 +50,7 @@ class Service
     /**
      * @param string $id
      * @param string $name
-     * @param $privacyQuestionsEnabled
+     * @param bool $privacyQuestionsEnabled
      * @param EntityList $entityList
      * @param RouterInterface $router
      */

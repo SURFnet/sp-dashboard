@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -58,10 +59,25 @@ class AuthorizationServiceTest extends MockeryTestCase
      */
     public function test_service_writes_selected_service_to_session()
     {
+        $service = m::mock(Service::class);
+        $service->shouldReceive('getId')->andReturn(1);
+
+        $this->tokenStorage->shouldReceive('getToken')
+            ->andReturn(new SamlToken(['ROLE_ADMINISTRATOR']));
+
+        $this->serviceService->shouldReceive('getServiceById')->andReturn(
+            $service
+        );
+
+        $this->serviceService->shouldReceive('getServiceNamesById')
+            ->andReturn([
+                1 => 'SURFnet',
+            ]);
+
         $this->session->shouldReceive('set')
             ->with('selected_service_id', 1);
 
-        $this->service->setSelectedServiceId(1);
+        $this->service->changeActiveService(1);
     }
 
     /**

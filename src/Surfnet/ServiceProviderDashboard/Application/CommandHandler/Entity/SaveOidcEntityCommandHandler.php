@@ -54,7 +54,7 @@ class SaveOidcEntityCommandHandler implements CommandHandler
     {
         // If the entity does not exist yet, create it on the fly
         if (is_null($command->getId())) {
-            $id = (string) Uuid::uuid1();
+            $id = Uuid::uuid1()->toString();
             if (!$this->repository->isUnique($id)) {
                 throw new InvalidArgumentException(
                     'The id that was generated for the entity was not unique, please try again'

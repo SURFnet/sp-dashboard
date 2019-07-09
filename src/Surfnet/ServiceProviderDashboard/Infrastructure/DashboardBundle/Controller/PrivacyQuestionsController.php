@@ -68,7 +68,7 @@ class PrivacyQuestionsController extends Controller
      */
     public function privacyAction($serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         if (!$this->authorizationService->hasActivatedPrivacyQuestions()) {
             throw $this->createNotFoundException('Privacy questions are disabled');
@@ -92,7 +92,7 @@ class PrivacyQuestionsController extends Controller
      */
     public function createAction(Request $request, $serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $command = PrivacyQuestionsCommand::fromService($service);
 

@@ -138,14 +138,12 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function switchToService($serviceName)
     {
-        $crawler = $this->client->request('GET', '/service/create');
-        $form = $crawler->filter('.service-switcher')
-            ->selectButton('Select')
-            ->form();
+        $crawler = $this->client->request('GET', '/');
+        $form = $crawler->filter('.service-switcher form')->form();
 
-        $form['service']->select(
-            $this->getServiceRepository()->findByName($serviceName)->getId()
-        );
+        $service  = $this->getServiceRepository()->findByName($serviceName);
+
+        $form['service_switcher[selected_service_id]']->select($service->getId());
 
         $this->client->submit($form);
 

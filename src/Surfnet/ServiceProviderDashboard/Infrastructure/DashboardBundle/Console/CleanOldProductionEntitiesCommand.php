@@ -86,7 +86,7 @@ class CleanOldProductionEntitiesCommand extends Command
         }
 
         // remove entities in queue
-        /** @var $entity Entity */
+        /** @var Entity $entity */
         foreach ($clearEntities as $entity) {
             $output->write(sprintf("Delete entity: %s (local id)", $entity->getId()));
             if ($entity->getManageId()) {
