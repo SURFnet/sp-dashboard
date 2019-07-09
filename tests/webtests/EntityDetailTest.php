@@ -30,9 +30,7 @@ class EntityDetailTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
+        $this->switchToService('SURFnet');
 
         $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
 
@@ -56,9 +54,7 @@ class EntityDetailTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
+        $this->switchToService('SURFnet');
 
         /** @var Entity $entity */
         $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
@@ -96,9 +92,7 @@ class EntityDetailTest extends WebTestCase
 
         $this->prodMockHandler->append(new Response(200, [], $sp3QueryResponse));
 
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
+        $this->switchToService('SURFnet');
 
         $crawler = $this->client->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
 
@@ -121,9 +115,7 @@ class EntityDetailTest extends WebTestCase
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
+        $this->switchToService('SURFnet');
 
         /** @var \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity $entity */
         $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));

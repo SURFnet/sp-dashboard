@@ -39,9 +39,7 @@ class EntityCreateOidcTest extends WebTestCase
 
         $this->service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->service->getId()
-        );
+        $this->switchToService('Ibuildings B.V.');
 
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
     }
@@ -207,7 +205,7 @@ class EntityCreateOidcTest extends WebTestCase
     public function test_creating_draft_for_production_is_not_allowed()
     {
         // SURFnet is not allowed to create production entities.
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 

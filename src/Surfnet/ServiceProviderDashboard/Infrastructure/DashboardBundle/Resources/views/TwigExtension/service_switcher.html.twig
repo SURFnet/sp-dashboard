@@ -1,11 +1,4 @@
-<form action="{{ path('select_service') }}" method="POST">
-    <select name="service" id="service-switcher">
-        <option value=""></option>
-    {% for service_id,service_name in services %}
-        <option value="{{ service_id }}"{{ service_id == selected_service ? ' selected' : '' }}>{{ service_name }}</option>
-    {% endfor %}
-    </select>
-    <noscript>
-        <input type="submit" value="Select" />
-    </noscript>
-</form>
+{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'action': path('select_service') } }) }}
+{{ form_widget(form.selected_service_id, {'id': 'service-switcher'}) }}
+{{ form_rest(form) }}
+{{ form_end(form) }}

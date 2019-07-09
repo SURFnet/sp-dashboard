@@ -28,15 +28,12 @@ class ServiceDeleteTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
     }
 
     public function test_removing_a_service_redirects_to_service_overview()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
+        $this->switchToService('SURFnet');
 
         // EntityService::getEntityListForService -> findByTeamName (service/edit first request)
         $this->testMockHandler->append(new Response(200, [], '[]'));
@@ -119,6 +116,7 @@ class ServiceDeleteTest extends WebTestCase
     public function test_removing_a_service_with_privacy_questions_is_possible()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
+        $this->switchToService('SURFnet');
 
         // EntityService::getEntityListForService -> findByTeamName (service/edit first request)
         $this->testMockHandler->append(new Response(200, [], '[]'));

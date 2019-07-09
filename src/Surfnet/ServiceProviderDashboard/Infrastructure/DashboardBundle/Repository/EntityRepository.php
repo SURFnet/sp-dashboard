@@ -54,7 +54,7 @@ class EntityRepository extends DoctrineEntityRepository implements EntityReposit
 
     /**
      * @param int $id
-     * @return Service|null
+     * @return Entity|null
      */
     public function findById($id)
     {

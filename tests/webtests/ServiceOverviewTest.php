@@ -30,10 +30,6 @@ class ServiceOverviewTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
     }
 
     /**
@@ -47,10 +43,10 @@ class ServiceOverviewTest extends WebTestCase
         $serviceRepository = $this->getServiceRepository();
         $surfNet = $serviceRepository->findByName('SURFnet');
 
+        $this->logIn('ROLE_USER', [$surfNet]);
+
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $this->logIn('ROLE_USER', [$surfNet]);
 
         $crawler = $this->client->request('GET', '/');
 
@@ -184,6 +180,7 @@ class ServiceOverviewTest extends WebTestCase
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->logIn('ROLE_USER', [$surfNet]);
+
         $crawler = $this->client->request('GET', '/');
 
         $link = $crawler->filter('.service-status-title > a:nth-child(1)');

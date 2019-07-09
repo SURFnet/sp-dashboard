@@ -41,7 +41,7 @@ interface TicketServiceInterface
     public function findByManageIds(array $manageIds);
 
     /**
-     * @param $id
+     * @param int $id
      * @return Issue|null
      */
     public function findByManageId($id);
@@ -49,8 +49,8 @@ interface TicketServiceInterface
     /**
      * Find a Jira issue by issue type and manage id.
      *
-     * @param $manageId
-     * @param $issueType
+     * @param string $manageId
+     * @param string $issueType
      * @return mixed
      */
     public function findByManageIdAndIssueType($manageId, $issueType);

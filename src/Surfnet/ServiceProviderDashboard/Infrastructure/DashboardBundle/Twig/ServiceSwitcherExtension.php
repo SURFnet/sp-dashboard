@@ -17,7 +17,9 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Environment;
 use Twig_Extension;
@@ -34,11 +36,19 @@ class ServiceSwitcherExtension extends Twig_Extension
      * @var TokenStorageInterface
      */
     private $tokenStorage;
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthorizationService $authorizationService)
-    {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        AuthorizationService $authorizationService,
+        FormFactoryInterface $formFactory
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorizationService = $authorizationService;
+        $this->formFactory = $formFactory;
     }
 
     public function getFunctions()
@@ -62,16 +72,12 @@ class ServiceSwitcherExtension extends Twig_Extension
             return '';
         }
 
-        $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
-        if (count($allowedServices) <= 1) {
-            return '';
-        }
+        $form = $this->formFactory->create(ServiceSwitcherType::class);
 
         return $environment->render(
             'DashboardBundle:TwigExtension:service_switcher.html.twig',
             [
-                'services' => $allowedServices,
-                'selected_service' => $this->authorizationService->getActiveServiceId(),
+                'form' => $form->createView(),
             ]
         );
     }

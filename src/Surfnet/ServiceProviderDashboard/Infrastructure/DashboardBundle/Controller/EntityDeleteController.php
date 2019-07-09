@@ -133,7 +133,7 @@ class EntityDeleteController extends Controller
      */
     public function deletePublishedAction(Request $request, $serviceId, $manageId, $environment)
     {
-        $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
+        $this->denyAccessUnlessGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
 
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $nameEn = $entity->getMetaData()->getNameEn();
@@ -151,7 +151,7 @@ class EntityDeleteController extends Controller
                 $this->commandBus->handle($command);
             }
 
-            $service = $this->authorizationService->getServiceById($serviceId);
+            $service = $this->authorizationService->changeActiveService($serviceId);
             return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
         }
 
@@ -186,7 +186,7 @@ class EntityDeleteController extends Controller
      */
     public function deleteRequestAction(Request $request, $serviceId, $manageId, $environment)
     {
-        $this->isGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
+        $this->denyAccessUnlessGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
 
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $nameEn = $entity->getMetaData()->getNameEn();
@@ -206,7 +206,7 @@ class EntityDeleteController extends Controller
                     )
                 );
             }
-            $service = $this->authorizationService->getServiceById($serviceId);
+            $service = $this->authorizationService->changeActiveService($serviceId);
             return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
         }
 

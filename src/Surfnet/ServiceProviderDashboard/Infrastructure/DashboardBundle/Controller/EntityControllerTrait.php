@@ -151,6 +151,11 @@ trait EntityControllerTrait
                 $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $applicant);
                 $destination = 'entity_published_production';
                 break;
+            default:
+                throw new InvalidArgumentException(
+                    sprintf('The environment with value "%s" is not supported.', $entity->getEnvironment())
+                );
+                break;
         }
 
         try {

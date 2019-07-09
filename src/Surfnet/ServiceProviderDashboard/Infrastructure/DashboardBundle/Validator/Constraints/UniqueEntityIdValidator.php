@@ -38,7 +38,7 @@ class UniqueEntityIdValidator extends ConstraintValidator
     private $manageProductionRepository;
 
     /**
-     * @var EntityRepository
+     * @var DoctrineRepository
      */
     private $doctrineRepository;
 

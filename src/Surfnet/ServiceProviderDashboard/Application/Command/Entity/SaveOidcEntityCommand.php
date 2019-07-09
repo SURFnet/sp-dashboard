@@ -546,7 +546,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param string
+     * @param string $grantType
      */
     public function setGrantType($grantType)
     {
