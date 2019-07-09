@@ -105,11 +105,10 @@ class ServiceSwitcherTest extends WebTestCase
         $this->loadFixtures();
 
         $crawler = $this->client->request('GET', '/service/create');
-        $form = $crawler->filter('.service-switcher')
-            ->selectButton('Select')
+        $form = $crawler->filter('.service-switcher form')
             ->form();
 
-        $form['service']->select(
+        $form['service_switcher[selected_service_id]']->select(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 

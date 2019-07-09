@@ -45,10 +45,6 @@ class EntityPublishToTestTest extends WebTestCase
                 $surfNet,
             ]
         );
-
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $surfNet->getId()
-        );
     }
 
     private function buildEntityWithAttribute(Service $service)

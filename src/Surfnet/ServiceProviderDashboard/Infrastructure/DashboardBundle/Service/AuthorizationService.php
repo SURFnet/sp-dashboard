@@ -134,7 +134,7 @@ class AuthorizationService
      *
      * @return AuthorizationService
      */
-    public function setSelectedServiceId($serviceId)
+    private function setSelectedServiceId($serviceId)
     {
         $this->session->set('selected_service_id', $serviceId);
 
@@ -232,7 +232,7 @@ class AuthorizationService
      * @return \Surfnet\ServiceProviderDashboard\Domain\Entity\Service
      * @throws ServiceNotFoundException
      */
-    public function getServiceById($serviceId)
+    public function changeActiveService($serviceId)
     {
         $service = $this->serviceService->getServiceById($serviceId);
 
@@ -244,6 +244,12 @@ class AuthorizationService
 
         return $service;
     }
+
+    public function resetService()
+    {
+        $this->setSelectedServiceId(null);
+    }
+
 
     /**
      * @param string $serviceId

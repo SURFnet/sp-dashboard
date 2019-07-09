@@ -71,7 +71,7 @@ class EntityListController extends Controller
      */
     public function listAction($serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $entityList = $this->entityService->getEntityListForService($service);
         $productionEntitiesEnabled = $service->isProductionEntitiesEnabled();

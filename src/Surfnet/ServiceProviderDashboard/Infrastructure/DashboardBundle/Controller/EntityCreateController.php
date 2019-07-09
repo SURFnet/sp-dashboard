@@ -62,7 +62,7 @@ class EntityCreateController extends Controller
         $command = new ChooseEntityTypeCommand();
         $form = $this->createForm(ChooseEntityTypeType::class, $command);
 
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -101,7 +101,7 @@ class EntityCreateController extends Controller
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
 
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         if (!$service->isProductionEntitiesEnabled() &&
             $targetEnvironment !== Entity::ENVIRONMENT_TEST
@@ -196,7 +196,7 @@ class EntityCreateController extends Controller
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
 
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
 

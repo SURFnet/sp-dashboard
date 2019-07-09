@@ -57,7 +57,7 @@ class EntityDetailController extends Controller
      */
     public function detailAction($id, $serviceId, $manageTarget)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         // First try to read the entity from the local storage
         $entity = $this->entityService->getEntityById($id);
