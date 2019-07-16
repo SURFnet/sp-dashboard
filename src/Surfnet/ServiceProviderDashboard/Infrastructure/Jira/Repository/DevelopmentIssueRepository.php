@@ -107,6 +107,9 @@ class DevelopmentIssueRepository implements TicketServiceInterface
             file_put_contents($this->filePath, '{}');
         }
         $rawData = json_decode(file_get_contents($this->filePath), true);
+        if (is_null($rawData)) {
+            $rawData = [];
+        }
         $this->data = $this->loadIssues($rawData);
     }
 
