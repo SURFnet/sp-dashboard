@@ -262,14 +262,6 @@ services:
             - '@surfnet.dashboard.repository.issue'
 
     surfnet.dashboard.repository.issue:
-        class: 'Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository'
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory'
-            - '%jira_issue_project_key%'
-            - '%jira_issue_type%'
-            - '%jira_issue_manageid_fieldname%'
-            - '%jira_issue_manageid_field_label%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityService:
         arguments:

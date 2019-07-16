@@ -1,3 +1,12 @@
+# Use a Jira test stand in
+
+By default SP dashboard is configured to not use the test stand in option in dev or production modes. To enable this 
+feature. Simply configure the `jira_enable_test_mode: true` and `jira_test_mode_storage_path: '../var/issues.json'` to
+your liking. The values above are sensible defaults.
+
+The Jira interaction is now skipped, and all actions are handled in a happy flow manner. Resulting in a JSON file that
+is filled with ticket id's that are then used by the application to track the Jira workflow state.
+
 # Install local jira with Docker
 
 This how to is based on the ivantichy Jira Docker image [1]
