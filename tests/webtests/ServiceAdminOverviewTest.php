@@ -30,10 +30,6 @@ class ServiceAdminOverviewTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
     }
 
     /**

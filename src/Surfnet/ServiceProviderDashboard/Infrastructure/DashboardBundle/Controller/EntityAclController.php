@@ -81,7 +81,7 @@ class EntityAclController extends Controller
      */
     public function aclAction(Request $request, $serviceId, $id)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Entity::ENVIRONMENT_TEST, $service);
 
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);

@@ -28,6 +28,7 @@ parameters:
     saml_remote_idp_entity_id: "{{ spdashboard_saml_remote_idp_entity_id }}"
     saml_remote_idp_sso_url: "{{ spdashboard_saml_remote_idp_sso_url }}"
     saml_remote_idp_certificate: "{{ spdashboard_saml_remote_idp_certificate }}"
+    saml_remote_idp_host: "{{ spdashboard_saml_remote_idp_host }}"
     manage_test_host: https://manage.{{ base_domain }}
     manage_test_username: sp-dashboard
     manage_test_password: {{ manage_sp_dashboard_secret }}
@@ -50,5 +51,7 @@ parameters:
     jira_issue_manageid_fieldname: {{ spdashboard_jira_manageid_fieldname }}
     jira_issue_manageid_field_label: {{ spdashboard_jira_manageid_field_label }}
     jira_issue_project_key: {{ spdashboard_jira_project_key }}
+    jira_enable_test_mode: {{ spdashboard_test_mode_enabled }}
+    jira_test_mode_storage_path: {{ spdashboard_test_mode_path }}
     playground_uri_test: {{ spdashboard_playground_uri_test }}
     playground_uri_prod: {{ spdashboard_playground_uri_prod }}

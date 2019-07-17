@@ -61,7 +61,7 @@ class Secret
     }
 
     /**
-     * @param $secret
+     * @param string $secret
      * @return bool
      */
     private function isValid($secret)

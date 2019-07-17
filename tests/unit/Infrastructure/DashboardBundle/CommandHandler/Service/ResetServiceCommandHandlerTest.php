@@ -47,7 +47,7 @@ class ResetServiceCommandHandlerTest extends MockeryTestCase
     {
         $command = new ResetServiceCommand();
 
-        $this->authService->shouldReceive('setSelectedServiceId')->with(null)->once();
+        $this->authService->shouldReceive('resetService')->withNoArgs()->once();
 
         $this->commandHandler->handle($command);
     }

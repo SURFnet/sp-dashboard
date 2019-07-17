@@ -40,6 +40,6 @@ class ResetServiceCommandHandler implements CommandHandler
      */
     public function handle(ResetServiceCommand $command)
     {
-        $this->service->setSelectedServiceId(null);
+        $this->service->resetService();
     }
 }

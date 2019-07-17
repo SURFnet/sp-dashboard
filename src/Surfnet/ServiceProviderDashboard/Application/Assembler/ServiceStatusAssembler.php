@@ -19,7 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Assembler;
 
 use Surfnet\ServiceProviderDashboard\Application\Dto\ServiceStatusDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -226,7 +226,7 @@ class ServiceStatusAssembler
     {
         $labels = [];
         foreach (self::states() as $state) {
-            $labels[$state] = $this->translator->trans('service.overview.progress.label.' . $state);
+            $labels[$state] = $this->getSanitizedHtmlTranslation('service.overview.progress.label.' . $state);
         }
         return $labels;
     }
@@ -235,7 +235,7 @@ class ServiceStatusAssembler
     {
         $tooltips = [];
         foreach ($mappedStates as $state => $status) {
-            $tooltips[$state] = $this->translator->trans('service.overview.progress.tooltip.' . $state . '.' . $status . '.html');
+            $tooltips[$state] = $this->getSanitizedHtmlTranslation('service.overview.progress.tooltip.' . $state . '.' . $status . '.html');
         }
         return $tooltips;
     }
@@ -251,5 +251,12 @@ class ServiceStatusAssembler
             $total++;
         }
         return \round($done/$total*100);
+    }
+
+    private function getSanitizedHtmlTranslation($key)
+    {
+        $translated = $this->translator->trans($key);
+        $sanitized = WysiwygExtension::sanitizeWysiwyg($translated);
+        return $sanitized;
     }
 }

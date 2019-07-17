@@ -24,6 +24,16 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 
 class Builder
 {
+    /**
+     * @var FactoryInterface
+     */
+    public $factory;
+
+    /**
+     * @var AuthorizationService
+     */
+    public $authorizationService;
+
     public function __construct(FactoryInterface $factory, AuthorizationService $authorizationService)
     {
         $this->factory = $factory;

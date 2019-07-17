@@ -43,9 +43,10 @@ class SelectServiceCommandHandlerTest extends MockeryTestCase
      */
     public function test_handler_processes_command_and_selects_service()
     {
-        $command = new SelectServiceCommand('ibuildings');
+        $command = new SelectServiceCommand();
+        $command->setSelectedServiceId('ibuildings');
 
-        $this->authService->shouldReceive('setSelectedServiceId')->with('ibuildings')->once();
+        $this->authService->shouldReceive('changeActiveService')->with('ibuildings')->once();
 
         $this->commandHandler->handle($command);
     }

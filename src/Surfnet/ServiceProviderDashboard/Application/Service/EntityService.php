@@ -101,9 +101,13 @@ class EntityService implements EntityServiceInterface
 
     public function createEntityUuid()
     {
-        return (string)Uuid::uuid1();
+        return Uuid::uuid1()->toString();
     }
 
+    /**
+     * @param int $id
+     * @return Entity|null
+     */
     public function getEntityById($id)
     {
         return $this->queryRepositoryProvider->getEntityRepository()->findById($id);
@@ -159,18 +163,12 @@ class EntityService implements EntityServiceInterface
             $entities[] = ViewObject\Entity::fromEntity($entity, $this->router);
         }
 
-        $testEntities = $this->findPublishedTestEntitiesByTeamName(
-            $service->getTeamName(),
-            $this->testManageConfig->getPublicationStatus()->getStatus()
-        );
+        $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
         foreach ($testEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageTestResult($result, $this->router, $service->getId());
         }
 
-        $productionEntities = $this->findPublishedProductionEntitiesByTeamName(
-            $service->getTeamName(),
-            $this->prodManageConfig->getPublicationStatus()->getStatus()
-        );
+        $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
         foreach ($productionEntities as $result) {
             $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
         }
@@ -217,14 +215,14 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param $serivceid
+     * @param int $serviceId
      * @return Entity[]
      */
-    private function findDraftEntitiesByServiceId($serivceid)
+    private function findDraftEntitiesByServiceId($serviceId)
     {
         return $this->queryRepositoryProvider
             ->getEntityRepository()
-            ->findByServiceId($serivceid);
+            ->findByServiceId($serviceId);
     }
 
     /**
@@ -245,7 +243,7 @@ class EntityService implements EntityServiceInterface
      * - Finds published entities in Manage (from the 'production' client)
      * - Tries to match Jira issues that mention one of the manage entity id's
      *
-     * @param $teamName
+     * @param string $teamName
      * @return array|null
      * @throws QueryServiceProviderException
      */
@@ -284,10 +282,10 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param $entity
+     * @param ManageEntity $entity
      * @return Issue|null
      */
-    private function findIssueBy($entity)
+    private function findIssueBy(ManageEntity $entity)
     {
         try {
             return $this->ticketService->findByManageId($entity->getId());

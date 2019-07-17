@@ -33,9 +33,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $this->getAuthorizationService()->setSelectedServiceId(
-            $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
-        );
+        $this->switchToService('Ibuildings B.V.');
     }
 
     public function test_it_renders_the_form()
@@ -297,7 +295,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
     public function test_creating_draft_for_production_is_not_allowed()
     {
         // SURFnet is not allowed to create production entities.
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('SURFnet')->getId()
         );
 
@@ -309,7 +307,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
     public function test_a_privileged_user_can_create_a_production_draft()
     {
         // Ibuildings is allowed to create production entities.
-        $this->getAuthorizationService()->setSelectedServiceId(
+        $this->getAuthorizationService()->changeActiveService(
             $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
         );
 

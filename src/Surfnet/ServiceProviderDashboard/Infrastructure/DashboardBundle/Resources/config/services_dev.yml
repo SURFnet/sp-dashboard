@@ -1,5 +1,0 @@
-services:
-  surfnet.dashboard.repository.issue:
-    class: 'Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentIssueRepository'
-    arguments:
-      - '../var/issues.json'

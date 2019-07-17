@@ -36,3 +36,4 @@ mongo:
   manage_password: "{{ mongo_passwords.manage }}"
   manage_database: manage
 
+manage_show_oidc_rp_tab: True

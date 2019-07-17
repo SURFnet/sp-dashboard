@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCo
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
@@ -39,6 +40,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Serv
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -179,7 +181,7 @@ class ServiceController extends Controller
      */
     public function editAction(Request $request, $serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $this->get('session')->getFlashBag()->clear();
         /** @var LoggerInterface $logger */
@@ -237,7 +239,7 @@ class ServiceController extends Controller
      */
     public function deleteAction(Request $request, $serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
 
         $form = $this->createForm(DeleteServiceType::class);
         $form->handleRequest($request);
@@ -272,18 +274,17 @@ class ServiceController extends Controller
      */
     public function selectAction(Request $request)
     {
-        $serviceId = $request->get('service', $request->query->get('service'));
-        $command = new SelectServiceCommand(
-            $serviceId
-        );
+        $command = new SelectServiceCommand();
+        $form = $this->createForm(ServiceSwitcherType::class, $command);
+
+        $form->handleRequest($request);
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            throw new ServiceNotFoundException('Unable to find service.');
+        }
 
         $this->commandBus->handle($command);
 
-        if (!$serviceId) {
-            return $this->redirectToRoute('service_overview');
-        }
-
-        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
+        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $command->getSelectedServiceId()]);
     }
 
     /**
@@ -294,7 +295,7 @@ class ServiceController extends Controller
      */
     public function adminOverviewAction($serviceId)
     {
-        $service = $this->authorizationService->getServiceById($serviceId);
+        $service = $this->authorizationService->changeActiveService($serviceId);
         $entityList = $this->entityService->getEntityListForService($service);
         $serviceList = new ServiceList([Service::fromService($service, $entityList, $this->router)]);
 
