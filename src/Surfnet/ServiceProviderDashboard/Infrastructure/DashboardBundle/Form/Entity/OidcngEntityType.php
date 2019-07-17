@@ -116,7 +116,8 @@ class OidcngEntityType extends AbstractType
                         'data-help' => 'entity.edit.information.accessTokenValidity',
                         'min' => 3600,
                         'max' => 86400,
-                        'step' => 60
+                        'step' => 60,
+                        'placeholder' => 3600,
                     ]
                 ]
             )
@@ -124,8 +125,9 @@ class OidcngEntityType extends AbstractType
                 'isPublicClient',
                 CheckboxType::class,
                 [
+                    'required' => false,
                     'attr' => [
-                        'required' => true,
+                        'required' => false,
                         'data-help' => 'entity.edit.information.isPublicClient',
                     ]
                 ]
