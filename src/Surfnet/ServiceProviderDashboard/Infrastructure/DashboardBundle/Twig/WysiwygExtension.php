@@ -73,6 +73,7 @@ class WysiwygExtension extends AbstractExtension
         $config->set('HTML.AllowedAttributes', 'a.target,a.href,p.style,span.style');
         $config->set('CSS.AllowedProperties', 'text-decoration,text-align');
         $config->set('Attr.AllowedFrameTargets', '_blank,_self,_parent,_top');
+        $config->set('Cache.DefinitionImpl', null);
 
         self::$purifier = new HTMLPurifier($config);
     }

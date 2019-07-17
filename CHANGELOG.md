@@ -1,3 +1,11 @@
+## 2.1.6
+**Bugfix**
+  * Escape the wysiwyg translations #281
+  * Fix the statuscode for switch to nonexistent service #280
+  * Add additional secyurity headers to response #278
+  * Fix the entity delete acl #276
+  * Fix the translations acl #277
+ 
 ## 2.1.5
 **Bugfix**
  * Ensure the issues are indexed on Manage id #273

@@ -109,6 +109,13 @@ class IssueRepositoryTest extends PHPUnit_Framework_TestCase
         $this->assertSame(4, $found);
     }
 
+    public function test_empty_file_should_not_throw_an_exception()
+    {
+        touch(self::CACHE_FILEPATH);
+        $result = $this->repository->findByManageId(1);
+        $this->assertNull($result);
+    }
+
     /**
      * @param $id
      * @param $issueType

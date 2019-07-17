@@ -50,10 +50,6 @@ class DashboardExtension extends Extension
             $loader->load($rootDir.'/../tests/webtests/Resources/config/services.yml');
         }
 
-        if ($environment === 'dev') {
-            $loader->load('services_dev.yml');
-        }
-
         foreach ($config['manage'] as $environment => $manageConfig) {
             $this->parseManageConfiguration($environment, $manageConfig, $container);
         }
