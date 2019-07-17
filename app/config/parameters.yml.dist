@@ -64,6 +64,11 @@ parameters:
     jira_username: sp-dashboard
     jira_password: secret
 
+    # By enabling 'jira_enable_test_mode', no real Jira backend is required to still simulate the Jira integration
+    jira_enable_test_mode: true
+    # When 'jira_enable_test_mode' is enabled, 'jira_test_mode_storage_path' must be configured with a filename in a directory that is writable for the user running the application.
+    jira_test_mode_storage_path: '../var/issues.json'
+
     # Jira default issue settings
     jira_issue_assignee: conext-beheer
     jira_issue_priority: Medium

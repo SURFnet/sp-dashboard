@@ -18,8 +18,15 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection\Compiler\IssueRepositoryCompilerPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class DashboardBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new IssueRepositoryCompilerPass());
+        parent::build($container);
+    }
 }
