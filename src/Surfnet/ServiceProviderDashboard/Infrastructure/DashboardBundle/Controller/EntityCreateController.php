@@ -98,6 +98,14 @@ class EntityCreateController extends Controller
 
         $form = $this->createForm(ChooseEntityTypeType::class, $command);
 
+        // Todo: Temporary solution: when handling a production form, handle the form with the correct form count, this
+        // is achieved by making a second instance of the form.
+        // This could be fixed by replacing the two forms by just one. This entails loading of conditional entity type
+        // choices. And this is out of scope for now.
+        if ($request->request->has('dashboard_bundle_choose_entity_type_1')) {
+            $form = $this->createForm(ChooseEntityTypeType::class, $command);
+        }
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // forward to create action.

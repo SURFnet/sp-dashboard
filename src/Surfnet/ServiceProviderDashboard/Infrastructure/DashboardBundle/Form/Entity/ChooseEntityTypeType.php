@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -30,7 +29,6 @@ class ChooseEntityTypeType extends AbstractType
     private $formCount = 0;
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) $key, $index are never used in the choice_attr callback
      * @param FormBuilderInterface $builder
      * @param array $options
      */
