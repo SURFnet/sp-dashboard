@@ -1,3 +1,9 @@
+## 2.2.0
+This release adds OpenID Connect TNG support to SP Dashboard. More details can be found in:
+
+* Add oidcng support #275
+
+
 ## 2.1.6
 **Bugfix**
   * Escape the wysiwyg translations #281
