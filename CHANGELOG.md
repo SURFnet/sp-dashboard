@@ -3,7 +3,18 @@ This release adds OpenID Connect TNG support to SP Dashboard. More details can b
 
 * Add oidcng support #275
 
+## 2.1.7
+**Feature**
+ * Added a Jira test stand-in feature flag #287
 
+**Bugfix**
+ * Disabled HTML Purifier cache #284
+ * Prevent error on empty Jira issue mock file #285
+
+**Other improvements**
+ * Ansible improvements #286 #279
+ * Several security related updates #282 #283 #288
+ 
 ## 2.1.6
 **Bugfix**
   * Escape the wysiwyg translations #281
