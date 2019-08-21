@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -1126,5 +1127,21 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
     public function setManageId($manageId)
     {
         $this->manageId = $manageId;
+    }
+
+    /**
+     * @param $object
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     * @Assert\Callback
+     */
+    public static function uniqueRedirectUris($object, ExecutionContextInterface $context, $payload)
+    {
+        /** @var SaveOidcEntityCommand $object */
+        $redirectUris = $object->getRedirectUris();
+
+        if (array_unique($redirectUris) !== $redirectUris) {
+            $context->buildViolation('Duplicate redirect URIs are not allowed')->atPath('redirectUris')->addViolation();
+        }
     }
 }
