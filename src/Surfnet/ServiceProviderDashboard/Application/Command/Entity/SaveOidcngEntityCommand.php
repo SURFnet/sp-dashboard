@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -104,9 +105,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $isPublicClient;
 
     /**
-     * @var array
+     * @var OidcGrantType
+     *
+     * @Assert\NotBlank()
      */
-    private $grants = ['authorization_code'];
+    private $grantType;
 
     /**
      * @var int
@@ -394,6 +397,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->entityId = $entity->getEntityId();
         $command->secret = $entity->getClientSecret();
         $command->redirectUrls = $entity->getRedirectUris();
+        $command->grantType = $entity->getGrantType()->getGrantType();
         $command->logoUrl = $entity->getLogoUrl();
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
@@ -559,14 +563,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setRedirectUrls($redirectUrls)
     {
         $this->redirectUrls = $redirectUrls;
-    }
-
-    /**
-     * @return array
-     */
-    public function getGrants()
-    {
-        return $this->grants;
     }
 
     /**
@@ -1190,5 +1186,21 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setEnablePlayground($enablePlayground)
     {
         $this->enablePlayground = $enablePlayground;
+    }
+
+    /**
+     * @return OidcGrantType
+     */
+    public function getGrantType()
+    {
+        return $this->grantType;
+    }
+
+    /**
+     * @param OidcGrantType $grantType
+     */
+    public function setGrantType($grantType)
+    {
+        $this->grantType = $grantType;
     }
 }
