@@ -62,4 +62,25 @@ describe('validate collection widget', function() {
     expect(actual).toBe(expected);
   });
 
+  it('should not allow duplicate entries', function() {
+    document.body.innerHTML = stateHtml;
+    loadEntityOidcForm();
+    // Add a redirect uri
+    $('.collection-entry input[type="text"]').val('https://redirect-url.org/redirect-uri');
+    // Add a new entry
+    $('.add_collection_entry').click();
+    // Add another redirect uri
+    $('.collection-entry input[type="text"]').last().val('https://redirect-url.org/redirect-uri-2');
+    // And add it
+    $('.add_collection_entry').click();
+    // Attempt to add an existing
+    $('.collection-entry input[type="text"]').last().val('https://redirect-url.org/redirect-uri');
+    // Should yield an error
+    $('.add_collection_entry').click();
+
+    let expected= `<li class="collection-entry"><input type="text" id="dashboard_bundle_entity_type_metadata_redirectUris_0" name="dashboard_bundle_entity_type[metadata][redirectUris][0]" readonly=""><button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button></li><li class="collection-entry"><input type="text" id="dashboard_bundle_entity_type_metadata_redirectUris_1" name="dashboard_bundle_entity_type[metadata][redirectUris][1]" readonly=""><button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button></li>`;
+    let actual = $('.collection-list').html();
+    expect(actual).toBe(expected);
+  });
+
 });
