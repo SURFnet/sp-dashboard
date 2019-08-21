@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
@@ -36,7 +36,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     private $client;
 
     /**
-     * @var GeneratorInterface
+     * @var JsonGeneratorStrategy
      */
     private $generator;
 
@@ -52,7 +52,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
     public function __construct(
         HttpClient $client,
-        GeneratorInterface $generator,
+        JsonGeneratorStrategy $generator,
         Config $manageConfig,
         LoggerInterface $logger
     ) {

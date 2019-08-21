@@ -26,6 +26,11 @@ class ChooseEntityTypeCommand
      */
     private $type;
 
+    /**
+     * @var array
+     */
+    private $choices;
+
     public function __construct($type = Entity::TYPE_SAML)
     {
         $this->type = $type;
@@ -45,5 +50,15 @@ class ChooseEntityTypeCommand
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    public function getProtocolChoices()
+    {
+        return $this->choices;
+    }
+
+    public function setProtocolChoices(array $choices)
+    {
+        $this->choices = $choices;
     }
 }

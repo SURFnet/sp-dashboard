@@ -25,6 +25,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 /**
+ * The JsonGenerator is able to generate Manage SAML 2.0 and OpenID Connect entities (oidc).
+ *
+ * The oidc entities are actually saved as saml20 entities. This is an early implementation detail in Manage < v4.
+ * From version 4 and onward the oidcng (oidc10_rp) entity type is introduced. This generator is not capable of
+ * creating that type of json.
+ *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ElseExpression)
  */

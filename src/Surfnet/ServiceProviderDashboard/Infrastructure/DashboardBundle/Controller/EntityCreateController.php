@@ -18,14 +18,21 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +45,28 @@ class EntityCreateController extends Controller
 {
     use EntityControllerTrait;
 
+    /**
+     * @var ProtocolChoiceFactory
+     */
+    private $protocolChoiceFactory;
+
+    public function __construct(
+        CommandBus $commandBus,
+        EntityService $entityService,
+        ServiceService $serviceService,
+        AuthorizationService $authorizationService,
+        EntityTypeFactory $entityTypeFactory,
+        LoadEntityService $loadEntityService,
+        ProtocolChoiceFactory $protocolChoiceFactory
+    ) {
+        $this->commandBus = $commandBus;
+        $this->entityService = $entityService;
+        $this->serviceService = $serviceService;
+        $this->authorizationService = $authorizationService;
+        $this->entityTypeFactory = $entityTypeFactory;
+        $this->loadEntityService = $loadEntityService;
+        $this->protocolChoiceFactory = $protocolChoiceFactory;
+    }
 
     /**
      * @Method({"GET", "POST"})
@@ -59,10 +88,23 @@ class EntityCreateController extends Controller
      */
     public function typeAction(Request $request, $serviceId, $targetEnvironment)
     {
+        $service = $this->authorizationService->changeActiveService($serviceId);
+
+        $this->protocolChoiceFactory->setService($service);
+        $choices = $this->protocolChoiceFactory->buildOptions($targetEnvironment);
+
         $command = new ChooseEntityTypeCommand();
+        $command->setProtocolChoices($choices);
+
         $form = $this->createForm(ChooseEntityTypeType::class, $command);
 
-        $service = $this->authorizationService->changeActiveService($serviceId);
+        // Todo: Temporary solution: when handling a production form, handle the form with the correct form count, this
+        // is achieved by making a second instance of the form.
+        // This could be fixed by replacing the two forms by just one. This entails loading of conditional entity type
+        // choices. And this is out of scope for now.
+        if ($request->request->has('dashboard_bundle_choose_entity_type_1')) {
+            $form = $this->createForm(ChooseEntityTypeType::class, $command);
+        }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -102,6 +144,15 @@ class EntityCreateController extends Controller
         $flashBag->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);
+
+
+        if ($type === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to create oidcng entities for this environment.'
+            );
+        }
 
         if (!$service->isProductionEntitiesEnabled() &&
             $targetEnvironment !== Entity::ENVIRONMENT_TEST
@@ -145,8 +196,9 @@ class EntityCreateController extends Controller
 
                         // When publishing failed, forward to the edit action and show the error messages there
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                    } else {
+                        $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
-                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
@@ -200,6 +252,14 @@ class EntityCreateController extends Controller
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
 
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to copy oidcng entities to this environment.'
+            );
+        }
+
         // load entity into form
         $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
         $command = $form->getData();
@@ -238,8 +298,9 @@ class EntityCreateController extends Controller
 
                         // When publishing failed, forward to the edit action and show the error messages there
                         return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                    } else {
+                        $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
-                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);

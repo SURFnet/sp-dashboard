@@ -56,7 +56,7 @@ class DeletePublishedProductionEntityCommandHandler implements CommandHandler
         );
 
         try {
-            $response = $this->deleteEntityRepository->delete($command->getManageId());
+            $response = $this->deleteEntityRepository->delete($command->getManageId(), $command->getProtocol());
         } catch (UnableToDeleteEntityException $e) {
             throw new EntityNotDeletedException(
                 sprintf(

@@ -146,7 +146,7 @@ class Entity
             $formattedContact,
             $result->getStatus(),
             'test',
-            $result->getProtocol(),
+            $result->getProtocol()->getProtocol(),
             $router
         );
     }
@@ -179,7 +179,7 @@ class Entity
             $formattedContact,
             $status,
             'production',
-            $result->getProtocol(),
+            $result->getProtocol()->getProtocol(),
             $router
         );
     }

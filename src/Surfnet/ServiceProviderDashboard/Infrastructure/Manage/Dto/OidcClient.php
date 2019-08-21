@@ -18,9 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\RuntimeException;
 use Webmozart\Assert\Assert;
 
-class OidcClient
+class OidcClient implements OidcClientInterface
 {
     /**
      * @var string
@@ -47,7 +48,7 @@ class OidcClient
      * @param array $data
      * @return OidcClient|null
      */
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data, $manageProtocol)
     {
         if (!isset($data['data']['oidcClient'])) {
             return null;
@@ -135,5 +136,21 @@ class OidcClient
     public function getScope()
     {
         return $this->scope;
+    }
+
+    /**
+     * @throws RuntimeException
+     */
+    public function isPublicClient()
+    {
+        throw new RuntimeException('This method is not supported by the OidcClient');
+    }
+
+    /**
+     * @throws RuntimeException
+     */
+    public function getAccessTokenValidity()
+    {
+        throw new RuntimeException('This method is not supported by the OidcClient');
     }
 }

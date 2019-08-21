@@ -55,6 +55,7 @@ class QueryClientTest extends MockeryTestCase
         // When the queried entityId is found
         $this->mockHandler
             ->append(
+                new Response(200, [], '[]'),
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/query_response.json'))
             );
         $id = $this->client->findManageIdByEntityId('https://example.com/metadata');
@@ -66,6 +67,7 @@ class QueryClientTest extends MockeryTestCase
         // When the queried entityId is found
         $this->mockHandler
             ->append(
+                new Response(200, [], '[]'),
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/read_response.json'))
             );
         $response = $this->client->findByManageId('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33');
@@ -84,7 +86,7 @@ class QueryClientTest extends MockeryTestCase
     public function test_it_can_query_non_existent_data()
     {
         // When the queried entityId does not exist, an empty array is returned
-        $this->mockHandler->append(new Response(200, [], json_encode([])));
+        $this->mockHandler->append(new Response(200, [], '[]'), new Response(200, [], '[]'));
         $response = $this->client->findByManageId('does-not-exists');
         $this->assertEmpty($response);
     }

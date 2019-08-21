@@ -27,6 +27,7 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
@@ -55,7 +56,7 @@ class PublishEntityClientTest extends MockeryTestCase
     private $logger;
 
     /**
-     * @var GeneratorInterface|Mock
+     * @var JsonGeneratorStrategy|Mock
      */
     private $generator;
 
@@ -64,7 +65,7 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
 
-        $this->generator = m::mock(GeneratorInterface::class);
+        $this->generator = m::mock(JsonGeneratorStrategy::class);
 
         $this->logger = m::mock(LoggerInterface::class);
 

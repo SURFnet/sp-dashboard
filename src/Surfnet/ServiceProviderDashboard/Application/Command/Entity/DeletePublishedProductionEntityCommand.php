@@ -31,11 +31,20 @@ class DeletePublishedProductionEntityCommand implements Command
     private $manageId;
 
     /**
-     * @param string $manageId
+     * @var string
+     * @Assert\NotBlank
+     * @Assert\Uuid
      */
-    public function __construct($manageId)
+    private $protocol;
+
+    /**
+     * @param string $manageId
+     * @param $protocol
+     */
+    public function __construct($manageId, $protocol)
     {
         $this->manageId = $manageId;
+        $this->protocol = $protocol;
     }
 
     /**
@@ -44,5 +53,13 @@ class DeletePublishedProductionEntityCommand implements Command
     public function getManageId()
     {
         return $this->manageId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
     }
 }

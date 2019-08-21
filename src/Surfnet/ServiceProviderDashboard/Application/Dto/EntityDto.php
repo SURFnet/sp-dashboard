@@ -50,23 +50,30 @@ class EntityDto
     private $contact;
 
     /**
+     * @var string
+     */
+    private $protocol;
+
+    /**
      * @param string $id
      * @param string $entityId
      * @param string $environment
      * @param string $state
+     * @param string $protocol
      */
-    public function __construct($id, $entityId, $environment, $state)
+    private function __construct($id, $entityId, $environment, $state, $protocol)
     {
         $this->id = $id;
         $this->entityId = $entityId;
         $this->environment = $environment;
         $this->state = $state;
+        $this->protocol = $protocol;
     }
 
 
     public static function fromEntity(Entity $entity)
     {
-        return new self($entity->getId(), $entity->getEntityId(), $entity->getEnvironment(), $entity->getStatus());
+        return new self($entity->getId(), $entity->getEntityId(), $entity->getEnvironment(), $entity->getStatus(), $entity->getProtocol());
     }
 
     public static function fromManageTestResult(ManageEntity $manageResponse)
@@ -75,7 +82,8 @@ class EntityDto
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
             Entity::ENVIRONMENT_TEST,
-            Entity::STATE_PUBLISHED
+            Entity::STATE_PUBLISHED,
+            $manageResponse->getProtocol()->getProtocol()
         );
     }
 
@@ -89,7 +97,8 @@ class EntityDto
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
             Entity::ENVIRONMENT_PRODUCTION,
-            $state
+            $state,
+            $manageResponse->getProtocol()->getProtocol()
         );
     }
 
@@ -133,5 +142,13 @@ class EntityDto
     public function getContact()
     {
         return $this->contact;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
     }
 }

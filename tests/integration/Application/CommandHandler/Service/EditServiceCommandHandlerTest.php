@@ -54,13 +54,12 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'team-foobar',
             false,
             false,
+            true,
             'institution',
             'not-applicable',
             'no',
             'no',
-            true,
-            'active',
-            'in-progress'
+            true
         );
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
@@ -85,6 +84,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
                 $this->assertEquals('team-foobar', $arg->getTeamName());
                 $this->assertEquals('30dd879c-ee2f-11db-8314-0800200c9a66', $arg->getGuid());
                 $this->assertEquals(false, $arg->isPrivacyQuestionsEnabled());
+                $this->assertEquals(true, $arg->isOidcngEnabled());
                 $this->assertEquals('no', $arg->getContractSigned());
                 $this->assertEquals('no', $arg->getSurfconextRepresentativeApproved());
                 $this->assertEquals('not-applicable', $arg->getIntakeStatus());
@@ -115,13 +115,12 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'team-foobar',
             false,
             true,
+            true,
             'institution',
             'not-applicable',
             'no',
             'no',
-            true,
-            'active',
-            'no'
+            true
         );
 
         $this->repository->shouldReceive('findById')->andReturn(null)->once();
@@ -143,13 +142,12 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'team-foobar',
             false,
             false,
+            true,
             'institution',
             'not-applicable',
             'no',
             'no',
-            true,
-            'active',
-            'yes'
+            true
         );
 
         $mockEntity = m::mock(Service::class)->makePartial();

@@ -57,6 +57,7 @@ class Entity
 
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT = 'oidc';
+    const TYPE_OPENID_CONNECT_TNG = 'oidcng';
 
     const OIDC_SECRET_LENGTH = 20;
 
@@ -388,6 +389,18 @@ class Entity
     private $comments;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isPublicClient;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true, options={"unsigned"=true})
+     */
+    private $accessTokenValidity;
+
+    /**
      * @var Service
      *
      * @ORM\ManyToOne(targetEntity="Service", inversedBy="entities")
@@ -409,23 +422,27 @@ class Entity
      * @param ManageEntity $manageEntity
      * @param string $environment
      * @param Service $service
-     * @param string $playGroundUriProd
      * @param string $playGroundUriTest
+     * @param string $playGroundUriProd
+     * @param string $oidcngPlayGroundUriTest
+     * @param string $oidcngPlayGroundUriProd
      * @return Entity
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function fromManageResponse(
         ManageEntity $manageEntity,
         $environment,
         Service $service,
         $playGroundUriTest,
-        $playGroundUriProd
+        $playGroundUriProd,
+        $oidcngPlayGroundUriTest,
+        $oidcngPlayGroundUriProd
     ) {
         $metaData = $manageEntity->getMetaData();
         $coin = $metaData->getCoin();
         $arp = $manageEntity->getAttributes();
-
         $entity = new self();
-
         $entity->setEnvironment($environment);
         $entity->setStatus($manageEntity->getStatus());
         $entity->setManageId($manageEntity->getId());
@@ -445,26 +462,46 @@ class Entity
         $entity->setApplicationUrl($coin->getApplicationUrl());
         $entity->setEulaUrl($coin->getEula());
 
-        // OIDC specific
-        if ($metaData->getCoin()->getOidcClient()) {
-            $oidcClient = $manageEntity->getOidcClient();
-
-            $entity->setClientSecret($oidcClient->getClientSecret());
-            $entity->setRedirectUris($oidcClient->getRedirectUris());
-            $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-            $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
-            self::setRedirectUrisFromManageResponse($entity, $manageEntity, $environment, $playGroundUriTest, $playGroundUriProd);
-        }
-
-        // SAML specific
-        if (!$metaData->getCoin()->getOidcClient()) {
-            $entity->setProtocol(Entity::TYPE_SAML);
-
-            $entity->setImportUrl($metaData->getEntityId());
-            $entity->setMetadataUrl($metaData->getMetaDataUrl());
-            $entity->setAcsLocation($metaData->getAcsLocation());
-            $entity->setNameIdFormat($metaData->getNameIdFormat());
-            $entity->setCertificate($metaData->getCertData());
+        switch ($manageEntity->getProtocol()->getProtocol()) {
+            case (self::TYPE_OPENID_CONNECT):
+                $oidcClient = $manageEntity->getOidcClient();
+                $entity->setClientSecret($oidcClient->getClientSecret());
+                $entity->setRedirectUris($oidcClient->getRedirectUris());
+                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+                self::setRedirectUrisFromManageResponse(
+                    $entity,
+                    $manageEntity,
+                    $environment,
+                    $playGroundUriTest,
+                    $playGroundUriProd
+                );
+                break;
+            case (self::TYPE_OPENID_CONNECT_TNG):
+                $oidcClient = $manageEntity->getOidcClient();
+                $entity->setClientSecret($oidcClient->getClientSecret());
+                $entity->setRedirectUris($oidcClient->getRedirectUris());
+                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
+                $entity->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
+                $entity->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
+                $entity->setNameIdFormat($metaData->getNameIdFormat());
+                self::setRedirectUrisFromManageResponse(
+                    $entity,
+                    $manageEntity,
+                    $environment,
+                    $oidcngPlayGroundUriTest,
+                    $oidcngPlayGroundUriProd
+                );
+                break;
+            case (self::TYPE_SAML):
+                $entity->setProtocol(Entity::TYPE_SAML);
+                $entity->setImportUrl($metaData->getEntityId());
+                $entity->setMetadataUrl($metaData->getMetaDataUrl());
+                $entity->setAcsLocation($metaData->getAcsLocation());
+                $entity->setNameIdFormat($metaData->getNameIdFormat());
+                $entity->setCertificate($metaData->getCertData());
+                break;
         }
 
         $administrative = $metaData->getContacts()->findAdministrativeContact();
@@ -498,9 +535,7 @@ class Entity
         }
 
         self::setAttributesOn($entity, $arp);
-
         $entity->setService($service);
-
         $entity->idpAllowAll =  $manageEntity->getAllowedIdentityProviders()->isAllowAll();
         $entity->idpWhitelist = $manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders();
 
@@ -1500,5 +1535,37 @@ class Entity
     public function isIdpAllowAll()
     {
         return $this->idpAllowAll;
+    }
+
+    /**
+     * @param bool $isPublic
+     */
+    public function setIsPublicClient($isPublic)
+    {
+        $this->isPublicClient = $isPublic;
+    }
+
+    /**
+     * @param int $accessTokenValidity
+     */
+    public function setAccessTokenValidity($accessTokenValidity)
+    {
+        $this->accessTokenValidity = $accessTokenValidity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAccessTokenValidity()
+    {
+        return $this->accessTokenValidity;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublicClient()
+    {
+        return $this->isPublicClient;
     }
 }

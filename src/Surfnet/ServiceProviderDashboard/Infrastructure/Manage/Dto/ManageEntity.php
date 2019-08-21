@@ -40,9 +40,14 @@ class ManageEntity
     private $metaData;
 
     /**
-     * @var OidcClient
+     * @var OidcClientInterface
      */
     private $oidcClient;
+
+    /**
+     * @var Protocol
+     */
+    private $protocol;
 
     /**
      * @var AllowedIdentityProviders
@@ -51,32 +56,44 @@ class ManageEntity
 
     public static function fromApiResponse($data)
     {
+        $manageProtocol = isset($data['type']) ? $data['type'] : '';
+
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
-        $oidcClient = OidcClient::fromApiResponse($data);
+        if ($manageProtocol === Protocol::OIDC10_RP) {
+            $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
+        } elseif ($manageProtocol === Protocol::SAML20_SP) {
+            // Try to create an OidcClient, the first oidc implementation used SAML20_SP as entity type.
+            $oidcClient = OidcClient::fromApiResponse($data, $manageProtocol);
+        }
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
-        return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $oidcClient);
+        $protocol = Protocol::fromApiResponse($data, $manageProtocol);
+
+        return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }
 
     /**
      * @param string $id
      * @param AttributeList $attributes
      * @param MetaData $metaData
-     * @param OidcClient $oidcClient
      * @param AllowedIdentityProviders $allowedIdentityProviders
+     * @param Protocol $protocol
+     * @param OidcClientInterface $oidcClient
      */
     private function __construct(
         $id,
         AttributeList $attributes,
         MetaData $metaData,
         AllowedIdentityProviders $allowedIdentityProviders,
-        OidcClient $oidcClient = null
+        Protocol $protocol,
+        OidcClientInterface $oidcClient = null
     ) {
         $this->id = $id;
         $this->status = DomainEntity::STATE_PUBLISHED;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
         $this->oidcClient = $oidcClient;
+        $this->protocol = $protocol;
         $this->allowedIdentityProviders = $allowedIdentityProviders;
     }
 
@@ -106,7 +123,7 @@ class ManageEntity
     }
 
     /**
-     * @return OidcClient|null
+     * @return OidcClientInterface|null
      */
     public function getOidcClient()
     {
@@ -122,13 +139,10 @@ class ManageEntity
     }
 
     /**
-     * @return string
+     * @return Protocol
      */
     public function getProtocol()
     {
-        if ($this->getMetaData()->getCoin()->getOidcClient()) {
-            return DomainEntity::TYPE_OPENID_CONNECT;
-        }
-        return DomainEntity::TYPE_SAML;
+        return $this->protocol;
     }
 }

@@ -47,6 +47,7 @@ class EntityAclTest extends WebTestCase
     {
         $spQueryResponse = json_encode([
             'id' => 'a8e7cffd-0409-45c7-a37a-000000000000',
+            'type' => 'saml20_sp',
             'data' => (object)[
                 'entityid' => 'SP1',
                 'metaDataFields' => [
@@ -61,6 +62,7 @@ class EntityAclTest extends WebTestCase
         $idpQueryResponse = json_encode([
             [
                 '_id' => 'bfe8f00d-317a-4fbc-9cf8-ad2f3b2af578',
+                'type' => 'saml20_idp',
                 'version' => 1,
                 'data' =>
                     [
@@ -76,6 +78,7 @@ class EntityAclTest extends WebTestCase
             ],
             [
                 '_id' => '0c3febd2-3f67-4b8a-b90d-ce56a3b0abb4',
+                'type' => 'saml20_idp',
                 'version' => 0,
                 'data' =>
                     [
@@ -94,7 +97,6 @@ class EntityAclTest extends WebTestCase
         $this->testMockHandler->append(new Response(200, [], $idpQueryResponse));
 
         $crawler = $this->client->request('GET', "/entity/acl/{$this->serviceId}/{$this->entityId}");
-
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();

@@ -85,6 +85,7 @@ class EntityServiceTest extends MockeryTestCase
         $this->router = m::mock(RouterInterface::class);
         $this->router = m::mock(RouterInterface::class);
         $logger = m::mock(LoggerInterface::class);
+        $logger->shouldReceive('warning');
         $this->ticketService = m::mock(TicketServiceInterface::class);
         $this->service = new EntityService(
             $provider,
@@ -94,7 +95,9 @@ class EntityServiceTest extends MockeryTestCase
             $this->router,
             $logger,
             'playgroundUriTest',
-            'playgroundUriProd'
+            'playgroundUriProd',
+            'oidcngPlaygroundUriTest',
+            'oidcngPlaygroundUriProd'
         );
     }
 

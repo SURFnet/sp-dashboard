@@ -107,6 +107,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 
         $manageDto = ManageEntity::fromApiResponse([
             'id' => 'd6f394b2-08b1-4882-8b32-81688c15c489',
+            'type' => 'saml20_sp',
             'data' => [
                 'entityid' => 'SP1',
                 'metaDataFields' => [
@@ -150,6 +151,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 
         $managetDto = ManageEntity::fromApiResponse([
             'id' => 'd6f394b2-08b1-4882-8b32-81688c15c489',
+            'type' => 'saml20_sp',
             'data' => [
                 'entityid' => 'SP1',
                 'metaDataFields' => [
