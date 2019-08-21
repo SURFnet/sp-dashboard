@@ -122,7 +122,6 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setPreferredLanguageAttribute($command->getPreferredLanguageAttribute());
         $entity->setPersonalCodeAttribute($command->getPersonalCodeAttribute());
         $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
-        $entity->setEduPersonTargetedIDAttribute($command->getEduPersonTargetedIDAttribute());
         $entity->setComments($command->getComments());
 
         // Set the name id format to unspecified.

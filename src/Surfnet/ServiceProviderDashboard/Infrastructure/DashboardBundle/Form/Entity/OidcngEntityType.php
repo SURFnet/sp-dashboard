@@ -408,16 +408,6 @@ class OidcngEntityType extends AbstractType
                             'attr' => ['data-help' => 'entity.edit.information.oidc.scopedAffiliationAttribute'],
                         ]
                     )
-                    ->add(
-                        'eduPersonTargetedIDAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.eduPersonTargetedIDAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.eduPersonTargetedIDAttribute'],
-                        ]
-                    )
             )
             ->add(
                 $builder->create('comments', FormType::class, ['inherit_data' => true])

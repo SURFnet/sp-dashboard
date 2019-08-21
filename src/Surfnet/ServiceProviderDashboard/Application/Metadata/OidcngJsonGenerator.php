@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 /**
@@ -116,7 +117,11 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private function generateDataForNewEntity(Entity $entity, $workflowState)
     {
-        // the type for entities is always saml because manage is using saml internally
+        // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
+        // The user cannot configure EPTI @ ARP settings but the value is used internally.
+        $this->addEpti($entity);
+
+        // the type for entities is always oidc10-rp because manage is using saml internally
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
             'type' => 'oidc10-rp',
@@ -142,6 +147,9 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private function generateDataForExistingEntity(Entity $entity, $workflowState)
     {
+        // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
+        // The user cannot configure EPTI @ ARP settings but the value is used internally.
+        $this->addEpti($entity);
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
             'entityid' => $this->updateClientId($entity->getEntityId()),
@@ -184,7 +192,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $flatFields = [];
 
         foreach ($fields as $name => $value) {
-            $flatFields['metaDataFields.' . $name] = $value;
+            $flatFields['metaDataFields.'.$name] = $value;
         }
 
         return $flatFields;
@@ -271,7 +279,11 @@ class OidcngJsonGenerator implements GeneratorInterface
         }
 
         if ($entity->getAdministrativeContact()) {
-            $metadata += $this->generateContactMetadata('administrative', $index++, $entity->getAdministrativeContact());
+            $metadata += $this->generateContactMetadata(
+                'administrative',
+                $index++,
+                $entity->getAdministrativeContact()
+            );
         }
 
         if ($entity->getTechnicalContact()) {
@@ -407,7 +419,16 @@ class OidcngJsonGenerator implements GeneratorInterface
         }
 
         // Remove the scheme (protocol) and the :// part
-        $clientId = str_replace($parts['scheme'] . '://', '', $entityId);
+        $clientId = str_replace($parts['scheme'].'://', '', $entityId);
+
         return $clientId;
+    }
+
+    private function addEpti(Entity $entity)
+    {
+        $epti = new Attribute();
+        $epti->setMotivation('OIDC requires EduPersonTargetedID by default');
+        $epti->setRequested(true);
+        $entity->setEduPersonTargetedIDAttribute($epti);
     }
 }

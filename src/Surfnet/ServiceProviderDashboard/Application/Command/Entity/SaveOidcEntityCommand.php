@@ -530,7 +530,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param string $redirectUris
+     * @param string[] $redirectUris
      */
     public function setRedirectUris($redirectUris)
     {

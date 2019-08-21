@@ -53,10 +53,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $this->privacyQuestionsMetadataGenerator = m::mock(PrivacyQuestionsMetadataGenerator::class);
         $this->spDashboardMetadataGenerator = m::mock(SpDashboardMetadataGenerator::class);
 
-        $this->arpMetadataGenerator
-            ->shouldReceive('build')
-            ->andReturn(['arp' => 'arp']);
-
         $this->privacyQuestionsMetadataGenerator
             ->shouldReceive('build')
             ->andReturn(['privacy' => 'privacy']);
@@ -75,6 +71,22 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.test.playground.example.com',
             'http://oidc.prod.playground.example.com'
         );
+
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->with(
+                m::on(
+                    function (Entity $entity) {
+                        $epti = $entity->getEduPersonTargetedIDAttribute();
+                        $this->assertTrue($epti->isRequested());
+                        $this->assertTrue($epti->hasMotivation());
+                        $this->assertEquals('OIDC requires EduPersonTargetedID by default', $epti->getMotivation());
+
+                        return true;
+                    }
+                )
+            )
+            ->andReturn(['arp' => 'arp']);
 
         $data = $generator->generateForNewEntity($this->createOidcngEntity(), 'testaccepted');
         $this->assertEquals(
@@ -128,6 +140,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
     public function test_it_can_build_oidcng_data_for_existing_entities()
     {
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
+
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
@@ -190,6 +206,9 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
     public function test_it_can_build_acl_whitelist_for_existing_entities_default_allow_all()
     {
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
@@ -211,6 +230,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
     public function test_it_can_build_acl_whitelist_for_existing_entities_allow_all()
     {
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
+
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
@@ -232,6 +255,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
     public function test_it_can_build_acl_whitelist_for_existing_entities_none()
     {
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
+
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
@@ -254,6 +281,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
     public function test_it_can_build_acl_whitelist_for_existing_entities_allow_single()
     {
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
+
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
@@ -282,6 +313,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
     public function test_it_can_build_acl_whitelist_for_existing_entities_allow_multiple()
     {
+        $this->arpMetadataGenerator
+            ->shouldReceive('build')
+            ->andReturn(['arp' => 'arp']);
+
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,

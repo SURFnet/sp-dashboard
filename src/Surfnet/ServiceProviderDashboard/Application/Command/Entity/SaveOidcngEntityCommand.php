@@ -370,7 +370,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     /**
      * @param Service $service
-     * @return SaveOidcEntityCommand
+     * @return SaveOidcngEntityCommand
      */
     public static function forCreateAction(Service $service)
     {
@@ -383,7 +383,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param Entity $entity
      *
-     * @return SaveOidcEntityCommand
+     * @return SaveOidcngEntityCommand
      */
     public static function fromEntity(Entity $entity)
     {
@@ -558,7 +558,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param string $redirectUrls
+     * @param string[] $redirectUrls
      */
     public function setRedirectUrls($redirectUrls)
     {
@@ -955,14 +955,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function getEduPersonTargetedIDAttribute()
     {
         return $this->eduPersonTargetedIDAttribute;
-    }
-
-    /**
-     * @param Attribute $eduPersonTargetedIDAttribute
-     */
-    public function setEduPersonTargetedIDAttribute($eduPersonTargetedIDAttribute)
-    {
-        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
     }
 
     /**
