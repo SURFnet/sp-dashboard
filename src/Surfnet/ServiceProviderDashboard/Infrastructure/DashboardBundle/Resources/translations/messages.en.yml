@@ -38,6 +38,7 @@ entity:
       redirect_uris: Redirect URIs
       playground_enabled: Playground enabled?
       name_id_format: NameID format
+      subject_type: Subject type
       certificate: Certificate
       logo_url: Logo URL
       name_nl: Name NL
@@ -353,6 +354,7 @@ entity.edit.information.oidc.scopedAffiliationAttribute: Text should be set in w
 entity.edit.information.oidc.eduPersonTargetedIDAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
 entity.edit.information.nameIdFormat: Text should be set in web translations
+entity.edit.information.subjectType: Text should be set in web translations
 entity.edit.motivation.keep_talking: 'Please provide a more detailed motivation.'
 entity.edit.label.transient: Transient
 entity.edit.label.persistent: Persistent

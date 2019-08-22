@@ -98,6 +98,8 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setEnablePlayground($command->isEnablePlayground());
         $grantType =  $command->getGrantType();
         $entity->setGrantType(new OidcGrantType($grantType));
+        // The OIDC subject type is analog to the SAML NameIdFormat: https://www.pivotaltracker.com/story/show/167511146
+        $entity->setNameIdFormat($command->getSubjectType());
         $entity->setLogoUrl($command->getLogoUrl());
         $entity->setNameNl($command->getNameNl());
         $entity->setNameEn($command->getNameEn());
@@ -124,9 +126,6 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
         $entity->setEduPersonTargetedIDAttribute($command->getEduPersonTargetedIDAttribute());
         $entity->setComments($command->getComments());
-
-        // Set the name id format to unspecified.
-        $entity->setNameIdFormat(Entity::NAME_ID_FORMAT_UNSPECIFIED);
 
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());
         $entity->setOrganizationNameEn($command->getOrganizationNameEn());
