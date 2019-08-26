@@ -252,6 +252,7 @@ class EntityCreateOidcngTest extends WebTestCase
                     'nameNl' => 'The A Team',
                     'clientId' => 'https://entity-id',
                     'isPublicClient' => true,
+                    'grantType' => 'implicit',
                     'accessTokenValidity' => 3600,
                     'logoUrl' => 'https://logo-url',
                 ],

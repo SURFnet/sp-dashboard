@@ -96,9 +96,8 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setAccessTokenValidity($command->getAccessTokenValidity());
         $entity->setIsPublicClient($command->isPublicClient());
         $entity->setEnablePlayground($command->isEnablePlayground());
-        // Only one grant type is supported yet, use that one to create the OidcGrantType.
-        $grantTypes =  $command->getGrants();
-        $entity->setGrantType(new OidcGrantType(reset($grantTypes)));
+        $grantType =  $command->getGrantType();
+        $entity->setGrantType(new OidcGrantType($grantType));
         $entity->setLogoUrl($command->getLogoUrl());
         $entity->setNameNl($command->getNameNl());
         $entity->setNameEn($command->getNameEn());
