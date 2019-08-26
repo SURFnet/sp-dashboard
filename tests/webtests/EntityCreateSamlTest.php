@@ -173,7 +173,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $entities = $this->getEntityRepository()->findAll();
         /** @var Entity $entity */
         $entity = end($entities);
-        $this->assertEquals(Entity::NAME_ID_FORMAT_DEFAULT, $entity->getNameIdFormat());
+        $this->assertEquals(Entity::NAME_ID_FORMAT_TRANSIENT, $entity->getNameIdFormat());
     }
 
     public function test_it_can_publish_the_form()

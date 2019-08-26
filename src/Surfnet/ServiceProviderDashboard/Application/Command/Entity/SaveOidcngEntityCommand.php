@@ -141,7 +141,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      *     strict=true
      * )
      */
-    private $subjectType = Entity::NAME_ID_FORMAT_DEFAULT;
+    private $subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string

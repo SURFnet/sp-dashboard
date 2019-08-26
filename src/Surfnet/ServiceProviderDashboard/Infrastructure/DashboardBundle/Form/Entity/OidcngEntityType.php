@@ -156,7 +156,7 @@ class OidcngEntityType extends AbstractType
                     'expanded' => true,
                     'multiple' => false,
                     'choices'  => [
-                        'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_DEFAULT,
+                        'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_TRANSIENT,
                         'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
                     ],
                     'attr' => [
