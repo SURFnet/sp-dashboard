@@ -85,11 +85,13 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             } else {
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
 
+                $data = json_encode($this->generator->generateForExistingEntity(
+                    $entity,
+                    $this->manageConfig->getPublicationStatus()->getStatus()
+                ));
+
                 $response = $this->client->put(
-                    json_encode($this->generator->generateForExistingEntity(
-                        $entity,
-                        $this->manageConfig->getPublicationStatus()->getStatus()
-                    )),
+                    $data,
                     '/manage/api/internal/merge'
                 );
             }
