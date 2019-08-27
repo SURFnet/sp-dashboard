@@ -43,7 +43,7 @@ class Entity
     const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
 
     // When adding valid name id formats, don't forget to add them to self::getValidNameIdFormats()
-    const NAME_ID_FORMAT_DEFAULT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+    const NAME_ID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
     const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
     const NAME_ID_FORMAT_UNSPECIFIED = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
 
@@ -1488,7 +1488,7 @@ class Entity
     public static function getValidNameIdFormats()
     {
         return [
-            static::NAME_ID_FORMAT_DEFAULT,
+            static::NAME_ID_FORMAT_TRANSIENT,
             static::NAME_ID_FORMAT_PERSISTENT,
         ];
     }

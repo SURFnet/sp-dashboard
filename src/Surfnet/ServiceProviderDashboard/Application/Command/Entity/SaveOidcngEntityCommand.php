@@ -129,6 +129,21 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $logoUrl;
 
     /**
+     * The subject type is comparable to the SAML name id format, that is why the Entity::NAME_ID_FORMAT_DEFAULT
+     * (transient) is used to set the default value.
+     *
+     * @var string
+     * @Assert\Choice(
+     *     callback={
+     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Entity",
+     *         "getValidNameIdFormats"
+     *     },
+     *     strict=true
+     * )
+     */
+    private $subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
+
+    /**
      * @var string
      * @Assert\NotBlank()
      */
@@ -401,6 +416,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->logoUrl = $entity->getLogoUrl();
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
+        // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
+        $command->subjectType = $entity->getNameIdFormat();
         $command->descriptionNl = $entity->getDescriptionNl();
         $command->descriptionEn = $entity->getDescriptionEn();
         $command->applicationUrl = $entity->getApplicationUrl();
@@ -982,14 +999,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @return bool
-     */
-    public function hasNameIdFormat()
-    {
-        return !empty($this->nameIdFormat);
-    }
-
-    /**
      * @return string
      */
     public function getOrganizationNameNl()
@@ -1202,5 +1211,21 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setGrantType($grantType)
     {
         $this->grantType = $grantType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubjectType()
+    {
+        return $this->subjectType;
+    }
+
+    /**
+     * @param string $subjectType
+     */
+    public function setSubjectType($subjectType)
+    {
+        $this->subjectType = $subjectType;
     }
 }

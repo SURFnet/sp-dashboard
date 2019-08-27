@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -27,7 +28,6 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -146,6 +146,22 @@ class OidcngEntityType extends AbstractType
                     ],
                     'attr' => [
                         'data-help' => 'entity.edit.information.grantType',
+                    ],
+                ]
+            )
+            ->add(
+                'subjectType',
+                ChoiceType::class,
+                [
+                    'expanded' => true,
+                    'multiple' => false,
+                    'choices'  => [
+                        'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_TRANSIENT,
+                        'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
+                    ],
+                    'attr' => [
+                        'class' => 'nameidformat-container',
+                        'data-help' => 'entity.edit.information.subjectType',
                     ],
                 ]
             )

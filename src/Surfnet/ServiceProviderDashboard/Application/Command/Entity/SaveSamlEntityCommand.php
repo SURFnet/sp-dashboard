@@ -322,7 +322,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      *     strict=true
      * )
      */
-    private $nameIdFormat = Entity::NAME_ID_FORMAT_DEFAULT;
+    private $nameIdFormat = Entity::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string
