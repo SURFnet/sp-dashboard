@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -49,6 +50,19 @@ class EntityCreateOidcngTest extends WebTestCase
             $nameEnfield->getValue(),
             'Expect the NameEN field to be empty'
         );
+    }
+
+    public function epti_attribute_is_not_on_the_form()
+    {
+        $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
+        $form = $crawler->filter('.page-container')
+            ->selectButton('Save')
+            ->form();
+
+        // OIDC NG entities do not have the epti attribute as an ARP option. As it's enabled by default.
+        // See: https://www.pivotaltracker.com/story/show/167511328
+        $this->expectException(InvalidArgumentException::class);
+        $form->get('dashboard_bundle_entity_type[attributes][eduPersonTargetedIDAttribute][requested]');
     }
 
     public function test_it_can_cancel_out_of_the_form()
