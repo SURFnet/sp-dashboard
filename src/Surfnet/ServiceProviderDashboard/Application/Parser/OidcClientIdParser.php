@@ -18,16 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Parser;
 
+/**
+ * A SAML Entity ID to OIDC ClientID parser
+ *
+ * Takes the entity id and removes the protocol as per:
+ *
+ * https://www.pivotaltracker.com/story/show/166702113/comments/204130376
+ */
 class OidcClientIdParser
 {
-
     /**
-     * Takes the entity id and removes the protocol as per:
-     *
-     * https://www.pivotaltracker.com/story/show/166702113/comments/204130376
-     *
-     * @param $entityId
-     * @return mixed
+     * @param string $entityId
+     * @return string
      */
     public static function parse($entityId)
     {

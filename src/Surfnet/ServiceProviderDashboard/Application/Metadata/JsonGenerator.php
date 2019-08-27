@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
@@ -278,7 +279,7 @@ class JsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
-        $metadata['clientId'] = str_replace('://', '@//', $entity->getEntityId());
+        $metadata['clientId'] = OidcClientIdParser::parse($entity->getEntityId());
         $metadata['clientSecret'] = $entity->getClientSecret();
         // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
         $metadata['redirectUris'] = $entity->getRedirectUris();

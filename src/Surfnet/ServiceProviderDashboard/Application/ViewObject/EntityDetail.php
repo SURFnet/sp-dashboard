@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParserTest;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
@@ -367,7 +367,7 @@ class EntityDetail
         if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
             return $this->entityId;
         }
-        return OidcClientIdParserTest::parse($this->entityId);
+        return OidcClientIdParser::parse($this->entityId);
     }
 
     /**
