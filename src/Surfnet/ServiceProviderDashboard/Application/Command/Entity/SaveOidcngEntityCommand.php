@@ -92,6 +92,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      *     @Assert\NotBlank(),
      *     @Assert\Url(),
      * })
+     * @SpDashboardAssert\UniqueRedirectUrls()
      */
     private $redirectUrls;
 
@@ -1203,21 +1204,5 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setGrantType($grantType)
     {
         $this->grantType = $grantType;
-    }
-
-    /**
-     * @param $object
-     * @param ExecutionContextInterface $context
-     * @param $payload
-     * @Assert\Callback
-     */
-    public static function uniqueRedirectUris($object, ExecutionContextInterface $context, $payload)
-    {
-        /** @var SaveOidcngEntityCommand $object */
-        $redirectUris = $object->getRedirectUrls();
-
-        if (array_unique($redirectUris) !== $redirectUris) {
-            $context->buildViolation('Duplicate redirect URIs are not allowed')->atPath('redirectUris')->addViolation();
-        }
     }
 }

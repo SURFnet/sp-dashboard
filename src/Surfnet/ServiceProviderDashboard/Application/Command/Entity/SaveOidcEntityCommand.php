@@ -92,6 +92,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
      *     @Assert\NotBlank(),
      *     @Assert\Url(),
      * })
+     * @SpDashboardAssert\UniqueRedirectUrls()
      */
     private $redirectUris;
 
@@ -1127,21 +1128,5 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
     public function setManageId($manageId)
     {
         $this->manageId = $manageId;
-    }
-
-    /**
-     * @param $object
-     * @param ExecutionContextInterface $context
-     * @param $payload
-     * @Assert\Callback
-     */
-    public static function uniqueRedirectUris($object, ExecutionContextInterface $context, $payload)
-    {
-        /** @var SaveOidcEntityCommand $object */
-        $redirectUris = $object->getRedirectUris();
-
-        if (array_unique($redirectUris) !== $redirectUris) {
-            $context->buildViolation('Duplicate redirect URIs are not allowed')->atPath('redirectUris')->addViolation();
-        }
     }
 }

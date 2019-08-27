@@ -261,6 +261,10 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: unique_entity_id }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
+        tags:
+            - { name: validator.constraint_validator, alias: unique_redirect_urls }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator:
         tags:
             - { name: validator.constraint_validator, alias: metadata_url }
