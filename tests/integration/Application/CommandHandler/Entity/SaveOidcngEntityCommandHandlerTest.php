@@ -93,6 +93,9 @@ class SaveOidcngEntityCommandHandlerTest extends MockeryTestCase
                         $epti = $entity->getEduPersonTargetedIDAttribute();
                         $this->assertNull($epti);
                         $this->assertEquals('Test Entity', $entity->getNameEn());
+                        // Without setting it explicitly 3600 is used as the default value
+                        // See: https://www.pivotaltracker.com/story/show/167510474
+                        $this->assertEquals(3600, $entity->getAccessTokenValidity());
                         return true;
                     }
                 )

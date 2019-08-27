@@ -119,7 +119,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @Assert\LessThanOrEqual(86400)
      * @Assert\GreaterThanOrEqual(3600)
      */
-    private $accessTokenValidity;
+    private $accessTokenValidity = 3600;
 
     /**
      * @var string
