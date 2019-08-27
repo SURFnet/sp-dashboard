@@ -198,8 +198,8 @@ services:
         tags:
             - { name: dashboard.json_generator, identifier: oidcng }
         arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
+            $oidcPlaygroundUriTest: '%oidcng_playground_uri_test%'
+            $oidcPlaygroundUriProd: '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
