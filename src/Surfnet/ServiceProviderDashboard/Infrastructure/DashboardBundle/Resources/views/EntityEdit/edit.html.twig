@@ -43,15 +43,11 @@
 
     {% endif %}
 
-    {% if form.attributes is defined %}
-
     <div class="fieldset card">
         <h2>{{ 'entity.edit.comments.title'|trans }}</h2>
         <div class="wysiwyg">{{ 'entity.edit.comments.html'|trans|wysiwyg }}</div>
         {{ form_widget(form.comments) }}
     </div>
-
-    {% endif %}
 
     <div class="button-wrapper">
         {{ form_end(form) }}

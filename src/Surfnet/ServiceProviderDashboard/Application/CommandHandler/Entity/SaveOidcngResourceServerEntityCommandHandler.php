@@ -110,6 +110,8 @@ class SaveOidcngResourceServerEntityCommandHandler implements CommandHandler
         $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
         $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
 
+        $entity->setComments($command->getComments());
+
         $this->repository->save($entity);
     }
 }

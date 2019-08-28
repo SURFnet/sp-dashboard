@@ -77,13 +77,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     private $scopes = ['openid'];
 
     /**
-     * @var OidcGrantType
-     *
-     * @Assert\NotBlank()
-     */
-    private $grantType;
-
-    /**
      * @var string
      * @Assert\NotBlank()
      */
@@ -212,11 +205,9 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $command->environment = $entity->getEnvironment();
         $command->entityId = $entity->getEntityId();
         $command->secret = $entity->getClientSecret();
-        if ($entity->getProtocol() !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $command->grantType = $entity->getGrantType()->getGrantType();
-        }
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
+        $command->comments = $entity->getComments();
         // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
         $command->descriptionNl = $entity->getDescriptionNl();
         $command->descriptionEn = $entity->getDescriptionEn();
