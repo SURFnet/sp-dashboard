@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -54,8 +55,6 @@ class OidcngResourceServerEntityType extends AbstractType
                     'required' => false,
                     'attr' => [
                         'data-help' => 'entity.edit.information.clientId',
-                        'data-parsley-uri' => null,
-                        'data-parsley-trigger' => 'blur',
                     ],
                 ]
             );
@@ -179,7 +178,7 @@ class OidcngResourceServerEntityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => SaveOidcngEntityCommand::class
+            'data_class' => SaveOidcngResourceServerEntityCommand::class
         ));
     }
 

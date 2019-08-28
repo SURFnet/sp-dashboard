@@ -78,7 +78,7 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         }
 
         if (is_null($entity)) {
-            throw new EntityNotFoundException('The requested Service cannot be found');
+            throw new EntityNotFoundException('The requested entity cannot be found');
         }
 
         if (!$command->getManageId()) {
@@ -116,26 +116,21 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setAdministrativeContact($command->getAdministrativeContact());
         $entity->setTechnicalContact($command->getTechnicalContact());
         $entity->setSupportContact($command->getSupportContact());
-
-        // Resource servers have no ARP attributes, skip setting them.
-        if ($command->getProtocol() !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $entity->setGivenNameAttribute($command->getGivenNameAttribute());
-            $entity->setSurNameAttribute($command->getSurNameAttribute());
-            $entity->setCommonNameAttribute($command->getCommonNameAttribute());
-            $entity->setDisplayNameAttribute($command->getDisplayNameAttribute());
-            $entity->setEmailAddressAttribute($command->getEmailAddressAttribute());
-            $entity->setOrganizationAttribute($command->getOrganizationAttribute());
-            $entity->setOrganizationTypeAttribute($command->getOrganizationTypeAttribute());
-            $entity->setAffiliationAttribute($command->getAffiliationAttribute());
-            $entity->setEntitlementAttribute($command->getEntitlementAttribute());
-            $entity->setPrincipleNameAttribute($command->getPrincipleNameAttribute());
-            $entity->setUidAttribute($command->getUidAttribute());
-            $entity->setPreferredLanguageAttribute($command->getPreferredLanguageAttribute());
-            $entity->setPersonalCodeAttribute($command->getPersonalCodeAttribute());
-            $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
-            $entity->setComments($command->getComments());
-        }
-
+        $entity->setGivenNameAttribute($command->getGivenNameAttribute());
+        $entity->setSurNameAttribute($command->getSurNameAttribute());
+        $entity->setCommonNameAttribute($command->getCommonNameAttribute());
+        $entity->setDisplayNameAttribute($command->getDisplayNameAttribute());
+        $entity->setEmailAddressAttribute($command->getEmailAddressAttribute());
+        $entity->setOrganizationAttribute($command->getOrganizationAttribute());
+        $entity->setOrganizationTypeAttribute($command->getOrganizationTypeAttribute());
+        $entity->setAffiliationAttribute($command->getAffiliationAttribute());
+        $entity->setEntitlementAttribute($command->getEntitlementAttribute());
+        $entity->setPrincipleNameAttribute($command->getPrincipleNameAttribute());
+        $entity->setUidAttribute($command->getUidAttribute());
+        $entity->setPreferredLanguageAttribute($command->getPreferredLanguageAttribute());
+        $entity->setPersonalCodeAttribute($command->getPersonalCodeAttribute());
+        $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
+        $entity->setComments($command->getComments());
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());
         $entity->setOrganizationNameEn($command->getOrganizationNameEn());
         $entity->setOrganizationDisplayNameNl($command->getOrganizationDisplayNameNl());

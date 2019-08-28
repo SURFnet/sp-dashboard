@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factor
 use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -67,16 +68,16 @@ class EntityTypeFactory
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_OPENID_CONNECT_TNG):
-                $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG);
+                $command = SaveOidcngEntityCommand::forCreateAction($service);
                 if ($entity) {
                     $command = SaveOidcngEntityCommand::fromEntity($entity);
                 }
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-                $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+                $command = SaveOidcngResourceServerEntityCommand::forCreateAction($service);
                 if ($entity) {
-                    $command = SaveOidcngEntityCommand::fromEntity($entity);
+                    $command = SaveOidcngResourceServerEntityCommand::fromEntity($entity);
                 }
                 $command->setEnvironment($environment);
 
@@ -113,7 +114,7 @@ class EntityTypeFactory
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
             case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-                $command = SaveOidcngEntityCommand::fromEntity($entity);
+                $command = SaveOidcngResourceServerEntityCommand::fromEntity($entity);
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
         }

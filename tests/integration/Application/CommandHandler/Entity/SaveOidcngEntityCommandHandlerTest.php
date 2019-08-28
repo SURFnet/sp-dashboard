@@ -52,11 +52,11 @@ class SaveOidcngEntityCommandHandlerTest extends MockeryTestCase
         );
     }
 
-    public function test_it_can_delete_an_entity_from_production()
+    public function test_it_can_handle_saving_of_a_save_command()
     {
         $service = m::mock(Service::class);
 
-        $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG);
+        $command = SaveOidcngEntityCommand::forCreateAction($service);
         $command->setEntityId('test_entity');
         $command->setGrantType(OidcGrantType::GRANT_TYPE_IMPLICIT);
         $command->setRedirectUrls(['https://test.example.com/redirect', 'https://test.example.com/section/31/redirect']);

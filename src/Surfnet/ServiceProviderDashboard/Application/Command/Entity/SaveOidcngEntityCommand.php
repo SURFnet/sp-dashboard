@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -379,7 +378,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      */
-    private $protocol;
+    private $protocol = Entity::TYPE_OPENID_CONNECT_TNG;
 
     private function __construct()
     {
@@ -389,13 +388,10 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @param Service $service
      * @return SaveOidcngEntityCommand
      */
-    public static function forCreateAction(Service $service, $protocol)
+    public static function forCreateAction(Service $service)
     {
         $command = new self();
         $command->service = $service;
-
-        $command->protocol = $protocol;
-
         return $command;
     }
 
@@ -416,9 +412,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->entityId = $entity->getEntityId();
         $command->secret = $entity->getClientSecret();
         $command->redirectUrls = $entity->getRedirectUris();
-        if ($entity->getProtocol() !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $command->grantType = $entity->getGrantType()->getGrantType();
-        }
+        $command->grantType = $entity->getGrantType()->getGrantType();
         $command->logoUrl = $entity->getLogoUrl();
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
@@ -456,8 +450,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->isPublicClient = $entity->isPublicClient();
         $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
         $command->enablePlayground = $entity->isEnablePlayground();
-
-        $command->protocol = $entity->getProtocol();
 
         return $command;
     }
