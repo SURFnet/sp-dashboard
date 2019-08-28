@@ -1,3 +1,21 @@
+## 2.2.1
+This release consist of bugfixes after testing OIDC TNG support.
+
+**Bugfix**
+ * Push signature method to manage for OIDC #299
+ * Correctly display ClientID values #295
+ * Set a hard default value on access token validity #296
+ * Set the OIDC TNG specific playground urls #297
+ * Do not allow duplicate redirect URIs #291
+ * Request EPTI by default for each OIDC TNG entity #290
+ * Allow selection of Subject Type (NameIdFormat) #293
+ * Refrain from sending a NULL secret to Manage #294
+ * Enable an additional grant type #292
+
+**Other improvements**
+ * Ansible: Add some configuration parameters #289
+ * Bump jquery from 3.3.1 to 3.4.0 #288
+
 ## 2.2.0
 This release adds OpenID Connect TNG support to SP Dashboard. More details can be found in:
 
