@@ -252,8 +252,6 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
                     'nameEn' => 'The A Team',
                     'nameNl' => 'The A Team',
                     'clientId' => 'https://entity-id',
-                    'grantType' => 'client_credentials',
-                    'isResourceServer' => true,
                 ],
                 'contactInformation' => [
                     'administrativeContact' => [

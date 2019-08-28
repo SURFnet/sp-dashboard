@@ -379,7 +379,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      */
-    private $protocol = Entity::TYPE_OPENID_CONNECT_TNG;
+    private $protocol;
 
     private function __construct()
     {
@@ -389,10 +389,12 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @param Service $service
      * @return SaveOidcngEntityCommand
      */
-    public static function forCreateAction(Service $service)
+    public static function forCreateAction(Service $service, $protocol)
     {
         $command = new self();
         $command->service = $service;
+
+        $command->protocol = $protocol;
 
         return $command;
     }
@@ -402,7 +404,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      *
      * @return SaveOidcngEntityCommand
      */
-    public static function fromEntity(Entity $entity)
+    public static function fromEntity(Entity $entity, $protocol)
     {
         $command = new self();
         $command->id = $entity->getId();
@@ -452,6 +454,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->isPublicClient = $entity->isPublicClient();
         $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
         $command->enablePlayground = $entity->isEnablePlayground();
+
+        $command->protocol = $protocol;
 
         return $command;
     }

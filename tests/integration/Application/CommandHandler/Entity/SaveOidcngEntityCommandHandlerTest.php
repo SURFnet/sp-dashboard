@@ -56,7 +56,7 @@ class SaveOidcngEntityCommandHandlerTest extends MockeryTestCase
     {
         $service = m::mock(Service::class);
 
-        $command = SaveOidcngEntityCommand::forCreateAction($service);
+        $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG);
         $command->setEntityId('test_entity');
         $command->setGrantType(OidcGrantType::GRANT_TYPE_IMPLICIT);
         $command->setRedirectUrls(['https://test.example.com/redirect', 'https://test.example.com/section/31/redirect']);

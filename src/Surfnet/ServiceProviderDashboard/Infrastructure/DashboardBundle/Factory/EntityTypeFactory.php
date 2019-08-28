@@ -67,16 +67,16 @@ class EntityTypeFactory
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_OPENID_CONNECT_TNG):
-                $command = SaveOidcngEntityCommand::forCreateAction($service);
+                $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG);
                 if ($entity) {
-                    $command = SaveOidcngEntityCommand::fromEntity($entity);
+                    $command = SaveOidcngEntityCommand::fromEntity($entity, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
                 }
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-                $command = SaveOidcngEntityCommand::forCreateAction($service);
+                $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
                 if ($entity) {
-                    $command = SaveOidcngEntityCommand::fromEntity($entity);
+                    $command = SaveOidcngEntityCommand::fromEntity($entity, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
                 }
                 $command->setEnvironment($environment);
 

@@ -96,8 +96,13 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setAccessTokenValidity($command->getAccessTokenValidity());
         $entity->setIsPublicClient($command->isPublicClient());
         $entity->setEnablePlayground($command->isEnablePlayground());
-        $grantType =  $command->getGrantType();
-        $entity->setGrantType(new OidcGrantType($grantType));
+        try {
+            $grantType =  $command->getGrantType();
+            $entity->setGrantType(new OidcGrantType($grantType));
+        } catch (\InvalidArgumentException $e) {
+            // Allow empty grant types
+        }
+
         // The OIDC subject type is analog to the SAML NameIdFormat: https://www.pivotaltracker.com/story/show/167511146
         $entity->setNameIdFormat($command->getSubjectType());
         $entity->setLogoUrl($command->getLogoUrl());
@@ -107,24 +112,29 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setDescriptionEn($command->getDescriptionEn());
         $entity->setApplicationUrl($command->getApplicationUrl());
         $entity->setEulaUrl($command->getEulaUrl());
+
         $entity->setAdministrativeContact($command->getAdministrativeContact());
         $entity->setTechnicalContact($command->getTechnicalContact());
         $entity->setSupportContact($command->getSupportContact());
-        $entity->setGivenNameAttribute($command->getGivenNameAttribute());
-        $entity->setSurNameAttribute($command->getSurNameAttribute());
-        $entity->setCommonNameAttribute($command->getCommonNameAttribute());
-        $entity->setDisplayNameAttribute($command->getDisplayNameAttribute());
-        $entity->setEmailAddressAttribute($command->getEmailAddressAttribute());
-        $entity->setOrganizationAttribute($command->getOrganizationAttribute());
-        $entity->setOrganizationTypeAttribute($command->getOrganizationTypeAttribute());
-        $entity->setAffiliationAttribute($command->getAffiliationAttribute());
-        $entity->setEntitlementAttribute($command->getEntitlementAttribute());
-        $entity->setPrincipleNameAttribute($command->getPrincipleNameAttribute());
-        $entity->setUidAttribute($command->getUidAttribute());
-        $entity->setPreferredLanguageAttribute($command->getPreferredLanguageAttribute());
-        $entity->setPersonalCodeAttribute($command->getPersonalCodeAttribute());
-        $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
-        $entity->setComments($command->getComments());
+
+        // Resource servers have no ARP attributes, skip setting them.
+        if ($command->getProtocol() !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $entity->setGivenNameAttribute($command->getGivenNameAttribute());
+            $entity->setSurNameAttribute($command->getSurNameAttribute());
+            $entity->setCommonNameAttribute($command->getCommonNameAttribute());
+            $entity->setDisplayNameAttribute($command->getDisplayNameAttribute());
+            $entity->setEmailAddressAttribute($command->getEmailAddressAttribute());
+            $entity->setOrganizationAttribute($command->getOrganizationAttribute());
+            $entity->setOrganizationTypeAttribute($command->getOrganizationTypeAttribute());
+            $entity->setAffiliationAttribute($command->getAffiliationAttribute());
+            $entity->setEntitlementAttribute($command->getEntitlementAttribute());
+            $entity->setPrincipleNameAttribute($command->getPrincipleNameAttribute());
+            $entity->setUidAttribute($command->getUidAttribute());
+            $entity->setPreferredLanguageAttribute($command->getPreferredLanguageAttribute());
+            $entity->setPersonalCodeAttribute($command->getPersonalCodeAttribute());
+            $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
+            $entity->setComments($command->getComments());
+        }
 
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());
         $entity->setOrganizationNameEn($command->getOrganizationNameEn());
