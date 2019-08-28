@@ -238,8 +238,10 @@ class JsonGenerator implements GeneratorInterface
             $metadata['AssertionConsumerService:0:Binding'] = $entity->getAcsBinding();
             $metadata['AssertionConsumerService:0:Location'] = $entity->getAcsLocation();
             $metadata['NameIDFormat'] = $entity->getNameIdFormat();
-            $metadata = array_merge($metadata, $this->generateSecurityMetadata($entity));
+            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+            $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
         } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
+            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
             $metadata["coin:oidc_client"] = '1';
         }
 
@@ -260,10 +262,8 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateSecurityMetadata(Entity $entity)
+    private function generateCertDataMetadata(Entity $entity)
     {
-        $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-
         if (!empty($entity->getCertificate())) {
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getCertificate()

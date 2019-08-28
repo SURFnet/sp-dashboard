@@ -442,6 +442,7 @@ class JsonGeneratorTest extends MockeryTestCase
                             'privacy' => 'privacy',
                             'sp' => 'sp',
                             'coin:oidc_client' => '1',
+                            'coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
                         ),
                     'oidcClient' =>
                         array (
@@ -508,6 +509,7 @@ class JsonGeneratorTest extends MockeryTestCase
                     'state' => 'testaccepted',
                     'allowedEntities' => [],
                     'allowedall' => true,
+                    'metaDataFields.coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
