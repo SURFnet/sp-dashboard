@@ -404,7 +404,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      *
      * @return SaveOidcngEntityCommand
      */
-    public static function fromEntity(Entity $entity, $protocol)
+    public static function fromEntity(Entity $entity)
     {
         $command = new self();
         $command->id = $entity->getId();
@@ -416,7 +416,9 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->entityId = $entity->getEntityId();
         $command->secret = $entity->getClientSecret();
         $command->redirectUrls = $entity->getRedirectUris();
-        $command->grantType = $entity->getGrantType()->getGrantType();
+        if ($entity->getProtocol() !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $command->grantType = $entity->getGrantType()->getGrantType();
+        }
         $command->logoUrl = $entity->getLogoUrl();
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
@@ -455,7 +457,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
         $command->enablePlayground = $entity->isEnablePlayground();
 
-        $command->protocol = $protocol;
+        $command->protocol = $entity->getProtocol();
 
         return $command;
     }

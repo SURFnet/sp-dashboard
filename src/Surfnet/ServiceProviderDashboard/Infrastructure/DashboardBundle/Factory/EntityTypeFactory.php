@@ -69,14 +69,14 @@ class EntityTypeFactory
             case ($type == Entity::TYPE_OPENID_CONNECT_TNG):
                 $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG);
                 if ($entity) {
-                    $command = SaveOidcngEntityCommand::fromEntity($entity, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+                    $command = SaveOidcngEntityCommand::fromEntity($entity);
                 }
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
                 $command = SaveOidcngEntityCommand::forCreateAction($service, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
                 if ($entity) {
-                    $command = SaveOidcngEntityCommand::fromEntity($entity, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+                    $command = SaveOidcngEntityCommand::fromEntity($entity);
                 }
                 $command->setEnvironment($environment);
 
@@ -112,6 +112,10 @@ class EntityTypeFactory
                 $command = SaveOidcngEntityCommand::fromEntity($entity);
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
+            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
+                $command = SaveOidcngEntityCommand::fromEntity($entity);
+                $command->setEnvironment($entity->getEnvironment());
+                return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
         }
 
         throw new InvalidArgumentException("invalid form type requested");
