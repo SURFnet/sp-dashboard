@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -26,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -91,6 +93,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
      *     @Assert\NotBlank(),
      *     @Assert\Url(),
      * })
+     * @SpDashboardAssert\UniqueRedirectUrls()
      */
     private $redirectUris;
 
@@ -499,7 +502,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
      */
     public function getClientId()
     {
-        return str_replace('://', '@//', $this->entityId);
+        return OidcClientIdParser::parse($this->entityId);
     }
 
     /**
@@ -530,7 +533,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param string $redirectUris
+     * @param string[] $redirectUris
      */
     public function setRedirectUris($redirectUris)
     {

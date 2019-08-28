@@ -1,3 +1,38 @@
+## 2.2.1
+This release consist of bugfixes after testing OIDC TNG support.
+
+**Bugfix**
+ * Push signature method to manage for OIDC #299
+ * Correctly display ClientID values #295
+ * Set a hard default value on access token validity #296
+ * Set the OIDC TNG specific playground urls #297
+ * Do not allow duplicate redirect URIs #291
+ * Request EPTI by default for each OIDC TNG entity #290
+ * Allow selection of Subject Type (NameIdFormat) #293
+ * Refrain from sending a NULL secret to Manage #294
+ * Enable an additional grant type #292
+
+**Other improvements**
+ * Ansible: Add some configuration parameters #289
+ * Bump jquery from 3.3.1 to 3.4.0 #288
+
+## 2.2.0
+This release adds OpenID Connect TNG support to SP Dashboard. More details can be found in:
+
+* Add oidcng support #275
+
+## 2.1.7
+**Feature**
+ * Added a Jira test stand-in feature flag #287
+
+**Bugfix**
+ * Disabled HTML Purifier cache #284
+ * Prevent error on empty Jira issue mock file #285
+
+**Other improvements**
+ * Ansible improvements #286 #279
+ * Several security related updates #282 #283 #288
+ 
 ## 2.1.6
 **Bugfix**
   * Escape the wysiwyg translations #281
@@ -45,7 +80,7 @@
  * Add translatable contact email placeholder #259
  * Rename 'team name' to 'team identifier' #258
  * Add translatable footer links #253
- * Show motivationless attributes on entity detaOil #255
+ * Show motivationless attributes on entity detail #255
  * Show OIDC items on entity details #256
  * Fix urn validator regex #251
  * Fix the playground url after copy to production #247

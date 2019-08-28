@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * Copyright 2019 SURFnet B.V.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
+
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\Mock;
+use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+
+class JsonGeneratorStrategyTest extends MockeryTestCase
+{
+    /**
+     * @var GeneratorInterface&Mock
+     */
+    private $generator1;
+
+    /**
+     * @var GeneratorInterface&Mock
+     */
+    private $generator2;
+
+    /**
+     * @var GeneratorInterface&Mock
+     */
+    private $generator3;
+
+    /**
+     * @var JsonGeneratorStrategy
+     */
+    private $strategy;
+
+    public function setUp()
+    {
+        $this->generator1 = m::mock(GeneratorInterface::class);
+        $this->generator1->shouldReceive('generateForNewEntity');
+        $this->generator1->shouldReceive('generateForExistingEntity');
+        $this->generator2 = m::mock(GeneratorInterface::class);
+        $this->generator2->shouldReceive('generateForNewEntity');
+        $this->generator2->shouldReceive('generateForExistingEntity');
+        $this->generator3 = m::mock(GeneratorInterface::class);
+        $this->generator3->shouldReceive('generateForNewEntity');
+        $this->generator3->shouldReceive('generateForExistingEntity');
+
+        $this->strategy = new JsonGeneratorStrategy();
+        $this->strategy->addStrategy('saml', $this->generator1);
+        $this->strategy->addStrategy('oidc', $this->generator2);
+        $this->strategy->addStrategy('oidcng', $this->generator3);
+    }
+
+    public function test_generate_for_new_entity()
+    {
+        $entity = m::mock(Entity::class);
+
+        $entity->shouldReceive('getProtocol')->andReturn('saml');
+        $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+
+        $entity->shouldReceive('getProtocol')->andReturn('oidc');
+        $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+
+        $entity->shouldReceive('getProtocol')->andReturn('oidcng');
+        $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+    }
+
+    public function test_generate_for_existing_entity()
+    {
+        $entity = m::mock(Entity::class);
+
+        $entity->shouldReceive('getProtocol')->andReturn('saml');
+        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
+
+        $entity->shouldReceive('getProtocol')->andReturn('oidc');
+        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
+
+        $entity->shouldReceive('getProtocol')->andReturn('oidcng');
+        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
+    }
+
+    public function test_add_invalid_strategy()
+    {
+        $entity = m::mock(Entity::class);
+        $entity->shouldReceive('getProtocol')->andReturn('saml30');
+
+        $this->expectException(JsonGeneratorStrategyNotFoundException::class);
+        $this->expectExceptionMessage('The requested JsonGenerator for protocol "saml30" is not registered');
+        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
+    }
+}

@@ -92,6 +92,14 @@ class EntityDeleteController extends Controller
         $form = $this->createForm(DeleteEntityType::class);
         $form->handleRequest($request);
 
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to delete oidcng entities for this environment.'
+            );
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
                 $this->commandBus->handle(
@@ -144,9 +152,12 @@ class EntityDeleteController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
-                $command = $this->commandFactory->buildDeletePublishedProductionEntityCommand($manageId);
+                $command = $this->commandFactory->buildDeletePublishedProductionEntityCommand(
+                    $manageId,
+                    $entity->getProtocol()->getProtocol()
+                );
                 if ($environment === 'test') {
-                    $command = $this->commandFactory->buildDeletePublishedTestEntityCommand($manageId);
+                    $command = $this->commandFactory->buildDeletePublishedTestEntityCommand($manageId, $entity->getProtocol()->getProtocol());
                 }
                 $this->commandBus->handle($command);
             }

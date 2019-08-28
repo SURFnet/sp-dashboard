@@ -46,6 +46,8 @@ class ServiceOverviewTest extends WebTestCase
         $this->logIn('ROLE_USER', [$surfNet]);
 
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/');
@@ -70,6 +72,10 @@ class ServiceOverviewTest extends WebTestCase
 
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
@@ -102,6 +108,10 @@ class ServiceOverviewTest extends WebTestCase
 
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 

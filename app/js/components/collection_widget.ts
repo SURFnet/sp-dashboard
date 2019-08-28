@@ -59,12 +59,22 @@ class CollectionWidget {
    * Add new collection entry with new id
    */
   private addCollectionEntry() {
+
+    const newElement = this.createNewCollectionEntry();
+    if (!this.isUnique(newElement)) {
+      this.$input.parent().addClass('error');
+      return;
+    }
+
+    this.$input.val('');
+    this.$input.parent().removeClass('error');
+
     const collectionEntry = $('<li class="collection-entry"></li>');
     const $removeEntryButton = $('<button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button>');
 
     this.registerRemoveClickHandler($removeEntryButton);
 
-    collectionEntry.append(this.createNewCollectionEntry());
+    collectionEntry.append(newElement);
     collectionEntry.append($removeEntryButton);
     this.$collectionList.append(collectionEntry);
 
@@ -89,7 +99,7 @@ class CollectionWidget {
     const $input = $(input);
     $input.val(this.$input.val() as string);
     $input.prop('readonly', true);
-    this.$input.val('');
+
     return $input;
   }
 
@@ -128,6 +138,18 @@ class CollectionWidget {
     };
     const $form = this.$collectionWidget.closest('form');
     $form.on('submit', handleBeforeSubmit);
+  }
+
+  private isUnique(newElement: JQuery<HTMLElement>): boolean {
+    let isUniqe = true;
+    this.$collectionList.find('li').toArray().forEach((value) => {
+      const existingValue = $(value).find('input').val();
+      if (existingValue === newElement.val()) {
+        isUniqe = false;
+      }
+    });
+
+    return isUniqe;
   }
 }
 

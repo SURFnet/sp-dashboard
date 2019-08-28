@@ -36,20 +36,31 @@ class Config
     private $publicationStatus;
 
     /**
+     * @var OidcngEnabled
+     */
+    private $oidcngEnabled;
+
+    /**
      * @param string $environment
      * @param Connection $connection
      * @param PublicationStatus $publicationStatus
+     * @param OidcngEnabled $oidcngEnabled
      */
-    public function __construct($environment, Connection $connection, PublicationStatus $publicationStatus)
-    {
+    public function __construct(
+        $environment,
+        Connection $connection,
+        PublicationStatus $publicationStatus,
+        OidcngEnabled $oidcngEnabled
+    ) {
         $this->environment = $environment;
         $this->connection = $connection;
         $this->publicationStatus = $publicationStatus;
+        $this->oidcngEnabled = $oidcngEnabled;
     }
 
     public function getEnvironment()
     {
-        return (string) $this->environment;
+        return (string)$this->environment;
     }
 
     public function getConnection()
@@ -60,5 +71,10 @@ class Config
     public function getPublicationStatus()
     {
         return $this->publicationStatus;
+    }
+
+    public function getOidcngEnabled()
+    {
+        return $this->oidcngEnabled;
     }
 }

@@ -76,6 +76,8 @@ class EntityCreateOidcTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
@@ -106,6 +108,8 @@ class EntityCreateOidcTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();
@@ -125,6 +129,7 @@ class EntityCreateOidcTest extends WebTestCase
             ->selectButton('Publish')
             ->form();
 
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         // ClientId validator
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Publish json
@@ -142,6 +147,8 @@ class EntityCreateOidcTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->client->followRedirect(); // redirect to published page
@@ -234,6 +241,8 @@ class EntityCreateOidcTest extends WebTestCase
 
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->followRedirect();

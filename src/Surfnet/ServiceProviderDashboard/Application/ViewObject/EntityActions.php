@@ -133,8 +133,10 @@ class EntityActions
      */
     public function allowSecretResetAction()
     {
-        return $this->protocol == DomainEntity::TYPE_OPENID_CONNECT &&
-            ($this->status == DomainEntity::STATE_PUBLISHED || $this->status == DomainEntity::STATE_PUBLICATION_REQUESTED);
+        $protocol = $this->protocol;
+        $status = $this->status;
+        return ($protocol == DomainEntity::TYPE_OPENID_CONNECT || $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG) &&
+            ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
     }
 
 

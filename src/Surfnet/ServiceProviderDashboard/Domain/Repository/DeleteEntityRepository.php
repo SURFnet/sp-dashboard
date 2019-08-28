@@ -26,6 +26,7 @@ interface DeleteEntityRepository
      * Delete an entity from manage identified by the manage id
      *
      * @param string $manageId
+     * @param string $protocol
      */
-    public function delete($manageId);
+    public function delete($manageId, $protocol);
 }

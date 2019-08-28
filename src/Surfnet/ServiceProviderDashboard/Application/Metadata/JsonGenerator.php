@@ -21,10 +21,17 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 /**
+ * The JsonGenerator is able to generate Manage SAML 2.0 and OpenID Connect entities (oidc).
+ *
+ * The oidc entities are actually saved as saml20 entities. This is an early implementation detail in Manage < v4.
+ * From version 4 and onward the oidcng (oidc10_rp) entity type is introduced. This generator is not capable of
+ * creating that type of json.
+ *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ElseExpression)
  */
@@ -231,8 +238,10 @@ class JsonGenerator implements GeneratorInterface
             $metadata['AssertionConsumerService:0:Binding'] = $entity->getAcsBinding();
             $metadata['AssertionConsumerService:0:Location'] = $entity->getAcsLocation();
             $metadata['NameIDFormat'] = $entity->getNameIdFormat();
-            $metadata = array_merge($metadata, $this->generateSecurityMetadata($entity));
+            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+            $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
         } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
+            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
             $metadata["coin:oidc_client"] = '1';
         }
 
@@ -253,10 +262,8 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateSecurityMetadata(Entity $entity)
+    private function generateCertDataMetadata(Entity $entity)
     {
-        $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-
         if (!empty($entity->getCertificate())) {
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getCertificate()
@@ -272,7 +279,7 @@ class JsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
-        $metadata['clientId'] = str_replace('://', '@//', $entity->getEntityId());
+        $metadata['clientId'] = OidcClientIdParser::parse($entity->getEntityId());
         $metadata['clientSecret'] = $entity->getClientSecret();
         // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
         $metadata['redirectUris'] = $entity->getRedirectUris();

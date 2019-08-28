@@ -67,6 +67,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand }
 
+    surfnet.dashboard.command_handler.edit_oidcng_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand }
+
     surfnet.dashboard.command_handler.edit_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
         public: true
@@ -174,11 +180,26 @@ services:
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
         arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%metadata_url_timeout%']
 
+
+    Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy:
+        class: Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy
+
     Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator
         arguments:
             $oidcPlaygroundUriTest: '%playground_uri_test%'
             $oidcPlaygroundUriProd: '%playground_uri_prod%'
+        tags:
+            - { name: dashboard.json_generator, identifier: saml20 }
+            - { name: dashboard.json_generator, identifier: oidc }
+
+    Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator:
+        class: Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator
+        tags:
+            - { name: dashboard.json_generator, identifier: oidcng }
+        arguments:
+            $oidcPlaygroundUriTest: '%oidcng_playground_uri_test%'
+            $oidcPlaygroundUriProd: '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
@@ -211,6 +232,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
+        arguments:
+            $manageTestConfig: "@surfnet.manage.configuration.test"
+            $manageProdConfig: "@surfnet.manage.configuration.production"
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension:
         tags: [twig.extension]
@@ -236,6 +260,10 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
         tags:
             - { name: validator.constraint_validator, alias: unique_entity_id }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
+        tags:
+            - { name: validator.constraint_validator, alias: unique_redirect_urls }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator:
         tags:
@@ -273,6 +301,8 @@ services:
             - '@logger'
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
+            - '%oidcng_playground_uri_test%'
+            - '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
@@ -282,6 +312,8 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
             - '%playground_uri_test%'
             - '%playground_uri_prod%'
+            - '%oidcng_playground_uri_test%'
+            - '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService:
         arguments:
@@ -296,7 +328,7 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
-            - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator'
+            - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
             - '@surfnet.manage.configuration.test'
             - '@logger'
 
@@ -318,7 +350,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
         arguments:
         - '@surfnet.manage.http.http_client.prod_environment'
-        - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator'
+        - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
         - '@surfnet.manage.configuration.production'
         - '@logger'
 
@@ -404,7 +436,12 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
         tags: ['form.type']
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory:
+      arguments:
+        - '@surfnet.manage.configuration.test'
+        - '@surfnet.manage.configuration.production'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType:
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService'
-        tags: ['form.type']
+      arguments:
+        - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService'
+      tags: ['form.type']

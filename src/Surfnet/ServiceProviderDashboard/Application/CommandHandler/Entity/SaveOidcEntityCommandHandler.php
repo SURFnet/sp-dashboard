@@ -28,6 +28,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
+/**
+ * Saves oidc drafts
+ */
 class SaveOidcEntityCommandHandler implements CommandHandler
 {
     /**

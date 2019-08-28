@@ -23,9 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
@@ -44,11 +42,6 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
      * @var EntityRepository|Mock
      */
     private $repository;
-
-    /**
-     * @var MockHandler
-     */
-    private $mockHandler;
 
     /**
      * @var LoggerInterface|Mock

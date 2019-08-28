@@ -20,13 +20,15 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 /**
- * The QueryClient can be used to perform queries on the manage /manage/api/internal/search/saml20_sp endpoint. Queries
- * will return a hard coded return set per application.
+ * The QueryClient can be used to perform queries on the manage /manage/api/internal/search/saml20_sp|oidc10_rp endpoint
+ *
+ * Queries will return a hard coded return set per application.
  *
  * Example response (json formatted for readability)
  *  [{
@@ -43,6 +45,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
  */
 class QueryClient implements QueryEntityRepository
 {
+
+    private $protocolSupport = [Protocol::SAML20_SP, Protocol::OIDC10_RP];
+
     /**
      * @var HttpClient
      */
@@ -117,9 +122,17 @@ class QueryClient implements QueryEntityRepository
     public function findByManageId($manageId)
     {
         try {
+            // TODO: investigate if we can add the protocol to the param list of this method to prevent the try/retry
+            //  construction below.
             $data = $this->client->read(
                 sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId)
             );
+            // If the saml endpoint yields no results, try the oidc.
+            if (empty($data)) {
+                $data = $this->client->read(
+                    sprintf('/manage/api/internal/metadata/oidc10_rp/%s', $manageId)
+                );
+            }
             if (empty($data)) {
                 return null;
             }
@@ -169,15 +182,22 @@ class QueryClient implements QueryEntityRepository
     }
 
     /**
+     * Search for both oidc and saml entities.
+     *
      * @param array $params
      * @return array|null
      * @throws HttpException
      */
     private function doSearchQuery(array $params)
     {
-        return $this->client->post(
-            json_encode($params),
-            '/manage/api/internal/search/saml20_sp'
-        );
+        $results = [];
+        foreach ($this->protocolSupport as $protocol) {
+            $response = $this->client->post(
+                json_encode($params),
+                sprintf('/manage/api/internal/search/%s', $protocol)
+            );
+            $results += $response;
+        }
+        return $results;
     }
 }

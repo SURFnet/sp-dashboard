@@ -114,7 +114,7 @@ class SaveSamlEntityCommandHandler implements CommandHandler
         if ($command->hasNameIdFormat()) {
             $entity->setNameIdFormat($command->getNameIdFormat());
         } else {
-            $entity->setNameIdFormat(Entity::NAME_ID_FORMAT_DEFAULT);
+            $entity->setNameIdFormat(Entity::NAME_ID_FORMAT_TRANSIENT);
         }
 
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());

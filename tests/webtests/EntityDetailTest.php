@@ -22,6 +22,7 @@ use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 
 class EntityDetailTest extends WebTestCase
 {
@@ -78,6 +79,7 @@ class EntityDetailTest extends WebTestCase
 
         $sp3QueryResponse = json_encode((object)[
             'id' => '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'type' => Protocol::SAML20_SP,
             'data' => (object)[
                 'entityid' => 'SP3',
                 'metaDataFields' => (object) [

@@ -25,7 +25,6 @@ class MetaData
     /**
      * Supports 1 ACS location, the first entry is used that is passed from Manage
      */
-    private $acsBinding;
     private $acsLocation;
     private $entityId;
     private $metaDataUrl;
@@ -57,11 +56,6 @@ class MetaData
     private $logo;
 
     /**
-     * @var string
-     */
-    private $signatureMethod;
-
-    /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
      * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
      * @param array $data
@@ -73,8 +67,6 @@ class MetaData
 
         $entityId = $data['data']['entityid'];
         $metaDataUrl = isset($data['data']['metadataurl']) ? $data['data']['metadataurl'] : '';
-        $acsBinding = isset($metaDataFields['AssertionConsumerService:0:Binding'])
-            ? $metaDataFields['AssertionConsumerService:0:Binding'] : '';
         $acsLocation = isset($metaDataFields['AssertionConsumerService:0:Location'])
             ? $metaDataFields['AssertionConsumerService:0:Location'] : '';
         $nameIdFormat = isset($metaDataFields['NameIDFormat']) ? $metaDataFields['NameIDFormat'] : '';
@@ -86,7 +78,6 @@ class MetaData
 
         Assert::stringNotEmpty($entityId);
         Assert::string($metaDataUrl);
-        Assert::string($acsBinding);
         Assert::string($acsLocation);
         Assert::string($nameIdFormat);
         Assert::string($certData);
@@ -103,7 +94,6 @@ class MetaData
         return new self(
             $entityId,
             $metaDataUrl,
-            $acsBinding,
             $acsLocation,
             $nameIdFormat,
             $certData,
@@ -121,7 +111,6 @@ class MetaData
     /**
      * @param string $entityId,
      * @param string $metaDataUrl
-     * @param string $acsBinding
      * @param string $acsLocation
      * @param string $nameIdFormat
      * @param string $certData
@@ -138,7 +127,6 @@ class MetaData
     private function __construct(
         $entityId,
         $metaDataUrl,
-        $acsBinding,
         $acsLocation,
         $nameIdFormat,
         $certData,
@@ -153,7 +141,6 @@ class MetaData
     ) {
         $this->entityId = $entityId;
         $this->metaDataUrl = $metaDataUrl;
-        $this->acsBinding = $acsBinding;
         $this->acsLocation = $acsLocation;
         $this->nameIdFormat = $nameIdFormat;
         $this->certData = $certData;
@@ -177,11 +164,6 @@ class MetaData
         return $this->metaDataUrl;
     }
 
-    public function getAcsBinding()
-    {
-        return $this->acsBinding;
-    }
-
     public function getAcsLocation()
     {
         return $this->acsLocation;
@@ -190,11 +172,6 @@ class MetaData
     public function getNameIdFormat()
     {
         return $this->nameIdFormat;
-    }
-
-    public function getSignatureMethod()
-    {
-        return $this->signatureMethod;
     }
 
     public function getCertData()

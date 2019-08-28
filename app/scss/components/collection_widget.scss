@@ -5,6 +5,12 @@
     padding-right: 40px;
 
     position: relative;
+
+    &.error {
+      input {
+        background: #ffe5e5;
+      }
+    }
   }
 
   .collection-entry-collection {

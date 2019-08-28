@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
@@ -26,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class EntityDetail
 {
@@ -246,6 +248,16 @@ class EntityDetail
      */
     private $playgroundEnabled;
 
+    /**
+     * @var int
+     */
+    private $accessTokenValidity;
+
+    /**
+     * @var bool
+     */
+    private $isPublicClient;
+
     private function __construct()
     {
     }
@@ -266,6 +278,15 @@ class EntityDetail
             $entityDetail->redirectUris = $entity->getRedirectUris();
             $entityDetail->playgroundEnabled = $entity->isEnablePlayground();
         }
+
+        if ($entity->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT_TNG) {
+            $entityDetail->grantType = $entity->getGrantType()->getGrantType();
+            $entityDetail->isPublicClient = $entity->isPublicClient();
+            $entityDetail->accessTokenValidity = $entity->getAccessTokenValidity();
+            $entityDetail->redirectUris = $entity->getRedirectUris();
+            $entityDetail->playgroundEnabled = $entity->isEnablePlayground();
+        }
+
         $entityDetail->metadataUrl = $entity->getMetadataUrl();
         $entityDetail->acsLocation = $entity->getAcsLocation();
         $entityDetail->entityId = $entity->getEntityId();
@@ -346,7 +367,7 @@ class EntityDetail
         if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
             return $this->entityId;
         }
-        return str_replace('://', '@//', $this->entityId);
+        return OidcClientIdParser::parse($this->entityId);
     }
 
     /**
@@ -659,5 +680,21 @@ class EntityDetail
     public function isPlaygroundEnabled()
     {
         return $this->playgroundEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAccessTokenValidity()
+    {
+        return $this->accessTokenValidity;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublicClient()
+    {
+        return $this->isPublicClient;
     }
 }

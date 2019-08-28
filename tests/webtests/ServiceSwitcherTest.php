@@ -32,6 +32,8 @@ class ServiceSwitcherTest extends WebTestCase
         parent::setUp();
 
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
     }
 

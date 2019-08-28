@@ -62,10 +62,19 @@ class EntityEditController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function editAction(Request $request, Entity $entity)
     {
         $flashBag = $this->get('session')->getFlashBag();
+
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to modify oidcng entities for this environment.'
+            );
+        }
 
         // Only clear the flash bag when this request did not come from the 'entity_add' action.
         if (!$this->requestFromCreateAction($request)) {
@@ -103,8 +112,9 @@ class EntityEditController extends Controller
                         if ($response instanceof Response) {
                             return $response;
                         }
+                    } else {
+                        $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
-                    $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);

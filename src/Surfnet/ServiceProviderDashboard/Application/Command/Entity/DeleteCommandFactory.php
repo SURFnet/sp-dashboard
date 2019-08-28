@@ -46,10 +46,10 @@ class DeleteCommandFactory
             return $this->buildDeleteDraftEntityCommand($entity->getId());
         }
         if ($isPublishedToTest) {
-            return $this->buildDeletePublishedTestEntityCommand($entity->getId());
+            return $this->buildDeletePublishedTestEntityCommand($entity->getId(), $entity->getProtocol());
         }
         if ($isPublishedProduction) {
-            return $this->buildDeletePublishedProductionEntityCommand($entity->getId());
+            return $this->buildDeletePublishedProductionEntityCommand($entity->getId(), $entity->getProtocol());
         }
         if ($isRequestDelete) {
             return $this->buildRequestDeletePublishedEntityCommand(
@@ -65,14 +65,14 @@ class DeleteCommandFactory
         return new DeleteDraftEntityCommand($entityId);
     }
 
-    public function buildDeletePublishedTestEntityCommand($manageId)
+    public function buildDeletePublishedTestEntityCommand($manageId, $protocol)
     {
-        return new DeletePublishedTestEntityCommand($manageId);
+        return new DeletePublishedTestEntityCommand($manageId, $protocol);
     }
 
-    public function buildDeletePublishedProductionEntityCommand($manageId)
+    public function buildDeletePublishedProductionEntityCommand($manageId, $protocol)
     {
-        return new DeletePublishedProductionEntityCommand($manageId);
+        return new DeletePublishedProductionEntityCommand($manageId, $protocol);
     }
 
     public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact)

@@ -47,12 +47,14 @@ parameters:
     manage_test_username: sp-dashboard
     manage_test_password: secret
     manage_test_publication_status: testaccepted
+    manage_test_oidcng_enabled: true
 
     ## Manage production instance
     manage_prod_host: 'https://manage-prod.dev.support.surfconext.nl'
     manage_prod_username: sp-dashboard
     manage_prod_password: secret
     manage_prod_publication_status: prodaccepted
+    manage_prod_oidcng_enabled: true
 
     # Mail default settings
     mail_from: support@surfconext.nl
@@ -84,3 +86,6 @@ parameters:
     # Playground uri's for OIDC entities
     playground_uri_test: https://test.dev.playground.surfconext.nl
     playground_uri_prod: https://prod.dev.playground.surfconext.nl
+    # Playground uri's for OIDC TNG entities
+    oidcng_playground_uri_test: 'https://test.dev.playground.surfconext.nl'
+    oidcng_playground_uri_prod: 'https://prod.dev.playground.surfconext.nl'

@@ -25,8 +25,8 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedTestEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\DeleteEntityFromManageException;
 
 class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
 {
@@ -60,11 +60,11 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
 
     public function test_it_can_delete_an_entity_from_test()
     {
-        $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', Entity::TYPE_SAML);
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Entity::TYPE_SAML)
             ->andReturn(DeleteEntityRepository::RESULT_SUCCESS);
 
         $this->logger
@@ -79,11 +79,14 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_handles_non_error_responses()
     {
-        $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new DeletePublishedTestEntityCommand(
+            'd6f394b2-08b1-4882-8b32-81688c15c489',
+            Entity::TYPE_OPENID_CONNECT
+        );
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Entity::TYPE_OPENID_CONNECT)
             ->andReturn(false);
 
         $this->logger
@@ -97,11 +100,14 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_handles_failing_delete_requests()
     {
-        $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new DeletePublishedTestEntityCommand(
+            'd6f394b2-08b1-4882-8b32-81688c15c489',
+            Entity::TYPE_OPENID_CONNECT_TNG
+        );
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Entity::TYPE_OPENID_CONNECT_TNG)
             ->andThrow(UnableToDeleteEntityException::class);
 
         $this->logger

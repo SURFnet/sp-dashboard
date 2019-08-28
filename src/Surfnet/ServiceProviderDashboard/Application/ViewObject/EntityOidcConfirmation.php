@@ -17,6 +17,8 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 
 class EntityOidcConfirmation
@@ -32,22 +34,30 @@ class EntityOidcConfirmation
     private $clientSecret;
 
     /**
+     * @var string
+     */
+    private $protocol;
+
+    /**
      * @param string $entityId
      * @param string $clientSecret
      */
     public function __construct(
         $entityId,
-        $clientSecret
+        $clientSecret,
+        $protocol
     ) {
         $this->entityId = $entityId;
         $this->clientSecret = $clientSecret;
+        $this->protocol = $protocol;
     }
 
     public static function fromEntity(DomainEntity $entity)
     {
         return new self(
             $entity->getEntityId(),
-            $entity->getClientSecret()
+            $entity->getClientSecret(),
+            $entity->getProtocol()
         );
     }
 
@@ -56,7 +66,11 @@ class EntityOidcConfirmation
      */
     public function getEntityId()
     {
-        return str_replace('://', '@//', $this->entityId);
+        if ($this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG) {
+            return OidcngClientIdParser::parse($this->entityId);
+        }
+
+        return OidcClientIdParser::parse($this->entityId);
     }
 
     /**

@@ -23,6 +23,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,6 +56,15 @@ class EntityResetSecretController extends Controller
         $service = $this->serviceService->getServiceById($serviceId);
 
         $id = (string) Uuid::uuid1();
+
+        $manageEntity = $this->entityService->getManageEntityById($manageId, $environment);
+        if ($manageEntity->getProtocol()->getProtocol() === Protocol::OIDC10_RP &&
+            !$this->authorizationService->isOidcngAllowed($service, $environment)
+        ) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to reset the client secret for oidcng entities to this environment.'
+            );
+        }
 
         // fetch entity from managae and reset secret
         // the entity gets stored local temporarily

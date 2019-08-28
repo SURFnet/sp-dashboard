@@ -62,8 +62,10 @@ class LoadEntityServiceTest extends MockeryTestCase
      */
     private $service;
 
-    const OIDC_PLAYGROUN_URL_TEST = 'http://playground-test';
-    const OIDC_PLAYGROUN_URL_PROD = 'http://playground-prod';
+    const OIDC_PLAYGROUND_URL_TEST = 'http://playground-test';
+    const OIDC_PLAYGROUND_URL_PROD = 'http://playground-prod';
+    const OIDCNG_PLAYGROUND_URL_TEST = 'http://tng-playground-test';
+    const OIDCNG_PLAYGROUND_URL_PROD = 'http://tng-playground-prod';
 
     public function setUp()
     {
@@ -82,8 +84,10 @@ class LoadEntityServiceTest extends MockeryTestCase
             $this->manageTestClient,
             $this->manageProdClient,
             $this->attributesMetadataRepository,
-            self::OIDC_PLAYGROUN_URL_TEST,
-            self::OIDC_PLAYGROUN_URL_PROD
+            self::OIDC_PLAYGROUND_URL_TEST,
+            self::OIDC_PLAYGROUND_URL_PROD,
+            self::OIDCNG_PLAYGROUND_URL_TEST,
+            self::OIDCNG_PLAYGROUND_URL_PROD
         );
     }
 
@@ -188,6 +192,7 @@ class LoadEntityServiceTest extends MockeryTestCase
 
         $manageDto = ManageEntity::fromApiResponse([
             'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
+            'type' => 'saml20_sp',
             'data' => [
                 'entityid' => 'http://example.com',
                 'arp' => [
@@ -290,6 +295,7 @@ JSON
 
         $manageDto = ManageEntity::fromApiResponse([
             'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
+            'type' => 'saml20_sp',
             'data' => [
                 'entityid' => 'http://example.com',
                 'arp' => [
@@ -382,6 +388,7 @@ JSON
 
         $manageDto = ManageEntity::fromApiResponse([
             'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
+            'type' => 'saml20_sp',
             'data' => [
                 'entityid' => 'http://example.com',
                 'arp' => [
@@ -450,12 +457,12 @@ JSON
     {
         //$testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground
         return [
-            ['prod-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['prod-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
+            ['prod-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
+            ['prod-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
             ['prod-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
             ['prod-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
-            ['test-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['test-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUN_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
+            ['test-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
+            ['test-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
             ['test-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
             ['test-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
         ];
