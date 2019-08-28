@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -501,7 +502,7 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
      */
     public function getClientId()
     {
-        return str_replace('://', '@//', $this->entityId);
+        return OidcClientIdParser::parse($this->entityId);
     }
 
     /**

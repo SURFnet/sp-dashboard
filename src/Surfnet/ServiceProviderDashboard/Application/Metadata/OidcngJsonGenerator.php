@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
@@ -125,7 +126,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
             'type' => 'oidc10-rp',
-            'entityid' => $this->updateClientId($entity->getEntityId()),
+            'entityid' => OidcngClientIdParser::parse($entity->getEntityId()),
             'active' => true,
             'state' => $workflowState,
             'metaDataFields' => $this->generateMetadataFields($entity),
@@ -152,7 +153,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $this->addEpti($entity);
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
-            'entityid' => $this->updateClientId($entity->getEntityId()),
+            'entityid' => OidcngClientIdParser::parse($entity->getEntityId()),
             'state' => $workflowState,
         ];
 
@@ -399,29 +400,6 @@ class OidcngJsonGenerator implements GeneratorInterface
             'allowedEntities' => $providers,
             'allowedall' => false,
         ];
-    }
-
-    /**
-     * Takes the entity id and removes the protocol as per:
-     *
-     * https://www.pivotaltracker.com/story/show/166702113/comments/204130376
-     *
-     * @param $entityId
-     * @return mixed
-     */
-    private function updateClientId($entityId)
-    {
-        $parts = parse_url($entityId);
-
-        // If no scheme is set, we are dealing with an entity that already had his scheme chopped off
-        if (!isset($parts['scheme'])) {
-            return $entityId;
-        }
-
-        // Remove the scheme (protocol) and the :// part
-        $clientId = str_replace($parts['scheme'].'://', '', $entityId);
-
-        return $clientId;
     }
 
     private function addEpti(Entity $entity)
