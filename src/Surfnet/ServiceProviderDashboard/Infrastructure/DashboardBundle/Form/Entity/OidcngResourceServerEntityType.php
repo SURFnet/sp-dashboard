@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -146,20 +145,25 @@ class OidcngResourceServerEntityType extends AbstractType
                         ]
                     )
             );
-
-            $builder->create('comments', FormType::class, ['inherit_data' => true])
-                ->add(
-                    'comments',
-                    TextareaType::class,
-                    [
-                        'required' => false,
-                        'attr' => [
-                            'data-help' => 'entity.edit.information.comments',
-                            'rows' => 10,
-                        ],
-                    ]
-                );
         $builder
+            ->add(
+                $builder->create(
+                    'comments',
+                    FormType::class,
+                    ['inherit_data' => true, 'attr' => ['class' => 'attributes']]
+                )
+                    ->add(
+                        'comments',
+                        TextareaType::class,
+                        [
+                            'required' => false,
+                            'attr' => [
+                                'data-help' => 'entity.edit.information.comments',
+                                'rows' => 10,
+                            ],
+                        ]
+                    )
+            )
             ->add('status', HiddenType::class)
             ->add('manageId', HiddenType::class)
             ->add('environment', HiddenType::class)

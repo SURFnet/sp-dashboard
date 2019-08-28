@@ -50,6 +50,11 @@ class Protocol
             $protocol = Entity::TYPE_OPENID_CONNECT;
         }
 
+        $isResourceServer = isset($data['data']['metaDataFields']['isResourceServer']) && $data['data']['metaDataFields']['isResourceServer'];
+        if ($protocol === Entity::TYPE_OPENID_CONNECT_TNG && $isResourceServer) {
+            $protocol = Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        }
+
         return new self($protocol);
     }
 

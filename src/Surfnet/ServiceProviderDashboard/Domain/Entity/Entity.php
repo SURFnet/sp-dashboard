@@ -495,6 +495,13 @@ class Entity
                     $oidcngPlayGroundUriProd
                 );
                 break;
+            case (self::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
+                $oidcClient = $manageEntity->getOidcClient();
+                $entity->setClientSecret($oidcClient->getClientSecret());
+                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+                $entity->setNameIdFormat($metaData->getNameIdFormat());
+                break;
             case (self::TYPE_SAML):
                 $entity->setProtocol(Entity::TYPE_SAML);
                 $entity->setImportUrl($metaData->getEntityId());

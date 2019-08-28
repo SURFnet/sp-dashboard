@@ -61,7 +61,11 @@ class ManageEntity
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
         if ($manageProtocol === Protocol::OIDC10_RP) {
-            $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
+            if (isset($data['data']['metaDataFields']['isResourceServer']) && $data['data']['metaDataFields']['isResourceServer']){
+                $oidcClient = OidcngResourceServerClient::fromApiResponse($data, $manageProtocol);
+            } else {
+                $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
+            }
         } elseif ($manageProtocol === Protocol::SAML20_SP) {
             // Try to create an OidcClient, the first oidc implementation used SAML20_SP as entity type.
             $oidcClient = OidcClient::fromApiResponse($data, $manageProtocol);
