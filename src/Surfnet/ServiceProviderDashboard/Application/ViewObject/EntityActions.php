@@ -137,7 +137,9 @@ class EntityActions
     {
         $protocol = $this->protocol;
         $status = $this->status;
-        $meetsProtocolRequirement = ($protocol == DomainEntity::TYPE_OPENID_CONNECT || $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG || $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+        $meetsProtocolRequirement = $protocol == DomainEntity::TYPE_OPENID_CONNECT ||
+            $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG ||
+            $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
         $meetsPublicationStatusRequirement = ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }

@@ -54,6 +54,12 @@ class ManageEntity
      */
     private $allowedIdentityProviders;
 
+    /**
+     * @param $data
+     * @return ManageEntity
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     */
     public static function fromApiResponse($data)
     {
         $manageProtocol = isset($data['type']) ? $data['type'] : '';
@@ -61,7 +67,9 @@ class ManageEntity
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
         if ($manageProtocol === Protocol::OIDC10_RP) {
-            if (isset($data['data']['metaDataFields']['isResourceServer']) && $data['data']['metaDataFields']['isResourceServer']){
+            if (isset($data['data']['metaDataFields']['isResourceServer']) &&
+                $data['data']['metaDataFields']['isResourceServer']
+            ) {
                 $oidcClient = OidcngResourceServerClient::fromApiResponse($data, $manageProtocol);
             } else {
                 $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
