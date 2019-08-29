@@ -125,7 +125,9 @@ class EntityActions
      */
     public function allowAclAction()
     {
-        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
+        return $this->status == DomainEntity::STATE_PUBLISHED &&
+            $this->environment == DomainEntity::ENVIRONMENT_TEST &&
+            $this->protocol !== DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
     /**
