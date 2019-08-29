@@ -29,4 +29,37 @@ class EntityActionsTest extends TestCase
         $actions = new EntityActions('manage-id', 1, Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_TEST, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
         $this->assertFalse($actions->allowAclAction());
     }
+
+    /**
+     * @param bool $expectation
+     * @param string $protocol
+     * @param string $publicationStatus
+     * @param string $description
+     *
+     * @dataProvider resetClientOptions
+     */
+    public function test_oidc_entities_can_reset_client_secret($expectation, $protocol, $publicationStatus, $description)
+    {
+        $actions = new EntityActions('manage-id', 1, $publicationStatus, Entity::ENVIRONMENT_TEST, $protocol);
+
+        $this->assertEquals($expectation, $actions->allowSecretResetAction(), $description);
+    }
+
+    public static function resetClientOptions()
+    {
+        return [
+            [true, Entity::TYPE_OPENID_CONNECT, Entity::STATE_PUBLISHED, 'Published OIDC entity should have reset option'],
+            [true, Entity::TYPE_OPENID_CONNECT_TNG, Entity::STATE_PUBLISHED, 'Published OIDC TNG entity should have reset option'],
+            [true, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER, Entity::STATE_PUBLISHED, 'Published OIDC Resource Server TNG entity should have reset option'],
+
+            [true, Entity::TYPE_OPENID_CONNECT, Entity::STATE_PUBLICATION_REQUESTED, 'Request for publication OIDC entity should have reset option'],
+            [true, Entity::TYPE_OPENID_CONNECT_TNG, Entity::STATE_PUBLICATION_REQUESTED, 'Request for publication OIDC TNG entity should have reset option'],
+            [true, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER, Entity::STATE_PUBLISHED, 'Request for publication OIDC Resource Server TNG entity should have reset option'],
+
+            [false, Entity::TYPE_SAML, Entity::STATE_PUBLISHED, 'SAML entities do not perform client resets'],
+
+            [false, Entity::TYPE_OPENID_CONNECT, Entity::STATE_DRAFT, 'Draft OIDC entities do not perform client resets'],
+            [false, Entity::TYPE_OPENID_CONNECT, Entity::STATE_REMOVAL_REQUESTED, 'Removed (requested) entities do not perform client resets'],
+        ];
+    }
 }
