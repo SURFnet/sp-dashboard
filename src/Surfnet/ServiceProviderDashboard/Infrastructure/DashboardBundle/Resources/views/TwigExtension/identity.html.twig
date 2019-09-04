@@ -1,4 +1,8 @@
 <a class="welcome-link">
     <i class="fa fa-user-circle-o"></i>
-    {{ contact.displayName }}
+    {% if contact.displayName is not empty %}
+        {{ contact.displayName }}
+    {% else %}
+        {{ 'unknownDisplayName' | trans }}
+    {%  endif %}
 </a>
