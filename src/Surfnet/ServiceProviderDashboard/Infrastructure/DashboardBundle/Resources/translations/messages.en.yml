@@ -335,6 +335,8 @@ entity.edit.attributes.oidcng_rs.html: "
 "
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
+entity.edit.oidcngResourceServers.title: Select the OIDC Resource Servers(s) that belong to this Client
+entity.edit.oidcngResourceServers.html: "<p>Only access_tokens that are provided to the clients selected can be introspected by the resource server.</p>"
 entity.edit.information.importUrl: Text should be set in web translations
 entity.edit.information.metadataUrl: Text should be set in web translations
 entity.edit.information.acsLocation: Text should be set in web translations
@@ -355,6 +357,7 @@ entity.edit.information.applicationUrl: Text should be set in web translations
 entity.edit.information.eulaUrl: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
+entity.edit.information.oidcngResourceServers: Text should be set in web translations
 entity.edit.information.technicalContact: Text should be set in web translations
 entity.edit.information.saml20.givenNameAttribute: Text should be set in web translations
 entity.edit.information.saml20.surNameAttribute: Text should be set in web translations

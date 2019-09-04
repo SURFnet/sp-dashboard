@@ -33,7 +33,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OidcngResourceServerEntityType extends AbstractType
 {
-
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
@@ -58,7 +57,10 @@ class OidcngResourceServerEntityType extends AbstractType
                 ]
             );
 
-        $manageId = $options['data']->getManageId();
+        /** @var SaveOidcngResourceServerEntityCommand $command */
+        $command = $options['data'];
+
+        $manageId = $command->getManageId();
         if (!empty($manageId)) {
             $metadata->remove('clientId');
             $metadata
@@ -144,8 +146,7 @@ class OidcngResourceServerEntityType extends AbstractType
                             'attr' => ['data-help' => 'entity.edit.information.supportContact'],
                         ]
                     )
-            );
-        $builder
+            )
             ->add(
                 $builder->create(
                     'comments',

@@ -380,6 +380,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     private $protocol = Entity::TYPE_OPENID_CONNECT_TNG;
 
+    /**
+     * @var string[]
+     */
+    private $resourceServers = [];
+
     private function __construct()
     {
     }
@@ -1219,5 +1224,21 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setSubjectType($subjectType)
     {
         $this->subjectType = $subjectType;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOidcngResourceServers()
+    {
+        return $this->resourceServers;
+    }
+
+    /**
+     * @param string[] $resourceServers
+     */
+    public function setOidcngResourceServers($resourceServers)
+    {
+        $this->resourceServers = $resourceServers;
     }
 }
