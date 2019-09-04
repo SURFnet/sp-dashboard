@@ -58,6 +58,7 @@ class Entity
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT = 'oidc';
     const TYPE_OPENID_CONNECT_TNG = 'oidcng';
+    const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oidcng_rs';
 
     const OIDC_SECRET_LENGTH = 20;
 
@@ -493,6 +494,13 @@ class Entity
                     $oidcngPlayGroundUriTest,
                     $oidcngPlayGroundUriProd
                 );
+                break;
+            case (self::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
+                $oidcClient = $manageEntity->getOidcClient();
+                $entity->setClientSecret($oidcClient->getClientSecret());
+                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+                $entity->setNameIdFormat($metaData->getNameIdFormat());
                 break;
             case (self::TYPE_SAML):
                 $entity->setProtocol(Entity::TYPE_SAML);

@@ -43,7 +43,8 @@ class ProtocolChoiceFactory
     private $availableOptions = [
         Entity::TYPE_SAML => 'entity.type.saml20.title',
         Entity::TYPE_OPENID_CONNECT => 'entity.type.oidc.title',
-        Entity::TYPE_OPENID_CONNECT_TNG => 'entity.type.oidcng.title',
+        Entity::TYPE_OPENID_CONNECT_TNG => 'entity.type.oidcng.client.title',
+        Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => 'entity.type.oidcng.resource_server.title',
     ];
 
     public function __construct(Config $manageConfigTest, Config $manageConfigProd)
@@ -72,6 +73,7 @@ class ProtocolChoiceFactory
         $options = $this->availableOptions;
         if (!$this->oidcngEnabledMarshaller->allowed($this->service, $manageConfig->getOidcngEnabled()->isEnabled())) {
             unset($options[Entity::TYPE_OPENID_CONNECT_TNG]);
+            unset($options[Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER]);
         }
         return array_flip($options);
     }

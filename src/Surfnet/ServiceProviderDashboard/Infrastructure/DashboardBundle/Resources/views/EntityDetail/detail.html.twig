@@ -62,6 +62,8 @@
 
     </div>
 
+    {% if entity.protocol != "oidcng_rs" %}
+
     <div class="fieldset card">
         <h2>{{ ('entity.detail.attribute.' ~ type ~ '.title')|trans }}</h2>
         <div class="wysiwyg">{{ ('entity.detail.attribute.' ~ type ~ '.html')|trans|wysiwyg }}</div>
@@ -83,6 +85,8 @@
         {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.edu_person_targetted_id')|trans, value: entity.eduPersonTargetedIDAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.eduPersonTargetedIDAttribute'} %}
 
     </div>
+
+    {% endif %}
 
     <div class="modal oidc-confirmation" id="reset-secret-confirmation">
         {% include "@Dashboard/EntityModal/secretResetModal.html.twig" %}

@@ -99,7 +99,9 @@ class EntityListController extends Controller
             return false;
         }
         $protocol = $publishedEntity->getProtocol();
-        $isOidcProtocol = $protocol === Entity::TYPE_OPENID_CONNECT_TNG || $protocol === Entity::TYPE_OPENID_CONNECT;
+        $isOidcProtocol = $protocol === Entity::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Entity::TYPE_OPENID_CONNECT ||
+            $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
 
         return $publishedEntity && $isOidcProtocol && $publishedEntity->getClientSecret();
     }

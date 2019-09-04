@@ -42,6 +42,10 @@ class UniqueRedirectUrlsValidator extends ConstraintValidator
             throw new Exception('invalid validator command exception');
         }
 
+        if (is_null($value)) {
+            return;
+        }
+
         if (array_unique($value) !== $value) {
             $this->context->addViolation('validator.unique_redirect_urls.duplicate_found');
 

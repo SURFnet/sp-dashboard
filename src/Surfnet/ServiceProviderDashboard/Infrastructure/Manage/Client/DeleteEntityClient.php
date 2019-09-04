@@ -85,6 +85,7 @@ class DeleteEntityClient implements DeleteEntityRepositoryInterface
     private function getProtocol($dashboardProtocol)
     {
         $lookup = [
+            Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => Protocol::OIDC10_RP,
             Entity::TYPE_OPENID_CONNECT_TNG => Protocol::OIDC10_RP,
             Entity::TYPE_OPENID_CONNECT => Protocol::SAML20_SP,
             Entity::TYPE_SAML => Protocol::SAML20_SP,

@@ -21,10 +21,12 @@ class OidcGrantType
 {
     const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
     const GRANT_TYPE_IMPLICIT = 'implicit';
+    const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
 
     private static $validGrantTypes = [
         self::GRANT_TYPE_AUTHORIZATION_CODE,
         self::GRANT_TYPE_IMPLICIT,
+        self::GRANT_TYPE_CLIENT_CREDENTIALS,
     ];
 
     /**
