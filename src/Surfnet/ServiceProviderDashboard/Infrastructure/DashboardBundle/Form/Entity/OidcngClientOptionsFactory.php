@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException as QueryServiceProviderExceptionAlias;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class OidcngResourceServerOptionsFactory
+class OidcngClientOptionsFactory
 {
     /**
      * @var QueryClient
@@ -72,13 +72,13 @@ class OidcngResourceServerOptionsFactory
         switch ($environment) {
             case Entity::ENVIRONMENT_TEST:
                 return $this->createChoicesFrom(
-                    $this->testEntityRepository->findOidcngResourceServersByTeamName($teamName, $this->testPublicationState)
+                    $this->testEntityRepository->findOidcngClientsByTeamName($teamName, $this->testPublicationState)
                 );
                 break;
 
             case Entity::ENVIRONMENT_PRODUCTION:
                 return  $this->createChoicesFrom(
-                    $this->productionRepository->findOidcngResourceServersByTeamName(
+                    $this->productionRepository->findOidcngClientsByTeamName(
                         $teamName,
                         $this->productionPublicationState
                     )

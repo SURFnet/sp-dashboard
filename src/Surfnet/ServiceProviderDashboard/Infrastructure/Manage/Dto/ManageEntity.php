@@ -157,4 +157,13 @@ class ManageEntity
     {
         return $this->protocol;
     }
+
+    public function isOidcngResourceServer()
+    {
+        if ($this->getOidcClient()) {
+            return $this->getOidcClient() instanceof OidcngResourceServerClient;
+        }
+
+        return false;
+    }
 }

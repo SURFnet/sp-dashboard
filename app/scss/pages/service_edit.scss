@@ -106,6 +106,10 @@ form {
       }
     }
 
+    .wide .radio-container {
+      width: 100%;
+    }
+
     .input-container {
       background-color: $light-blue;
       display: inline-block;
