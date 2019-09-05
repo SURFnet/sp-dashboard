@@ -30,13 +30,13 @@ class Contact
 
     public static function from(array $contactData)
     {
-        $type = isset($contactData['contactType']) ? $contactData['contactType'] : '';
+        $type = $contactData['contactType'];
         $givenName = isset($contactData['givenName']) ? $contactData['givenName'] : '';
         $surName = isset($contactData['surName']) ? $contactData['surName'] : '';
         $email = isset($contactData['emailAddress']) ? $contactData['emailAddress'] : '';
         $phone = isset($contactData['phone']) ? $contactData['phone'] : '';
 
-        Assert::string($type);
+        Assert::stringNotEmpty($type);
         Assert::string($givenName);
         Assert::string($surName);
         Assert::string($email);
