@@ -1,6 +1,7 @@
 import { loadEntityOidcForm } from "./collection_widget";
 
 import * as $ from "jquery";
+import * as jQuery from "jquery";
 
 jest
   .dontMock('fs')
@@ -9,7 +10,7 @@ jest
 describe('validate collection widget', function() {
 
   let stateHtml = `
-        <form>
+        <form action="/" method="POST">
         <div class="collection-widget" data-prototype="<input type=&quot;text&quot; id=&quot;dashboard_bundle_entity_type_metadata_redirectUris___name__&quot; name=&quot;dashboard_bundle_entity_type[metadata][redirectUris][__name__]&quot;  />">
         <ul class="collection-list"></ul>
         </div>
@@ -81,6 +82,23 @@ describe('validate collection widget', function() {
     let expected= `<li class="collection-entry"><input type="text" id="dashboard_bundle_entity_type_metadata_redirectUris_0" name="dashboard_bundle_entity_type[metadata][redirectUris][0]" readonly=""><button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button></li><li class="collection-entry"><input type="text" id="dashboard_bundle_entity_type_metadata_redirectUris_1" name="dashboard_bundle_entity_type[metadata][redirectUris][1]" readonly=""><button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button></li>`;
     let actual = $('.collection-list').html();
     expect(actual).toBe(expected);
+  });
+
+
+  it('should not submit form on enter', function () {
+    document.body.innerHTML = stateHtml;
+    loadEntityOidcForm();
+
+    let actual = $('.collection-entry input[type="text"]').length;
+    expect(actual).toBe(1);
+
+    // press enter
+    let e = jQuery.Event('keydown', { keyCode: 13 });
+    $('.collection-entry input[type="text"]').last().trigger(e);
+
+    actual = $('.collection-entry input[type="text"]').length;
+    expect(actual).toBe(2);
+
   });
 
 });
