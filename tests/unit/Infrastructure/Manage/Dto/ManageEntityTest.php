@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Manage\Dto;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Contact;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class ManageEntityTest extends MockeryTestCase
@@ -33,5 +34,24 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertEquals('Technical Support', $entity->getMetaData()->getContacts()->findTechnicalContact()->getSurName());
         $this->assertEquals('SURFnet BV', $entity->getMetaData()->getOrganization()->getNameEn());
         $this->assertEquals(160, $entity->getMetaData()->getLogo()->getHeight());
+    }
+
+    public function test_create_dto_with_invalid_contacts_from_manage_response()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_contacts_response.json'), true));
+        $this->assertInstanceOf(ManageEntity::class, $entity);
+
+        $contactList = $entity->getMetaData()->getContacts();
+
+        $this->assertSame(null, $contactList->findAdministrativeContact());
+        $this->assertSame(null, $contactList->findSupportContact());
+        $this->assertInstanceOf(Contact::class, $contactList->findTechnicalContact());
+
+        $contact = $contactList->findTechnicalContact();
+        $this->assertSame('technical', $contact->getType());
+        $this->assertSame('SURFconext', $contact->getGivenName());
+        $this->assertSame('Technical Support', $contact->getSurName());
+        $this->assertSame('support@surfconext.nl', $contact->getEmail());
+        $this->assertSame('', $contact->getPhone());
     }
 }

@@ -20,6 +20,12 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
 
 class ContactList
 {
+    private static $supportedContactTypes = [
+        'technical',
+        'administrative',
+        'support',
+    ];
+
     private $contacts = [];
 
     public static function fromApiResponse(array $metaDataFields)
@@ -36,7 +42,9 @@ class ContactList
         // 2. Build the Contact DTOs
         $list = new self();
         foreach ($contactsData as $contact) {
-            $list->add(Contact::from($contact));
+            if (array_key_exists('contactType', $contact) && in_array($contact['contactType'], self::$supportedContactTypes)) {
+                $list->add(Contact::from($contact));
+            }
         }
 
         return $list;
