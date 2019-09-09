@@ -53,7 +53,7 @@ class CollectionWidget {
 
     this.registerAddClickHandler($addEntryButton);
     this.registerBeforeSubmitHandler($addEntryButton);
-    this.registerKeyDownEnterHandler($input);
+    this.registerPreventFormSubmitHandler($input);
   }
 
   /**
@@ -127,12 +127,12 @@ class CollectionWidget {
   }
 
   /**
-   * Add click handler to add entry
-   * @param $addEntryButton
+   * Add prevent submit handler to prevent form submission on enter and instead add entry
+   * @param $input
    */
-  private registerKeyDownEnterHandler($input: JQuery<HTMLElement>) {
+  private registerPreventFormSubmitHandler($input: JQuery<HTMLElement>) {
     const handleKeydownEnter = (event: JQuery.Event) => {
-      if (event.keyCode === 13) {
+      if (event.key === 'Enter') {
         event.preventDefault();
         this.addCollectionEntry();
       }

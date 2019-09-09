@@ -93,7 +93,7 @@ describe('validate collection widget', function() {
     expect(actual).toBe(1);
 
     // press enter
-    let e = jQuery.Event('keydown', { keyCode: 13 });
+    let e = jQuery.Event('keydown', { key: 'Enter' });
     $('.collection-entry input[type="text"]').last().trigger(e);
 
     actual = $('.collection-entry input[type="text"]').length;
