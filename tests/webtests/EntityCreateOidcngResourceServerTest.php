@@ -40,7 +40,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
         $form = $crawler->filter('.page-container')
-            ->selectButton('Save')
+            ->selectButton('Publish')
             ->form();
 
         $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
@@ -80,35 +80,21 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         $this->assertContains('There are no entities configured', $message);
     }
 
-    public function test_it_can_save_the_form()
+    public function test_it_can_not_save_the_form_drafts_are_disabled()
     {
-        $formData = $this->buildValidFormData();
-
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
 
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
+        // There is no save button
+        $buttonNodes = $crawler->filter('button#dashboard_bundle_entity_type_save');
+        $this->assertEquals(0, $buttonNodes->count());
 
-        $this->client->submit($form, $formData);
+        // There is a publish button instead
+        $buttonNodes = $crawler->filter('button#dashboard_bundle_entity_type_publishButton');
+        $this->assertEquals(1, $buttonNodes->count());
 
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
-        );
-
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->followRedirect();
-
-        // Assert the entity id is in one of the td's of the first table row.
-        $entityTr = $crawler->filter('.page-container table tbody tr')->first();
-        $this->assertRegexp('/entity-id/', $entityTr->text());
+        // And the cancel button is ever present
+        $buttonNodes = $crawler->filter('button#dashboard_bundle_entity_type_cancel');
+        $this->assertEquals(1, $buttonNodes->count());
     }
 
     public function test_it_can_publish_the_form()
@@ -208,38 +194,6 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         $this->client->request('GET', "/entity/create/1/oidcng_rs/production");
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function test_a_privileged_user_can_create_a_production_draft()
-    {
-        $formData = $this->buildValidFormData();
-
-        $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/production");
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
-        );
-
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->followRedirect();
-
-        // Assert the entity is saved for the production environment.
-        $row = $crawler->filter('table tbody tr')->eq(1);
-
-        $this->assertEquals('https://entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
     }
 
     private function buildValidFormData()
