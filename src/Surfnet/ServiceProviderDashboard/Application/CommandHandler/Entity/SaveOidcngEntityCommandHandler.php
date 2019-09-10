@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
 /**
@@ -137,6 +138,7 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setOrganizationDisplayNameEn($command->getOrganizationDisplayNameEn());
         $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
         $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
+        $entity->setOidcngResourceServers(new ResourceServerCollection($command->getOidcngResourceServers()));
 
         $this->repository->save($entity);
     }

@@ -455,6 +455,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->isPublicClient = $entity->isPublicClient();
         $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
         $command->enablePlayground = $entity->isEnablePlayground();
+        $command->resourceServers = $entity->getOidcngResourceServers()->getResourceServers();
 
         return $command;
     }
