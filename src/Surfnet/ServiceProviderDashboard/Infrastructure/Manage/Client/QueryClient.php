@@ -181,6 +181,12 @@ class QueryClient implements QueryEntityRepository
         }
     }
 
+    /**
+     * @param $teamName
+     * @param $state
+     * @return array
+     * @throws QueryServiceProviderException
+     */
     public function findOidcngResourceServersByTeamName($teamName, $state)
     {
         try {

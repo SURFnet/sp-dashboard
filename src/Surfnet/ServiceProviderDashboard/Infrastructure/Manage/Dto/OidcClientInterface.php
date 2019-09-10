@@ -61,4 +61,9 @@ interface OidcClientInterface
      * @return int
      */
     public function getAccessTokenValidity();
+
+    /**
+     * @return array
+     */
+    public function getResourceServers();
 }

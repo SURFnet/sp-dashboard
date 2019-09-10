@@ -23,7 +23,6 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\In
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException as QueryServiceProviderExceptionAlias;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class OidcngResourceServerOptionsFactory
 {
@@ -100,12 +99,13 @@ class OidcngResourceServerOptionsFactory
         $choices = [];
         foreach ($entities as $entity) {
             $format = '%s (%s)';
+            $clientId = $entity->getOidcClient()->getClientId();
             $choice = sprintf(
                 $format,
                 $entity->getMetaData()->getNameEn(),
-                $entity->getOidcClient()->getClientId()
+                $clientId
             );
-            $choices[$choice] = $entity->getId();
+            $choices[$choice] = $clientId;
         }
         return $choices;
     }

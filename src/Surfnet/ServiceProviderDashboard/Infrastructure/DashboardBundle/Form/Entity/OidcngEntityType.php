@@ -282,7 +282,6 @@ class OidcngEntityType extends AbstractType
                                 'expanded' => true,
                                 'multiple' => true,
                                 'by_reference' => false,
-                                'empty_data' => 'Wir haben kein resource servers',
                                 'attr' => [
                                     'data-help' => 'entity.edit.information.oidcngResourceServers',
                                     'class' => 'wide'

@@ -138,4 +138,12 @@ class OidcngResourceServerClient implements OidcClientInterface
     {
         return 0;
     }
+
+    /**
+     * @return array
+     */
+    public function getResourceServers()
+    {
+        return [];
+    }
 }

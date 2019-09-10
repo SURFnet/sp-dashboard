@@ -51,6 +51,11 @@ class OidcngClient implements OidcClientInterface
      */
     private $accessTokenValidity;
     /**
+     * @var array
+     */
+    private $resourceServers;
+
+    /**
      * @param array $data
      * @param string $manageProtocol
      * @return OidcngClient
@@ -69,6 +74,10 @@ class OidcngClient implements OidcClientInterface
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
             ? $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
 
+        $resourceServers = isset($data['data']['allowedResourceServers']) ? self::parseResourceServers(
+            $data['data']['allowedResourceServers']
+        ) : [];
+
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
         Assert::isArray($redirectUris);
@@ -76,6 +85,7 @@ class OidcngClient implements OidcClientInterface
         Assert::isArray($scope);
         Assert::boolean($isPublicClient);
         Assert::numeric($accessTokenValidity);
+        Assert::isArray($resourceServers);
 
         return new self(
             $clientId,
@@ -84,7 +94,8 @@ class OidcngClient implements OidcClientInterface
             $grantType,
             $scope,
             $isPublicClient,
-            $accessTokenValidity
+            $accessTokenValidity,
+            $resourceServers
         );
     }
 
@@ -96,6 +107,7 @@ class OidcngClient implements OidcClientInterface
      * @param array $scope
      * @param bool $isPublicClient
      * @param int $accessTokenValidity
+     * @param array $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function __construct(
@@ -105,7 +117,8 @@ class OidcngClient implements OidcClientInterface
         $grantType,
         $scope,
         $isPublicClient,
-        $accessTokenValidity
+        $accessTokenValidity,
+        $resourceServers
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -114,6 +127,16 @@ class OidcngClient implements OidcClientInterface
         $this->scope = $scope;
         $this->isPublicClient = $isPublicClient;
         $this->accessTokenValidity = $accessTokenValidity;
+        $this->resourceServers = $resourceServers;
+    }
+
+    private static function parseResourceServers($allowedResourceServers)
+    {
+        $servers = [];
+        foreach ($allowedResourceServers as $clientId) {
+            $servers[$clientId['name']] = $clientId['name'];
+        }
+        return $servers;
     }
 
     /**
@@ -170,5 +193,10 @@ class OidcngClient implements OidcClientInterface
     public function getAccessTokenValidity()
     {
         return $this->accessTokenValidity;
+    }
+
+    public function getResourceServers()
+    {
+        return $this->resourceServers;
     }
 }

@@ -133,6 +133,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
 
         $metadata += $this->generateAclData($entity);
+        $metadata += $this->generateAllowedResourceServers($entity);
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
@@ -158,6 +159,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
 
         $metadata += $this->generateAclData($entity);
+        $metadata += $this->generateAllowedResourceServers($entity);
 
         $metadata += $this->flattenMetadataFields(
             $this->generateMetadataFields($entity)
@@ -261,7 +263,6 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata['grants'] = [$entity->getGrantType()->getGrantType()];
         $metadata['accessTokenValidity'] = $entity->getAccessTokenValidity();
         $metadata['isPublicClient'] = $entity->isPublicClient();
-
 
         return $metadata;
     }
@@ -408,5 +409,18 @@ class OidcngJsonGenerator implements GeneratorInterface
         $epti->setMotivation('OIDC requires EduPersonTargetedID by default');
         $epti->setRequested(true);
         $entity->setEduPersonTargetedIDAttribute($epti);
+    }
+
+    private function generateAllowedResourceServers(Entity $entity)
+    {
+        $servers = $entity->getOidcngResourceServers()->getResourceServers();
+        $allowedResourceServers = [];
+        foreach ($servers as $clientId) {
+            $allowedResourceServers[]['name'] = $clientId;
+        }
+
+        return [
+            'allowedResourceServers' => $allowedResourceServers,
+        ];
     }
 }
