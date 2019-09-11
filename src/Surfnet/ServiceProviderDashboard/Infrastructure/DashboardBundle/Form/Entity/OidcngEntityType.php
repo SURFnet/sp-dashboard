@@ -290,7 +290,6 @@ class OidcngEntityType extends AbstractType
                                     return ['class' => 'decorated'];
                                 },
                             ]
-
                         )
                 );
         }
