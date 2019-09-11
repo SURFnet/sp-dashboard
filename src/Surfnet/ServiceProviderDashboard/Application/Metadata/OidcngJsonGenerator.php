@@ -413,10 +413,14 @@ class OidcngJsonGenerator implements GeneratorInterface
 
     private function generateAllowedResourceServers(Entity $entity)
     {
-        $servers = $entity->getOidcngResourceServers()->getResourceServers();
+        $collection = $entity->getOidcngResourceServers();
         $allowedResourceServers = [];
-        foreach ($servers as $clientId) {
-            $allowedResourceServers[]['name'] = $clientId;
+
+        if ($collection) {
+            $servers = $collection->getResourceServers();
+            foreach ($servers as $clientId) {
+                $allowedResourceServers[]['name'] = $clientId;
+            }
         }
 
         return [
