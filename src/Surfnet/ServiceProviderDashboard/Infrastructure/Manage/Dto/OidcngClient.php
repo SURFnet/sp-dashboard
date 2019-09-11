@@ -62,18 +62,17 @@ class OidcngClient implements OidcClientInterface
      */
     public static function fromApiResponse(array $data, $manageProtocol)
     {
-        $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $redirectUris = isset($data['data']['metaDataFields']['redirectUrls'])
-            ? $data['data']['metaDataFields']['redirectUrls'] : '';
+        $clientId = self::getStringOrEmpty($data['data'], 'entityid');
+        $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
+        $redirectUris = self::getStringOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
+        $scope = self::getStringOrEmpty($data['data']['metaDataFields'], 'scopes');
+
         $grantType = isset($data['data']['metaDataFields']['grants'])
             ? reset($data['data']['metaDataFields']['grants']) : '';
-        $scope = isset($data['data']['metaDataFields']['scopes']) ? $data['data']['metaDataFields']['scopes'] : '';
         $isPublicClient = isset($data['data']['metaDataFields']['isPublicClient'])
             ? $data['data']['metaDataFields']['isPublicClient'] : true;
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
             ? $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
-
         $resourceServers = isset($data['data']['allowedResourceServers']) ? self::parseResourceServers(
             $data['data']['allowedResourceServers']
         ) : [];
@@ -137,6 +136,16 @@ class OidcngClient implements OidcClientInterface
             $servers[$clientId['name']] = $clientId['name'];
         }
         return $servers;
+    }
+
+    /**
+     * @param array $data
+     * @param $key
+     * @return string
+     */
+    private static function getStringOrEmpty(array $data, $key)
+    {
+        return isset($data[$key]) ? $data[$key] : '';
     }
 
     /**
