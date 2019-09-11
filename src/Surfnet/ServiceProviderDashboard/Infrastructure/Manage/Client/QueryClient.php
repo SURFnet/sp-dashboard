@@ -205,7 +205,7 @@ class QueryClient implements QueryEntityRepository
             return array_filter(array_map(
                 function ($result) {
                     $entity = $this->findByManageId($result['_id']);
-                    if ($entity->isOidcngResourceServer()) {
+                    if ($entity && $entity->isOidcngResourceServer()) {
                         return $entity;
                     }
                 },
