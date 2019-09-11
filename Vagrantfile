@@ -13,7 +13,10 @@ Vagrant.configure(2) do |config|
   
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "ansible/vagrant.yml"
-    ansible.groups = {"dev" => "default"}
+    ansible.groups = {
+                       "dev" => "default",
+                       "mongod_primary" => "default"
+                     }
     ansible.extra_vars = {
       develop_spd: true
     }
