@@ -48,7 +48,11 @@ div.flash {
       padding: 6px;
     }
   }
+}
 
-
-
+div.card.messages {
+  padding-bottom: 5px;
+  .message {
+    margin-bottom: 5px;
+  }
 }

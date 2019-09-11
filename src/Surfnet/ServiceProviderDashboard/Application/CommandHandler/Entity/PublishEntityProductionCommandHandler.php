@@ -144,6 +144,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     public function handle(PublishEntityProductionCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
+        $isNewEntity = empty($entity->getManageId());
 
         // 1. Create the Jira ticket
         $ticket = Ticket::fromEntity(
@@ -224,5 +225,9 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         // 3. On failure, remove the Jira ticket that was previously created. The user must retry at a later stage
         $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->getKey()));
         $this->ticketService->delete($issue->getKey());
+
+        if ($isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $this->flashBag->add('wysiwyg','entity.list.oidcng_connection.info.html');
+        }
     }
 }

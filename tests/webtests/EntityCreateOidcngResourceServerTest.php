@@ -139,6 +139,10 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         // A secret should be displayed
         $this->assertEquals('Secret', $label);
         $this->assertSame(20, strlen($span));
+
+        // When a new entity is published, a flash message should be displayed
+        $flashMessage = $crawler->filter('.message.wysiwyg')->text();
+        $this->assertContains('Select OIDC RP to connect this Resource Server to', $flashMessage);
     }
 
     public function test_it_forwards_to_edit_action_when_publish_failed()
