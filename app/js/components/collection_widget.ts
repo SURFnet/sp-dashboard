@@ -53,6 +53,7 @@ class CollectionWidget {
 
     this.registerAddClickHandler($addEntryButton);
     this.registerBeforeSubmitHandler($addEntryButton);
+    this.registerPreventFormSubmitHandler($input);
   }
 
   /**
@@ -126,6 +127,20 @@ class CollectionWidget {
   }
 
   /**
+   * Add prevent submit handler to prevent form submission on enter and instead add entry
+   * @param $input
+   */
+  private registerPreventFormSubmitHandler($input: JQuery<HTMLElement>) {
+    const handleKeydownEnter = (event: JQuery.Event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        this.addCollectionEntry();
+      }
+    };
+    $input.on('keydown', handleKeydownEnter);
+  }
+
+  /**
    * Add submit handler to add data entered but ot already added to the collection
    * @param $addEntryButton
    */
@@ -141,15 +156,15 @@ class CollectionWidget {
   }
 
   private isUnique(newElement: JQuery<HTMLElement>): boolean {
-    let isUniqe = true;
+    let isUnique = true;
     this.$collectionList.find('li').toArray().forEach((value) => {
       const existingValue = $(value).find('input').val();
       if (existingValue === newElement.val()) {
-        isUniqe = false;
+        isUnique = false;
       }
     });
 
-    return isUniqe;
+    return isUnique;
   }
 }
 
