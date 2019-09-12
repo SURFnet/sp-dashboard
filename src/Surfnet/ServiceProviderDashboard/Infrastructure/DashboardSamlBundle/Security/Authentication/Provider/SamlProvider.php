@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\MissingSamlAttributeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -92,8 +93,17 @@ class SamlProvider implements AuthenticationProviderInterface
         $translatedAssertion = $this->attributeDictionary->translate($token->assertion);
 
         $nameId = $translatedAssertion->getNameID();
-        $email = $this->getSingleStringValue('mail', $translatedAssertion);
-        $commonName = $this->getSingleStringValue('commonName', $translatedAssertion);
+        try {
+            $email = $this->getSingleStringValue('mail', $translatedAssertion);
+        } catch (MissingSamlAttributeException $e) {
+            throw new BadCredentialsException($e->getMessage());
+        }
+
+        try {
+            $commonName = $this->getSingleStringValue('commonName', $translatedAssertion);
+        } catch (MissingSamlAttributeException $e) {
+            $commonName = '';
+        }
 
         // Default to the ROLE_USER role for services.
         $role = 'ROLE_USER';
@@ -195,7 +205,14 @@ class SamlProvider implements AuthenticationProviderInterface
         $values = $translatedAssertion->getAttributeValue($attribute);
 
         if (empty($values)) {
-            throw new BadCredentialsException(sprintf('Missing value for required attribute "%s"', $attribute));
+            $message = sprintf(
+                'No value(s) found for attribute "%s"',
+                $attribute
+            );
+
+            $this->logger->warning($message);
+
+            throw new MissingSamlAttributeException(sprintf('Missing value for requested attribute "%s"', $attribute));
         }
 
         // see https://www.pivotaltracker.com/story/show/121296389
@@ -218,7 +235,7 @@ class SamlProvider implements AuthenticationProviderInterface
 
             $this->logger->warning($message);
 
-            throw new BadCredentialsException($message);
+            throw new MissingSamlAttributeException($message);
         }
 
         return $value;
