@@ -19,10 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -71,6 +71,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
     public function handle(PublishEntityTestCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
+        $isNewEntity = empty($entity->getManageId());
         try {
             $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
 
@@ -79,6 +80,10 @@ class PublishEntityTestCommandHandler implements CommandHandler
             if (array_key_exists('id', $publishResponse)) {
                 $this->logger->info(sprintf('Pushing entity "%s" to engineblock', $entity->getNameNl()));
                 $this->publishClient->pushMetadata();
+
+                if ($isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+                    $this->flashBag->add('wysiwyg','entity.list.oidcng_connection.info.html');
+                }
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(

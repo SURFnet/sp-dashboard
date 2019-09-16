@@ -12,10 +12,14 @@
 
     {% set flashes = app.session.flashbag.all %}
     {% if flashes is not empty %}
-    <div class="card">
+    <div class="card messages">
         {% for type, messages in flashes %}
             {% for message in messages %}
-                <div class="message {{ type }}">{{ message|trans }}</div>
+                {% if type == 'wysiwyg' %}
+                    <div class="message {{ type }}">{{ message|trans|wysiwyg }}</div>
+                {% else %}
+                    <div class="message {{ type }}">{{ message|trans }}</div>
+                {% endif %}
             {% endfor %}
         {% endfor %}
     </div>
@@ -165,7 +169,7 @@
 
     {% if showOidcPopup %}
         <div class="modal" id="oidc-published-popup">
-            {{ render(controller('DashboardBundle:EntityPublished:oidcConfirmationModal')) }}
+            {{ render(controller('DashboardBundle:EntityPublished:oidcConfirmationModal', {'entity': publishedEntity})) }}
         </div>
     {% endif %}
 

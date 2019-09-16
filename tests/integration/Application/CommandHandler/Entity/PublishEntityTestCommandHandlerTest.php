@@ -80,7 +80,10 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getNameNl')
-            ->andReturn('Test Entity Name');
+            ->andReturn('Test Entity Name')
+            ->shouldReceive('getManageId')
+            ->shouldReceive('getProtocol')
+            ->andReturn(Entity::TYPE_OPENID_CONNECT_TNG);
 
         $this->repository
             ->shouldReceive('findById')
@@ -112,7 +115,10 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getNameNl')
-            ->andReturn('Test Entity Name');
+            ->andReturn('Test Entity Name')
+            ->shouldReceive('getManageId')
+            ->shouldReceive('getProtocol')
+            ->andReturn(Entity::TYPE_SAML);
 
         $this->repository
             ->shouldReceive('findById')
@@ -153,7 +159,10 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $entity = m::mock(Entity::class);
         $entity
             ->shouldReceive('getNameNl')
-            ->andReturn('Test Entity Name');
+            ->andReturn('Test Entity Name')
+            ->shouldReceive('getManageId')
+            ->shouldReceive('getProtocol')
+            ->andReturn(Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
 
         $this->repository
             ->shouldReceive('findById')
