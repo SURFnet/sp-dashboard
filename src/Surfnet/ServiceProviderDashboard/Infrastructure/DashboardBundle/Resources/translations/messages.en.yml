@@ -35,6 +35,7 @@ entity:
       metadata_url: Metadata URL
       acs_location: ACS location
       entity_id: Entity ID
+      client_id: Client ID
       grant_type: Grant type
       is_public_client: Is public client
       access_token_validity: Access token validitiy (seconds)
