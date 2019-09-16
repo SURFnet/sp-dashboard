@@ -71,7 +71,6 @@ class PublishEntityTestCommandHandler implements CommandHandler
     public function handle(PublishEntityTestCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
-        $isNewEntity = empty($entity->getManageId());
         try {
             $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
 
@@ -81,8 +80,8 @@ class PublishEntityTestCommandHandler implements CommandHandler
                 $this->logger->info(sprintf('Pushing entity "%s" to engineblock', $entity->getNameNl()));
                 $this->publishClient->pushMetadata();
 
-                if ($isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-                    $this->flashBag->add('wysiwyg','entity.list.oidcng_connection.info.html');
+                if ($this->isNewResourceServer($entity)) {
+                    $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
                 }
             }
         } catch (PublishMetadataException $e) {
@@ -98,5 +97,11 @@ class PublishEntityTestCommandHandler implements CommandHandler
             $this->logger->error(sprintf('Pushing to Engineblock failed with message: "%s"', $e->getMessage()));
             $this->flashBag->add('error', 'entity.edit.error.push');
         }
+    }
+
+    private function isNewResourceServer(Entity $entity)
+    {
+        $isNewEntity = empty($entity->getManageId());
+        return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 }
