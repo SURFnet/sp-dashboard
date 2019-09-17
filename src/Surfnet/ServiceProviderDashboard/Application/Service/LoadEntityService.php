@@ -19,6 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -172,6 +174,7 @@ class LoadEntityService
         }
 
         $this->updateAllowedResourceServers($isCopyToProduction, $domainEntity);
+        $this->updateClientId($isCopyToProduction, $domainEntity);
 
         // Set the target environment
         $domainEntity->setEnvironment($environment);
@@ -203,13 +206,32 @@ class LoadEntityService
      * When copying a OIDC TNG entity to production, we do NOT copy the related resource server references
      * along with it. As they do not exist on the other environment.
      *
-     * @param $isCopyToProduction
+     * @param bool $isCopyToProduction
      * @param Entity $domainEntity
      */
     private function updateAllowedResourceServers($isCopyToProduction, Entity $domainEntity)
     {
         if ($isCopyToProduction && $domainEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
             $domainEntity->setOidcngResourceServers(new ResourceServerCollection([]));
+        }
+    }
+
+    /**
+     * Only when an OIDC TNG entity is copied to production, do we append the https schema back onto the schema-less
+     * client id. This to prevent a validation error when publishing the draft entity (what a copied to production
+     * entity basically is).
+     *
+     * @param bool $isCopyToProduction
+     * @param Entity $domainEntity
+     */
+    private function updateClientId($isCopyToProduction, Entity $domainEntity)
+    {
+        $protocol = $domainEntity->getProtocol();
+        $isOidcngEntity = $protocol === Entity::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        if ($isCopyToProduction && $isOidcngEntity) {
+            $clientId = OidcngSpdClientIdParser::parse($domainEntity->getEntityId());
+            $domainEntity->setEntityId($clientId);
         }
     }
 }

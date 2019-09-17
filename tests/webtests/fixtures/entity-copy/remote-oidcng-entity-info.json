@@ -1,0 +1,47 @@
+{
+  "id": "88888888-0000-9999-1111-777777777777",
+  "version": 2,
+  "type": "oidc10_rp",
+  "data": {
+    "arp": {
+      "attributes": {
+        "urn:mace:dir:attribute-def:eduPersonTargetedID": [{
+          "source": "idp",
+          "value": "*",
+          "motivation": "OIDC requires EduPersonTargetedID by default"
+        }]
+      },
+      "enabled": true
+    },
+    "type": "oidc10-rp",
+    "entityid": "playground.openconext.nl",
+    "active": true,
+    "state": "prodaccepted",
+    "metaDataFields": {
+      "description:en": "Description in English",
+      "description:nl": "Description in Dutch",
+      "name:en": "SURF Playground",
+      "name:nl": "SURF Speeltuin",
+      "contacts:0:contactType": "technical",
+      "contacts:0:givenName": "Aad",
+      "contacts:0:surName": "Janssen",
+      "contacts:0:emailAddress": "ajanssen@foobar.com",
+      "coin:service_team_id": "urn:collab:org:surf.nl",
+      "coin:application_url": "https:\/\/prod.dev.playground.openconext.nl\/playground",
+      "coin:eula": "https:\/\/prod.dev.playground.openconext.nl\/playground\/EULA",
+      "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+      "scopes": ["openid"],
+      "secret": "$2a$10$ErGAt73kBcyDI9iPLy0URe5nJrfI84zgSVvyCTGlDyRdXnEzzJS9f",
+      "redirectUrls": ["https:\/\/prod.dev.playground.openconext.nl\/redirect1", "https:\/\/test.dev.playground.openconext.nl"],
+      "grants": ["authorization_code"],
+      "accessTokenValidity": 4140,
+      "isPublicClient": true,
+      "logo:0:url": "https:\/\/spdashboard.dev.support.openconext.nl\/images\/openconext-logo.png",
+      "logo:0:width": 322,
+      "logo:0:height": 100,
+      "coin:exclude_from_push": true
+    },
+    "revisionnote": "Revision note 2",
+    "eid": 36
+  }
+}
