@@ -422,7 +422,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
         // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
-        $command->subjectType = $entity->getNameIdFormat();
+        $command->setSubjectType($entity->getNameIdFormat());
         $command->descriptionNl = $entity->getDescriptionNl();
         $command->descriptionEn = $entity->getDescriptionEn();
         $command->applicationUrl = $entity->getApplicationUrl();
@@ -1225,6 +1225,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setSubjectType($subjectType)
     {
         $this->subjectType = $subjectType;
+        // If the SubjectType is not set in the draft, we set the default value (transient) as requested in:
+        // https://www.pivotaltracker.com/story/show/167511146
+        if (is_null($subjectType)) {
+            $this->subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
+        }
     }
 
     /**
