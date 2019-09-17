@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -107,11 +106,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $isPublicClient;
 
     /**
-     * @var OidcGrantType
+     * @var string $grantType defaults to OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE
      *
      * @Assert\NotBlank()
      */
-    private $grantType;
+    private $grantType = OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE;
 
     /**
      * @var int
@@ -381,6 +380,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     private $protocol = Entity::TYPE_OPENID_CONNECT_TNG;
 
+    /**
+     * @var string[]
+     */
+    private $resourceServers = [];
+
     private function __construct()
     {
     }
@@ -393,7 +397,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     {
         $command = new self();
         $command->service = $service;
-
         return $command;
     }
 
@@ -419,7 +422,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->nameNl = $entity->getNameNl();
         $command->nameEn = $entity->getNameEn();
         // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
-        $command->subjectType = $entity->getNameIdFormat();
+        $command->setSubjectType($entity->getNameIdFormat());
         $command->descriptionNl = $entity->getDescriptionNl();
         $command->descriptionEn = $entity->getDescriptionEn();
         $command->applicationUrl = $entity->getApplicationUrl();
@@ -452,6 +455,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->isPublicClient = $entity->isPublicClient();
         $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
         $command->enablePlayground = $entity->isEnablePlayground();
+        $command->resourceServers = $entity->getOidcngResourceServers()->getResourceServers();
 
         return $command;
     }
@@ -1221,5 +1225,26 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setSubjectType($subjectType)
     {
         $this->subjectType = $subjectType;
+        // If the SubjectType is not set in the draft, we set the default value (transient) as requested in:
+        // https://www.pivotaltracker.com/story/show/167511146
+        if (is_null($subjectType)) {
+            $this->subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOidcngResourceServers()
+    {
+        return $this->resourceServers;
+    }
+
+    /**
+     * @param string[] $resourceServers
+     */
+    public function setOidcngResourceServers($resourceServers)
+    {
+        $this->resourceServers = $resourceServers;
     }
 }

@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
 /**
@@ -78,7 +79,7 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         }
 
         if (is_null($entity)) {
-            throw new EntityNotFoundException('The requested Service cannot be found');
+            throw new EntityNotFoundException('The requested entity cannot be found');
         }
 
         if (!$command->getManageId()) {
@@ -96,8 +97,13 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setAccessTokenValidity($command->getAccessTokenValidity());
         $entity->setIsPublicClient($command->isPublicClient());
         $entity->setEnablePlayground($command->isEnablePlayground());
-        $grantType =  $command->getGrantType();
-        $entity->setGrantType(new OidcGrantType($grantType));
+        try {
+            $grantType =  $command->getGrantType();
+            $entity->setGrantType(new OidcGrantType($grantType));
+        } catch (\InvalidArgumentException $e) {
+            // Allow empty grant types
+        }
+
         // The OIDC subject type is analog to the SAML NameIdFormat: https://www.pivotaltracker.com/story/show/167511146
         $entity->setNameIdFormat($command->getSubjectType());
         $entity->setLogoUrl($command->getLogoUrl());
@@ -107,6 +113,7 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setDescriptionEn($command->getDescriptionEn());
         $entity->setApplicationUrl($command->getApplicationUrl());
         $entity->setEulaUrl($command->getEulaUrl());
+
         $entity->setAdministrativeContact($command->getAdministrativeContact());
         $entity->setTechnicalContact($command->getTechnicalContact());
         $entity->setSupportContact($command->getSupportContact());
@@ -125,13 +132,13 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setPersonalCodeAttribute($command->getPersonalCodeAttribute());
         $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
         $entity->setComments($command->getComments());
-
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());
         $entity->setOrganizationNameEn($command->getOrganizationNameEn());
         $entity->setOrganizationDisplayNameNl($command->getOrganizationDisplayNameNl());
         $entity->setOrganizationDisplayNameEn($command->getOrganizationDisplayNameEn());
         $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
         $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
+        $entity->setOidcngResourceServers(new ResourceServerCollection($command->getOidcngResourceServers()));
 
         $this->repository->save($entity);
     }

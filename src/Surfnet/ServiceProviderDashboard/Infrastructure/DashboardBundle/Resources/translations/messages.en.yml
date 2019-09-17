@@ -15,6 +15,8 @@ entity.delete.request.ticket.description: "h2. Details
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
 
+unknownDisplayName: "Unknown"
+
 entity:
   detail:
     title: Entity details
@@ -28,10 +30,14 @@ entity:
       oidcng:
         title: Information
         html: <strong>information about this view</strong>
+      oidcng_rs:
+        title: Information
+        html: <strong>information about this view</strong>
     metadata:
       metadata_url: Metadata URL
       acs_location: ACS location
       entity_id: Entity ID
+      client_id: Client ID
       grant_type: Grant type
       is_public_client: Is public client
       access_token_validity: Access token validitiy (seconds)
@@ -56,6 +62,9 @@ entity:
       oidcng:
         title: Metadata
         html: <strong>information about the metadata fields</strong>
+      oidcng_rs:
+        title: Metadata
+        html: <strong>information about the metadata fields</strong>
     contact:
       administrative: Administrative contact
       technical: Technical contact
@@ -71,6 +80,9 @@ entity:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
       oidcng:
+        title: Contact information
+        html: <strong>information about the contact information fields</strong>
+      oidcng_rs:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
     attribute:
@@ -160,6 +172,7 @@ entity.list.modal.oidc_confirmation:
     label: Secret
   warning: This message will be displayed only once
   info.html: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+entity.list.oidcng_connection.info.html: <p><strong>Select OIDC RP to connect this Resource Server to</strong></p><p><i class="fa fa-exclamation-triangle"></i> Only access_tokens from connected clients can be introspected by the resource server.</p>
 entity.edit.error.publish: "Unable to publish the entity, try again later"
 entity.edit.error.push: "Unable to publish the entity, try again later"
 entity.edit.title: Service Provider registration form
@@ -246,18 +259,35 @@ should be present.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 "
+entity.edit.info.oidcng_rs.title: Info
+entity.edit.info.oidcng_rs.html: "
+<p>Documentation about this SP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
+
+<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
+In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
+<ul>
+<li>Various contacts responsible for the entity. Support, administrative and technical
+should be present.</li>
+<li>Information about SAML 2.0 configuration.</li>
+<li>Metadata information including URL, certificate and logo of your entity.</li>
+<li>A list of the attributes your Service Provider requires to operate.</li>
+</ul>
+"
 entity.edit.general.title: General
 entity.edit.general.html: "<p>Enter/edit your contact information below. We will use this information in case we have additional questions.</p>"
 entity.edit.metadata.fetch.exception: "Unable to load the metadata from the provided import url."
 entity.edit.metadata.saml20.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oidc.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oidcng.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
+entity.edit.metadata.oidcng_rs.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
 entity.edit.metadata.validation-failed: "Warning! Some entries are missing or incorrect. Please review and fix those entries below."
 entity.edit.metadata.unknown.exception: "An unknown error occurred while importing the metadata."
 entity.edit.metadata.saml20.title: Metadata
 entity.edit.metadata.oidc.title: Metadata
 entity.edit.metadata.oidcng.title: Metadata
+entity.edit.metadata.oidcng_rs.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
 entity.edit.contact_information.title: Contact information
 entity.edit.contact_information.html: "
@@ -299,8 +329,18 @@ entity.edit.attributes.oidcng.html: "
 
 <p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
 "
+entity.edit.attributes.oidcng_rs.title: Attributes
+entity.edit.attributes.oidcng_rs.html: "
+<p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a entity. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
+
+<p>Possibly some boxes have already been checked. This information is reused from the metadata.</p>
+
+<p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
+"
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
+entity.edit.oidcngResourceServers.title: Select the OIDC Resource Servers(s) that belong to this Client
+entity.edit.oidcngResourceServers.html: "<p>Only access_tokens that are provided to the clients selected can be introspected by the resource server.</p>"
 entity.edit.information.importUrl: Text should be set in web translations
 entity.edit.information.metadataUrl: Text should be set in web translations
 entity.edit.information.acsLocation: Text should be set in web translations
@@ -321,6 +361,7 @@ entity.edit.information.applicationUrl: Text should be set in web translations
 entity.edit.information.eulaUrl: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
+entity.edit.information.oidcngResourceServers: Text should be set in web translations
 entity.edit.information.technicalContact: Text should be set in web translations
 entity.edit.information.saml20.givenNameAttribute: Text should be set in web translations
 entity.edit.information.saml20.surNameAttribute: Text should be set in web translations
@@ -389,6 +430,8 @@ entity.type.description.html: "<p><strong>Lorem ipsum dolor sit amet</strong> Co
 entity.type.saml20.title: SAML 2.0
 entity.type.oidc.title: OpenID Connect
 entity.type.oidcng.title: OpenID Connect - The Next Generation
+entity.type.oidcng.client.title: OpenID Connect client - The Next Generation
+entity.type.oidcng.resource_server.title: OpenID Connect resource server - The Next Generation
 privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 privacy.form.label.accessData.html: 2. Who can access the data?

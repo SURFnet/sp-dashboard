@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
@@ -58,6 +59,7 @@ class Entity
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT = 'oidc';
     const TYPE_OPENID_CONNECT_TNG = 'oidcng';
+    const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oidcng_rs';
 
     const OIDC_SECRET_LENGTH = 20;
 
@@ -419,6 +421,16 @@ class Entity
     private $idpAllowAll = true;
 
     /**
+     * The OIDC resource servers belonging to a client
+     *
+     * Specifically added for OIDC TNG Client
+     *
+     * @var ResourceServerCollection
+     * @ORM\Column(type="object", nullable=true)
+     */
+    private $oidcngResourceServers;
+
+    /**
      * @param ManageEntity $manageEntity
      * @param string $environment
      * @param Service $service
@@ -493,6 +505,16 @@ class Entity
                     $oidcngPlayGroundUriTest,
                     $oidcngPlayGroundUriProd
                 );
+                $entity->setOidcngResourceServers(
+                    new ResourceServerCollection($manageEntity->getOidcClient()->getResourceServers())
+                );
+                break;
+            case (self::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
+                $oidcClient = $manageEntity->getOidcClient();
+                $entity->setClientSecret($oidcClient->getClientSecret());
+                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
+                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+                $entity->setNameIdFormat($metaData->getNameIdFormat());
                 break;
             case (self::TYPE_SAML):
                 $entity->setProtocol(Entity::TYPE_SAML);
@@ -1567,5 +1589,21 @@ class Entity
     public function isPublicClient()
     {
         return $this->isPublicClient;
+    }
+
+    /**
+     * @return ResourceServerCollection
+     */
+    public function getOidcngResourceServers()
+    {
+        return $this->oidcngResourceServers;
+    }
+
+    /**
+     * @param ResourceServerCollection $resourceServers
+     */
+    public function setOidcngResourceServers(ResourceServerCollection $resourceServers)
+    {
+        $this->oidcngResourceServers = $resourceServers;
     }
 }

@@ -153,4 +153,12 @@ class OidcClient implements OidcClientInterface
     {
         throw new RuntimeException('This method is not supported by the OidcClient');
     }
+
+    /**
+     * @throws RuntimeException
+     */
+    public function getResourceServers()
+    {
+        throw new RuntimeException('This method is not supported by the OidcClient');
+    }
 }

@@ -78,7 +78,7 @@ class SaveOidcEntityCommandHandler implements CommandHandler
         }
 
         if (is_null($entity)) {
-            throw new EntityNotFoundException('The requested Service cannot be found');
+            throw new EntityNotFoundException('The requested entity cannot be found');
         }
 
         if (!$command->getManageId()) {

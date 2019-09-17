@@ -38,6 +38,8 @@ class EntityCreateOidcngTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
+        // Manage is queried for resource servers
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
@@ -54,6 +56,8 @@ class EntityCreateOidcngTest extends WebTestCase
 
     public function epti_attribute_is_not_on_the_form()
     {
+        // Manage is queried for resource servers
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
@@ -67,6 +71,10 @@ class EntityCreateOidcngTest extends WebTestCase
 
     public function test_it_can_cancel_out_of_the_form()
     {
+        // Manage is queried for resource servers (the form is rebuilt after submit for validation)
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
         $form = $crawler
             ->selectButton('Cancel')
@@ -74,9 +82,10 @@ class EntityCreateOidcngTest extends WebTestCase
 
         $this->client->submit($form);
         // The form is now redirected to the list view
+
         $this->assertTrue(
             $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
+            'Expecting a redirect response after cancelling out of the form'
         );
 
         // The entity list queries manage for published entities
@@ -96,6 +105,9 @@ class EntityCreateOidcngTest extends WebTestCase
     public function test_it_can_save_the_form()
     {
         $formData = $this->buildValidFormData();
+        // Manage is queried for resource servers (the form is rebuilt after submit for validation)
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
 
@@ -114,6 +126,7 @@ class EntityCreateOidcngTest extends WebTestCase
         // The entity list queries manage for published entities
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
         $this->prodMockHandler->append(new Response(200, [], '[]'));
 
@@ -127,13 +140,15 @@ class EntityCreateOidcngTest extends WebTestCase
     public function test_it_can_publish_the_form()
     {
         $formData = $this->buildValidFormData();
-
+        // Manage is queried for resource servers (the form is rebuilt after submit for validation)
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
-
+        // Manage is queried for resource servers
         $this->testMockHandler->append(new Response(200, [], '[]'));
         // ClientId validator
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
@@ -171,6 +186,9 @@ class EntityCreateOidcngTest extends WebTestCase
     public function test_it_forwards_to_edit_action_when_publish_failed()
     {
         $formData = $this->buildValidFormData();
+        // Manage is queried for resource servers
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
 
@@ -200,6 +218,9 @@ class EntityCreateOidcngTest extends WebTestCase
             'Expecting redirect to entity edit form'
         );
 
+        // Manage is queried for resource servers
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+
         $crawler = $this->client->followRedirect();
         // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
@@ -226,7 +247,9 @@ class EntityCreateOidcngTest extends WebTestCase
     public function test_a_privileged_user_can_create_a_production_draft()
     {
         $formData = $this->buildValidFormData();
-
+        // Manage is queried for resource servers
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->prodMockHandler->append(new Response(200, [], '[]'));
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/production");
 
         $form = $crawler

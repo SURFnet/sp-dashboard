@@ -453,6 +453,119 @@ JSON
         $this->assertSame($expectedEnabledPlayground, $playgroundEnabled, sprintf($messageFormat, 'playgroundEnabled', $testName));
     }
 
+    public function test_it_removes_resource_servers_on_copy_to_production()
+    {
+        $this->entityRepository->shouldReceive('isUnique')
+            ->with('dashboardid')
+            ->andReturn(true);
+
+        $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
+
+        $this->manageTestClient->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn($manageDto);
+
+        $entity = $this->copyService->load(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_PRODUCTION
+        );
+
+        $this->assertEmpty($entity->getOidcngResourceServers()->getResourceServers());
+    }
+
+    public function test_it_keeps_resource_servers_on_copy_to_same_environment()
+    {
+        $this->entityRepository
+            ->shouldReceive('isUnique')
+            ->with('dashboardid')
+            ->andReturn(true)
+            ->twice();
+
+        $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
+
+        $this->manageTestClient
+            ->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn($manageDto);
+
+        $entity = $this->copyService->load(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_TEST
+        );
+
+        $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
+
+        $this->manageProdClient
+            ->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn($manageDto);
+
+
+        $entity = $this->copyService->load(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_PRODUCTION,
+            Entity::ENVIRONMENT_PRODUCTION
+        );
+
+        $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
+    }
+
+    public function test_it_updates_the_client_id_on_copy_to_production()
+    {
+        $this->entityRepository->shouldReceive('isUnique')
+            ->with('dashboardid')
+            ->andReturn(true)
+            ->twice();
+
+        $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
+
+        $this->manageTestClient->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn($manageDto);
+
+        $entity = $this->copyService->load(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_PRODUCTION
+        );
+
+        $this->assertEquals(
+            'https://playground.openconext.nl',
+            $entity->getEntityId(),
+            'The schema should have been put back in place on a copy to production (relying party)'
+        );
+
+        // Also verify the Resource Server entity type correctly gets the schema prepend.
+        $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRSMetadata());
+        $this->manageTestClient->shouldReceive('findByManageId')
+            ->with('manageid')
+            ->andReturn($manageDto);
+        
+        $entity = $this->copyService->load(
+            'dashboardid',
+            'manageid',
+            $this->service,
+            Entity::ENVIRONMENT_TEST,
+            Entity::ENVIRONMENT_PRODUCTION
+        );
+
+        $this->assertEquals(
+            'https://playground.openconext.nl',
+            $entity->getEntityId(),
+            'The schema should have been put back in place on a copy to production (resource server)'
+        );
+    }
+
     public function providePlaygroundUrls()
     {
         //$testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground
@@ -466,5 +579,73 @@ JSON
             ['test-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
             ['test-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
         ];
+    }
+
+    private function getOidcNgRPMetadata()
+    {
+        return json_decode(
+            '
+                {
+                    "id": "88888888-0000-9999-1111-777777777777",
+                    "version": 2,
+                    "type": "oidc10_rp",
+                    "data": {
+                        "arp": {
+                            "attributes": {
+                                "urn:mace:dir:attribute-def:eduPersonTargetedID": [{
+                                    "source": "idp",
+                                    "value": "*",
+                                    "motivation": "OIDC requires EduPersonTargetedID by default"
+                                }]
+                            },
+                            "enabled": true
+                        },
+                        "type": "oidc10-rp",
+                        "entityid": "playground.openconext.nl",
+                        "active": true,
+                        "state": "prodaccepted",
+                        "metaDataFields": {
+                            "description:en": "Description in English",
+                            "description:nl": "Description in Dutch",
+                            "name:en": "SURF Playground",
+                            "name:nl": "SURF Speeltuin",
+                            "contacts:0:contactType": "technical",
+                            "contacts:0:givenName": "Aad",
+                            "contacts:0:surName": "Janssen",
+                            "contacts:0:emailAddress": "ajanssen@foobar.com",
+                            "coin:service_team_id": "testteam",
+                            "coin:application_url": "https:\/\/prod.dev.playground.openconext.nl\/playground",
+                            "coin:eula": "https:\/\/prod.dev.playground.openconext.nl\/playground\/EULA",
+                            "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+                            "scopes": ["openid"],
+                            "secret": "$2a$10$ErGAt73kBcyDI9iPLy0URe5nJrfI84zgSVvyCTGlDyRdXnEzzJS9f",
+                            "redirectUrls": ["https:\/\/prod.dev.playground.openconext.nl\/redirect1", "https:\/\/test.dev.playground.openconext.nl"],
+                            "grants": ["authorization_code"],
+                            "accessTokenValidity": 4140,
+                            "isPublicClient": true,
+                            "logo:0:url": "https:\/\/spdashboard.dev.support.openconext.nl\/images\/openconext-logo.png",
+                            "logo:0:width": 322,
+                            "logo:0:height": 100,
+                            "coin:exclude_from_push": true
+                        },
+                        "revisionnote": "Revision note 2",
+                        "eid": 36,
+                        "allowedResourceServers": [{
+                            "name": "foobar.com"
+                        }, {
+                            "name": "another-resource-server.com"
+                        }]
+                    }
+                }
+            ',
+            true
+        );
+    }
+
+    private function getOidcNgRSMetadata()
+    {
+        $metadata = $this->getOidcNgRPMetadata();
+        $metadata['data']['metaDataFields']['isResourceServer'] = true;
+        return $metadata;
     }
 }

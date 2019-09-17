@@ -182,6 +182,45 @@ class QueryClient implements QueryEntityRepository
     }
 
     /**
+     * @param $teamName
+     * @param $state
+     * @return array
+     * @throws QueryServiceProviderException
+     */
+    public function findOidcngResourceServersByTeamName($teamName, $state)
+    {
+        try {
+            // Query manage to get the internal id of every SP entity with given team ID.
+            $params = [
+                'metaDataFields.coin:service_team_id' => $teamName,
+                'state' => $state
+            ];
+
+            $searchResults = $this->client->post(
+                json_encode($params),
+                sprintf('/manage/api/internal/search/oidc10_rp')
+            );
+
+            // For each search result, query manage to get the full SP entity data.
+            return array_filter(array_map(
+                function ($result) {
+                    $entity = $this->findByManageId($result['_id']);
+                    if ($entity && $entity->isOidcngResourceServer()) {
+                        return $entity;
+                    }
+                },
+                $searchResults
+            ));
+        } catch (HttpException $e) {
+            throw new QueryServiceProviderException(
+                sprintf('Unable to find oidcng resource server entities with team ID: "%s"', $teamName),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
      * Search for both oidc and saml entities.
      *
      * @param array $params

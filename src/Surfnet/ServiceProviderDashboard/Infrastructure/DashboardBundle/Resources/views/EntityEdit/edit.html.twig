@@ -27,17 +27,31 @@
         {{ form_widget(form.metadata) }}
     </div>
 
+    {% if form.oidcngResourceServers is defined %}
+
+        <div class="fieldset card">
+            <h2>{{ 'entity.edit.oidcngResourceServers.title'|trans }}</h2>
+            <div class="wysiwyg">{{ 'entity.edit.oidcngResourceServers.html'|trans|wysiwyg }}</div>
+            {{ form_widget(form.oidcngResourceServers) }}
+        </div>
+
+    {% endif %}
+
     <div class="fieldset card contact">
         <h2>{{ 'entity.edit.contact_information.title'|trans }}</h2>
         <div class="wysiwyg">{{ 'entity.edit.contact_information.html'|trans|wysiwyg }}</div>
         {{ form_widget(form.contactInformation) }}
     </div>
 
+    {% if form.attributes is defined %}
+
     <div class="fieldset card">
         <h2>{{ ('entity.edit.attributes.' ~ type ~ '.title')|trans }}</h2>
         <div class="wysiwyg">{{ ('entity.edit.attributes.' ~ type ~ '.html')|trans|wysiwyg }}</div>
         {{ form_widget(form.attributes) }}
     </div>
+
+    {% endif %}
 
     <div class="fieldset card">
         <h2>{{ 'entity.edit.comments.title'|trans }}</h2>

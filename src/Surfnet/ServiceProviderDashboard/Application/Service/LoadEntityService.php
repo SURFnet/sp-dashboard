@@ -19,12 +19,16 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Webmozart\Assert\Assert;
 
@@ -169,6 +173,9 @@ class LoadEntityService
             $domainEntity->setManageId(null);
         }
 
+        $this->updateAllowedResourceServers($isCopyToProduction, $domainEntity);
+        $this->updateClientId($isCopyToProduction, $domainEntity);
+
         // Set the target environment
         $domainEntity->setEnvironment($environment);
 
@@ -193,5 +200,38 @@ class LoadEntityService
             return 1;
         }
         return 0;
+    }
+
+    /**
+     * When copying a OIDC TNG entity to production, we do NOT copy the related resource server references
+     * along with it. As they do not exist on the other environment.
+     *
+     * @param bool $isCopyToProduction
+     * @param Entity $domainEntity
+     */
+    private function updateAllowedResourceServers($isCopyToProduction, Entity $domainEntity)
+    {
+        if ($isCopyToProduction && $domainEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+            $domainEntity->setOidcngResourceServers(new ResourceServerCollection([]));
+        }
+    }
+
+    /**
+     * Only when an OIDC TNG entity is copied to production, do we append the https schema back onto the schema-less
+     * client id. This to prevent a validation error when publishing the draft entity (what a copied to production
+     * entity basically is).
+     *
+     * @param bool $isCopyToProduction
+     * @param Entity $domainEntity
+     */
+    private function updateClientId($isCopyToProduction, Entity $domainEntity)
+    {
+        $protocol = $domainEntity->getProtocol();
+        $isOidcngEntity = $protocol === Entity::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        if ($isCopyToProduction && $isOidcngEntity) {
+            $clientId = OidcngSpdClientIdParser::parse($domainEntity->getEntityId());
+            $domainEntity->setEntityId($clientId);
+        }
     }
 }

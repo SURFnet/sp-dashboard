@@ -153,11 +153,32 @@ class EntityCopyTest extends WebTestCase
         );
         $this->testMockHandler->append(new Response(200, [], json_decode($response)));
 
-        $this->client->request('GET', "/entity/copy/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
+        $crawler = $this->client->request('GET', "/entity/copy/1/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
+        // Ensure we are not basing further assertions on an error response
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        // And check we did actually perform a copy action by checking a sample field from the form.
+        $nameEn = $crawler->filter('#dashboard_bundle_entity_type_metadata_nameEn')->attr('value');
+        $this->assertEquals('OpenConext Engine EN', $nameEn);
 
         // Assert that the newly created entity is indeed a production entity.
         $entity = $this->getEntityRepository()->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
         $this->assertEmpty($entity, 'Entity is not saved, but loaded on the form');
+    }
+
+    public function test_copy_to_production_for_oidcng_entities_yields_a_protocol_prepend_on_client_id_field()
+    {
+        $response = file_get_contents(
+            __DIR__ . '/fixtures/entity-copy/remote-oidcng-entity-info.json'
+        );
+        // Read the entity from test
+        $this->testMockHandler->append(new Response(200, [], $response));
+        // Load/find NO resource servers to render on the form
+        $this->testMockHandler->append(new Response(200, [], json_encode([])));
+        $this->prodMockHandler->append(new Response(200, [], json_encode([])));
+        $crawler = $this->client->request('GET', "/entity/copy/1/88888888-0000-9999-1111-777777777777/production");
+        // Assert that the newly created entity has the updated client id
+        $clientId = $crawler->filter('#dashboard_bundle_entity_type_metadata_clientId')->attr('value');
+        $this->assertEquals('https://playground.openconext.nl', $clientId);
     }
 
     public function test_no_save_button_after_import()

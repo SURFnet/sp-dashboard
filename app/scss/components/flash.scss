@@ -48,7 +48,16 @@ div.flash {
       padding: 6px;
     }
   }
+}
 
-
-
+div.card.messages {
+  border-top-color: $green;
+  padding-bottom: 5px;
+  i {
+    font-size: larger;
+    font-style: normal;
+  }
+  .message {
+    margin-bottom: 5px;
+  }
 }

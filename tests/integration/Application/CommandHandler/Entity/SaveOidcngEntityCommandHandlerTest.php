@@ -52,7 +52,7 @@ class SaveOidcngEntityCommandHandlerTest extends MockeryTestCase
         );
     }
 
-    public function test_it_can_delete_an_entity_from_production()
+    public function test_it_can_handle_saving_of_a_save_command()
     {
         $service = m::mock(Service::class);
 

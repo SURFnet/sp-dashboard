@@ -77,7 +77,14 @@
 
 {%- block checkbox_widget -%}
     {{ block('help_block') }}
+    {% set addInputContainer = (attr.class is defined and attr.class == "decorated") %}
+    {%  if addInputContainer %}
+    <div class="input-container">
+    {% endif %}
     <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    {%  if addInputContainer  %}
+    </div>
+    {% endif %}
 {%- endblock checkbox_widget -%}
 
 {%- block radio_widget -%}

@@ -73,6 +73,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand }
 
+    surfnet.dashboard.command_handler.edit_oidcng_rs_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngResourceServerEntityCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand }
+
     surfnet.dashboard.command_handler.edit_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
         public: true
@@ -200,6 +206,11 @@ services:
         arguments:
             $oidcPlaygroundUriTest: '%oidcng_playground_uri_test%'
             $oidcPlaygroundUriProd: '%oidcng_playground_uri_prod%'
+
+    Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator:
+        class: Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator
+        tags:
+            - { name: dashboard.json_generator, identifier: oidcng_rs }
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
@@ -445,3 +456,15 @@ services:
       arguments:
         - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService'
       tags: ['form.type']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
+        tags: ['form.type']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '%manage_test_publication_status%'
+            - '%manage_prod_publication_status%'

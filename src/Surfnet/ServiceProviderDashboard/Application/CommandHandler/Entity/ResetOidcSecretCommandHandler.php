@@ -69,7 +69,10 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         }
 
         $protocol = $entity->getProtocol();
-        if ($protocol !== Entity::TYPE_OPENID_CONNECT && $protocol !== Entity::TYPE_OPENID_CONNECT_TNG) {
+        if ($protocol !== Entity::TYPE_OPENID_CONNECT &&
+            $protocol !== Entity::TYPE_OPENID_CONNECT_TNG &&
+            $protocol !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+        ) {
             throw new EntityNotFoundException('The requested entity could be found, invalid protocol');
         }
 

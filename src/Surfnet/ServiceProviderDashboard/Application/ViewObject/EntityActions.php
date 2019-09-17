@@ -125,7 +125,9 @@ class EntityActions
      */
     public function allowAclAction()
     {
-        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
+        return $this->status == DomainEntity::STATE_PUBLISHED &&
+            $this->environment == DomainEntity::ENVIRONMENT_TEST &&
+            $this->protocol !== DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
     /**
@@ -135,8 +137,11 @@ class EntityActions
     {
         $protocol = $this->protocol;
         $status = $this->status;
-        return ($protocol == DomainEntity::TYPE_OPENID_CONNECT || $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG) &&
-            ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
+        $meetsProtocolRequirement = $protocol == DomainEntity::TYPE_OPENID_CONNECT ||
+            $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG ||
+            $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        $meetsPublicationStatusRequirement = ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
+        return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
 
 
