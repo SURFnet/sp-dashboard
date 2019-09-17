@@ -1596,6 +1596,10 @@ class Entity
      */
     public function getOidcngResourceServers()
     {
+        // Doctrine does not call the constructor, preventing us from setting a default value there.
+        if (is_null($this->oidcngResourceServers)) {
+            return new ResourceServerCollection([]);
+        }
         return $this->oidcngResourceServers;
     }
 
