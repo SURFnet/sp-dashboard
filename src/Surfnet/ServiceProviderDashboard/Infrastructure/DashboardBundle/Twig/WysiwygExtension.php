@@ -69,8 +69,8 @@ class WysiwygExtension extends AbstractExtension
 
         $config->set('HTML.Doctype', 'HTML5');
         $config->set('Core.Encoding', 'UTF-8');
-        $config->set('HTML.AllowedElements', 'p,em,strong,span,h1,h2,h3,h4,h5,h6,ul,ol,li,a,sup,sub,code,blockquote,br');
-        $config->set('HTML.AllowedAttributes', 'a.target,a.href,p.style,span.style');
+        $config->set('HTML.AllowedElements', 'p,em,strong,span,h1,h2,h3,h4,h5,h6,ul,ol,li,a,sup,sub,code,blockquote,br,i');
+        $config->set('HTML.AllowedAttributes', 'a.target,a.href,p.style,span.style,i.class');
         $config->set('CSS.AllowedProperties', 'text-decoration,text-align');
         $config->set('Attr.AllowedFrameTargets', '_blank,_self,_parent,_top');
         $config->set('Cache.DefinitionImpl', null);
