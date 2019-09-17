@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -226,10 +227,11 @@ class LoadEntityService
     private function updateClientId($isCopyToProduction, Entity $domainEntity)
     {
         $protocol = $domainEntity->getProtocol();
-        $isOidcngEntity = $protocol === Entity::TYPE_OPENID_CONNECT_TNG || $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        $isOidcngEntity = $protocol === Entity::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
         if ($isCopyToProduction && $isOidcngEntity) {
-            $clientIdFormat = "https://%s";
-            $domainEntity->setEntityId(sprintf($clientIdFormat, $domainEntity->getEntityId()));
+            $clientId = OidcngSpdClientIdParser::parse($domainEntity->getEntityId());
+            $domainEntity->setEntityId($clientId);
         }
     }
 }
