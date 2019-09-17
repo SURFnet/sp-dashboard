@@ -23,8 +23,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Webmozart\Assert\Assert;
 
@@ -169,6 +171,8 @@ class LoadEntityService
             $domainEntity->setManageId(null);
         }
 
+        $this->updateAllowedResourceServers($isCopyToProduction, $domainEntity);
+
         // Set the target environment
         $domainEntity->setEnvironment($environment);
 
@@ -193,5 +197,19 @@ class LoadEntityService
             return 1;
         }
         return 0;
+    }
+
+    /**
+     * When copying a OIDC TNG entity to production, we do NOT copy the related resource server references
+     * along with it. As they do not exist on the other environment.
+     *
+     * @param $isCopyToProduction
+     * @param Entity $domainEntity
+     */
+    private function updateAllowedResourceServers($isCopyToProduction, Entity $domainEntity)
+    {
+        if ($isCopyToProduction && $domainEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+            $domainEntity->setOidcngResourceServers(new ResourceServerCollection([]));
+        }
     }
 }

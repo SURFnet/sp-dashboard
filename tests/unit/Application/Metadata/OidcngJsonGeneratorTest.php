@@ -98,6 +98,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                     'entityid' => 'entityid',
                     'active' => true,
                     'allowedEntities' => [],
+                    'allowedResourceServers' => [],
                     'allowedall' => true,
                     'metaDataFields' => [
                         'accessTokenValidity' => 3600,
@@ -195,6 +196,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'revisionnote' => 'revisionnote',
                         'state' => 'testaccepted',
                         'allowedEntities' => [],
+                        'allowedResourceServers' => [],
                         'allowedall' => true,
                     ),
                 'type' => 'oidc10_rp',

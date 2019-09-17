@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\AttributeList;
@@ -420,6 +421,16 @@ class Entity
     private $idpAllowAll = true;
 
     /**
+     * The OIDC resource servers belonging to a client
+     *
+     * Specifically added for OIDC TNG Client
+     *
+     * @var ResourceServerCollection
+     * @ORM\Column(type="object", nullable=true)
+     */
+    private $oidcngResourceServers;
+
+    /**
      * @param ManageEntity $manageEntity
      * @param string $environment
      * @param Service $service
@@ -493,6 +504,9 @@ class Entity
                     $environment,
                     $oidcngPlayGroundUriTest,
                     $oidcngPlayGroundUriProd
+                );
+                $entity->setOidcngResourceServers(
+                    new ResourceServerCollection($manageEntity->getOidcClient()->getResourceServers())
                 );
                 break;
             case (self::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
@@ -1575,5 +1589,21 @@ class Entity
     public function isPublicClient()
     {
         return $this->isPublicClient;
+    }
+
+    /**
+     * @return ResourceServerCollection
+     */
+    public function getOidcngResourceServers()
+    {
+        return $this->oidcngResourceServers;
+    }
+
+    /**
+     * @param ResourceServerCollection $resourceServers
+     */
+    public function setOidcngResourceServers(ResourceServerCollection $resourceServers)
+    {
+        $this->oidcngResourceServers = $resourceServers;
     }
 }

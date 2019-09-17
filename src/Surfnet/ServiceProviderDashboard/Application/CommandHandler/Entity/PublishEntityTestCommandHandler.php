@@ -19,10 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -79,6 +79,10 @@ class PublishEntityTestCommandHandler implements CommandHandler
             if (array_key_exists('id', $publishResponse)) {
                 $this->logger->info(sprintf('Pushing entity "%s" to engineblock', $entity->getNameNl()));
                 $this->publishClient->pushMetadata();
+
+                if ($this->isNewResourceServer($entity)) {
+                    $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+                }
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(
@@ -93,5 +97,11 @@ class PublishEntityTestCommandHandler implements CommandHandler
             $this->logger->error(sprintf('Pushing to Engineblock failed with message: "%s"', $e->getMessage()));
             $this->flashBag->add('error', 'entity.edit.error.push');
         }
+    }
+
+    private function isNewResourceServer(Entity $entity)
+    {
+        $isNewEntity = empty($entity->getManageId());
+        return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 }

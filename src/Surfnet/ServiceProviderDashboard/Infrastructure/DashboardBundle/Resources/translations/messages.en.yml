@@ -37,6 +37,7 @@ entity:
       metadata_url: Metadata URL
       acs_location: ACS location
       entity_id: Entity ID
+      client_id: Client ID
       grant_type: Grant type
       is_public_client: Is public client
       access_token_validity: Access token validitiy (seconds)
@@ -171,6 +172,7 @@ entity.list.modal.oidc_confirmation:
     label: Secret
   warning: This message will be displayed only once
   info.html: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+entity.list.oidcng_connection.info.html: <p><strong>Select OIDC RP to connect this Resource Server to</strong></p><p>Only access_tokens from connected clients can be introspected by the resource server.</p>
 entity.edit.error.publish: "Unable to publish the entity, try again later"
 entity.edit.error.push: "Unable to publish the entity, try again later"
 entity.edit.title: Service Provider registration form
@@ -337,6 +339,8 @@ entity.edit.attributes.oidcng_rs.html: "
 "
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
+entity.edit.oidcngResourceServers.title: Select the OIDC Resource Servers(s) that belong to this Client
+entity.edit.oidcngResourceServers.html: "<p>Only access_tokens that are provided to the clients selected can be introspected by the resource server.</p>"
 entity.edit.information.importUrl: Text should be set in web translations
 entity.edit.information.metadataUrl: Text should be set in web translations
 entity.edit.information.acsLocation: Text should be set in web translations
@@ -357,6 +361,7 @@ entity.edit.information.applicationUrl: Text should be set in web translations
 entity.edit.information.eulaUrl: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
+entity.edit.information.oidcngResourceServers: Text should be set in web translations
 entity.edit.information.technicalContact: Text should be set in web translations
 entity.edit.information.saml20.givenNameAttribute: Text should be set in web translations
 entity.edit.information.saml20.surNameAttribute: Text should be set in web translations

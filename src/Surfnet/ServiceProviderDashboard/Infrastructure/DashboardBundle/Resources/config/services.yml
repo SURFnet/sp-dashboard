@@ -456,3 +456,15 @@ services:
       arguments:
         - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService'
       tags: ['form.type']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
+        tags: ['form.type']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
+            - '@surfnet.manage.client.query_client.prod_environment'
+            - '%manage_test_publication_status%'
+            - '%manage_prod_publication_status%'

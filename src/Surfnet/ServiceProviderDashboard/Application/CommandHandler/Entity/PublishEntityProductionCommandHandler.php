@@ -224,5 +224,15 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         // 3. On failure, remove the Jira ticket that was previously created. The user must retry at a later stage
         $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->getKey()));
         $this->ticketService->delete($issue->getKey());
+
+        if ($this->isNewResourceServer($entity)) {
+            $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+        }
+    }
+
+    private function isNewResourceServer(Entity $entity)
+    {
+        $isNewEntity = empty($entity->getManageId());
+        return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 }

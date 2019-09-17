@@ -51,23 +51,31 @@ class OidcngClient implements OidcClientInterface
      */
     private $accessTokenValidity;
     /**
+     * @var array
+     */
+    private $resourceServers;
+
+    /**
      * @param array $data
      * @param string $manageProtocol
      * @return OidcngClient
      */
     public static function fromApiResponse(array $data, $manageProtocol)
     {
-        $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $redirectUris = isset($data['data']['metaDataFields']['redirectUrls'])
-            ? $data['data']['metaDataFields']['redirectUrls'] : '';
+        $clientId = self::getStringOrEmpty($data['data'], 'entityid');
+        $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
+        $redirectUris = self::getStringOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
+        $scope = self::getStringOrEmpty($data['data']['metaDataFields'], 'scopes');
+
         $grantType = isset($data['data']['metaDataFields']['grants'])
             ? reset($data['data']['metaDataFields']['grants']) : '';
-        $scope = isset($data['data']['metaDataFields']['scopes']) ? $data['data']['metaDataFields']['scopes'] : '';
         $isPublicClient = isset($data['data']['metaDataFields']['isPublicClient'])
             ? $data['data']['metaDataFields']['isPublicClient'] : true;
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
             ? $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
+        $resourceServers = isset($data['data']['allowedResourceServers']) ? self::parseResourceServers(
+            $data['data']['allowedResourceServers']
+        ) : [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
@@ -76,6 +84,7 @@ class OidcngClient implements OidcClientInterface
         Assert::isArray($scope);
         Assert::boolean($isPublicClient);
         Assert::numeric($accessTokenValidity);
+        Assert::isArray($resourceServers);
 
         return new self(
             $clientId,
@@ -84,7 +93,8 @@ class OidcngClient implements OidcClientInterface
             $grantType,
             $scope,
             $isPublicClient,
-            $accessTokenValidity
+            $accessTokenValidity,
+            $resourceServers
         );
     }
 
@@ -96,6 +106,7 @@ class OidcngClient implements OidcClientInterface
      * @param array $scope
      * @param bool $isPublicClient
      * @param int $accessTokenValidity
+     * @param array $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function __construct(
@@ -105,7 +116,8 @@ class OidcngClient implements OidcClientInterface
         $grantType,
         $scope,
         $isPublicClient,
-        $accessTokenValidity
+        $accessTokenValidity,
+        $resourceServers
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -114,6 +126,26 @@ class OidcngClient implements OidcClientInterface
         $this->scope = $scope;
         $this->isPublicClient = $isPublicClient;
         $this->accessTokenValidity = $accessTokenValidity;
+        $this->resourceServers = $resourceServers;
+    }
+
+    private static function parseResourceServers($allowedResourceServers)
+    {
+        $servers = [];
+        foreach ($allowedResourceServers as $clientId) {
+            $servers[$clientId['name']] = $clientId['name'];
+        }
+        return $servers;
+    }
+
+    /**
+     * @param array $data
+     * @param $key
+     * @return string
+     */
+    private static function getStringOrEmpty(array $data, $key)
+    {
+        return isset($data[$key]) ? $data[$key] : '';
     }
 
     /**
@@ -170,5 +202,10 @@ class OidcngClient implements OidcClientInterface
     public function getAccessTokenValidity()
     {
         return $this->accessTokenValidity;
+    }
+
+    public function getResourceServers()
+    {
+        return $this->resourceServers;
     }
 }
