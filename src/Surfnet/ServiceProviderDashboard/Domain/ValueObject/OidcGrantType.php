@@ -39,6 +39,12 @@ class OidcGrantType
      */
     public function __construct($grantType = self::GRANT_TYPE_AUTHORIZATION_CODE)
     {
+        // In certain cases the grant type might be empty (for example draft entities from before enforcing a
+        // default value). In those cases we are setting the default grant type, preventing a hard error.
+        if (empty($grantType)) {
+            $grantType = self::GRANT_TYPE_AUTHORIZATION_CODE;
+        }
+
         if (!in_array($grantType, self::$validGrantTypes)) {
             throw new \InvalidArgumentException("invalid grant type");
         }
