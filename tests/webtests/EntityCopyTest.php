@@ -153,7 +153,12 @@ class EntityCopyTest extends WebTestCase
         );
         $this->testMockHandler->append(new Response(200, [], json_decode($response)));
 
-        $this->client->request('GET', "/entity/copy/1/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
+        $crawler = $this->client->request('GET', "/entity/copy/1/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
+        // Ensure we are not basing further assertions on an error response
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        // And check we did actually perform a copy action by checking a sample field from the form.
+        $nameEn = $crawler->filter('#dashboard_bundle_entity_type_metadata_nameEn')->attr('value');
+        $this->assertEquals('OpenConext Engine EN', $nameEn);
 
         // Assert that the newly created entity is indeed a production entity.
         $entity = $this->getEntityRepository()->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
