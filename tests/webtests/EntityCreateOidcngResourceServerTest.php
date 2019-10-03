@@ -108,9 +108,12 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
             ->form();
 
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+
+        // The Entity is queried from manage in to set IdP ACL data
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         // ClientId validator
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Publish json
         $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
         // Push to EB through manage
         $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));

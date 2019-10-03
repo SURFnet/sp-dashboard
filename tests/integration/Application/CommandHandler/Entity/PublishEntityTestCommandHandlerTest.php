@@ -27,6 +27,8 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTes
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -58,16 +60,23 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
      */
     private $client;
 
+    /**
+     * @var m\MockInterface&QueryClient
+     */
+    private $manageClient;
+
     public function setUp()
     {
         $this->repository = m::mock(EntityRepository::class);
         $this->client = m::mock(PublishEntityClient::class);
+        $this->manageClient = m::mock(QueryClient::class);
         $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
 
         $this->commandHandler = new PublishEntityTestCommandHandler(
             $this->repository,
             $this->client,
+            $this->manageClient,
             $this->logger,
             $this->flashBag
         );
@@ -83,6 +92,8 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->andReturn('Test Entity Name')
             ->shouldReceive('getManageId')
             ->shouldReceive('getProtocol')
+            ->shouldReceive('setIdpAllowAll')
+            ->shouldReceive('setIdpWhitelistRaw')
             ->andReturn(Entity::TYPE_OPENID_CONNECT_TNG);
 
         $this->repository
@@ -102,6 +113,18 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
                 'id' => 123,
             ]);
 
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+            ->andReturn([]);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+            ->andReturn(true);
+
+        $this->manageClient
+            ->shouldReceive('findByManageId')
+            ->andReturn($manageEntity);
+
         $this->client
             ->shouldReceive('pushMetadata')
             ->once();
@@ -118,12 +141,26 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->andReturn('Test Entity Name')
             ->shouldReceive('getManageId')
             ->shouldReceive('getProtocol')
+            ->shouldReceive('setIdpAllowAll')
+            ->shouldReceive('setIdpWhitelistRaw')
             ->andReturn(Entity::TYPE_SAML);
 
         $this->repository
             ->shouldReceive('findById')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
             ->andReturn($entity);
+
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+            ->andReturn([]);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+            ->andReturn(true);
+
+        $this->manageClient
+            ->shouldReceive('findByManageId')
+            ->andReturn($manageEntity);
 
         $this->logger
             ->shouldReceive('info')
@@ -162,12 +199,26 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->andReturn('Test Entity Name')
             ->shouldReceive('getManageId')
             ->shouldReceive('getProtocol')
+            ->shouldReceive('setIdpAllowAll')
+            ->shouldReceive('setIdpWhitelistRaw')
             ->andReturn(Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
 
         $this->repository
             ->shouldReceive('findById')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
             ->andReturn($entity);
+
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+            ->andReturn([]);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+            ->andReturn(true);
+
+        $this->manageClient
+            ->shouldReceive('findByManageId')
+            ->andReturn($manageEntity);
 
         $this->logger
             ->shouldReceive('info')

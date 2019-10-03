@@ -98,6 +98,9 @@ class EntityPublishToTestTest extends WebTestCase
         // Entity id validation
         $this->testMockHandler->append(new Response(200, [], '[]'));
         $this->testMockHandler->append(new Response(200, [], '[]'));
+        // The Entity is queried from manage in to set IdP ACL data
+        $this->testMockHandler->append(new Response(200, [], '[]'));
+        $this->testMockHandler->append(new Response(200, [], '[]'));
         // Push to Manage
         $this->testMockHandler->append(new Response(200, [], '{"id":"1"}'));
         // Push to EB through manage

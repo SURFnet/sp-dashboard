@@ -1,3 +1,22 @@
+## 2.3.1
+
+**Bugfix**
+* Stop overwriting IdP ACL data when editing a published entity #315
+
+## 2.3.0
+This release adds OpenID Connect TNG Resource server support to SP Dashboard.
+
+**Feature**
+ * OIDC TNG Resource server support was added #298
+ * Resource servers can be selected on RP (client) form #305 #306
+ * Forms are no longer submitted on 'enter' #303
+
+**Bugfix**
+ * Contact type no longer mandatory #301
+ * CommonName no longer mandatory #302
+ 
+ Some other less noteworthy issues have been resolved in this release: #307 #308 #309 #312
+
 ## 2.2.1
 This release consist of bugfixes after testing OIDC TNG support.
 
