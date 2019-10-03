@@ -1,3 +1,8 @@
+## 2.3.1
+
+**Bugfix**
+* Stop overwriting IdP ACL data when editing a published entity #315
+
 ## 2.3.0
 This release adds OpenID Connect TNG Resource server support to SP Dashboard.
 
