@@ -468,3 +468,6 @@ services:
             - '@surfnet.manage.client.query_client.prod_environment'
             - '%manage_test_publication_status%'
             - '%manage_prod_publication_status%'
+
+    Surfnet\ServiceProviderDashboard\Domain\Service\OidcCreateEntityEnabledMarshaller:
+        arguments: ['%oidc_create_enabled%']
