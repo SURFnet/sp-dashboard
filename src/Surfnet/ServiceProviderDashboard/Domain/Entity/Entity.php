@@ -1536,6 +1536,17 @@ class Entity
     }
 
     /**
+     * If you have a list of idp entity ID's (from manage response) this is the way to set the
+     * whitelist on the Entity.
+     *
+     * @param string[] $providers
+     */
+    public function setIdpWhitelistRaw(array $providers)
+    {
+        $this->idpWhitelist = $providers;
+    }
+
+    /**
      * @return string[]
      */
     public function getIdpWhitelist()

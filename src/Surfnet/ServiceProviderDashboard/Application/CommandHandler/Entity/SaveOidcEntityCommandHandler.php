@@ -132,6 +132,9 @@ class SaveOidcEntityCommandHandler implements CommandHandler
         $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
         $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
 
+        $entity->setIdpWhitelistRaw($command->getIdpWhitelistDecoded());
+        $entity->setIdpAllowAll($command->getIdpAllowAll());
+
         $this->repository->save($entity);
     }
 }

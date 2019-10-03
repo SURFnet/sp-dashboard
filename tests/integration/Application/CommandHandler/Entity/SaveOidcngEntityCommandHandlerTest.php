@@ -80,6 +80,9 @@ class SaveOidcngEntityCommandHandlerTest extends MockeryTestCase
         $command->setPersonalCodeAttribute(m::mock(Attribute::class));
         $command->setScopedAffiliationAttribute(m::mock(Attribute::class));
 
+        $command->setIdpAllowAll(false);
+        $command->setIdpWhitelist(['https://example.org/idp/metadata', 'https://acme.org/idp/metadata']);
+
         $this->repository
             ->shouldReceive('isUnique')
             ->andReturn(true);
@@ -96,6 +99,14 @@ class SaveOidcngEntityCommandHandlerTest extends MockeryTestCase
                         // Without setting it explicitly 3600 is used as the default value
                         // See: https://www.pivotaltracker.com/story/show/167510474
                         $this->assertEquals(3600, $entity->getAccessTokenValidity());
+
+                        $this->assertFalse($entity->isIdpAllowAll());
+                        $this->assertNotEmpty($entity->getIdpWhitelist());
+                        $this->assertEquals(
+                            ['https://example.org/idp/metadata', 'https://acme.org/idp/metadata'],
+                            $entity->getIdpWhitelist()
+                        );
+
                         return true;
                     }
                 )

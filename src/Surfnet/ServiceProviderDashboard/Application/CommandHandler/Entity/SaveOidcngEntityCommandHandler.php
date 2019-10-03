@@ -140,6 +140,9 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
         $entity->setOidcngResourceServers(new ResourceServerCollection($command->getOidcngResourceServers()));
 
+        $entity->setIdpWhitelistRaw($command->getIdpWhitelistDecoded());
+        $entity->setIdpAllowAll($command->getIdpAllowAll());
+
         $this->repository->save($entity);
     }
 }
