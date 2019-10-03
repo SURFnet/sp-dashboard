@@ -343,6 +343,19 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
      */
     private $manageId;
 
+    /**
+     * @var bool
+     */
+    private $idpAllowAll = true;
+
+    /**
+     * The array of IdP's that are whitelisted are displayed in a hidden form field, and are rendered
+     * as a string (json encoded).
+     *
+     * @var string
+     */
+    private $idpWhitelist;
+
     private function __construct()
     {
         $this->grantType = new OidcGrantType();
@@ -410,6 +423,9 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
         $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
         $command->organizationUrlNl = $entity->getOrganizationUrlNl();
         $command->organizationUrlEn = $entity->getOrganizationUrlEn();
+
+        $command->idpWhitelist = json_encode($entity->getIdpWhitelist());
+        $command->idpAllowAll = $entity->isIdpAllowAll();
 
         return $command;
     }
@@ -1128,5 +1144,51 @@ class SaveOidcEntityCommand implements SaveEntityCommandInterface
     public function setManageId($manageId)
     {
         $this->manageId = $manageId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdpAllowAll()
+    {
+        return $this->idpAllowAll;
+    }
+
+    /**
+     * @param mixed $idpAllowAll
+     */
+    public function setIdpAllowAll($idpAllowAll)
+    {
+        $this->idpAllowAll = $idpAllowAll;
+    }
+
+    /**
+     * Returns the json_encoded string of the IdP whitelist)
+     * @return string
+     */
+    public function getIdpWhitelist()
+    {
+        return $this->idpWhitelist;
+    }
+
+    /**
+     * Returns the json_encoded string of the IdP whitelist)
+     * @return array
+     */
+    public function getIdpWhitelistDecoded()
+    {
+        $idpWhitelist = $this->idpWhitelist;
+        if (empty($idpWhitelist)) {
+            return [];
+        }
+        return json_decode($idpWhitelist, true);
+    }
+
+    /**
+     * @param array $idpWhitelist
+     */
+    public function setIdpWhitelist(array $idpWhitelist)
+    {
+        $this->idpWhitelist = json_encode($idpWhitelist);
     }
 }
