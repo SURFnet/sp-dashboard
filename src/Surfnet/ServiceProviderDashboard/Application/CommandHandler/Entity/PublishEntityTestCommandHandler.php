@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -51,14 +52,21 @@ class PublishEntityTestCommandHandler implements CommandHandler
      */
     private $flashBag;
 
+    /**
+     * @var QueryClient
+     */
+    private $manageQueryClient;
+
     public function __construct(
         EntityRepository $entityRepository,
         PublishEntityRepository $publishClient,
+        QueryClient $queryClient,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
         $this->repository = $entityRepository;
         $this->publishClient = $publishClient;
+        $this->manageQueryClient = $queryClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
     }
@@ -71,6 +79,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
     public function handle(PublishEntityTestCommand $command)
     {
         $entity = $this->repository->findById($command->getId());
+        $this->persistData($entity);
         try {
             $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
 
@@ -103,5 +112,22 @@ class PublishEntityTestCommandHandler implements CommandHandler
     {
         $isNewEntity = empty($entity->getManageId());
         return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+    }
+
+    /**
+     * Persist data that would otherwise be lost in the publication
+     * The manage entity is loaded prior to publication. Data that needs to be persisted on the upcoming publication
+     * can be set on the Entity here. This is usefull for data that is only stored in Manage, or data that is not
+     * updated in the entity edit forms.
+     *
+     * @param Entity $entity
+     */
+    private function persistData(Entity $entity)
+    {
+        $manageEntity = $this->manageQueryClient->findByManageId($entity->getManageId());
+        if ($manageEntity) {
+            $entity->setIdpAllowAll($manageEntity->getAllowedIdentityProviders()->isAllowAll());
+            $entity->setIdpWhitelistRaw($manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders());
+        }
     }
 }
