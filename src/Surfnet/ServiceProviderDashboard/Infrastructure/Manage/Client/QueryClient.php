@@ -235,7 +235,7 @@ class QueryClient implements QueryEntityRepository
                 json_encode($params),
                 sprintf('/manage/api/internal/search/%s', $protocol)
             );
-            $results += $response;
+            $results = array_merge($response, $results);
         }
         return $results;
     }
