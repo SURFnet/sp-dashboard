@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Service\OidcCreateEntityEnabledMarshaller;
 use Surfnet\ServiceProviderDashboard\Domain\Service\OidcngEnabledMarshaller;
 
 class ProtocolChoiceFactory
@@ -29,6 +30,11 @@ class ProtocolChoiceFactory
      * @var OidcngEnabledMarshaller
      */
     private $oidcngEnabledMarshaller;
+
+    /**
+     * @var OidcCreateEntityEnabledMarshaller
+     */
+    private $oidcCreateMarshaller;
 
     /**
      * @var Config[] $manageConfig
@@ -47,14 +53,18 @@ class ProtocolChoiceFactory
         Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => 'entity.type.oidcng.resource_server.title',
     ];
 
-    public function __construct(Config $manageConfigTest, Config $manageConfigProd)
-    {
+    public function __construct(
+        Config $manageConfigTest,
+        Config $manageConfigProd,
+        OidcCreateEntityEnabledMarshaller $oidcCreateMarshaller
+    ) {
         $this->manageConfig = [
             Entity::ENVIRONMENT_TEST => $manageConfigTest,
             Entity::ENVIRONMENT_PRODUCTION => $manageConfigProd,
         ];
 
         $this->oidcngEnabledMarshaller = new OidcngEnabledMarshaller();
+        $this->oidcCreateMarshaller = $oidcCreateMarshaller;
     }
 
     public function setService(Service $service)
@@ -75,6 +85,11 @@ class ProtocolChoiceFactory
             unset($options[Entity::TYPE_OPENID_CONNECT_TNG]);
             unset($options[Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER]);
         }
+
+        if (!$this->oidcCreateMarshaller->allowed()) {
+            unset($options[Entity::TYPE_OPENID_CONNECT]);
+        }
+
         return array_flip($options);
     }
 }

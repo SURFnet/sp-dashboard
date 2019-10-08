@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "710c61af-411d-4bfb-af16-251d9f7b8027",
+    "version": 1,
+    "data": {
+      "entityid": "test.oidcng.example.com",
+      "state": "prodaccepted",
+      "metaDataFields": {
+        "name:en": "Test 1 | UU",
+        "name:nl": "Test 1 | UU"
+      }
+    }
+  },
+  {
+    "_id": "810c61af-411d-4bfb-af16-251d9f7b8027",
+    "version": 1,
+    "data": {
+      "entityid": "test2.oidcng.example.com",
+      "state": "prodaccepted",
+      "metaDataFields": {
+        "name:en": "Test 2 | UU",
+        "name:nl": "Test 2 | UU"
+      }
+    }
+  },
+  {
+    "_id": "910c61af-411d-4bfb-af16-251d9f7b8027",
+    "version": 1,
+    "data": {
+      "entityid": "test3.oidcng.example.com",
+      "state": "prodaccepted",
+      "metaDataFields": {
+        "name:en": "Test 3 | UU",
+        "name:nl": "Test 3 | UU"
+      }
+    }
+  }
+]

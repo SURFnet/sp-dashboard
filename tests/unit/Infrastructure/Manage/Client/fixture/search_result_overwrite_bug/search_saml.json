@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "1c7b3d8b-7897-4cc1-8521-df4f65b615c5",
+    "version": 0,
+    "data": {
+      "entityid": "https://test1.saml.example.com",
+      "state": "prodaccepted",
+      "metaDataFields": {
+        "name:en": "Test SP 1 | UU",
+        "name:nl": "Test SP 1 | UU"
+      }
+    }
+  },
+  {
+    "_id": "2c7b3d8b-7897-4cc1-8521-df4f65b615c5",
+    "version": 0,
+    "data": {
+      "entityid": "https://test2.saml.example.com",
+      "state": "prodaccepted",
+      "metaDataFields": {
+        "name:en": "Test SP 2 | UU",
+        "name:nl": "Test SP 2 | UU"
+      }
+    }
+  }
+]
