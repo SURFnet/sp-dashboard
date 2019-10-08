@@ -1,3 +1,11 @@
+## 2.3.2
+
+**Feature**
+* Add 'show oidc create options' feature toggle #314
+
+**Bugfix**
+* Ensure all OIDCng entities are shown in the entity listings #316
+
 ## 2.3.1
 
 **Bugfix**
