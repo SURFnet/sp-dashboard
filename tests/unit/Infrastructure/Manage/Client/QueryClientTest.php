@@ -83,6 +83,71 @@ class QueryClientTest extends MockeryTestCase
         );
     }
 
+
+    /**
+     * Test, when multiple entities are retrieved from manage search from both the SAML and the OIDC endpoints, no
+     * overwriting is applied to the merged search results.
+     *
+     * @see https://www.pivotaltracker.com/story/show/168834919
+     */
+    public function test_search_does_not_override_keys()
+    {
+        $this->mockHandler
+            ->append(
+                # The saml search endpoint is queried
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/search_saml.json')
+                ),
+                # The oidc search endpoint is queried
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/search_oidc.json')
+                ),
+                # Next the oidc entities are retrieved from manage by id, first trying the SAML endpoint, then OIDC
+                new Response(404, [], '[]'),
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_oidc1.json')
+                ),
+                new Response(404, [], '[]'),
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_oidc2.json')
+                ),
+                new Response(404, [], '[]'),
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_oidc3.json')
+                ),
+                # Finally the SAML entities are loaded
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_saml1.json')
+                ),
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_saml2.json')
+                )
+            );
+        $response = $this->client->findByTeamName('team-UU', 'prodaccepted');
+
+        $this->assertEquals('oidcng', $response[0]->getProtocol()->getProtocol());
+        $this->assertEquals('oidcng', $response[1]->getProtocol()->getProtocol());
+        $this->assertEquals('oidcng', $response[2]->getProtocol()->getProtocol());
+        $this->assertEquals('saml20', $response[3]->getProtocol()->getProtocol());
+        $this->assertEquals('saml20', $response[4]->getProtocol()->getProtocol());
+
+        $this->assertCount(5, $response);
+    }
+
     public function test_it_can_query_non_existent_data()
     {
         // When the queried entityId does not exist, an empty array is returned

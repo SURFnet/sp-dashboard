@@ -1,0 +1,79 @@
+{
+  "id": "710c61af-411d-4bfb-af16-251d9f7b8027",
+  "version": 1,
+  "type": "oidc10_rp",
+  "revision": {
+    "number": 1,
+    "created": 1570441986.983,
+    "parentId": null,
+    "updatedBy": "urn:collab:person:example.com:admin",
+    "terminated": null
+  },
+  "data": {
+    "entityid": "test.oidcng.example.com",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "arp": {
+      "enabled": true,
+      "attributes": {
+        "urn:mace:dir:attribute-def:displayName": [
+          {
+            "value": "*",
+            "source": "idp",
+            "motivation": ""
+          }
+        ],
+        "urn:mace:dir:attribute-def:uid": [
+          {
+            "value": "*",
+            "source": "idp",
+            "motivation": ""
+          }
+        ]
+      }
+    },
+    "metaDataFields": {
+      "name:en": "MijnUu app | Uu",
+      "secret": "$2a$10$DX5wtBQtWT3SkhJVzEeb1uBGOJyBjVNcsOFkoJtABKmd7tYxy9UQy",
+      "redirectUrls": [
+        "http://localhost",
+        "https://oidc-playground.test.openconext.nl/redirect",
+        "http://localhost:8000/app/redirect.html"
+      ],
+      "scopes": [
+        "openid"
+      ],
+      "grants": [
+        "authorization_code",
+        "refresh_token"
+      ],
+      "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+      "isResourceServer": false,
+      "contacts:2:givenName": "Test",
+      "contacts:1:surName": "Test",
+      "contacts:2:emailAddress": "test@uu.example.com",
+      "logo:0:width": 200,
+      "contacts:0:emailAddress": "test@uu.example.com",
+      "contacts:0:contactType": "technical",
+      "contacts:2:contactType": "administrative",
+      "contacts:1:contactType": "support",
+      "contacts:1:givenName": "Test",
+      "name:nl": "MijnUu app | Uu",
+      "description:en": "MijnUu app",
+      "coin:service_team_id": "team-UU",
+      "contacts:2:surName": "Test",
+      "description:nl": "MijnUu app",
+      "logo:0:url": "https://static.openconext.nl/media/sp/Uu.png",
+      "contacts:0:givenName": "Test",
+      "contacts:0:surName": "Test",
+      "contacts:1:emailAddress": "test@uu.example.com",
+      "logo:0:height": 160,
+      "isPublicClient": true
+    },
+    "allowedEntities": [],
+    "allowedResourceServers": [],
+    "type": "oidc10-rp",
+    "revisionnote": "Some revision note",
+    "eid": 57
+  }
+}
