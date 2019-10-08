@@ -111,7 +111,7 @@ class EntityListTest extends WebTestCase
         $this->assertContains("Entities of service 'SURFnet'", $pageTitle->text());
         $data =  $this->rowsToArray($crawler->filter('table'));
 
-        $this->assertCount(4, $data, 'Expecting three rows (including header)');
+        $this->assertCount(5, $data, 'Expecting four rows (2 drafts, 2 published and the header)');
 
         unset($data[0][5]); // remove buttons
         $this->assertEquals([
@@ -140,9 +140,18 @@ class EntityListTest extends WebTestCase
             'published',
         ], $data[2]);
 
+        unset($data[3][5]); // remove buttons
+        $this->assertEquals([
+            'SP3',
+            'SP3',
+            'Test Test (test@example.org)',
+            'saml20',
+            'published',
+        ], $data[3]);
+
         $this->assertEquals([
             'There are no entities configured',
-        ], $data[3]);
+        ], $data[4]);
     }
 
     public function test_entity_list_shows_add_to_test_link()
