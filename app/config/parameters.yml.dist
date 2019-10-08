@@ -89,3 +89,6 @@ parameters:
     # Playground uri's for OIDC TNG entities
     oidcng_playground_uri_test: 'https://test.dev.playground.surfconext.nl'
     oidcng_playground_uri_prod: 'https://prod.dev.playground.surfconext.nl'
+
+    # Globally enable/disable OIDC entitiy creation support
+    oidc_create_enabled: true
