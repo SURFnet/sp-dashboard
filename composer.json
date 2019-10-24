@@ -22,7 +22,7 @@
         ]
     },
     "require": {
-        "php": "^7.2",
+        "php": "7.2",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
         "doctrine/doctrine-migrations-bundle": "^1.0",
@@ -54,9 +54,9 @@
         "malukenho/docheader": "^0.1.6",
         "mockery/mockery": "^0.9.9",
         "phpmd/phpmd": "^2.6",
-        "phpunit/phpcov": "~3.0",
-        "phpunit/phpunit": "^5.7",
-        "sebastian/phpcpd": "^3.0",
+        "phpunit/phpcov": "~5.0",
+        "phpunit/phpunit": "~7.5",
+        "sebastian/phpcpd": "^4.1",
         "sensio/distribution-bundle": "^5.0",
         "sensio/generator-bundle": "^3.0",
         "sensiolabs/security-checker": "^5.0",
