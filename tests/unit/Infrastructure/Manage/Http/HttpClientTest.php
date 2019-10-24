@@ -21,14 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Manage\Http
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase as UnitTest;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\MalformedResponseException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
-class HttpClientTest extends UnitTest
+class HttpClientTest extends TestCase
 {
     public function test_data_from_a_resource_can_be_read()
     {

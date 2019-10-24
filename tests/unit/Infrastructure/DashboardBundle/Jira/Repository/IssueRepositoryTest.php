@@ -17,13 +17,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Jira\Repository;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentIssueRepository;
 
-class IssueRepositoryTest extends PHPUnit_Framework_TestCase
+class IssueRepositoryTest extends TestCase
 {
     const CACHE_FILEPATH =  __DIR__ . '/issues.json';
 

@@ -20,12 +20,12 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Jira\Factor
 
 use Mockery as m;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class IssueFieldFactoryTest extends PHPUnit_Framework_TestCase
+class IssueFieldFactoryTest extends TestCase
 {
     /**
      * @var IssueFieldFactory
