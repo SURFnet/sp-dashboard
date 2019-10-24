@@ -1,3 +1,8 @@
+## 2.4.0
+
+**Feature**
+* Make SP Dashboard PHP 7.2 compatible
+
 ## 2.3.2
 
 **Feature**
