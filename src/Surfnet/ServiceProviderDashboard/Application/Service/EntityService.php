@@ -34,6 +34,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServic
 use Symfony\Component\Routing\RouterInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class EntityService implements EntityServiceInterface
 {
     /**

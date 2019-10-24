@@ -576,7 +576,8 @@ class Entity
         $entity->setEnablePlayground(false);
         if (in_array($playGroundUri, $redirectUris)) {
             $entity->setEnablePlayground(true);
-            if (($key = array_search($playGroundUri, $redirectUris)) !== false) {
+            $key = array_search($playGroundUri, $redirectUris);
+            if ($key !== false) {
                 unset($redirectUris[$key]);
             }
         }

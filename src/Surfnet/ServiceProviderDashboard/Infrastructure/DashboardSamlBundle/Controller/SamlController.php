@@ -18,14 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Controller;
 
-use Exception;
-use LogicException;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
+use Surfnet\SamlBundle\Exception\LogicException;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\Http\XMLResponse;
 use Surfnet\SamlBundle\Metadata\MetadataFactory;
@@ -76,10 +74,11 @@ class SamlController extends Controller
     /**
      * @Method("POST")
      * @Route("/saml/acs", name="dashboard_saml_consume_assertion")
+     * @param Request $request
      */
     public function consumeAssertionAction(Request $request)
     {
-        throw new \Surfnet\SamlBundle\Exception\LogicException(
+        throw new LogicException(
             'Unreachable statement, should be handled by the SAML firewall'
         );
     }
