@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Service;
 
+use Hamcrest\Core\IsEqual;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler;
@@ -70,7 +71,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
         $command->setContractSigned($service->getContractSigned());
 
-        $this->repository->shouldReceive('save')->with(equalTo($service))->once();
+        $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
 
         $this->commandHandler->handle($command);
