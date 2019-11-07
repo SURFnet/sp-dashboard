@@ -6,6 +6,11 @@
 **Bugfix**
 * Upgrade Stepup-saml-bundle to version 4.1.8 #309
 
+## 2.3.3
+
+This is a security release that will harden the application against CVE 2019-3465
+* Upgrade xmlseclibs to version 3.0.4 #318
+
 ## 2.3.2
 
 **Feature**
