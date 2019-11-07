@@ -3,6 +3,9 @@
 **Feature**
 * Make SP Dashboard PHP 7.2 compatible
 
+**Bugfix**
+* Upgrade Stepup-saml-bundle to version 4.1.8 #309
+
 ## 2.3.2
 
 **Feature**
