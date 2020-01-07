@@ -17,6 +17,10 @@ Encore
         options.includePaths = ['./node_modules'];
     })
     .disableSingleRuntimeChunk()
+    .configureBabel(() => {}, {
+        useBuiltIns: 'entry',
+        corejs: 3
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();
