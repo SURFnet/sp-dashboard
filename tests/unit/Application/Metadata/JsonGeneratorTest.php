@@ -169,8 +169,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('telephonenumber', $metadata['metaDataFields.contacts:0:telephoneNumber']);
     }
 
-
-
     public function test_it_can_build_oidc_entity_metadata_for_new_entities()
     {
         $generator = new JsonGenerator(
@@ -625,7 +623,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertSame([['name' => 'entity-id']], $data['pathUpdates']['allowedEntities']);
     }
 
-
     public function test_it_can_build_acl_whitelist_for_existing_entities_allow_multiple()
     {
         $generator = new JsonGenerator(
@@ -652,6 +649,66 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertSame([['name' => 'entity-id'], ['name' => 'entity-id2'],], $data['pathUpdates']['allowedEntities']);
     }
 
+    public function test_certificate_is_not_required()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $entity = $this->createSamlEntity();
+        $entity->setCertificate('');
+
+        $data = $generator->generateForNewEntity($entity, 'prodaccepted');
+
+        $this->assertEquals(array (
+            'data' =>
+                array (
+                    'arp' =>
+                        array (
+                            'arp' => 'arp',
+                        ),
+                    'type' => 'saml20-sp',
+                    'entityid' => 'http://entityid',
+                    'active' => true,
+                    'allowedEntities' =>
+                        array (
+                        ),
+                    'allowedall' => true,
+                    'state' => 'prodaccepted',
+                    'metaDataFields' =>
+                        array (
+                            'description:en' => 'description en',
+                            'description:nl' => 'description nl',
+                            'name:en' => 'name en',
+                            'name:nl' => 'name nl',
+                            'contacts:0:contactType' => 'support',
+                            'contacts:0:givenName' => 'givenname',
+                            'contacts:0:surName' => 'surname',
+                            'contacts:0:emailAddress' => 'emailaddress',
+                            'contacts:0:telephoneNumber' => 'telephonenumber',
+                            'OrganizationName:en' => 'orgen',
+                            'OrganizationDisplayName:en' => 'orgdisen',
+                            'OrganizationURL:en' => 'http://orgen',
+                            'OrganizationName:nl' => 'orgnl',
+                            'OrganizationDisplayName:nl' => 'orgdisnl',
+                            'OrganizationURL:nl' => 'http://orgnl',
+                            'privacy' => 'privacy',
+                            'sp' => 'sp',
+                            'AssertionConsumerService:0:Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+                            'AssertionConsumerService:0:Location' => 'http://acs',
+                            'NameIDFormat' => 'nameidformat',
+                            'coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+                        ),
+                    'metadataurl' => 'http://metadata',
+                    'revisionnote' => 'revisionnote',
+                ),
+            'type' => 'saml20_sp',
+        ), $data);
+    }
 
     /**
      * @return Entity
