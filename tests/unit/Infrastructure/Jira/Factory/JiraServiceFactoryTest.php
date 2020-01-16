@@ -21,10 +21,10 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Jira\Factor
 use JiraRestApi\Issue\IssueService;
 use Mockery as m;
 use Monolog\Logger;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 
-class JiraServiceFactoryTest extends PHPUnit_Framework_TestCase
+class JiraServiceFactoryTest extends TestCase
 {
     public function test_build_issue_service()
     {

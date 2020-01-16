@@ -29,6 +29,7 @@ final class JsonResponseParser
      * @param string $json
      * @return mixed
      * @throws InvalidJsonException
+     * @SuppressWarnings(PHPMD.UndefinedVariable) - jsonErrors is defined, md does not seem to resolve correctly
      */
     public static function parse($json)
     {

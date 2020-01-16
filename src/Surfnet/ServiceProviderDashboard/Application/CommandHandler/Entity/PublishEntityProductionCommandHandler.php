@@ -36,6 +36,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMeta
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
     /**

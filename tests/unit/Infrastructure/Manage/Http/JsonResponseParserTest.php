@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Manage\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidJsonException;

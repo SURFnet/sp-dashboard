@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "private": true,
   "devDependencies": {
-    "@symfony/webpack-encore": "^0.21.0",
+    "@symfony/webpack-encore": "^0.26",
     "@types/jest": "^23.3.2",
     "compass-mixins": "^0.12.10",
     "css-loader": "^1.0.0",
@@ -31,14 +31,17 @@
     "@types/jquery": "^3.3.22",
     "chart.js": "^2.7.3",
     "chartjs-plugin-datalabels": "^0.4.0",
+    "core-js": "3",
     "jquery": "^3.4.0",
     "jquery-modal": "^0.9.1",
+    "jquery.mousewheel": "^3.1.9",
     "parsleyjs": "^2.8.1",
     "select2": "^4.0.3",
     "tippy.js": "^2.0.2"
   },
   "resolutions": {
-    "jquery": "3.4.0"
+    "jquery": "3.4.1",
+    "braces": "^2.3.1"
   },
   "scripts": {
     "build": "encore production",

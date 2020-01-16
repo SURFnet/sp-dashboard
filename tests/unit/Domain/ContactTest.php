@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\ValueObject;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 class ContactTest extends TestCase

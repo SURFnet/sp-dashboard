@@ -38,6 +38,7 @@ class Protocol
      * @param array $data
      * @param string $manageProtocol
      * @return Protocol
+     * @SuppressWarnings(PHPMD.UndefinedVariable) - protocolMapping is defined, md does not seem to resolve correctly
      */
     public static function fromApiResponse(array $data, $manageProtocol)
     {

@@ -49,7 +49,12 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
-        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+        $env = $this->getEnvironment();
+        // For test and dev, use a cache folder outside the project folder.
+        if ($env === 'dev' || $env === 'test') {
+            return '/tmp/sp-dashboard/' . $env;
+        }
+        return dirname(__DIR__).'/var/cache/'.$env;
     }
 
     public function getLogDir()

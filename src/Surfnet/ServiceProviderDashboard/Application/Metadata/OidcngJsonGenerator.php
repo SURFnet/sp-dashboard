@@ -254,6 +254,7 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
+        $metadata = [];
         $secret = $entity->getClientSecret();
         if ($secret) {
             $metadata['secret'] = $secret;

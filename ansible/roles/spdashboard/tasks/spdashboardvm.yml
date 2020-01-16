@@ -26,12 +26,12 @@
   when: ca_update.changed
 
 - name: Install PHP Xdebug extension
-  yum: name=php-pecl-xdebug state=present
+  yum: name=php72-php-pecl-xdebug state=present
     
 - name: Configure PHP Xdebug
   template: src=xdebug.ini.j2 dest=/etc/php.d/15-xdebug.ini
   notify:
-    - restart php-fpm
+    - restart php72-php-fpm
     
 - name: Add hosts file
   lineinfile:

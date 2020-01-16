@@ -10,7 +10,7 @@ if ($('#oidc-published-popup').length) {
   $('#oidc-published-popup').modal();
 }
 
-$('a[rel="modal:secret"]').on('click', (el: JQuery.Event) => {
+$('a[rel="modal:secret"]').on('click', (el: JQuery.TriggeredEvent) => {
   const href = $(el.target).data('url');
   $('#reset-secret-confirmation-link').attr('href', href);
   $('#reset-secret-confirmation').modal();

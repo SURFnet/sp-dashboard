@@ -31,6 +31,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Symfony\Component\Form\FormFactory;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class EntityTypeFactory
 {
     /**
