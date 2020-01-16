@@ -252,7 +252,7 @@ class JsonGenerator implements GeneratorInterface
         }
 
         if (!empty($entity->getLogoUrl())) {
-            $metadata += $this->generateLogoMetadata($entity);
+            $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
 
         return $metadata;
