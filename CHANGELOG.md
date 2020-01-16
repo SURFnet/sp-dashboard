@@ -5,6 +5,12 @@
 
 **Bugfix**
 * Upgrade Stepup-saml-bundle to version 4.1.8 #309
+* Resolve certificate publication issue #324
+
+**Security updates**
+* Symfony to 3.4.36 
+* Handlebars to 4.5.3
+* Mixin-deep to 1.3.2
 
 ## 2.3.3
 
