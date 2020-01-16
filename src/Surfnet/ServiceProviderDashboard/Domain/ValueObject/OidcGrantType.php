@@ -17,6 +17,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use InvalidArgumentException;
+
 class OidcGrantType
 {
     const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
@@ -40,7 +42,7 @@ class OidcGrantType
     public function __construct($grantType = self::GRANT_TYPE_AUTHORIZATION_CODE)
     {
         if (!in_array($grantType, self::$validGrantTypes)) {
-            throw new \InvalidArgumentException("invalid grant type");
+            throw new InvalidArgumentException("invalid grant type");
         }
 
         $this->grantType = $grantType;

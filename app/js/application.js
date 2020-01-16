@@ -1,6 +1,5 @@
 'use strict';
 
-import 'jquery';
 import './type_definitions.ts';
 import './components/form.ts';
 import './components/service_switcher.js';

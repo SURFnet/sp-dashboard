@@ -1,3 +1,22 @@
+## 2.4.0
+
+**Feature**
+* Make SP Dashboard PHP 7.2 compatible
+
+**Bugfix**
+* Upgrade Stepup-saml-bundle to version 4.1.8 #309
+* Resolve certificate publication issue #324
+
+**Security updates**
+* Symfony to 3.4.36 
+* Handlebars to 4.5.3
+* Mixin-deep to 1.3.2
+
+## 2.3.3
+
+This is a security release that will harden the application against CVE 2019-3465
+* Upgrade xmlseclibs to version 3.0.4 #318
+
 ## 2.3.2
 
 **Feature**

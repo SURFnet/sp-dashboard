@@ -80,6 +80,11 @@ class WebTestCase extends SymfonyWebTestCase
 
         $purger = new ORMPurger($em);
         $executor = new ORMExecutor($em, $purger);
+
+        // The sequence of the Service table is important, purger only removes data, does not reset the
+        // autoincrement sequence. That is explicitly reset with the query below.
+//        $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
+
         $executor->execute($loader->getFixtures());
     }
 

@@ -46,6 +46,7 @@ class ValidSSLCertificateValidator extends ConstraintValidator
 
         openssl_x509_export($value, $cert, false);
 
+        $matches = [];
         if (!preg_match('~Public-Key: \((\d+) bit\)~', $cert, $matches)) {
             $this->context->addViolation('validator.ssl_certificate.unknown_key_length');
 

@@ -252,7 +252,7 @@ class JsonGenerator implements GeneratorInterface
         }
 
         if (!empty($entity->getLogoUrl())) {
-            $metadata += $this->generateLogoMetadata($entity);
+            $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
 
         return $metadata;
@@ -264,6 +264,7 @@ class JsonGenerator implements GeneratorInterface
      */
     private function generateCertDataMetadata(Entity $entity)
     {
+        $metadata = [];
         if (!empty($entity->getCertificate())) {
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getCertificate()
@@ -279,6 +280,7 @@ class JsonGenerator implements GeneratorInterface
      */
     private function generateOidcClient(Entity $entity)
     {
+        $metadata = [];
         $metadata['clientId'] = OidcClientIdParser::parse($entity->getEntityId());
         $metadata['clientSecret'] = $entity->getClientSecret();
         // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)

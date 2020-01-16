@@ -86,7 +86,7 @@ class CollectionWidget {
    * Remove the collection entry from the list
    * @param el
    */
-  private removeCollectionEntry(el: JQuery.Event) {
+  private removeCollectionEntry(el: JQuery.TriggeredEvent) {
     const element = $(el.target);
 
     element.closest('.collection-entry').remove();
@@ -109,7 +109,7 @@ class CollectionWidget {
    * @param $removeEntryButton
    */
   private registerRemoveClickHandler($removeEntryButton: JQuery<HTMLElement>) {
-    const handleRemoveClick = (el: JQuery.Event) => {
+    const handleRemoveClick = (el: JQuery.TriggeredEvent) => {
       this.removeCollectionEntry(el);
     };
     $removeEntryButton.on('click', handleRemoveClick);

@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Legacy\Metadata;
 
+use DOMDocument;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -361,7 +362,7 @@ class Parser implements ParserInterface
         //the end user.
         libxml_clear_errors();
 
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->loadXml($xml);
 
         if (!$doc->schemaValidate($this->schemaLocation.'/schemas/surf.xsd')) {

@@ -34,7 +34,7 @@
 - name: php-fpm config
   template:
     src: '{{ item }}.j2'
-    dest: /etc/php-fpm.d/{{ item }}
+    dest: /etc/opt/remi/php72/php-fpm.d/{{ item }}
   with_items:
      - spdashboard-pool.conf
   notify:

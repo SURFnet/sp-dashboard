@@ -1,4 +1,5 @@
-import 'parsleyjs';
+import Parsley from 'parsleyjs';
+import $ from 'jquery';
 
 // Configure Parsley
 const parsleyConfig = {
