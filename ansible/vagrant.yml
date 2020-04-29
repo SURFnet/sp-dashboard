@@ -26,6 +26,7 @@
     spdashboard_data_dir: /vagrant
     spdashboard_fpm_user: vagrant
   roles:
+    - { role: tls,                                          tags: ['tls'] }
     - ../OpenConext-deploy/roles/common
     - ../OpenConext-deploy/roles/openconext-common
     - ../OpenConext-deploy/roles/httpd

@@ -1,0 +1,37 @@
+---
+- name: Install python crypto module
+  pip:
+    name: "cryptography"
+    state: "latest"
+
+- name: Generate a private key
+  openssl_privatekey:
+    path: /etc/pki/tls/private/star.dev.support.surfconext.nl.key
+    size: 2048
+
+- name: Generate a CSR
+  openssl_csr:
+    path: /etc/pki/tls/certs/star.dev.support.surfconext.nl.csr
+    privatekey_path: /etc/pki/tls/private/star.dev.support.surfconext.nl.key
+    common_name: "*.dev.support.surfconext.nl"
+    country_name: NL
+    organization_name: OpenConext
+    basic_constraints: CA:TRUE
+
+- name: Generate a selfsigned certificate
+  openssl_certificate:
+    path: /etc/pki/tls/certs/star.dev.support.surfconext.nl.pem
+    privatekey_path: /etc/pki/tls/private/star.dev.support.surfconext.nl.key
+    csr_path: /etc/pki/tls/certs/star.dev.support.surfconext.nl.csr
+    provider: selfsigned
+
+- name: Copy the certificate to the pki anchor source directory  
+  copy:
+    remote_src: yes
+    src: /etc/pki/tls/certs/star.dev.support.surfconext.nl.pem
+    dest: /etc/pki/ca-trust/source/anchors/star.dev.support.surfconext.nl_ca.pem
+  register: copy_cert
+
+- name: Import the cert in the local cert store
+  command: update-ca-trust
+  when: copy_cert.changed
