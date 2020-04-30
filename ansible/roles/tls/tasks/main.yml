@@ -1,4 +1,9 @@
 ---
+- name: Install pip
+  yum:
+    name: "python2-pip"
+    state: "installed"
+
 - name: Install python crypto module
   pip:
     name: "cryptography"
