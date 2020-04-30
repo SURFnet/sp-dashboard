@@ -11,25 +11,11 @@
 - name: Install Mailcatcher
   action: command gem install mailcatcher creates=/usr/local/bin/mailcatcher
 
-- name: Create SSL key
-  copy: content="{{ https_dev_star_private_key }}" dest={{ tls.cert_private_path }}/star.{{ base_domain  }}.key mode=0600 owner=root
-  
-- name: Create SSL certificate
-  copy: src=files/certs/star.{{ base_domain }}.pem dest="{{ tls.cert_path }}/star.{{ base_domain}}.pem"
-
-- name: Copy ca file
-  copy: src=files/certs/star.{{ base_domain}}_ca.pem dest={{tls.cert_path_ca}}/star.{{ base_domain}}_ca.pem
-  register: ca_update
-
-- name: Run update-ca-trust
-  command: update-ca-trust
-  when: ca_update.changed
-
 - name: Install PHP Xdebug extension
   yum: name=php72-php-pecl-xdebug state=present
     
 - name: Configure PHP Xdebug
-  template: src=xdebug.ini.j2 dest=/etc/php.d/15-xdebug.ini
+  template: src=xdebug.ini.j2 dest=/etc/opt/remi/php72/php.d/15-xdebug.ini
   notify:
     - restart php72-php-fpm
     
