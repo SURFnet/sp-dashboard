@@ -34,7 +34,7 @@
     - { role: ../OpenConext-deploy/roles/mysql,             tags: ['mysql'] }
     - { role: ../OpenConext-deploy/roles/engineblock,       tags: ['eb'] }
     - { role: ../OpenConext-deploy/roles/java,              tags: ['java' ] }
-      #    - { role: spdashboard,                                  tags: ['spdashboard'] } 
+    - { role: spdashboard,                                  tags: ['spdashboard'] } 
     - { role: ../OpenConext-deploy/roles/mujina-idp,        tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/mujina-sp,         tags: ['legacy' ] }
     - { role: ../OpenConext-deploy/roles/shibboleth,        tags: ['shib' ] }
