@@ -19,6 +19,7 @@ Vagrant.configure(2) do |config|
     ansible.extra_vars = {
       develop_spd: true
     }
+    ansible.tags = ENV['ANSIBLE_TAGS']
   end
 
   # Stop/start Mailcatcher
