@@ -26,6 +26,21 @@ The Ansible playbook for SP Dashboard depends on some roles from
 to have that repository checked out in a directory called `OpenConext-deploy` in the parent directory of where this
 project lives.
 
+## Provision the VM
+
+The VM is provisioned using Ansible and Vagrant. After you have installed those, you can run
+```
+vagrant up
+```
+
+Grab some coffee or two, and your VM will be ready.
+
+If you need to run specific roles on the VM, you can use the corresponding tag. The tags can be found in the playbook (ansible/vagrant.yml)
+The tags need to in the environment variable "ANSIBLE_TAGS", seperated by a ,. So if you want to provision the tags eb and profile, you'd run:
+```
+ANSIBLE_TAGS=eb,profile vagrant provision
+```
+
 ## Getting started
 
 First, run `composer install`. This will install all PHP dependencies, including the development dependencies.
