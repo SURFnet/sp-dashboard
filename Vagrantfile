@@ -1,7 +1,6 @@
 Vagrant.configure(2) do |config|
-  config.vm.box = "CentOS-7.0"
-  config.vm.box_url = "https://build.openconext.org/vagrant_boxes/virtualbox-centos7.box"
-
+  config.vm.box = "OpenConext-CentOS-7.0"
+  config.vm.box_url = "https://build.openconext.org/vagrant_boxes/openconext.json"
   config.vm.network "private_network", ip: "192.168.33.19"
   config.vm.hostname = "dev.support.surfconext.nl"
   config.hostsupdater.aliases = ["aa.dev.support.surfconext.nl","engine.dev.support.surfconext.nl","teams.dev.support.surfconext.nl","voot.dev.support.surfconext.nl","authz.dev.support.surfconext.nl","authz-admin.dev.support.surfconext.nl","aa.dev.support.surfconext.nl","mujina-idp.dev.support.surfconext.nl","manage.dev.support.surfconext.nl","spdashboard.dev.support.surfconext.nl","manage-prod.dev.support.surfconext.nl","oidc.dev.support.surfconext.nl"]
@@ -20,6 +19,7 @@ Vagrant.configure(2) do |config|
     ansible.extra_vars = {
       develop_spd: true
     }
+    ansible.tags = ENV['ANSIBLE_TAGS']
   end
 
   # Stop/start Mailcatcher
