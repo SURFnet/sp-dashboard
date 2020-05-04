@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 
 class CollectionWidget {
   private $collectionWidget: JQuery;
-  private $collectionList: JQuery;
+  private $collectionList: JQuery<any>;
   private $input: JQuery;
   private prototype: string;
   private index: number =  0;
@@ -47,7 +47,7 @@ class CollectionWidget {
 
     this.index = this.$collectionList.find('.collection-entry').length;
 
-    this.$collectionList.find('.remove_collection_entry').each((_index: number, el: HTMLElement) => {
+    this.$collectionList.find('.remove_collection_entry').each((_index: number, el: any) => {
       this.registerRemoveClickHandler($(el));
     });
 
