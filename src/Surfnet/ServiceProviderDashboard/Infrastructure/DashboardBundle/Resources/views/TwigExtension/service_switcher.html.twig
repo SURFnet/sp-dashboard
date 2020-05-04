@@ -1,4 +1,6 @@
+{% if form.selected_service_id is defined %}
 {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'action': path('select_service') } }) }}
 {{ form_widget(form.selected_service_id, {'id': 'service-switcher'}) }}
 {{ form_rest(form) }}
 {{ form_end(form) }}
+{% endif %}
