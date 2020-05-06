@@ -18,10 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use DateTime;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * Builds ARP metadata for the JSON export.
@@ -38,7 +38,7 @@ class ArpGenerator implements MetadataGenerator
         $this->repository = $repository;
     }
 
-    public function build(Entity $entity)
+    public function build(Entity $entity, ManageEntity $manageEntity = null)
     {
         $attributes = [];
 
@@ -63,6 +63,20 @@ class ArpGenerator implements MetadataGenerator
 
                 if ($attr->hasMotivation()) {
                     $attributes[$urn][0]['motivation'] = $attr->getMotivation();
+                }
+            }
+        }
+
+        if ($manageEntity) {
+            // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
+            foreach ($manageEntity->getAttributes()->getAttributes() as $manageAttribute) {
+                if (!array_key_exists($manageAttribute->getName(), $attributes)) {
+                    $attributes[$manageAttribute->getName()] = [
+                        [
+                            'source' => $manageAttribute->getSource(),
+                            'value' => $manageAttribute->getValue(),
+                        ]
+                    ];
                 }
             }
         }
