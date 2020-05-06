@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * Determines which strategy to use when generating Manage json metadata
@@ -57,13 +58,14 @@ class JsonGeneratorStrategy
 
     /**
      * @param Entity $entity
+     * @param ManageEntity $manageEntity
      * @param string $workflowState
      * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState)
+    public function generateForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState)
     {
-        return $this->getStrategy($entity->getProtocol())->generateForExistingEntity($entity, $workflowState);
+        return $this->getStrategy($entity->getProtocol())->generateForExistingEntity($entity, $manageEntity, $workflowState);
     }
 
     /**

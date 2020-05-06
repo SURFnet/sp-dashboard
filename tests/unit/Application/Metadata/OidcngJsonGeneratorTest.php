@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class OidcngJsonGeneratorTest extends MockeryTestCase
 {
@@ -153,7 +154,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $data = $generator->generateForExistingEntity($this->createOidcngEntity(), 'testaccepted');
+        $data = $generator->generateForExistingEntity($this->createOidcngEntity(), m::mock(ManageEntity::class), 'testaccepted');
 
         $this->assertEquals(
             array(
@@ -221,7 +222,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
         $entity = $this->createOidcngEntity();
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, m::mock(ManageEntity::class), 'testaccepted');
 
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
@@ -247,7 +248,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity = $this->createOidcngEntity();
         $entity->setIdpAllowAll(true);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, m::mock(ManageEntity::class), 'testaccepted');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -272,7 +273,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity = $this->createOidcngEntity();
         $entity->setIdpAllowAll(false);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, m::mock(ManageEntity::class), 'testaccepted');
 
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
@@ -303,7 +304,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             ]
         );
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, m::mock(ManageEntity::class), 'testaccepted');
 
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
@@ -336,7 +337,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             ]
         );
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, m::mock(ManageEntity::class), 'testaccepted');
 
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);

@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 interface GeneratorInterface
 {
@@ -40,8 +41,9 @@ interface GeneratorInterface
      * entities).
      *
      * @param Entity $entity
+     * @param ManageEntity $manageEntity
      * @param string $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState);
+    public function generateForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState);
 }

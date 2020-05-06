@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashbo
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * The JsonGenerator is able to generate Manage SAML 2.0 and OpenID Connect entities (oidc).
@@ -37,7 +38,6 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
  */
 class JsonGenerator implements GeneratorInterface
 {
-
     /**
      * @var ArpGenerator
      */
@@ -100,14 +100,15 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param ManageEntity $manageEntity
      * @param string $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState)
+    public function generateForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         $data = [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $manageEntity, $workflowState),
             'type' => 'saml20_sp',
             'id' => $entity->getManageId(),
         ];
@@ -158,13 +159,14 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param ManageEntity $manageEntity
      * @param string $workflowState
      * @return array
      */
-    private function generateDataForExistingEntity(Entity $entity, $workflowState)
+    private function generateDataForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState)
     {
         $metadata = [
-            'arp' => $this->arpMetadataGenerator->build($entity),
+            'arp' => $this->arpMetadataGenerator->build($entity, $manageEntity),
             'entityid' => $entity->getEntityId(),
             'state' => $workflowState,
         ];
@@ -176,7 +178,7 @@ class JsonGenerator implements GeneratorInterface
         }
 
         $metadata += $this->flattenMetadataFields(
-            $this->generateMetadataFields($entity)
+            $this->generateMetadataFields($entity, $manageEntity)
         );
 
         if ($entity->hasComments()) {
@@ -219,7 +221,7 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateMetadataFields(Entity $entity)
+    private function generateMetadataFields(Entity $entity, ManageEntity $manageEntity = null)
     {
         $metadata = array_merge(
             [

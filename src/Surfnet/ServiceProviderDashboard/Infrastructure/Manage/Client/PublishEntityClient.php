@@ -36,6 +36,11 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     private $client;
 
     /**
+     * @var QueryClient
+     */
+    private $queryClient;
+
+    /**
      * @var JsonGeneratorStrategy
      */
     private $generator;
@@ -52,11 +57,13 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
     public function __construct(
         HttpClient $client,
+        QueryClient $queryClient,
         JsonGeneratorStrategy $generator,
         Config $manageConfig,
         LoggerInterface $logger
     ) {
         $this->client = $client;
+        $this->queryClient = $queryClient;
         $this->generator = $generator;
         $this->manageConfig = $manageConfig;
         $this->logger = $logger;
@@ -84,9 +91,10 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 );
             } else {
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
-
+                $manageEntity = $this->queryClient->findByManageId($entity->getManageId());
                 $data = json_encode($this->generator->generateForExistingEntity(
                     $entity,
+                    $manageEntity,
                     $this->manageConfig->getPublicationStatus()->getStatus()
                 ));
 

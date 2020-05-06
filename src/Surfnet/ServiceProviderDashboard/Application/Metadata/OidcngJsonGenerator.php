@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * The OidcngJsonGenerator generates oidc10_rp entity json
@@ -96,14 +97,14 @@ class OidcngJsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param ManageEntity $manageEntity
      * @param string $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState)
+    public function generateForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState)
     {
-        // the type for entities is always saml because manage is using saml internally
         $data = [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $manageEntity, $workflowState),
             'type' => 'oidc10_rp',
             'id' => $entity->getManageId(),
         ];
@@ -144,16 +145,17 @@ class OidcngJsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param ManageEntity $manageEntity
      * @param string $workflowState
      * @return array
      */
-    private function generateDataForExistingEntity(Entity $entity, $workflowState)
+    private function generateDataForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState)
     {
         // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
         // The user cannot configure EPTI @ ARP settings but the value is used internally.
         $this->addEpti($entity);
         $metadata = [
-            'arp' => $this->arpMetadataGenerator->build($entity),
+            'arp' => $this->arpMetadataGenerator->build($entity, $manageEntity),
             'entityid' => OidcngClientIdParser::parse($entity->getEntityId()),
             'state' => $workflowState,
         ];
@@ -162,7 +164,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata += $this->generateAllowedResourceServers($entity);
 
         $metadata += $this->flattenMetadataFields(
-            $this->generateMetadataFields($entity)
+            $this->generateMetadataFields($entity, $manageEntity)
         );
 
         if ($entity->hasComments()) {
@@ -205,7 +207,7 @@ class OidcngJsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateMetadataFields(Entity $entity)
+    private function generateMetadataFields(Entity $entity, ManageEntity $manageEntity = null)
     {
         $metadata = array_merge(
             [
@@ -217,7 +219,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             $this->generateAllContactsMetadata($entity),
             $this->generateOrganizationMetadata($entity),
             $this->privacyQuestionsMetadataGenerator->build($entity),
-            $this->spDashboardMetadataGenerator->build($entity)
+            $this->spDashboardMetadataGenerator->build($entity, $manageEntity)
         );
 
         $metadata['NameIDFormat'] = $entity->getNameIdFormat();

@@ -22,9 +22,9 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * The OidcngResourceServerJsonGenerator generates oidc10_rp resource server entity json
@@ -63,7 +63,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
      */
     public function generateForNewEntity(Entity $entity, $workflowState)
     {
-        // the type for entities is always saml because manage is using saml internally
         return [
             'data' => $this->generateDataForNewEntity($entity, $workflowState),
             'type' => 'oidc10_rp',
@@ -72,14 +71,14 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
     /**
      * @param Entity $entity
+     * @param ManageEntity $manageEntity
      * @param string $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState)
+    public function generateForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState)
     {
-        // the type for entities is always saml because manage is using saml internally
         $data = [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $manageEntity, $workflowState),
             'type' => 'oidc10_rp',
             'id' => $entity->getManageId(),
         ];
@@ -117,7 +116,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
      * @param string $workflowState
      * @return array
      */
-    private function generateDataForExistingEntity(Entity $entity, $workflowState)
+    private function generateDataForExistingEntity(Entity $entity, ManageEntity $manageEntity, $workflowState)
     {
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getEntityId()),
@@ -127,7 +126,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
 
         $metadata += $this->flattenMetadataFields(
-            $this->generateMetadataFields($entity)
+            $this->generateMetadataFields($entity, $manageEntity)
         );
 
         if ($entity->hasComments()) {
@@ -170,7 +169,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateMetadataFields(Entity $entity)
+    private function generateMetadataFields(Entity $entity, ManageEntity $manageEntity = null)
     {
         $metadata = array_merge(
             [
