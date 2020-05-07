@@ -556,4 +556,9 @@ class MetadataConversionDto
     {
         return !is_null($this->manageEntity);
     }
+
+    public function isExcludedFromPush()
+    {
+        return $this->manageEntity->isExcludedFromPush();
+    }
 }

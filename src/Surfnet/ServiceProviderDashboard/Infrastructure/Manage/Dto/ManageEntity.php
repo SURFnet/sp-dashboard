@@ -166,4 +166,9 @@ class ManageEntity
 
         return false;
     }
+
+    public function isExcludedFromPush()
+    {
+        return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
+    }
 }
