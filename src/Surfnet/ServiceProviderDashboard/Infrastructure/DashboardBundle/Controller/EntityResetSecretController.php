@@ -23,7 +23,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +65,7 @@ class EntityResetSecretController extends Controller
             );
         }
 
-        // fetch entity from managae and reset secret
+        // fetch entity from manage and reset secret
         // the entity gets stored local temporarily
         $resetOidcSecretCommand = new ResetOidcSecretCommand($id, $manageId, $environment, $service);
         $this->commandBus->handle($resetOidcSecretCommand);
