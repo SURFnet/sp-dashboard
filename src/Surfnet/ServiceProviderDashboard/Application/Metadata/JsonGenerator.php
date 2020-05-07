@@ -246,11 +246,14 @@ class JsonGenerator implements GeneratorInterface
         }
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
-        // entity from being pushed to engineblock.
+        // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0
+        // by one of the administrators. If the entity was included for push, we make sure it is not overridden.
         if ($entity->isProduction()) {
             $metadata['coin:exclude_from_push'] = '1';
         }
-
+        if ($entity->isManageEntity() && !$entity->isExcludedFromPush()) {
+            $metadata['coin:exclude_from_push'] = '0';
+        }
         if (!empty($entity->getLogoUrl())) {
             $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }

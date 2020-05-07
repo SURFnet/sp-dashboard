@@ -571,7 +571,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createMetadataConversionDto(true);
+        $entity = $this->createMetadataConversionDto(null, true);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
 
@@ -591,7 +591,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createMetadataConversionDto(false);
+        $entity = $this->createMetadataConversionDto(null, false);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
 
@@ -612,7 +612,7 @@ class JsonGeneratorTest extends MockeryTestCase
         );
 
         $idpWhitlest = [new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en')];
-        $entity = $this->createMetadataConversionDto(false, $idpWhitlest);
+        $entity = $this->createMetadataConversionDto(null, false, $idpWhitlest);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
 
@@ -620,6 +620,44 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
         $this->assertArrayHasKey('allowedEntities', $data['pathUpdates']);
         $this->assertSame([['name' => 'entity-id']], $data['pathUpdates']['allowedEntities']);
+    }
+
+    public function test_exclude_from_push_is_correctly_set()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+
+        $mangeEntity = m::mock(ManageEntity::class);
+        $mangeEntity->shouldReceive('isExcludedFromPush')->andReturn(true);
+
+        $entity = $this->createMetadataConversionDto($mangeEntity, null, null, null, 'production');
+
+        $data = $generator->generateForExistingEntity($entity, 'prodaccepted');
+
+        $this->assertEquals('1', $data['pathUpdates']['metaDataFields.coin:exclude_from_push']);
+    }
+
+    public function test_exclude_from_push_is_correctly_set_include()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://playground-test',
+            'http://playground-prod'
+        );
+        $mangeEntity = m::mock(ManageEntity::class);
+        $mangeEntity->shouldReceive('isExcludedFromPush')->andReturn(false);
+        $entity = $this->createMetadataConversionDto($mangeEntity, null, null, null, 'production');
+
+        $data = $generator->generateForExistingEntity($entity, 'prodaccepted');
+
+        $this->assertEquals('0', $data['pathUpdates']['metaDataFields.coin:exclude_from_push']);
     }
 
     public function test_it_can_build_acl_whitelist_for_existing_entities_allow_multiple()
@@ -636,7 +674,7 @@ class JsonGeneratorTest extends MockeryTestCase
             new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
             new IdentityProvider('manage-id2', 'entity-id2', 'name-nl2', 'name-en2'),
         ];
-        $entity = $this->createMetadataConversionDto(false, $idpWhitelist);
+        $entity = $this->createMetadataConversionDto(null, false, $idpWhitelist);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
 
@@ -656,7 +694,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createMetadataConversionDto(null, null, '');
+        $entity = $this->createMetadataConversionDto(null, null, null, '');
 
         $data = $generator->generateForNewEntity($entity, 'prodaccepted');
 
@@ -707,13 +745,20 @@ class JsonGeneratorTest extends MockeryTestCase
     }
 
     /**
+     * @param ManageEntity|null $manageEntity
      * @param bool|null $idpAllowAll
      * @param array|null $idpWhitelist
      * @param string|null $certificate
+     * @param string|null $environment
      * @return MetadataConversionDto
      */
-    private function createMetadataConversionDto($idpAllowAll = null, $idpWhitelist = null, $certificate = null)
-    {
+    private function createMetadataConversionDto(
+        ManageEntity $manageEntity = null,
+        $idpAllowAll = null,
+        $idpWhitelist = null,
+        $certificate = null,
+        $environment = null
+    ) {
         /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
 
@@ -763,8 +808,15 @@ CERT
             $entity->setCertificate($certificate);
         }
 
-        $entity = MetadataConversionDto::fromEntity($entity);
+        if (!is_null($environment)) {
+            $entity->setEnvironment($environment);
+        }
 
+        if (!$manageEntity) {
+            $entity = MetadataConversionDto::fromEntity($entity);
+        } else {
+            $entity = MetadataConversionDto::fromManageEntity($manageEntity, $entity);
+        }
         return $entity;
     }
 
