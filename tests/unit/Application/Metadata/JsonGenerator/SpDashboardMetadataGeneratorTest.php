@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonG
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -37,7 +38,7 @@ class SpDashboardMetadataGeneratorTest extends MockeryTestCase
         $entity->setImportUrl('http://the-a-team.com/saml/metadata');
 
         $entity->setService($service);
-
+        $entity = MetadataConversionDto::fromEntity($entity);
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new SpDashboardMetadataGenerator($metadataRepository);

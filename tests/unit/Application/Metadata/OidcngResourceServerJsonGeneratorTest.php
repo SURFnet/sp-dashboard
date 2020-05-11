@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
@@ -116,11 +117,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $data = $generator->generateForExistingEntity(
-            $this->createOidcngEntity(),
-            m::mock(ManageEntity::class),
-            'testaccepted'
-        );
+        $data = $generator->generateForExistingEntity($this->createOidcngEntity(), 'testaccepted');
 
         $this->assertEquals(
             array(
@@ -162,7 +159,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
     }
 
     /**
-     * @return Entity
+     * @return MetadataConversionDto
      */
     private function createOidcngEntity()
     {
@@ -200,10 +197,9 @@ CERT
         $contact->setPhone('telephonenumber');
 
         $entity->setSupportContact($contact);
-
         $entity->setClientSecret('test');
-
         $entity->shouldReceive('isAllowedAll')->andReturn(true);
-        return $entity;
+
+        return MetadataConversionDto::fromEntity($entity);
     }
 }

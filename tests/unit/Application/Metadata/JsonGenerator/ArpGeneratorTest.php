@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonG
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -45,10 +46,10 @@ class ArpGeneratorTest extends MockeryTestCase
         $entity->setDisplayNameAttribute($attribute);
 
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
-
+        $mde = MetadataConversionDto::fromEntity($entity);
         $factory = new ArpGenerator($metadataRepository);
 
-        $metadata = $factory->build($entity);
+        $metadata = $factory->build($mde);
 
         $this->assertCount(2, $metadata['attributes']);
 
@@ -76,14 +77,39 @@ class ArpGeneratorTest extends MockeryTestCase
         $factory = new ArpGenerator($metadataRepository);
 
         $manageEntity = $this->getManageEntity();
+        $mde = MetadataConversionDto::fromManageEntity($manageEntity, $entity);
 
-        $metadata = $factory->build($entity, $manageEntity);
+        $metadata = $factory->build($mde);
+
         $this->assertCount(4, $metadata['attributes']);
 
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:displayName']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-1']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-2']);
+    }
+
+    public function test_adds_epti_for_oidcng_entities()
+    {
+        /** @var Entity $entity */
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
+
+        $attribute = new Attribute();
+        $attribute->setRequested(true);
+        $attribute->setMotivation('commonname');
+
+        $entity->setCommonNameAttribute($attribute);
+
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
+        $factory = new ArpGenerator($metadataRepository);
+
+        $mde = MetadataConversionDto::fromEntity($entity);
+        $metadata = $factory->build($mde);
+
+        $this->assertCount(2, $metadata['attributes']);
+        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
+        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonTargetedID']);
     }
 
     private function getManageEntity()

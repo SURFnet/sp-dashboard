@@ -18,10 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * Builds ARP metadata for the JSON export.
@@ -38,7 +38,7 @@ class ArpGenerator implements MetadataGenerator
         $this->repository = $repository;
     }
 
-    public function build(Entity $entity, ManageEntity $manageEntity = null)
+    public function build(MetadataConversionDto $entity)
     {
         $attributes = [];
 
@@ -67,9 +67,19 @@ class ArpGenerator implements MetadataGenerator
             }
         }
 
-        if ($manageEntity) {
+        $this->addExtraFields($attributes, $entity);
+
+        return [
+            'attributes' => $attributes,
+            'enabled' => true,
+        ];
+    }
+
+    private function addExtraFields(array &$attributes, MetadataConversionDto $entity)
+    {
+        if ($entity->isManageEntity()) {
             // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
-            foreach ($manageEntity->getAttributes()->getAttributes() as $manageAttribute) {
+            foreach ($entity->getArpAttributes()->getAttributes() as $manageAttribute) {
                 if (!array_key_exists($manageAttribute->getName(), $attributes)) {
                     $attributes[$manageAttribute->getName()] = [
                         [
@@ -81,9 +91,16 @@ class ArpGenerator implements MetadataGenerator
             }
         }
 
-        return [
-            'attributes' => $attributes,
-            'enabled' => true,
-        ];
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+            // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
+            // The user cannot configure EPTI @ ARP settings but the value is used internally.
+            $attributes['urn:mace:dir:attribute-def:eduPersonTargetedID'] = [
+                [
+                    'source' => 'idp',
+                    'value' => '*',
+                    'motivation' => 'OIDC requires EduPersonTargetedID by default',
+                ]
+            ];
+        }
     }
 }

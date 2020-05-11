@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -84,7 +85,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
                 $response = $this->client->post(
                     json_encode($this->generator->generateForNewEntity(
-                        $entity,
+                        MetadataConversionDto::fromEntity($entity),
                         $this->manageConfig->getPublicationStatus()->getStatus()
                     )),
                     '/manage/api/internal/metadata'
@@ -93,8 +94,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
                 $manageEntity = $this->queryClient->findByManageId($entity->getManageId());
                 $data = json_encode($this->generator->generateForExistingEntity(
-                    $entity,
-                    $manageEntity,
+                    MetadataConversionDto::fromManageEntity($manageEntity, $entity),
                     $this->manageConfig->getPublicationStatus()->getStatus()
                 ));
 
