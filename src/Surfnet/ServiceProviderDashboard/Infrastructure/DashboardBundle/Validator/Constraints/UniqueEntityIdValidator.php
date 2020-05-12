@@ -20,6 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\MangeQueryService;
 use Symfony\Component\Validator\Constraint;
@@ -62,6 +65,11 @@ class UniqueEntityIdValidator extends ConstraintValidator
         }
 
         $mode = $entityCommand->isForProduction() ? 'production' : 'test';
+
+        if ($entityCommand instanceof SaveOidcngEntityCommand || $entityCommand instanceof SaveOidcngResourceServerEntityCommand) {
+            // Remove the protocol to ensure we can lookup the Oidc TNG entities for existence
+            $value = OidcngClientIdParser::parse($value);
+        }
 
         try {
             $manageId = $this->queryService->findManageIdByEntityId($mode, $value);

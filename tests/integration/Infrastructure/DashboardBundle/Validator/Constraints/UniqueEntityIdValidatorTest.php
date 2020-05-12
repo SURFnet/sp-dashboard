@@ -20,6 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Infrastructure\Dash
 
 use Exception;
 use Mockery as m;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityId;
@@ -62,7 +64,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     {
 
         $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andReturn(null);
-        $this->queryService->shouldNotReceive('production', 'findManageIdByEntityId');
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
@@ -81,7 +82,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     public function test_success_for_production()
     {
         $this->queryService->shouldReceive('production', 'findManageIdByEntityId')->andReturn(null);
-        $this->queryService->shouldNotReceive('test', 'findManageIdByEntityId');
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(true);
@@ -101,7 +101,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     public function test_duplicate_entity_id()
     {
         $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andReturn('2222222');
-        $this->queryService->shouldNotReceive('production', 'findManageIdByEntityId');
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
@@ -125,8 +124,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_duplicate_entity_id_on_production()
     {
-        $this->queryService->shouldReceive('production', 'findManageIdByEntityId')->andReturn('2222222');
-        $this->queryService->shouldNotReceive('test', 'findManageIdByEntityId');
+        $this->queryService->shouldReceive('findManageIdByEntityId')->andReturn('2222222');
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(true);
@@ -148,11 +146,28 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
         );
     }
 
+    public function test_oidcng_client_id_checked_without_protocol()
+    {
+        $this->queryService->shouldReceive('findManageIdByEntityId')->with('test', 'sub.domain.org')->andReturn(null);
+
+        $entityCommand = m::mock(SaveOidcngResourceServerEntityCommand::class);
+        $entityCommand->shouldReceive('isForProduction')->andReturn(false);
+        $entityCommand->shouldReceive('getManageId')->andReturn(1);
+
+        $this->mockFormData($entityCommand);
+
+        $this->repository->shouldReceive('findById')
+            ->andReturn(null);
+
+        $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
+
+        $this->assertNoViolation();
+    }
+
     public function test_registry_exception()
     {
 
         $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andThrow(new Exception('An exception while fetching data from manage'));
-        $this->queryService->shouldNotReceive('production', 'findManageIdByEntityId');
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
@@ -170,7 +185,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
         );
     }
 
-    private function mockFormData(SaveSamlEntityCommand $data)
+    private function mockFormData(SaveEntityCommandInterface $data)
     {
         $form = $this->createMock('Symfony\Component\Form\FormInterface');
         $form->expects($this->any())->method('getData')->willReturn($data);
