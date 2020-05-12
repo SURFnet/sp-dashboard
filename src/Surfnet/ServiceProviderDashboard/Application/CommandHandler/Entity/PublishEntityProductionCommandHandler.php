@@ -22,10 +22,8 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\NotAuthenticatedException;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
@@ -47,7 +45,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $repository;
 
     /**
-     * @var EntityRepository
+     * @var ServiceRepository
      */
     private $serviceRepository;
 
@@ -140,7 +138,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      *  - A jira ticket is created to inform the service desk of the pending publication request
      *
      * @param PublishEntityProductionCommand $command
-     * @throws NotAuthenticatedException
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */

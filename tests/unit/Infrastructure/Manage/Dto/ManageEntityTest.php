@@ -34,6 +34,13 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertEquals('Technical Support', $entity->getMetaData()->getContacts()->findTechnicalContact()->getSurName());
         $this->assertEquals('SURFnet BV', $entity->getMetaData()->getOrganization()->getNameEn());
         $this->assertEquals(160, $entity->getMetaData()->getLogo()->getHeight());
+        $this->assertTrue($entity->isExcludedFromPush());
+    }
+
+    public function test_create_dto_from_manage_response_not_excluded_from_push()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_response_not_excluded_from_push.json'), true));
+        $this->assertFalse($entity->isExcludedFromPush());
     }
 
     public function test_create_dto_with_invalid_contacts_from_manage_response()
