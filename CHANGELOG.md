@@ -1,3 +1,11 @@
+## 2.5.0
+**Bugfix**
+
+* Check ClientID existence without protocol #336
+* Prevent overriding the 'exclude_from_push' attribute #335 
+* Prevent overwriting of attributes when (re) publishing entities #334
+* Add missing entity.edit.information translations #333
+
 ## 2.4.0
 
 **Feature**
