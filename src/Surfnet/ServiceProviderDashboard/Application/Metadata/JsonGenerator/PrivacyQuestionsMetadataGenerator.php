@@ -19,8 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use DateTime;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * Reads the PrivacyQuestions from the Entity that is injected, It than references the answers found in the
@@ -51,7 +53,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
         $this->repository = $repository;
     }
 
-    public function build(Entity $entity)
+    public function build(MetadataConversionDto $entity)
     {
         $privacyQuestionAnswers = $entity->getService()->getPrivacyQuestions();
         $privacyQuestions = $this->repository->findAllPrivacyQuestionsAttributes();

@@ -18,9 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 
 interface MetadataGenerator
 {
-    public function build(Entity $entity);
+    public function build(MetadataConversionDto $entity);
 }

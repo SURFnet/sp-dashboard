@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
@@ -29,6 +30,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class OidcngJsonGeneratorTest extends MockeryTestCase
 {
@@ -74,21 +76,9 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
         $this->arpMetadataGenerator
             ->shouldReceive('build')
-            ->with(
-                m::on(
-                    function (Entity $entity) {
-                        $epti = $entity->getEduPersonTargetedIDAttribute();
-                        $this->assertTrue($epti->isRequested());
-                        $this->assertTrue($epti->hasMotivation());
-                        $this->assertEquals('OIDC requires EduPersonTargetedID by default', $epti->getMotivation());
-
-                        return true;
-                    }
-                )
-            )
             ->andReturn(['arp' => 'arp']);
 
-        $data = $generator->generateForNewEntity($this->createOidcngEntity(), 'testaccepted');
+        $data = $generator->generateForNewEntity($this->createMetadataConversionDto(), 'testaccepted');
         $this->assertEquals(
             [
                 'data' => [
@@ -153,7 +143,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $data = $generator->generateForExistingEntity($this->createOidcngEntity(), 'testaccepted');
+        $data = $generator->generateForExistingEntity($this->createMetadataConversionDto(), 'testaccepted');
 
         $this->assertEquals(
             array(
@@ -219,10 +209,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $entity = $this->createOidcngEntity();
-
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
-
+        $data = $generator->generateForExistingEntity($this->createMetadataConversionDto(), 'testaccepted');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -244,8 +231,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $entity = $this->createOidcngEntity();
-        $entity->setIdpAllowAll(true);
+        $entity = $this->createMetadataConversionDto(true);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
 
@@ -269,8 +255,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $entity = $this->createOidcngEntity();
-        $entity->setIdpAllowAll(false);
+        $entity = $this->createMetadataConversionDto(false);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
 
@@ -295,16 +280,11 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $entity = $this->createOidcngEntity();
-        $entity->setIdpAllowAll(false);
-        $entity->setIdpWhitelist(
-            [
-                new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
-            ]
-        );
+        $entity = $this->createMetadataConversionDto(false, [
+            new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
+        ]);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
-
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -327,17 +307,12 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $entity = $this->createOidcngEntity();
-        $entity->setIdpAllowAll(false);
-        $entity->setIdpWhitelist(
-            [
-                new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
-                new IdentityProvider('manage-id2', 'entity-id2', 'name-nl2', 'name-en2'),
-            ]
-        );
+        $entity = $this->createMetadataConversionDto(false, [
+            new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
+            new IdentityProvider('manage-id2', 'entity-id2', 'name-nl2', 'name-en2'),
+        ]);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
-
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -350,9 +325,9 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
 
     /**
-     * @return Entity
+     * @return MetadataConversionDto
      */
-    private function createOidcngEntity()
+    private function createMetadataConversionDto($idpAllowAll = null, $idpWhitelist = null, $certificate = null)
     {
         /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
@@ -399,6 +374,18 @@ CERT
         $entity->setAccessTokenValidity(3600);
 
         $entity->shouldReceive('isAllowedAll')->andReturn(true);
-        return $entity;
+        if (!is_null($idpAllowAll)) {
+            $entity->setIdpAllowAll($idpAllowAll);
+        }
+
+        if (!is_null($idpWhitelist)) {
+            $entity->setIdpWhitelist($idpWhitelist);
+        }
+
+        if (!is_null($certificate)) {
+            $entity->setCertificate($certificate);
+        }
+
+        return MetadataConversionDto::fromEntity($entity);
     }
 }

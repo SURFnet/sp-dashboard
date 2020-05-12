@@ -340,6 +340,7 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
             - '@surfnet.manage.configuration.test'
             - '@logger'
@@ -362,6 +363,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
         arguments:
         - '@surfnet.manage.http.http_client.prod_environment'
+        - '@surfnet.manage.client.query_client.prod_environment'
         - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
         - '@surfnet.manage.configuration.production'
         - '@logger'

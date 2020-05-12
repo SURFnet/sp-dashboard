@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
@@ -37,7 +38,6 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
  */
 class JsonGenerator implements GeneratorInterface
 {
-
     /**
      * @var ArpGenerator
      */
@@ -85,11 +85,11 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      */
-    public function generateForNewEntity(Entity $entity, $workflowState)
+    public function generateForNewEntity(MetadataConversionDto $entity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         return [
@@ -99,11 +99,11 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState)
+    public function generateForExistingEntity(MetadataConversionDto $entity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         $data = [
@@ -122,11 +122,11 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      */
-    private function generateDataForNewEntity(Entity $entity, $workflowState)
+    private function generateDataForNewEntity(MetadataConversionDto $entity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         $metadata = [
@@ -157,11 +157,11 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      */
-    private function generateDataForExistingEntity(Entity $entity, $workflowState)
+    private function generateDataForExistingEntity(MetadataConversionDto $entity, $workflowState)
     {
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
@@ -219,7 +219,7 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateMetadataFields(Entity $entity)
+    private function generateMetadataFields(MetadataConversionDto $entity)
     {
         $metadata = array_merge(
             [
@@ -262,7 +262,7 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateCertDataMetadata(Entity $entity)
+    private function generateCertDataMetadata(MetadataConversionDto $entity)
     {
         $metadata = [];
         if (!empty($entity->getCertificate())) {
@@ -278,7 +278,7 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateOidcClient(Entity $entity)
+    private function generateOidcClient(MetadataConversionDto $entity)
     {
         $metadata = [];
         $metadata['clientId'] = OidcClientIdParser::parse($entity->getEntityId());
@@ -314,10 +314,10 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @return array
      */
-    private function generateAllContactsMetadata(Entity $entity)
+    private function generateAllContactsMetadata(MetadataConversionDto $entity)
     {
         $metadata = [];
         $index = 0;
@@ -327,7 +327,11 @@ class JsonGenerator implements GeneratorInterface
         }
 
         if ($entity->getAdministrativeContact()) {
-            $metadata += $this->generateContactMetadata('administrative', $index++, $entity->getAdministrativeContact());
+            $metadata += $this->generateContactMetadata(
+                'administrative',
+                $index++,
+                $entity->getAdministrativeContact()
+            );
         }
 
         if ($entity->getTechnicalContact()) {
@@ -341,7 +345,7 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateOrganizationMetadata(Entity $entity)
+    private function generateOrganizationMetadata(MetadataConversionDto $entity)
     {
         $metadata = [
             'OrganizationName:en' => $entity->getOrganizationNameEn(),
@@ -393,10 +397,10 @@ class JsonGenerator implements GeneratorInterface
      * except when the user just created the entity in the interface. We
      * determine the dimensions in those situations.
      *
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @return array
      */
-    private function generateLogoMetadata(Entity $entity)
+    private function generateLogoMetadata(MetadataConversionDto $entity)
     {
         $metadata = [
             'logo:0:url' => $entity->getLogoUrl(),
@@ -421,10 +425,10 @@ class JsonGenerator implements GeneratorInterface
 
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @return array
      */
-    private function generateAclData(Entity $entity)
+    private function generateAclData(MetadataConversionDto $entity)
     {
         if ($entity->isIdpAllowAll()) {
             return [

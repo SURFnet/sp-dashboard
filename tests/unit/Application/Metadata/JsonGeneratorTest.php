@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
@@ -28,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class JsonGeneratorTest extends MockeryTestCase
 {
@@ -75,7 +77,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForNewEntity($this->createSamlEntity(), 'testaccepted');
+        $metadata = $generator->generateForNewEntity($this->createMetadataConversionDto(), 'testaccepted');
         $metadata = $metadata['data'];
 
         $this->assertEquals('saml20-sp', $metadata['type']);
@@ -129,7 +131,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForExistingEntity($this->createSamlEntity(), 'testaccepted');
+        $metadata = $generator->generateForExistingEntity($this->createMetadataConversionDto(), 'testaccepted');
         $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
@@ -179,7 +181,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForNewEntity($this->createOidcEntity(), 'testaccepted');
+        $metadata = $generator->generateForNewEntity($this->createOidcMetadataConversionDto(), 'testaccepted');
         $metadata = $metadata['data'];
 
         $this->assertTrue($metadata['active']);
@@ -237,7 +239,12 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $metadata = $generator->generateForExistingEntity($this->createOidcEntity(), 'testaccepted');
+        $metadata = $generator->generateForExistingEntity(
+            $this->createOidcMetadataConversionDto(),
+            m::mock(ManageEntity::class),
+            'testaccepted'
+        );
+
         $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
@@ -289,7 +296,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForNewEntity($this->createSamlEntity(), 'prodaccepted');
+        $data = $generator->generateForNewEntity($this->createMetadataConversionDto(), 'prodaccepted');
 
         $this->assertEquals(array (
             'data' =>
@@ -348,7 +355,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForExistingEntity($this->createSamlEntity(), 'testaccepted');
+        $data = $generator->generateForExistingEntity($this->createMetadataConversionDto(), 'testaccepted');
 
         $this->assertEquals(array (
             'pathUpdates' =>
@@ -403,7 +410,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForNewEntity($this->createOidcEntity(), 'testaccepted');
+        $data = $generator->generateForNewEntity($this->createOidcMetadataConversionDto(), 'testaccepted');
 
         $this->assertEquals(array (
             'data' =>
@@ -475,7 +482,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $data = $generator->generateForExistingEntity($this->createOidcEntity(), 'testaccepted');
+        $data = $generator->generateForExistingEntity($this->createOidcMetadataConversionDto(), 'testaccepted');
 
         $this->assertEquals(array (
             'pathUpdates' =>
@@ -544,10 +551,9 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createSamlEntity();
+        $entity = $this->createMetadataConversionDto();
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
-
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -565,8 +571,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createSamlEntity();
-        $entity->setIdpAllowAll(true);
+        $entity = $this->createMetadataConversionDto(true);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
 
@@ -586,11 +591,9 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createSamlEntity();
-        $entity->setIdpAllowAll(false);
+        $entity = $this->createMetadataConversionDto(false);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
-
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -608,14 +611,10 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createSamlEntity();
-        $entity->setIdpAllowAll(false);
-        $entity->setIdpWhitelist([
-            new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
-        ]);
+        $idpWhitlest = [new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en')];
+        $entity = $this->createMetadataConversionDto(false, $idpWhitlest);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
-
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -633,15 +632,13 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createSamlEntity();
-        $entity->setIdpAllowAll(false);
-        $entity->setIdpWhitelist([
+        $idpWhitelist = [
             new IdentityProvider('manage-id', 'entity-id', 'name-nl', 'name-en'),
             new IdentityProvider('manage-id2', 'entity-id2', 'name-nl2', 'name-en2'),
-        ]);
+        ];
+        $entity = $this->createMetadataConversionDto(false, $idpWhitelist);
 
         $data = $generator->generateForExistingEntity($entity, 'testaccepted');
-
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -659,8 +656,7 @@ class JsonGeneratorTest extends MockeryTestCase
             'http://playground-prod'
         );
 
-        $entity = $this->createSamlEntity();
-        $entity->setCertificate('');
+        $entity = $this->createMetadataConversionDto(null, null, '');
 
         $data = $generator->generateForNewEntity($entity, 'prodaccepted');
 
@@ -711,9 +707,12 @@ class JsonGeneratorTest extends MockeryTestCase
     }
 
     /**
-     * @return Entity
+     * @param bool|null $idpAllowAll
+     * @param array|null $idpWhitelist
+     * @param string|null $certificate
+     * @return MetadataConversionDto
      */
-    private function createSamlEntity()
+    private function createMetadataConversionDto($idpAllowAll = null, $idpWhitelist = null, $certificate = null)
     {
         /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
@@ -752,16 +751,29 @@ CERT
 
         $entity->setSupportContact($contact);
 
+        if (!is_null($idpAllowAll)) {
+            $entity->setIdpAllowAll($idpAllowAll);
+        }
+
+        if (!is_null($idpWhitelist)) {
+            $entity->setIdpWhitelist($idpWhitelist);
+        }
+
+        if (!is_null($certificate)) {
+            $entity->setCertificate($certificate);
+        }
+
+        $entity = MetadataConversionDto::fromEntity($entity);
+
         return $entity;
     }
 
     /**
-     * @return Entity
+     * @return MetadataConversionDto
      */
-    private function createOidcEntity()
+    private function createOidcMetadataConversionDto()
     {
         /** @var Entity $entity */
-
         $entity = m::mock(Entity::class)->makePartial();
 
         $entity->setProtocol('oidc');
@@ -795,7 +807,7 @@ CERT
         $contact->setPhone('telephonenumber');
 
         $entity->setSupportContact($contact);
-
+        $entity = MetadataConversionDto::fromEntity($entity);
         return $entity;
     }
 }

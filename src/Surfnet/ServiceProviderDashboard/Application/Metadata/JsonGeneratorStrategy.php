@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 /**
  * Determines which strategy to use when generating Manage json metadata
@@ -45,23 +45,23 @@ class JsonGeneratorStrategy
     }
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForNewEntity(Entity $entity, $workflowState)
+    public function generateForNewEntity(MetadataConversionDto $entity, $workflowState)
     {
         return $this->getStrategy($entity->getProtocol())->generateForNewEntity($entity, $workflowState);
     }
 
     /**
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState)
+    public function generateForExistingEntity(MetadataConversionDto $entity, $workflowState)
     {
         return $this->getStrategy($entity->getProtocol())->generateForExistingEntity($entity, $workflowState);
     }
