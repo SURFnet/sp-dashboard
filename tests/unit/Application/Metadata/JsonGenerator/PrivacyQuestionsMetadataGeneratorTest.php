@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonG
 use DateTime;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
@@ -61,6 +62,8 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $service->setPrivacyQuestions($privacyQuestions);
         $entity->setService($service);
 
+        $entity = MetadataConversionDto::fromEntity($entity);
+
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
@@ -92,7 +95,7 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
-
+        $entity = MetadataConversionDto::fromEntity($entity);
         $metadata = $factory->build($entity);
 
         $this->assertEmpty($metadata);

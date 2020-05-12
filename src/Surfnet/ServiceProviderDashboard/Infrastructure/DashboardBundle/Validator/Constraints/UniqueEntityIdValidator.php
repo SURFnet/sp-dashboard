@@ -20,22 +20,20 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\MangeQueryService;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueEntityIdValidator extends ConstraintValidator
 {
     /**
-     * @var QueryEntityRepository
+     * @var MangeQueryService
      */
-    private $manageTestRepository;
-
-    /**
-     * @var QueryEntityRepository
-     */
-    private $manageProductionRepository;
+    private $queryService;
 
     /**
      * @var DoctrineRepository
@@ -43,17 +41,13 @@ class UniqueEntityIdValidator extends ConstraintValidator
     private $doctrineRepository;
 
     /**
-     * @param QueryEntityRepository $manageTestRepository
-     * @param QueryEntityRepository $manageProductionRepository
      * @param DoctrineRepository $doctrineRepository
      */
     public function __construct(
-        QueryEntityRepository $manageTestRepository,
-        QueryEntityRepository $manageProductionRepository,
+        MangeQueryService $queryService,
         DoctrineRepository $doctrineRepository
     ) {
-        $this->manageTestRepository = $manageTestRepository;
-        $this->manageProductionRepository = $manageProductionRepository;
+        $this->queryService = $queryService;
         $this->doctrineRepository = $doctrineRepository;
     }
 
@@ -70,13 +64,15 @@ class UniqueEntityIdValidator extends ConstraintValidator
             throw new Exception('invalid validator command exception');
         }
 
-        $manage = $this->manageTestRepository;
-        if ($entityCommand->isForProduction()) {
-            $manage = $this->manageProductionRepository;
+        $mode = $entityCommand->isForProduction() ? 'production' : 'test';
+
+        if ($entityCommand instanceof SaveOidcngEntityCommand || $entityCommand instanceof SaveOidcngResourceServerEntityCommand) {
+            // Remove the protocol to ensure we can lookup the Oidc TNG entities for existence
+            $value = OidcngClientIdParser::parse($value);
         }
 
         try {
-            $manageId = $manage->findManageIdByEntityId($value);
+            $manageId = $this->queryService->findManageIdByEntityId($mode, $value);
         } catch (Exception $e) {
             $this->context->addViolation('validator.entity_id.registry_failure');
             return;

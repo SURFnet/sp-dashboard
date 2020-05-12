@@ -31,6 +31,8 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 class PublishEntityClientTest extends MockeryTestCase
@@ -76,6 +78,7 @@ class PublishEntityClientTest extends MockeryTestCase
                 $guzzle,
                 new NullLogger()
             ),
+            $this->buildQueryClient(),
             $this->generator,
             $this->manageConfig,
             $this->logger
@@ -216,5 +219,14 @@ class PublishEntityClientTest extends MockeryTestCase
             ->once();
 
         $this->client->pushMetadata();
+    }
+
+    private function buildQueryClient()
+    {
+        $queryClient = m::mock(QueryClient::class);
+        $queryClient
+            ->shouldReceive('findByManageId')
+            ->andReturn(m::mock(ManageEntity::class));
+        return $queryClient;
     }
 }

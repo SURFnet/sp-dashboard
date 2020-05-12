@@ -21,10 +21,10 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 class JsonGeneratorStrategyTest extends MockeryTestCase
 {
@@ -68,7 +68,7 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
     public function test_generate_for_new_entity()
     {
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(MetadataConversionDto::class);
 
         $entity->shouldReceive('getProtocol')->andReturn('saml');
         $this->strategy->generateForNewEntity($entity, 'prodaccepted');
@@ -82,7 +82,7 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
     public function test_generate_for_existing_entity()
     {
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(MetadataConversionDto::class);
 
         $entity->shouldReceive('getProtocol')->andReturn('saml');
         $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
@@ -96,7 +96,8 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
     public function test_add_invalid_strategy()
     {
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(MetadataConversionDto::class);
+
         $entity->shouldReceive('getProtocol')->andReturn('saml30');
 
         $this->expectException(JsonGeneratorStrategyNotFoundException::class);

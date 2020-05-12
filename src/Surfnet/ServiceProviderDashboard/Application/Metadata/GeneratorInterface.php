@@ -18,18 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 
 interface GeneratorInterface
 {
     /**
      * Convert a new, unpublished entity to json-serializable array.
      *
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      */
-    public function generateForNewEntity(Entity $entity, $workflowState);
+    public function generateForNewEntity(MetadataConversionDto $entity, $workflowState);
 
     /**
      * Convert entity to an array for the manage merge-write API call.
@@ -39,9 +39,9 @@ interface GeneratorInterface
      * never overwrites fields not managed by the dashboard (such as allowed
      * entities).
      *
-     * @param Entity $entity
+     * @param MetadataConversionDto $entity
      * @param string $workflowState
      * @return array
      */
-    public function generateForExistingEntity(Entity $entity, $workflowState);
+    public function generateForExistingEntity(MetadataConversionDto $entity, $workflowState);
 }

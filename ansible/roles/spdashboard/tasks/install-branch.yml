@@ -60,25 +60,25 @@
   template: src=parameters.yml.j2 dest={{ spdashboard_data_dir}}/current/app/config/parameters.yml
 
 - name: Clear the cache
-  command: bin/console cache:clear --env=prod
+  command: php72 bin/console cache:clear --env=prod
   args:
     chdir: "{{ spdashboard_data_dir }}/current/"
 
 - name: Run database migrations
-  command: bin/console doctrine:migrations:migrate
+  command: php72 bin/console doctrine:migrations:migrate
   args:
     chdir: "{{ spdashboard_data_dir }}/current/"
 
 - name: Run translation import
-  command: bin/console lexik:translations:import
+  command: php72 bin/console lexik:translations:import
   args:
     chdir: "{{ spdashboard_data_dir }}/current/"
 
 - name: Clean the cache
-  command: bin/console cache:clear --env=prod
+  command: php72 bin/console cache:clear --env=prod
   args:
     chdir: "{{ spdashboard_data_dir }}/current/"
-  notify: restart php-fpm
+  notify: restart php72-fpm
 
 - name: Chown the cachedir recursively again
   file: dest={{spdashboard_data_dir}}/shared/cache owner=spdashboard recurse=yes

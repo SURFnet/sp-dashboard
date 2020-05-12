@@ -18,10 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use DateTime;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 
 /**
  * Adds the team name original metadata url to a list of attributes that can be stored in the serivce registry (Manage)
@@ -41,7 +39,7 @@ class SpDashboardMetadataGenerator implements MetadataGenerator
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function build(Entity $entity)
+    public function build(MetadataConversionDto $entity)
     {
         $spDashboardAttributes = $this->repository->findAllSpDashboardAttributes();
         $attributes = [];
