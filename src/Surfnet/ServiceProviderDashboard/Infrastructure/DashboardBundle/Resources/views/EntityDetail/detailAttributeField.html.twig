@@ -2,7 +2,7 @@
 <h3 class="attribute-title">{{ label }}</h3>
 <div class="detail attribute">
     {% if informationPopup is defined %}
-        <span title="{{ informationPopup|trans }}" class="help-button">
+        <span data-tippy-content="{{ informationPopup|trans }}" class="help-button">
             <i class="fa fa-question-circle"></i>
         </span>
     {% endif %}

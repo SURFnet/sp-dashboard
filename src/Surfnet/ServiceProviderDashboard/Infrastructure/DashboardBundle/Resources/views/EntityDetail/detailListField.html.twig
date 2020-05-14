@@ -1,7 +1,7 @@
 {% if value is not empty %}
 <div class="detail">
     {% if informationPopup is defined %}
-        <span title="{{ informationPopup|trans }}" class="help-button">
+        <span data-tippy-content="{{ informationPopup|trans }}" class="help-button">
             <i class="fa fa-question-circle"></i>
         </span>
     {% endif %}
