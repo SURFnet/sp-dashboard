@@ -43,7 +43,7 @@ class EntityDetailTest extends WebTestCase
 
         $this->assertDetailEquals(0, 'Entity ID', 'SP1');
         $this->assertDetailEquals(1, 'Name EN', 'SP1');
-        $this->assertDetailEquals(2, 'First name', 'John', false);
+        $this->assertDetailEquals(2, 'First name', 'John', true);
         $this->assertDetailEquals(3, 'Last name', 'Doe', false);
     }
 
@@ -104,7 +104,7 @@ class EntityDetailTest extends WebTestCase
 
         $this->assertDetailEquals(0, 'Entity ID', 'SP3');
         $this->assertDetailEquals(1, 'Name EN', 'SP3');
-        $this->assertDetailEquals(2, 'First name', 'Test', false);
+        $this->assertDetailEquals(2, 'First name', 'Test', true);
         $this->assertDetailEquals(3, 'Last name', 'Test', false);
     }
 
