@@ -40,12 +40,10 @@ class IssueFieldFactoryTest extends TestCase
     {
         $this->translator = m::mock(TranslatorInterface::class);
         $this->factory = new IssueFieldFactory(
-            'Jane Doe',
             'customfield_10107',
             'customfield_10108',
             'Critical',
             'SPD',
-            'John Doe',
             $this->translator
         );
     }
@@ -86,11 +84,9 @@ class IssueFieldFactoryTest extends TestCase
 
         $this->assertEquals('Summary', $issueField->summary);
         $this->assertEquals('Description', $issueField->description);
-        $this->assertEquals('Jane Doe', $issueField->assignee->name);
         // The custom field is used for saving the entity id.
         $this->assertEquals('https://example.com', $issueField->customFields['customfield_10107']);
         $this->assertEquals('arbitrary-issue-type', $ticket->getIssueType());
         $this->assertEquals('Critical', $issueField->priority->name);
-        $this->assertEquals('John Doe', $issueField->reporter->name);
     }
 }
