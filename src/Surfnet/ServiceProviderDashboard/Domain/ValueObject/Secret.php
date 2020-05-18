@@ -24,8 +24,7 @@ class Secret
     /**
      * @var string
      */
-    private static $allowedChars = '0123456789abcdefghijklmnopqrstuvwxyz~!@#$%^&*_+=';
-    private static $requiredChars = '~!@#$%^&*_+=';
+    private static $allowedChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
      * @var string
@@ -38,18 +37,16 @@ class Secret
      */
     public function __construct($length)
     {
-        if ($length < 8) {
-            throw new Exception('The secret length should be a value greater then 7');
+        if ($length < 20) {
+            throw new Exception('The secret length should be a value greater or equal to 20');
         }
-        do {
-            $this->secret = '';
-            $nofAllowedChars = strlen(self::$allowedChars) - 1;
-            for ($pos = 0; $pos < $length; $pos++) {
-                $i = random_int(0, $nofAllowedChars);
-                $char = self::$allowedChars[$i];
-                $this->secret .= $char;
-            }
-        } while (!$this->isValid($this->secret));
+        $this->secret = '';
+        $nofAllowedChars = strlen(self::$allowedChars) - 1;
+        for ($pos = 0; $pos < $length; $pos++) {
+            $i = random_int(0, $nofAllowedChars);
+            $char = self::$allowedChars[$i];
+            $this->secret .= $char;
+        }
     }
 
     /**
@@ -58,18 +55,5 @@ class Secret
     public function getSecret()
     {
         return $this->secret;
-    }
-
-    /**
-     * @param string $secret
-     * @return bool
-     */
-    private function isValid($secret)
-    {
-        if (strpbrk($secret, self::$requiredChars) !== false) {
-            return true;
-        }
-
-        return false;
     }
 }

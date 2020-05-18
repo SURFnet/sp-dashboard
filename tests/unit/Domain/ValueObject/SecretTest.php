@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\ValueObject;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
@@ -29,35 +30,25 @@ class SecretTest extends TestCase
 
         $this->assertEquals(20, strlen($secret->getSecret()));
 
-        // The charlist should match characters in Secret::$requiredChars
-        $this->assertNotFalse(strpbrk($secret->getSecret(), '~!@#$%^&*_+='));
+        $this->assertNotFalse(strpbrk($secret->getSecret(), '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'));
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage The secret length should be a value greater then 7
-     */
     public function test_secret_generation_with_length_of_0_should_fail()
     {
-        $secret = new Secret(0);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The secret length should be a value greater or equal to 20');
+        new Secret(0);
+    }
+    public function test_secret_generation_with_length_of_19_should_fail()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The secret length should be a value greater or equal to 20');
+        new Secret(19);
     }
 
-
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage The secret length should be a value greater then 7
-     */
-    public function test_secret_generation_with_length_of_7_should_fail()
+    public function test_secret_generation_with_length_of_20_should_succeed()
     {
-        $secret = new Secret(7);
-    }
-
-    public function test_secret_generation_with_length_of_8_should_succeed()
-    {
-        $secret = new Secret(8);
-
-        // The charlist should match characters in Secret::$requiredChars
-        $this->assertNotFalse(strpbrk($secret->getSecret(), '~!@#$%^&*_+='));
+        $secret = new Secret(20);
 
         $this->assertInstanceOf(Secret::class, $secret);
     }
