@@ -169,6 +169,9 @@ class ManageEntity
 
     public function isExcludedFromPush()
     {
+        if (is_null($this->getMetaData()->getCoin()->getExcludeFromPush())) {
+            return true;
+        }
         return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
     }
 }

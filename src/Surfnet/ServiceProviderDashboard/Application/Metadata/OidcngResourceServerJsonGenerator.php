@@ -194,6 +194,12 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             $metadata['coin:exclude_from_push'] = '1';
         }
 
+        // When dealing with a client secret reset, keep the current exclude from push state.
+        $secret = $entity->getClientSecret();
+        if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPush()) {
+            $metadata['coin:exclude_from_push'] = '0';
+        }
+
         $metadata += $this->generateOidcClient($entity);
 
         return $metadata;
