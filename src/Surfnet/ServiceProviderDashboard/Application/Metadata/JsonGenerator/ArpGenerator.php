@@ -87,6 +87,9 @@ class ArpGenerator implements MetadataGenerator
                             'value' => $manageAttribute->getValue(),
                         ]
                     ];
+                    if (!empty($manageAttribute->getMotivation())) {
+                        $attributes[$manageAttribute->getName()][0]['motivation'] = $manageAttribute->getMotivation();
+                    }
                 }
             }
         }
