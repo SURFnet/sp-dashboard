@@ -561,4 +561,12 @@ class MetadataConversionDto
     {
         return $this->manageEntity->isExcludedFromPush();
     }
+
+    /**
+     * @return array
+     */
+    public function getScopes()
+    {
+        return $this->manageEntity->getOidcClient()->getScope();
+    }
 }
