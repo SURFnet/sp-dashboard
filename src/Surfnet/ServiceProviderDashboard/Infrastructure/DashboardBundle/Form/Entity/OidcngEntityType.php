@@ -256,7 +256,8 @@ class OidcngEntityType extends AbstractType
                 [
                     'required' => false,
                     'attr' => [
-                        'class' => 'requested'
+                        'class' => 'requested',
+                        'data-help' => 'entity.edit.information.enablePlayground',
                     ]
                 ]
             );
