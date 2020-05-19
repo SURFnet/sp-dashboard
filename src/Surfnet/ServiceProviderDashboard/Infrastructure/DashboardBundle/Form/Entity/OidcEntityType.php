@@ -97,7 +97,6 @@ class OidcEntityType extends AbstractType
                     'entry_options' => [
                         'attr' => [
                             'data-parsley-redirecturis' => null,
-                            'data-parsley-uri' => null,
                             'data-parsley-trigger' => 'blur',
                             'data-parsley-validate-if-empty' => null,
                         ],
