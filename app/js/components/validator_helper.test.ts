@@ -1,16 +1,16 @@
-import {ValidatorHelper} from "./validator_helper";
+import { ValidatorHelper } from './validator_helper';
 
-describe('validation functions', function () {
+describe('validation functions', () => {
 
-  it('can validate empty strings', function () {
-    const helper = new ValidatorHelper;
+  it('can validate empty strings', () => {
+    const helper = new ValidatorHelper();
     expect(helper.validateEmpty('')).toBeTruthy();
     expect(helper.validateEmpty(' ')).toBeFalsy();
     expect(helper.validateEmpty('df')).toBeFalsy();
   });
 
-  it('should validate urls', function () {
-    let allowedUrls: Array<string> = [
+  it('should validate urls', () => {
+    const allowedUrls: string[] = [
       'https://www.sp-dashboard.com',
       'http://www.sp-dashboard.com',
       'https://www.sp-dashboard.com/with/path',
@@ -18,24 +18,24 @@ describe('validation functions', function () {
       'ftp://www.sp-dashboard.com/with/path',
       'sftp://www.sp-dashboard.com/with/path',
     ];
-    let illegalUrls: Array<string> = [
+    const illegalUrls: string[] = [
       'httpd://inorrect.protocol.com',
       'httpd:/invalid-protocol.com',
       'https://localhost',
     ];
-    const helper = new ValidatorHelper;
+    const helper = new ValidatorHelper();
 
-    for (let allowed of allowedUrls) {
+    for (const allowed of allowedUrls) {
       expect(helper.validateUrl(allowed)).toBeTruthy();
     }
 
-    for (let illegal of illegalUrls) {
+    for (const illegal of illegalUrls) {
       expect(helper.validateUrl(illegal)).toBeFalsy();
     }
   });
 
-  it('should validate urns', function () {
-    let allowedUrns: Array<string> = [
+  it('should validate urns', () => {
+    const allowedUrns: string[] = [
       'urn:mace:dir:attribute-def:eduPersonTargetedID',
       'urn:mace:dir:attribute-def:isMemberOf',
       'urn:oid:1.3.6.1.4.1.5923.1.1.1.16',
@@ -43,24 +43,24 @@ describe('validation functions', function () {
       'urn:lsid:foobank.org:pub:CDC8D258-8F57-41DC-B560-247E17D3DC8C',
       'urn:nonce:dir:pub:special-chars()+,-.:=@;$_!*\'%?#',
     ];
-    let illegalUrns: Array<string> = [
+    const illegalUrns: string[] = [
       'url:nonce:dir:pub:foobar',
       'urn;nonce;dir;pub;foobar',
       'urn:nonce:dir:pub:illegalspecial-chars-🤕🤕😎',
     ];
-    const helper = new ValidatorHelper;
+    const helper = new ValidatorHelper();
 
-    for (let allowed of allowedUrns) {
+    for (const allowed of allowedUrns) {
       expect(helper.validateUrn(allowed)).toBeTruthy();
     }
 
-    for (let illegal of illegalUrns) {
+    for (const illegal of illegalUrns) {
       expect(helper.validateUrn(illegal)).toBeFalsy();
     }
   });
 
-  it('should validate loopback urls', function () {
-    let allowedUrls: Array<string> = [
+  it('should validate loopback urls', () => {
+    const allowedUrls: string[] = [
       'https://localhost',
       'https://localhost/foo/bar',
       'http://localhost',
@@ -72,18 +72,18 @@ describe('validation functions', function () {
       'http://[::]:7832',
       'https://localhost:3432',
     ];
-    let illegalUrls: Array<string> = [
+    const illegalUrls: string[] = [
       'httpd://localhost',
       'https://local-host/foo/bar',
       'http://local',
     ];
-    const helper = new ValidatorHelper;
+    const helper = new ValidatorHelper();
 
-    for (let allowed of allowedUrls) {
+    for (const allowed of allowedUrls) {
       expect(helper.validateLoopback(allowed)).toBeTruthy();
     }
 
-    for (let illegal of illegalUrls) {
+    for (const illegal of illegalUrls) {
       expect(helper.validateLoopback(illegal)).toBeFalsy();
     }
   });
