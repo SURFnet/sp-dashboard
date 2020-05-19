@@ -136,6 +136,8 @@ class ArpGeneratorTest extends MockeryTestCase
             ->andReturn('idp');
         $attribute->shouldReceive('getValue')
             ->andReturn('The Manage attr value');
+        $attribute->shouldReceive('getMotivation')
+            ->andReturn('The Manage motivation');
         return $attribute;
     }
 }

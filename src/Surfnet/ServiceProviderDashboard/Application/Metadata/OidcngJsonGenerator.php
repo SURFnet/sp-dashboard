@@ -216,13 +216,25 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata['NameIDFormat'] = $entity->getNameIdFormat();
 
-        // Will become configurable some time in the future.
-        $metadata['scopes'] = ['openid'];
+        // If the entity exists in Manage, use the scopes configured there.
+        if ($entity->isManageEntity()) {
+            // This prevents overwriting the scopes attribute. See: https://www.pivotaltracker.com/story/show/170868465
+            $metadata['scopes'] = $entity->getScopes();
+        } else {
+            // Will become configurable some time in the future.
+            $metadata['scopes'] = ['openid'];
+        }
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to engineblock.
         if ($entity->isProduction()) {
             $metadata['coin:exclude_from_push'] = '1';
+        }
+
+        // When dealing with a client secret reset, keep the current exclude from push state.
+        $secret = $entity->getClientSecret();
+        if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPush()) {
+            $metadata['coin:exclude_from_push'] = '0';
         }
 
         $metadata += $this->generateOidcClient($entity);

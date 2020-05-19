@@ -43,7 +43,7 @@ class Coin
         $eula = isset($metaDataFields['coin:eula'])
             ? $metaDataFields['coin:eula'] : '';
         $excludeFromPush = isset($metaDataFields['coin:exclude_from_push'])
-            ? (int) $metaDataFields['coin:exclude_from_push'] : 0;
+            ? (int) $metaDataFields['coin:exclude_from_push'] : null;
         $oidcClient = isset($metaDataFields['coin:oidc_client'])
             ? (int) $metaDataFields['coin:oidc_client'] : 0;
 
@@ -52,7 +52,7 @@ class Coin
         Assert::string($originalMetadataUrl);
         Assert::string($applicationUrl);
         Assert::string($eula);
-        Assert::integer($excludeFromPush);
+        Assert::nullOrIntegerish($excludeFromPush);
         Assert::integer($oidcClient);
 
         return new self(
