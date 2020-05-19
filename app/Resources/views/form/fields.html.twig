@@ -124,6 +124,7 @@
 {# A collection widget is used to add multiple redirect uris #}
 {%- block collection_widget -%}
     <div class="collection-widget" {{ block('widget_attributes') }} data-prototype="{{ form_widget(form.vars.prototype)|e }}">
+        {{ block('help_block') }}
         <ul class="collection-list">
             {%- for child in form %}
                 <li class="collection-entry">
