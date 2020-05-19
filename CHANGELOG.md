@@ -1,3 +1,9 @@
+## 2.5.1
+**Bugfix**
+* Only preserve the exclude-from-push flag on client secret reset #342
+* Reuse scope attribute, preventing overwriting them #341 
+* Prevent overwriting of ARP motivations #340
+
 ## 2.5.0
 **Bugfix**
 
