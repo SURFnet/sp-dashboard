@@ -72,9 +72,7 @@ parameters:
     jira_test_mode_storage_path: '../var/issues.json'
 
     # Jira default issue settings
-    jira_issue_assignee: conext-beheer
     jira_issue_priority: Medium
-    jira_issue_reporter: sp-dashboard
     jira_issue_type: spd-delete-production-entity
     jira_issue_type_publication_request: spd-request-production-entity
     jira_issue_entityid_fieldname: customfield_13018

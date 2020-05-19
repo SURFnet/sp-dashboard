@@ -436,12 +436,10 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory:
         arguments:
-            - '%jira_issue_assignee%'
             - '%jira_issue_entityid_fieldname%'
             - '%jira_issue_manageid_fieldname%'
             - '%jira_issue_priority%'
             - '%jira_issue_project_key%'
-            - '%jira_issue_reporter%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory:
         arguments:
