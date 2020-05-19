@@ -359,6 +359,7 @@ entity.edit.information.nameEn: Text should be set in web translations
 entity.edit.information.descriptionEn: Text should be set in web translations
 entity.edit.information.applicationUrl: Text should be set in web translations
 entity.edit.information.eulaUrl: Text should be set in web translations
+entity.edit.information.enablePlayground: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
 entity.edit.information.oidcngResourceServers: Text should be set in web translations
