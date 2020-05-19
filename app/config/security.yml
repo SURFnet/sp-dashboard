@@ -60,16 +60,29 @@ nelmio_security:
             - '%saml_remote_idp_host%'
     csp:
         report_logger_service: monolog.logger.security
-        hosts:
-            - 'ajax.googleapis.com'
+        hosts: []
         content_types: []
         enforce:
-            report-uri: [/csp/report]
+            level1_fallback: false
+            browser_adaptive:
+                enabled: false
+            report-uri: "%router.request_context.base_url%/csp/report"
             default-src:
                 - 'self'
-                - 'data:'
             object-src:
                 - 'none'
+            style-src:
+                - 'self'
+                - 'netdna.bootstrapcdn.com'
+                - 'unsafe-inline'
+            script-src:
+                - 'self'
+                - 'ajax.googleapis.com'
+            font-src:
+                - 'self'
+                - 'netdna.bootstrapcdn.com'
+            block-all-mixed-content: true # defaults to false, blocks HTTP content over HTTPS transport
+            upgrade-insecure-requests: true # defaults to false, upgrades HTTP requests to HTTPS transport
     content_type:
         nosniff: true
     xss_protection:

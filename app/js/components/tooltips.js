@@ -1,6 +1,6 @@
 'use strict';
 
-const tippy = require('../../../node_modules/tippy.js/dist/tippy.all.js');
+import tippy from 'tippy.js/dist/esm/tippy.standalone'
 
 $(document).ready(
     () => tippy(
@@ -10,6 +10,7 @@ $(document).ready(
            arrow: true,
            duration: 200,
            placement: 'left',
+           content: '',
            theme: 'light',
            trigger: 'click'
        }
