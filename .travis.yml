@@ -36,4 +36,6 @@ branches:
   only:
     - develop
     - master
-    - feature/php72-support
+    - /^feature\/(.*)$/
+    - /^bugfix\/(.*)$/
+    - /^release\/(.*)$/
