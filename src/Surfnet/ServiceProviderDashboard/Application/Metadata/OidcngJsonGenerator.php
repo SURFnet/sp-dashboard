@@ -225,17 +225,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             $metadata['scopes'] = ['openid'];
         }
 
-        // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
-        // entity from being pushed to engineblock.
-        if ($entity->isProduction()) {
-            $metadata['coin:exclude_from_push'] = '1';
-        }
-
-        // When dealing with a client secret reset, keep the current exclude from push state.
-        $secret = $entity->getClientSecret();
-        if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPush()) {
-            $metadata['coin:exclude_from_push'] = '0';
-        }
+        $this->setExcludeFromPush($metadata, $entity);
 
         $metadata += $this->generateOidcClient($entity);
 
@@ -425,5 +415,27 @@ class OidcngJsonGenerator implements GeneratorInterface
         return [
             'allowedResourceServers' => $allowedResourceServers,
         ];
+    }
+
+    private function setExcludeFromPush(&$metadata, MetadataConversionDto $entity)
+    {
+        // Scenario 1: When publishing to production, the coin:exclude_from_push must be present and set to '1'.
+        // This prevents the entity from being pushed to EngineBlock.
+        if ($entity->isProduction()) {
+            $metadata['coin:exclude_from_push'] = '1';
+        }
+
+        // Scenario 2: When dealing with a client secret reset, keep the current exclude from push state.
+        $secret = $entity->getClientSecret();
+        if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPush()) {
+            $metadata['coin:exclude_from_push'] = '0';
+        }
+
+        // Scenario 3: We are resetting the client secret, the service desk removed the exclude from push coin
+        // attribute. This also indicates the entity is published. But now we do not want to reset the coin to '0', we
+        // simply unset it.
+        if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPushSet()) {
+            unset($metadata['coin:exclude_from_push']);
+        }
     }
 }
