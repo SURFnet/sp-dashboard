@@ -562,6 +562,11 @@ class MetadataConversionDto
         return $this->manageEntity->isExcludedFromPush();
     }
 
+    public function isExcludedFromPushSet()
+    {
+        return $this->manageEntity->isExcludedFromPushSet();
+    }
+
     /**
      * @return array
      */

@@ -167,10 +167,18 @@ class ManageEntity
         return false;
     }
 
+    public function isExcludedFromPushSet()
+    {
+        if (is_null($this->getMetaData()->getCoin()->getExcludeFromPush())) {
+            return false;
+        }
+        return true;
+    }
+
     public function isExcludedFromPush()
     {
         if (is_null($this->getMetaData()->getCoin()->getExcludeFromPush())) {
-            return true;
+            return false;
         }
         return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
     }
