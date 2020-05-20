@@ -1,3 +1,7 @@
+## 2.5.2
+**Bugfix**
+* Interpret missing exclude from push correctly #348
+
 ## 2.5.1
 **Bugfix**
 * Only preserve the exclude-from-push flag on client secret reset #342
