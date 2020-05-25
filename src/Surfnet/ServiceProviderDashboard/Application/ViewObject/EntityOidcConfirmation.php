@@ -66,7 +66,9 @@ class EntityOidcConfirmation
      */
     public function getEntityId()
     {
-        if ($this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG) {
+        $isOidcng = $this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG ||
+            $this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        if ($isOidcng) {
             return OidcngClientIdParser::parse($this->entityId);
         }
 
