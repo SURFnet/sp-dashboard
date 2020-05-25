@@ -32,6 +32,7 @@
     "chart.js": "^2.7.3",
     "chartjs-plugin-datalabels": "^0.4.0",
     "core-js": "3",
+    "ip-validator": "^0.0.1",
     "jquery": "^3.4.0",
     "jquery-modal": "^0.9.1",
     "jquery.mousewheel": "^3.1.9",
