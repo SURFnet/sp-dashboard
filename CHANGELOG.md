@@ -1,3 +1,7 @@
+## 2.5.3
+**Bugfix**
+* Remove excessive OIDCng RS ARP attribute translations #349
+
 ## 2.5.2
 **Bugfix**
 * Interpret missing exclude from push correctly #348
