@@ -35,4 +35,4 @@ spdashboard_playground_uri_test: https://authz-playground.dev.support.surfconext
 spdashboard_playground_uri_prod: https://authz-playground.dev.support.surfconext.nl/redirect
 spdashboard_oidcng_playground_uri_test: https://oidc-playground.dev.support.surfconext.nl/redirect
 spdashboard_oidcng_playground_uri_prod: https://oidc-playground.dev.support.surfconext.nl/redirect
-spdashboard_oidc_create_enabled: true
+

@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Service\OidcCreateEntityEnabledMarshaller;
 use Surfnet\ServiceProviderDashboard\Domain\Service\OidcngEnabledMarshaller;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\ManageConfigNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
@@ -52,10 +51,6 @@ class AuthorizationService
     private $oidcngMarshaller;
 
     /**
-     * @var OidcCreateEntityEnabledMarshaller
-     */
-    private $oidcCreateEntityEnabledMarshaller;
-    /**
      * @var Config[]
      */
     private $manageConfig;
@@ -65,8 +60,7 @@ class AuthorizationService
         Session $session,
         TokenStorageInterface $tokenStorage,
         Config $manageTestConfig,
-        Config $manageProdConfig,
-        OidcCreateEntityEnabledMarshaller $oidcCreateEntityEnabledMarshaller
+        Config $manageProdConfig
     ) {
         $this->serviceService = $serviceService;
         $this->session = $session;
@@ -77,7 +71,6 @@ class AuthorizationService
             'production' => $manageProdConfig,
         ];
         $this->oidcngMarshaller = new OidcngEnabledMarshaller();
-        $this->oidcCreateEntityEnabledMarshaller = $oidcCreateEntityEnabledMarshaller;
     }
 
     /**
@@ -318,13 +311,5 @@ class AuthorizationService
             $service,
             $this->manageConfig[$environment]->getOidcngEnabled()->isEnabled()
         );
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOidcCreateEntityAllowed()
-    {
-        return $this->oidcCreateEntityEnabledMarshaller->allowed();
     }
 }
