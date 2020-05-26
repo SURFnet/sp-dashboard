@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -29,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
@@ -138,71 +136,6 @@ class EntityTypeFactoryTest extends MockeryTestCase
 
         $form = $this->factory->createCreateForm(
             Entity::TYPE_SAML,
-            $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            $this->entity
-        );
-
-        $this->assertInstanceOf(FormType::class, $form);
-    }
-
-
-    public function test_build_create_new_oidc_form()
-    {
-        $this->formFactory
-            ->shouldReceive('create')
-            ->with(\Mockery::on(function ($entityType) {
-                $this->assertSame(OidcEntityType::class, $entityType);
-                return true;
-            }), \Mockery::on(function ($command) {
-                $this->assertInstanceOf(SaveOidcEntityCommand::class, $command);
-                return true;
-            }), \Mockery::on(function ($options) {
-                $this->assertSame([
-                    'validation_groups' => [
-                        0 => 'Default',
-                        1 => 'production',
-                    ],
-                ], $options);
-                return true;
-            }))
-            ->once()
-            ->andReturn($this->form);
-
-        $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT,
-            $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            null
-        );
-
-        $this->assertInstanceOf(FormType::class, $form);
-    }
-
-    public function test_build_create_new_oidc_form_from_entity()
-    {
-        $this->formFactory
-            ->shouldReceive('create')
-            ->with(\Mockery::on(function ($entityType) {
-                $this->assertSame(OidcEntityType::class, $entityType);
-                return true;
-            }), \Mockery::on(function ($command) {
-                $this->assertInstanceOf(SaveOidcEntityCommand::class, $command);
-                return true;
-            }), \Mockery::on(function ($options) {
-                $this->assertSame([
-                    'validation_groups' => [
-                        0 => 'Default',
-                        1 => 'production',
-                    ],
-                ], $options);
-                return true;
-            }))
-            ->once()
-            ->andReturn($this->form);
-
-        $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT,
             $this->service,
             Entity::ENVIRONMENT_PRODUCTION,
             $this->entity

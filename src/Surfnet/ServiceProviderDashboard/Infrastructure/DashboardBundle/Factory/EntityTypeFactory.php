@@ -18,14 +18,12 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory;
 
 use InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\EntityTypeInterface;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
@@ -56,13 +54,6 @@ class EntityTypeFactory
     public function createCreateForm($type, Service $service, $environment, Entity $entity = null)
     {
         switch (true) {
-            case ($type == Entity::TYPE_OPENID_CONNECT):
-                $command = SaveOidcEntityCommand::forCreateAction($service);
-                if ($entity) {
-                    $command = SaveOidcEntityCommand::fromEntity($entity);
-                }
-                $command->setEnvironment($environment);
-                return $this->formFactory->create(OidcEntityType::class, $command, $this->buildOptions($environment));
             case ($type == Entity::TYPE_SAML):
                 $command = SaveSamlEntityCommand::forCreateAction($service);
                 if ($entity) {
@@ -104,10 +95,6 @@ class EntityTypeFactory
     public function createEditForm(Entity $entity)
     {
         switch (true) {
-            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
-                $command = SaveOidcEntityCommand::fromEntity($entity);
-                $command->setEnvironment($entity->getEnvironment());
-                return $this->formFactory->create(OidcEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
             case ($entity->getProtocol() == Entity::TYPE_SAML):
                 $command = SaveSamlEntityCommand::fromEntity($entity);
                 $command->setEnvironment($entity->getEnvironment());
