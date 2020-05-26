@@ -378,6 +378,12 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
 
+    surfnet.manage.publish_service:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+            - '@surfnet.manage.client.publish_client.prod_environment'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
