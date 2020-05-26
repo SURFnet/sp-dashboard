@@ -383,7 +383,7 @@ services:
         - '@surfnet.manage.http.http_client.prod_environment'
 
     surfnet.manage.query_service:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\MangeQueryService
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
