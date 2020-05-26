@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntit
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
@@ -160,6 +161,9 @@ trait EntityControllerTrait
 
         try {
             $this->commandBus->handle($publishEntityCommand);
+            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+                $this->commandBus->handle(new PushMetadataCommand(Entity::ENVIRONMENT_TEST));
+            }
         } catch (Exception $e) {
             $flashBag->add('error', 'entity.edit.error.publish');
         }
