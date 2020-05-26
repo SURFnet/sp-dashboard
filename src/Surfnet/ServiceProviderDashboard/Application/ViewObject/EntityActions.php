@@ -88,6 +88,9 @@ class EntityActions
      */
     public function allowEditAction()
     {
+        if ($this->isOidc()) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_DRAFT;
     }
 
@@ -96,6 +99,9 @@ class EntityActions
      */
     public function allowCopyAction()
     {
+        if ($this->isOidc()) {
+            return false;
+        }
         $isPublishedTestEntity = ($this->status == DomainEntity::STATE_PUBLISHED
             && $this->environment == DomainEntity::ENVIRONMENT_TEST);
 
@@ -107,16 +113,25 @@ class EntityActions
 
     public function allowCopyToProductionAction()
     {
+        if ($this->isOidc()) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
     }
 
     public function allowCloneAction()
     {
+        if ($this->isOidc()) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION;
     }
 
     public function allowDeleteAction()
     {
+        if ($this->isOidc()) {
+            return false;
+        }
         return !$this->isDeleteRequested();
     }
 
@@ -125,6 +140,9 @@ class EntityActions
      */
     public function allowAclAction()
     {
+        if ($this->isOidc()) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_PUBLISHED &&
             $this->environment == DomainEntity::ENVIRONMENT_TEST &&
             $this->protocol !== DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
@@ -135,15 +153,21 @@ class EntityActions
      */
     public function allowSecretResetAction()
     {
+        if ($this->isOidc()) {
+            return false;
+        }
         $protocol = $this->protocol;
         $status = $this->status;
-        $meetsProtocolRequirement = $protocol == DomainEntity::TYPE_OPENID_CONNECT ||
-            $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG ||
+        $meetsProtocolRequirement = $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG ||
             $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
         $meetsPublicationStatusRequirement = ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
 
+    private function isOidc()
+    {
+        return $this->protocol === DomainEntity::TYPE_OPENID_CONNECT;
+    }
 
     public function isPublishedToProduction()
     {

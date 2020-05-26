@@ -140,6 +140,12 @@ trait EntityControllerTrait
      */
     private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
     {
+        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
+            throw $this->createAccessDeniedException(
+                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
+            );
+        }
+
         switch ($entity->getEnvironment()) {
             case Entity::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity->getId());

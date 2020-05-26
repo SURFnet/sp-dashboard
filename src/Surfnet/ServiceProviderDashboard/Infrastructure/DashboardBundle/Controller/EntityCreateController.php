@@ -147,7 +147,7 @@ class EntityCreateController extends Controller
 
         if ($type === Entity::TYPE_OPENID_CONNECT) {
             throw $this->createAccessDeniedException(
-                'OIDC entities have been made read only'
+                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
             );
         }
 
