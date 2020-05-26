@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
 
-class MangeQueryService
+class ManageQueryService
 {
     private $validEnvironments = ['test', 'production'];
 

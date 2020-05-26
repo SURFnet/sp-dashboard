@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCo
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityIdValidator;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\MangeQueryService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
@@ -38,7 +38,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     private $repository;
 
     /**
-     * @var m\MockInterface&MangeQueryService
+     * @var m\MockInterface&ManageQueryService
      */
     private $queryService;
 
@@ -52,7 +52,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     {
         $this->repository = m::mock(EntityRepository::class);
 
-        $this->queryService = m::mock(MangeQueryService::class);
+        $this->queryService = m::mock(ManageQueryService::class);
 
         return new UniqueEntityIdValidator(
             $this->queryService,
