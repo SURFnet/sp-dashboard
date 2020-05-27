@@ -64,6 +64,14 @@ class ArpGenerator implements MetadataGenerator
                 if ($attr->hasMotivation()) {
                     $attributes[$urn][0]['motivation'] = $attr->getMotivation();
                 }
+
+                if ($entity->isManageEntity() && $entity->getArpAttributes()->findByUrn($urn)) {
+                    $manageAttribute = $entity->getArpAttributes()->findByUrn($urn);
+                    // If the source is set in Manage, do not overwrite the source with idp
+                    $attributes[$urn][0]['source'] = $manageAttribute->getSource();
+                    // If the filter value is set in Manage, do not overwrite it with '*' again
+                    $attributes[$urn][0]['value'] = $manageAttribute->getValue();
+                }
             }
         }
 
