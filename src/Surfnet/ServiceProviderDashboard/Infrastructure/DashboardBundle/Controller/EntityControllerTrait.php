@@ -161,14 +161,15 @@ trait EntityControllerTrait
 
         try {
             $this->commandBus->handle($publishEntityCommand);
-            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
-                $this->commandBus->handle(new PushMetadataCommand(Entity::ENVIRONMENT_TEST));
-            }
         } catch (Exception $e) {
             $flashBag->add('error', 'entity.edit.error.publish');
         }
 
         if (!$flashBag->has('error')) {
+            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+                $this->commandBus->handle(new PushMetadataCommand(Entity::ENVIRONMENT_TEST));
+            }
+
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
             // page we will be redirecting to in a moment.
             $this->get('session')->set('published.entity.clone', clone $entity);
