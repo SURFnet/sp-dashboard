@@ -128,6 +128,16 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
 
+    surfnet.dashboard.command_handler.push_metadata:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
+        arguments:
+            - '@surfnet.manage.publish_service'
+            - '@session.flash_bag'
+            - '@logger'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand }
+
     surfnet.dashboard.command_handler.update_entity_acl:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityAclCommandHandler
         arguments:
@@ -373,10 +383,16 @@ services:
         - '@surfnet.manage.http.http_client.prod_environment'
 
     surfnet.manage.query_service:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\MangeQueryService
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
+
+    surfnet.manage.publish_service:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+            - '@surfnet.manage.client.publish_client.prod_environment'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
         arguments:

@@ -22,7 +22,9 @@ use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,6 +75,11 @@ class EntityResetSecretController extends Controller
         // publish the entity
         $entity = $this->entityService->getEntityById($resetOidcSecretCommand->getId());
         $response = $this->publishEntity($entity, $flashBag);
+        if ($entity->getEnvironment() === Entity::ENVIRONMENT_PRODUCTION) {
+            // Push metadata (note that we also push to production manage upon client secret resets)
+            // https://www.pivotaltracker.com/story/show/173009970
+            $this->commandBus->handle(new PushMetadataCommand($entity->getEnvironment()));
+        }
         if ($response instanceof Response) {
             return $response;
         }

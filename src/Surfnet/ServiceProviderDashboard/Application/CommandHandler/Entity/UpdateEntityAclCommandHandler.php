@@ -27,7 +27,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UpdateEntityAclCommandHandler implements CommandHandler
@@ -86,12 +85,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         $entity->setIdpWhitelist($command->getSelected());
 
         try {
-            $publishResponse = $this->publishClient->publish($entity);
-
-            if (array_key_exists('id', $publishResponse)) {
-                $this->logger->info(sprintf('Pushing entity "%s" to engineblock', $entity->getNameNl()));
-                $this->publishClient->pushMetadata();
-            }
+            $this->publishClient->publish($entity);
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(
@@ -101,9 +95,6 @@ class UpdateEntityAclCommandHandler implements CommandHandler
                 )
             );
             $this->flashBag->add('error', 'entity.edit.error.publish');
-        } catch (PushMetadataException $e) {
-            $this->logger->error(sprintf('Pushing to Engineblock failed with message: "%s"', $e->getMessage()));
-            $this->flashBag->add('error', 'entity.edit.error.push');
         }
     }
 }

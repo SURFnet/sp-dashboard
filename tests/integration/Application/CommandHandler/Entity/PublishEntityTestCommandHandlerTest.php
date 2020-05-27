@@ -103,89 +103,27 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
 
         $this->logger
             ->shouldReceive('info')
-            ->times(2);
-
-        $this->client
-            ->shouldReceive('publish')
-            ->once()
-            ->with($entity)
-            ->andReturn([
-                'id' => 123,
-            ]);
-
-        $manageEntity = m::mock(ManageEntity::class);
-        $manageEntity
-            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
-            ->andReturn([]);
-        $manageEntity
-            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
-            ->andReturn(true);
-
-        $this->manageClient
-            ->shouldReceive('findByManageId')
-            ->andReturn($manageEntity);
-
-        $this->client
-            ->shouldReceive('pushMetadata')
-            ->once();
-
-        $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
-        $this->commandHandler->handle($command);
-    }
-
-    public function test_it_handles_failing_push()
-    {
-        $entity = m::mock(Entity::class);
-        $entity
-            ->shouldReceive('getNameNl')
-            ->andReturn('Test Entity Name')
-            ->shouldReceive('getManageId')
-            ->shouldReceive('getProtocol')
-            ->shouldReceive('setIdpAllowAll')
-            ->shouldReceive('setIdpWhitelistRaw')
-            ->andReturn(Entity::TYPE_SAML);
-
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
-
-        $manageEntity = m::mock(ManageEntity::class);
-        $manageEntity
-            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
-            ->andReturn([]);
-        $manageEntity
-            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
-            ->andReturn(true);
-
-        $this->manageClient
-            ->shouldReceive('findByManageId')
-            ->andReturn($manageEntity);
-
-        $this->logger
-            ->shouldReceive('info')
-            ->times(2);
-
-        $this->client
-            ->shouldReceive('publish')
-            ->once()
-            ->with($entity)
-            ->andReturn([
-                'id' => 123,
-            ]);
-
-        $this->client
-            ->shouldReceive('pushMetadata')
-            ->once()
-            ->andThrow(PushMetadataException::class);
-
-        $this->logger
-            ->shouldReceive('error')
             ->times(1);
 
-        $this->flashBag
-            ->shouldReceive('add')
-            ->with('error', 'entity.edit.error.push');
+        $this->client
+            ->shouldReceive('publish')
+            ->once()
+            ->with($entity)
+            ->andReturn([
+                'id' => 123,
+            ]);
+
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+            ->andReturn([]);
+        $manageEntity
+            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+            ->andReturn(true);
+
+        $this->manageClient
+            ->shouldReceive('findByManageId')
+            ->andReturn($manageEntity);
 
         $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
         $this->commandHandler->handle($command);
