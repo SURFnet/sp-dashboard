@@ -51,18 +51,26 @@ class EntityActions
     private $protocol;
 
     /**
+     * @var bool
+     */
+    private $readOnly;
+
+    /**
      * @param string $id
      * @param int $serviceId
      * @param string $status
      * @param string $environment
+     * @param string $protocol
+     * @param bool $isReadOnly
      */
-    public function __construct($id, $serviceId, $status, $environment, $protocol)
+    public function __construct($id, $serviceId, $status, $environment, $protocol, $isReadOnly)
     {
         $this->id = $id;
         $this->serviceId = $serviceId;
         $this->status = $status;
         $this->environment = $environment;
         $this->protocol = $protocol;
+        $this->readOnly = $isReadOnly;
     }
 
     public function getId()
@@ -88,7 +96,7 @@ class EntityActions
      */
     public function allowEditAction()
     {
-        if ($this->isOidc()) {
+        if ($this->readOnly) {
             return false;
         }
         return $this->status == DomainEntity::STATE_DRAFT;
@@ -99,7 +107,7 @@ class EntityActions
      */
     public function allowCopyAction()
     {
-        if ($this->isOidc()) {
+        if ($this->readOnly) {
             return false;
         }
         $isPublishedTestEntity = ($this->status == DomainEntity::STATE_PUBLISHED
@@ -113,7 +121,7 @@ class EntityActions
 
     public function allowCopyToProductionAction()
     {
-        if ($this->isOidc()) {
+        if ($this->readOnly) {
             return false;
         }
         return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
@@ -121,7 +129,7 @@ class EntityActions
 
     public function allowCloneAction()
     {
-        if ($this->isOidc()) {
+        if ($this->readOnly) {
             return false;
         }
         return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION;
@@ -129,7 +137,7 @@ class EntityActions
 
     public function allowDeleteAction()
     {
-        if ($this->isOidc()) {
+        if ($this->readOnly) {
             return false;
         }
         return !$this->isDeleteRequested();
@@ -140,7 +148,7 @@ class EntityActions
      */
     public function allowAclAction()
     {
-        if ($this->isOidc()) {
+        if ($this->readOnly) {
             return false;
         }
         return $this->status == DomainEntity::STATE_PUBLISHED &&
@@ -153,7 +161,7 @@ class EntityActions
      */
     public function allowSecretResetAction()
     {
-        if ($this->isOidc()) {
+        if ($this->readOnly) {
             return false;
         }
         $protocol = $this->protocol;
@@ -162,11 +170,6 @@ class EntityActions
             $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
         $meetsPublicationStatusRequirement = ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
-    }
-
-    private function isOidc()
-    {
-        return $this->protocol === DomainEntity::TYPE_OPENID_CONNECT;
     }
 
     public function isPublishedToProduction()

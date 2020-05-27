@@ -1618,4 +1618,9 @@ class Entity
     {
         $this->oidcngResourceServers = $resourceServers;
     }
+
+    public function isReadOnly()
+    {
+        return $this->protocol === self::TYPE_OPENID_CONNECT;
+    }
 }

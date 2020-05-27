@@ -82,7 +82,9 @@ class Entity
      * @param string $state
      * @param string $environment
      * @param string $protocol
+     * @param bool $isReadOnly
      * @param RouterInterface $router
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $id,
@@ -93,6 +95,7 @@ class Entity
         $state,
         $environment,
         $protocol,
+        $isReadOnly,
         RouterInterface $router
     ) {
         $this->id = $id;
@@ -103,7 +106,7 @@ class Entity
         $this->environment = $environment;
         $this->protocol = $protocol;
         $this->router = $router;
-        $this->actions = new EntityActions($id, $serviceId, $state, $environment, $protocol);
+        $this->actions = new EntityActions($id, $serviceId, $state, $environment, $protocol, $isReadOnly);
     }
 
     public static function fromEntity(DomainEntity $entity, RouterInterface $router)
@@ -125,6 +128,7 @@ class Entity
             $entity->getStatus(),
             $entity->getEnvironment(),
             $entity->getProtocol(),
+            $entity->isReadOnly(),
             $router
         );
     }
@@ -138,7 +142,7 @@ class Entity
     public static function fromManageTestResult(ManageEntity $result, RouterInterface $router, $serviceId)
     {
         $formattedContact = self::formatManageContact($result);
-
+        $protocol = $result->getProtocol()->getProtocol();
         return new self(
             $result->getId(),
             $result->getMetaData()->getEntityId(),
@@ -147,7 +151,8 @@ class Entity
             $formattedContact,
             $result->getStatus(),
             'test',
-            $result->getProtocol()->getProtocol(),
+            $protocol,
+            $protocol === DomainEntity::TYPE_OPENID_CONNECT,
             $router
         );
     }
@@ -171,7 +176,7 @@ class Entity
         if ($excludeFromPush === 1) {
             $status = DomainEntity::STATE_PUBLICATION_REQUESTED;
         }
-
+        $protocol = $result->getProtocol()->getProtocol();
         return new self(
             $result->getId(),
             $result->getMetaData()->getEntityId(),
@@ -180,7 +185,8 @@ class Entity
             $formattedContact,
             $status,
             'production',
-            $result->getProtocol()->getProtocol(),
+            $protocol,
+            $protocol === DomainEntity::TYPE_OPENID_CONNECT,
             $router
         );
     }

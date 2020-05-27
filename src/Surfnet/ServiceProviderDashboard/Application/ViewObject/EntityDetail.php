@@ -333,7 +333,8 @@ class EntityDetail
             $entity->getService()->getId(),
             $entity->getStatus(),
             $entity->getEnvironment(),
-            $entity->getProtocol()
+            $entity->getProtocol(),
+            $entity->isReadOnly()
         );
         return $entityDetail;
     }
