@@ -68,7 +68,7 @@ class EntityEditController extends Controller
     {
         $flashBag = $this->get('session')->getFlashBag();
 
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
+        if ($entity->isReadOnly()) {
             throw $this->createAccessDeniedException(
                 'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
             );

@@ -87,7 +87,7 @@ class EntityTest extends MockeryTestCase
             ['oidc draft', $this->buildEntity('draft', 'test', 'oidc'), false, false, false, false, false],
             ['oidc published', $this->buildEntity('published', 'test', 'oidc'), false, false, false, false, false],
             ['oidc prod draft', $this->buildEntity('draft', 'production', 'oidc'), false, false, false, false, false],
-            ['oidc prod requested', $this->buildEntity('requested', 'production', 'oidc'), false, false, false, false, false],
+            ['oidc prod published', $this->buildEntity('requested', 'production', 'oidc'), false, false, false, false, false],
             ['oidc prod published', $this->buildEntity('published', 'production', 'oidc'), false, false, false, false, false],
         ];
     }
