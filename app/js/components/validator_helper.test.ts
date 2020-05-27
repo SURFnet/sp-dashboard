@@ -26,6 +26,9 @@ describe('validation functions', () => {
       'sftp://www.sp-dashboard.com/with/path',
       'https://il legalchar.com',
       'http://##/',
+      'https:/www.sp-dashboard.com',
+      'http://foobar',
+      'http:/foobar',
     ];
     const helper = new ValidatorHelper();
 
@@ -91,5 +94,4 @@ describe('validation functions', () => {
       expect(helper.validateLoopback(illegal)).toBeFalsy();
     }
   });
-
 });
