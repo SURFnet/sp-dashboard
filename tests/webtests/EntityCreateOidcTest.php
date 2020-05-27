@@ -42,6 +42,6 @@ class EntityCreateOidcTest extends WebTestCase
         $crawler = $this->client->request('GET', "/entity/create/2/oidc/test");
         $pageTitle = $crawler->filter('h1.break-long-words')->first()->text();
         $this->assertEquals("OIDC enitty have been made read-only. Use OIDC TNG entities instead.", $pageTitle);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 }

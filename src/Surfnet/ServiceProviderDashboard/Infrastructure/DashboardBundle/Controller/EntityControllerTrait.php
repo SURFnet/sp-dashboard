@@ -141,7 +141,7 @@ trait EntityControllerTrait
     private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
     {
         if ($entity->isReadOnly()) {
-            throw $this->createAccessDeniedException(
+            throw $this->createNotFoundException(
                 'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
             );
         }
