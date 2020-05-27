@@ -57,7 +57,7 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
     }
 
-    public function test_does_not_override_existing_manage_attributes()
+    public function test_does_not_override_existing_manage_attributes_and_sources()
     {
         /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
@@ -83,10 +83,22 @@ class ArpGeneratorTest extends MockeryTestCase
 
         $this->assertCount(4, $metadata['attributes']);
 
+        // Verify the attribues are present, and have the correct source. When source was modified in manage, it should
+        // not be overwritten back to 'idp'. The same applies for the filter value of the ARP attribute
+        // See https://www.pivotaltracker.com/story/show/173030675
+
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:displayName']);
+        $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['source']);
+        $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['value']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
+        $this->assertEquals('voot', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
+        $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['value']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-1']);
+        $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:manage-1'][0]['source']);
+        $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:manage-1'][0]['value']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-2']);
+        $this->assertEquals('sab', $metadata['attributes']['urn:mace:dir:attribute-def:manage-2'][0]['source']);
+        $this->assertEquals('/^foobar(.*)$/i', $metadata['attributes']['urn:mace:dir:attribute-def:manage-2'][0]['value']);
     }
 
     public function test_adds_epti_for_oidcng_entities()
@@ -114,12 +126,14 @@ class ArpGeneratorTest extends MockeryTestCase
 
     private function getManageEntity()
     {
+        $manageEntity = m::mock(ManageEntity::class);
         $manageAttributes = [
-            $this->buildManageAttribute('urn:mace:dir:attribute-def:manage-1'),
-            $this->buildManageAttribute('urn:mace:dir:attribute-def:manage-2'),
+            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:cn', 'voot', '*'),
+            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*'),
+            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-1', 'idp', '*'),
+            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-2', 'sab', '/^foobar(.*)$/i'),
         ];
 
-        $manageEntity = m::mock(ManageEntity::class);
         $manageEntity
             ->shouldReceive('getAttributes->getAttributes')
             ->andReturn($manageAttributes);
@@ -127,17 +141,19 @@ class ArpGeneratorTest extends MockeryTestCase
         return $manageEntity;
     }
 
-    private function buildManageAttribute(string $attributeName)
+    private function buildManageAttribute(ManageEntity $manageEntity, string $attributeName, string $source, string $value)
     {
         $attribute = m::mock(ManageAttribute::class);
         $attribute->shouldReceive('getName')
             ->andReturn($attributeName);
         $attribute->shouldReceive('getSource')
-            ->andReturn('idp');
+            ->andReturn($source);
         $attribute->shouldReceive('getValue')
-            ->andReturn('The Manage attr value');
+            ->andReturn($value);
         $attribute->shouldReceive('getMotivation')
             ->andReturn('The Manage motivation');
+
+        $manageEntity->shouldReceive('getAttributes->findByUrn')->with($attributeName)->andReturn($attribute);
         return $attribute;
     }
 }
