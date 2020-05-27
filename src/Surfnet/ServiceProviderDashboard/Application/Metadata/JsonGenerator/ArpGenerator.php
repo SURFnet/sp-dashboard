@@ -64,18 +64,11 @@ class ArpGenerator implements MetadataGenerator
                 if ($attr->hasMotivation()) {
                     $attributes[$urn][0]['motivation'] = $attr->getMotivation();
                 }
-
-                if ($entity->isManageEntity() && $entity->getArpAttributes()->findByUrn($urn)) {
-                    $manageAttribute = $entity->getArpAttributes()->findByUrn($urn);
-                    // If the source is set in Manage, do not overwrite the source with idp
-                    $attributes[$urn][0]['source'] = $manageAttribute->getSource();
-                    // If the filter value is set in Manage, do not overwrite it with '*' again
-                    $attributes[$urn][0]['value'] = $manageAttribute->getValue();
-                }
+                $this->mergeWithManageAttributes($attributes, $urn, $entity);
             }
         }
 
-        $this->addExtraFields($attributes, $entity);
+        $this->addManageOnlyAttributes($attributes, $entity);
 
         return [
             'attributes' => $attributes,
@@ -83,7 +76,7 @@ class ArpGenerator implements MetadataGenerator
         ];
     }
 
-    private function addExtraFields(array &$attributes, MetadataConversionDto $entity)
+    private function addManageOnlyAttributes(array &$attributes, MetadataConversionDto $entity)
     {
         if ($entity->isManageEntity()) {
             // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
@@ -112,6 +105,22 @@ class ArpGenerator implements MetadataGenerator
                     'motivation' => 'OIDC requires EduPersonTargetedID by default',
                 ]
             ];
+        }
+    }
+
+    /**
+     * Preserves Manage attribute data, which would otherwise be reset to '*' and 'idp'
+     *
+     * @param array $attributes
+     * @param string $urn
+     * @param MetadataConversionDto $entity
+     */
+    private function mergeWithManageAttributes(array &$attributes, $urn, MetadataConversionDto $entity)
+    {
+        if ($entity->isManageEntity() && $entity->getArpAttributes()->findByUrn($urn)) {
+            $manageAttribute = $entity->getArpAttributes()->findByUrn($urn);
+            $attributes[$urn][0]['source'] = $manageAttribute->getSource();
+            $attributes[$urn][0]['value'] = $manageAttribute->getValue();
         }
     }
 }
