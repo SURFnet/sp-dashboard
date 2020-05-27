@@ -1,3 +1,8 @@
+## 2.5.4
+**Feature**
+* Do not overwrite the source & value from an attribute if set in Manage #356
+* Push metadata to production after secret reset #355
+
 ## 2.5.3
 **Bugfix**
 * Remove excessive OIDCng RS ARP attribute translations #349
