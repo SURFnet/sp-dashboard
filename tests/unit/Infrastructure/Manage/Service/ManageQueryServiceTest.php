@@ -23,7 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\MangeQueryService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService;
 
 class ManageQueryServiceTest extends MockeryTestCase
 {
@@ -41,7 +41,7 @@ class ManageQueryServiceTest extends MockeryTestCase
     {
         $this->testClient = m::mock(QueryClient::class);
         $this->productionClient = m::mock(QueryClient::class);
-        $this->queryService = new MangeQueryService($this->testClient, $this->productionClient);
+        $this->queryService = new ManageQueryService($this->testClient, $this->productionClient);
     }
 
     public function test_calling_find_method_on_service_on_test_client()

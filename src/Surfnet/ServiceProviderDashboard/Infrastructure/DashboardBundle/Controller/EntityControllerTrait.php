@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntit
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
@@ -165,6 +166,10 @@ trait EntityControllerTrait
         }
 
         if (!$flashBag->has('error')) {
+            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+                $this->commandBus->handle(new PushMetadataCommand(Entity::ENVIRONMENT_TEST));
+            }
+
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
             // page we will be redirecting to in a moment.
             $this->get('session')->set('published.entity.clone', clone $entity);

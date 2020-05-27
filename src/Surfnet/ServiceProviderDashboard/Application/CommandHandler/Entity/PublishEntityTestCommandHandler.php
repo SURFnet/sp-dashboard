@@ -27,7 +27,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityTestCommandHandler implements CommandHandler
@@ -86,9 +85,6 @@ class PublishEntityTestCommandHandler implements CommandHandler
             $publishResponse = $this->publishClient->publish($entity);
 
             if (array_key_exists('id', $publishResponse)) {
-                $this->logger->info(sprintf('Pushing entity "%s" to engineblock', $entity->getNameNl()));
-                $this->publishClient->pushMetadata();
-
                 if ($this->isNewResourceServer($entity)) {
                     $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
                 }
@@ -102,9 +98,6 @@ class PublishEntityTestCommandHandler implements CommandHandler
                 )
             );
             $this->flashBag->add('error', 'entity.edit.error.publish');
-        } catch (PushMetadataException $e) {
-            $this->logger->error(sprintf('Pushing to Engineblock failed with message: "%s"', $e->getMessage()));
-            $this->flashBag->add('error', 'entity.edit.error.push');
         }
     }
 
