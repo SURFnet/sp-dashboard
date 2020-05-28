@@ -189,11 +189,6 @@ class EntityDetail
     private $scopedAffiliationAttribute;
 
     /**
-     * @var Attribute
-     */
-    private $eduPersonTargetedIDAttribute;
-
-    /**
      * @var string
      */
     private $nameIdFormat;
@@ -315,7 +310,6 @@ class EntityDetail
         $entityDetail->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
         $entityDetail->personalCodeAttribute = $entity->getPersonalCodeAttribute();
         $entityDetail->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
-        $entityDetail->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
         $entityDetail->nameIdFormat = $entity->getNameIdFormat();
         $entityDetail->organizationNameNl = $entity->getOrganizationNameNl();
         $entityDetail->organizationNameEn = $entity->getOrganizationNameEn();
@@ -568,14 +562,6 @@ class EntityDetail
     public function getScopedAffiliationAttribute()
     {
         return $this->scopedAffiliationAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getEduPersonTargetedIDAttribute()
-    {
-        return $this->eduPersonTargetedIDAttribute;
     }
 
     /**

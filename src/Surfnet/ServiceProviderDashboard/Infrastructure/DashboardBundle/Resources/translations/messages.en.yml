@@ -105,7 +105,6 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-        edu_person_targetted_id: Edu person targeted ID attribute
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
@@ -123,7 +122,6 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-        edu_person_targetted_id: Edu person targeted ID attribute
       oidcng:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
@@ -141,7 +139,6 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-        edu_person_targetted_id: Edu person targeted ID attribute
 entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
@@ -408,7 +405,6 @@ entity.edit.information.oidcng.uidAttribute: Text should be set in web translati
 entity.edit.information.oidcng.preferredLanguageAttribute: Text should be set in web translations
 entity.edit.information.oidcng.personalCodeAttribute: Text should be set in web translations
 entity.edit.information.oidcng.scopedAffiliationAttribute: Text should be set in web translations
-entity.edit.information.oidcng.eduPersonTargetedIDAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
 entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.information.subjectType: Text should be set in web translations
