@@ -17,6 +17,7 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
@@ -41,12 +42,28 @@ class EntityOidcConfirmation
     /**
      * @param string $entityId
      * @param string $clientSecret
+     * @param string $protocol
+     * @throws InvalidArgumentException
      */
     public function __construct(
         $entityId,
         $clientSecret,
         $protocol
     ) {
+        $supportedProtocols = [
+            DomainEntity::TYPE_OPENID_CONNECT,
+            DomainEntity::TYPE_OPENID_CONNECT_TNG,
+            DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+        ];
+
+        if (!in_array($protocol, $supportedProtocols)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Only use the EntityOidcConfirmation for one of these protocols %s',
+                    implode(', ', $supportedProtocols)
+                )
+            );
+        }
         $this->entityId = $entityId;
         $this->clientSecret = $clientSecret;
         $this->protocol = $protocol;
@@ -66,7 +83,9 @@ class EntityOidcConfirmation
      */
     public function getEntityId()
     {
-        if ($this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG) {
+        $isOidcng = $this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG ||
+            $this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        if ($isOidcng) {
             return OidcngClientIdParser::parse($this->entityId);
         }
 
