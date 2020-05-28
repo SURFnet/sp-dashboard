@@ -13,15 +13,22 @@ describe('validation functions', () => {
     const allowedUrls: string[] = [
       'https://www.sp-dashboard.com',
       'http://www.sp-dashboard.com',
+      'http://www.sp-dashboard.com/with/path',
       'https://www.sp-dashboard.com/with/path',
-      'git://www.sp-dashboard.com/with/path',
-      'ftp://www.sp-dashboard.com/with/path',
-      'sftp://www.sp-dashboard.com/with/path',
     ];
     const illegalUrls: string[] = [
       'httpd://inorrect.protocol.com',
       'httpd:/invalid-protocol.com',
       'https://localhost',
+      'https://185.258.148.45',
+      'git://www.sp-dashboard.com/with/path',
+      'ftp://www.sp-dashboard.com/with/path',
+      'sftp://www.sp-dashboard.com/with/path',
+      'https://il legalchar.com',
+      'http://##/',
+      'https:/www.sp-dashboard.com',
+      'http://foobar',
+      'http:/foobar',
     ];
     const helper = new ValidatorHelper();
 
@@ -87,5 +94,4 @@ describe('validation functions', () => {
       expect(helper.validateLoopback(illegal)).toBeFalsy();
     }
   });
-
 });
