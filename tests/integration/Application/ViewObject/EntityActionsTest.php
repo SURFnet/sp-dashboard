@@ -26,7 +26,7 @@ class EntityActionsTest extends TestCase
 {
     public function test_it_hides_idp_whitlist_option_for_oidcng_resource_server()
     {
-        $actions = new EntityActions('manage-id', 1, Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_TEST, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+        $actions = new EntityActions('manage-id', 1, Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_TEST, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER, false);
         $this->assertFalse($actions->allowAclAction());
     }
 
@@ -40,7 +40,7 @@ class EntityActionsTest extends TestCase
      */
     public function test_oidc_entities_can_reset_client_secret($expectation, $protocol, $publicationStatus, $description)
     {
-        $actions = new EntityActions('manage-id', 1, $publicationStatus, Entity::ENVIRONMENT_TEST, $protocol);
+        $actions = new EntityActions('manage-id', 1, $publicationStatus, Entity::ENVIRONMENT_TEST, $protocol, false);
 
         $this->assertEquals($expectation, $actions->allowSecretResetAction(), $description);
     }
@@ -48,11 +48,11 @@ class EntityActionsTest extends TestCase
     public static function resetClientOptions()
     {
         return [
-            [true, Entity::TYPE_OPENID_CONNECT, Entity::STATE_PUBLISHED, 'Published OIDC entity should have reset option'],
+            [false, Entity::TYPE_OPENID_CONNECT, Entity::STATE_PUBLISHED, 'Published OIDC entity should have reset option'],
             [true, Entity::TYPE_OPENID_CONNECT_TNG, Entity::STATE_PUBLISHED, 'Published OIDC TNG entity should have reset option'],
             [true, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER, Entity::STATE_PUBLISHED, 'Published OIDC Resource Server TNG entity should have reset option'],
 
-            [true, Entity::TYPE_OPENID_CONNECT, Entity::STATE_PUBLICATION_REQUESTED, 'Request for publication OIDC entity should have reset option'],
+            [false, Entity::TYPE_OPENID_CONNECT, Entity::STATE_PUBLICATION_REQUESTED, 'Request for publication OIDC entity should have reset option'],
             [true, Entity::TYPE_OPENID_CONNECT_TNG, Entity::STATE_PUBLICATION_REQUESTED, 'Request for publication OIDC TNG entity should have reset option'],
             [true, Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER, Entity::STATE_PUBLISHED, 'Request for publication OIDC Resource Server TNG entity should have reset option'],
 
@@ -61,5 +61,16 @@ class EntityActionsTest extends TestCase
             [false, Entity::TYPE_OPENID_CONNECT, Entity::STATE_DRAFT, 'Draft OIDC entities do not perform client resets'],
             [false, Entity::TYPE_OPENID_CONNECT, Entity::STATE_REMOVAL_REQUESTED, 'Removed (requested) entities do not perform client resets'],
         ];
+    }
+
+    public function test_read_only_restricts_cud_actions()
+    {
+        $actions = new EntityActions('manage-id', 1, Entity::STATE_DRAFT, Entity::ENVIRONMENT_TEST, Entity::TYPE_OPENID_CONNECT, true);
+        $this->assertFalse($actions->allowEditAction());
+        $this->assertFalse($actions->allowDeleteAction());
+        $this->assertFalse($actions->allowAclAction());
+        $this->assertFalse($actions->allowCopyAction());
+        $this->assertFalse($actions->allowCopyToProductionAction());
+        $this->assertFalse($actions->allowSecretResetAction());
     }
 }

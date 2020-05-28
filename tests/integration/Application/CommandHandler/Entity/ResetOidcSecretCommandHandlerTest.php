@@ -141,7 +141,7 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
         $entity->setService($command->getService());
         $entity->setStatus($status);
         $entity->setEnvironment($entity);
-        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
 
 
         $this->loadEntityService

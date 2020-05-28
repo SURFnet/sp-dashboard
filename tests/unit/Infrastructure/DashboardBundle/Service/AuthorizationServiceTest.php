@@ -24,7 +24,6 @@ use Mockery\MockInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Service\OidcCreateEntityEnabledMarshaller;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\ManageConfigNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
@@ -52,10 +51,6 @@ class AuthorizationServiceTest extends MockeryTestCase
      * @var MockInterface&Config
      */
     private $manageConfigProd;
-    /**
-     * @var MockInterface&OidcCreateEntityEnabledMarshaller
-     */
-    private $marshaller;
 
     public function setUp()
     {
@@ -65,15 +60,12 @@ class AuthorizationServiceTest extends MockeryTestCase
         $this->manageConfigTest = m::mock(Config::class);
         $this->manageConfigProd = m::mock(Config::class);
 
-        $this->marshaller = m::mock(OidcCreateEntityEnabledMarshaller::class);
-
         $this->service = new AuthorizationService(
             $this->serviceService,
             $this->session,
             $this->tokenStorage,
             $this->manageConfigTest,
-            $this->manageConfigProd,
-            $this->marshaller
+            $this->manageConfigProd
         );
     }
 
@@ -189,21 +181,5 @@ class AuthorizationServiceTest extends MockeryTestCase
         $this->expectException(ManageConfigNotFoundException::class);
         $this->expectExceptionMessage('The manage configuration for environment "mumbojumbo" can not be found.');
         $this->service->isOidcngAllowed(m::mock(Service::class), 'mumbojumbo');
-    }
-
-    public function test_oidc_create_entity_allowed()
-    {
-        $this->marshaller
-            ->shouldReceive('allowed')
-            ->once()
-            ->andReturn(false);
-        $this->assertFalse($this->service->isOidcCreateEntityAllowed());
-
-        $this->marshaller
-            ->shouldReceive('allowed')
-            ->once()
-            ->andReturn(true);
-
-        $this->assertTrue($this->service->isOidcCreateEntityAllowed());
     }
 }

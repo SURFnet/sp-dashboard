@@ -51,18 +51,26 @@ class EntityActions
     private $protocol;
 
     /**
+     * @var bool
+     */
+    private $readOnly;
+
+    /**
      * @param string $id
      * @param int $serviceId
      * @param string $status
      * @param string $environment
+     * @param string $protocol
+     * @param bool $isReadOnly
      */
-    public function __construct($id, $serviceId, $status, $environment, $protocol)
+    public function __construct($id, $serviceId, $status, $environment, $protocol, $isReadOnly)
     {
         $this->id = $id;
         $this->serviceId = $serviceId;
         $this->status = $status;
         $this->environment = $environment;
         $this->protocol = $protocol;
+        $this->readOnly = $isReadOnly;
     }
 
     public function getId()
@@ -88,6 +96,9 @@ class EntityActions
      */
     public function allowEditAction()
     {
+        if ($this->readOnly) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_DRAFT;
     }
 
@@ -96,6 +107,9 @@ class EntityActions
      */
     public function allowCopyAction()
     {
+        if ($this->readOnly) {
+            return false;
+        }
         $isPublishedTestEntity = ($this->status == DomainEntity::STATE_PUBLISHED
             && $this->environment == DomainEntity::ENVIRONMENT_TEST);
 
@@ -107,16 +121,25 @@ class EntityActions
 
     public function allowCopyToProductionAction()
     {
+        if ($this->readOnly) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
     }
 
     public function allowCloneAction()
     {
+        if ($this->readOnly) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION;
     }
 
     public function allowDeleteAction()
     {
+        if ($this->readOnly) {
+            return false;
+        }
         return !$this->isDeleteRequested();
     }
 
@@ -125,6 +148,9 @@ class EntityActions
      */
     public function allowAclAction()
     {
+        if ($this->readOnly) {
+            return false;
+        }
         return $this->status == DomainEntity::STATE_PUBLISHED &&
             $this->environment == DomainEntity::ENVIRONMENT_TEST &&
             $this->protocol !== DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
@@ -135,15 +161,16 @@ class EntityActions
      */
     public function allowSecretResetAction()
     {
+        if ($this->readOnly) {
+            return false;
+        }
         $protocol = $this->protocol;
         $status = $this->status;
-        $meetsProtocolRequirement = $protocol == DomainEntity::TYPE_OPENID_CONNECT ||
-            $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG ||
+        $meetsProtocolRequirement = $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG ||
             $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
         $meetsPublicationStatusRequirement = ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
-
 
     public function isPublishedToProduction()
     {

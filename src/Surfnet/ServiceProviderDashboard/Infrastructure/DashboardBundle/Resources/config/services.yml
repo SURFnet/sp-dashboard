@@ -61,12 +61,6 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand }
 
-    surfnet.dashboard.command_handler.edit_oidc_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand }
-
     surfnet.dashboard.command_handler.edit_oidcng_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngEntityCommandHandler
         public: true
@@ -490,6 +484,3 @@ services:
             - '@surfnet.manage.client.query_client.prod_environment'
             - '%manage_test_publication_status%'
             - '%manage_prod_publication_status%'
-
-    Surfnet\ServiceProviderDashboard\Domain\Service\OidcCreateEntityEnabledMarshaller:
-        arguments: ['%oidc_create_enabled%']
