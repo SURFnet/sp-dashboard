@@ -75,7 +75,7 @@ class EntityResetSecretController extends Controller
         // publish the entity
         $entity = $this->entityService->getEntityById($resetOidcSecretCommand->getId());
         $response = $this->publishEntity($entity, $flashBag);
-        if ($entity->getEnvironment() === Entity::ENVIRONMENT_PRODUCTION) {
+        if ($entity->getEnvironment() === Entity::ENVIRONMENT_PRODUCTION && !$manageEntity->isExcludedFromPush()) {
             // Push metadata (note that we also push to production manage upon client secret resets)
             // https://www.pivotaltracker.com/story/show/173009970
             $this->commandBus->handle(new PushMetadataCommand($entity->getEnvironment()));
