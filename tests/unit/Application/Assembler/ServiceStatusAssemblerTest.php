@@ -22,11 +22,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Surfnet\ServiceProviderDashboard\Application\Assembler\ServiceStatusAssembler;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Routing\RouterInterface;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity as EntityViewObject;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ServiceStatusAssemblerTest extends MockeryTestCase

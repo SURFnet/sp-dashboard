@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCopyTest extends WebTestCase
 {

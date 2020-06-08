@@ -20,14 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Provider;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery\Mock;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
-use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
-use Symfony\Component\Routing\RouterInterface;
 
 class EntityQueryRepositoryProviderTest extends MockeryTestCase
 {

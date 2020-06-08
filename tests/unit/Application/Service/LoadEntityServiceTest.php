@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
-use League\Tactician\CommandBus;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;

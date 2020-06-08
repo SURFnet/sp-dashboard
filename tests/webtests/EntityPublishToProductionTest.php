@@ -19,14 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
-use Psr\Http\Message\MessageInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\SupplierRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityPublishToProductionTest extends WebTestCase

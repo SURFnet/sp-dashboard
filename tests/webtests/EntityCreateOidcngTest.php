@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCreateOidcngTest extends WebTestCase

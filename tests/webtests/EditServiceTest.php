@@ -19,8 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EditServiceTest extends WebTestCase
 {

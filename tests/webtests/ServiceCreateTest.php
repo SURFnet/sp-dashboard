@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Ramsey\Uuid\Uuid;
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceCreateTest extends WebTestCase
