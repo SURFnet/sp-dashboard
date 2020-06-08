@@ -199,7 +199,9 @@ class ServiceController extends Controller
             $service->getIntakeStatus(),
             $service->getContractSigned(),
             $service->getSurfconextRepresentativeApproved(),
-            $this->serviceStatusService->hasPrivacyQuestions($service)
+            $this->serviceStatusService->hasPrivacyQuestions($service),
+            $service->getInstitutionGuid(),
+            $service->getInstitutionId()
         );
 
         $form = $this->createForm(EditServiceType::class, $command);
