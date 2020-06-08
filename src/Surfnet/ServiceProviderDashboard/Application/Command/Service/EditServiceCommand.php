@@ -89,6 +89,17 @@ class EditServiceCommand implements Command
     private $privacyQuestionsAnswered;
 
     /**
+     * @var string
+     */
+    private $institutionId;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $institutionGuid;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      *
      * @param int $id
@@ -103,6 +114,8 @@ class EditServiceCommand implements Command
      * @param string $contractSigned
      * @param string $surfconextRepresentativeApproved
      * @param string $privacyQuestionsAnswered
+     * @param string $institutionGuid
+     * @param string $institutionId
      */
     public function __construct(
         $id,
@@ -116,7 +129,9 @@ class EditServiceCommand implements Command
         $intakeStatus,
         $contractSigned,
         $surfconextRepresentativeApproved,
-        $privacyQuestionsAnswered
+        $privacyQuestionsAnswered,
+        $institutionGuid,
+        $institutionId
     ) {
         $this->id = $id;
         $this->guid = $guid;
@@ -130,8 +145,9 @@ class EditServiceCommand implements Command
         $this->contractSigned = $contractSigned;
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
+        $this->institutionGuid = $institutionGuid;
+        $this->institutionId = $institutionId;
     }
-
 
     /**
      * @param string $guid
@@ -228,6 +244,23 @@ class EditServiceCommand implements Command
     {
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
     }
+
+    /**
+     * @param string $institutionId
+     */
+    public function setInstitutionId($institutionId)
+    {
+        $this->institutionId = $institutionId;
+    }
+
+    /**
+     * @param string $institutionGuid
+     */
+    public function setInstitutionGuid($institutionGuid)
+    {
+        $this->institutionGuid = $institutionGuid;
+    }
+
     /**
      * @return string
      */
@@ -322,5 +355,21 @@ class EditServiceCommand implements Command
     public function isOidcngEnabled()
     {
         return $this->oidcngEnabled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInstitutionId()
+    {
+        return $this->institutionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInstitutionGuid()
+    {
+        return $this->institutionGuid;
     }
 }
