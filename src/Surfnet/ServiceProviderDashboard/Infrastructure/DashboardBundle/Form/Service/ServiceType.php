@@ -46,6 +46,8 @@ class ServiceType extends AbstractType
                     ]
                 )
                     ->add('name')
+                    ->add('institutionId', TextType::class, [ 'required' => false])
+                    ->add('institutionGuid', TextType::class, [ 'required' => true])
                     ->add('teamName', null, ['label' => 'team identifier'])
                     ->add(
                         'productionEntitiesEnabled',
