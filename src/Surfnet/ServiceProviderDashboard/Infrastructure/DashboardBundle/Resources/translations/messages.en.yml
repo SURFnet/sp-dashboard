@@ -504,6 +504,8 @@ service.form.label.representative_approved_yes: Yes
 service.form.label.service_type: Type of service
 service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
+service.form.label.institution_id: Institute ID
+service.form.label.institution_guid:  Institute GUID
 service.admin_overview.title: Service overview
 service.overview.title: My services
 service.overview.action.entityList: Detailed entities overview
