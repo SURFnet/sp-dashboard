@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -137,11 +138,11 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      *  - In addition to a test publish; the coin:exclude_from_push attribute is passed with value 1
      *  - A jira ticket is created to inform the service desk of the pending publication request
      *
-     * @param PublishEntityProductionCommand $command
+     * @param PublishProductionCommandInterface $command
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(PublishEntityProductionCommand $command)
+    public function handle(PublishProductionCommandInterface $command)
     {
         $entity = $this->repository->findById($command->getId());
         $issue = null;
@@ -157,8 +158,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                 $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
                 // Save changes made to entity
                 $this->repository->save($entity);
-
-                $issue = $this->createJiraTicket($entity, $command);
+                // No need to create a Jira ticket when resetting the client secret
+                if ($command instanceof PublishEntityProductionCommand) {
+                    $issue = $this->createJiraTicket($entity, $command);
+                }
             } else {
                 $this->logger->error(
                     sprintf(
