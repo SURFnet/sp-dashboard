@@ -1,0 +1,29 @@
+name: Build docker container for the SP Dashboard
+
+
+on:
+  push:
+    branches: [ feature/docker ]
+  pull_request:
+    branches: [ feature/docker ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Check out the repo
+      uses: actions/checkout@v2
+
+    - name: Push to GitHub Packages
+      uses: docker/build-push-action@v1
+      with:
+        dockerfile: docker/php-fpm/Dockerfile
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: docker.pkg.github.com
+        repository: surfnet/sp-dashboard/spdashboard
+        tag_with_ref: true
+
