@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\UnexpectedResultException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
@@ -136,6 +137,9 @@ class QueryClient implements QueryEntityRepository
             if (empty($data)) {
                 return null;
             }
+
+            $this->loadDetailedResourceServers($data);
+
             return ManageEntity::fromApiResponse($data);
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
@@ -220,6 +224,28 @@ class QueryClient implements QueryEntityRepository
         }
     }
 
+    private function findByEntityId($entityId, $state)
+    {
+        // Query manage to get the internal id of every SP entity with given team ID.
+        $params = [
+            'entityid' => $entityId,
+            'state' => $state
+        ];
+
+        $searchResults = $this->client->post(
+            json_encode($params),
+            sprintf('/manage/api/internal/search/oidc10_rp')
+        );
+
+        $count = count($searchResults);
+        if ($count != 1) {
+            throw new UnexpectedResultException(sprintf('Expected one search result, found %s results', $count));
+        }
+
+        $searchResult = reset($searchResults);
+        return $this->findByManageId($searchResult['_id']);
+    }
+
     /**
      * Search for both oidc and saml entities.
      *
@@ -238,5 +264,22 @@ class QueryClient implements QueryEntityRepository
             $results = array_merge($response, $results);
         }
         return $results;
+    }
+
+    private function loadDetailedResourceServers(array &$data)
+    {
+        // When loading OIDCng entities, we also want details of the connected resource servers
+        $manageProtocol = isset($data['type']) ? $data['type'] : '';
+        $isResourceServer = (isset($data['data']['metaDataFields']['isResourceServer']) &&
+            $data['data']['metaDataFields']['isResourceServer']);
+
+        if ($manageProtocol === Protocol::OIDC10_RP && !$isResourceServer) {
+            $resourceServers = [];
+            $rs = isset($data['data']['allowedResourceServers']) ? $data['data']['allowedResourceServers'] : [];
+            foreach ($rs as $resourceServer) {
+                $resourceServers[] = $this->findByEntityId($resourceServer['name'], $data['data']['state']);
+            }
+            $data['resourceServers'] = $resourceServers;
+        }
     }
 }

@@ -506,7 +506,6 @@ JSON
             ->with('manageid')
             ->andReturn($manageDto);
 
-
         $entity = $this->copyService->load(
             'dashboardid',
             'manageid',
@@ -589,6 +588,11 @@ JSON
                     "id": "88888888-0000-9999-1111-777777777777",
                     "version": 2,
                     "type": "oidc10_rp",
+                    "resourceServers": [{
+                        "name": "foobar.com"
+                    }, {
+                        "name": "another-resource-server.com"
+                    }],
                     "data": {
                         "arp": {
                             "attributes": {
