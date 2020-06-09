@@ -61,7 +61,7 @@
     {% if entity.protocol == "oidcng" %}
     <div class="fieldset card">
         <h2>{{ 'entity.detail.metadata.resource_servers'|trans }}</h2>
-        {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.resource_servers'|trans, value: entity.resourceServers, informationPopup: 'entity.edit.information.resourceServers'} %}
+        {% include '@Dashboard/EntityDetail/detailResourceServersField.html.twig' with {label: 'entity.detail.metadata.resource_servers'|trans, value: entity.resourceServers, entity: entity, informationPopup: 'entity.edit.information.resourceServers'} %}
     </div>
     {% endif %}
 
