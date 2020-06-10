@@ -4,6 +4,7 @@ class ServiceForm {
   private $toggle: JQuery;
   private $contractSignedContainer: JQuery;
   private $repApprovedContainer: JQuery;
+  private $institutionIdContainer: JQuery;
 
   /**
    * @param $toggle The container with radio buttons to toggle on
@@ -14,10 +15,12 @@ class ServiceForm {
     $toggle: JQuery,
     $contractSignedContainer: JQuery,
     $repApprovedContainer: JQuery,
+    $institutionIdContainer: JQuery,
   ) {
     this.$toggle = $toggle;
     this.$contractSignedContainer = $contractSignedContainer;
     this.$repApprovedContainer = $repApprovedContainer;
+    this.$institutionIdContainer = $institutionIdContainer;
   }
 
   /**
@@ -37,10 +40,12 @@ class ServiceForm {
       const serviceTypeValue = this.$toggle.find(':checked').val();
       if (serviceTypeValue === 'institute') {
         this.showElement(this.$repApprovedContainer.parent());
+        this.showElement(this.$institutionIdContainer.parent());
         this.hideElement(this.$contractSignedContainer.parent());
       } else {
         this.showElement(this.$contractSignedContainer.parent());
         this.hideElement(this.$repApprovedContainer.parent());
+        this.hideElement(this.$institutionIdContainer.parent());
       }
     };
 
@@ -76,6 +81,7 @@ export function loadServiceForm() {
       $('.contract-signed-toggle'),
       $('.contract-signed-container'),
       $('.representative-signed-container'),
+      $('.institution-id-container'),
     );
     serviceForm.registerEventHandlers();
   }

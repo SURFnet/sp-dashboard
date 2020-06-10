@@ -1,18 +1,27 @@
 <form name="dashboard_bundle_service_type" method="post" novalidate="novalidate" data-parsley-validate=""
       class="service-form">
-
     <div class="row">
         <div class="fieldset card">
             <h2>General</h2>
-
             <div id="dashboard_bundle_service_type_general">
                 <div class="form-row"><label for="dashboard_bundle_service_type_general_name"
                                              class="required">Name</label>
                     <p class="parsley-errors"></p>
                     <input type="text" id="dashboard_bundle_service_type_general_name"
                            name="dashboard_bundle_service_type[general][name]" required="required"/></div>
-                <div class="form-row"><label for="dashboard_bundle_service_type_general_teamName" class="required">Team
-                    name</label>
+                <div class="form-row"><label for="dashboard_bundle_service_type_general_institutionId">Institution
+                    ID</label>
+                    <p class="parsley-errors"></p>
+                    <input type="text" id="dashboard_bundle_service_type_general_institutionId"
+                           name="dashboard_bundle_service_type[general][institutionId]"
+                           class="institution-id-container"/></div>
+                <div class="form-row"><label for="dashboard_bundle_service_type_general_institutionGuid"
+                                             class="required">Institution GUID</label>
+                    <p class="parsley-errors"></p>
+                    <input type="text" id="dashboard_bundle_service_type_general_institutionGuid"
+                           name="dashboard_bundle_service_type[general][institutionGuid]" required="required"/></div>
+                <div class="form-row"><label for="dashboard_bundle_service_type_general_teamName" class="required">team
+                    identifier</label>
                     <p class="parsley-errors"></p>
                     <input type="text" id="dashboard_bundle_service_type_general_teamName"
                            name="dashboard_bundle_service_type[general][teamName]" required="required"/></div>
@@ -20,13 +29,22 @@
                     entities enabled</label>
                     <p class="parsley-errors"></p>
                     <input type="checkbox" id="dashboard_bundle_service_type_general_productionEntitiesEnabled"
-                           name="dashboard_bundle_service_type[general][productionEntitiesEnabled]" value="1"/></div>
+                           name="dashboard_bundle_service_type[general][productionEntitiesEnabled]" value="1"/>
+                </div>
                 <div class="form-row"><label for="dashboard_bundle_service_type_general_privacyQuestionsEnabled">Privacy
                     questions enabled</label>
                     <p class="parsley-errors"></p>
                     <input type="checkbox" id="dashboard_bundle_service_type_general_privacyQuestionsEnabled"
                            name="dashboard_bundle_service_type[general][privacyQuestionsEnabled]"
-                           class="privacy-questions-toggle" value="1" checked="checked"/></div>
+                           class="privacy-questions-toggle" value="1" checked="checked"/>
+                </div>
+                <div class="form-row"><label for="dashboard_bundle_service_type_general_oidcngEnabled">Oidcng
+                    enabled</label>
+                    <p class="parsley-errors"></p>
+                    <input type="checkbox" id="dashboard_bundle_service_type_general_oidcngEnabled"
+                           name="dashboard_bundle_service_type[general][oidcngEnabled]" class="privacy-questions-toggle"
+                           value="1"/>
+                </div>
                 <div class="form-row"><label for="dashboard_bundle_service_type_general_guid" class="required">CRM
                     ID</label>
                     <p class="parsley-errors"></p>
@@ -134,36 +152,6 @@
                             </div>
                             <label for="dashboard_bundle_service_type_serviceStatus_surfconextRepresentativeApproved_1"
                                    class="required">Yes</label></div>
-                    </div>
-                </div>
-                <div class="form-row"><label class="required">Connection status</label>
-                    <p class="parsley-errors"></p>
-                    <div id="dashboard_bundle_service_type_serviceStatus_connectionStatus"
-                         class="service-status-container">
-                        <div class="radio-container">
-                            <div class="input-container">
-                                <input type="radio" id="dashboard_bundle_service_type_serviceStatus_connectionStatus_0"
-                                       name="dashboard_bundle_service_type[serviceStatus][connectionStatus]"
-                                       required="required" value="not-requested" checked="checked"/>
-                            </div>
-                            <label for="dashboard_bundle_service_type_serviceStatus_connectionStatus_0"
-                                   class="required">Not requested</label></div>
-                        <div class="radio-container">
-                            <div class="input-container">
-                                <input type="radio" id="dashboard_bundle_service_type_serviceStatus_connectionStatus_1"
-                                       name="dashboard_bundle_service_type[serviceStatus][connectionStatus]"
-                                       required="required" value="requested"/>
-                            </div>
-                            <label for="dashboard_bundle_service_type_serviceStatus_connectionStatus_1"
-                                   class="required">Requested</label></div>
-                        <div class="radio-container">
-                            <div class="input-container">
-                                <input type="radio" id="dashboard_bundle_service_type_serviceStatus_connectionStatus_3"
-                                       name="dashboard_bundle_service_type[serviceStatus][connectionStatus]"
-                                       required="required" value="active"/>
-                            </div>
-                            <label for="dashboard_bundle_service_type_serviceStatus_connectionStatus_3"
-                                   class="required">Active</label></div>
                     </div>
                 </div>
             </div>

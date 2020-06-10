@@ -27,6 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(
  *     repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository"
  * )
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Service
 {
@@ -151,6 +152,20 @@ class Service
      * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service", cascade={"remove"}, orphanRemoval=true)
      */
     private $privacyQuestions;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=true)
+     */
+    private $institutionId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=true)
+     */
+    private $institutionGuid;
 
     public function __construct()
     {
@@ -381,5 +396,31 @@ class Service
     public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
+    }
+
+    public function getInstitutionGuid()
+    {
+        return $this->institutionGuid;
+    }
+
+    public function getInstitutionId()
+    {
+        return $this->institutionId;
+    }
+
+    /**
+     * @param string $institutionId
+     */
+    public function setInstitutionId($institutionId)
+    {
+        $this->institutionId = $institutionId;
+    }
+
+    /**
+     * @param string $institutionGuid
+     */
+    public function setInstitutionGuid($institutionGuid)
+    {
+        $this->institutionGuid = $institutionGuid;
     }
 }

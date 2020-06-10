@@ -70,6 +70,8 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setIntakeStatus($service->getIntakeStatus());
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
         $command->setContractSigned($service->getContractSigned());
+        $command->setInstitutionId($service->getInstitutionId());
+        $command->setInstitutionGuid($service->getInstitutionGuid());
 
         $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
@@ -78,12 +80,12 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
      * @group CommandHandler
      */
     public function test_it_rejects_non_unique_create_service_command()
     {
+        $this->expectExceptionMessage("This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66");
+        $this->expectException(InvalidArgumentException::class);
         $command = new CreateServiceCommand();
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
