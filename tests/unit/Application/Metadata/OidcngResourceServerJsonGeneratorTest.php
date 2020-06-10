@@ -27,7 +27,6 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashbo
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
 {

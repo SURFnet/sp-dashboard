@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\ViewObject;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
 use Symfony\Component\Routing\RouterInterface;
 

@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityAclTest extends WebTestCase
 {

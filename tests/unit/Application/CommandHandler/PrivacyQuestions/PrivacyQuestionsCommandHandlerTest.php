@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\CommandHandler
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\PrivacyQuestions\PrivacyQuestionsCommandHandler;
