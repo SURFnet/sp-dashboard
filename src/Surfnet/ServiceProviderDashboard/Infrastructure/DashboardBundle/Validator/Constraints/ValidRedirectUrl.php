@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2020 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
-use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Url;
 
 /**
  * @Annotation
  */
-class UniqueRedirectUrls extends Constraint
+class ValidRedirectUrl extends Url
 {
     /**
      * @return string
      */
     public function validatedBy()
     {
-        return 'unique_redirect_urls';
+        return 'valid_redirect_url';
     }
 }

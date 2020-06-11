@@ -280,6 +280,10 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: unique_redirect_urls }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidRedirectUrlValidator:
+        tags:
+            - { name: validator.constraint_validator, alias: valid_redirect_url }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator:
         tags:
             - { name: validator.constraint_validator, alias: metadata_url }
