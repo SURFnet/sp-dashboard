@@ -15,6 +15,17 @@ describe('validation functions', () => {
       'http://www.sp-dashboard.com',
       'http://www.sp-dashboard.com/with/path',
       'https://www.sp-dashboard.com/with/path',
+      'https://www.sp-dashboard.com/with/path?query=param',
+      'https://www.sp-dashboard.com/with/path#fragment',
+      // Reverse redirect urls are allowed
+      'nl.foobar.portal://https:7777/bar/foo',
+      'nl.foobar.portal://https',
+      'nl.foobar.portal://http',
+      'nl.portal://custom',
+      'nl.foobar.portal://custom/bar/foo',
+      'nl.foobar.portal://https:7777/bar/foo?query=param',
+      'nl.foobar.portal://https:7777/bar/foo?query=param&second=param',
+      'nl.foobar.portal://https:7777/bar/foo#fragment',
     ];
     const illegalUrls: string[] = [
       'httpd://inorrect.protocol.com',

@@ -90,7 +90,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * )
      * @Assert\All({
      *     @Assert\NotBlank(),
-     *     @Assert\Url(),
+     *     @SpDashboardAssert\ValidRedirectUrl()
      * })
      * @SpDashboardAssert\UniqueRedirectUrls()
      */

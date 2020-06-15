@@ -120,7 +120,7 @@ window.Parsley.addValidator('uri', function (value, requirement) {
     return helper.validateEmpty(value) || helper.validateUrl(value) || helper.validateUrn(value)
 }, 32).addMessage('en', 'uri', 'This value should be a valid URL or URN.');
 
-window.Parsley.addValidator('redirecturis', {
+window.Parsley.addValidator('redirecturis-set', {
     validateString: function(value, requirement, instance) {
         let count  = 0;
         instance.$element.closest('.collection-widget').find('input').each(function (idx, value) {
@@ -134,6 +134,18 @@ window.Parsley.addValidator('redirecturis', {
     },
     messages: {
         en: 'At least one redirecturi must be set.',
+    }
+}, 32);
+
+window.Parsley.addValidator('redirecturis-valid', {
+    validateString: function(value, requirement, instance) {
+        let items = instance.$element.closest('.collection-widget').find('input');
+        console.log(items, value);
+        let helper = new ValidatorHelper();
+        return helper.validateUrl(value) || helper.validateLoopback(value) || helper.validateReverseDns(value)
+    },
+    messages: {
+        en: 'Invalid redirect URI provided.',
     }
 }, 32);
 

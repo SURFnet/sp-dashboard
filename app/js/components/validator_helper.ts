@@ -11,14 +11,21 @@ export class ValidatorHelper {
    * - The url should be valid according to the JS parser (which doesn't take much)
    * - Localhost is not allowed in this validator. The validateLoopback will verify this as valid
    * - Url's can not be IP addresses
+   * - Reverse redirect urls are allowed (swapped protocol & hostname)
    */
   public validateUrl(value: string): boolean {
+    let rawUrlValue = value;
     try {
-      const url = new URL(value);
+      const isReverseRedirectUrl = this.isReverseUrl(rawUrlValue);
+      let url: URL;
+      if (isReverseRedirectUrl) {
+        rawUrlValue = this.flipProtocol(rawUrlValue);
+      }
+      url = new URL(rawUrlValue);
       const isIp = this.isIp(url.host);
       const isLocalhost = url.host === 'localhost';
-      // console.log(value, isIp, this.invalidProtocol(value), this.missingTld(url), isLocalhost);
-      return !(isIp || this.invalidProtocol(value) || this.missingTld(url) || isLocalhost);
+
+      return !(isIp || this.invalidProtocol(rawUrlValue, isReverseRedirectUrl) || this.missingTld(url) || isLocalhost);
     } catch (e) {
       return false;
     }
@@ -53,7 +60,11 @@ export class ValidatorHelper {
     }
   }
 
-  private invalidProtocol(input: string): boolean {
+  private invalidProtocol(input: string, isReverseUrl: boolean = false): boolean {
+    // Reverse Urls are allowed to have custom protocol, Rules regarding custom protocols are validated in PHP.
+    if (isReverseUrl) {
+      return false;
+    }
     const regex = /^https?:\/{2}/i;
     if (!input.match(regex)) {
       return true;
@@ -73,5 +84,33 @@ export class ValidatorHelper {
     const regexv6 = /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/;
 
     return (regexv4.test(host) || regexv6.test(host));
+  }
+
+  private isReverseUrl(url: string): boolean {
+    if (this.invalidProtocol(url)) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * This helper method is designed to turn a reverse redirect url into a validatable regular url
+   */
+  private flipProtocol(value: string): string {
+    const url = new URL(value);
+    // The hostname is provided in reverse as per https://tools.ietf.org/html/rfc8252#section-7.1
+    const reversedHost = url.protocol.replace(':', '').split('.').reverse().join('.');
+    // Store the protocol (stored in the host), removing the port if present.
+    const originalProtocol = (url.host.includes(url.port)) ? url.host.replace(`:${url.port}`, '') : url.host;
+    const protocolWithoutColon = url.protocol.replace(':', '');
+    const protocolRegex = new RegExp(`^${this.escapeRegExp(protocolWithoutColon)}`, 'gi');
+    // Overwrite the host (overwriting protocol does not work, use string replace function for that)
+    url.host = reversedHost;
+    const parsedUrl = url.toString();
+    return parsedUrl.replace(protocolRegex, originalProtocol);
+  }
+
+  private escapeRegExp(regex: string) {
+    return regex.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 }
