@@ -224,7 +224,7 @@ class QueryClient implements QueryEntityRepository
         }
     }
 
-    private function findByEntityId($entityId, $state)
+    public function findByEntityId($entityId, $state)
     {
         // Query manage to get the internal id of every SP entity with given team ID.
         $params = [

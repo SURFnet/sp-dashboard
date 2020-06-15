@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+
 interface QueryEntityRepository
 {
     /**
@@ -30,7 +32,7 @@ interface QueryEntityRepository
     /**
      * @param string $manageId
      *
-     * @return array|null
+     * @return ManageEntity|null
      */
     public function findByManageId($manageId);
 
@@ -45,7 +47,17 @@ interface QueryEntityRepository
      * @param string $teamName
      * @param string $state
      *
-     * @return array|null
+     * @return ManageEntity[]|null
      */
     public function findByTeamName($teamName, $state);
+
+    /**
+     * The entity Id or client Id for RP's should also be unique, and can be used to search a SP/RP with.
+     *
+     * @param string $entityId
+     * @param string $state
+     *
+     * @return ManageEntity|null
+     */
+    public function findByEntityId($entityId, $state);
 }
