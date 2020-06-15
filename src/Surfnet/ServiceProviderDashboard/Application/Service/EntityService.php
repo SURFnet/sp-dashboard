@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
@@ -141,7 +142,29 @@ class EntityService implements EntityServiceInterface
      */
     public function getEntityById($id)
     {
-        return $this->queryRepositoryProvider->getEntityRepository()->findById($id);
+        $entity = $this->queryRepositoryProvider->getEntityRepository()->findById($id);
+        if ($entity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+            // Load the Possibly connected resource servers
+            $resourceServers = [];
+            switch ($entity->getEnvironment()) {
+                case Entity::ENVIRONMENT_TEST:
+                    foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
+                        $resourceServers[] = $this->queryRepositoryProvider
+                            ->getManageTestQueryClient()
+                            ->findByEntityId($clientId, $this->testManageConfig->getPublicationStatus()->getStatus());
+                    }
+                    break;
+                case Entity::ENVIRONMENT_PRODUCTION:
+                    foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
+                        $resourceServers[] = $this->queryRepositoryProvider
+                            ->getManageProductionQueryClient()
+                            ->findByEntityId($clientId, $this->prodManageConfig->getPublicationStatus()->getStatus());
+                    }
+                    break;
+            }
+            $entity->setOidcngResourceServers(new ResourceServerCollection($resourceServers));
+        }
+        return $entity;
     }
 
     /**
