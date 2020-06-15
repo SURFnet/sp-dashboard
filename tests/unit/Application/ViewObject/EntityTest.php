@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\ViewObject;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -79,20 +79,26 @@ class EntityTest extends MockeryTestCase
     {
         // The expectations are in order: mayEdit, mayDelete, mayClone, mayCopy, mayCopyToProduction
         return [
-            ['test draft', $this->buildEntity('draft', 'test'), true, true, false, false, false],
-            ['test published', $this->buildEntity('published', 'test'), false, true, false, true, true],
-            ['prod draft', $this->buildEntity('draft', 'production'), true, true, false, false, false],
-            ['prod requested', $this->buildEntity('requested', 'production'), false, true, false, true, false],
-            ['prod published', $this->buildEntity('published', 'production'), false, true, true, false, false],
+            ['test draft', $this->buildEntity('draft', 'test', 'saml20'), true, true, false, false, false],
+            ['test published', $this->buildEntity('published', 'test', 'saml20'), false, true, false, true, true],
+            ['prod draft', $this->buildEntity('draft', 'production', 'saml20'), true, true, false, false, false],
+            ['prod requested', $this->buildEntity('requested', 'production', 'saml20'), false, true, false, true, false],
+            ['prod published', $this->buildEntity('published', 'production', 'saml20'), false, true, true, false, false],
+            ['oidc draft', $this->buildEntity('draft', 'test', 'oidc'), false, false, false, false, false],
+            ['oidc published', $this->buildEntity('published', 'test', 'oidc'), false, false, false, false, false],
+            ['oidc prod draft', $this->buildEntity('draft', 'production', 'oidc'), false, false, false, false, false],
+            ['oidc prod published', $this->buildEntity('requested', 'production', 'oidc'), false, false, false, false, false],
+            ['oidc prod published', $this->buildEntity('published', 'production', 'oidc'), false, false, false, false, false],
         ];
     }
 
     /**
      * @param string $state
      * @param string $env
+     * @param string $protocol
      * @return Entity
      */
-    private function buildEntity($state, $env)
+    private function buildEntity($state, $env, $protocol)
     {
         $router = m::mock(RouterInterface::class);
 
@@ -104,7 +110,8 @@ class EntityTest extends MockeryTestCase
             'John Doe',
             $state,
             $env,
-            'saml20',
+            $protocol,
+            $protocol === 'oidc' ? true : false,
             $router
         );
     }

@@ -23,15 +23,12 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Service\OidcCreateEntityEnabledMarshaller;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
 
 class ProtocolChoiceFactoryTest extends MockeryTestCase
 {
     /** @var ProtocolChoiceFactory  */
     private $protocolChoiceFactory;
-    /** @var m\MockInterface&OidcCreateEntityEnabledMarshaller */
-    private $oidcCreateEnabledMarshaller;
     /** @var m\MockInterface&Config */
     private $manageTestConfig;
     /** @var m\MockInterface&Config */
@@ -44,7 +41,6 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
      * @param array $expectation
      * @param bool $testOidcngEnabled
      * @param bool $oidcngEnabledForService
-     * @param bool $oidcEnabled
      *
      * @dataProvider provideTestVariations
      */
@@ -52,8 +48,7 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
         $testDescription,
         $expectation,
         $testOidcngEnabled,
-        $oidcngEnabledForService,
-        $oidcEnabled
+        $oidcngEnabledForService
     ) {
         $this->manageTestConfig
             ->shouldReceive('getOidcngEnabled->isEnabled')
@@ -64,10 +59,6 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
             ->shouldReceive('isOidcngEnabled')
             ->andReturn($oidcngEnabledForService);
 
-        $this->oidcCreateEnabledMarshaller
-            ->shouldReceive('allowed')
-            ->andReturn($oidcEnabled);
-
         $testOptions = $this->protocolChoiceFactory->buildOptions(Entity::ENVIRONMENT_TEST);
         $this->assertEquals($expectation, array_values($testOptions), $testDescription);
     }
@@ -77,7 +68,6 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
      * @param array $expectation
      * @param bool $productionOidcngEnabled
      * @param bool $oidcngEnabledForService
-     * @param bool $oidcEnabled
      *
      * @dataProvider provideTestVariations Note that the test generator is used, as for now behaviour is similar
      *                                     between prod and test
@@ -86,8 +76,7 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
         $testDescription,
         $expectation,
         $productionOidcngEnabled,
-        $oidcngEnabledForService,
-        $oidcEnabled
+        $oidcngEnabledForService
     ) {
         $this->manageProdConfig
             ->shouldReceive('getOidcngEnabled->isEnabled')
@@ -97,10 +86,6 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
         $this->service
             ->shouldReceive('isOidcngEnabled')
             ->andReturn($oidcngEnabledForService);
-
-        $this->oidcCreateEnabledMarshaller
-            ->shouldReceive('allowed')
-            ->andReturn($oidcEnabled);
 
         $testOptions = $this->protocolChoiceFactory->buildOptions(Entity::ENVIRONMENT_PRODUCTION);
         $this->assertEquals($expectation, array_values($testOptions), $testDescription);
@@ -113,58 +98,38 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
                 'All systems go, all options are set to true, so all options are displayed',
                 [
                     'saml20',
-                    'oidc',
                     'oidcng',
                     'oidcng_rs',
                 ],
                 true,
                 true,
-                true,
             ],
             [
-                'OIDC is disabled, all other options should be present',
-                [
-                    'saml20',
-                    'oidcng',
-                    'oidcng_rs',
-                ],
-                true,
-                true,
-                false,
-            ],
-            [
-                'OIDC & OIDCng is disabled, Only SAML should be visible',
+                'OIDCng is disabled, Only SAML should be visible',
                 [
                     'saml20',
                 ],
                 false,
                 true,
-                false,
             ],
             [
-                'OIDCng is disabled for the service, Only SAML and OIDC should be visible',
+                'OIDCng is disabled for the service, Only SAML should be visible',
                 [
                     'saml20',
-                    'oidc',
                 ],
                 true,
                 false,
-                true,
             ],
         ];
     }
 
     protected function setUp()
     {
-        $this->oidcCreateEnabledMarshaller = m::mock(OidcCreateEntityEnabledMarshaller::class);
         $this->manageTestConfig = m::mock(Config::class);
         $this->manageProdConfig = m::mock(Config::class);
-
-
         $this->protocolChoiceFactory = new ProtocolChoiceFactory(
             $this->manageTestConfig,
-            $this->manageProdConfig,
-            $this->oidcCreateEnabledMarshaller
+            $this->manageProdConfig
         );
         $this->service = m::mock(Service::class);
         $this->protocolChoiceFactory->setService($this->service);

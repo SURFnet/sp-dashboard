@@ -6,6 +6,7 @@
       - gcc-c++
       - sqlite-devel
       - ant
+      - composer
     state: present
 
 - name: Install Mailcatcher

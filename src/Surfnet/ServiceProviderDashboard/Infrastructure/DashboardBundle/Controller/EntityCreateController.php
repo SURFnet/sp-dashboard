@@ -145,9 +145,9 @@ class EntityCreateController extends Controller
 
         $service = $this->authorizationService->changeActiveService($serviceId);
 
-        if ($type === Entity::TYPE_OPENID_CONNECT && !$this->authorizationService->isOidcCreateEntityAllowed()) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to create oidc entities'
+        if ($type === Entity::TYPE_OPENID_CONNECT) {
+            throw $this->createNotFoundException(
+                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
             );
         }
 

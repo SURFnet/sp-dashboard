@@ -22,6 +22,7 @@ use Exception;
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
@@ -137,10 +138,17 @@ trait EntityControllerTrait
     /**
      * @param Entity $entity
      * @param FlashBagInterface $flashBag
+     * @param bool $isClientReset
      * @return RedirectResponse|Form
      */
-    private function publishEntity(Entity $entity, FlashBagInterface $flashBag)
+    private function publishEntity(Entity $entity, FlashBagInterface $flashBag, $isClientReset = false)
     {
+        if ($entity->isReadOnly()) {
+            throw $this->createNotFoundException(
+                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
+            );
+        }
+
         switch ($entity->getEnvironment()) {
             case Entity::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
@@ -150,6 +158,12 @@ trait EntityControllerTrait
             case Entity::ENVIRONMENT_PRODUCTION:
                 $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $applicant);
+                if ($isClientReset) {
+                    $publishEntityCommand = new PublishEntityProductionAfterClientResetCommand(
+                        $entity->getId(),
+                        $applicant
+                    );
+                }
                 $destination = 'entity_published_production';
                 break;
             default:

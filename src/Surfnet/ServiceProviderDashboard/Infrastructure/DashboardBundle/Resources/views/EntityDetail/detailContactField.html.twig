@@ -1,13 +1,13 @@
 {% if value is not empty %}
 <h3>{{ label }}</h3>
-{% if informationPopup is defined %}
-    <span title="{{ informationPopup|trans }}" class="help-button">
-        <i class="fa fa-question-circle"></i>
-    </span>
-{% endif %}
 <div class="container contact">
     {% if value.firstName is not empty %}
     <div class="detail">
+        {% if informationPopup is defined %}
+            <span data-tippy-content="{{ informationPopup|trans }}" class="help-button">
+                <i class="fa fa-question-circle"></i>
+            </span>
+        {% endif %}
         <label>{{ 'entity.detail.contact.first_name'|trans }}</label>
         <span>{{ value.firstName }}</span>
     </div>

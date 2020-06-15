@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2020 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PublishEntityProductionCommand implements PublishProductionCommandInterface, Command
+class PublishEntityProductionAfterClientResetCommand implements PublishProductionCommandInterface, Command
 {
     /**
      * @var string
@@ -37,12 +37,13 @@ class PublishEntityProductionCommand implements PublishProductionCommandInterfac
     private $applicant;
 
     /**
-     * @param string $id
+     * @param $id
+     * @param Contact $applicant
      */
-    public function __construct($id, Contact $applicatant)
+    public function __construct($id, Contact $applicant)
     {
         $this->id = $id;
-        $this->applicant = $applicatant;
+        $this->applicant = $applicant;
     }
 
     /**

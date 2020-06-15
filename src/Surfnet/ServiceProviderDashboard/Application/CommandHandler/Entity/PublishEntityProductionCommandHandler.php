@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -137,54 +138,14 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      *  - In addition to a test publish; the coin:exclude_from_push attribute is passed with value 1
      *  - A jira ticket is created to inform the service desk of the pending publication request
      *
-     * @param PublishEntityProductionCommand $command
+     * @param PublishProductionCommandInterface $command
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(PublishEntityProductionCommand $command)
+    public function handle(PublishProductionCommandInterface $command)
     {
         $entity = $this->repository->findById($command->getId());
-
-        // 1. Create the Jira ticket
-        $ticket = Ticket::fromEntity(
-            $entity,
-            $command->getApplicant(),
-            $this->issueType,
-            $this->summaryTranslationKey,
-            $this->descriptionTranslationKey
-        );
-
-        $this->logger->info(
-            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getNameEn())
-        );
-
-        try {
-            $issue = null;
-            if ($entity->getManageId()) {
-                // Before creating an issue, test if we didn't previously create this ticket (users can apply changes to
-                // requested published entities).
-                $issue = $this->ticketService->findByManageIdAndIssueType($entity->getManageId(), $this->issueType);
-            }
-            if (is_null($issue)) {
-                $issue = $this->ticketService->createIssueFrom($ticket);
-                $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
-            } else {
-                $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->getKey()));
-            }
-        } catch (Exception $e) {
-            $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
-
-            // Inform the service desk of the unavailability of Jira
-            $message = $this->mailFactory->buildJiraIssueFailedMessage($e, $entity);
-            $this->mailer->send($message);
-
-            // Customer is presented an error message with the invitation to try again at a later stage
-            $this->flashBag->add('error', 'entity.edit.error.publish');
-            // Stop execution
-            return;
-        }
-
-        // 2. On success, publish the entity to production
+        $issue = null;
         try {
             $this->logger->info(
                 sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameEn())
@@ -197,6 +158,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                 $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
                 // Save changes made to entity
                 $this->repository->save($entity);
+                // No need to create a Jira ticket when resetting the client secret
+                if ($command instanceof PublishEntityProductionCommand) {
+                    $issue = $this->createJiraTicket($entity, $command);
+                }
             } else {
                 $this->logger->error(
                     sprintf(
@@ -208,7 +173,9 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                 );
                 $this->flashBag->add('error', 'entity.edit.error.publish');
             }
-
+            if ($this->isNewResourceServer($entity)) {
+                $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+            }
             return;
         } catch (PublishMetadataException $e) {
             $this->logger->error(
@@ -219,14 +186,16 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                 )
             );
             $this->flashBag->add('error', 'entity.edit.error.publish');
-        }
+        } catch (Exception $e) {
+            $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
 
-        // 3. On failure, remove the Jira ticket that was previously created. The user must retry at a later stage
-        $this->logger->info(sprintf('Deleting Jira issue with key: %s after failed publication action', $issue->getKey()));
-        $this->ticketService->delete($issue->getKey());
+            // Inform the service desk of the unavailability of Jira
+            $message = $this->mailFactory->buildJiraIssueFailedMessage($e, $entity);
+            $this->mailer->send($message);
 
-        if ($this->isNewResourceServer($entity)) {
-            $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+            // Customer is presented an error message with the invitation to try again at a later stage
+            $this->flashBag->add('error', 'entity.edit.error.publish');
+            return;
         }
     }
 
@@ -234,5 +203,33 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     {
         $isNewEntity = empty($entity->getManageId());
         return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+    }
+
+    private function createJiraTicket(Entity $entity, PublishEntityProductionCommand $command)
+    {
+        $ticket = Ticket::fromEntity(
+            $entity,
+            $command->getApplicant(),
+            $this->issueType,
+            $this->summaryTranslationKey,
+            $this->descriptionTranslationKey
+        );
+
+        $this->logger->info(
+            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getNameEn())
+        );
+        $issue = null;
+        if ($entity->getManageId()) {
+            // Before creating an issue, test if we didn't previously create this ticket (users can apply changes to
+            // requested published entities).
+            $issue = $this->ticketService->findByManageIdAndIssueType($entity->getManageId(), $this->issueType);
+        }
+        if (is_null($issue)) {
+            $issue = $this->ticketService->createIssueFrom($ticket);
+            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
+            return $issue;
+        }
+        $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->getKey()));
+        return $issue;
     }
 }

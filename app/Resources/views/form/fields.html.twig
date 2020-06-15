@@ -1,7 +1,7 @@
 {%- block help_block -%}
     {% for attrname,attrvalue in attr %}
         {% if attrname == 'data-help' %}
-            <span title="{{ attrvalue|trans }}" class="help-button">
+            <span data-tippy-content="{{ attrvalue|trans }}" class="help-button">
                 <i class="fa fa-question-circle"></i>
             </span>
         {% endif %}
@@ -124,6 +124,7 @@
 {# A collection widget is used to add multiple redirect uris #}
 {%- block collection_widget -%}
     <div class="collection-widget" {{ block('widget_attributes') }} data-prototype="{{ form_widget(form.vars.prototype)|e }}">
+        {{ block('help_block') }}
         <ul class="collection-list">
             {%- for child in form %}
                 <li class="collection-entry">

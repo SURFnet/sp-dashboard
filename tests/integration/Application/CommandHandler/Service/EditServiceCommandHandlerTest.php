@@ -18,11 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Service;
 
-use Doctrine\ORM\EntityNotFoundException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
@@ -59,7 +59,9 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'not-applicable',
             'no',
             'no',
-            true
+            true,
+            '22dd879c-ee2f-11db-8314-0800200c9a66',
+            '123'
         );
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
@@ -88,6 +90,8 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
                 $this->assertEquals('no', $arg->getContractSigned());
                 $this->assertEquals('no', $arg->getSurfconextRepresentativeApproved());
                 $this->assertEquals('not-applicable', $arg->getIntakeStatus());
+                $this->assertEquals('123', $arg->getInstitutionId());
+                $this->assertEquals('22dd879c-ee2f-11db-8314-0800200c9a66', $arg->getInstitutionGuid());
 
                 return true;
             }))
@@ -102,12 +106,12 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
      * Its highly unlikely to happen, but this tests the event that a service was removed while someone else is
      * editing it. An EntityNotFound exception is thrown in this case.
      *
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException
-     * @expectedExceptionMessage The requested Service cannot be found
      * @group CommandHandler
      */
     public function test_it_rejects_non_existing_service()
     {
+        $this->expectExceptionMessage("The requested Service cannot be found");
+        $this->expectException(EntityNotFoundException::class);
         $command = new EditServiceCommand(
             1,
             '30dd879c-ee2f-11db-8314-0800200c9a66',
@@ -120,7 +124,9 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'not-applicable',
             'no',
             'no',
-            true
+            true,
+            '22dd879c-ee2f-11db-8314-0800200c9a66',
+            '123'
         );
 
         $this->repository->shouldReceive('findById')->andReturn(null)->once();
@@ -129,12 +135,12 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66
      * @group CommandHandler
      */
     public function test_it_rejects_non_unique_edit_service_command()
     {
+        $this->expectExceptionMessage("This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66");
+        $this->expectException(InvalidArgumentException::class);
         $command = new EditServiceCommand(
             1,
             '30dd879c-ee2f-11db-8314-0800200c9a66',
@@ -147,7 +153,9 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'not-applicable',
             'no',
             'no',
-            true
+            true,
+            '22dd879c-ee2f-11db-8314-0800200c9a66',
+            '123'
         );
 
         $mockEntity = m::mock(Service::class)->makePartial();

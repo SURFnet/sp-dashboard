@@ -13,3 +13,8 @@ openconext_monitor:
 lexik_translation_edition:
     resource: "@LexikTranslationBundle/Resources/config/routing.yml"
     prefix:   /translations
+
+nelmio_security_csp:
+    path:     /csp/report
+    defaults: { _controller: nelmio_security.csp_reporter_controller:indexAction }
+    methods:  [POST]

@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -189,11 +190,6 @@ class EntityDetail
     private $scopedAffiliationAttribute;
 
     /**
-     * @var Attribute
-     */
-    private $eduPersonTargetedIDAttribute;
-
-    /**
      * @var string
      */
     private $nameIdFormat;
@@ -258,6 +254,11 @@ class EntityDetail
      */
     private $isPublicClient;
 
+    /**
+     * @var ManageEntity[]|null
+     */
+    private $resourceServers = null;
+
     private function __construct()
     {
     }
@@ -285,6 +286,7 @@ class EntityDetail
             $entityDetail->accessTokenValidity = $entity->getAccessTokenValidity();
             $entityDetail->redirectUris = $entity->getRedirectUris();
             $entityDetail->playgroundEnabled = $entity->isEnablePlayground();
+            $entityDetail->resourceServers = $entity->getOidcngResourceServers()->getResourceServers();
         }
 
         $entityDetail->metadataUrl = $entity->getMetadataUrl();
@@ -315,7 +317,6 @@ class EntityDetail
         $entityDetail->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
         $entityDetail->personalCodeAttribute = $entity->getPersonalCodeAttribute();
         $entityDetail->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
-        $entityDetail->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
         $entityDetail->nameIdFormat = $entity->getNameIdFormat();
         $entityDetail->organizationNameNl = $entity->getOrganizationNameNl();
         $entityDetail->organizationNameEn = $entity->getOrganizationNameEn();
@@ -333,7 +334,8 @@ class EntityDetail
             $entity->getService()->getId(),
             $entity->getStatus(),
             $entity->getEnvironment(),
-            $entity->getProtocol()
+            $entity->getProtocol(),
+            $entity->isReadOnly()
         );
         return $entityDetail;
     }
@@ -571,14 +573,6 @@ class EntityDetail
     }
 
     /**
-     * @return Attribute
-     */
-    public function getEduPersonTargetedIDAttribute()
-    {
-        return $this->eduPersonTargetedIDAttribute;
-    }
-
-    /**
      * @return string
      */
     public function getNameIdFormat()
@@ -696,5 +690,13 @@ class EntityDetail
     public function isPublicClient()
     {
         return $this->isPublicClient;
+    }
+
+    /**
+     * @return ManageEntity[]|null
+     */
+    public function getResourceServers()
+    {
+        return $this->resourceServers;
     }
 }

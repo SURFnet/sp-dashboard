@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -34,11 +33,11 @@ class UniqueRedirectUrlsValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         /**
-         * @var SaveOidcngEntityCommand|SaveOidcEntityCommand $entityCommand
+         * @var SaveOidcngEntityCommand $entityCommand
          */
         $entityCommand = $this->context->getRoot()->getData();
 
-        if (!($entityCommand instanceof SaveOidcngEntityCommand || $entityCommand instanceof SaveOidcEntityCommand)) {
+        if (!$entityCommand instanceof SaveOidcngEntityCommand) {
             throw new Exception('invalid validator command exception');
         }
 

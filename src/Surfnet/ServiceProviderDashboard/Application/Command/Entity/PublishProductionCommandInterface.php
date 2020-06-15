@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2020 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,11 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Service;
+namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
-/**
- * Is the application configured to allow creation of OIDC entities
- */
-class OidcCreateEntityEnabledMarshaller
+interface PublishProductionCommandInterface
 {
-    private $isAllowed = false;
+    public function getId();
 
-    public function __construct($isAllowed)
-    {
-        $this->isAllowed = $isAllowed;
-    }
-
-    /**
-     * @return bool
-     */
-    public function allowed()
-    {
-        return $this->isAllowed;
-    }
+    public function getApplicant();
 }

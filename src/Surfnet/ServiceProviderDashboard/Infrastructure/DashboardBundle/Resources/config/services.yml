@@ -61,12 +61,6 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand }
 
-    surfnet.dashboard.command_handler.edit_oidc_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcEntityCommand }
-
     surfnet.dashboard.command_handler.edit_oidcng_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngEntityCommandHandler
         public: true
@@ -127,6 +121,17 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand }
+
+    surfnet.dashboard.command_handler.push_metadata:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
+        arguments:
+            - '@surfnet.manage.publish_service'
+            - '@session.flash_bag'
+            - '@logger'
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand }
 
     surfnet.dashboard.command_handler.push_metadata:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
@@ -285,6 +290,10 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
         tags:
             - { name: validator.constraint_validator, alias: unique_redirect_urls }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidRedirectUrlValidator:
+        tags:
+            - { name: validator.constraint_validator, alias: valid_redirect_url }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidMetadataUrlValidator:
         tags:
@@ -452,12 +461,10 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory:
         arguments:
-            - '%jira_issue_assignee%'
             - '%jira_issue_entityid_fieldname%'
             - '%jira_issue_manageid_fieldname%'
             - '%jira_issue_priority%'
             - '%jira_issue_project_key%'
-            - '%jira_issue_reporter%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory:
         arguments:
@@ -492,6 +499,3 @@ services:
             - '@surfnet.manage.client.query_client.prod_environment'
             - '%manage_test_publication_status%'
             - '%manage_prod_publication_status%'
-
-    Surfnet\ServiceProviderDashboard\Domain\Service\OidcCreateEntityEnabledMarshaller:
-        arguments: ['%oidc_create_enabled%']

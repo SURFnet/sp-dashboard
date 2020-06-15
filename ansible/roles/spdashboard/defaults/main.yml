@@ -22,9 +22,7 @@ spdashboard_nodejs_rpm_url: "https://rpm.nodesource.com/pub_11.x/el/7/x86_64/nod
 spdashboard_jira_host: https://jira-test.surfnet.nl
 spdashboard_jira_username: username
 spdashboard_jira_password: password
-spdashboard_jira_issue_assignee: sp-dashboard
 spdashboard_jira_issue_priority: Medium
-spdashboard_jira_issue_reporter: sp-dashboard
 spdashboard_jira_issue_type: spd-delete-production-entity
 spdashboard_jira_issue_type_publication_request: spd-request-production-entity
 spdashboard_jira_entityid_fieldname: customfield_12914
@@ -37,4 +35,4 @@ spdashboard_playground_uri_test: https://authz-playground.dev.support.surfconext
 spdashboard_playground_uri_prod: https://authz-playground.dev.support.surfconext.nl/redirect
 spdashboard_oidcng_playground_uri_test: https://oidc-playground.dev.support.surfconext.nl/redirect
 spdashboard_oidcng_playground_uri_prod: https://oidc-playground.dev.support.surfconext.nl/redirect
-spdashboard_oidc_create_enabled: true
+

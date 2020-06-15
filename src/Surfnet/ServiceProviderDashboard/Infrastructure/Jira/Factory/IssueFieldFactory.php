@@ -26,12 +26,6 @@ use Webmozart\Assert\Assert;
 class IssueFieldFactory
 {
     /**
-    /**
-     * @var string
-     */
-    private $assignee;
-
-    /**
      * @var string
      */
     private $entityIdFieldName;
@@ -52,34 +46,24 @@ class IssueFieldFactory
     private $projectKey;
 
     /**
-     * @var string
-     */
-    private $reporter;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param string $assignee
      * @param string $entityIdFieldName
      * @param string $manageIdFieldName
      * @param string $priority
      * @param string $projectKey
-     * @param string $reporter
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        $assignee,
         $entityIdFieldName,
         $manageIdFieldName,
         $priority,
         $projectKey,
-        $reporter,
         TranslatorInterface $translator
     ) {
-        Assert::stringNotEmpty($assignee, 'The assignee may not be empty, configure in parameters.yml');
         Assert::stringNotEmpty(
             $entityIdFieldName,
             'The entity id field name may not be empty, configure in parameters.yml'
@@ -90,14 +74,11 @@ class IssueFieldFactory
         );
         Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in parameters.yml');
         Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in parameters.yml');
-        Assert::stringNotEmpty($reporter, 'The reporter may not be empty, configure in parameters.yml');
 
-        $this->assignee = $assignee;
         $this->entityIdFieldName = $entityIdFieldName;
         $this->manageIdFieldName = $manageIdFieldName;
         $this->priority = $priority;
         $this->projectKey = $projectKey;
-        $this->reporter = $reporter;
         $this->translator = $translator;
     }
 
@@ -109,8 +90,6 @@ class IssueFieldFactory
             ->setSummary($this->translateSummary($ticket))
             ->setIssueType($ticket->getIssueType())
             ->setPriorityName($this->priority)
-            ->setAssigneeName($this->assignee)
-            ->setReporterName($this->reporter)
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
             ->addCustomField($this->manageIdFieldName, $ticket->getManageId())
         ;

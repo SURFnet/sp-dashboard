@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Ramsey\Uuid\Uuid;
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceCreateTest extends WebTestCase
@@ -39,6 +38,8 @@ class ServiceCreateTest extends WebTestCase
             'dashboard_bundle_service_type' => [
                 'general' => [
                     'guid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]
@@ -66,6 +67,8 @@ class ServiceCreateTest extends WebTestCase
             'dashboard_bundle_service_type' => [
                 'general' => [
                     'guid' => '',
+                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]
@@ -98,6 +101,8 @@ class ServiceCreateTest extends WebTestCase
             'dashboard_bundle_service_type' => [
                 'general' => [
                     'guid' => '1234abcd-146e-e711-80e8-005056956c1e',
+                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]
@@ -126,6 +131,8 @@ class ServiceCreateTest extends WebTestCase
             'dashboard_bundle_service_type' => [
                 'general' => [
                     'guid' => Uuid::uuid4(),
+                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'urn:collab:org:surf.nl',
                 ]
@@ -156,6 +163,8 @@ class ServiceCreateTest extends WebTestCase
             'dashboard_bundle_service_type' => [
                 'general' => [
                     'guid' => 'b9aaa8c4-3376-4e9d-b828-afa38cf29986',
+                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
+                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]

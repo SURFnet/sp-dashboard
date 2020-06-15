@@ -1,3 +1,34 @@
+## 2.6.0
+**Features**
+* Make OIDC entities read-only #354
+* Add institution fields to Service #362 
+* Display more detailed resource servers in client detail view #365
+* Allow reverse redirect URLs #366
+ 
+**Visual changes**
+* Make form labels normal casing #357
+* Match SPD header styling match that of IdPD #358 
+
+**Bugfix**
+* Enable content security policy #339 
+* Set missing information balloons #347
+* Only preserve the exclude-from-push flag on client secret reset #342
+* Parse OIDCng clientID correctly on secret modal #351
+* Only push when not excluded from push for client reset #361
+
+**Other changes and chores**
+* Prevent Jira ticket on prod client secret reset #364 
+* Postpone Jira publication request ticket creation #363 
+* Remove assignee and reporter from Jira config #345
+* Adjust translations #344
+* Allow loopback addresses for redirect uris #337 
+* Make secret generator url encode safe #346
+* Improve URL validation disallow use of IP address #350
+* Stop showing EPTI on detail views #353
+* Validate the privacyPolicyUrl field #352
+* Add composer to Ansible for installation #359
+* Security updates #360
+
 ## 2.5.4
 **Feature**
 * Do not overwrite the source & value from an attribute if set in Manage #356

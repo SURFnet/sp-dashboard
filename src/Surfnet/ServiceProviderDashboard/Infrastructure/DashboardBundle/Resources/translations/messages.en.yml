@@ -41,6 +41,7 @@ entity:
       grant_type: Grant type
       is_public_client: Is public client
       access_token_validity: Access token validitiy (seconds)
+      resource_servers: Connected Resource servers
       redirect_uris: Redirect URIs
       playground_enabled: Playground enabled?
       name_id_format: NameID format
@@ -105,7 +106,6 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-        edu_person_targetted_id: Edu person targeted ID attribute
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
@@ -123,7 +123,6 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-        edu_person_targetted_id: Edu person targeted ID attribute
       oidcng:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
@@ -141,7 +140,6 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-        edu_person_targetted_id: Edu person targeted ID attribute
 entity.list.title: Entities of service '%serviceName%'
 entity.list.title_no_service_selected: No service selected
 entity.list.empty: There are no entities configured
@@ -349,6 +347,7 @@ entity.edit.information.clientId: Text should be set in web translations
 entity.edit.information.redirectUris: Text should be set in web translations
 entity.edit.information.grantType: Text should be set in web translations
 entity.edit.information.accessTokenValidity: Text should be set in web translations
+entity.edit.information.resourceServers: Text should be set in web translations
 entity.edit.information.isPublicClient: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations
@@ -359,6 +358,7 @@ entity.edit.information.nameEn: Text should be set in web translations
 entity.edit.information.descriptionEn: Text should be set in web translations
 entity.edit.information.applicationUrl: Text should be set in web translations
 entity.edit.information.eulaUrl: Text should be set in web translations
+entity.edit.information.enablePlayground: Text should be set in web translations
 entity.edit.information.administrativeContact: Text should be set in web translations
 entity.edit.information.supportContact: Text should be set in web translations
 entity.edit.information.oidcngResourceServers: Text should be set in web translations
@@ -507,6 +507,8 @@ service.form.label.representative_approved_yes: Yes
 service.form.label.service_type: Type of service
 service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
+service.form.label.institution_id: Institute ID
+service.form.label.institution_guid:  Institute GUID
 service.admin_overview.title: Service overview
 service.overview.title: My services
 service.overview.action.entityList: Detailed entities overview

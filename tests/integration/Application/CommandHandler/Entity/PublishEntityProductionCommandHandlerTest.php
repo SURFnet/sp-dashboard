@@ -24,6 +24,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
@@ -252,6 +253,64 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
+    /**
+     * Publishing a client reset should not result in creating a Jira ticket. As per:
+     *
+     * https://www.pivotaltracker.com/story/show/173220529
+     */
+    public function test_it_can_publish_a_client_reset()
+    {
+        $contact = new Contact('nameid', 'name@example.org', 'display name');
+        $user = new Identity($contact);
+
+        $token = new SamlToken([]);
+        $token->setUser($user);
+
+        $entity = m::mock(Entity::class);
+        $entity
+            ->shouldReceive('getId')
+            ->andReturn('123');
+        $entity
+            ->shouldReceive('getNameEn')
+            ->andReturn('Test Entity Name');
+        $entity
+            ->shouldReceive('getEntityId')
+            ->andReturn('https://app.example.com/');
+        $entity
+            ->shouldReceive('getManageId')
+            ->andReturn('the-manage-id');
+        $entity
+            ->shouldReceive('setStatus')
+            ->with(Entity::STATE_PUBLISHED);
+        $entity
+            ->shouldReceive('getService->getConnectionStatus');
+
+        $this->repository
+            ->shouldReceive('findById')
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
+            ->andReturn($entity);
+
+        $this->repository
+            ->shouldReceive('save')
+            ->with($entity);
+
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->with($entity)
+            ->andReturn([
+                'id' => 123,
+            ]);
+
+        $this->logger
+            ->shouldReceive('info')
+            ->times(2);
+
+        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+        $command = new PublishEntityProductionAfterClientResetCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
+        $this->commandHandler->handle($command);
+    }
+
     public function test_failing_jira_ticket_creation()
     {
         $contact = new Contact('nameid', 'name@example.org', 'display name');
@@ -306,72 +365,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
 
-        $command = new PublishEntityProductionCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
-        $this->commandHandler->handle($command);
-    }
-
-    public function test_it_handles_failing_publish_and_cleans_up_ticket()
-    {
-        $entity = m::mock(Entity::class);
-        $entity
-            ->shouldReceive('getId')
-            ->andReturn('123');
-        $entity
-            ->shouldReceive('getNameEn')
-            ->andReturn('Test Entity Name');
-        $entity
-            ->shouldReceive('setStatus')
-            ->with(Entity::STATE_PUBLISHED);
-        $entity
-            ->shouldReceive('getEntityId')
-            ->andReturn('https://app.example.com/');
-        $entity
-            ->shouldReceive('getManageId')
-            ->andReturn('the-manage-id');
-
-        $issue = m::mock(Issue::class)->makePartial();
-        $issue->shouldReceive('getKey')
-            ->andReturn('CXT-999');
-
-        $this->ticketService
-            ->shouldReceive('findByManageIdAndIssueType')
-            ->andReturn(null);
-
-        $this->ticketService
-            ->shouldReceive('createIssueFrom')
-            ->andReturn($issue);
-
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
-
-        $this->repository
-            ->shouldReceive('save')
-            ->with($entity);
-
-        $this->logger
-            ->shouldReceive('info')
-            ->times(4);
-
-        $this->logger
-            ->shouldReceive('error')
-            ->times(1);
-
-        $this->publishEntityClient
-            ->shouldReceive('publish')
-            ->once()
-            ->with($entity)
-            ->andThrow(PublishMetadataException::class);
-
-        $this->flashBag
-            ->shouldReceive('add')
-            ->with('error', 'entity.edit.error.publish');
-
-        $this->ticketService
-            ->shouldReceive('delete');
-
-        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
         $command = new PublishEntityProductionCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
         $this->commandHandler->handle($command);
     }

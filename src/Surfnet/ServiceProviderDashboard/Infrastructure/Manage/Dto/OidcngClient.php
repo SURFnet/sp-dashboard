@@ -73,9 +73,7 @@ class OidcngClient implements OidcClientInterface
             ? $data['data']['metaDataFields']['isPublicClient'] : true;
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
             ? $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
-        $resourceServers = isset($data['data']['allowedResourceServers']) ? self::parseResourceServers(
-            $data['data']['allowedResourceServers']
-        ) : [];
+        $resourceServers = isset($data['resourceServers']) ? $data['resourceServers'] : [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
@@ -127,15 +125,6 @@ class OidcngClient implements OidcClientInterface
         $this->isPublicClient = $isPublicClient;
         $this->accessTokenValidity = $accessTokenValidity;
         $this->resourceServers = $resourceServers;
-    }
-
-    private static function parseResourceServers($allowedResourceServers)
-    {
-        $servers = [];
-        foreach ($allowedResourceServers as $clientId) {
-            $servers[$clientId['name']] = $clientId['name'];
-        }
-        return $servers;
     }
 
     /**
