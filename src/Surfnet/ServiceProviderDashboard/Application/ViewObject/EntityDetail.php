@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -255,7 +255,7 @@ class EntityDetail
     private $isPublicClient;
 
     /**
-     * @var string[]|null
+     * @var ManageEntity[]|null
      */
     private $resourceServers = null;
 
@@ -693,7 +693,7 @@ class EntityDetail
     }
 
     /**
-     * @return string[]|null
+     * @return ManageEntity[]|null
      */
     public function getResourceServers()
     {
