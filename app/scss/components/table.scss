@@ -9,11 +9,17 @@ table {
     th {
       color: $dark-grey;
       font-weight: bold;
-      text-transform: uppercase;
     }
 
     td, th {
       padding: 10px;
+      a {
+        text-decoration: none;
+        color: $blue;
+      }
+      i {
+        color: $dark-grey;
+      }
     }
 
     td:first-child, th:first-child {
@@ -23,6 +29,7 @@ table {
     td:last-child, th:last-child {
       padding-right: 0;
     }
+
   }
 
   thead tr {

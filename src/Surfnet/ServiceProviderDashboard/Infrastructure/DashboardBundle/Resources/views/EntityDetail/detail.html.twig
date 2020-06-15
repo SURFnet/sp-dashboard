@@ -58,6 +58,13 @@
 
     </div>
 
+    {% if entity.protocol == "oidcng" %}
+    <div class="fieldset card">
+        <h2>{{ 'entity.detail.metadata.resource_servers'|trans }}</h2>
+        {% include '@Dashboard/EntityDetail/detailResourceServersField.html.twig' with {label: 'entity.detail.metadata.resource_servers'|trans, value: entity.resourceServers, entity: entity, informationPopup: 'entity.edit.information.resourceServers'} %}
+    </div>
+    {% endif %}
+
     <div class="fieldset card">
         <h2>{{ ('entity.detail.contact.' ~ type ~ '.title')|trans }}</h2>
         <div class="wysiwyg">{{ ('entity.detail.contact.' ~ type ~ '.html')|trans|wysiwyg }}</div>

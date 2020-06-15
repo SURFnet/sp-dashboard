@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -457,6 +458,14 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $command->enablePlayground = $entity->isEnablePlayground();
         $command->resourceServers = $entity->getOidcngResourceServers()->getResourceServers();
 
+        if (is_array($command->resourceServers) && reset($command->resourceServers) instanceof ManageEntity) {
+            $servers = $entity->getOidcngResourceServers()->getResourceServers();
+            $resourceServers = [];
+            foreach ($servers as $resourceServer) {
+                $resourceServers[$resourceServer->getMetaData()->getEntityId()] = $resourceServer->getMetaData()->getEntityId();
+            }
+            $command->resourceServers = $resourceServers;
+        }
         return $command;
     }
 

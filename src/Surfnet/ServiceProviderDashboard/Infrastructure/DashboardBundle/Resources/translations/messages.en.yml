@@ -41,6 +41,7 @@ entity:
       grant_type: Grant type
       is_public_client: Is public client
       access_token_validity: Access token validitiy (seconds)
+      resource_servers: Connected Resource servers
       redirect_uris: Redirect URIs
       playground_enabled: Playground enabled?
       name_id_format: NameID format
@@ -346,6 +347,7 @@ entity.edit.information.clientId: Text should be set in web translations
 entity.edit.information.redirectUris: Text should be set in web translations
 entity.edit.information.grantType: Text should be set in web translations
 entity.edit.information.accessTokenValidity: Text should be set in web translations
+entity.edit.information.resourceServers: Text should be set in web translations
 entity.edit.information.isPublicClient: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations
