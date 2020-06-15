@@ -27,7 +27,7 @@ jobs:
         repository: surfnet/sp-dashboard/spdashboard_php-fpm
         tag_with_ref: true
 
-    - name: Push to GitHub Packages
+    - name: Build the Apache container and push to GitHub Packages
       uses: docker/build-push-action@v1
       with:
         dockerfile: docker/httpd/Dockerfile
