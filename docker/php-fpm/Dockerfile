@@ -21,6 +21,8 @@ LABEL maintainer "Bart Geesink" <bart.geesink@surfnet.nl>
 RUN apk add --no-cache libxml2-dev \
     freetype-dev && \
     docker-php-ext-install soap gd pdo_mysql && \
-    chown www-data /var/www/html/var/{cache,sessions,logs}
+    chown www-data /var/www/html/var/cache && \
+    chown www-data /var/www/html/var/logs && \
+    chown www-data /var/www/html/var/sessions
 
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
