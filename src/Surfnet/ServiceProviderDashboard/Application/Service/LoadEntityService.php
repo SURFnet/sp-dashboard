@@ -19,16 +19,13 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Webmozart\Assert\Assert;
 
@@ -38,17 +35,10 @@ class LoadEntityService
      * @var EntityRepository
      */
     private $entityRepository;
-
     /**
-     * @var ManageClient
+     * @var EntityServiceInterface
      */
-    private $manageTestClient;
-
-    /**
-     * @var ManageClient
-     */
-    private $manageProductionClient;
-
+    private $entityService;
     /**
      * @var AttributesMetadataRepository
      */
@@ -71,9 +61,8 @@ class LoadEntityService
     private $oidcngPlaygroundUriProd;
 
     /**
+     * @param EntityServiceInterface $entityService
      * @param EntityRepository $entityRepository
-     * @param ManageClient $manageTestClient
-     * @param ManageClient $manageProductionClient
      * @param AttributesMetadataRepository $attributeMetadataRepository
      * @param string $oidcPlaygroundUriTest
      * @param string $oidcPlaygroundUriProd
@@ -81,9 +70,8 @@ class LoadEntityService
      * @param string $oidcngPlaygroundUriProd
      */
     public function __construct(
+        EntityServiceInterface $entityService,
         EntityRepository $entityRepository,
-        ManageClient $manageTestClient,
-        ManageClient $manageProductionClient,
         AttributesMetadataRepository $attributeMetadataRepository,
         $oidcPlaygroundUriTest,
         $oidcPlaygroundUriProd,
@@ -95,9 +83,8 @@ class LoadEntityService
         Assert::stringNotEmpty($oidcngPlaygroundUriTest, 'Please set "oidcng_playground_uri_test" in parameters.yml');
         Assert::stringNotEmpty($oidcngPlaygroundUriProd, 'Please set "oidcng_playground_uri_prod" in parameters.yml');
 
+        $this->entityService = $entityService;
         $this->entityRepository = $entityRepository;
-        $this->manageTestClient = $manageTestClient;
-        $this->manageProductionClient = $manageProductionClient;
         $this->attributeMetadataRepository = $attributeMetadataRepository;
         $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
         $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
@@ -123,18 +110,7 @@ class LoadEntityService
             );
         }
 
-        $manageClient = $this->manageProductionClient;
-        if ($sourceEnvironment == 'test') {
-            $manageClient = $this->manageTestClient;
-        }
-
-        $manageEntity = $manageClient->findByManageId($manageId);
-
-        if (empty($manageEntity)) {
-            throw new InvalidArgumentException(
-                'Could not find entity in manage: '.$manageId
-            );
-        }
+        $manageEntity = $this->entityService->findByManageId($manageId, $sourceEnvironment);
 
         $manageTeamName = $manageEntity->getMetaData()->getCoin()->getServiceTeamId();
         $manageStagingState = $this->getManageStagingState($manageEntity->getMetaData()->getCoin());

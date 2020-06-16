@@ -20,12 +20,14 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Coin;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
@@ -37,19 +39,14 @@ class LoadEntityServiceTest extends MockeryTestCase
     private $copyService;
 
     /**
-     * @var EntityRepository|m\Mock
+     * @var EntityRepository&m\Mock
      */
     private $entityRepository;
 
     /**
-     * @var ManageClient
+     * @var EntityServiceInterface&m\Mock
      */
-    private $manageTestClient;
-
-    /**
-     * @var ManageClient
-     */
-    private $manageProdClient;
+    private $entityService;
 
     /**
      * @var AttributesMetadataRepository
@@ -71,17 +68,15 @@ class LoadEntityServiceTest extends MockeryTestCase
         parent::setUp();
 
         $this->entityRepository = m::mock(EntityRepository::class);
-        $this->manageTestClient = m::mock(ManageClient::class);
-        $this->manageProdClient = m::mock(ManageClient::class);
+        $this->entityService = m::mock(EntityServiceInterface::class);
         $this->attributesMetadataRepository = m::mock(AttributesMetadataRepository::class);
 
         $this->service = new Service();
         $this->service->setTeamName('testteam');
 
         $this->copyService = new LoadEntityService(
+            $this->entityService,
             $this->entityRepository,
-            $this->manageTestClient,
-            $this->manageProdClient,
             $this->attributesMetadataRepository,
             self::OIDC_PLAYGROUND_URL_TEST,
             self::OIDC_PLAYGROUND_URL_PROD,
@@ -90,12 +85,10 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The id that was generated for the entity was not unique
-     */
     public function test_service_works_on_new_entities_only()
     {
+        $this->expectExceptionMessage("The id that was generated for the entity was not unique");
+        $this->expectException(InvalidArgumentException::class);
         $this->entityRepository->shouldReceive('isUnique')
             ->with('dashboardid')
             ->andReturn(false);
@@ -109,19 +102,17 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Could not find entity in manage: manageid
-     */
     public function test_handler_finds_remote_entity_in_manage()
     {
+        $this->expectException(EntityNotFoundException::class);
+
         $this->entityRepository->shouldReceive('isUnique')
             ->with('dashboardid')
             ->andReturn(true);
 
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
-            ->andReturn([]);
+        $this->entityService->shouldReceive('findByManageId')
+            ->with('manageid', 'test')
+            ->andThrow(EntityNotFoundException::class);
 
         $this->copyService->load(
             'dashboardid',
@@ -132,12 +123,11 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The entity you are about to copy does not belong to the selected team
-     */
     public function test_handler_checks_access_rights_of_user()
     {
+        $this->expectExceptionMessage("The entity you are about to copy does not belong to the selected team");
+        $this->expectException(InvalidArgumentException::class);
+
         $this->entityRepository->shouldReceive('isUnique')
             ->with('dashboardid')
             ->andReturn(true);
@@ -157,8 +147,8 @@ class LoadEntityServiceTest extends MockeryTestCase
             ->shouldReceive('getExcludeFromPush')
             ->andReturn(1);
 
-        $this->manageProdClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->entityService->shouldReceive('findByManageId')
+            ->with('manageid', 'production')
             ->andReturn($manageEntity);
 
         $this->copyService->load(
@@ -223,8 +213,9 @@ class LoadEntityServiceTest extends MockeryTestCase
             ]
         ]);
 
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->entityService
+            ->shouldReceive('findByManageId')
+            ->with('manageid', 'test')
             ->andReturn($manageDto);
 
         $this->attributesMetadataRepository->shouldReceive('findAll')
@@ -326,8 +317,9 @@ JSON
             ]
         ]);
 
-        $this->manageProdClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->entityService
+            ->shouldReceive('findByManageId')
+            ->with('manageid', 'production')
             ->andReturn($manageDto);
 
         $this->attributesMetadataRepository->shouldReceive('findAll')
@@ -427,12 +419,14 @@ JSON
             ],
         ]);
 
-        $this->manageProdClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->entityService
+            ->shouldReceive('findByManageId')
+            ->with('manageid', 'production')
             ->andReturn($manageDto);
 
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->entityService
+            ->shouldReceive('findByManageId')
+            ->with('manageid', 'test')
             ->andReturn($manageDto);
 
         $entity =$this->copyService->load(
@@ -460,8 +454,9 @@ JSON
 
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
 
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->entityService
+            ->shouldReceive('findByManageId')
+            ->with('manageid', 'test')
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
@@ -485,9 +480,9 @@ JSON
 
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
 
-        $this->manageTestClient
+        $this->entityService
             ->shouldReceive('findByManageId')
-            ->with('manageid')
+            ->with('manageid', 'test')
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
@@ -500,9 +495,9 @@ JSON
 
         $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
 
-        $this->manageProdClient
+        $this->entityService
             ->shouldReceive('findByManageId')
-            ->with('manageid')
+            ->with('manageid', 'production')
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
@@ -525,8 +520,9 @@ JSON
 
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
 
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->entityService
+            ->shouldReceive('findByManageId')
+            ->with('manageid', 'test')
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
@@ -545,8 +541,10 @@ JSON
 
         // Also verify the Resource Server entity type correctly gets the schema prepend.
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRSMetadata());
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
+
+        $this->entityService
+            ->shouldReceive('findByManageId')
+            ->with('manageid', 'test')
             ->andReturn($manageDto);
         
         $entity = $this->copyService->load(
