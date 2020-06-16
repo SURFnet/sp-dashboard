@@ -22,6 +22,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
@@ -167,6 +168,31 @@ class EntityService implements EntityServiceInterface
         return $entity;
     }
 
+    public function findByManageId(string $manageId, string $environment): ManageEntity
+    {
+        switch ($environment) {
+            case 'production':
+                return $this->queryRepositoryProvider
+                    ->getManageProductionQueryClient()
+                    ->findByManageId($manageId);
+                break;
+            case 'test':
+                return $this->queryRepositoryProvider
+                    ->getManageTestQueryClient()
+                    ->findByManageId($manageId);
+                break;
+            default:
+                throw new EntityNotFoundException(
+                    sprintf(
+                        'Unable to find Manage entity identified by %s in environment %s',
+                        $manageId,
+                        $environment
+                    )
+                );
+                break;
+        }
+    }
+
     /**
      * @param string $id
      * @param string $manageTarget
@@ -178,10 +204,7 @@ class EntityService implements EntityServiceInterface
     {
         switch ($manageTarget) {
             case 'production':
-                $entity = $this->queryRepositoryProvider
-                    ->getManageProductionQueryClient()
-                    ->findByManageId($id);
-
+                $entity = $this->findByManageId($id, $manageTarget);
                 // Entities that are still excluded from push are not realy published, but have a publication request
                 // with the service desk.
                 if ($entity->getMetaData()->getCoin()->getExcludeFromPush()) {
@@ -204,10 +227,7 @@ class EntityService implements EntityServiceInterface
                 );
                 break;
             case 'test':
-                $entity = $this->queryRepositoryProvider
-                    ->getManageTestQueryClient()
-                    ->findByManageId($id);
-
+                $entity = $this->findByManageId($id, $manageTarget);
                 return Entity::fromManageResponse(
                     $entity,
                     $manageTarget,

@@ -46,6 +46,8 @@ interface EntityServiceInterface
      */
     public function getEntityById($id);
 
+    public function findByManageId(string $manageId, string $environment): ManageEntity;
+
     /**
      * @param Service $service
      * @return EntityList
