@@ -407,6 +407,7 @@ entity.edit.information.oidcng.uidAttribute: Text should be set in web translati
 entity.edit.information.oidcng.preferredLanguageAttribute: Text should be set in web translations
 entity.edit.information.oidcng.personalCodeAttribute: Text should be set in web translations
 entity.edit.information.oidcng.scopedAffiliationAttribute: Text should be set in web translations
+entity.edit.information.oidcng.eduPersonTargetedIDAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
 entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.information.subjectType: Text should be set in web translations
