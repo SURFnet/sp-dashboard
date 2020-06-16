@@ -69,4 +69,11 @@ interface EntityServiceInterface
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
      */
     public function getManageEntityById($manageId, $env = 'test');
+
+    /**
+     * @param string $id
+     * @param string $environment
+     * @return string
+     */
+    public function findManageIdByEntityId(string $id, string $environment);
 }

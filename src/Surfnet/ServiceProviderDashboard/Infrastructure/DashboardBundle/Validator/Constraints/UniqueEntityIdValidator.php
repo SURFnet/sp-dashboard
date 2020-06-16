@@ -23,17 +23,17 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityComman
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueEntityIdValidator extends ConstraintValidator
 {
     /**
-     * @var ManageQueryService
+     * @var EntityServiceInterface
      */
-    private $queryService;
+    private $entityService;
 
     /**
      * @var DoctrineRepository
@@ -41,13 +41,14 @@ class UniqueEntityIdValidator extends ConstraintValidator
     private $doctrineRepository;
 
     /**
+     * @param EntityServiceInterface $entityService
      * @param DoctrineRepository $doctrineRepository
      */
     public function __construct(
-        ManageQueryService $queryService,
+        EntityServiceInterface $entityService,
         DoctrineRepository $doctrineRepository
     ) {
-        $this->queryService = $queryService;
+        $this->entityService = $entityService;
         $this->doctrineRepository = $doctrineRepository;
     }
 
@@ -71,8 +72,12 @@ class UniqueEntityIdValidator extends ConstraintValidator
             $value = OidcngClientIdParser::parse($value);
         }
 
+        if (!$value) {
+            return;
+        }
+
         try {
-            $manageId = $this->queryService->findManageIdByEntityId($mode, $value);
+            $manageId = $this->entityService->findManageIdByEntityId($value, $mode);
         } catch (Exception $e) {
             $this->context->addViolation('validator.entity_id.registry_failure');
             return;

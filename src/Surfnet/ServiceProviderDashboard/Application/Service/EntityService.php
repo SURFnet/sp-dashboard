@@ -305,6 +305,32 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
+     * @param string $id
+     * @param string $environment
+     * @return string|null
+     * @throws InvalidArgumentException
+     * @throws QueryServiceProviderException
+     */
+    public function findManageIdByEntityId(string $id, string $environment)
+    {
+        switch ($environment) {
+            case 'production':
+                return $this->queryRepositoryProvider
+                    ->getManageProductionQueryClient()
+                    ->findManageIdByEntityId($id);
+                break;
+            case 'test':
+                return $this->queryRepositoryProvider
+                    ->getManageTestQueryClient()
+                    ->findManageIdByEntityId($id);
+                break;
+            default:
+                throw new InvalidArgumentException(sprintf('Unsupported environment %s', $environment));
+                break;
+        }
+    }
+
+    /**
      * @param int $serviceId
      * @return Entity[]
      */

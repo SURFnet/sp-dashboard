@@ -23,6 +23,7 @@ use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityIdValidator;
@@ -38,9 +39,9 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     private $repository;
 
     /**
-     * @var m\MockInterface&ManageQueryService
+     * @var m\MockInterface&EntityServiceInterface
      */
-    private $queryService;
+    private $entityService;
 
     protected function tearDown()
     {
@@ -52,10 +53,10 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     {
         $this->repository = m::mock(EntityRepository::class);
 
-        $this->queryService = m::mock(ManageQueryService::class);
+        $this->entityService = m::mock(EntityServiceInterface::class);
 
         return new UniqueEntityIdValidator(
-            $this->queryService,
+            $this->entityService,
             $this->repository
         );
     }
@@ -63,7 +64,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     public function test_success()
     {
 
-        $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andReturn(null);
+        $this->entityService->shouldReceive('test', 'findManageIdByEntityId')->andReturn(null);
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
@@ -81,7 +82,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_success_for_production()
     {
-        $this->queryService->shouldReceive('production', 'findManageIdByEntityId')->andReturn(null);
+        $this->entityService->shouldReceive('production', 'findManageIdByEntityId')->andReturn(null);
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(true);
@@ -100,7 +101,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_duplicate_entity_id()
     {
-        $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andReturn('2222222');
+        $this->entityService->shouldReceive('test', 'findManageIdByEntityId')->andReturn('2222222');
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
@@ -124,7 +125,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_duplicate_entity_id_on_production()
     {
-        $this->queryService->shouldReceive('findManageIdByEntityId')->andReturn('2222222');
+        $this->entityService->shouldReceive('findManageIdByEntityId')->andReturn('2222222');
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(true);
@@ -148,7 +149,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     public function test_oidcng_client_id_checked_without_protocol()
     {
-        $this->queryService->shouldReceive('findManageIdByEntityId')->with('test', 'sub.domain.org')->andReturn(null);
+        $this->entityService->shouldReceive('findManageIdByEntityId')->with('sub.domain.org', 'test')->andReturn(null);
 
         $entityCommand = m::mock(SaveOidcngResourceServerEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);
@@ -167,7 +168,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
     public function test_registry_exception()
     {
 
-        $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andThrow(new Exception('An exception while fetching data from manage'));
+        $this->entityService->shouldReceive('test', 'findManageIdByEntityId')->andThrow(new Exception('An exception while fetching data from manage'));
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
         $entityCommand->shouldReceive('isForProduction')->andReturn(false);

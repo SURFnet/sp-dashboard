@@ -272,7 +272,7 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityIdValidator:
         arguments:
-            - '@surfnet.manage.query_service'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
         tags:
             - { name: validator.constraint_validator, alias: unique_entity_id }
@@ -379,12 +379,6 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient
         arguments:
         - '@surfnet.manage.http.http_client.prod_environment'
-
-    surfnet.manage.query_service:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
-            - '@surfnet.manage.client.query_client.prod_environment'
 
     surfnet.manage.publish_service:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService
