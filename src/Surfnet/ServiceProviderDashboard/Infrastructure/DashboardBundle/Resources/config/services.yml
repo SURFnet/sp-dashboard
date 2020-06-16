@@ -98,7 +98,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+            - '@surfnet.manage.publish_service'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@logger'
             - '@session.flash_bag'
@@ -111,7 +111,7 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
-            - '@surfnet.manage.client.publish_client.prod_environment'
+            - '@surfnet.manage.publish_service'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@session.flash_bag'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
@@ -138,7 +138,7 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+            - '@surfnet.manage.publish_service'
             - '@logger'
             - '@session.flash_bag'
         public: true

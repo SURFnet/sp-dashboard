@@ -52,7 +52,7 @@ class ManagePublishService
      */
     public function publish($environment, Entity $entity)
     {
-        $this->getClient($environment)->publish($entity, $environment);
+        return $this->getClient($environment)->publish($entity, $environment);
     }
 
     /**

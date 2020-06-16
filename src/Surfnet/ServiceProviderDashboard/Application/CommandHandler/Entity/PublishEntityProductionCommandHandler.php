@@ -27,11 +27,11 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
@@ -51,9 +51,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $serviceRepository;
 
     /**
-     * @var PublishEntityRepository
+     * @var ManagePublishService
      */
-    private $publishClient;
+    private $managePublishService;
+
     /**
      * @var TicketService
      */
@@ -97,7 +98,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     /**
      * @param EntityRepository $entityRepository
      * @param ServiceRepository $serviceRepository
-     * @param PublishEntityRepository $publishClient
+     * @param ManagePublishService $publishService
      * @param TicketService $ticketService
      * @param FlashBagInterface $flashBag
      * @param MailMessageFactory $mailFactory
@@ -108,7 +109,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     public function __construct(
         EntityRepository $entityRepository,
         ServiceRepository $serviceRepository,
-        PublishEntityRepository $publishClient,
+        ManagePublishService $publishService,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
         MailMessageFactory $mailFactory,
@@ -119,7 +120,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_publication_request" in parameters.yml');
         $this->repository = $entityRepository;
         $this->serviceRepository = $serviceRepository;
-        $this->publishClient = $publishClient;
+        $this->managePublishService = $publishService;
         $this->ticketService = $ticketService;
         $this->mailFactory = $mailFactory;
         $this->mailer = $mailer;
@@ -150,7 +151,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->logger->info(
                 sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameEn())
             );
-            $publishResponse = $this->publishClient->publish($entity, Entity::ENVIRONMENT_PRODUCTION);
+            $publishResponse = $this->managePublishService->publish(Entity::ENVIRONMENT_PRODUCTION, $entity);
             if (array_key_exists('id', $publishResponse)) {
                 // Set entity status to published
                 $entity->setStatus(Entity::STATE_PUBLISHED);

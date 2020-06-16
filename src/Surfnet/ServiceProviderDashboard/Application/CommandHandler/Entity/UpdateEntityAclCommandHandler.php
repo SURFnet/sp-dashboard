@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UpdateEntityAclCommandHandler implements CommandHandler
@@ -37,9 +38,9 @@ class UpdateEntityAclCommandHandler implements CommandHandler
     private $entityService;
 
     /**
-     * @var PublishEntityRepository
+     * @var ManagePublishService
      */
-    private $publishClient;
+    private $publishService;
 
     /**
      * @var LoggerInterface
@@ -58,12 +59,12 @@ class UpdateEntityAclCommandHandler implements CommandHandler
     public function __construct(
         EntityService $entityService,
         ServiceRepository $serviceRepository,
-        PublishEntityRepository $publishClient,
+        ManagePublishService $publishSer,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
         $this->entityService = $entityService;
-        $this->publishClient = $publishClient;
+        $this->publishService = $publishSer;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
         $this->serviceRepository = $serviceRepository;
@@ -85,7 +86,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         $entity->setIdpWhitelist($command->getSelected());
 
         try {
-            $this->publishClient->publish($entity, Entity::ENVIRONMENT_TEST);
+            $this->publishService->publish(Entity::ENVIRONMENT_TEST, $entity);
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(

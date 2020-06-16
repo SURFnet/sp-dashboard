@@ -50,7 +50,7 @@ class ManagePublishServiceTest extends MockeryTestCase
         $entity = m::mock(Entity::class);
         $this->testClient
             ->shouldReceive('publish')
-            ->with($entity)
+            ->with($entity, 'test')
             ->once();
 
         $this->publishService

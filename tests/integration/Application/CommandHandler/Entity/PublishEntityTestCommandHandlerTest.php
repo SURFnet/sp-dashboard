@@ -26,10 +26,10 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTes
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityTestCommandHandlerTest extends MockeryTestCase
@@ -55,9 +55,9 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
     private $flashBag;
 
     /**
-     * @var PublishEntityClient
+     * @var ManagePublishService&m\Mock
      */
-    private $client;
+    private $service;
 
     /**
      * @var m\MockInterface&QueryClient
@@ -67,14 +67,14 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
     public function setUp()
     {
         $this->repository = m::mock(EntityRepository::class);
-        $this->client = m::mock(PublishEntityClient::class);
+        $this->service = m::mock(ManagePublishService::class);
         $this->manageClient = m::mock(QueryClient::class);
         $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
 
         $this->commandHandler = new PublishEntityTestCommandHandler(
             $this->repository,
-            $this->client,
+            $this->service,
             $this->manageClient,
             $this->logger,
             $this->flashBag
@@ -104,10 +104,10 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('info')
             ->times(1);
 
-        $this->client
+        $this->service
             ->shouldReceive('publish')
             ->once()
-            ->with($entity)
+            ->with('test', $entity)
             ->andReturn([
                 'id' => 123,
             ]);
@@ -165,10 +165,10 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('error')
             ->times(1);
 
-        $this->client
+        $this->service
             ->shouldReceive('publish')
             ->once()
-            ->with($entity)
+            ->with('test', $entity)
             ->andThrow(PublishMetadataException::class);
 
         $this->flashBag

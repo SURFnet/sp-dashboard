@@ -24,9 +24,9 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityTestCommandHandler implements CommandHandler
@@ -37,9 +37,9 @@ class PublishEntityTestCommandHandler implements CommandHandler
     private $repository;
 
     /**
-     * @var PublishEntityRepository
+     * @var ManagePublishService
      */
-    private $publishClient;
+    private $publishService;
 
     /**
      * @var LoggerInterface
@@ -58,13 +58,13 @@ class PublishEntityTestCommandHandler implements CommandHandler
 
     public function __construct(
         EntityRepository $entityRepository,
-        PublishEntityRepository $publishClient,
+        ManagePublishService $publishService,
         QueryClient $queryClient,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
         $this->repository = $entityRepository;
-        $this->publishClient = $publishClient;
+        $this->publishService = $publishService;
         $this->manageQueryClient = $queryClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
@@ -82,7 +82,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
         try {
             $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
 
-            $publishResponse = $this->publishClient->publish($entity, Entity::ENVIRONMENT_TEST);
+            $publishResponse = $this->publishService->publish(Entity::ENVIRONMENT_TEST, $entity);
 
             if (array_key_exists('id', $publishResponse)) {
                 if ($this->isNewResourceServer($entity)) {
