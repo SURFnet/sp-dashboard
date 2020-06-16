@@ -27,11 +27,14 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 class PublishEntityClientTest extends MockeryTestCase
@@ -77,7 +80,7 @@ class PublishEntityClientTest extends MockeryTestCase
                 $guzzle,
                 new NullLogger()
             ),
-            $this->buildQueryClient(),
+            $this->buildEntityService(),
             $this->generator,
             $this->manageConfig,
             $this->logger
@@ -110,7 +113,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForNewEntity')
             ->andReturn($json);
 
-        $response = $this->client->publish($entity);
+        $response = $this->client->publish($entity, 'test');
         $this->assertEquals('1', $response['id']);
     }
 
@@ -140,16 +143,14 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForExistingEntity')
             ->andReturn($json);
 
-        $response = $this->client->publish($entity);
+        $response = $this->client->publish($entity, 'test');
         $this->assertEquals('1', $response['id']);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException
-     * @expectedExceptionMessage Unable to publish the metadata to Manage
-     */
     public function test_it_handles_failing_publish_action()
     {
+        $this->expectExceptionMessage("Unable to publish the metadata to Manage");
+        $this->expectException(PublishMetadataException::class);
         $this->mockHandler->append(new Response(418));
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
@@ -179,7 +180,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForNewEntity')
             ->andReturn($json);
 
-        $this->client->publish($entity);
+        $this->client->publish($entity, 'test');
     }
 
     public function test_it_can_push_to_engineblock()
@@ -190,12 +191,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->assertEquals('OK', $response['status']);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException
-     * @expectedExceptionMessage Unable to push the metadata to Engineblock
-     */
     public function test_it_handles_failing_push_action()
     {
+        $this->expectExceptionMessage("Unable to push the metadata to EngineBlock");
+        $this->expectException(PushMetadataException::class);
         $this->logger
             ->shouldReceive('error')
             ->once();
@@ -204,12 +203,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->client->pushMetadata();
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException
-     * @expectedExceptionMessage Pushing did not succeed
-     */
     public function test_it_handles_failing_push_action_with_response()
     {
+        $this->expectExceptionMessage("Pushing did not succeed");
+        $this->expectException(PushMetadataException::class);
         // First call represents the 'xml to json' POST on the Manage endpoint
         $this->mockHandler->append(new Response(200, [], '{"status": "failed", "validation": "invalid enum"}'));
 
@@ -220,12 +217,12 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->client->pushMetadata();
     }
 
-    private function buildQueryClient()
+    private function buildEntityService()
     {
-        $queryClient = m::mock(QueryClient::class);
-        $queryClient
+        $entityService = m::mock(EntityServiceInterface::class);
+        $entityService
             ->shouldReceive('findByManageId')
             ->andReturn(m::mock(ManageEntity::class));
-        return $queryClient;
+        return $entityService;
     }
 }

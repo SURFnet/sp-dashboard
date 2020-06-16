@@ -20,7 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
+use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
@@ -37,9 +39,9 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     private $client;
 
     /**
-     * @var QueryClient
+     * @var EntityServiceInterface
      */
-    private $queryClient;
+    private $entityService;
 
     /**
      * @var JsonGeneratorStrategy
@@ -58,13 +60,13 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
     public function __construct(
         HttpClient $client,
-        QueryClient $queryClient,
+        EntityServiceInterface $entityService,
         JsonGeneratorStrategy $generator,
         Config $manageConfig,
         LoggerInterface $logger
     ) {
         $this->client = $client;
-        $this->queryClient = $queryClient;
+        $this->entityService = $entityService;
         $this->generator = $generator;
         $this->manageConfig = $manageConfig;
         $this->logger = $logger;
@@ -72,12 +74,12 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
     /**
      * @param Entity $entity
-     * @return mixed
+     * @param string $environment
      * @throws PublishMetadataException
-     *
+     * @throws JsonGeneratorStrategyNotFoundException
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function publish(Entity $entity)
+    public function publish(Entity $entity, string $environment)
     {
         try {
             if (empty($entity->getManageId())) {
@@ -92,7 +94,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 );
             } else {
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getEntityId()));
-                $manageEntity = $this->queryClient->findByManageId($entity->getManageId());
+                $manageEntity = $this->entityService->findByManageId($entity->getManageId(), $environment);
                 $data = json_encode($this->generator->generateForExistingEntity(
                     MetadataConversionDto::fromManageEntity($manageEntity, $entity),
                     $this->manageConfig->getPublicationStatus()->getStatus()
@@ -129,15 +131,15 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             );
         } catch (HttpException $e) {
             $this->logger->error(
-                'Unable to push to Engineblock',
+                'Unable to push to EngineBlock',
                 (isset($response)) ? $response : []
             );
-            throw new PushMetadataException('Unable to push the metadata to Engineblock', 0, $e);
+            throw new PushMetadataException('Unable to push the metadata to EngineBlock', 0, $e);
         }
 
         if ($response['status'] != "OK") {
             $this->logger->error(
-                'Manage rejected the push to Engineblock',
+                'Manage rejected the push to EngineBlock',
                 (isset($response)) ? $response : []
             );
             throw new PushMetadataException('Pushing did not succeed.');

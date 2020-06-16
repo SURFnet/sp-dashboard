@@ -85,7 +85,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         $entity->setIdpWhitelist($command->getSelected());
 
         try {
-            $this->publishClient->publish($entity);
+            $this->publishClient->publish($entity, Entity::ENVIRONMENT_TEST);
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(

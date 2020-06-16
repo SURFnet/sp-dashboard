@@ -150,7 +150,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->logger->info(
                 sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameEn())
             );
-            $publishResponse = $this->publishClient->publish($entity);
+            $publishResponse = $this->publishClient->publish($entity, Entity::ENVIRONMENT_PRODUCTION);
             if (array_key_exists('id', $publishResponse)) {
                 // Set entity status to published
                 $entity->setStatus(Entity::STATE_PUBLISHED);

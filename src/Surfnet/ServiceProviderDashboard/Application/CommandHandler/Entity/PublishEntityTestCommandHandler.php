@@ -82,7 +82,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
         try {
             $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
 
-            $publishResponse = $this->publishClient->publish($entity);
+            $publishResponse = $this->publishClient->publish($entity, Entity::ENVIRONMENT_TEST);
 
             if (array_key_exists('id', $publishResponse)) {
                 if ($this->isNewResourceServer($entity)) {
