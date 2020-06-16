@@ -133,16 +133,6 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand }
 
-    surfnet.dashboard.command_handler.push_metadata:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
-        arguments:
-            - '@surfnet.manage.publish_service'
-            - '@session.flash_bag'
-            - '@logger'
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand }
-
     surfnet.dashboard.command_handler.update_entity_acl:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityAclCommandHandler
         arguments:
