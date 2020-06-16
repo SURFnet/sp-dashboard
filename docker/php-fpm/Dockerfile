@@ -6,7 +6,8 @@ ENV SYMFONY_ENV=prod
 RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev && \ 
     apk add --no-cache yarn && \
     yarn install && \
-    yarn run encore production
+    yarn run encore production && \
+    bin/console cache:clear
 
 FROM php:7.2-fpm-alpine
 COPY --from=0 /var/www/html/app/. /var/www/html/app/
