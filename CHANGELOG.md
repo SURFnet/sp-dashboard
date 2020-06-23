@@ -1,3 +1,11 @@
+## 2.6.1
+**Features**
+* Finish Service changes started in #362 #372
+* Increase CSP strictness #369
+
+**Bugfix**
+* Add entity.edit.information.redirectUrls to translations #370 
+
 ## 2.6.0
 **Features**
 * Make OIDC entities read-only #354
