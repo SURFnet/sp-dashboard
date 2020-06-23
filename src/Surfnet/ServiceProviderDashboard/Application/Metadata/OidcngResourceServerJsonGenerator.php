@@ -183,6 +183,14 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             $this->spDashboardMetadataGenerator->build($entity)
         );
 
+        $service = $entity->getService();
+        if ($service->getInstitutionId() != '') {
+            $metadata['coin:institution_id'] = $service->getInstitutionId();
+        }
+        if ($service->getGuid() != '') {
+            $metadata['coin:institution_guid'] = $service->getGuid();
+        }
+
         $metadata['NameIDFormat'] = $entity->getNameIdFormat();
 
         // Will become configurable some time in the future.

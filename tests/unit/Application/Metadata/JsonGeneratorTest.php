@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
@@ -337,6 +338,8 @@ class JsonGeneratorTest extends MockeryTestCase
                             'NameIDFormat' => 'nameidformat',
                             'coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
                             'certData' => 'certdata',
+                            'coin:institution_id' => 'service-institution-id',
+                            'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                         ),
                     'metadataurl' => 'http://metadata',
                     'revisionnote' => 'revisionnote',
@@ -392,6 +395,8 @@ class JsonGeneratorTest extends MockeryTestCase
                     'revisionnote' => 'revisionnote',
                     'allowedEntities' => [],
                     'allowedall' => true,
+                    'metaDataFields.coin:institution_id' => 'service-institution-id',
+                    'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
@@ -448,6 +453,8 @@ class JsonGeneratorTest extends MockeryTestCase
                             'sp' => 'sp',
                             'coin:oidc_client' => '1',
                             'coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+                            'coin:institution_id' => 'service-institution-id',
+                            'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                         ),
                     'oidcClient' =>
                         array (
@@ -515,6 +522,8 @@ class JsonGeneratorTest extends MockeryTestCase
                     'allowedEntities' => [],
                     'allowedall' => true,
                     'metaDataFields.coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+                    'metaDataFields.coin:institution_id' => 'service-institution-id',
+                    'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
@@ -736,6 +745,8 @@ class JsonGeneratorTest extends MockeryTestCase
                             'AssertionConsumerService:0:Location' => 'http://acs',
                             'NameIDFormat' => 'nameidformat',
                             'coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
+                            'coin:institution_id' => 'service-institution-id',
+                            'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                         ),
                     'metadataurl' => 'http://metadata',
                     'revisionnote' => 'revisionnote',
@@ -795,6 +806,11 @@ CERT
         $contact->setPhone('telephonenumber');
 
         $entity->setSupportContact($contact);
+
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
 
         if (!is_null($idpAllowAll)) {
             $entity->setIdpAllowAll($idpAllowAll);
@@ -859,6 +875,12 @@ CERT
         $contact->setPhone('telephonenumber');
 
         $entity->setSupportContact($contact);
+
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
+
         $entity = MetadataConversionDto::fromEntity($entity);
         return $entity;
     }

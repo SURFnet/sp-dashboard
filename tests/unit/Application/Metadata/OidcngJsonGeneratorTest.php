@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashbo
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 
@@ -118,6 +119,8 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         ],
                         'secret' => 'test',
                         'scopes' => ['openid'],
+                        'coin:institution_id' => 'service-institution-id',
+                        'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                     ],
                     'revisionnote' => 'revisionnote',
                 ],
@@ -186,6 +189,8 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'allowedEntities' => [],
                         'allowedResourceServers' => [],
                         'allowedall' => true,
+                        'metaDataFields.coin:institution_id' => 'service-institution-id',
+                        'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                     ),
                 'type' => 'oidc10_rp',
                 'id' => 'manageId',
@@ -383,6 +388,11 @@ CERT
         if (!is_null($certificate)) {
             $entity->setCertificate($certificate);
         }
+
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
 
         return MetadataConversionDto::fromEntity($entity);
     }

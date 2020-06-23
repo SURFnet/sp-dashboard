@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
@@ -100,7 +101,9 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'OrganizationURL:nl' => 'http://orgnl',
                         'scopes' => ['openid'],
                         'privacy' => 'privacy',
-                        'secret' => 'test'
+                        'secret' => 'test',
+                        'coin:institution_id' => 'service-institution-id',
+                        'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                     ],
                 ],
                 'type' => 'oidc10_rp',
@@ -148,7 +151,9 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'state' => 'testaccepted',
                         'allowedEntities' => [],
                         'allowedall' => true,
-                        'metaDataFields.privacy' => 'privacy'
+                        'metaDataFields.privacy' => 'privacy',
+                        'metaDataFields.coin:institution_id' => 'service-institution-id',
+                        'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                     ),
                 'type' => 'oidc10_rp',
                 'id' => 'manageId',
@@ -198,6 +203,11 @@ CERT
         $entity->setSupportContact($contact);
         $entity->setClientSecret('test');
         $entity->shouldReceive('isAllowedAll')->andReturn(true);
+
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
 
         return MetadataConversionDto::fromEntity($entity);
     }

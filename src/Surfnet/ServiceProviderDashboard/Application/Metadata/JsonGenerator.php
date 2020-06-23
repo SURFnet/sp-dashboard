@@ -234,6 +234,14 @@ class JsonGenerator implements GeneratorInterface
             $this->spDashboardMetadataGenerator->build($entity)
         );
 
+        $service = $entity->getService();
+        if ($service->getInstitutionId() != '') {
+            $metadata['coin:institution_id'] = $service->getInstitutionId();
+        }
+        if ($service->getGuid() != '') {
+            $metadata['coin:institution_guid'] = $service->getGuid();
+        }
+
         if ($entity->getProtocol() == Entity::TYPE_SAML) {
             $metadata['AssertionConsumerService:0:Binding'] = $entity->getAcsBinding();
             $metadata['AssertionConsumerService:0:Location'] = $entity->getAcsLocation();
