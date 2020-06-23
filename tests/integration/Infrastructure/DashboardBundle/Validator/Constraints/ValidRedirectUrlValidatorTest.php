@@ -60,6 +60,20 @@ class ValidRedirectUrlValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
+    /**
+     * @dataProvider invalidRedirectUrlsGenerator
+     */
+    public function test_invalid_redirect_url($url)
+    {
+        $constraint = new ValidRedirectUrl();
+        $command = m::mock(SaveOidcngEntityCommand::class);
+        $command->makePartial();
+        $command->shouldReceive('getClientId')->andReturn('https://example.com');
+        $this->mockFormData($command);
+
+        $this->validator->validate($url, $constraint);
+        $this->assertTrue($this->context->getViolations()->count() > 0);
+    }
 
     /**
      * @dataProvider invalidReverseRedirectUrlsGenerator
@@ -102,5 +116,10 @@ class ValidRedirectUrlValidatorTest extends ConstraintValidatorTestCase
     {
         yield ['https://example.com/', 'com.example.test://https'];
         yield ['https://example.com/', 'com.example.test://custom'];
+    }
+
+    public static function invalidRedirectUrlsGenerator()
+    {
+        yield ['123.123.123.123'];
     }
 }

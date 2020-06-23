@@ -60,6 +60,26 @@ export class ValidatorHelper {
     }
   }
 
+  /**
+   * This helper method is designed to turn a reverse redirect url into a validatable regular url
+   */
+  public flipProtocol(value: string): string {
+    const url = new URL(value.trim());
+    // The hostname is provided in reverse as per https://tools.ietf.org/html/rfc8252#section-7.1
+    const originalHost = url.protocol.replace(':', '');
+    const reversedHost = originalHost.split('.').reverse().join('.');
+    // Store the protocol (stored in the host), removing the port if present.
+    let originalProtocol = (url.host.includes(url.port)) ? url.host.replace(`:${url.port}`, '') : url.host;
+    if (originalProtocol === '') {
+      originalProtocol = url.pathname.replace('//', '');
+    }
+    const protocolRegex = new RegExp(`^${this.escapeRegExp(originalHost)}`, 'gi');
+    const hostRegex = new RegExp(`${this.escapeRegExp(originalProtocol)}`, 'gi');
+    let parsedUrl = value.replace(hostRegex, reversedHost);
+    parsedUrl = parsedUrl.replace(protocolRegex, originalProtocol);
+    return parsedUrl;
+  }
+
   private invalidProtocol(input: string, isReverseUrl: boolean = false): boolean {
     // Reverse Urls are allowed to have custom protocol, Rules regarding custom protocols are validated in PHP.
     if (isReverseUrl) {
@@ -91,23 +111,6 @@ export class ValidatorHelper {
       return true;
     }
     return false;
-  }
-
-  /**
-   * This helper method is designed to turn a reverse redirect url into a validatable regular url
-   */
-  private flipProtocol(value: string): string {
-    const url = new URL(value);
-    // The hostname is provided in reverse as per https://tools.ietf.org/html/rfc8252#section-7.1
-    const reversedHost = url.protocol.replace(':', '').split('.').reverse().join('.');
-    // Store the protocol (stored in the host), removing the port if present.
-    const originalProtocol = (url.host.includes(url.port)) ? url.host.replace(`:${url.port}`, '') : url.host;
-    const protocolWithoutColon = url.protocol.replace(':', '');
-    const protocolRegex = new RegExp(`^${this.escapeRegExp(protocolWithoutColon)}`, 'gi');
-    // Overwrite the host (overwriting protocol does not work, use string replace function for that)
-    url.host = reversedHost;
-    const parsedUrl = url.toString();
-    return parsedUrl.replace(protocolRegex, originalProtocol);
   }
 
   private escapeRegExp(regex: string) {

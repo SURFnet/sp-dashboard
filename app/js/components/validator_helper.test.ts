@@ -32,6 +32,8 @@ describe('validation functions', () => {
       'httpd:/invalid-protocol.com',
       'https://localhost',
       'https://185.258.148.45',
+      'localhost',
+      '123.123.123.123',
       'git://www.sp-dashboard.com/with/path',
       'ftp://www.sp-dashboard.com/with/path',
       'sftp://www.sp-dashboard.com/with/path',
@@ -94,6 +96,8 @@ describe('validation functions', () => {
       'httpd://localhost',
       'https://local-host/foo/bar',
       'http://local',
+      'localhost',
+      '127.0.0.1',
     ];
     const helper = new ValidatorHelper();
 
@@ -103,6 +107,31 @@ describe('validation functions', () => {
 
     for (const illegal of illegalUrls) {
       expect(helper.validateLoopback(illegal)).toBeFalsy();
+    }
+  });
+
+  it('should correctly flip urls', () => {
+    const expectancies = [
+      { url: 'com.example.foobar://whatever', flipped: 'whatever://foobar.example.com' },
+      { url: 'com.github://https/client', flipped: 'https://github.com/client' },
+      { url: 'https://foobar.example.com', flipped: 'foobar.example.com://https' },
+      { url: 'https://foobar.example.com/foo/bar', flipped: 'foobar.example.com://https/foo/bar' },
+      { url: 'http://11.22.33.44', flipped: '11.22.33.44://http' },
+    ];
+    const helper = new ValidatorHelper();
+    for (const expectation of expectancies) {
+      const flipped = helper.flipProtocol(expectation.url);
+      expect(flipped).toBe(expectation.flipped);
+    }
+  });
+
+  it('flip protocol should only processes valid urls', () => {
+    const invalidUrls = [
+      'localhost',
+    ];
+    const helper = new ValidatorHelper();
+    for (const invalid of invalidUrls) {
+      expect(() => helper.flipProtocol(invalid)).toThrow('Invalid URL');
     }
   });
 });

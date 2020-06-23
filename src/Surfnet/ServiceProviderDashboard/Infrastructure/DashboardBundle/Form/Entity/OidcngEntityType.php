@@ -110,10 +110,9 @@ class OidcngEntityType extends AbstractType
                     'entry_type' => TextType::class,
                     'entry_options' => [
                         'attr' => [
-                            'data-parsley-redirecturis-set' => null,
-                            'data-parsley-redirecturis-valid' => null,
+                            'data-parsley-redirecturis_set' => 'true',
+                            'data-parsley-redirecturis_valid' => 'true',
                             'data-parsley-trigger' => 'blur',
-                            'data-parsley-validate-if-empty' => null,
                         ],
                     ],
                     'attr' => [

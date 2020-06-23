@@ -47,9 +47,13 @@ class ValidRedirectUrlValidator extends UrlValidator
         // Test if we have Url violations, if so re validate the url with the reverse redirect URL rules
         $violations = $this->context->getViolations();
         if ($violations->count() > 0) {
+            $parts = parse_url($value);
+            if (!isset($parts['host'])) {
+                return;
+            }
+
             $clientId = $entityCommand->getClientId();
             $violations->remove(0);
-            $parts = parse_url($value);
             $storedHost = $parts['host'];
             $parts['host'] = $this->reverseHostname($parts['scheme']);
             if (!substr_count($clientId, $parts['host']) > 0) {
