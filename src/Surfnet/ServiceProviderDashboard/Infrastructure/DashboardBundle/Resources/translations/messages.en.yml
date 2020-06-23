@@ -348,6 +348,7 @@ entity.edit.information.redirectUris: Text should be set in web translations
 entity.edit.information.grantType: Text should be set in web translations
 entity.edit.information.accessTokenValidity: Text should be set in web translations
 entity.edit.information.resourceServers: Text should be set in web translations
+entity.edit.information.redirectUrls: Text should be set in web translations
 entity.edit.information.isPublicClient: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.certificate: Text should be set in web translations

@@ -55,7 +55,6 @@ class CreateServiceCommandHandler implements CommandHandler
         $service->setContractSigned($command->getContractSigned());
         $service->setIntakeStatus($command->getIntakeStatus());
         $service->setSurfconextRepresentativeApproved($command->getSurfconextRepresentativeApproved());
-        $service->setInstitutionGuid($command->getInstitutionGuid());
         $service->setInstitutionId($command->getInstitutionId());
 
         $this->serviceRepository->isUnique($service);

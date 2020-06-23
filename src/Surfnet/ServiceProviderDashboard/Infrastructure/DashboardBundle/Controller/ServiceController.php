@@ -200,7 +200,6 @@ class ServiceController extends Controller
             $service->getContractSigned(),
             $service->getSurfconextRepresentativeApproved(),
             $this->serviceStatusService->hasPrivacyQuestions($service),
-            $service->getInstitutionGuid(),
             $service->getInstitutionId()
         );
 

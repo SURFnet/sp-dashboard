@@ -73,14 +73,10 @@ nelmio_security:
                 - 'none'
             style-src:
                 - 'self'
-                - 'netdna.bootstrapcdn.com'
-                - 'unsafe-inline'
             script-src:
                 - 'self'
-                - 'ajax.googleapis.com'
             font-src:
                 - 'self'
-                - 'netdna.bootstrapcdn.com'
             block-all-mixed-content: true # defaults to false, blocks HTTP content over HTTPS transport
             upgrade-insecure-requests: true # defaults to false, upgrades HTTP requests to HTTPS transport
     content_type:
