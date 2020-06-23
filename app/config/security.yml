@@ -73,7 +73,6 @@ nelmio_security:
                 - 'none'
             style-src:
                 - 'self'
-                - 'unsafe-inline'
             script-src:
                 - 'self'
             font-src:

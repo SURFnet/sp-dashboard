@@ -136,6 +136,8 @@ export class ServiceStatus {
       tooltipEl.style.top = `${position.top + window.pageYOffset + tooltipModel.caretY}px`;
     };
 
+    Chart.platform.disableCSSInjection = true;
+
     const options: Chart.ChartConfiguration = {
       type: 'doughnut',
       data: {
