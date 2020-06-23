@@ -48,12 +48,6 @@ class CreateServiceCommand implements Command
     private $institutionId;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $institutionGuid;
-
-    /**
      * @var bool
      */
     private $productionEntitiesEnabled = false;
@@ -179,14 +173,6 @@ class CreateServiceCommand implements Command
     }
 
     /**
-     * @param string $institutionGuid
-     */
-    public function setInstitutionGuid($institutionGuid)
-    {
-        $this->institutionGuid = $institutionGuid;
-    }
-
-    /**
      * @return string
      */
     public function getGuid()
@@ -281,13 +267,5 @@ class CreateServiceCommand implements Command
     public function getInstitutionId()
     {
         return $this->institutionId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInstitutionGuid()
-    {
-        return $this->institutionGuid;
     }
 }

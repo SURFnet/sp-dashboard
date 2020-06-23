@@ -55,14 +55,6 @@ class ServiceType extends AbstractType
                             'attr' => ['class' => 'institution-id-container']
                         ]
                     )
-                    ->add(
-                        'institutionGuid',
-                        TextType::class,
-                        [
-                            'required' => true,
-                            'label' => 'service.form.label.institution_guid'
-                        ]
-                    )
                     ->add('teamName', null, ['label' => 'team identifier'])
                     ->add(
                         'productionEntitiesEnabled',

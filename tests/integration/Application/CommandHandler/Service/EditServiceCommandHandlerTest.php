@@ -60,7 +60,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            '22dd879c-ee2f-11db-8314-0800200c9a66',
             '123'
         );
         $command->setName('Foobar');
@@ -91,8 +90,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
                 $this->assertEquals('no', $arg->getSurfconextRepresentativeApproved());
                 $this->assertEquals('not-applicable', $arg->getIntakeStatus());
                 $this->assertEquals('123', $arg->getInstitutionId());
-                $this->assertEquals('22dd879c-ee2f-11db-8314-0800200c9a66', $arg->getInstitutionGuid());
-
                 return true;
             }))
             ->once();
@@ -125,7 +122,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            '22dd879c-ee2f-11db-8314-0800200c9a66',
             '123'
         );
 
@@ -154,7 +150,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            '22dd879c-ee2f-11db-8314-0800200c9a66',
             '123'
         );
 

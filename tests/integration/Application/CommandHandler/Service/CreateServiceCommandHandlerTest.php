@@ -71,7 +71,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
         $command->setContractSigned($service->getContractSigned());
         $command->setInstitutionId($service->getInstitutionId());
-        $command->setInstitutionGuid($service->getInstitutionGuid());
 
         $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
