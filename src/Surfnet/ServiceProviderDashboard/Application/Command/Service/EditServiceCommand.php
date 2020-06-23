@@ -94,12 +94,6 @@ class EditServiceCommand implements Command
     private $institutionId;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $institutionGuid;
-
-    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      *
      * @param int $id
@@ -114,7 +108,6 @@ class EditServiceCommand implements Command
      * @param string $contractSigned
      * @param string $surfconextRepresentativeApproved
      * @param string $privacyQuestionsAnswered
-     * @param string $institutionGuid
      * @param string $institutionId
      */
     public function __construct(
@@ -130,7 +123,6 @@ class EditServiceCommand implements Command
         $contractSigned,
         $surfconextRepresentativeApproved,
         $privacyQuestionsAnswered,
-        $institutionGuid,
         $institutionId
     ) {
         $this->id = $id;
@@ -145,7 +137,6 @@ class EditServiceCommand implements Command
         $this->contractSigned = $contractSigned;
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
-        $this->institutionGuid = $institutionGuid;
         $this->institutionId = $institutionId;
     }
 
@@ -254,14 +245,6 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @param string $institutionGuid
-     */
-    public function setInstitutionGuid($institutionGuid)
-    {
-        $this->institutionGuid = $institutionGuid;
-    }
-
-    /**
      * @return string
      */
     public function getId()
@@ -363,13 +346,5 @@ class EditServiceCommand implements Command
     public function getInstitutionId()
     {
         return $this->institutionId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInstitutionGuid()
-    {
-        return $this->institutionGuid;
     }
 }

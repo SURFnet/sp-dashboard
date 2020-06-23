@@ -39,7 +39,6 @@ class ServiceCreateTest extends WebTestCase
                 'general' => [
                     'guid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]
@@ -68,7 +67,6 @@ class ServiceCreateTest extends WebTestCase
                 'general' => [
                     'guid' => '',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]
@@ -102,7 +100,6 @@ class ServiceCreateTest extends WebTestCase
                 'general' => [
                     'guid' => '1234abcd-146e-e711-80e8-005056956c1e',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]
@@ -132,7 +129,6 @@ class ServiceCreateTest extends WebTestCase
                 'general' => [
                     'guid' => Uuid::uuid4(),
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'urn:collab:org:surf.nl',
                 ]
@@ -164,7 +160,6 @@ class ServiceCreateTest extends WebTestCase
                 'general' => [
                     'guid' => 'b9aaa8c4-3376-4e9d-b828-afa38cf29986',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'institutionGuid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
                 ]

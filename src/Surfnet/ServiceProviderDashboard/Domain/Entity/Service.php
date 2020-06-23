@@ -160,13 +160,6 @@ class Service
      */
     private $institutionId;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(length=255, nullable=true)
-     */
-    private $institutionGuid;
-
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -398,11 +391,6 @@ class Service
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
     }
 
-    public function getInstitutionGuid()
-    {
-        return $this->institutionGuid;
-    }
-
     public function getInstitutionId()
     {
         return $this->institutionId;
@@ -414,13 +402,5 @@ class Service
     public function setInstitutionId($institutionId)
     {
         $this->institutionId = $institutionId;
-    }
-
-    /**
-     * @param string $institutionGuid
-     */
-    public function setInstitutionGuid($institutionGuid)
-    {
-        $this->institutionGuid = $institutionGuid;
     }
 }
