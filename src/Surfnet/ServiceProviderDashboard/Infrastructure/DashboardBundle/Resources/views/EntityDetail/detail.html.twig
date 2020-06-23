@@ -29,7 +29,7 @@
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
             {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.redirect_uris'|trans, value: entity.redirectUris, informationPopup: 'entity.edit.information.redirectUris'} %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.grant_type'|trans, value: ('entity.edit.label.' ~ entity.grantType)|trans, informationPopup: 'entity.edit.information.grantType'} %}
-            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.playgroundEnabled'} %}
+            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.enablePlayground'} %}
         {% endif %}
 
         {% if entity.protocol == "oidcng" %}
@@ -37,7 +37,7 @@
             {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.redirect_uris'|trans, value: entity.redirectUris, informationPopup: 'entity.edit.information.redirectUris'} %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.grant_type'|trans, value: ('entity.edit.label.' ~ entity.grantType)|trans, informationPopup: 'entity.edit.information.grantType'} %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.subject_type'|trans, value: entity.nameIdFormat|replace({'urn:oasis:names:tc:SAML:2.0:nameid-format:': ''}), informationPopup: 'entity.edit.information.subjectType'} %}
-            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.playgroundEnabled'} %}
+            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.enablePlayground'} %}
             {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.is_public_client'|trans, value: entity.publicClient, informationPopup: 'entity.edit.information.isPublicClient'} %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.access_token_validity'|trans, value: entity.accessTokenValidity, informationPopup: 'entity.edit.information.accessTokenValidity'} %}
         {% endif %}
