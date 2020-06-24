@@ -110,6 +110,7 @@ class ValidRedirectUrlValidatorTest extends ConstraintValidatorTestCase
         yield ['https://www.example.com/foob/bar', 'com.example.www://https/foo/bar'];
         yield ['https://www.example.com/foob/bar', 'com.example.www://https/foo/bar#fraction'];
         yield ['https://www.example.com/foob/bar', 'com.example.www://https/foo/bar?myQuery=param#fraction'];
+        yield ['https://spdashboard.dev.support.surfconext.nl', 'nl.surfconext.support.dev.spdashboard://https/my/path'];
     }
 
     public static function invalidReverseRedirectUrlsGenerator()

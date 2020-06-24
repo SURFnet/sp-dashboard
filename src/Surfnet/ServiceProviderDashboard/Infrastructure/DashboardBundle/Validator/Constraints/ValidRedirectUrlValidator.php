@@ -53,7 +53,10 @@ class ValidRedirectUrlValidator extends UrlValidator
             }
 
             $clientId = $entityCommand->getClientId();
-            $violations->remove(0);
+            // Remove all violations, we'll run the validator again with the reverse hostname.
+            foreach ($violations as $index => $violation) {
+                $violations->remove($index);
+            }
             $storedHost = $parts['host'];
             $parts['host'] = $this->reverseHostname($parts['scheme']);
             if (!substr_count($clientId, $parts['host']) > 0) {
