@@ -52,7 +52,7 @@ class SamlEntityType extends AbstractType
             // perform. This is to prevent the import action when submitting
             // the form (the import button is now the second button on the
             // form).
-            ->add('default', SubmitType::class, ['attr' => ['style' => 'display: none']])
+            ->add('default', SubmitType::class, ['attr' => ['class' => 'hidden']])
             ->add(
                 $builder->create('metadata', FormType::class, ['inherit_data' => true])
                     ->add(
