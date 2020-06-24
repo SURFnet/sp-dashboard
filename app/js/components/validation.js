@@ -137,13 +137,12 @@ window.Parsley.addValidator('redirecturis_set', {
 
 window.Parsley.addValidator('redirecturis_valid', {
     validateString: function(value) {
-        // Allos empty string (substitute for validatie-if-empty validation)
+        // Allow empty string (substitute for validatie-if-empty validation)
         if (value === '') {
             return true;
         }
         const helper = new ValidatorHelper();
-        const result = helper.validateUrl(value.trim()) || helper.validateLoopback(value.trim());
-        return result;
+        return helper.validateUrl(value.trim()) || helper.validateLoopback(value.trim());
     },
     messages: {
         en: 'Invalid redirect URI provided.',

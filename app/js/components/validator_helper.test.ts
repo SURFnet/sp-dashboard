@@ -124,14 +124,4 @@ describe('validation functions', () => {
       expect(flipped).toBe(expectation.flipped);
     }
   });
-
-  it('flip protocol should only processes valid urls', () => {
-    const invalidUrls = [
-      'localhost',
-    ];
-    const helper = new ValidatorHelper();
-    for (const invalid of invalidUrls) {
-      expect(() => helper.flipProtocol(invalid)).toThrow('Invalid URL');
-    }
-  });
 });

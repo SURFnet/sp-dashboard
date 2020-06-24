@@ -1,3 +1,6 @@
+// tslint:disable-next-line:no-var-requires
+const Url = require('url-parse');
+
 export class ValidatorHelper {
 
   public validateEmpty(value: string): boolean {
@@ -64,20 +67,15 @@ export class ValidatorHelper {
    * This helper method is designed to turn a reverse redirect url into a validatable regular url
    */
   public flipProtocol(value: string): string {
-    const url = new URL(value.trim());
+    const url = new Url(value.trim());
     // The hostname is provided in reverse as per https://tools.ietf.org/html/rfc8252#section-7.1
     const originalHost = url.protocol.replace(':', '');
     const reversedHost = originalHost.split('.').reverse().join('.');
     // Store the protocol (stored in the host), removing the port if present.
-    let originalProtocol = (url.host.includes(url.port)) ? url.host.replace(`:${url.port}`, '') : url.host;
-    if (originalProtocol === '') {
-      originalProtocol = url.pathname.replace('//', '');
-    }
-    const protocolRegex = new RegExp(`^${this.escapeRegExp(originalHost)}`, 'gi');
-    const hostRegex = new RegExp(`${this.escapeRegExp(originalProtocol)}`, 'gi');
-    let parsedUrl = value.replace(hostRegex, reversedHost);
-    parsedUrl = parsedUrl.replace(protocolRegex, originalProtocol);
-    return parsedUrl;
+    const originalProtocol = (url.host.includes(url.port)) ? url.host.replace(`:${url.port}`, '') : url.host;
+    url.host = reversedHost;
+    url.protocol = originalProtocol;
+    return url.toString();
   }
 
   private invalidProtocol(input: string, isReverseUrl: boolean = false): boolean {
@@ -111,9 +109,5 @@ export class ValidatorHelper {
       return true;
     }
     return false;
-  }
-
-  private escapeRegExp(regex: string) {
-    return regex.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 }
