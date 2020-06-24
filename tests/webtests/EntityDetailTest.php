@@ -22,7 +22,7 @@ use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 
 class EntityDetailTest extends WebTestCase
 {

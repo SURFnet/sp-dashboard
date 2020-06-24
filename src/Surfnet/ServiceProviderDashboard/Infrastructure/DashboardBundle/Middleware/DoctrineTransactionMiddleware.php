@@ -18,8 +18,8 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Middleware;
 
 use Doctrine\ORM\EntityManager;
-use League\Tactician\Middleware;
 use Exception;
+use League\Tactician\Middleware;
 use Throwable;
 
 class DoctrineTransactionMiddleware implements Middleware

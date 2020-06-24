@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
+namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\RuntimeException;
 use Webmozart\Assert\Assert;
 
-class OidcngResourceServerClient implements OidcClientInterface
+class OidcClient implements OidcClientInterface
 {
     /**
      * @var string
@@ -31,6 +32,10 @@ class OidcngResourceServerClient implements OidcClientInterface
      */
     private $clientSecret;
     /**
+     * @var array
+     */
+    private $redirectUris;
+    /**
      * @var string
      */
     private $grantType;
@@ -38,47 +43,57 @@ class OidcngResourceServerClient implements OidcClientInterface
      * @var array
      */
     private $scope;
+
     /**
      * @param array $data
-     * @param string $manageProtocol
-     * @return OidcngClient
+     * @return OidcClient|null
      */
     public static function fromApiResponse(array $data, $manageProtocol)
     {
-        $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $grantType = isset($data['data']['metaDataFields']['grants'])
-            ? reset($data['data']['metaDataFields']['grants']) : '';
-        $scope = isset($data['data']['metaDataFields']['scopes']) ? $data['data']['metaDataFields']['scopes'] : '';
+        if (!isset($data['data']['oidcClient'])) {
+            return null;
+        }
+
+        $clientId = isset($data['data']['oidcClient']['clientId']) ? $data['data']['oidcClient']['clientId'] : '';
+        $clientSecret = isset($data['data']['oidcClient']['clientSecret']) ? $data['data']['oidcClient']['clientSecret'] : '';
+        $redirectUris = isset($data['data']['oidcClient']['redirectUris']) ? $data['data']['oidcClient']['redirectUris'] : '';
+        $grantType = isset($data['data']['oidcClient']['grantType']) ? $data['data']['oidcClient']['grantType'] : '';
+        $scope = isset($data['data']['oidcClient']['scope']) ? $data['data']['oidcClient']['scope'] : '';
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
+        Assert::isArray($redirectUris);
         Assert::string($grantType);
         Assert::isArray($scope);
 
         return new self(
             $clientId,
             $clientSecret,
+            $redirectUris,
             $grantType,
             $scope
         );
     }
 
     /**
-     * @param string $clientId ,
+     * @param string $clientId,
      * @param string $clientSecret
+     * @param array $redirectUris
      * @param string $grantType
+     * @param string $nameIdFormat
      * @param array $scope
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function __construct(
         $clientId,
         $clientSecret,
+        $redirectUris,
         $grantType,
         $scope
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+        $this->redirectUris = $redirectUris;
         $this->grantType = $grantType;
         $this->scope = $scope;
     }
@@ -100,6 +115,14 @@ class OidcngResourceServerClient implements OidcClientInterface
     }
 
     /**
+     * @return array
+     */
+    public function getRedirectUris()
+    {
+        return $this->redirectUris;
+    }
+
+    /**
      * @return string
      */
     public function getGrantType()
@@ -116,34 +139,26 @@ class OidcngResourceServerClient implements OidcClientInterface
     }
 
     /**
-     * @return array
-     */
-    public function getRedirectUris()
-    {
-        return [];
-    }
-
-    /**
-     * @return bool
+     * @throws RuntimeException
      */
     public function isPublicClient()
     {
-        return false;
+        throw new RuntimeException('This method is not supported by the OidcClient');
     }
 
     /**
-     * @return int
+     * @throws RuntimeException
      */
     public function getAccessTokenValidity()
     {
-        return 0;
+        throw new RuntimeException('This method is not supported by the OidcClient');
     }
 
     /**
-     * @return array
+     * @throws RuntimeException
      */
     public function getResourceServers()
     {
-        return [];
+        throw new RuntimeException('This method is not supported by the OidcClient');
     }
 }

@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Manage\Dto;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 
 class ProtocolTest extends MockeryTestCase
 {
