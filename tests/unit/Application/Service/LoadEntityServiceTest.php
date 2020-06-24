@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class LoadEntityServiceTest extends MockeryTestCase
 {

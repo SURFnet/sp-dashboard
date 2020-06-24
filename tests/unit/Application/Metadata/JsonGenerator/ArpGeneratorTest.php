@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute as ManageAttribute;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class ArpGeneratorTest extends MockeryTestCase

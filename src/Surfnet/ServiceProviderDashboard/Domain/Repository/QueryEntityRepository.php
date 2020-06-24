@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 interface QueryEntityRepository
 {

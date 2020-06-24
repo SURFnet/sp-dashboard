@@ -24,7 +24,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class Ticket
 {

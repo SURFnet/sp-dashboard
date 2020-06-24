@@ -32,7 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFact
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
