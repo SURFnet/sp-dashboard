@@ -93,6 +93,38 @@ class ValidRedirectUrlValidatorTest extends ConstraintValidatorTestCase
         );
     }
 
+    public function test_reverse_redirect_url_validation_sequence()
+    {
+        $clientId = 'https://www.example.com/foob/bar';
+        $validReverseUrl = 'com.example.www://https/foob/bar';
+        $invalidReverseUrl = 'com.example.test://https';
+
+        // test sequence
+        $constraint = new ValidRedirectUrl();
+        $command = m::mock(SaveOidcngEntityCommand::class);
+        $command->makePartial();
+        $command->shouldReceive('getClientId')->andReturn($clientId);
+        $this->mockFormData($command);
+
+        $this->validator->validate($validReverseUrl, $constraint);
+        $this->validator->validate($invalidReverseUrl, $constraint);
+
+        $this->assertEquals(1, $this->context->getViolations()->count());
+
+        // test sequence but now other way around
+        $constraint = new ValidRedirectUrl();
+        $command = m::mock(SaveOidcngEntityCommand::class);
+        $command->makePartial();
+        $command->shouldReceive('getClientId')->andReturn($clientId);
+        $this->mockFormData($command);
+
+        $this->validator->validate($invalidReverseUrl, $constraint);
+        $this->validator->validate($validReverseUrl, $constraint);
+
+        $this->assertEquals(1, $this->context->getViolations()->count());
+    }
+
+
     private function mockFormData(SaveEntityCommandInterface $data)
     {
         $form = $this->createMock('Symfony\Component\Form\FormInterface');
