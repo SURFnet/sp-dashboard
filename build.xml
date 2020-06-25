@@ -66,6 +66,11 @@
             <arg path="tests" />
         </exec>
 
+        <echo message="${line.separator}phpstan:" />
+        <exec executable="vendor/bin/phpstan" failonerror="true">
+            <arg line="analyse" />
+        </exec>
+
         <echo message="${line.separator}jscpd:" />
         <exec executable="node_modules/jscpd/bin/jscpd" failonerror="true">
             <arg line='--exclude "**/*.test.ts"' />
