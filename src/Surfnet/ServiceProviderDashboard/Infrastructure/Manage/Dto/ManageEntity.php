@@ -66,6 +66,7 @@ class ManageEntity
 
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
+        $oidcClient = null;
         if ($manageProtocol === Protocol::OIDC10_RP) {
             if (isset($data['data']['metaDataFields']['isResourceServer']) &&
                 $data['data']['metaDataFields']['isResourceServer']
