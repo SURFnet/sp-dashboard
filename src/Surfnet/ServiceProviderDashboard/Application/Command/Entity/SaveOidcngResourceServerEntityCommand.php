@@ -616,12 +616,4 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     {
         return $this->scopes;
     }
-
-    /**
-     * @return OidcGrantType
-     */
-    public function getGrantType()
-    {
-        return $this->grantType;
-    }
 }
