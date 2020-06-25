@@ -24,10 +24,10 @@ class IdentityProviderFactory
 {
 
     /**
-     * @param $manageResult
+     * @param array $manageResult
      * @return IdentityProvider
      */
-    public static function fromManageResult($manageResult)
+    public static function fromManageResult(array $manageResult)
     {
         return new IdentityProvider(
             $manageResult['_id'],

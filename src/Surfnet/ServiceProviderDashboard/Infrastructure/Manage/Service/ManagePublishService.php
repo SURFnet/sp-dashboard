@@ -56,7 +56,7 @@ class ManagePublishService
     }
 
     /**
-     * @param $environment
+     * @param string $environment
      * @throws InvalidArgumentException
      * @throws PushMetadataException
      */

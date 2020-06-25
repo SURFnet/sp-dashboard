@@ -58,7 +58,7 @@ class OidcClient implements OidcClientInterface
         $clientSecret = isset($data['data']['oidcClient']['clientSecret']) ? $data['data']['oidcClient']['clientSecret'] : '';
         $redirectUris = isset($data['data']['oidcClient']['redirectUris']) ? $data['data']['oidcClient']['redirectUris'] : '';
         $grantType = isset($data['data']['oidcClient']['grantType']) ? $data['data']['oidcClient']['grantType'] : '';
-        $scope = isset($data['data']['oidcClient']['scope']) ? $data['data']['oidcClient']['scope'] : '';
+        $scope = isset($data['data']['oidcClient']['scope']) ? $data['data']['oidcClient']['scope'] : [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
@@ -80,7 +80,6 @@ class OidcClient implements OidcClientInterface
      * @param string $clientSecret
      * @param array $redirectUris
      * @param string $grantType
-     * @param string $nameIdFormat
      * @param array $scope
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */

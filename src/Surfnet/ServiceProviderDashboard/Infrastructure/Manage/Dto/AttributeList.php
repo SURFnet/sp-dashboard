@@ -48,7 +48,7 @@ class AttributeList
     }
 
     /**
-     * @param $urn
+     * @param string $urn
      * @return Attribute|null
      */
     public function findByUrn($urn)

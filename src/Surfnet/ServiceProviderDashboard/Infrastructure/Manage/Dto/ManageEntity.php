@@ -55,12 +55,12 @@ class ManageEntity
     private $allowedIdentityProviders;
 
     /**
-     * @param $data
+     * @param array $data
      * @return ManageEntity
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public static function fromApiResponse($data)
+    public static function fromApiResponse(array $data)
     {
         $manageProtocol = isset($data['type']) ? $data['type'] : '';
 

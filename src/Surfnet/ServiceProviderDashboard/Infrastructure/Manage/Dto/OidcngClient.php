@@ -129,7 +129,7 @@ class OidcngClient implements OidcClientInterface
 
     /**
      * @param array $data
-     * @param $key
+     * @param string $key
      * @return string
      */
     private static function getStringOrEmpty(array $data, $key)
