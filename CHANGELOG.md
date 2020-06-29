@@ -1,3 +1,7 @@
+## 2.6.2
+**Bugfix**
+* Prevent use of inline-style as this causes a CSP warning #374
+
 ## 2.6.1
 **Features**
 * Finish Service changes started in #362 #372
