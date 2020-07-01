@@ -1,3 +1,9 @@
+## 2.6.3
+In a previous release the Parsley form validation became broken. Resulting in allowing certain redirect URL restrictions to pass validation.
+
+**Bugfix**
+* Enable and fix Url validation #373
+
 ## 2.6.2
 **Bugfix**
 * Prevent use of inline-style as this causes a CSP warning #374
