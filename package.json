@@ -37,7 +37,8 @@
     "jquery.mousewheel": "^3.1.9",
     "parsleyjs": "^2.8.1",
     "select2": "^4.0.3",
-    "tippy.js": "^2.0.2"
+    "tippy.js": "^2.0.2",
+    "url-parse": "^1.4.7"
   },
   "resolutions": {
     "jquery": "3.5.0",

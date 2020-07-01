@@ -109,18 +109,18 @@ if (form.length) {
 // Add a stricter url validator, fields validated with urlstrict are
 // allowed to be empty, or a URL with protocol.
 window.Parsley.addValidator('urlstrict', function (value, requirement) {
-    let helper = new ValidatorHelper();
+    const helper = new ValidatorHelper();
     return helper.validateEmpty(value) || helper.validateUrl(value);
 }, 32).addMessage('en', 'urlstrict', 'This value should be a valid URL.');
 
 // Add URI validator (must be URN or URL), fields validated with urn
 // must be empty or be a valid URN  or URL (with protocol).
 window.Parsley.addValidator('uri', function (value, requirement) {
-    let helper = new ValidatorHelper();
+    const helper = new ValidatorHelper();
     return helper.validateEmpty(value) || helper.validateUrl(value) || helper.validateUrn(value)
 }, 32).addMessage('en', 'uri', 'This value should be a valid URL or URN.');
 
-window.Parsley.addValidator('redirecturis-set', {
+window.Parsley.addValidator('redirecturis_set', {
     validateString: function(value, requirement, instance) {
         let count  = 0;
         instance.$element.closest('.collection-widget').find('input').each(function (idx, value) {
@@ -128,21 +128,21 @@ window.Parsley.addValidator('redirecturis-set', {
                 count++;
             }
         });
-        let helper = new ValidatorHelper();
-
-        return (helper.validateUrl(value) || helper.validateLoopback(value)) && count > 0
+        return count > 0
     },
     messages: {
         en: 'At least one redirecturi must be set.',
     }
 }, 32);
 
-window.Parsley.addValidator('redirecturis-valid', {
-    validateString: function(value, requirement, instance) {
-        let items = instance.$element.closest('.collection-widget').find('input');
-        console.log(items, value);
-        let helper = new ValidatorHelper();
-        return helper.validateUrl(value) || helper.validateLoopback(value) || helper.validateReverseDns(value)
+window.Parsley.addValidator('redirecturis_valid', {
+    validateString: function(value) {
+        // Allow empty string (substitute for validatie-if-empty validation)
+        if (value === '') {
+            return true;
+        }
+        const helper = new ValidatorHelper();
+        return helper.validateUrl(value.trim()) || helper.validateLoopback(value.trim());
     },
     messages: {
         en: 'Invalid redirect URI provided.',
