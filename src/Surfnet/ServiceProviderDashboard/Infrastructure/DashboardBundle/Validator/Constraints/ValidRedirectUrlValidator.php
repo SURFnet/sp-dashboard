@@ -22,6 +22,7 @@ use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\UrlValidator;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ValidRedirectUrlValidator extends UrlValidator
 {
@@ -32,6 +33,8 @@ class ValidRedirectUrlValidator extends UrlValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        // This validator is used on a collection of Redirect URLs, Its possible violations are already present.
+        $numberOfViolations = $this->context->getViolations()->count();
         /**
          * @var SaveOidcngEntityCommand $entityCommand
          */
@@ -46,10 +49,16 @@ class ValidRedirectUrlValidator extends UrlValidator
 
         // Test if we have Url violations, if so re validate the url with the reverse redirect URL rules
         $violations = $this->context->getViolations();
-        if ($violations->count() > 0) {
-            $clientId = $entityCommand->getClientId();
-            $violations->remove(0);
+        if ($violations->count() > $numberOfViolations) {
             $parts = parse_url($value);
+            if (!isset($parts['host'])) {
+                return;
+            }
+
+            $clientId = $entityCommand->getClientId();
+            // Remove the violations that where added just now, we'll run the validator again with the reverse hostname.
+            $this->dropLastAddedErrors($violations, $numberOfViolations);
+
             $storedHost = $parts['host'];
             $parts['host'] = $this->reverseHostname($parts['scheme']);
             if (!substr_count($clientId, $parts['host']) > 0) {
@@ -90,5 +99,28 @@ class ValidRedirectUrlValidator extends UrlValidator
     private function reverseHostname($hostname)
     {
         return implode('.', array_reverse(explode('.', $hostname)));
+    }
+
+    private function dropLastAddedErrors(
+        ConstraintViolationListInterface $violations,
+        int $numberOfViolationsBeforeExecution
+    ) {
+        // Convert the violations to an array for easier manipulation
+        $violationsArray = $violations->getIterator()->getArrayCopy();
+        $numberOfViolations = $violations->count();
+        // Now empty the current list of violations
+        foreach ($violations as $index => $violation) {
+            $violations->offsetUnset($index);
+        }
+
+        // Remove the last errors from the array copy
+        for ($i=1; $i<=($numberOfViolations - $numberOfViolationsBeforeExecution); $i++) {
+            array_pop($violationsArray);
+        }
+
+        // Set the array copy values as the list of violations
+        foreach ($violationsArray as $index => $violation) {
+            $violations->set($index, $violation);
+        }
     }
 }

@@ -60,6 +60,20 @@ class ValidRedirectUrlValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
+    /**
+     * @dataProvider invalidRedirectUrlsGenerator
+     */
+    public function test_invalid_redirect_url($url)
+    {
+        $constraint = new ValidRedirectUrl();
+        $command = m::mock(SaveOidcngEntityCommand::class);
+        $command->makePartial();
+        $command->shouldReceive('getClientId')->andReturn('https://example.com');
+        $this->mockFormData($command);
+
+        $this->validator->validate($url, $constraint);
+        $this->assertTrue($this->context->getViolations()->count() > 0);
+    }
 
     /**
      * @dataProvider invalidReverseRedirectUrlsGenerator
@@ -79,6 +93,38 @@ class ValidRedirectUrlValidatorTest extends ConstraintValidatorTestCase
         );
     }
 
+    public function test_reverse_redirect_url_validation_sequence()
+    {
+        $clientId = 'https://www.example.com/foob/bar';
+        $validReverseUrl = 'com.example.www://https/foob/bar';
+        $invalidReverseUrl = 'com.example.test://https';
+
+        // test sequence
+        $constraint = new ValidRedirectUrl();
+        $command = m::mock(SaveOidcngEntityCommand::class);
+        $command->makePartial();
+        $command->shouldReceive('getClientId')->andReturn($clientId);
+        $this->mockFormData($command);
+
+        $this->validator->validate($validReverseUrl, $constraint);
+        $this->validator->validate($invalidReverseUrl, $constraint);
+
+        $this->assertEquals(1, $this->context->getViolations()->count());
+
+        // test sequence but now other way around
+        $constraint = new ValidRedirectUrl();
+        $command = m::mock(SaveOidcngEntityCommand::class);
+        $command->makePartial();
+        $command->shouldReceive('getClientId')->andReturn($clientId);
+        $this->mockFormData($command);
+
+        $this->validator->validate($invalidReverseUrl, $constraint);
+        $this->validator->validate($validReverseUrl, $constraint);
+
+        $this->assertEquals(1, $this->context->getViolations()->count());
+    }
+
+
     private function mockFormData(SaveEntityCommandInterface $data)
     {
         $form = $this->createMock('Symfony\Component\Form\FormInterface');
@@ -96,11 +142,17 @@ class ValidRedirectUrlValidatorTest extends ConstraintValidatorTestCase
         yield ['https://www.example.com/foob/bar', 'com.example.www://https/foo/bar'];
         yield ['https://www.example.com/foob/bar', 'com.example.www://https/foo/bar#fraction'];
         yield ['https://www.example.com/foob/bar', 'com.example.www://https/foo/bar?myQuery=param#fraction'];
+        yield ['https://spdashboard.dev.support.surfconext.nl', 'nl.surfconext.support.dev.spdashboard://https/my/path'];
     }
 
     public static function invalidReverseRedirectUrlsGenerator()
     {
         yield ['https://example.com/', 'com.example.test://https'];
         yield ['https://example.com/', 'com.example.test://custom'];
+    }
+
+    public static function invalidRedirectUrlsGenerator()
+    {
+        yield ['123.123.123.123'];
     }
 }
