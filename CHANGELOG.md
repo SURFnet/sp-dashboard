@@ -1,3 +1,10 @@
+## 2.6.4
+There was a bug introduced in 2.5 which did always overwrite the attributes from manage. This prevented the removal of
+attributes when one was removed.
+
+**Bugfix**
+* Merge manage attributes only #378
+
 ## 2.6.3
 In a previous release the Parsley form validation became broken. Resulting in allowing certain redirect URL restrictions to pass validation.
 
