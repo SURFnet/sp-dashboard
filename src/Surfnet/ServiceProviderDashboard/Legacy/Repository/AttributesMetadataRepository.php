@@ -62,4 +62,16 @@ class AttributesMetadataRepository implements AttributesMetadataRepositoryInterf
             file_get_contents($this->rootDir . '/metadata/sp_dashboard.json')
         );
     }
+
+    /**
+     * @return string[]
+     */
+    public function findAllAttributeUrns()
+    {
+        $names = [];
+        foreach ($this->findAll() as $definition) {
+            $names[] = reset($definition->urns);
+        }
+        return $names;
+    }
 }
