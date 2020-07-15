@@ -78,10 +78,12 @@ class ArpGenerator implements MetadataGenerator
 
     private function addManageOnlyAttributes(array &$attributes, MetadataConversionDto $entity)
     {
+        $managedAttributeUrns = $this->repository->findAllAttributeUrns();
+
         if ($entity->isManageEntity()) {
             // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
             foreach ($entity->getArpAttributes()->getAttributes() as $manageAttribute) {
-                if (!array_key_exists($manageAttribute->getName(), $attributes)) {
+                if (!array_key_exists($manageAttribute->getName(), $attributes) && !in_array($manageAttribute->getName(), $managedAttributeUrns)) {
                     $attributes[$manageAttribute->getName()] = [
                         [
                             'source' => $manageAttribute->getSource(),
