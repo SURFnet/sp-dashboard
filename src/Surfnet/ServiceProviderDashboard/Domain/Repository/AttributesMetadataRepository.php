@@ -25,4 +25,6 @@ interface AttributesMetadataRepository
     public function findAllPrivacyQuestionsAttributes();
 
     public function findAllSpDashboardAttributes();
+
+    public function findAllAttributeUrns();
 }
