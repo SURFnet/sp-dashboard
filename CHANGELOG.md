@@ -1,3 +1,10 @@
+## 2.6.5
+When testing 2.6.4 another bug was encountered. This bug pushed the memberOf attribute to manage which was empoty and resulted
+therefore in the removal of the attribute in Manage which shouldn't occur.
+
+**Bugfix**
+* Remove memberOf as managed attribute #379 
+
 ## 2.6.4
 There was a bug introduced in 2.5 which did always overwrite the attributes from manage. This prevented the removal of
 attributes when one was removed.
