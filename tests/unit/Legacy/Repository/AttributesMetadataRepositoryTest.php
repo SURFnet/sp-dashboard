@@ -51,14 +51,13 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
           "uid",
           "principleName",
           "preferredLanguage",
-          "isMemberOf",
           "personalCode",
           "eduPersonTargetedID",
         ];
 
         $attributes = $this->repository->findAll();
 
-        $this->assertCount(16, $attributes);
+        $this->assertCount(15, $attributes);
         foreach ($attributes as $attribute) {
             $this->assertContains($attribute->id, $expectedAttributes);
         }
@@ -106,5 +105,31 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
         foreach ($attributes as $attribute) {
             $this->assertContains($attribute->id, $expectedAttributes);
         }
+    }
+
+    public function test_it_has_all_metadata_attribute_urns()
+    {
+        $expectedAttributes = [
+            'urn:mace:dir:attribute-def:displayName',
+            'urn:mace:dir:attribute-def:eduPersonAffiliation',
+            'urn:mace:dir:attribute-def:eduPersonScopedAffiliation',
+            'urn:mace:dir:attribute-def:mail',
+            'urn:mace:dir:attribute-def:cn',
+            'urn:mace:terena.org:attribute-def:schacHomeOrganization',
+            'urn:mace:terena.org:attribute-def:schacHomeOrganizationType',
+            'urn:mace:dir:attribute-def:sn',
+            'urn:mace:dir:attribute-def:givenName',
+            'urn:mace:dir:attribute-def:eduPersonEntitlement',
+            'urn:mace:dir:attribute-def:uid',
+            'urn:mace:dir:attribute-def:eduPersonPrincipalName',
+            'urn:mace:dir:attribute-def:preferredLanguage',
+            'urn:schac:attribute-def:schacPersonalUniqueCode',
+            'urn:mace:dir:attribute-def:eduPersonTargetedID',
+        ];
+
+        $urns = $this->repository->findAllAttributeUrns();
+
+        $this->assertCount(15, $urns);
+        $this->assertEquals($expectedAttributes, $urns);
     }
 }
