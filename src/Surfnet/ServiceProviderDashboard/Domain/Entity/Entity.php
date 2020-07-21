@@ -596,15 +596,11 @@ class Entity
                 continue;
             }
 
-            $setter = $attributeDefinition->setterName;
-            if (empty($setter)) {
-                continue;
-            }
-
             $attribute = new Attribute();
             $attribute->setRequested(true);
             $attribute->setMotivation($manageAttribute->getMotivation());
 
+            $setter = $attributeDefinition->setterName;
             $entity->{$setter}($attribute);
         }
     }

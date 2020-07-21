@@ -45,11 +45,6 @@ class ArpGenerator implements MetadataGenerator
         foreach ($this->repository->findAll() as $definition) {
             $getterName = $definition->getterName;
 
-            // Skip attributes we know about but don't have registered.
-            if (!method_exists($entity, $getterName)) {
-                continue;
-            }
-
             $attr = $entity->$getterName();
 
             if ($attr instanceof Attribute && $attr->isRequested()) {
