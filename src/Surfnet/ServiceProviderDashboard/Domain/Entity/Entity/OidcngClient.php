@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2019 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
+namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\RuntimeException;
 use Webmozart\Assert\Assert;
 
-class OidcClient implements OidcClientInterface
+class OidcngClient implements OidcClientInterface
 {
     /**
      * @var string
@@ -43,45 +42,69 @@ class OidcClient implements OidcClientInterface
      * @var array
      */
     private $scope;
+    /**
+     * @var bool
+     */
+    private $isPublicClient;
+    /**
+     * @var int
+     */
+    private $accessTokenValidity;
+    /**
+     * @var array
+     */
+    private $resourceServers;
 
     /**
      * @param array $data
-     * @return OidcClient|null
+     * @param string $manageProtocol
+     * @return OidcngClient
      */
     public static function fromApiResponse(array $data, $manageProtocol)
     {
-        if (!isset($data['data']['oidcClient'])) {
-            return null;
-        }
+        $clientId = self::getStringOrEmpty($data['data'], 'entityid');
+        $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
+        $redirectUris = self::getStringOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
+        $scope = self::getStringOrEmpty($data['data']['metaDataFields'], 'scopes');
 
-        $clientId = isset($data['data']['oidcClient']['clientId']) ? $data['data']['oidcClient']['clientId'] : '';
-        $clientSecret = isset($data['data']['oidcClient']['clientSecret']) ? $data['data']['oidcClient']['clientSecret'] : '';
-        $redirectUris = isset($data['data']['oidcClient']['redirectUris']) ? $data['data']['oidcClient']['redirectUris'] : '';
-        $grantType = isset($data['data']['oidcClient']['grantType']) ? $data['data']['oidcClient']['grantType'] : '';
-        $scope = isset($data['data']['oidcClient']['scope']) ? $data['data']['oidcClient']['scope'] : '';
+        $grantType = isset($data['data']['metaDataFields']['grants'])
+            ? reset($data['data']['metaDataFields']['grants']) : '';
+        $isPublicClient = isset($data['data']['metaDataFields']['isPublicClient'])
+            ? $data['data']['metaDataFields']['isPublicClient'] : true;
+        $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
+            ? $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
+        $resourceServers = isset($data['resourceServers']) ? $data['resourceServers'] : [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
         Assert::isArray($redirectUris);
         Assert::string($grantType);
         Assert::isArray($scope);
+        Assert::boolean($isPublicClient);
+        Assert::numeric($accessTokenValidity);
+        Assert::isArray($resourceServers);
 
         return new self(
             $clientId,
             $clientSecret,
             $redirectUris,
             $grantType,
-            $scope
+            $scope,
+            $isPublicClient,
+            $accessTokenValidity,
+            $resourceServers
         );
     }
 
     /**
-     * @param string $clientId,
+     * @param string $clientId ,
      * @param string $clientSecret
      * @param array $redirectUris
      * @param string $grantType
-     * @param string $nameIdFormat
      * @param array $scope
+     * @param bool $isPublicClient
+     * @param int $accessTokenValidity
+     * @param array $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function __construct(
@@ -89,13 +112,29 @@ class OidcClient implements OidcClientInterface
         $clientSecret,
         $redirectUris,
         $grantType,
-        $scope
+        $scope,
+        $isPublicClient,
+        $accessTokenValidity,
+        $resourceServers
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUris = $redirectUris;
         $this->grantType = $grantType;
         $this->scope = $scope;
+        $this->isPublicClient = $isPublicClient;
+        $this->accessTokenValidity = $accessTokenValidity;
+        $this->resourceServers = $resourceServers;
+    }
+
+    /**
+     * @param array $data
+     * @param $key
+     * @return string
+     */
+    private static function getStringOrEmpty(array $data, $key)
+    {
+        return isset($data[$key]) ? $data[$key] : '';
     }
 
     /**
@@ -139,26 +178,23 @@ class OidcClient implements OidcClientInterface
     }
 
     /**
-     * @throws RuntimeException
+     * @return bool
      */
     public function isPublicClient()
     {
-        throw new RuntimeException('This method is not supported by the OidcClient');
+        return $this->isPublicClient;
     }
 
     /**
-     * @throws RuntimeException
+     * @return int
      */
     public function getAccessTokenValidity()
     {
-        throw new RuntimeException('This method is not supported by the OidcClient');
+        return $this->accessTokenValidity;
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function getResourceServers()
     {
-        throw new RuntimeException('This method is not supported by the OidcClient');
+        return $this->resourceServers;
     }
 }

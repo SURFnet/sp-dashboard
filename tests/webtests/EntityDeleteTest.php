@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityDeleteTest extends WebTestCase

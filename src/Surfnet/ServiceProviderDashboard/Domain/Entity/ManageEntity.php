@@ -16,10 +16,23 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto;
+namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClient;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 
+/**
+ * TODO: All factory logic should be offloaded to Application or Infra layers where the
+ * entity is used in a specific context. This particularly applies for the factory
+ * methods found in the 'Entity/Entity' namespace.
+ */
 class ManageEntity
 {
     private $id;

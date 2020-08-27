@@ -19,10 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\CommandHandler\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SelectServiceCommandHandler implements CommandHandler
 {
