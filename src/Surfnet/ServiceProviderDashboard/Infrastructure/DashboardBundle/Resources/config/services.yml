@@ -1,6 +1,7 @@
 services:
     _defaults:
         autowire: true
+        autoconfigure: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
         resource: '../../Controller'
@@ -437,6 +438,9 @@ services:
         factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\ManageClientFactory:createClient"
         arguments:
             - "@surfnet.manage.configuration.production"
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactory
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand

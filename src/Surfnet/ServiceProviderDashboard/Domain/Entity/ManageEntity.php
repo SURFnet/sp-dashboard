@@ -147,6 +147,11 @@ class ManageEntity
         return $this->status;
     }
 
+    public function isPublished()
+    {
+        return ($this->status === 'published');
+    }
+
     /**
      * @return OidcClientInterface|null
      */

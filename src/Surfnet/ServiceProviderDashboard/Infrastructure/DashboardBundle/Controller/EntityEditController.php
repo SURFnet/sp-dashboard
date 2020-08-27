@@ -50,13 +50,8 @@ class EntityEditController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
-     * @Route("/entity/edit/{id}", name="entity_edit")
-     * @Security("token.hasAccessToEntity(request.get('entity'))")
+     * @Route("/entity/edit/{environment}/{manageId}", name="entity_edit")
      * @Template()
-     *
-     * @param Request $request
-     * @param Entity $entity
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      *
@@ -64,18 +59,21 @@ class EntityEditController extends Controller
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function editAction(Request $request, Entity $entity)
+    public function editAction(Request $request, string $environment, string $manageId)
     {
         $flashBag = $this->get('session')->getFlashBag();
+        $entity = $this->entityService->getManageEntityById($manageId, $environment);
+        $protocol = $entity->getProtocol()->getProtocol();
+        $service = $this->serviceService->getServiceById($this->authorizationService->getActiveServiceId());
 
-        if ($entity->isReadOnly()) {
+        if ($protocol === Entity::TYPE_OPENID_CONNECT) {
             throw $this->createNotFoundException(
                 'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
             );
         }
 
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        if ($protocol === Entity::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($service, $entity->getStatus())
         ) {
             throw $this->createAccessDeniedException(
                 'You are not allowed to modify oidcng entities for this environment.'
@@ -87,7 +85,7 @@ class EntityEditController extends Controller
             $flashBag->clear();
         }
 
-        $form = $this->entityTypeFactory->createEditForm($entity);
+        $form = $this->entityTypeFactory->createEditForm($entity, $service, $environment);
         $command = $form->getData();
 
         if ($entity->isPublished()) {
@@ -132,7 +130,7 @@ class EntityEditController extends Controller
 
         return [
             'form' => $form->createView(),
-            'type' => $entity->getProtocol(),
+            'type' => $entity->getProtocol()->getProtocol(),
         ];
     }
 

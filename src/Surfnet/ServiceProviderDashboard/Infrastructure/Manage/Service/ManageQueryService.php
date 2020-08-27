@@ -18,8 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 
 class ManageQueryService
 {
@@ -41,22 +43,27 @@ class ManageQueryService
         $this->productionQueryClient = $production;
     }
 
-    public function findManageIdByEntityId($environment, $entityId)
+    public function findManageIdByEntityId(string $environment, string $entityId): ?string
     {
         return $this->getClient($environment)->findManageIdByEntityId($entityId);
     }
 
-    public function findByManageId($environment, $manageId)
+    public function findByManageId(string $environment, string $manageId): ?ManageEntity
     {
         return $this->getClient($environment)->findByManageId($manageId);
     }
 
-    public function getMetadataXmlByManageId($environment, $manageId)
+    public function getMetadataXmlByManageId(string $environment, string $manageId): string
     {
         return $this->getClient($environment)->getMetadataXmlByManageId($manageId);
     }
 
-    public function findByTeamName($environment, $teamName, $state)
+    /**
+     * @return ManageEntity[]|null
+     * @throws InvalidArgumentException
+     * @throws QueryServiceProviderException
+     */
+    public function findByTeamName(string $environment, string $teamName, string $state): ?array
     {
         return $this->getClient($environment)->findByTeamName($teamName, $state);
     }

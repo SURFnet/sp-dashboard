@@ -99,7 +99,7 @@ class EntityActions
         if ($this->readOnly) {
             return false;
         }
-        return $this->status == DomainEntity::STATE_DRAFT;
+        return true;
     }
 
     /**

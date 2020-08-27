@@ -54,6 +54,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     /**
      * @var bool
+     * @deprecated
      */
     private $archived = false;
 
@@ -69,7 +70,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      * Metadata URL that import last happened from.
      *
      * @var string
-
+     * @deprecated
      */
     private $importUrl;
 
@@ -82,6 +83,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     /**
      * @var string
+     * @deprecated
      */
     private $pastedMetadata;
 
@@ -359,7 +361,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      */
     private $manageId;
 
-    private function __construct()
+    public function __construct()
     {
     }
 
@@ -400,10 +402,13 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $command->descriptionNl = $entity->getDescriptionNl();
         $command->descriptionEn = $entity->getDescriptionEn();
         $command->applicationUrl = $entity->getApplicationUrl();
+
+
         $command->eulaUrl = $entity->getEulaUrl();
         $command->administrativeContact = $entity->getAdministrativeContact();
         $command->technicalContact = $entity->getTechnicalContact();
         $command->supportContact = $entity->getSupportContact();
+
         $command->givenNameAttribute = $entity->getGivenNameAttribute();
         $command->surNameAttribute = $entity->getSurNameAttribute();
         $command->commonNameAttribute = $entity->getCommonNameAttribute();
@@ -419,6 +424,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $command->personalCodeAttribute = $entity->getPersonalCodeAttribute();
         $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
         $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
+
         $command->comments = $entity->getComments();
         $command->nameIdFormat = $entity->getNameIdFormat();
         $command->organizationNameNl = $entity->getOrganizationNameNl();
@@ -704,50 +710,32 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->eulaUrl = $eulaUrl;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getAdministrativeContact()
+    public function getAdministrativeContact(): ?Contact
     {
         return $this->administrativeContact;
     }
 
-    /**
-     * @param Contact $administrativeContact
-     */
-    public function setAdministrativeContact($administrativeContact)
+    public function setAdministrativeContact(?Contact $administrativeContact)
     {
         $this->administrativeContact = $administrativeContact;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getTechnicalContact()
+    public function getTechnicalContact(): ?Contact
     {
         return $this->technicalContact;
     }
 
-    /**
-     * @param Contact $technicalContact
-     */
-    public function setTechnicalContact($technicalContact)
+    public function setTechnicalContact(?Contact $technicalContact)
     {
         $this->technicalContact = $technicalContact;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getSupportContact()
+    public function getSupportContact(): ?Contact
     {
         return $this->supportContact;
     }
 
-    /**
-     * @param Contact $supportContact
-     */
-    public function setSupportContact($supportContact)
+    public function setSupportContact(?Contact $supportContact)
     {
         $this->supportContact = $supportContact;
     }
