@@ -179,7 +179,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private $protocol = Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
 
-    private function __construct()
+    public function __construct()
     {
     }
 
@@ -191,41 +191,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     {
         $command = new self();
         $command->service = $service;
-
-        return $command;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return SaveOidcngResourceServerEntityCommand
-     */
-    public static function fromEntity(Entity $entity)
-    {
-        $command = new self();
-        $command->id = $entity->getId();
-        $command->status = $entity->getStatus();
-        $command->manageId = $entity->getManageId();
-        $command->service = $entity->getService();
-        $command->archived = $entity->isArchived();
-        $command->environment = $entity->getEnvironment();
-        $command->entityId = $entity->getEntityId();
-        $command->secret = $entity->getClientSecret();
-        $command->nameNl = $entity->getNameNl();
-        $command->nameEn = $entity->getNameEn();
-        $command->comments = $entity->getComments();
-        // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
-        $command->descriptionNl = $entity->getDescriptionNl();
-        $command->descriptionEn = $entity->getDescriptionEn();
-        $command->administrativeContact = $entity->getAdministrativeContact();
-        $command->technicalContact = $entity->getTechnicalContact();
-        $command->supportContact = $entity->getSupportContact();
-        $command->organizationNameNl = $entity->getOrganizationNameNl();
-        $command->organizationNameEn = $entity->getOrganizationNameEn();
-        $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
-        $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
-        $command->organizationUrlNl = $entity->getOrganizationUrlNl();
-        $command->organizationUrlEn = $entity->getOrganizationUrlEn();
 
         return $command;
     }

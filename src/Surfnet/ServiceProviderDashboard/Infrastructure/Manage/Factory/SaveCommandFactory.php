@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityComman
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -133,7 +132,27 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
     public function buildOidcngRsCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveOidcngResourceServerEntityCommand
     {
+        $command = new SaveOidcngResourceServerEntityCommand();
+        $metaData = $manageEntity->getMetaData();
 
+        $command->setId($manageEntity->getId());
+        $command->setManageId($manageEntity->getId());
+        $command->setStatus($manageEntity->getStatus());
+        $command->setEnvironment($environment);
+        $command->setEntityId($metaData->getEntityId());
+
+        $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
+
+        $command->setNameNl($metaData->getNameNl());
+        $command->setNameEn($metaData->getNameEn());
+        $command->setDescriptionNl($metaData->getDescriptionNl());
+        $command->setDescriptionEn($metaData->getDescriptionEn());
+
+        $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
+        $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));
+        $command->setSupportContact(Contact::from($metaData->getContacts()->findSupportContact()));
+
+        return $command;
     }
 
     private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList)

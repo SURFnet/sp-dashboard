@@ -107,14 +107,13 @@ class EntityTypeFactory
                 $command->setService($service);
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
             case (Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-                $command = SaveOidcngResourceServerEntityCommand::fromEntity($entity);
-                $command->setEnvironment($entity->getEnvironment());
-                return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
+                $command = $this->saveCommandFactory->buildOidcngRsCommandByManageEntity($entity, $environment);
+                $command->setService($service);
+                return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($environment));
         }
 
         throw new InvalidArgumentException("invalid form type requested");
     }
-
 
     private function buildOptions($environment)
     {
