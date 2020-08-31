@@ -441,6 +441,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactory
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand

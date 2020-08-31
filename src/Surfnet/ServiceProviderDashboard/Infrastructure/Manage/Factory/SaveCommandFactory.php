@@ -30,14 +30,31 @@ use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataReposit
 
 class SaveCommandFactory implements SaveCommandFactoryInterface
 {
+    const ENVIRONMENT_PRODUCTION = 'prod';
+
     /**
      * @var AttributesMetadataRepository
      */
     private $attributeRepository;
 
-    public function __construct(AttributesMetadataRepository $attributeRepository)
-    {
+    /**
+     * @var string
+     */
+    private $playGroundUriProd;
+
+    /**
+     * @var string
+     */
+    private $playGroundUriTest;
+
+    public function __construct(
+        AttributesMetadataRepository $attributeRepository,
+        string $oidcPlaygroundUriTest,
+        string $oidcPlaygroundUriProd
+    ) {
         $this->attributeRepository = $attributeRepository;
+        $this->playGroundUriTest = $oidcPlaygroundUriTest;
+        $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
     public function buildSamlCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveSamlEntityCommand
@@ -127,6 +144,9 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
             }
             $command->setOidcngResourceServers($servers);
         }
+
+        $this->setRedirectUris($command, $manageEntity, $environment, $this->playgroundUriTest, $this->playgroundUriProd);
+
         return $command;
     }
 
@@ -171,5 +191,24 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
             $setter = $attributeDefinition->setterName;
             $command->{$setter}($attribute);
         }
+    }
+
+    /**
+     * @param SaveEntityCommandInterface|SaveOidcngResourceServerEntityCommand|SaveOidcngEntityCommand $command
+     * @param ManageEntity $manageEntity
+     * @param $environment
+     */
+    private function setRedirectUris(SaveEntityCommandInterface $command, ManageEntity $manageEntity, $environment)
+    {
+        $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
+        $playGroundUri = ($environment === self::ENVIRONMENT_PRODUCTION ? $this->playGroundUriProd : $this->playGroundUriTest);
+        if (in_array($playGroundUri, $redirectUris)) {
+            $key = array_search($playGroundUri, $redirectUris);
+            if ($key !== false) {
+                unset($redirectUris[$key]);
+                $command->setEnablePlayground(true);
+            }
+        }
+        $command->setRedirectUrls($redirectUris);
     }
 }

@@ -432,7 +432,6 @@ class SamlEntityType extends AbstractType
             ->add('organizationUrlNl', HiddenType::class)
             ->add('organizationUrlEn', HiddenType::class)
 
-            ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
             ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }

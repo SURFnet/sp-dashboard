@@ -63,8 +63,8 @@ class EntityTypeFactory
      */
     public function createCreateForm($type, Service $service, $environment, Entity $entity = null)
     {
-//        switch (true) {
-//            case ($type == Entity::TYPE_SAML):
+        switch (true) {
+            case ($type == Entity::TYPE_SAML):
                 $command = SaveSamlEntityCommand::forCreateAction($service);
                 if ($entity) {
                     $command = SaveSamlEntityCommand::fromEntity($entity);
@@ -90,9 +90,9 @@ class EntityTypeFactory
 //                    $command,
 //                    $this->buildOptions($environment)
 //                );
-//        }
+        }
 
-//        throw new InvalidArgumentException("invalid form type requested: " . $type);
+        throw new InvalidArgumentException("invalid form type requested: " . $type);
     }
 
     public function createEditForm(ManageEntity $entity, Service $service, string $environment)
