@@ -386,7 +386,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     private $resourceServers = [];
 
-    private function __construct()
+    public function __construct()
     {
     }
 
@@ -835,6 +835,14 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setEmailAddressAttribute($emailAddressAttribute)
     {
         $this->emailAddressAttribute = $emailAddressAttribute;
+    }
+
+    /**
+     * @param Attribute $eduPersonTargetedIDAttribute
+     */
+    public function setEduPersonTargetedIDAttribute($eduPersonTargetedIDAttribute)
+    {
+        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
     }
 
     /**

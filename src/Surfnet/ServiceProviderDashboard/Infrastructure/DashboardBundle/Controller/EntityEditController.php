@@ -73,7 +73,7 @@ class EntityEditController extends Controller
         }
 
         if ($protocol === Entity::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($service, $entity->getStatus())
+            !$this->authorizationService->isOidcngAllowed($service, $environment)
         ) {
             throw $this->createAccessDeniedException(
                 'You are not allowed to modify oidcng entities for this environment.'

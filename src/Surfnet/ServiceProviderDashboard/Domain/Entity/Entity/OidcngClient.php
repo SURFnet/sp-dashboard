@@ -23,6 +23,10 @@ use Webmozart\Assert\Assert;
 class OidcngClient implements OidcClientInterface
 {
     /**
+     * TODO: Find a way to set this, or otherwise be able to verify what the playground url is
+     */
+    const PLAYGROUND_URL = 'https://playground.uri';
+    /**
      * @var string
      */
     private $clientId;
@@ -188,7 +192,7 @@ class OidcngClient implements OidcClientInterface
     /**
      * @return int
      */
-    public function getAccessTokenValidity()
+    public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
     }
@@ -196,5 +200,11 @@ class OidcngClient implements OidcClientInterface
     public function getResourceServers()
     {
         return $this->resourceServers;
+    }
+
+    public function isPlaygroundEnabled(): bool
+    {
+        $uris = $this->getRedirectUris();
+        return in_array(self::PLAYGROUND_URL, $uris);
     }
 }

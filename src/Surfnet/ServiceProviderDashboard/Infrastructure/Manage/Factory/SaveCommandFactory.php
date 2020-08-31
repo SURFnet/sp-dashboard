@@ -18,9 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory;
 
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -46,6 +48,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $coins = $manageEntity->getMetaData()->getCoin();
 
         $command->setId($manageEntity->getId());
+        $command->setManageId($manageEntity->getId());
         $command->setStatus($manageEntity->getStatus());
         $command->setEnvironment($environment);
         $command->setMetadataUrl($metaData->getMetaDataUrl());
@@ -77,7 +80,55 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
     public function buildOidcngCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveOidcngEntityCommand
     {
+        $command = new SaveOidcngEntityCommand();
+        $metaData = $manageEntity->getMetaData();
+        $coins = $manageEntity->getMetaData()->getCoin();
 
+        $command->setId($manageEntity->getId());
+        $command->setManageId($manageEntity->getId());
+        $command->setStatus($manageEntity->getStatus());
+        $command->setEnvironment($environment);
+        $command->setEntityId($metaData->getEntityId());
+        $command->setLogoUrl($metaData->getLogo()->getUrl());
+        $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
+        $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));
+        $command->setSupportContact(Contact::from($metaData->getContacts()->findSupportContact()));
+
+        // Organization data
+        $command->setNameNl($metaData->getNameNl());
+        $command->setNameEn($metaData->getNameEn());
+        $command->setDescriptionNl($metaData->getDescriptionNl());
+        $command->setDescriptionEn($metaData->getDescriptionEn());
+
+        // Coin data
+        $command->setApplicationUrl($coins->getApplicationUrl());
+        $command->setEulaUrl($coins->getEula());
+
+        // Attributes
+        $this->setAttributes($command, $manageEntity->getAttributes());
+
+        // OidcNg settings
+        $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
+        $command->setRedirectUrls($manageEntity->getOidcClient()->getRedirectUris());
+        $command->setGrantType($manageEntity->getOidcClient()->getGrantType());
+
+        // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
+        $command->setSubjectType($metaData->getNameIdFormat());
+        $command->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
+        $command->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
+        $command->setEnablePlayground($manageEntity->getOidcClient()->isPlaygroundEnabled());
+        $command->setOidcngResourceServers($manageEntity->getOidcClient()->getResourceServers());
+
+        $resourceServers = $command->getOidcngResourceServers();
+        if (is_array($resourceServers) && reset($resourceServers) instanceof ManageEntity) {
+            $resourceServers = $command->getOidcngResourceServers();
+            $servers = [];
+            foreach ($resourceServers as $resourceServer) {
+                $servers[$resourceServer->getMetaData()->getEntityId()] = $resourceServer->getMetaData()->getEntityId();
+            }
+            $command->setOidcngResourceServers($servers);
+        }
+        return $command;
     }
 
     public function buildOidcngRsCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveOidcngResourceServerEntityCommand
@@ -85,7 +136,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
     }
 
-    private function setAttributes(SaveSamlEntityCommand $command, AttributeList $attributeList)
+    private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList)
     {
         foreach ($this->attributeRepository->findAll() as $attributeDefinition) {
             $urn = reset($attributeDefinition->urns);

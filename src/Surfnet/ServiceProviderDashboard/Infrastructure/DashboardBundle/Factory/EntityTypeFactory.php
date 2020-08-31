@@ -97,16 +97,16 @@ class EntityTypeFactory
 
     public function createEditForm(ManageEntity $entity, Service $service, string $environment)
     {
-        switch (true) {
-            case ($entity->getProtocol()->getProtocol() == Entity::TYPE_SAML):
+        switch ($entity->getProtocol()->getProtocol()) {
+            case (Entity::TYPE_SAML):
                 $command = $this->saveCommandFactory->buildSamlCommandByManageEntity($entity, $environment);
                 $command->setService($service);
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
-            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG):
-                $command = SaveOidcngEntityCommand::fromEntity($entity);
-                $command->setEnvironment($entity->getEnvironment());
-                return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));
-            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
+            case (Entity::TYPE_OPENID_CONNECT_TNG):
+                $command = $this->saveCommandFactory->buildOidcngCommandByManageEntity($entity, $environment);
+                $command->setService($service);
+                return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
+            case (Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
                 $command = SaveOidcngResourceServerEntityCommand::fromEntity($entity);
                 $command->setEnvironment($entity->getEnvironment());
                 return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($entity->getEnvironment()));

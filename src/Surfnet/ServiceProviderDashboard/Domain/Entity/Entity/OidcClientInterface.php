@@ -57,13 +57,12 @@ interface OidcClientInterface
      */
     public function isPublicClient();
 
-    /**
-     * @return int
-     */
-    public function getAccessTokenValidity();
+    public function getAccessTokenValidity(): int;
 
     /**
      * @return array
      */
     public function getResourceServers();
+
+    public function isPlaygroundEnabled(): bool;
 }

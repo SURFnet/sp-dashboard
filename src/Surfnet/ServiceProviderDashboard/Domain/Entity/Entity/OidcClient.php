@@ -27,7 +27,7 @@ class OidcClient implements OidcClientInterface
      * @var string
      */
     private $clientId;
-    /**
+    /**@return bool
      * @var string
      */
     private $clientSecret;
@@ -149,7 +149,7 @@ class OidcClient implements OidcClientInterface
     /**
      * @throws RuntimeException
      */
-    public function getAccessTokenValidity()
+    public function getAccessTokenValidity(): int
     {
         throw new RuntimeException('This method is not supported by the OidcClient');
     }
@@ -158,6 +158,11 @@ class OidcClient implements OidcClientInterface
      * @throws RuntimeException
      */
     public function getResourceServers()
+    {
+        throw new RuntimeException('This method is not supported by the OidcClient');
+    }
+
+    public function isPlaygroundEnabled(): bool
     {
         throw new RuntimeException('This method is not supported by the OidcClient');
     }
