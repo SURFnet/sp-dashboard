@@ -263,7 +263,7 @@ class EntityCreateController extends Controller
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
 
         if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
         ) {
             throw $this->createAccessDeniedException(
                 'You are not allowed to copy oidcng entities to this environment.'
@@ -271,7 +271,7 @@ class EntityCreateController extends Controller
         }
 
         // load entity into form
-        $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
+        $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment);
         $command = $form->getData();
 
         // A copy can never be saved as draft: changes are published directly to manage.
@@ -322,7 +322,7 @@ class EntityCreateController extends Controller
 
         return [
             'form' => $form->createView(),
-            'type' => $entity->getProtocol(),
+            'type' => $entity->getProtocol()->getProtocol(),
         ];
     }
 }

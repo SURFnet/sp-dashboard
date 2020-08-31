@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
@@ -111,7 +112,7 @@ class LoadEntityService
      * @param Service $service
      * @param string $sourceEnvironment
      * @param string $environment
-     * @return Entity
+     * @return ManageEntity
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
      */
@@ -148,39 +149,39 @@ class LoadEntityService
                 )
             );
         }
-
-        // Convert manage entity to domain entity
-        $domainEntity = Entity::fromManageResponse(
-            $manageEntity,
-            $sourceEnvironment,
-            $service,
-            $this->oidcPlaygroundUriTest,
-            $this->oidcPlaygroundUriProd,
-            $this->oidcngPlaygroundUriTest,
-            $this->oidcngPlaygroundUriProd
-        );
-
-        // Set some defaults
-        $domainEntity->setStatus(Entity::STATE_PUBLISHED);
-        $domainEntity->setId($dashboardId);
-        $domainEntity->setManageId($manageId);
+//
+//        // Convert manage entity to domain entity
+//        $domainEntity = Entity::fromManageResponse(
+//            $manageEntity,
+//            $sourceEnvironment,
+//            $service,
+//            $this->oidcPlaygroundUriTest,
+//            $this->oidcPlaygroundUriProd,
+//            $this->oidcngPlaygroundUriTest,
+//            $this->oidcngPlaygroundUriProd
+//        );
+//
+//        // Set some defaults
+//        $domainEntity->setStatus(Entity::STATE_PUBLISHED);
+//        $domainEntity->setId($dashboardId);
+//        $domainEntity->setManageId($manageId);
 
         // Published production entities must be cloned, not copied
         $isProductionClone = $environment == 'production' && $manageStagingState === 0;
         // Entities copied from test to prod should not have a manage id either
         $isCopyToProduction = $environment == 'production' && $sourceEnvironment == 'test';
         if ($isProductionClone || $isCopyToProduction) {
-            $domainEntity->setManageId(null);
+            $manageEntity = $manageEntity->resetId();
         }
 
-        $this->updateAllowedResourceServers($isCopyToProduction, $domainEntity);
-        $this->updateClientId($isCopyToProduction, $domainEntity);
+//        $this->updateAllowedResourceServers($isCopyToProduction, $domainEntity);
+//        $this->updateClientId($isCopyToProduction, $domainEntity);
 
         // Set the target environment
-        $domainEntity->setEnvironment($environment);
+//        $domainEntity->setEnvironment($environment);
 
         // Return the entity
-        return $domainEntity;
+        return $manageEntity;
     }
 
     /**
