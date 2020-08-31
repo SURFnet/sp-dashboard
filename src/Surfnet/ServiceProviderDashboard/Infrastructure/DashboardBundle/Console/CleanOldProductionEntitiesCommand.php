@@ -17,6 +17,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
@@ -80,7 +81,7 @@ class CleanOldProductionEntitiesCommand extends Command
     private function updateNextBatch(OutputInterface $output)
     {
         // fetch published production entities
-        $clearEntities = $this->entityRepository->findByState(Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION);
+        $clearEntities = $this->entityRepository->findByState(Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_PRODUCTION);
         if (empty($clearEntities)) {
             return false;
         }

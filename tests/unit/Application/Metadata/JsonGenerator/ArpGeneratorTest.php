@@ -22,10 +22,11 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute as ManageAttribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class ArpGeneratorTest extends MockeryTestCase
@@ -105,7 +106,7 @@ class ArpGeneratorTest extends MockeryTestCase
     {
         /** @var Entity $entity */
         $entity = m::mock(Entity::class)->makePartial();
-        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
+        $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG);
 
         $attribute = new Attribute();
         $attribute->setRequested(true);

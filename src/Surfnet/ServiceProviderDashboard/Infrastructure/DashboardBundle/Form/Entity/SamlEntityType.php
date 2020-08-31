@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -129,8 +129,8 @@ class SamlEntityType extends AbstractType
                             'expanded' => true,
                             'multiple' => false,
                             'choices'  => [
-                                'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_TRANSIENT,
-                                'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
+                                'entity.edit.label.transient' => Constants::NAME_ID_FORMAT_TRANSIENT,
+                                'entity.edit.label.persistent' => Constants::NAME_ID_FORMAT_PERSISTENT,
                             ],
                             'attr' => [
                                 'class' => 'nameidformat-container',

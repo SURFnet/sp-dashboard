@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclC
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -83,7 +83,7 @@ class EntityAclController extends Controller
     public function aclAction(Request $request, $serviceId, $id)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
-        $entity = $this->entityService->getEntityByIdAndTarget($id, Entity::ENVIRONMENT_TEST, $service);
+        $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
 
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 

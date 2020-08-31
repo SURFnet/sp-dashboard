@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -143,18 +144,18 @@ class EntityService implements EntityServiceInterface
     public function getEntityById($id)
     {
         $entity = $this->queryRepositoryProvider->getEntityRepository()->findById($id);
-        if ($entity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+        if ($entity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
             // Load the Possibly connected resource servers
             $resourceServers = [];
             switch ($entity->getEnvironment()) {
-                case Entity::ENVIRONMENT_TEST:
+                case Constants::ENVIRONMENT_TEST:
                     foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
                         $resourceServers[] = $this->queryRepositoryProvider
                             ->getManageTestQueryClient()
                             ->findByEntityId($clientId, $this->testManageConfig->getPublicationStatus()->getStatus());
                     }
                     break;
-                case Entity::ENVIRONMENT_PRODUCTION:
+                case Constants::ENVIRONMENT_PRODUCTION:
                     foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
                         $resourceServers[] = $this->queryRepositoryProvider
                             ->getManageProductionQueryClient()
@@ -185,7 +186,7 @@ class EntityService implements EntityServiceInterface
                 // Entities that are still excluded from push are not realy published, but have a publication request
                 // with the service desk.
                 if ($entity->getMetaData()->getCoin()->getExcludeFromPush()) {
-                    $entity->updateStatus(Entity::STATE_PUBLICATION_REQUESTED);
+                    $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
                 }
 
                 $issue = $this->findIssueBy($entity);
@@ -337,7 +338,7 @@ class EntityService implements EntityServiceInterface
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
                     if ($issueCollection->getIssueById($entity->getId())) {
-                        $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
+                        $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                     }
                 }
             }
@@ -375,7 +376,7 @@ class EntityService implements EntityServiceInterface
     private function updateEntityStatusWithJiraTicketStatus(ManageEntity $entity, Issue $issue)
     {
         if ($issue instanceof Issue) {
-            $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
+            $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
         }
     }
 }

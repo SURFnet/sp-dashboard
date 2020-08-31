@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFi
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -82,7 +83,7 @@ class WebTestFixtures extends Fixture
         $entity->setId(Uuid::uuid4());
         $entity->setNameEn($name);
         $entity->setEntityId($name);
-        $entity->setProtocol(Entity::TYPE_SAML);
+        $entity->setProtocol(Constants::TYPE_SAML);
         $entity->setEnvironment('test');
         $entity->setAdministrativeContact(
             $this->createContact('John', 'Doe', 'jdoe@example.org')

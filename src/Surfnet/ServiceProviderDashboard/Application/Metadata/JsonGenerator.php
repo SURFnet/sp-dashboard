@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
@@ -112,7 +113,7 @@ class JsonGenerator implements GeneratorInterface
             'id' => $entity->getManageId(),
         ];
 
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
+        if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
             $data['externalReferenceData'] = [
                 'oidcClient' => $this->generateOidcClient($entity),
             ];
@@ -141,10 +142,10 @@ class JsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
 
         switch (true) {
-            case ($entity->getProtocol() == Entity::TYPE_SAML):
+            case ($entity->getProtocol() == Constants::TYPE_SAML):
                 $metadata['metadataurl'] = $entity->getMetadataUrl();
                 break;
-            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
+            case ($entity->getProtocol() == Constants::TYPE_OPENID_CONNECT):
                 $metadata['oidcClient'] = $this->generateOidcClient($entity);
                 break;
         }
@@ -171,7 +172,7 @@ class JsonGenerator implements GeneratorInterface
 
         $metadata += $this->generateAclData($entity);
 
-        if ($entity->getProtocol() == Entity::TYPE_SAML) {
+        if ($entity->getProtocol() == Constants::TYPE_SAML) {
             $metadata['metadataurl'] = $entity->getMetadataUrl();
         }
 
@@ -242,13 +243,13 @@ class JsonGenerator implements GeneratorInterface
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        if ($entity->getProtocol() == Entity::TYPE_SAML) {
+        if ($entity->getProtocol() === Constants::TYPE_SAML) {
             $metadata['AssertionConsumerService:0:Binding'] = $entity->getAcsBinding();
             $metadata['AssertionConsumerService:0:Location'] = $entity->getAcsLocation();
             $metadata['NameIDFormat'] = $entity->getNameIdFormat();
             $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
             $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
-        } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
+        } else if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
             $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
             $metadata["coin:oidc_client"] = '1';
         }

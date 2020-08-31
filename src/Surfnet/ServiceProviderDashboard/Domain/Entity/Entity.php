@@ -40,27 +40,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Entity
 {
-    const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
-
-    // When adding valid name id formats, don't forget to add them to self::getValidNameIdFormats()
-    const NAME_ID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-    const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
-    const NAME_ID_FORMAT_UNSPECIFIED = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
-
-    const ENVIRONMENT_TEST = 'test';
-    const ENVIRONMENT_PRODUCTION = 'production';
-
-    const STATE_DRAFT = 'draft';
-    const STATE_PUBLISHED = 'published';
-    const STATE_PUBLICATION_REQUESTED = 'requested';
-    const STATE_REMOVAL_REQUESTED = 'removal requested';
-
-    const TYPE_SAML = 'saml20';
-    const TYPE_OPENID_CONNECT = 'oidc';
-    const TYPE_OPENID_CONNECT_TNG = 'oidcng';
-    const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oidcng_rs';
-
-    const OIDC_SECRET_LENGTH = 20;
 
     /**
      * @var string
@@ -80,14 +59,14 @@ class Entity
      * @var string
      * @ORM\Column(type="string")
      */
-    private $environment = self::ENVIRONMENT_TEST;
+    private $environment = Constants::ENVIRONMENT_TEST;
 
 
     /**
      * @var string
      * @ORM\Column(type="string")
      */
-    private $status = self::STATE_DRAFT;
+    private $status = Constants::STATE_DRAFT;
 
     /**
      * @var \DateTime $created
@@ -479,7 +458,7 @@ class Entity
                 $entity->setClientSecret($oidcClient->getClientSecret());
                 $entity->setRedirectUris($oidcClient->getRedirectUris());
                 $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+                $entity->setProtocol(Constants::TYPE_OPENID_CONNECT);
                 self::setRedirectUrisFromManageResponse(
                     $entity,
                     $manageEntity,
@@ -493,7 +472,7 @@ class Entity
                 $entity->setClientSecret($oidcClient->getClientSecret());
                 $entity->setRedirectUris($oidcClient->getRedirectUris());
                 $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
+                $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG);
                 $entity->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
                 $entity->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
                 $entity->setNameIdFormat($metaData->getNameIdFormat());
@@ -512,11 +491,11 @@ class Entity
                 $oidcClient = $manageEntity->getOidcClient();
                 $entity->setClientSecret($oidcClient->getClientSecret());
                 $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-                $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+                $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
                 $entity->setNameIdFormat($metaData->getNameIdFormat());
                 break;
             case (self::TYPE_SAML):
-                $entity->setProtocol(Entity::TYPE_SAML);
+                $entity->setProtocol(Constants::TYPE_SAML);
                 $entity->setImportUrl($metaData->getEntityId());
                 $entity->setMetadataUrl($metaData->getMetaDataUrl());
                 $entity->setAcsLocation($metaData->getAcsLocation());

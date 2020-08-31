@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository;
 
@@ -70,11 +70,11 @@ class ServiceStatusService
         $publishedList = [];
 
         foreach ($entities as $entity) {
-            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
-                if ($entity->getState() == Entity::STATE_PUBLISHED) {
+            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
+                if ($entity->getState() == Constants::STATE_PUBLISHED) {
                     $publishedList[] = $entity;
                 }
-                if ($entity->getState() == Entity::STATE_DRAFT) {
+                if ($entity->getState() == Constants::STATE_DRAFT) {
                     $inProgressList[] = $entity;
                 }
             }
@@ -110,11 +110,11 @@ class ServiceStatusService
         $publishedList = [];
 
         foreach ($entities as $entity) {
-            if ($entity->getEnvironment() === Entity::ENVIRONMENT_PRODUCTION) {
-                if ($entity->getState() == Entity::STATE_PUBLISHED) {
+            if ($entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION) {
+                if ($entity->getState() == Constants::STATE_PUBLISHED) {
                     $publishedList[] = $entity;
                 }
-                if ($entity->getState() == Entity::STATE_PUBLICATION_REQUESTED) {
+                if ($entity->getState() == Constants::STATE_PUBLICATION_REQUESTED) {
                     $inProgressList[] = $entity;
                 }
             }

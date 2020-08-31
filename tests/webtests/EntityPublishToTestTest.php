@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Supplier;
@@ -65,7 +66,7 @@ class EntityPublishToTestTest extends WebTestCase
         $entity = new Entity();
         $entity->setId('a8e7cffd-0409-45c7-a37a-81bb5e7e5f66');
         $entity->setEntityId('https://domain.org/saml/sp/saml2-post/default-sp/metadata');
-        $entity->setProtocol(Entity::TYPE_SAML);
+        $entity->setProtocol(Constants::TYPE_SAML);
         $entity->setMetadataUrl('https://domain.org/saml/sp/saml2-post/default-sp/metadata');
         $entity->setAcsLocation('https://domain.org/saml/sp/saml2-post/default-sp/acs');
         $entity->setCertificate(file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'));
@@ -76,7 +77,7 @@ class EntityPublishToTestTest extends WebTestCase
         $entity->setDescriptionEn('MijnService description');
         $entity->setDescriptionNl('MijnService description');
         $entity->setTechnicalContact($this->buildContact());
-        $entity->setEnvironment(Entity::ENVIRONMENT_TEST);
+        $entity->setEnvironment(Constants::ENVIRONMENT_TEST);
         $entity->setMetadataXml(file_get_contents(__DIR__ . '/fixtures/publish/metadata.xml'));
 
         return $entity;

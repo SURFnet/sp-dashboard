@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
@@ -69,17 +69,17 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         }
 
         $protocol = $entity->getProtocol();
-        if ($protocol !== Entity::TYPE_OPENID_CONNECT_TNG &&
-            $protocol !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+        if ($protocol !== Constants::TYPE_OPENID_CONNECT_TNG &&
+            $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {
             throw new EntityNotFoundException('The requested entity could be found, invalid protocol');
         }
 
-        if ($entity->getStatus() !== Entity::STATE_PUBLISHED) {
+        if ($entity->getStatus() !== Constants::STATE_PUBLISHED) {
             throw new EntityNotFoundException('The requested entity could be found, invalid state');
         }
 
-        $secret = new Secret(Entity::OIDC_SECRET_LENGTH);
+        $secret = new Secret(Constants::OIDC_SECRET_LENGTH);
 
         $entity->setClientSecret($secret->getSecret());
         $entity->setManageId($command->getManageId());

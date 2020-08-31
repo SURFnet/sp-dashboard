@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -43,16 +44,16 @@ class EntityPublishedController extends Controller
         // Redirects OIDC (including TNG) published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
         $protocol = $entity->getProtocol();
-        if ($protocol === Entity::TYPE_OPENID_CONNECT ||
-            $protocol === Entity::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+        if ($protocol === Constants::TYPE_OPENID_CONNECT ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {
             return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
         }
 
         $parameters = ['entityName' => $entity->getNameEn()];
 
-        if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+        if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             return $this->render('@Dashboard/EntityPublished/publishedTest.html.twig', $parameters);
         }
         return $this->render('@Dashboard/EntityPublished/publishedProduction.html.twig', $parameters);

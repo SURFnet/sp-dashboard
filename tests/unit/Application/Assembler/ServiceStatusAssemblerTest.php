@@ -22,6 +22,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Surfnet\ServiceProviderDashboard\Application\Assembler\ServiceStatusAssembler;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Routing\RouterInterface;
@@ -100,7 +101,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => true,
                     'entities' => [
-                        ['id' => 1, 'name' => 'entity-1', 'environment' => Entity::ENVIRONMENT_PRODUCTION],
+                        ['id' => 1, 'name' => 'entity-1', 'environment' => Constants::ENVIRONMENT_PRODUCTION],
                     ],
                 ],
                 'statusService' => [
@@ -159,7 +160,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'contractSigned' => Service::CONTRACT_SIGNED_YES,
                     'isPrivacyQuestionsEnabled' => true,
                     'entities' => [
-                        ['id' => 1, 'name' => 'entity-1', 'environment' => Entity::ENVIRONMENT_PRODUCTION],
+                        ['id' => 1, 'name' => 'entity-1', 'environment' => Constants::ENVIRONMENT_PRODUCTION],
                     ],
                 ],
                 'statusService' => [
@@ -217,9 +218,9 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
                     'contractSigned' => null,
                     'isPrivacyQuestionsEnabled' => true,
                     'entities' => [
-                        ['id' => 1, 'name' => 'entity-1', 'environment' => Entity::ENVIRONMENT_PRODUCTION],
-                        ['id' => 2, 'name' => 'entity-2', 'environment' => Entity::ENVIRONMENT_TEST],
-                        ['id' => 3, 'name' => 'entity-3', 'environment' => Entity::ENVIRONMENT_TEST],
+                        ['id' => 1, 'name' => 'entity-1', 'environment' => Constants::ENVIRONMENT_PRODUCTION],
+                        ['id' => 2, 'name' => 'entity-2', 'environment' => Constants::ENVIRONMENT_TEST],
+                        ['id' => 3, 'name' => 'entity-3', 'environment' => Constants::ENVIRONMENT_TEST],
                     ],
                 ],
                 'statusService' => [
@@ -536,7 +537,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
 
     private function createEntityMock($id, $name, $environment)
     {
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(Constants::class);
 
         $entity->shouldReceive('getId')
             ->andReturn($id);

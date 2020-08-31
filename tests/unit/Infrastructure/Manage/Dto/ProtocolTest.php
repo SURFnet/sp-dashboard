@@ -31,7 +31,7 @@ class ProtocolTest extends MockeryTestCase
      */
     public function test_protocol_determination(array $manageData, $manageProtocol, $expectation)
     {
-        $protocol = Protocol::fromApiResponse($manageData, $manageProtocol);
+        $protocol = Protocol::fromApiResponse($manageData, $manageProtocol, Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
         $this->assertEquals($expectation, $protocol->getProtocol());
     }
 

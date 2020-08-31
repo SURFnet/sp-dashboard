@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityPro
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
@@ -38,7 +39,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
@@ -140,7 +140,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('the-manage-id');
         $entity
             ->shouldReceive('setStatus')
-            ->with(Entity::STATE_PUBLISHED);
+            ->with(Constants::STATE_PUBLISHED);
         $entity
             ->shouldReceive('getService->getConnectionStatus');
 
@@ -210,7 +210,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('the-manage-id');
         $entity
             ->shouldReceive('setStatus')
-            ->with(Entity::STATE_PUBLISHED);
+            ->with(Constants::STATE_PUBLISHED);
         $entity
             ->shouldReceive('getService->getConnectionStatus');
 
@@ -281,7 +281,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('the-manage-id');
         $entity
             ->shouldReceive('setStatus')
-            ->with(Entity::STATE_PUBLISHED);
+            ->with(Constants::STATE_PUBLISHED);
         $entity
             ->shouldReceive('getService->getConnectionStatus');
 

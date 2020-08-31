@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
@@ -69,24 +69,21 @@ class OidcngResourceServerOptionsFactory
     public function build($teamName, $environment)
     {
         switch ($environment) {
-            case Entity::ENVIRONMENT_TEST:
+            case Constants::ENVIRONMENT_TEST:
                 return $this->createChoicesFrom(
                     $this->testEntityRepository->findOidcngResourceServersByTeamName($teamName, $this->testPublicationState)
                 );
-                break;
 
-            case Entity::ENVIRONMENT_PRODUCTION:
+            case Constants::ENVIRONMENT_PRODUCTION:
                 return  $this->createChoicesFrom(
                     $this->productionRepository->findOidcngResourceServersByTeamName(
                         $teamName,
                         $this->productionPublicationState
                     )
                 );
-                break;
 
             default:
                 throw new InvalidEnvironmentException(sprintf('Environment "%s" is not supported', $environment));
-                break;
         }
     }
 

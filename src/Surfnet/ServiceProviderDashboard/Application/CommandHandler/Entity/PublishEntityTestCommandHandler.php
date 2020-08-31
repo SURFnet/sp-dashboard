@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
@@ -104,7 +105,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
     private function isNewResourceServer(Entity $entity)
     {
         $isNewEntity = empty($entity->getManageId());
-        return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        return $isNewEntity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
     /**

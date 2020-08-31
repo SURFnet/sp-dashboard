@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -65,7 +66,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"production", "test"}, strict=true)
      */
-    private $environment = Entity::ENVIRONMENT_TEST;
+    private $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * @var string
@@ -131,7 +132,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $logoUrl;
 
     /**
-     * The subject type is comparable to the SAML name id format, that is why the Entity::NAME_ID_FORMAT_DEFAULT
+     * The subject type is comparable to the SAML name id format, that is why the Constants::NAME_ID_FORMAT_DEFAULT
      * (transient) is used to set the default value.
      *
      * @var string
@@ -143,7 +144,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      *     strict=true
      * )
      */
-    private $subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
+    private $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string
@@ -379,7 +380,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      */
-    private $protocol = Entity::TYPE_OPENID_CONNECT_TNG;
+    private $protocol = Constants::TYPE_OPENID_CONNECT_TNG;
 
     /**
      * @var string[]
@@ -525,8 +526,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         if (!in_array(
             $environment,
             [
-                Entity::ENVIRONMENT_TEST,
-                Entity::ENVIRONMENT_PRODUCTION,
+                Constants::ENVIRONMENT_TEST,
+                Constants::ENVIRONMENT_PRODUCTION,
             ]
         )) {
             throw new InvalidArgumentException(
@@ -1111,7 +1112,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     public function isForProduction()
     {
-        return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
+        return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function setId($id)
@@ -1245,7 +1246,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         // If the SubjectType is not set in the draft, we set the default value (transient) as requested in:
         // https://www.pivotaltracker.com/story/show/167511146
         if (is_null($subjectType)) {
-            $this->subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
+            $this->subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
         }
     }
 

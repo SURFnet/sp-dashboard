@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -274,13 +275,13 @@ class EntityDetail
         $entityDetail->id = $entity->getId();
         $entityDetail->manageId = $entity->getManageId();
         $entityDetail->protocol = $entity->getProtocol();
-        if ($entity->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT) {
+        if ($entity->getProtocol() == Constants::TYPE_OPENID_CONNECT) {
             $entityDetail->grantType = $entity->getGrantType()->getGrantType();
             $entityDetail->redirectUris = $entity->getRedirectUris();
             $entityDetail->playgroundEnabled = $entity->isEnablePlayground();
         }
 
-        if ($entity->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT_TNG) {
+        if ($entity->getProtocol() == Constants::TYPE_OPENID_CONNECT_TNG) {
             $entityDetail->grantType = $entity->getGrantType()->getGrantType();
             $entityDetail->isPublicClient = $entity->isPublicClient();
             $entityDetail->accessTokenValidity = $entity->getAccessTokenValidity();
@@ -366,7 +367,7 @@ class EntityDetail
      */
     public function getEntityId()
     {
-        if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
+        if ($this->getProtocol() !== Constants::TYPE_OPENID_CONNECT) {
             return $this->entityId;
         }
         return OidcClientIdParser::parse($this->entityId);

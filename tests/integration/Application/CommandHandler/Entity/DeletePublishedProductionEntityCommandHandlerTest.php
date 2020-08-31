@@ -25,6 +25,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedProductionEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 
@@ -67,7 +68,7 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Entity::TYPE_OPENID_CONNECT_TNG)
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_OPENID_CONNECT_TNG)
             ->andReturn(DeleteEntityRepository::RESULT_SUCCESS);
 
         $this->logger
@@ -89,7 +90,7 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Entity::TYPE_SAML)
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_SAML)
             ->andReturn(false);
 
         $this->logger
@@ -110,7 +111,7 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Entity::TYPE_OPENID_CONNECT)
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_OPENID_CONNECT)
             ->andThrow(UnableToDeleteEntityException::class);
 
         $this->logger

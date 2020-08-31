@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Provider;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
 
@@ -59,10 +59,10 @@ class EntityQueryRepositoryProvider
     public function fromEnvironment($environment)
     {
         switch ($environment) {
-            case Entity::ENVIRONMENT_TEST:
+            case Constants::ENVIRONMENT_TEST:
                 return $this->manageTestQueryClient;
                 break;
-            case Entity::ENVIRONMENT_PRODUCTION:
+            case Constants::ENVIRONMENT_PRODUCTION:
                 return $this->manageProductionQueryClient;
                 break;
             default:

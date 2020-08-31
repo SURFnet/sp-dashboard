@@ -23,6 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
@@ -103,9 +104,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_SAML,
+            Constants::TYPE_SAML,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION,
             null
         );
 
@@ -135,9 +136,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_SAML,
+            Constants::TYPE_SAML,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION,
             $this->entity
         );
 
@@ -167,9 +168,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG,
+            Constants::TYPE_OPENID_CONNECT_TNG,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION,
             null
         );
 
@@ -199,9 +200,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG,
+            Constants::TYPE_OPENID_CONNECT_TNG,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION,
             $this->entity
         );
 
@@ -231,9 +232,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
+            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION,
             null
         );
 
@@ -263,9 +264,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
+            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION,
             $this->entity
         );
 

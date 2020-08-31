@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository;
@@ -101,40 +102,40 @@ class ServiceStatusServiceTest extends MockeryTestCase
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_TEST],
+                    0 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST],
                 ]),
                 Service::ENTITY_PUBLISHED_IN_PROGRESS,
                 'One drafted entity should result in "in progress"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_TEST],
-                    1 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_TEST],
-                    2 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_TEST],
+                    0 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST],
+                    1 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST],
+                    2 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST],
                 ]),
                 Service::ENTITY_PUBLISHED_IN_PROGRESS,
                 'Multiple drafted entity should result in "in progress"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_TEST],
+                    0 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_TEST],
                 ]),
                 Service::ENTITY_PUBLISHED_YES,
                 'One published entity should result in "yes"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_TEST],
-                    1 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_TEST],
+                    0 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_TEST],
+                    1 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_TEST],
                 ]),
                 Service::ENTITY_PUBLISHED_YES,
                 'Multiple published entity should result in "yes"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_TEST],
-                    1 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_TEST],
-                    2 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_TEST],
+                    0 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST],
+                    1 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_TEST],
+                    2 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST],
                 ]),
                 Service::ENTITY_PUBLISHED_YES,
                 'Multiple mixed value published entity should result in "yes"',
@@ -148,14 +149,14 @@ class ServiceStatusServiceTest extends MockeryTestCase
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_PRODUCTION],
+                    0 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_PRODUCTION],
                 ]),
                 Service::ENTITY_PUBLISHED_NO,
                 'No entities are available for this service, so none are published.',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
+                    0 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_PRODUCTION],
                 ]),
                 Service::ENTITY_PUBLISHED_NO,
                 'No entities are available for this service, so none are published.',
@@ -169,47 +170,47 @@ class ServiceStatusServiceTest extends MockeryTestCase
             [
                 $this->buildEntities(
                     [],
-                    Entity::ENVIRONMENT_PRODUCTION
+                    Constants::ENVIRONMENT_PRODUCTION
                 ),
                 Service::CONNECTION_STATUS_NOT_REQUESTED,
                 'No entities are available for this service, so none are published.',
             ],
             [
                 $this->buildEntities(
-                    [0 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION]]
+                    [0 => [Constants::STATE_PUBLICATION_REQUESTED, Constants::ENVIRONMENT_PRODUCTION]]
                 ),
                 Service::CONNECTION_STATUS_REQUESTED,
                 'One drafted entity should result in "in progress"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
-                    1 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
-                    2 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
+                    0 => [Constants::STATE_PUBLICATION_REQUESTED, Constants::ENVIRONMENT_PRODUCTION],
+                    1 => [Constants::STATE_PUBLICATION_REQUESTED, Constants::ENVIRONMENT_PRODUCTION],
+                    2 => [Constants::STATE_PUBLICATION_REQUESTED, Constants::ENVIRONMENT_PRODUCTION],
                 ]),
                 Service::CONNECTION_STATUS_REQUESTED,
                 'Multiple drafted entity should result in "in progress"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
+                    0 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_PRODUCTION],
                 ]),
                 Service::CONNECTION_STATUS_ACTIVE,
                 'One published entity should result in "yes"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
-                    1 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
+                    0 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_PRODUCTION],
+                    1 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_PRODUCTION],
                 ]),
                 Service::CONNECTION_STATUS_ACTIVE,
                 'Multiple published entity should result in "yes"',
             ],
             [
                 $this->buildEntities([
-                    0 => [Entity::STATE_DRAFT, Entity::ENVIRONMENT_PRODUCTION],
-                    1 => [Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION],
-                    2 => [Entity::STATE_PUBLICATION_REQUESTED, Entity::ENVIRONMENT_PRODUCTION],
+                    0 => [Constants::STATE_DRAFT, Constants::ENVIRONMENT_PRODUCTION],
+                    1 => [Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_PRODUCTION],
+                    2 => [Constants::STATE_PUBLICATION_REQUESTED, Constants::ENVIRONMENT_PRODUCTION],
                 ]),
                 Service::CONNECTION_STATUS_ACTIVE,
                 'Multiple mixed value published entity should result in "yes"',

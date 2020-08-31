@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormEvents;
@@ -66,13 +67,13 @@ class EntityEditController extends Controller
         $protocol = $entity->getProtocol()->getProtocol();
         $service = $this->serviceService->getServiceById($this->authorizationService->getActiveServiceId());
 
-        if ($protocol === Entity::TYPE_OPENID_CONNECT) {
+        if ($protocol === Constants::TYPE_OPENID_CONNECT) {
             throw $this->createNotFoundException(
                 'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
             );
         }
 
-        if ($protocol === Entity::TYPE_OPENID_CONNECT_TNG &&
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG &&
             !$this->authorizationService->isOidcngAllowed($service, $environment)
         ) {
             throw $this->createAccessDeniedException(

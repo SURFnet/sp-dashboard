@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -212,7 +213,7 @@ class LoadEntityService
      */
     private function updateAllowedResourceServers($isCopyToProduction, Entity $domainEntity)
     {
-        if ($isCopyToProduction && $domainEntity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+        if ($isCopyToProduction && $domainEntity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
             $domainEntity->setOidcngResourceServers(new ResourceServerCollection([]));
         }
     }
@@ -228,8 +229,8 @@ class LoadEntityService
     private function updateClientId($isCopyToProduction, Entity $domainEntity)
     {
         $protocol = $domainEntity->getProtocol();
-        $isOidcngEntity = $protocol === Entity::TYPE_OPENID_CONNECT_TNG
-            || $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        $isOidcngEntity = $protocol === Constants::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
         if ($isCopyToProduction && $isOidcngEntity) {
             $clientId = OidcngSpdClientIdParser::parse($domainEntity->getEntityId());
             $domainEntity->setEntityId($clientId);

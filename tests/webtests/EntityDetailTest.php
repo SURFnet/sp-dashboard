@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
@@ -59,7 +60,7 @@ class EntityDetailTest extends WebTestCase
 
         /** @var Entity $entity */
         $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
-        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT);
+        $entity->setProtocol(Constants::TYPE_OPENID_CONNECT);
         $entity->setGrantType(new OidcGrantType(OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE));
         $entity->setRedirectUris(['https://sp.example.org', 'https://sp.example.org/redirect2']);
         $entity->setEnablePlayground(true);

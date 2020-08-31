@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityPro
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
@@ -153,7 +154,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $publishResponse = $this->publishClient->publish($entity);
             if (array_key_exists('id', $publishResponse)) {
                 // Set entity status to published
-                $entity->setStatus(Entity::STATE_PUBLISHED);
+                $entity->setStatus(Constants::STATE_PUBLISHED);
 
                 $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
                 // Save changes made to entity
@@ -202,7 +203,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private function isNewResourceServer(Entity $entity)
     {
         $isNewEntity = empty($entity->getManageId());
-        return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        return $isNewEntity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
     private function createJiraTicket(Entity $entity, PublishEntityProductionCommand $command)

@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
@@ -61,7 +62,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"production", "test"}, strict=true)
      */
-    private $environment = Entity::ENVIRONMENT_TEST;
+    private $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * @var string
@@ -177,7 +178,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @var string
      */
-    private $protocol = Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+    private $protocol = Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
 
     public function __construct()
     {
@@ -251,8 +252,8 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         if (!in_array(
             $environment,
             [
-                Entity::ENVIRONMENT_TEST,
-                Entity::ENVIRONMENT_PRODUCTION,
+                Constants::ENVIRONMENT_TEST,
+                Constants::ENVIRONMENT_PRODUCTION,
             ]
         )) {
             throw new InvalidArgumentException(
@@ -529,7 +530,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
 
     public function isForProduction()
     {
-        return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
+        return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function setId($id)

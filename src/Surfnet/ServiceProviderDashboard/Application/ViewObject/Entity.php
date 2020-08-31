@@ -18,6 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
@@ -152,7 +153,7 @@ class Entity
             $result->getStatus(),
             'test',
             $protocol,
-            $protocol === DomainEntity::TYPE_OPENID_CONNECT,
+            $protocol === Constants::TYPE_OPENID_CONNECT,
             $router
         );
     }
@@ -174,7 +175,7 @@ class Entity
 
         $excludeFromPush = $result->getMetaData()->getCoin()->getExcludeFromPush();
         if ($excludeFromPush === 1) {
-            $status = DomainEntity::STATE_PUBLICATION_REQUESTED;
+            $status = Constants::STATE_PUBLICATION_REQUESTED;
         }
         $protocol = $result->getProtocol()->getProtocol();
         return new self(
@@ -186,7 +187,7 @@ class Entity
             $status,
             'production',
             $protocol,
-            $protocol === DomainEntity::TYPE_OPENID_CONNECT,
+            $protocol === Constants::TYPE_OPENID_CONNECT,
             $router
         );
     }
@@ -235,7 +236,7 @@ class Entity
      */
     public function getEntityId()
     {
-        if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
+        if ($this->getProtocol() !== Constants::TYPE_OPENID_CONNECT) {
             return $this->entityId;
         }
         return OidcClientIdParser::parse($this->entityId);

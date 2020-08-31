@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,7 +47,7 @@ class ResetOidcSecretCommand implements Command
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"production", "test"}, strict=true)
      */
-    private $environment = Entity::ENVIRONMENT_TEST;
+    private $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * @var string
@@ -71,8 +71,8 @@ class ResetOidcSecretCommand implements Command
         $this->manageId = $manageId;
 
         if (!in_array($environment, [
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION,
         ])) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"

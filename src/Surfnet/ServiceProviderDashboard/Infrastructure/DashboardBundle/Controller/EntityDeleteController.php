@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -98,7 +99,7 @@ class EntityDeleteController extends Controller
         $form = $this->createForm(DeleteEntityType::class);
         $form->handleRequest($request);
 
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
+        if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG &&
             !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
         ) {
             throw $this->createAccessDeniedException(
@@ -175,7 +176,7 @@ class EntityDeleteController extends Controller
         return [
             'form' => $form->createView(),
             'environment' => $environment,
-            'status' => $excludeFromPush === "1" ? Entity::STATE_PUBLICATION_REQUESTED : Entity::STATE_PUBLISHED,
+            'status' => $excludeFromPush === "1" ? Constants::STATE_PUBLICATION_REQUESTED : Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
         ];
     }
@@ -230,7 +231,7 @@ class EntityDeleteController extends Controller
         return [
             'form' => $form->createView(),
             'environment' => $environment,
-            'status' => Entity::STATE_PUBLISHED,
+            'status' => Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
         ];
     }

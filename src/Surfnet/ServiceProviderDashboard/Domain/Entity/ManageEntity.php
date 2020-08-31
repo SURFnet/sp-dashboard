@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
@@ -92,7 +91,7 @@ class ManageEntity
             $oidcClient = OidcClient::fromApiResponse($data, $manageProtocol);
         }
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
-        $protocol = Protocol::fromApiResponse($data, $manageProtocol);
+        $protocol = Protocol::fromApiResponse($data, $manageProtocol, Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
 
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }
@@ -114,12 +113,19 @@ class ManageEntity
         OidcClientInterface $oidcClient = null
     ) {
         $this->id = $id;
-        $this->status = DomainEntity::STATE_PUBLISHED;
+        $this->status = Constants::STATE_PUBLISHED;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
         $this->oidcClient = $oidcClient;
         $this->protocol = $protocol;
         $this->allowedIdentityProviders = $allowedIdentityProviders;
+    }
+
+    public function resetId()
+    {
+        $clone = clone $this;
+        $clone->id = null;
+        return $clone;
     }
 
     public function getId()

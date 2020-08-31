@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -110,11 +110,11 @@ class EntityActions
         if ($this->readOnly) {
             return false;
         }
-        $isPublishedTestEntity = ($this->status == DomainEntity::STATE_PUBLISHED
-            && $this->environment == DomainEntity::ENVIRONMENT_TEST);
+        $isPublishedTestEntity = ($this->status == Constants::STATE_PUBLISHED
+            && $this->environment == Constants::ENVIRONMENT_TEST);
 
-        $isPublishedProdEntity = ($this->status == DomainEntity::STATE_PUBLICATION_REQUESTED
-            && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION);
+        $isPublishedProdEntity = ($this->status == Constants::STATE_PUBLICATION_REQUESTED
+            && $this->environment == Constants::ENVIRONMENT_PRODUCTION);
 
         return $isPublishedTestEntity || $isPublishedProdEntity;
     }
@@ -124,7 +124,7 @@ class EntityActions
         if ($this->readOnly) {
             return false;
         }
-        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_TEST;
+        return $this->status == Constants::STATE_PUBLISHED && $this->environment == Constants::ENVIRONMENT_TEST;
     }
 
     public function allowCloneAction()
@@ -132,7 +132,7 @@ class EntityActions
         if ($this->readOnly) {
             return false;
         }
-        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION;
+        return $this->status == Constants::STATE_PUBLISHED && $this->environment == Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function allowDeleteAction()
@@ -151,9 +151,9 @@ class EntityActions
         if ($this->readOnly) {
             return false;
         }
-        return $this->status == DomainEntity::STATE_PUBLISHED &&
-            $this->environment == DomainEntity::ENVIRONMENT_TEST &&
-            $this->protocol !== DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        return $this->status == Constants::STATE_PUBLISHED &&
+            $this->environment == Constants::ENVIRONMENT_TEST &&
+            $this->protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
     /**
@@ -166,29 +166,29 @@ class EntityActions
         }
         $protocol = $this->protocol;
         $status = $this->status;
-        $meetsProtocolRequirement = $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG ||
-            $protocol == DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-        $meetsPublicationStatusRequirement = ($status == DomainEntity::STATE_PUBLISHED || $status == DomainEntity::STATE_PUBLICATION_REQUESTED);
+        $meetsProtocolRequirement = $protocol == Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol == Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED || $status == Constants::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
 
     public function isPublishedToProduction()
     {
-        return $this->status == DomainEntity::STATE_PUBLISHED && $this->environment == DomainEntity::ENVIRONMENT_PRODUCTION;
+        return $this->status == Constants::STATE_PUBLISHED && $this->environment == Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function isPublished()
     {
-        return $this->status === DomainEntity::STATE_PUBLISHED;
+        return $this->status === Constants::STATE_PUBLISHED;
     }
 
     public function isRequested()
     {
-        return $this->status === DomainEntity::STATE_PUBLICATION_REQUESTED;
+        return $this->status === Constants::STATE_PUBLICATION_REQUESTED;
     }
 
     public function isDeleteRequested()
     {
-        return $this->status === DomainEntity::STATE_REMOVAL_REQUESTED;
+        return $this->status === Constants::STATE_REMOVAL_REQUESTED;
     }
 }

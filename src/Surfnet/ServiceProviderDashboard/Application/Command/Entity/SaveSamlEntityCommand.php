@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -64,7 +65,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"production", "test"}, strict=true)
      */
-    private $environment = Entity::ENVIRONMENT_TEST;
+    private $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * Metadata URL that import last happened from.
@@ -324,7 +325,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      *     strict=true
      * )
      */
-    private $nameIdFormat = Entity::NAME_ID_FORMAT_TRANSIENT;
+    private $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string
@@ -491,8 +492,8 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     public function setEnvironment($environment)
     {
         if (!in_array($environment, [
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION,
         ])) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
@@ -1118,7 +1119,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     public function isForProduction()
     {
-        return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
+        return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function setId($id)

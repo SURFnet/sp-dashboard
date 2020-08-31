@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclC
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -79,7 +79,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment to update ACL', $command->getEntityManageId()));
 
         $service = $this->serviceRepository->findById($command->getServiceId());
-        $entity = $this->entityService->getEntityByIdAndTarget($command->getEntityManageId(), Entity::ENVIRONMENT_TEST, $service);
+        $entity = $this->entityService->getEntityByIdAndTarget($command->getEntityManageId(), Constants::ENVIRONMENT_TEST, $service);
 
         $entity->setIdpAllowAll($command->isSelectAll());
         $entity->setIdpWhitelist($command->getSelected());

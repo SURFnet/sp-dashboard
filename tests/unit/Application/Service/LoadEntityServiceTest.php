@@ -21,13 +21,14 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class LoadEntityServiceTest extends MockeryTestCase
 {
@@ -104,8 +105,8 @@ class LoadEntityServiceTest extends MockeryTestCase
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
     }
 
@@ -127,8 +128,8 @@ class LoadEntityServiceTest extends MockeryTestCase
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
     }
 
@@ -165,8 +166,8 @@ class LoadEntityServiceTest extends MockeryTestCase
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION
         );
     }
 
@@ -268,8 +269,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
     }
 
@@ -371,8 +372,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION
         );
     }
 
@@ -468,8 +469,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertEmpty($entity->getOidcngResourceServers()->getResourceServers());
@@ -494,8 +495,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
 
         $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
@@ -509,8 +510,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
@@ -533,8 +534,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertEquals(
@@ -553,8 +554,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertEquals(
@@ -568,14 +569,14 @@ JSON
     {
         //$testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground
         return [
-            ['prod-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['prod-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
-            ['prod-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
-            ['prod-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
-            ['test-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['test-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
-            ['test-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
-            ['test-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
+            ['prod-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
+            ['prod-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
+            ['prod-test-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
+            ['prod-prod-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
+            ['test-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
+            ['test-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
+            ['test-test-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
+            ['test-prod-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
         ];
     }
 

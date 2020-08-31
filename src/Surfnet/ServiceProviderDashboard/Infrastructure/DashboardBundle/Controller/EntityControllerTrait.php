@@ -31,6 +31,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
@@ -128,7 +129,7 @@ trait EntityControllerTrait
 
         $form = $this->createForm(SamlEntityType::class, $command);
 
-        if ($command->getStatus() === Entity::STATE_PUBLISHED) {
+        if ($command->getStatus() === Constants::STATE_PUBLISHED) {
             $form->remove('save');
         }
 
@@ -150,12 +151,12 @@ trait EntityControllerTrait
         }
 
         switch ($entity->getEnvironment()) {
-            case Entity::ENVIRONMENT_TEST:
+            case Constants::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
                 $destination = 'entity_published_test';
                 break;
 
-            case Entity::ENVIRONMENT_PRODUCTION:
+            case Constants::ENVIRONMENT_PRODUCTION:
                 $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $applicant);
                 if ($isClientReset) {
@@ -180,8 +181,8 @@ trait EntityControllerTrait
         }
 
         if (!$flashBag->has('error')) {
-            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
-                $this->commandBus->handle(new PushMetadataCommand(Entity::ENVIRONMENT_TEST));
+            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
+                $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
             }
 
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting

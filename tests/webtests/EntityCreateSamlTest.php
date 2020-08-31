@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -173,7 +174,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $entities = $this->getEntityRepository()->findAll();
         /** @var Entity $entity */
         $entity = end($entities);
-        $this->assertEquals(Entity::NAME_ID_FORMAT_TRANSIENT, $entity->getNameIdFormat());
+        $this->assertEquals(Constants::NAME_ID_FORMAT_TRANSIENT, $entity->getNameIdFormat());
     }
 
     public function test_it_can_publish_the_form()

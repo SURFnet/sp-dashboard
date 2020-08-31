@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -100,7 +101,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('privacy', $fields['privacy']);
         $this->assertEquals('sp', $fields['sp']);
         $this->assertEquals('http://acs', $fields['AssertionConsumerService:0:Location']);
-        $this->assertEquals(Entity::BINDING_HTTP_POST, $fields['AssertionConsumerService:0:Binding']);
+        $this->assertEquals(Constants::BINDING_HTTP_POST, $fields['AssertionConsumerService:0:Binding']);
         $this->assertEquals('nameidformat', $fields['NameIDFormat']);
         $this->assertEquals('name en', $fields['name:en']);
         $this->assertEquals('name nl', $fields['name:nl']);
@@ -150,7 +151,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('privacy', $metadata['metaDataFields.privacy']);
         $this->assertEquals('sp', $metadata['metaDataFields.sp']);
         $this->assertEquals('http://acs', $metadata['metaDataFields.AssertionConsumerService:0:Location']);
-        $this->assertEquals(Entity::BINDING_HTTP_POST, $metadata['metaDataFields.AssertionConsumerService:0:Binding']);
+        $this->assertEquals(Constants::BINDING_HTTP_POST, $metadata['metaDataFields.AssertionConsumerService:0:Binding']);
         $this->assertEquals('nameidformat', $metadata['metaDataFields.NameIDFormat']);
         $this->assertEquals('name en', $metadata['metaDataFields.name:en']);
         $this->assertEquals('name nl', $metadata['metaDataFields.name:nl']);

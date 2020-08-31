@@ -24,6 +24,7 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
@@ -93,7 +94,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getProtocol')
             ->shouldReceive('setIdpAllowAll')
             ->shouldReceive('setIdpWhitelistRaw')
-            ->andReturn(Entity::TYPE_OPENID_CONNECT_TNG);
+            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG);
 
         $this->repository
             ->shouldReceive('findById')
@@ -138,7 +139,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getProtocol')
             ->shouldReceive('setIdpAllowAll')
             ->shouldReceive('setIdpWhitelistRaw')
-            ->andReturn(Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
 
         $this->repository
             ->shouldReceive('findById')

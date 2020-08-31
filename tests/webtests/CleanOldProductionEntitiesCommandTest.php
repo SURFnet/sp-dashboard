@@ -18,6 +18,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Ramsey\Uuid\Uuid;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -90,8 +91,8 @@ class CleanOldProductionEntitiesCommandTest extends WebTestCase
             $entity->setService($service);
             $entity->setManageId($id);
             $entity->setEntityId($id);
-            $entity->setStatus(Entity::STATE_PUBLISHED);
-            $entity->setEnvironment(Entity::ENVIRONMENT_PRODUCTION);
+            $entity->setStatus(Constants::STATE_PUBLISHED);
+            $entity->setEnvironment(Constants::ENVIRONMENT_PRODUCTION);
 
             $this->getEntityRepository()->save($entity);
         }
@@ -103,8 +104,8 @@ class CleanOldProductionEntitiesCommandTest extends WebTestCase
             $entity->setService($service);
             $entity->setManageId($id);
             $entity->setEntityId($id);
-            $entity->setStatus(Entity::STATE_DRAFT);
-            $entity->setEnvironment(Entity::ENVIRONMENT_PRODUCTION);
+            $entity->setStatus(Constants::STATE_DRAFT);
+            $entity->setEnvironment(Constants::ENVIRONMENT_PRODUCTION);
 
             $this->getEntityRepository()->save($entity);
         }

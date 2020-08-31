@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretC
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\ResetOidcSecretCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
@@ -58,8 +59,8 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
 
     public function test_handle_happy_flow()
     {
-        $status = Entity::STATE_PUBLISHED;
-        $command = $this->buildCommand(1, 'my-manage-id', Entity::ENVIRONMENT_TEST);
+        $status = Constants::STATE_PUBLISHED;
+        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
 
         $entity = $this->expectedEntityFrom($command, $status);
 
@@ -74,7 +75,7 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
 
     public function test_handle_entity_not_found()
     {
-        $command = $this->buildCommand(1, 'my-manage-id', Entity::ENVIRONMENT_TEST);
+        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
 
         $this->loadEntityService
             ->shouldReceive('load')
@@ -95,8 +96,8 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
 
     public function test_handle_entity_invalid_protocol()
     {
-        $status = Entity::STATE_PUBLISHED;
-        $command = $this->buildCommand(1, 'my-manage-id', Entity::ENVIRONMENT_TEST);
+        $status = Constants::STATE_PUBLISHED;
+        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
 
         $entity = $this->expectedEntityFrom($command, $status);
         $entity->setProtocol('oauth');
@@ -109,11 +110,11 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
 
     public function test_handle_entity_invalid_publication_status()
     {
-        $status = Entity::STATE_PUBLISHED;
-        $command = $this->buildCommand(1, 'my-manage-id', Entity::ENVIRONMENT_TEST);
+        $status = Constants::STATE_PUBLISHED;
+        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
 
         $entity = $this->expectedEntityFrom($command, $status);
-        $entity->setStatus(Entity::STATE_DRAFT);
+        $entity->setStatus(Constants::STATE_DRAFT);
 
         $this->expectException(EntityNotFoundException::class);
         $this->expectExceptionMessage('The requested entity could be found, invalid state');
@@ -141,7 +142,7 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
         $entity->setService($command->getService());
         $entity->setStatus($status);
         $entity->setEnvironment($entity);
-        $entity->setProtocol(Entity::TYPE_OPENID_CONNECT_TNG);
+        $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG);
 
 
         $this->loadEntityService
