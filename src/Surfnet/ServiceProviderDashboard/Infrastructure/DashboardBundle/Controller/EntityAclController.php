@@ -87,13 +87,13 @@ class EntityAclController extends Controller
 
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 
-        $command = new UpdateEntityAclCommand($entity->getManageId(), $service->getId(), $selectedIdps, $entity->isIdpAllowAll());
+        $command = new UpdateEntityAclCommand($entity->getId(), $service->getId(), $selectedIdps, $entity->isIdpAllowAll());
         $form = $this->createForm(AclEntityType::class, $command);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commandBus->handle($command);
-            $this->commandBus->handle(new PushMetadataCommand($entity->getEnvironment()));
+            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
         }
         $viewObject = EntityDetail::fromEntity($entity);
 

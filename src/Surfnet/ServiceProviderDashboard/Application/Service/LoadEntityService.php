@@ -150,22 +150,6 @@ class LoadEntityService
                 )
             );
         }
-//
-//        // Convert manage entity to domain entity
-//        $domainEntity = Entity::fromManageResponse(
-//            $manageEntity,
-//            $sourceEnvironment,
-//            $service,
-//            $this->oidcPlaygroundUriTest,
-//            $this->oidcPlaygroundUriProd,
-//            $this->oidcngPlaygroundUriTest,
-//            $this->oidcngPlaygroundUriProd
-//        );
-//
-//        // Set some defaults
-//        $domainEntity->setStatus(Entity::STATE_PUBLISHED);
-//        $domainEntity->setId($dashboardId);
-//        $domainEntity->setManageId($manageId);
 
         // Published production entities must be cloned, not copied
         $isProductionClone = $environment == 'production' && $manageStagingState === 0;
@@ -174,12 +158,6 @@ class LoadEntityService
         if ($isProductionClone || $isCopyToProduction) {
             $manageEntity = $manageEntity->resetId();
         }
-
-//        $this->updateAllowedResourceServers($isCopyToProduction, $domainEntity);
-//        $this->updateClientId($isCopyToProduction, $domainEntity);
-
-        // Set the target environment
-//        $domainEntity->setEnvironment($environment);
 
         // Return the entity
         return $manageEntity;

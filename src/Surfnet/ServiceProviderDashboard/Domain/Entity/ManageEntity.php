@@ -65,6 +65,10 @@ class ManageEntity
      * @var AllowedIdentityProviders
      */
     private $allowedIdentityProviders;
+    
+    private $idpWhitelist;
+    
+    private $idpAllowAll;
 
     /**
      * @param $data
@@ -206,4 +210,64 @@ class ManageEntity
         }
         return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
     }
+
+    /**
+     * @param IdentityProvider $provider
+     * @return bool
+     */
+    public function isWhitelisted(IdentityProvider $provider)
+    {
+        return in_array($provider->getEntityId(), $this->idpWhitelist);
+    }
+
+    /**
+     * @param IdentityProvider[] $providers
+     */
+    public function setIdpWhitelist(array $providers)
+    {
+        $this->idpWhitelist = [];
+        foreach ($providers as $provider) {
+            $this->idpWhitelist[] = $provider->getEntityId();
+        }
+    }
+
+    /**
+     * If you have a list of idp entity ID's (from manage response) this is the way to set the
+     * whitelist on the Entity.
+     *
+     * @param string[] $providers
+     */
+    public function setIdpWhitelistRaw(array $providers)
+    {
+        $this->idpWhitelist = $providers;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIdpWhitelist()
+    {
+        return $this->idpWhitelist;
+    }
+
+    /**
+     * @param bool $idpAllowAll
+     */
+    public function setIdpAllowAll($idpAllowAll)
+    {
+        $this->idpAllowAll = (bool) $idpAllowAll;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIdpAllowAll()
+    {
+        return $this->idpAllowAll;
+    }
+
+    public function getEnvironment()
+    {
+    }
+
 }

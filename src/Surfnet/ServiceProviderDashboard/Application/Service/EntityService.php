@@ -22,6 +22,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
@@ -172,8 +173,8 @@ class EntityService implements EntityServiceInterface
      * @param string $id
      * @param string $manageTarget
      * @param Service $service
-     * @return mixed|Entity|null
-     * @throws QueryServiceProviderException
+     * @return ManageEntity
+     * @throws EntityNotFoundException
      */
     public function getEntityByIdAndTarget($id, $manageTarget, Service $service)
     {
@@ -183,7 +184,7 @@ class EntityService implements EntityServiceInterface
                     ->getManageProductionQueryClient()
                     ->findByManageId($id);
 
-                // Entities that are still excluded from push are not realy published, but have a publication request
+                // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
                 if ($entity->getMetaData()->getCoin()->getExcludeFromPush()) {
                     $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
@@ -194,34 +195,21 @@ class EntityService implements EntityServiceInterface
                     $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
                 }
 
-                return Entity::fromManageResponse(
-                    $entity,
-                    $manageTarget,
-                    $service,
-                    $this->oidcPlaygroundUriTest,
-                    $this->oidcPlaygroundUriProd,
-                    $this->oidcngPlaygroundUriTest,
-                    $this->oidcngPlaygroundUriProd
-                );
-                break;
+                return $entity;
             case 'test':
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
 
-                return Entity::fromManageResponse(
-                    $entity,
-                    $manageTarget,
-                    $service,
-                    $this->oidcPlaygroundUriTest,
-                    $this->oidcPlaygroundUriProd,
-                    $this->oidcngPlaygroundUriTest,
-                    $this->oidcngPlaygroundUriProd
-                );
-                break;
+                return $entity;
+
             default:
-                return $this->getEntityById($id);
-                break;
+                throw new EntityNotFoundException(
+                    sprintf(
+                        'Unable to find ManageEntity for environment "%s"',
+                        $manageTarget
+                    )
+                );
         }
     }
 
