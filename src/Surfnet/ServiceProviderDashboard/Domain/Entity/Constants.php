@@ -41,4 +41,12 @@ class Constants
     const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oidcng_rs';
 
     const OIDC_SECRET_LENGTH = 20;
+
+    public static function getValidNameIdFormats()
+    {
+        return [
+            Constants::NAME_ID_FORMAT_TRANSIENT,
+            Constants::NAME_ID_FORMAT_PERSISTENT,
+        ];
+    }
 }

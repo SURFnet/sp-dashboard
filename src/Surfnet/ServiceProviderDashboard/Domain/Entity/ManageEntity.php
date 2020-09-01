@@ -70,6 +70,10 @@ class ManageEntity
     
     private $idpAllowAll;
 
+    private $comments;
+
+    private $environment;
+
     /**
      * @param $data
      * @return ManageEntity
@@ -211,6 +215,11 @@ class ManageEntity
         return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
     }
 
+    public function isManageEntity(): bool
+    {
+        return !is_null($this->getId());
+    }
+
     /**
      * @param IdentityProvider $provider
      * @return bool
@@ -266,8 +275,44 @@ class ManageEntity
         return $this->idpAllowAll;
     }
 
-    public function getEnvironment()
+    public function setComments(string $comments): void
     {
+        $this->comments = $comments;
     }
 
+    /**
+     * @return string
+     */
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasComments(): bool
+    {
+        return !(empty($this->comments));
+    }
+
+    public function setEnvironment(string $environment): void
+    {
+        $this->environment = $environment;
+    }
+
+    public function getEnvironment(): ?string
+    {
+        return $this->environment;
+    }
+
+    public function isProduction()
+    {
+        return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
+    }
+
+    public function isReadOnly()
+    {
+        return $this->protocol === Constants::TYPE_OPENID_CONNECT;
+    }
 }

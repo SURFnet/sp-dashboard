@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 
 /**
@@ -39,7 +39,7 @@ class SpDashboardMetadataGenerator implements MetadataGenerator
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function build(MetadataConversionDto $entity)
+    public function build(ManageEntity $entity): array
     {
         $spDashboardAttributes = $this->repository->findAllSpDashboardAttributes();
         $attributes = [];

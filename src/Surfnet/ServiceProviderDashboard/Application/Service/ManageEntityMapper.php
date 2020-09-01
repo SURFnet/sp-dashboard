@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2020 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,19 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
+namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
-interface MetadataGenerator
+class ManageEntityMapper
 {
-    public function build(ManageEntity $entity): array;
+    /**
+     * Maps data from the command onto the existing manage entity
+     */
+    public function fromSaveCommand(SaveEntityCommandInterface $command, ManageEntity $manageEntity): ManageEntity
+    {
+
+        return $manageEntity;
+    }
 }

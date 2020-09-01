@@ -19,30 +19,40 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityTestCommand implements Command
 {
     /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Uuid
+     * @var ManageEntity
+     * @Assert\Type{
+     *      type="\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity"
+     * }
      */
-    private $id;
+    private $manageEntity;
 
     /**
-     * @param string $id
+     * @var SaveEntityCommandInterface
      */
-    public function __construct($id)
+    private $saveEntityCommand;
+
+    public function __construct(ManageEntity $entity, SaveEntityCommandInterface $saveEntityCommand)
     {
-        $this->id = $id;
+        $this->manageEntity = $entity;
+        $this->saveEntityCommand = $saveEntityCommand;
+    }
+
+    public function getManageEntity(): ManageEntity
+    {
+        return $this->manageEntity;
     }
 
     /**
-     * @return string
+     * @return SaveEntityCommandInterface
      */
-    public function getId()
+    public function getSaveEntityCommand(): SaveEntityCommandInterface
     {
-        return $this->id;
+        return $this->saveEntityCommand;
     }
 }

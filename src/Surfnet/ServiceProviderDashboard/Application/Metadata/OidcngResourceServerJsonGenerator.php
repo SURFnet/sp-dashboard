@@ -18,11 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 
@@ -56,12 +56,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
     }
 
-    /**
-     * @param MetadataConversionDto $entity
-     * @param string $workflowState
-     * @return array
-     */
-    public function generateForNewEntity(MetadataConversionDto $entity, $workflowState)
+    public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         return [
             'data' => $this->generateDataForNewEntity($entity, $workflowState),
@@ -69,33 +64,21 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         ];
     }
 
-    /**
-     * @param MetadataConversionDto $entity
-     * @param string $workflowState
-     * @return array
-     */
-    public function generateForExistingEntity(MetadataConversionDto $entity, $workflowState)
+    public function generateForExistingEntity(ManageEntity $entity, string $workflowState): array
     {
-        $data = [
+        return [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
             'type' => 'oidc10_rp',
             'id' => $entity->getManageId(),
         ];
-
-        return $data;
     }
 
-    /**
-     * @param MetadataConversionDto $entity
-     * @param string $workflowState
-     * @return array
-     */
-    private function generateDataForNewEntity(MetadataConversionDto $entity, $workflowState)
+    private function generateDataForNewEntity(ManageEntity $entity, $workflowState)
     {
         // the type for entities is always oidc10-rp because manage is using saml internally
         $metadata = [
             'type' => 'oidc10-rp',
-            'entityid' => OidcngClientIdParser::parse($entity->getEntityId()),
+            'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'active' => true,
             'state' => $workflowState,
             'metaDataFields' => $this->generateMetadataFields($entity),
@@ -110,15 +93,10 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param MetadataConversionDto $entity
-     * @param string $workflowState
-     * @return array
-     */
-    private function generateDataForExistingEntity(MetadataConversionDto $entity, $workflowState)
+    private function generateDataForExistingEntity(ManageEntity $entity, $workflowState)
     {
         $metadata = [
-            'entityid' => OidcngClientIdParser::parse($entity->getEntityId()),
+            'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'state' => $workflowState,
         ];
 
@@ -168,7 +146,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateMetadataFields(MetadataConversionDto $entity)
+    private function generateMetadataFields(ManageEntity $entity)
     {
         $metadata = array_merge(
             [
@@ -204,10 +182,10 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @return array
      */
-    private function generateOidcClient(MetadataConversionDto $entity)
+    private function generateOidcClient(ManageEntity $entity)
     {
         $metadata = [];
         $secret = $entity->getClientSecret();
@@ -222,10 +200,10 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @return array
      */
-    private function generateAllContactsMetadata(MetadataConversionDto $entity)
+    private function generateAllContactsMetadata(ManageEntity $entity)
     {
         $metadata = [];
         $index = 0;
@@ -250,10 +228,10 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @return array
      */
-    private function generateOrganizationMetadata(MetadataConversionDto $entity)
+    private function generateOrganizationMetadata(ManageEntity $entity)
     {
         $metadata = [
             'OrganizationName:en' => $entity->getOrganizationNameEn(),
@@ -299,10 +277,10 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @return array
      */
-    private function generateAclData(MetadataConversionDto $entity)
+    private function generateAclData(ManageEntity $entity)
     {
         if ($entity->isIdpAllowAll()) {
             return [
@@ -324,7 +302,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         ];
     }
 
-    private function setExcludeFromPush(&$metadata, MetadataConversionDto $entity)
+    private function setExcludeFromPush(&$metadata, ManageEntity $entity)
     {
         // Scenario 1: When publishing to production, the coin:exclude_from_push must be present and set to '1'.
         // This prevents the entity from being pushed to EngineBlock.

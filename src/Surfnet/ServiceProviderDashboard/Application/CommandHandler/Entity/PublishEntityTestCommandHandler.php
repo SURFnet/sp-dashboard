@@ -111,7 +111,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
     /**
      * Persist data that would otherwise be lost in the publication
      * The manage entity is loaded prior to publication. Data that needs to be persisted on the upcoming publication
-     * can be set on the Entity here. This is usefull for data that is only stored in Manage, or data that is not
+     * can be set on the Entity here. This is useful for data that is only stored in Manage, or data that is not
      * updated in the entity edit forms.
      *
      * @param Entity $entity

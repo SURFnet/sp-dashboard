@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 
@@ -38,7 +38,7 @@ class ArpGenerator implements MetadataGenerator
         $this->repository = $repository;
     }
 
-    public function build(MetadataConversionDto $entity)
+    public function build(ManageEntity $entity): array
     {
         $attributes = [];
 
@@ -71,7 +71,7 @@ class ArpGenerator implements MetadataGenerator
         ];
     }
 
-    private function addManageOnlyAttributes(array &$attributes, MetadataConversionDto $entity)
+    private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
     {
         $managedAttributeUrns = $this->repository->findAllAttributeUrns();
 
@@ -110,9 +110,9 @@ class ArpGenerator implements MetadataGenerator
      *
      * @param array $attributes
      * @param string $urn
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      */
-    private function mergeWithManageAttributes(array &$attributes, $urn, MetadataConversionDto $entity)
+    private function mergeWithManageAttributes(array &$attributes, $urn, ManageEntity $entity)
     {
         if ($entity->isManageEntity() && $entity->getArpAttributes()->findByUrn($urn)) {
             $manageAttribute = $entity->getArpAttributes()->findByUrn($urn);

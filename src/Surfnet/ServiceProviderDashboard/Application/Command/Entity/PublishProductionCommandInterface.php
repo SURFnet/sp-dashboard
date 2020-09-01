@@ -18,9 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+
 interface PublishProductionCommandInterface
 {
-    public function getId();
+    public function getManageEntity(): ManageEntity;
 
-    public function getApplicant();
+    public function getApplicant(): Contact;
 }

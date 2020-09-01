@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityPro
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
@@ -33,6 +34,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -142,7 +144,7 @@ trait EntityControllerTrait
      * @param bool $isClientReset
      * @return RedirectResponse|Form
      */
-    private function publishEntity(Entity $entity, FlashBagInterface $flashBag, $isClientReset = false)
+    private function publishEntity(ManageEntity $entity, SaveEntityCommandInterface $saveCommand, FlashBagInterface $flashBag, $isClientReset = false)
     {
         if ($entity->isReadOnly()) {
             throw $this->createNotFoundException(
@@ -152,13 +154,13 @@ trait EntityControllerTrait
 
         switch ($entity->getEnvironment()) {
             case Constants::ENVIRONMENT_TEST:
-                $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
+                $publishEntityCommand = new PublishEntityTestCommand($entity, $saveCommand);
                 $destination = 'entity_published_test';
                 break;
 
             case Constants::ENVIRONMENT_PRODUCTION:
                 $applicant = $this->authorizationService->getContact();
-                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $applicant);
+                $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
                 if ($isClientReset) {
                     $publishEntityCommand = new PublishEntityProductionAfterClientResetCommand(
                         $entity->getId(),

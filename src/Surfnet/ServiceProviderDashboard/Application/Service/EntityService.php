@@ -183,7 +183,7 @@ class EntityService implements EntityServiceInterface
                 $entity = $this->queryRepositoryProvider
                     ->getManageProductionQueryClient()
                     ->findByManageId($id);
-
+                $entity->setEnvironment($manageTarget);
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
                 if ($entity->getMetaData()->getCoin()->getExcludeFromPush()) {
@@ -200,7 +200,7 @@ class EntityService implements EntityServiceInterface
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
-
+                $entity->setEnvironment($manageTarget);
                 return $entity;
 
             default:
@@ -268,9 +268,11 @@ class EntityService implements EntityServiceInterface
      */
     public function getManageEntityById($manageId, $env = 'test')
     {
-        return $this->queryRepositoryProvider
+        $entity = $this->queryRepositoryProvider
             ->fromEnvironment($env)
             ->findByManageId($manageId);
+        $entity->setEnvironment($env);
+        return $entity;
     }
 
     /**

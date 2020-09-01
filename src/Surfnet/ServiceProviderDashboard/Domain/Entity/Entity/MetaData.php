@@ -214,7 +214,7 @@ class MetaData
         return $this->coin;
     }
 
-    public function getLogo()
+    public function getLogo(): ?Logo
     {
         return $this->logo;
     }

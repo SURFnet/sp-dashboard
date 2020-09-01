@@ -319,7 +319,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      * @var string
      * @Assert\Choice(
      *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Entity",
+     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Constants",
      *         "getValidNameIdFormats"
      *     },
      *     strict=true

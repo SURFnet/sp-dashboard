@@ -20,41 +20,36 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityProductionAfterClientResetCommand implements PublishProductionCommandInterface, Command
 {
     /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Uuid
+     * @var ManageEntity
+     * @Assert\Type{
+     *      type="\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity"
+     * }
      */
-    private $id;
+    private $manageEntity;
 
     /**
      * @var Contact
      */
     private $applicant;
 
-    /**
-     * @param $id
-     * @param Contact $applicant
-     */
-    public function __construct($id, Contact $applicant)
+    public function __construct(ManageEntity $manageEntity, Contact $applicant)
     {
-        $this->id = $id;
+        $this->manageEntity = $manageEntity;
         $this->applicant = $applicant;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getManageEntity(): ManageEntity
     {
-        return $this->id;
+        return $this->manageEntity;
     }
 
-    public function getApplicant()
+    public function getApplicant(): Contact
     {
         return $this->applicant;
     }

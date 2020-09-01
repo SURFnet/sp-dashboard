@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+
 interface PublishEntityRepository
 {
     /**

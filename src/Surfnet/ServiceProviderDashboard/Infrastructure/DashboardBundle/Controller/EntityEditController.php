@@ -109,10 +109,8 @@ class EntityEditController extends Controller
                     return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
                 } elseif ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
-                    $this->commandBus->handle($command);
-
                     if ($form->isValid()) {
-                        $response = $this->publishEntity($entity, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $flashBag);
 
                         if ($response instanceof Response) {
                             return $response;

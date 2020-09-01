@@ -1482,14 +1482,6 @@ class Entity
         return ($this->environment == self::ENVIRONMENT_PRODUCTION);
     }
 
-    public static function getValidNameIdFormats()
-    {
-        return [
-            static::NAME_ID_FORMAT_TRANSIENT,
-            static::NAME_ID_FORMAT_PERSISTENT,
-        ];
-    }
-
     /**
      * @param IdentityProvider $provider
      * @return bool
