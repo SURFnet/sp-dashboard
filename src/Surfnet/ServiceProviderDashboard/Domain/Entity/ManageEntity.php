@@ -75,6 +75,11 @@ class ManageEntity
     private $environment;
 
     /**
+     * @var Service
+     */
+    private $service;
+
+    /**
      * @param $data
      * @return ManageEntity
      *
@@ -104,21 +109,14 @@ class ManageEntity
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }
 
-    /**
-     * @param string $id
-     * @param AttributeList $attributes
-     * @param MetaData $metaData
-     * @param AllowedIdentityProviders $allowedIdentityProviders
-     * @param Protocol $protocol
-     * @param OidcClientInterface $oidcClient
-     */
-    private function __construct(
-        $id,
+    public function __construct(
+        ?string $id,
         AttributeList $attributes,
         MetaData $metaData,
         AllowedIdentityProviders $allowedIdentityProviders,
         Protocol $protocol,
-        OidcClientInterface $oidcClient = null
+        ?OidcClientInterface $oidcClient = null,
+        ?Service $service = null
     ) {
         $this->id = $id;
         $this->status = Constants::STATE_PUBLISHED;
@@ -127,6 +125,7 @@ class ManageEntity
         $this->oidcClient = $oidcClient;
         $this->protocol = $protocol;
         $this->allowedIdentityProviders = $allowedIdentityProviders;
+        $this->service = $service;
     }
 
     public function resetId()
@@ -314,5 +313,26 @@ class ManageEntity
     public function isReadOnly()
     {
         return $this->protocol === Constants::TYPE_OPENID_CONNECT;
+    }
+
+    public function getService(): Service
+    {
+        return $this->service;
+    }
+
+    public function setService(Service $service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * Merge new data into an existing ManageEntity.
+     * @param ManageEntity $newEntity
+     */
+    public function merge(ManageEntity $newEntity)
+    {
+        $this->service = $newEntity->getService();
+        $this->metaData->merge($newEntity->getMetaData());
+        $this->attributes->merge($newEntity->getAttributes());
     }
 }

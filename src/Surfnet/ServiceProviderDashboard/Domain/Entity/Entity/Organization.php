@@ -50,16 +50,14 @@ class Organization
         return new self($nameEn, $displayNameEn, $urlEn, $nameNl, $displayNameNl, $urlNl);
     }
 
-    /**
-     * @param string $nameEn
-     * @param string $displayNameEn
-     * @param string $urlEn
-     * @param string $nameNl
-     * @param string $displayNameNl
-     * @param string $urlNl
-     */
-    private function __construct($nameEn, $displayNameEn, $urlEn, $nameNl, $displayNameNl, $urlNl)
-    {
+    public function __construct(
+        ?string $nameEn,
+        ?string $displayNameEn,
+        ?string $urlEn,
+        ?string $nameNl,
+        ?string $displayNameNl,
+        ?string $urlNl
+    ) {
         $this->nameEn = $nameEn;
         $this->displayNameEn = $displayNameEn;
         $this->urlEn = $urlEn;
@@ -96,5 +94,15 @@ class Organization
     public function getUrlNl()
     {
         return $this->urlNl;
+    }
+
+    public function merge(Organization $organization)
+    {
+        $this->nameEn = $organization->getNameEn() ?: $this->nameEn;
+        $this->displayNameEn = $organization->getDisplayNameEn() ?: $this->displayNameEn;
+        $this->urlEn = $organization->getUrlEn() ?: $this->urlEn;
+        $this->nameNl = $organization->getNameEn() ?: $this->nameNl;
+        $this->displayNameNl = $organization->getDisplayNameNl() ?: $this->displayNameNl;
+        $this->urlNl = $organization->getUrlNl() ?: $this->urlNl;
     }
 }

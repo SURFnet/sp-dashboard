@@ -111,7 +111,7 @@ class OidcngClient implements OidcClientInterface
      * @param array $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    private function __construct(
+    public function __construct(
         $clientId,
         $clientSecret,
         $redirectUris,

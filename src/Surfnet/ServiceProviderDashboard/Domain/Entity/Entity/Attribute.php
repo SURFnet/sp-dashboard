@@ -52,7 +52,7 @@ class Attribute
      * @param string $source
      * @param string $motivation
      */
-    private function __construct($name, $value, $source, $motivation)
+    public function __construct($name, $value, $source, $motivation)
     {
         $this->name = $name;
         $this->value = $value;

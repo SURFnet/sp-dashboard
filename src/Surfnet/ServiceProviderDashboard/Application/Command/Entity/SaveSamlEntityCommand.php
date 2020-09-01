@@ -682,7 +682,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getApplicationUrl()
+    public function getApplicationUrl(): string
     {
         return $this->applicationUrl;
     }
@@ -698,7 +698,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getEulaUrl()
+    public function getEulaUrl(): string
     {
         return $this->eulaUrl;
     }
@@ -1024,7 +1024,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getOrganizationNameNl()
+    public function getOrganizationNameNl(): ?string
     {
         return $this->organizationNameNl;
     }
@@ -1040,7 +1040,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getOrganizationNameEn()
+    public function getOrganizationNameEn(): ?string
     {
         return $this->organizationNameEn;
     }
@@ -1056,7 +1056,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameNl()
+    public function getOrganizationDisplayNameNl(): ?string
     {
         return $this->organizationDisplayNameNl;
     }
@@ -1072,7 +1072,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameEn()
+    public function getOrganizationDisplayNameEn(): ?string
     {
         return $this->organizationDisplayNameEn;
     }
@@ -1088,7 +1088,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getOrganizationUrlNl()
+    public function getOrganizationUrlNl(): ?string
     {
         return $this->organizationUrlNl;
     }
@@ -1104,7 +1104,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getOrganizationUrlEn()
+    public function getOrganizationUrlEn(): ?string
     {
         return $this->organizationUrlEn;
     }

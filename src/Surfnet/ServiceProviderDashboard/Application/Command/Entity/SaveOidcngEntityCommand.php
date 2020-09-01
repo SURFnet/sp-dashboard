@@ -729,7 +729,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return Contact
      */
-    public function getTechnicalContact()
+    public function getTechnicalContact(): Contact
     {
         return $this->technicalContact;
     }

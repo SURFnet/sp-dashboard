@@ -60,23 +60,14 @@ class Coin
         );
     }
 
-    /**
-     * @param string $signatureMethod
-     * @param string $serviceTeamId
-     * @param string $originalMetadataUrl
-     * @param string $excludeFromPush
-     * @param string $applicationUrl
-     * @param string $eula
-     * @param int $oidcClient
-     */
-    private function __construct(
-        $signatureMethod,
-        $serviceTeamId,
-        $originalMetadataUrl,
-        $excludeFromPush,
-        $applicationUrl,
-        $eula,
-        $oidcClient
+    public function __construct(
+        ?string $signatureMethod,
+        ?string $serviceTeamId,
+        ?string $originalMetadataUrl,
+        ?string $excludeFromPush,
+        ?string $applicationUrl,
+        ?string $eula,
+        ?int $oidcClient
     ) {
         $this->signatureMethod = $signatureMethod;
         $this->serviceTeamId = $serviceTeamId;
@@ -120,5 +111,16 @@ class Coin
     public function getOidcClient()
     {
         return $this->oidcClient;
+    }
+
+    public function merge(Coin $coin)
+    {
+        $this->signatureMethod = $coin->getSignatureMethod() ?: $this->signatureMethod;
+        $this->serviceTeamId = $coin->getServiceTeamId() ?: $this->serviceTeamId;
+        $this->originalMetadataUrl = $coin->getOriginalMetadataUrl() ?: $this->originalMetadataUrl;
+        $this->excludeFromPush = $coin->getExcludeFromPush() ?: $this->excludeFromPush;
+        $this->applicationUrl = $coin->getApplicationUrl() ?: $this->applicationUrl;
+        $this->eula = $coin->getEula() ?: $this->eula;
+        $this->oidcClient = $coin->getOidcClient() ?: $this->oidcClient;
     }
 }

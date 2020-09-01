@@ -66,4 +66,9 @@ class AttributeList
     {
         return $this->attributes;
     }
+
+    public function merge(AttributeList $attributes)
+    {
+
+    }
 }

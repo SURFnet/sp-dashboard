@@ -71,7 +71,7 @@ class OidcngResourceServerClient implements OidcClientInterface
      * @param array $scope
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    private function __construct(
+    public function __construct(
         $clientId,
         $clientSecret,
         $grantType,

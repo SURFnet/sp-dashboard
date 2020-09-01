@@ -82,10 +82,6 @@ class Contact
         $this->services = new ArrayCollection();
     }
 
-    public static function from(?Entity\Contact $findAdministrativeContact)
-    {
-    }
-
     /**
      * @param string $emailAddress
      *

@@ -65,7 +65,7 @@ class MetaData
     {
         $metaDataFields = $data['data']['metaDataFields'];
 
-        $entityId = $data['data']['entityid'];
+        $entityId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $metaDataUrl = isset($data['data']['metadataurl']) ? $data['data']['metadataurl'] : '';
         $acsLocation = isset($metaDataFields['AssertionConsumerService:0:Location'])
             ? $metaDataFields['AssertionConsumerService:0:Location'] : '';
@@ -76,7 +76,7 @@ class MetaData
         $nameEn = isset($metaDataFields['name:en']) ? $metaDataFields['name:en'] : '';
         $nameNl = isset($metaDataFields['name:nl']) ? $metaDataFields['name:nl'] : '';
 
-        Assert::stringNotEmpty($entityId);
+        Assert::string($entityId);
         Assert::string($metaDataUrl);
         Assert::string($acsLocation);
         Assert::string($nameIdFormat);
@@ -109,31 +109,18 @@ class MetaData
     }
 
     /**
-     * @param string $entityId,
-     * @param string $metaDataUrl
-     * @param string $acsLocation
-     * @param string $nameIdFormat
-     * @param string $certData
-     * @param string $descriptionEn
-     * @param string $descriptionNl
-     * @param string $nameEn
-     * @param string $nameNl
-     * @param ContactList $contacts
-     * @param Organization $organization
-     * @param Coin $coin
-     * @param Logo $logo
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    private function __construct(
-        $entityId,
-        $metaDataUrl,
-        $acsLocation,
-        $nameIdFormat,
-        $certData,
-        $descriptionEn,
-        $descriptionNl,
-        $nameEn,
-        $nameNl,
+    public function __construct(
+        ?string $entityId,
+        ?string $metaDataUrl,
+        ?string $acsLocation,
+        ?string $nameIdFormat,
+        ?string $certData,
+        ?string $descriptionEn,
+        ?string $descriptionNl,
+        ?string $nameEn,
+        ?string $nameNl,
         ContactList $contacts,
         Organization $organization,
         Coin $coin,
@@ -217,5 +204,22 @@ class MetaData
     public function getLogo(): ?Logo
     {
         return $this->logo;
+    }
+
+    public function merge(MetaData $metaData)
+    {
+        $this->entityId = $metaData->getEntityId() ?: $this->entityId;
+        $this->metaDataUrl = $metaData->getMetaDataUrl() ?: $this->metaDataUrl;
+        $this->acsLocation = $metaData->getAcsLocation() ?: $this->acsLocation;
+        $this->nameIdFormat = $metaData->getNameIdFormat() ?: $this->nameIdFormat;
+        $this->certData = $metaData->getCertData() ?: $this->certData;
+        $this->descriptionEn = $metaData->getDescriptionEn() ?: $this->descriptionEn;
+        $this->descriptionNl = $metaData->getDescriptionNl() ?: $this->descriptionNl;
+        $this->nameEn = $metaData->getNameEn() ?: $this->nameEn;
+        $this->nameNl = $metaData->getNameNl() ?: $this->nameNl;
+        $this->coin->merge($metaData->getCoin());
+        $this->contacts->merge($metaData->getContacts());
+        $this->organization->merge($metaData->getOrganization());
+        $this->logo->merge($metaData->getLogo());
     }
 }

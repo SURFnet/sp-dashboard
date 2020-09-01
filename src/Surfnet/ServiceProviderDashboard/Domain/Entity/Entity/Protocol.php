@@ -62,9 +62,9 @@ class Protocol
     /**
      * @param string $protocol
      */
-    private function __construct($protocol)
+    public function __construct(?string $protocol)
     {
-        Assert::string($protocol);
+        Assert::nullOrString($protocol);
 
         $this->protocol = $protocol;
     }
