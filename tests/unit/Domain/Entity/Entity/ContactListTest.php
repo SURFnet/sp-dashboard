@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ContactList;
 class ContactListTest extends TestCase
 {
     /**
-     * @dataProvider provideLogoTestData
+     * @dataProvider provideContactListTestData
      */
     public function test_it_can_merge_data(ContactList $list, ?ContactList $newData, ContactList $expectations)
     {
@@ -51,7 +51,7 @@ class ContactListTest extends TestCase
         }
     }
 
-    public function provideLogoTestData()
+    public function provideContactListTestData()
     {
         yield [
             $this->contactList(['technical', 'administrative', 'support']),

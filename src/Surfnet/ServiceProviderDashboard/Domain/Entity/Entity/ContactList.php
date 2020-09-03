@@ -93,17 +93,19 @@ class ContactList
         $this->contacts = [];
     }
 
-    public function merge(ContactList $contacts)
+    public function merge(?ContactList $contacts)
     {
         $this->clear();
-        if ($technical = $contacts->findTechnicalContact()) {
-            $this->add($technical);
-        }
-        if ($support = $contacts->findSupportContact()) {
-            $this->add($support);
-        }
-        if ($administrative = $contacts->findAdministrativeContact()) {
-            $this->add($administrative);
+        if ($contacts !== null) {
+            if ($technical = $contacts->findTechnicalContact()) {
+                $this->add($technical);
+            }
+            if ($support = $contacts->findSupportContact()) {
+                $this->add($support);
+            }
+            if ($administrative = $contacts->findAdministrativeContact()) {
+                $this->add($administrative);
+            }
         }
     }
 }

@@ -121,10 +121,10 @@ class MetaData
         ?string $descriptionNl,
         ?string $nameEn,
         ?string $nameNl,
-        ContactList $contacts,
-        Organization $organization,
-        Coin $coin,
-        Logo $logo
+        ?ContactList $contacts,
+        ?Organization $organization,
+        ?Coin $coin,
+        ?Logo $logo
     ) {
         $this->entityId = $entityId;
         $this->metaDataUrl = $metaDataUrl;
@@ -141,62 +141,62 @@ class MetaData
         $this->logo = $logo;
     }
 
-    public function getEntityId()
+    public function getEntityId(): ?string
     {
         return $this->entityId;
     }
 
-    public function getMetaDataUrl()
+    public function getMetaDataUrl(): ?string
     {
         return $this->metaDataUrl;
     }
 
-    public function getAcsLocation()
+    public function getAcsLocation(): ?string
     {
         return $this->acsLocation;
     }
 
-    public function getNameIdFormat()
+    public function getNameIdFormat(): ?string
     {
         return $this->nameIdFormat;
     }
 
-    public function getCertData()
+    public function getCertData(): ?string
     {
         return $this->certData;
     }
 
-    public function getDescriptionEn()
+    public function getDescriptionEn(): ?string
     {
         return $this->descriptionEn;
     }
 
-    public function getDescriptionNl()
+    public function getDescriptionNl(): ?string
     {
         return $this->descriptionNl;
     }
 
-    public function getNameEn()
+    public function getNameEn(): ?string
     {
         return $this->nameEn;
     }
 
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
 
-    public function getContacts()
+    public function getContacts(): ?ContactList
     {
         return $this->contacts;
     }
 
-    public function getOrganization()
+    public function getOrganization(): ?Organization
     {
         return $this->organization;
     }
 
-    public function getCoin()
+    public function getCoin(): ?Coin
     {
         return $this->coin;
     }
@@ -206,17 +206,33 @@ class MetaData
         return $this->logo;
     }
 
-    public function merge(MetaData $metaData)
+    public function merge(?MetaData $metaData)
     {
-        $this->entityId = $metaData->getEntityId() ?: $this->entityId;
-        $this->metaDataUrl = $metaData->getMetaDataUrl() ?: $this->metaDataUrl;
-        $this->acsLocation = $metaData->getAcsLocation() ?: $this->acsLocation;
-        $this->nameIdFormat = $metaData->getNameIdFormat() ?: $this->nameIdFormat;
-        $this->certData = $metaData->getCertData() ?: $this->certData;
-        $this->descriptionEn = $metaData->getDescriptionEn() ?: $this->descriptionEn;
-        $this->descriptionNl = $metaData->getDescriptionNl() ?: $this->descriptionNl;
-        $this->nameEn = $metaData->getNameEn() ?: $this->nameEn;
-        $this->nameNl = $metaData->getNameNl() ?: $this->nameNl;
+        if ($metaData === null) {
+            $this->entityId = null;
+            $this->metaDataUrl = null;
+            $this->acsLocation = null;
+            $this->nameIdFormat = null;
+            $this->certData = null;
+            $this->descriptionEn = null;
+            $this->descriptionNl = null;
+            $this->nameEn = null;
+            $this->nameNl = null;
+            $this->coin = null;
+            $this->contacts->merge(null);
+            $this->organization->merge(null);
+            $this->logo->merge(null);
+            return;
+        }
+        $this->entityId = is_null($metaData->getEntityId()) ? null : $metaData->getEntityId();
+        $this->metaDataUrl = is_null($metaData->getMetaDataUrl()) ? null : $metaData->getMetaDataUrl();
+        $this->acsLocation = is_null($metaData->getAcsLocation()) ? null : $metaData->getAcsLocation();
+        $this->nameIdFormat = is_null($metaData->getNameIdFormat()) ? null : $metaData->getNameIdFormat();
+        $this->certData = is_null($metaData->getCertData()) ? null : $metaData->getCertData();
+        $this->descriptionEn = is_null($metaData->getDescriptionEn()) ? null : $metaData->getDescriptionEn();
+        $this->descriptionNl = is_null($metaData->getDescriptionNl()) ? null : $metaData->getDescriptionNl();
+        $this->nameEn = is_null($metaData->getNameEn()) ? null : $metaData->getNameEn();
+        $this->nameNl = is_null($metaData->getNameNl()) ? null : $metaData->getNameNl();
         $this->coin->merge($metaData->getCoin());
         $this->contacts->merge($metaData->getContacts());
         $this->organization->merge($metaData->getOrganization());

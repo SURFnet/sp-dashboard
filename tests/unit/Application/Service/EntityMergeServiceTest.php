@@ -66,7 +66,10 @@ class EntityMergeServiceTest extends TestCase
 
     public function test_it_can_merge_saml_save_command_data_into_a_manage_entity()
     {
-        $manageEntity = $this->service->mergeSamlEntityCommand($this->buildSamlCommand(m::mock(Service::class)), $this->buildManageEntity());
+        $mergedManageEntity = $this->service->mergeSamlEntityCommand(
+            $this->buildSamlCommand(m::mock(Service::class)),
+            $this->buildManageEntity()
+        );
     }
 
     private function buildManageEntity()

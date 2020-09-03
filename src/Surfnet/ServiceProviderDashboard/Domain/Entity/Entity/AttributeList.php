@@ -67,8 +67,16 @@ class AttributeList
         return $this->attributes;
     }
 
+    private function clear()
+    {
+        $this->attributes = [];
+    }
+
     public function merge(AttributeList $attributes)
     {
-
+        $this->clear();
+        foreach ($attributes->getAttributes() as $attribute){
+            $this->add($attribute);
+        }
     }
 }

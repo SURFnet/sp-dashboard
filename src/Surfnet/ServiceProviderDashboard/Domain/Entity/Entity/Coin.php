@@ -113,14 +113,27 @@ class Coin
         return $this->oidcClient;
     }
 
-    public function merge(Coin $coin)
+    public function merge(?Coin $coin)
     {
-        $this->signatureMethod = $coin->getSignatureMethod() ?: $this->signatureMethod;
-        $this->serviceTeamId = $coin->getServiceTeamId() ?: $this->serviceTeamId;
-        $this->originalMetadataUrl = $coin->getOriginalMetadataUrl() ?: $this->originalMetadataUrl;
-        $this->excludeFromPush = $coin->getExcludeFromPush() ?: $this->excludeFromPush;
-        $this->applicationUrl = $coin->getApplicationUrl() ?: $this->applicationUrl;
-        $this->eula = $coin->getEula() ?: $this->eula;
-        $this->oidcClient = $coin->getOidcClient() ?: $this->oidcClient;
+        // When the new Coin data is not set, reset the data to reflect that state (not set)
+        if (is_null($coin)) {
+            $this->signatureMethod = null;
+            $this->serviceTeamId = null;
+            $this->originalMetadataUrl = null;
+            $this->excludeFromPush = null;
+            $this->applicationUrl = null;
+            $this->eula = null;
+            $this->oidcClient = null;
+            return;
+        }
+
+        // Overwrite the current data with that from the new Coin data
+        $this->signatureMethod = is_null($coin->getSignatureMethod()) ? null : $coin->getSignatureMethod();
+        $this->serviceTeamId = is_null($coin->getServiceTeamId()) ? null : $coin->getServiceTeamId();
+        $this->originalMetadataUrl = is_null($coin->getOriginalMetadataUrl()) ? null : $coin->getOriginalMetadataUrl();
+        $this->excludeFromPush = is_null($coin->getExcludeFromPush()) ? null : $coin->getExcludeFromPush();
+        $this->applicationUrl = is_null($coin->getApplicationUrl()) ? null : $coin->getApplicationUrl();
+        $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
+        $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
     }
 }

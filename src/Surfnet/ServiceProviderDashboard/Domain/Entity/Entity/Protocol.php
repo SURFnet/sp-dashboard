@@ -76,4 +76,12 @@ class Protocol
     {
         return $this->protocol;
     }
+    public function merge(?Protocol $lprotocol)
+    {
+        if ($lprotocol === null) {
+            $this->protocol = null;
+            return;
+        }
+        $this->protocol = is_null($lprotocol->getProtocol()) ? null : $lprotocol->getProtocol();
+    }
 }
