@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Exception;
 use League\Tactician\CommandBus;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
@@ -29,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
@@ -79,20 +79,18 @@ trait EntityControllerTrait
     private $loadEntityService;
 
     /**
-     * @param CommandBus $commandBus
-     * @param EntityService $entityService
-     * @param ServiceService $serviceService
-     * @param AuthorizationService $authorizationService
-     * @param EntityTypeFactory $entityTypeFactory
-     * @param LoadEntityService $loadEntityService
+     * @var EntityMergeService
      */
+    private $entityMergeService;
+
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         ServiceService $serviceService,
         AuthorizationService $authorizationService,
         EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService
+        LoadEntityService $loadEntityService,
+        EntityMergeService $entityMergeService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
@@ -100,6 +98,7 @@ trait EntityControllerTrait
         $this->authorizationService = $authorizationService;
         $this->entityTypeFactory = $entityTypeFactory;
         $this->loadEntityService = $loadEntityService;
+        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -152,9 +151,12 @@ trait EntityControllerTrait
             );
         }
 
+        // Merge the save command data into the ManageEntity
+        $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
+
         switch ($entity->getEnvironment()) {
             case Constants::ENVIRONMENT_TEST:
-                $publishEntityCommand = new PublishEntityTestCommand($entity, $saveCommand);
+                $publishEntityCommand = new PublishEntityTestCommand($entity);
                 $destination = 'entity_published_test';
                 break;
 
@@ -190,10 +192,6 @@ trait EntityControllerTrait
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
             // page we will be redirecting to in a moment.
             $this->get('session')->set('published.entity.clone', clone $entity);
-
-            // Test entities are removed after they've been published to Manage
-            $deleteCommand = new DeleteDraftEntityCommand($entity->getId());
-            $this->commandBus->handle($deleteCommand);
 
             return $this->redirectToRoute($destination);
         }

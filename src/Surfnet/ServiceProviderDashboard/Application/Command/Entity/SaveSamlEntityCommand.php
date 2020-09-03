@@ -682,7 +682,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getApplicationUrl(): string
+    public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
     }
@@ -698,7 +698,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getEulaUrl(): string
+    public function getEulaUrl(): ?string
     {
         return $this->eulaUrl;
     }

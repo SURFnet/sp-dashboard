@@ -75,6 +75,11 @@ class Attribute
         return $this->source;
     }
 
+    public function hasMotivation()
+    {
+        return $this->motivation !== null && $this->motivation !== '';
+    }
+
     public function getMotivation()
     {
         return $this->motivation;

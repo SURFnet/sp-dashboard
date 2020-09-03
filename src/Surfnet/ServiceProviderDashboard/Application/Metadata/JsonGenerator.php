@@ -100,7 +100,7 @@ class JsonGenerator implements GeneratorInterface
         $data = [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
             'type' => 'saml20_sp',
-            'id' => $entity->getManageId(),
+            'id' => $entity->getId(),
         ];
 
         if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
@@ -354,21 +354,20 @@ class JsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param Entity $entity
-     * @return array
-     */
-    private function generateOrganizationMetadata(ManageEntity $entity)
+    private function generateOrganizationMetadata(ManageEntity $entity): array
     {
-        $metadata = [
-            'OrganizationName:en' => $entity->getOrganizationNameEn(),
-            'OrganizationDisplayName:en' => $entity->getOrganizationDisplayNameEn(),
-            'OrganizationURL:en' => $entity->getOrganizationUrlEn(),
-            'OrganizationName:nl' => $entity->getOrganizationNameNl(),
-            'OrganizationDisplayName:nl' => $entity->getOrganizationDisplayNameNl(),
-            'OrganizationURL:nl' => $entity->getOrganizationUrlNl(),
-        ];
-
+        $metadata = [];
+        $organization = $entity->getMetaData()->getOrganization();
+        if ($organization) {
+            $metadata = [
+                'OrganizationName:en' => $organization->getNameEn(),
+                'OrganizationDisplayName:en' => $organization->getDisplayNameEn(),
+                'OrganizationURL:en' => $organization->getUrlEn(),
+                'OrganizationName:nl' => $organization->getNameNl(),
+                'OrganizationDisplayName:nl' => $organization->getDisplayNameNl(),
+                'OrganizationURL:nl' => $organization->getUrlNl(),
+            ];
+        }
         return array_filter($metadata);
     }
 
@@ -416,24 +415,26 @@ class JsonGenerator implements GeneratorInterface
     private function generateLogoMetadata(ManageEntity $entity)
     {
         $logo = $entity->getMetaData()->getLogo();
-        $metadata = [
-            'logo:0:url' => $logo->getUrl(),
-        ];
+        $metadata = [];
+        if ($logo) {
+            $metadata = [
+                'logo:0:url' => $logo->getUrl(),
+            ];
 
-        $logoData = @getimagesize(
-            $logo->getUrl()
-        );
+            $logoData = @getimagesize(
+                $logo->getUrl()
+            );
 
-        if ($logoData !== false) {
-            list($width, $height) = $logoData;
-        } else {
-            $width = 50;
-            $height = 50;
+            if ($logoData !== false) {
+                list($width, $height) = $logoData;
+            } else {
+                $width = 50;
+                $height = 50;
+            }
+
+            $metadata['logo:0:width'] = (string)$width;
+            $metadata['logo:0:height'] = (string)$height;
         }
-
-        $metadata['logo:0:width'] = (string)$width;
-        $metadata['logo:0:height'] = (string)$height;
-
         return $metadata;
     }
 
@@ -444,7 +445,7 @@ class JsonGenerator implements GeneratorInterface
      */
     private function generateAclData(ManageEntity $entity)
     {
-        if ($entity->isIdpAllowAll()) {
+        if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
             return [
                 'allowedEntities' => [],
                 'allowedall' => true,
@@ -452,7 +453,7 @@ class JsonGenerator implements GeneratorInterface
         }
 
         $providers = [];
-        foreach ($entity->getIdpWhitelist() as $entityId) {
+        foreach ($entity->getAllowedIdentityProviders()->getAllowedIdentityProviders() as $entityId) {
             $providers[] = [
                 'name' => $entityId,
             ];

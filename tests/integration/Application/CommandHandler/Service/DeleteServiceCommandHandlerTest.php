@@ -24,7 +24,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler;
@@ -117,21 +116,9 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             ->andReturn($entityList)
             ->once();
 
-        $command1 = m::mock(DeleteDraftEntityCommand::class);
         $command2 = m::mock(DeletePublishedTestEntityCommand::class);
 
-        $this->deleteCommandFactory
-            ->shouldReceive('from')
-            ->with($entity1)
-            ->andReturn($command1)
-            ->once();
-
-        $this->commandBus
-            ->shouldReceive('handle')
-            ->with($command1)
-            ->once();
-
-        $this->commandBus
+      $this->commandBus
             ->shouldReceive('handle')
             ->with($command2)
             ->once();

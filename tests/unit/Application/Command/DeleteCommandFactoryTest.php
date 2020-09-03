@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Command;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
@@ -54,12 +53,10 @@ class DeleteCommandFactoryTest extends MockeryTestCase
         $this->assertInstanceOf($expectedCommand, $command, $testDescription);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage This entity state/environment combination is not supported for deleting
-     */
     public function test_invalid_entity_results_in_exception()
     {
+        $this->expectExceptionMessage("This entity state/environment combination is not supported for deleting");
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
         $entity = m::mock(EntityDto::class);
         $entity->shouldReceive('getState')->andReturn('Wisconsin');
         $entity->shouldReceive('getEnvironment')->andReturn('Desert');
@@ -72,19 +69,9 @@ class DeleteCommandFactoryTest extends MockeryTestCase
     {
         return [
             [
-                $this->buildEntity('test', 'draft'),
-                DeleteDraftEntityCommand::class,
-                'Test draft should result in DeleteDraftEntityCommand',
-            ],
-            [
                 $this->buildEntity('test', 'published'),
                 DeletePublishedTestEntityCommand::class,
                 'Test published should result in DeletePublishedTestEntityCommand',
-            ],
-            [
-                $this->buildEntity('production', 'draft'),
-                DeleteDraftEntityCommand::class,
-                'Production draft should result in DeleteDraftEntityCommand',
             ],
             [
                 $this->buildEntity('production', 'requested'),

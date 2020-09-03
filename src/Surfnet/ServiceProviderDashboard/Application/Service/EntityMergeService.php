@@ -48,7 +48,7 @@ class EntityMergeService
         $this->attributeRepository = $repository;
     }
 
-    public function mergeSamlEntityCommand(SaveSamlEntityCommand $command, ?ManageEntity $manageEntity = null): ManageEntity
+    public function mergeEntityCommand(SaveEntityCommandInterface $command, ?ManageEntity $manageEntity = null): ManageEntity
     {
         $metaData = new MetaData(
             $command->getEntityId(),
@@ -84,18 +84,6 @@ class EntityMergeService
         }
         $manageEntity->merge($newEntity);
         return $manageEntity;
-    }
-
-    private function buildEmptyManageEntity()
-    {
-        $contactList = new ContactList();
-        $organization = new Organization(null, null, null, null, null, null);
-        $coin = new Coin(null, null, null, null, null, null, null);
-        $logo = new Logo(null, null, null);
-        $metaData = new MetaData(null, null, null, null, null, null, null, null, null, $contactList, $organization, $coin, $logo);
-        $allowedIdPs = new AllowedIdentityProviders();
-        $protocol = new Protocol(null);
-        return new ManageEntity(null, new AttributeList(), $metaData, $allowedIdPs, $protocol);
     }
 
     /**

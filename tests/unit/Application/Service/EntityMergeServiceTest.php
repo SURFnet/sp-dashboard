@@ -49,7 +49,7 @@ class EntityMergeServiceTest extends TestCase
     public function test_it_can_merge_saml_save_command_data_into_an_empty_manage_entity()
     {
         $service = m::mock(Service::class);
-        $manageEntity = $this->service->mergeSamlEntityCommand($this->buildSamlCommand($service), null);
+        $manageEntity = $this->service->mergeEntityCommand($this->buildSamlCommand($service), null);
 
         self::assertNull($manageEntity->getId());
         self::assertFalse($manageEntity->isManageEntity());
@@ -66,10 +66,17 @@ class EntityMergeServiceTest extends TestCase
 
     public function test_it_can_merge_saml_save_command_data_into_a_manage_entity()
     {
-        $mergedManageEntity = $this->service->mergeSamlEntityCommand(
+        $manageEntity = $this->buildManageEntity();
+        // The point of this tests is not to verify all data was correctly merged (see seperate unit tests for that)
+        self::assertEquals('https://monitorstands.example.com', $manageEntity->getMetaData()->getEntityId());
+        self::assertEquals('SURFconext', $manageEntity->getMetaData()->getContacts()->findAdministrativeContact()->getGivenName());
+        $mergedManageEntity = $this->service->mergeEntityCommand(
             $this->buildSamlCommand(m::mock(Service::class)),
-            $this->buildManageEntity()
+            $manageEntity
         );
+        // Verify merging was performed by randomly test one value that should have been updated. And one that should have been nulled
+        self::assertEquals('https://www.example.com', $mergedManageEntity->getMetaData()->getEntityId());
+        self::assertNull($manageEntity->getMetaData()->getContacts()->findAdministrativeContact());
     }
 
     private function buildManageEntity()

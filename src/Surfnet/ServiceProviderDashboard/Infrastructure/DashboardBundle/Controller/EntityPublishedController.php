@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class EntityPublishedController extends Controller
@@ -38,7 +39,7 @@ class EntityPublishedController extends Controller
      */
     public function publishedAction()
     {
-        /** @var Entity $entity */
+        /** @var ManageEntity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
 
         // Redirects OIDC (including TNG) published entity confirmations to the entity list page and shows a
@@ -51,7 +52,7 @@ class EntityPublishedController extends Controller
             return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
         }
 
-        $parameters = ['entityName' => $entity->getNameEn()];
+        $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
 
         if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             return $this->render('@Dashboard/EntityPublished/publishedTest.html.twig', $parameters);

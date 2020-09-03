@@ -90,6 +90,8 @@ class EntityDeleteController extends Controller
      */
     public function deleteAction(Request $request, Entity $entity)
     {
+        die('Remove altogether? Or should this trigger a delete at manage end');
+
         if ($entity->isReadOnly()) {
             throw $this->createNotFoundException(
                 'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
@@ -109,9 +111,9 @@ class EntityDeleteController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton()->getName() === 'delete') {
-                $this->commandBus->handle(
-                    $this->commandFactory->buildDeleteDraftEntityCommand($entity->getId())
-                );
+//                $this->commandBus->handle(
+//                    $this->commandFactory->buildDeleteDraftEntityCommand($entity->getId())
+//                );
             }
 
             return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);

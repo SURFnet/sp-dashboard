@@ -32,27 +32,13 @@ class PublishEntityTestCommand implements Command
      */
     private $manageEntity;
 
-    /**
-     * @var SaveEntityCommandInterface
-     */
-    private $saveEntityCommand;
-
-    public function __construct(ManageEntity $entity, SaveEntityCommandInterface $saveEntityCommand)
+    public function __construct(ManageEntity $entity)
     {
         $this->manageEntity = $entity;
-        $this->saveEntityCommand = $saveEntityCommand;
     }
 
     public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;
-    }
-
-    /**
-     * @return SaveEntityCommandInterface
-     */
-    public function getSaveEntityCommand(): SaveEntityCommandInterface
-    {
-        return $this->saveEntityCommand;
     }
 }

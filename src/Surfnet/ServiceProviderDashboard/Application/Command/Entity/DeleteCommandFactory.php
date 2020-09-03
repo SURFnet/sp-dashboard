@@ -37,14 +37,10 @@ class DeleteCommandFactory
 {
     public function from(EntityDto $entity)
     {
-        $isDraft = $entity->getState() === 'draft';
         $isPublishedToTest = $entity->getEnvironment() === 'test' && $entity->getState() === 'published';
         $isPublishedProduction = $entity->getEnvironment() === 'production' && $entity->getState() === 'requested';
         $isRequestDelete = $entity->getEnvironment() === 'production' && $entity->getState() === 'published';
 
-        if ($isDraft) {
-            return $this->buildDeleteDraftEntityCommand($entity->getId());
-        }
         if ($isPublishedToTest) {
             return $this->buildDeletePublishedTestEntityCommand($entity->getId(), $entity->getProtocol());
         }
@@ -58,11 +54,6 @@ class DeleteCommandFactory
             );
         }
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
-    }
-
-    public function buildDeleteDraftEntityCommand($entityId)
-    {
-        return new DeleteDraftEntityCommand($entityId);
     }
 
     public function buildDeletePublishedTestEntityCommand($manageId, $protocol)

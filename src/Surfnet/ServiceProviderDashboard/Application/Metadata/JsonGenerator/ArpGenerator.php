@@ -41,14 +41,11 @@ class ArpGenerator implements MetadataGenerator
     public function build(ManageEntity $entity): array
     {
         $attributes = [];
-
+        $entityAttributes = $entity->getAttributes();
         foreach ($this->repository->findAll() as $definition) {
-            $getterName = $definition->getterName;
-
-            $attr = $entity->$getterName();
-
-            if ($attr instanceof Attribute && $attr->isRequested()) {
-                $urn = reset($definition->urns);
+            $urn = reset($definition->urns);
+            $attrribute = $entityAttributes->findByUrn($urn);
+            if ($attrribute) {
                 $attributes[$urn] = [
                     [
                         'source' => 'idp',
@@ -56,10 +53,9 @@ class ArpGenerator implements MetadataGenerator
                     ],
                 ];
 
-                if ($attr->hasMotivation()) {
-                    $attributes[$urn][0]['motivation'] = $attr->getMotivation();
+                if ($attrribute->hasMotivation()) {
+                    $attributes[$urn][0]['motivation'] = $attrribute->getMotivation();
                 }
-                $this->mergeWithManageAttributes($attributes, $urn, $entity);
             }
         }
 
@@ -77,7 +73,7 @@ class ArpGenerator implements MetadataGenerator
 
         if ($entity->isManageEntity()) {
             // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
-            foreach ($entity->getArpAttributes()->getAttributes() as $manageAttribute) {
+            foreach ($entity->getAttributes()->getAttributes() as $manageAttribute) {
                 if (!array_key_exists($manageAttribute->getName(), $attributes) && !in_array($manageAttribute->getName(), $managedAttributeUrns)) {
                     $attributes[$manageAttribute->getName()] = [
                         [
@@ -102,22 +98,6 @@ class ArpGenerator implements MetadataGenerator
                     'motivation' => 'OIDC requires EduPersonTargetedID by default',
                 ]
             ];
-        }
-    }
-
-    /**
-     * Preserves Manage attribute data, which would otherwise be reset to '*' and 'idp'
-     *
-     * @param array $attributes
-     * @param string $urn
-     * @param ManageEntity $entity
-     */
-    private function mergeWithManageAttributes(array &$attributes, $urn, ManageEntity $entity)
-    {
-        if ($entity->isManageEntity() && $entity->getArpAttributes()->findByUrn($urn)) {
-            $manageAttribute = $entity->getArpAttributes()->findByUrn($urn);
-            $attributes[$urn][0]['source'] = $manageAttribute->getSource();
-            $attributes[$urn][0]['value'] = $manageAttribute->getValue();
         }
     }
 }
