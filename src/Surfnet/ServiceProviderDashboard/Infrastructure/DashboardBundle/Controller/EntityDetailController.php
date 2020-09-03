@@ -50,20 +50,12 @@ class EntityDetailController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @Template("@Dashboard/EntityDetail/detail.html.twig")
      *
-     * @param string $id
-     * @param int $serviceId
-     * @param string $manageTarget
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function detailAction($id, $serviceId, $manageTarget)
+    public function detailAction(string $id, int $serviceId, string $manageTarget)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
-
-        // First try to read the entity from the local storage
-        $entity = $this->entityService->getEntityById($id);
-        if (!$entity) {
-            $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
-        }
+        $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
         $viewObject = EntityDetail::fromEntity($entity);
 
         return ['entity' => $viewObject];

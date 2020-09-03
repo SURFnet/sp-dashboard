@@ -184,12 +184,14 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
                 continue;
             }
 
-            $attribute = new Attribute();
-            $attribute->setRequested(true);
-            $attribute->setMotivation($manageAttribute->getMotivation());
+            if ($manageAttribute->hasMotivation()){
+                $attribute = new Attribute();
+                $attribute->setRequested(true);
+                $attribute->setMotivation($manageAttribute->getMotivation());
 
-            $setter = $attributeDefinition->setterName;
-            $command->{$setter}($attribute);
+                $setter = $attributeDefinition->setterName;
+                $command->{$setter}($attribute);
+            }
         }
     }
 
