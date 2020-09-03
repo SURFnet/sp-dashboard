@@ -87,7 +87,7 @@ class EntityAclController extends Controller
 
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 
-        $command = new UpdateEntityAclCommand($entity->getId(), $service->getId(), $selectedIdps, $entity->isIdpAllowAll());
+        $command = new UpdateEntityAclCommand($entity, $selectedIdps, $entity->getAllowedIdentityProviders()->isAllowAll());
         $form = $this->createForm(AclEntityType::class, $command);
 
         $form->handleRequest($request);

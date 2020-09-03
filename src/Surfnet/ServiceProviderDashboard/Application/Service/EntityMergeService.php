@@ -67,7 +67,14 @@ class EntityMergeService
         );
         $attributes = $this->buildAttributesFromCommand($command);
         $protocol = new Protocol($this->determineProtocol($command));
-        $allowedIdPs = new AllowedIdentityProviders();
+
+        $allowedIdPs = null;
+        if ($manageEntity && $manageEntity->getAllowedIdentityProviders()) {
+            $allowedIdPs = new AllowedIdentityProviders(
+                $manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders(),
+                $manageEntity->getAllowedIdentityProviders()->isAllowAll()
+            );
+        }
 
         $newEntity = new ManageEntity(
             null,

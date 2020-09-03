@@ -127,12 +127,7 @@ services:
     surfnet.dashboard.command_handler.update_entity_acl:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityAclCommandHandler
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
-            - '@logger'
-            - '@session.flash_bag'
-        public: true
+            $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand }
 
