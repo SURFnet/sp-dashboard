@@ -131,6 +131,11 @@ class ManageEntity
         return $clone;
     }
 
+    public function setId(string $id)
+    {
+        $this->id = $id;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -275,5 +280,10 @@ class ManageEntity
         $this->service = is_null($newEntity->getService()) ? null : $newEntity->getService();
         $this->metaData->merge($newEntity->getMetaData());
         $this->attributes->merge($newEntity->getAttributes());
+    }
+
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
     }
 }

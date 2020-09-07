@@ -51,7 +51,7 @@ class JsonGeneratorStrategy
      */
     public function generateForNewEntity(ManageEntity $entity, string $workflowState)
     {
-        return $this->getStrategy($entity->getProtocol())->generateForNewEntity($entity, $workflowState);
+        return $this->getStrategy($entity->getProtocol()->getProtocol())->generateForNewEntity($entity, $workflowState);
     }
 
     /**

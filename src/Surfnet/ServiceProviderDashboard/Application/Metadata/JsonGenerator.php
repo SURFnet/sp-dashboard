@@ -103,7 +103,7 @@ class JsonGenerator implements GeneratorInterface
             'id' => $entity->getId(),
         ];
 
-        if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
             $data['externalReferenceData'] = [
                 'oidcClient' => $this->generateOidcClient($entity),
             ];
@@ -132,10 +132,10 @@ class JsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
 
         switch (true) {
-            case ($entity->getProtocol() == Constants::TYPE_SAML):
+            case ($entity->getProtocol()->getProtocol() == Constants::TYPE_SAML):
                 $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
                 break;
-            case ($entity->getProtocol() == Constants::TYPE_OPENID_CONNECT):
+            case ($entity->getProtocol()->getProtocol() == Constants::TYPE_OPENID_CONNECT):
                 $metadata['oidcClient'] = $this->generateOidcClient($entity);
                 break;
         }
@@ -162,7 +162,7 @@ class JsonGenerator implements GeneratorInterface
 
         $metadata += $this->generateAclData($entity);
 
-        if ($entity->getProtocol() == Constants::TYPE_SAML) {
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
             $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
         }
 
@@ -229,7 +229,7 @@ class JsonGenerator implements GeneratorInterface
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        if ($entity->getProtocol() === Constants::TYPE_SAML) {
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
             /*
              * The binding of the ACS URL is always POST.
              *
@@ -242,7 +242,7 @@ class JsonGenerator implements GeneratorInterface
             $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
             $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
             $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
-        } else if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
+        } else if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
             $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
             $metadata["coin:oidc_client"] = '1';
         }
@@ -272,7 +272,7 @@ class JsonGenerator implements GeneratorInterface
         $metadata = [];
         if (!empty($entity->getMetaData()->getCertData())) {
             $metadata['certData'] = $this->stripCertificateEnvelope(
-                $entity->getMetaData()->getCertData()()
+                $entity->getMetaData()->getCertData()
             );
         }
 

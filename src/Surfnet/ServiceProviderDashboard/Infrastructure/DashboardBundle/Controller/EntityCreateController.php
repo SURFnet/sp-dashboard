@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
@@ -58,7 +59,8 @@ class EntityCreateController extends Controller
         AuthorizationService $authorizationService,
         EntityTypeFactory $entityTypeFactory,
         LoadEntityService $loadEntityService,
-        ProtocolChoiceFactory $protocolChoiceFactory
+        ProtocolChoiceFactory $protocolChoiceFactory,
+        EntityMergeService $entityMergeService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
@@ -67,6 +69,7 @@ class EntityCreateController extends Controller
         $this->entityTypeFactory = $entityTypeFactory;
         $this->loadEntityService = $loadEntityService;
         $this->protocolChoiceFactory = $protocolChoiceFactory;
+        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -262,7 +265,7 @@ class EntityCreateController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
-
+        $entity->setEnvironment($targetEnvironment);
         if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG &&
             !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
         ) {
@@ -289,18 +292,11 @@ class EntityCreateController extends Controller
 
         if ($form->isSubmitted()) {
             try {
-                if ($this->isSaveAction($form)) {
-                    // Only trigger form validation on publish
-                    $this->commandBus->handle($command);
-
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
-                } elseif ($this->isPublishAction($form)) {
+                if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $this->commandBus->handle($command);
 
-                        $entity = $this->entityService->getEntityById($command->getId());
-                        $response = $this->publishEntity($entity, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $flashBag);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
@@ -308,7 +304,7 @@ class EntityCreateController extends Controller
                         }
 
                         // When publishing failed, forward to the edit action and show the error messages there
-                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                        return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }

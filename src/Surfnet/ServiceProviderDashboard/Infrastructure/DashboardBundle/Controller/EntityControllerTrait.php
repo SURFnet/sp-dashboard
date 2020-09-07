@@ -175,7 +175,6 @@ trait EntityControllerTrait
                 throw new InvalidArgumentException(
                     sprintf('The environment with value "%s" is not supported.', $entity->getEnvironment())
                 );
-                break;
         }
 
         try {

@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductio
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
@@ -145,29 +145,37 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      */
     public function handle(PublishProductionCommandInterface $command)
     {
-        $entity = $this->repository->findById($command->getId());
+        $entity = $command->getManageEntity();
         $issue = null;
         try {
             $this->logger->info(
-                sprintf('Publishing entity "%s" to Manage in production environment', $entity->getNameEn())
+                sprintf(
+                    'Publishing entity "%s" to Manage in production environment',
+                    $entity->getMetaData()->getNameEn()
+                )
             );
             $publishResponse = $this->publishClient->publish($entity);
             if (array_key_exists('id', $publishResponse)) {
                 // Set entity status to published
                 $entity->setStatus(Constants::STATE_PUBLISHED);
+                $entity->setId($publishResponse['id']);
 
-                $this->logger->info(sprintf('Updating status of "%s" to published', $entity->getNameEn()));
-                // Save changes made to entity
-                $this->repository->save($entity);
+                $this->logger->info(
+                    sprintf(
+                        'Updating status of "%s" to published',
+                        $entity->getMetaData()->getNameEn()
+                    )
+                );
+
                 // No need to create a Jira ticket when resetting the client secret
                 if ($command instanceof PublishEntityProductionCommand) {
-                    $issue = $this->createJiraTicket($entity, $command);
+                    $this->createJiraTicket($entity, $command);
                 }
             } else {
                 $this->logger->error(
                     sprintf(
                         'Publishing to Manage failed for: "%s". Message: "%s"',
-                        $entity->getNameEn(),
+                        $entity->getMetaData()->getNameEn(),
                         'Manage did not return an id. See the context for more details.'
                     ),
                     [$publishResponse]
@@ -182,7 +190,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $entity->getNameEn(),
+                    $entity->getMetaData()->getNameEn(),
                     $e->getMessage()
                 )
             );
@@ -200,15 +208,15 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         }
     }
 
-    private function isNewResourceServer(Entity $entity)
+    private function isNewResourceServer(ManageEntity $entity)
     {
-        $isNewEntity = empty($entity->getManageId());
-        return $isNewEntity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        $isNewEntity = empty($entity->getId());
+        return $isNewEntity && $entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
-    private function createJiraTicket(Entity $entity, PublishEntityProductionCommand $command)
+    private function createJiraTicket(ManageEntity $entity, PublishEntityProductionCommand $command)
     {
-        $ticket = Ticket::fromEntity(
+        $ticket = Ticket::fromManageResponse(
             $entity,
             $command->getApplicant(),
             $this->issueType,
@@ -217,13 +225,13 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         );
 
         $this->logger->info(
-            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getNameEn())
+            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getMetaData()->getNameEn())
         );
         $issue = null;
-        if ($entity->getManageId()) {
+        if ($entity->getId()) {
             // Before creating an issue, test if we didn't previously create this ticket (users can apply changes to
             // requested published entities).
-            $issue = $this->ticketService->findByManageIdAndIssueType($entity->getManageId(), $this->issueType);
+            $issue = $this->ticketService->findByManageIdAndIssueType($entity->getId(), $this->issueType);
         }
         if (is_null($issue)) {
             $issue = $this->ticketService->createIssueFrom($ticket);
