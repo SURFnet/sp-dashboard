@@ -44,13 +44,6 @@ class Protocol
     {
         $protocol = self::$protocolMapping[$manageProtocol];
 
-        // The old/first oidc implementation piggy backs on the saml20 entity, and is identified as oidc by the
-        // oidcClient coin.
-        $oidcClient = isset($data['data']['oidcClient']);
-        if ($oidcClient && $protocol === Constants::TYPE_SAML) {
-            $protocol = Constants::TYPE_OPENID_CONNECT;
-        }
-
         $isResourceServer = isset($data['data']['metaDataFields']['isResourceServer']) && $data['data']['metaDataFields']['isResourceServer'];
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG && $isResourceServer) {
             $protocol = Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;

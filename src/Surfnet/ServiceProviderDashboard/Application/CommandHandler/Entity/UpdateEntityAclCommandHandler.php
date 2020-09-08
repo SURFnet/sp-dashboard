@@ -65,9 +65,9 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment to update ACL', $command->getManageEntity()->getId()));
 
         $entity = $command->getManageEntity();
-        $idps = array_filter($command->getSelected(), function (IdentityProvider $idp) {
+        $idps = array_map(function (IdentityProvider $idp) {
             return $idp->getEntityId();
-        });
+        }, $command->getSelected());
         $allowedIdps = new AllowedIdentityProviders($idps, $command->isSelectAll());
         $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {

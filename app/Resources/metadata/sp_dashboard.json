@@ -9,7 +9,7 @@
   },
   {
     "id": "originalMetadataUrl",
-    "getterName": "getImportUrl",
+    "getterName": "getOriginalMetadataUrl",
     "friendlyName": "OriginalMetadataUrl",
     "urns": [
       "coin:original_metadata_url"
@@ -25,7 +25,7 @@
   },
   {
     "id": "eula",
-    "getterName": "getEulaUrl",
+    "getterName": "getEula",
     "friendlyName": "Eula",
     "urns": [
       "coin:eula"

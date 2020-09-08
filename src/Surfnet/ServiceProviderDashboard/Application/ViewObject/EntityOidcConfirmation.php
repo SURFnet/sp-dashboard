@@ -18,7 +18,6 @@
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
@@ -52,7 +51,6 @@ class EntityOidcConfirmation
         $protocol
     ) {
         $supportedProtocols = [
-            Constants::TYPE_OPENID_CONNECT,
             Constants::TYPE_OPENID_CONNECT_TNG,
             Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ];
@@ -84,13 +82,7 @@ class EntityOidcConfirmation
      */
     public function getEntityId()
     {
-        $isOidcng = $this->protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $this->protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-        if ($isOidcng) {
-            return OidcngClientIdParser::parse($this->entityId);
-        }
-
-        return OidcClientIdParser::parse($this->entityId);
+        return OidcngClientIdParser::parse($this->entityId);
     }
 
     /**

@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\Entity\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
 
 class CoinTest extends TestCase
 {

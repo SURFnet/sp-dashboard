@@ -35,7 +35,7 @@ class Contact
         $givenName = $contactData['givenName'] ?? '';
         $surName = $contactData['surName'] ?? '';
         $email = $contactData['emailAddress'] ?? '';
-        $phone = $contactData['phone'] ?? '';
+        $phone = $contactData['telephoneNumber'] ?? '';
 
         Assert::stringNotEmpty($type);
         Assert::string($givenName);

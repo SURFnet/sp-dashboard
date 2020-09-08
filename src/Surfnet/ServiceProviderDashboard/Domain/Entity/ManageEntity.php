@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
@@ -87,6 +86,7 @@ class ManageEntity
 
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
+        $oidcClient = null;
         if ($manageProtocol === Protocol::OIDC10_RP) {
             if (isset($data['data']['metaDataFields']['isResourceServer']) &&
                 $data['data']['metaDataFields']['isResourceServer']
@@ -95,9 +95,6 @@ class ManageEntity
             } else {
                 $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
             }
-        } elseif ($manageProtocol === Protocol::SAML20_SP) {
-            // Try to create an OidcClient, the first oidc implementation used SAML20_SP as entity type.
-            $oidcClient = OidcClient::fromApiResponse($data, $manageProtocol);
         }
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
         $protocol = Protocol::fromApiResponse($data, $manageProtocol);
@@ -146,7 +143,7 @@ class ManageEntity
         return $this->attributes;
     }
 
-    public function getMetaData()
+    public function getMetaData(): ?MetaData
     {
         return $this->metaData;
     }
@@ -220,7 +217,7 @@ class ManageEntity
         return !is_null($this->getId());
     }
 
-    public function setComments(string $comments): void
+    public function setComments(?string $comments): void
     {
         $this->comments = $comments;
     }
@@ -253,12 +250,14 @@ class ManageEntity
 
     public function isProduction()
     {
-        return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
+        return $this->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function isReadOnly()
     {
-        return $this->protocol === Constants::TYPE_OPENID_CONNECT;
+        // No read only scenarios exist currently. This was used to block oidc entities
+        // (during the Oidc TNG rollover period)
+        return false;
     }
 
     public function getService(): Service

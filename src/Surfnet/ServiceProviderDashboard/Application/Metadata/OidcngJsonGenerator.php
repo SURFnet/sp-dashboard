@@ -213,7 +213,7 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata += $this->generateOidcClient($entity);
 
-        if (!empty($entity->getMetaData()->getLogo()->getUrl())) {
+        if (!is_null($entity->getMetaData()->getLogo())) {
             $metadata += $this->generateLogoMetadata($entity);
         }
 

@@ -20,37 +20,35 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonG
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute as ManageAttribute;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class ArpGeneratorTest extends MockeryTestCase
 {
     public function test_it_can_build_arp_metadata()
     {
-        /** @var Entity $entity */
-        $entity = m::mock(Entity::class)->makePartial();
+        $entity = m::mock(ManageEntity::class)->makePartial();
+        $attribute = m::mock(Attribute::class);
+        $attribute->shouldReceive('hasMotivation');
 
-        $attribute = new Attribute();
-        $attribute->setRequested(true);
-        $attribute->setMotivation('commonname');
-        $entity->setCommonNameAttribute($attribute);
+        $entity->shouldReceive('getAttributes->findByUrn')
+            ->with('urn:mace:dir:attribute-def:displayName')
+            ->andReturn($attribute);
+        $entity->shouldReceive('getAttributes->findByUrn')
+            ->with('urn:mace:dir:attribute-def:cn')
+            ->andReturn($attribute);
+        $entity->shouldReceive('getProtocol->getProtocol')
+            ->andReturn('saml20');
 
-        $attribute = new Attribute();
-        $attribute->setRequested(true);
-        $attribute->setMotivation('displayname');
-        $entity->setDisplayNameAttribute($attribute);
-
+        $entity->shouldReceive('getAttributes->findByUrn');
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
-        $mde = MetadataConversionDto::fromEntity($entity);
+
         $factory = new ArpGenerator($metadataRepository);
 
-        $metadata = $factory->build($mde);
+        $metadata = $factory->build($entity);
 
         $this->assertCount(2, $metadata['attributes']);
 
@@ -60,39 +58,19 @@ class ArpGeneratorTest extends MockeryTestCase
 
     public function test_does_not_override_existing_manage_attributes_and_sources()
     {
-        /** @var Entity $entity */
-        $entity = m::mock(Entity::class)->makePartial();
-
-        $attribute = new Attribute();
-        $attribute->setRequested(true);
-        $attribute->setMotivation('commonname');
-        $entity->setCommonNameAttribute($attribute);
-
-        $attribute = new Attribute();
-        $attribute->setRequested(true);
-        $attribute->setMotivation('displayname');
-        $entity->setDisplayNameAttribute($attribute);
-
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new ArpGenerator($metadataRepository);
-
         $manageEntity = $this->getManageEntity();
-        $mde = MetadataConversionDto::fromManageEntity($manageEntity, $entity);
-
-        $metadata = $factory->build($mde);
+        $metadata = $factory->build($manageEntity);
 
         $this->assertCount(4, $metadata['attributes']);
-
-        // Verify the attribues are present, and have the correct source. When source was modified in manage, it should
-        // not be overwritten back to 'idp'. The same applies for the filter value of the ARP attribute
-        // See https://www.pivotaltracker.com/story/show/173030675
 
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:displayName']);
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['value']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
-        $this->assertEquals('voot', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
+        $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['value']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-1']);
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:manage-1'][0]['source']);
@@ -104,47 +82,52 @@ class ArpGeneratorTest extends MockeryTestCase
 
     public function test_adds_epti_for_oidcng_entities()
     {
-        /** @var Entity $entity */
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG);
-
-        $attribute = new Attribute();
-        $attribute->setRequested(true);
-        $attribute->setMotivation('commonname');
-
-        $entity->setCommonNameAttribute($attribute);
+        $entity = $this->getManageEntity(Constants::TYPE_OPENID_CONNECT_TNG, false);
 
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
         $factory = new ArpGenerator($metadataRepository);
 
-        $mde = MetadataConversionDto::fromEntity($entity);
-        $metadata = $factory->build($mde);
+        $metadata = $factory->build($entity);
 
-        $this->assertCount(2, $metadata['attributes']);
-        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
+        $this->assertCount(1, $metadata['attributes']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonTargetedID']);
     }
 
-    private function getManageEntity()
+    private function getManageEntity(string $protocol = 'sanl20', $registerAttributes = true)
     {
         $manageEntity = m::mock(ManageEntity::class);
-        $manageAttributes = [
-            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:cn', 'voot', '*'),
-            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*'),
-            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-1', 'idp', '*'),
-            $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-2', 'sab', '/^foobar(.*)$/i'),
-        ];
+        $manageEntity->shouldReceive('getProtocol->getProtocol')
+            ->andReturn($protocol);
 
+        $attributes = [];
+        if ($registerAttributes) {
+            $attributes = [
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:cn', 'voot', '*'),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*'),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-1', 'idp', '*'),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-2', 'sab', '/^foobar(.*)$/i'),
+            ];
+        }
         $manageEntity
             ->shouldReceive('getAttributes->getAttributes')
-            ->andReturn($manageAttributes);
+            ->andReturn($attributes);
+
+        $manageEntity
+            ->shouldReceive('getAttributes->findByUrn');
+        $manageEntity
+            ->shouldReceive('isManageEntity')
+            ->andReturn(true);
+        $manageEntity
+            ->shouldReceive('getProtocol')
+            ->andReturn('saml20');
 
         return $manageEntity;
     }
 
     private function buildManageAttribute(ManageEntity $manageEntity, string $attributeName, string $source, string $value)
     {
-        $attribute = m::mock(ManageAttribute::class);
+
+        $attribute = m::mock(Attribute::class);
         $attribute->shouldReceive('getName')
             ->andReturn($attributeName);
         $attribute->shouldReceive('getSource')
@@ -153,8 +136,14 @@ class ArpGeneratorTest extends MockeryTestCase
             ->andReturn($value);
         $attribute->shouldReceive('getMotivation')
             ->andReturn('The Manage motivation');
+        $attribute->shouldReceive('hasMotivation')
+            ->andReturn(true);
 
-        $manageEntity->shouldReceive('getAttributes->findByUrn')->with($attributeName)->andReturn($attribute);
+        $manageEntity
+            ->shouldReceive('getAttributes->findByUrn')
+            ->with($attributeName)
+            ->andReturn($attribute);
+
         return $attribute;
     }
 }

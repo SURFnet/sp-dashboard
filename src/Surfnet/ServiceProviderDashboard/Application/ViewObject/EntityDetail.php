@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -275,11 +274,6 @@ class EntityDetail
         $entityDetail->id = $entity->getId();
         $entityDetail->manageId = $entity->getId();
         $entityDetail->protocol = $entity->getProtocol()->getProtocol();
-        if ($entity->getProtocol() == Constants::TYPE_OPENID_CONNECT) {
-            $entityDetail->grantType = $entity->getOidcClient()->getGrantType();
-            $entityDetail->redirectUris = $entity->getOidcClient()->getRedirectUris();
-            $entityDetail->playgroundEnabled = $entity->getOidcClient()->isPlaygroundEnabled();
-        }
 
         if ($entity->getProtocol() == Constants::TYPE_OPENID_CONNECT_TNG) {
             $entityDetail->grantType = $entity->getOidcClient()->getGrantType();
@@ -373,10 +367,7 @@ class EntityDetail
      */
     public function getEntityId()
     {
-        if ($this->getProtocol() !== Constants::TYPE_OPENID_CONNECT) {
-            return $this->entityId;
-        }
-        return OidcClientIdParser::parse($this->entityId);
+        return $this->entityId;
     }
 
     /**

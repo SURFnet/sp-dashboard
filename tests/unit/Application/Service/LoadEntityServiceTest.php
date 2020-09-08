@@ -377,82 +377,6 @@ JSON
         );
     }
 
-    /**
-     * @dataProvider providePlaygroundUrls
-     */
-    public function test_handler_should_handle_playground_redirect_url_for_production($testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground)
-    {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true);
-
-        $manageDto = ManageEntity::fromApiResponse([
-            'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
-            'type' => 'saml20_sp',
-            'data' => [
-                'entityid' => 'http://example.com',
-                'arp' => [
-                    'attributes' => [
-                        'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
-                            'source' => 'idp',
-                            'value' => '*',
-                            'motivation' => 'test1',
-                        ]],
-                        'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
-                            'source' => 'idp',
-                            'value' => '*',
-                            'motivation' => 'test2',
-                        ]],
-                        'urn:mace:dir:attribute-def:displayName' => [[
-                            'source' => 'idp',
-                            'value' => '*',
-                            'motivation' => 'test3',
-                        ]],
-                    ],
-                ],
-                'metaDataFields' => [
-                    'name:en' => 'name en',
-                    'name:nl' => 'name nl',
-                    'description:en' => 'description en',
-                    'description:nl' => 'description nl',
-                    'coin:service_team_id' => 'testteam',
-                    'coin:oidc_client' => '1',
-                ],
-                'oidcClient' => [
-                    'clientId' => 'http@//entityid',
-                    'clientSecret' => 'test',
-                    'redirectUris' => $redirectUris,
-                    'grantType' => 'implicit',
-                    'scope' => ['openid'],
-                ],
-            ],
-        ]);
-
-        $this->manageProdClient->shouldReceive('findByManageId')
-            ->with('manageid')
-            ->andReturn($manageDto);
-
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
-            ->andReturn($manageDto);
-
-        $entity =$this->copyService->load(
-            'dashboardid',
-            'manageid',
-            $this->service,
-            $sourceEnviroment,
-            $destinationEvironment
-        );
-
-        $redirectUris = $entity->getRedirectUris();
-        $playgroundEnabled = $entity->isEnablePlayground();
-
-        $messageFormat = 'Unexpected outcome for the "%s" test in scenario "%s".';
-
-        $this->assertSame($excpectedUris, $redirectUris, sprintf($messageFormat, 'expectedUris', $testName));
-        $this->assertSame($expectedEnabledPlayground, $playgroundEnabled, sprintf($messageFormat, 'playgroundEnabled', $testName));
-    }
-
     public function test_it_removes_resource_servers_on_copy_to_production()
     {
         $this->entityRepository->shouldReceive('isUnique')
@@ -473,7 +397,7 @@ JSON
             Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertEmpty($entity->getOidcngResourceServers()->getResourceServers());
+        $this->assertEmpty($entity->getOidcClient()->getResourceServers());
     }
 
     public function test_it_keeps_resource_servers_on_copy_to_same_environment()
@@ -499,7 +423,7 @@ JSON
             Constants::ENVIRONMENT_TEST
         );
 
-        $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
+        $this->assertNotEmpty($entity->getOidcClient()->getResourceServers());
 
         $this->manageProdClient
             ->shouldReceive('findByManageId')
@@ -514,7 +438,7 @@ JSON
             Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
+        $this->assertNotEmpty($entity->getOidcClient()->getResourceServers());
     }
 
     public function test_it_updates_the_client_id_on_copy_to_production()
@@ -540,19 +464,20 @@ JSON
 
         $this->assertEquals(
             'https://playground.openconext.nl',
-            $entity->getEntityId(),
+            $entity->getMetaData()->getEntityId(),
             'The schema should have been put back in place on a copy to production (relying party)'
         );
 
         // Also verify the Resource Server entity type correctly gets the schema prepend.
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRSMetadata());
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->manageTestClient
+            ->shouldReceive('findByManageId')
+            ->with('manageid2')
             ->andReturn($manageDto);
         
         $entity = $this->copyService->load(
             'dashboardid',
-            'manageid',
+            'manageid2',
             $this->service,
             Constants::ENVIRONMENT_TEST,
             Constants::ENVIRONMENT_PRODUCTION
@@ -560,24 +485,9 @@ JSON
 
         $this->assertEquals(
             'https://playground.openconext.nl',
-            $entity->getEntityId(),
+            $entity->getMetaData()->getEntityId(),
             'The schema should have been put back in place on a copy to production (resource server)'
         );
-    }
-
-    public function providePlaygroundUrls()
-    {
-        //$testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground
-        return [
-            ['prod-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['prod-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
-            ['prod-test-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
-            ['prod-prod-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_PRODUCTION, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
-            ['test-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['test-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
-            ['test-test-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
-            ['test-prod-disabled', ['url1','url2','url3'], Constants::ENVIRONMENT_TEST, Constants::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
-        ];
     }
 
     private function getOidcNgRPMetadata()
@@ -585,7 +495,7 @@ JSON
         return json_decode(
             '
                 {
-                    "id": "88888888-0000-9999-1111-777777777777",
+                    "id": "manageid2",
                     "version": 2,
                     "type": "oidc10_rp",
                     "resourceServers": [{

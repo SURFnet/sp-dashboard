@@ -184,12 +184,8 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator
-        arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
         tags:
             - { name: dashboard.json_generator, identifier: saml20 }
-            - { name: dashboard.json_generator, identifier: oidc }
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator

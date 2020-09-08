@@ -88,7 +88,7 @@ class ArpGenerator implements MetadataGenerator
             }
         }
 
-        if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
             // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
             // The user cannot configure EPTI @ ARP settings but the value is used internally.
             $attributes['urn:mace:dir:attribute-def:eduPersonTargetedID'] = [

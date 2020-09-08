@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedT
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedTestEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 
 class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
@@ -82,12 +81,12 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
     {
         $command = new DeletePublishedTestEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
-            Constants::TYPE_OPENID_CONNECT
+            Constants::TYPE_OPENID_CONNECT_TNG
         );
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_OPENID_CONNECT)
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_OPENID_CONNECT_TNG)
             ->andReturn(false);
 
         $this->logger

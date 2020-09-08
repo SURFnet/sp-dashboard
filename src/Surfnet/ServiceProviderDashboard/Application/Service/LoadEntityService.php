@@ -71,6 +71,7 @@ class LoadEntityService
      * @return ManageEntity
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function load($dashboardId, $manageId, Service $service, $sourceEnvironment, $environment)
     {
@@ -112,6 +113,15 @@ class LoadEntityService
         $isCopyToProduction = $environment == 'production' && $sourceEnvironment == 'test';
         if ($isProductionClone || $isCopyToProduction) {
             $manageEntity = $manageEntity->resetId();
+        }
+
+        $protocol = $manageEntity->getProtocol()->getProtocol();
+        if ($isCopyToProduction &&
+            ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER)
+        ) {
+            $manageEntity->getOidcClient()->resetResourceServers();
+            $manageEntity->getMetaData()->resetOidcNgEntitId();
         }
 
         // Return the entity

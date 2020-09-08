@@ -23,7 +23,6 @@ use Mockery\MockInterface;
 use Surfnet\ServiceProviderDashboard\Application\Assembler\ServiceStatusAssembler;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;

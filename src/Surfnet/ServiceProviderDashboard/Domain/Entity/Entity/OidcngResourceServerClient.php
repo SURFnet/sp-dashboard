@@ -38,12 +38,8 @@ class OidcngResourceServerClient implements OidcClientInterface
      * @var array
      */
     private $scope;
-    /**
-     * @param array $data
-     * @param string $manageProtocol
-     * @return OidcngClient
-     */
-    public static function fromApiResponse(array $data, $manageProtocol)
+
+    public static function fromApiResponse(array $data, string $manageProtocol)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
@@ -153,5 +149,10 @@ class OidcngResourceServerClient implements OidcClientInterface
     public function isPlaygroundEnabled(): bool
     {
         return false;
+    }
+
+    public function resetResourceServers(): void
+    {
+        // Nothing to do here.
     }
 }

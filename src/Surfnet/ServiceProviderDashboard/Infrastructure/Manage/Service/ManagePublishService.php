@@ -45,17 +45,6 @@ class ManagePublishService
     }
 
     /**
-     * @param string $environment
-     * @param Entity $entity
-     * @throws InvalidArgumentException
-     * @throws PublishMetadataException
-     */
-    public function publish($environment, Entity $entity)
-    {
-        $this->getClient($environment)->publish($entity);
-    }
-
-    /**
      * @param $environment
      * @throws InvalidArgumentException
      * @throws PushMetadataException

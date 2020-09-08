@@ -403,74 +403,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param Entity $entity
-     *
-     * @return SaveOidcngEntityCommand
-     */
-    public static function fromEntity(Entity $entity)
-    {
-        $command = new self();
-        $command->id = $entity->getId();
-        $command->status = $entity->getStatus();
-        $command->manageId = $entity->getManageId();
-        $command->service = $entity->getService();
-        $command->archived = $entity->isArchived();
-        $command->environment = $entity->getEnvironment();
-        $command->entityId = $entity->getEntityId();
-        $command->secret = $entity->getClientSecret();
-        $command->redirectUrls = $entity->getRedirectUris();
-        $command->grantType = $entity->getGrantType()->getGrantType();
-        $command->logoUrl = $entity->getLogoUrl();
-        $command->nameNl = $entity->getNameNl();
-        $command->nameEn = $entity->getNameEn();
-        // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
-        $command->setSubjectType($entity->getNameIdFormat());
-        $command->descriptionNl = $entity->getDescriptionNl();
-        $command->descriptionEn = $entity->getDescriptionEn();
-        $command->applicationUrl = $entity->getApplicationUrl();
-        $command->eulaUrl = $entity->getEulaUrl();
-        $command->administrativeContact = $entity->getAdministrativeContact();
-        $command->technicalContact = $entity->getTechnicalContact();
-        $command->supportContact = $entity->getSupportContact();
-        $command->givenNameAttribute = $entity->getGivenNameAttribute();
-        $command->surNameAttribute = $entity->getSurNameAttribute();
-        $command->commonNameAttribute = $entity->getCommonNameAttribute();
-        $command->displayNameAttribute = $entity->getDisplayNameAttribute();
-        $command->emailAddressAttribute = $entity->getEmailAddressAttribute();
-        $command->organizationAttribute = $entity->getOrganizationAttribute();
-        $command->organizationTypeAttribute = $entity->getOrganizationTypeAttribute();
-        $command->affiliationAttribute = $entity->getAffiliationAttribute();
-        $command->entitlementAttribute = $entity->getEntitlementAttribute();
-        $command->principleNameAttribute = $entity->getPrincipleNameAttribute();
-        $command->uidAttribute = $entity->getUidAttribute();
-        $command->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
-        $command->personalCodeAttribute = $entity->getPersonalCodeAttribute();
-        $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
-        $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
-        $command->comments = $entity->getComments();
-        $command->organizationNameNl = $entity->getOrganizationNameNl();
-        $command->organizationNameEn = $entity->getOrganizationNameEn();
-        $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
-        $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
-        $command->organizationUrlNl = $entity->getOrganizationUrlNl();
-        $command->organizationUrlEn = $entity->getOrganizationUrlEn();
-        $command->isPublicClient = $entity->isPublicClient();
-        $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
-        $command->enablePlayground = $entity->isEnablePlayground();
-        $command->resourceServers = $entity->getOidcngResourceServers()->getResourceServers();
-
-        if (is_array($command->resourceServers) && reset($command->resourceServers) instanceof ManageEntity) {
-            $servers = $entity->getOidcngResourceServers()->getResourceServers();
-            $resourceServers = [];
-            foreach ($servers as $resourceServer) {
-                $resourceServers[$resourceServer->getMetaData()->getEntityId()] = $resourceServer->getMetaData()->getEntityId();
-            }
-            $command->resourceServers = $resourceServers;
-        }
-        return $command;
-    }
-
-    /**
      * @return string
      */
     public function getId()
@@ -989,7 +921,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getComments()
+    public function getComments(): ?string
     {
         return $this->comments;
     }

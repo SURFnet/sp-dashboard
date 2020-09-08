@@ -21,18 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 /**
- * The JsonGenerator is able to generate Manage SAML 2.0 and OpenID Connect entities (oidc).
- *
- * The oidc entities are actually saved as saml20 entities. This is an early implementation detail in Manage < v4.
- * From version 4 and onward the oidcng (oidc10_rp) entity type is introduced. This generator is not capable of
- * creating that type of json.
+ * The JsonGenerator is able to generate Manage SAML 2.0 JSON metadata
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ElseExpression)
@@ -54,35 +49,14 @@ class JsonGenerator implements GeneratorInterface
      */
     private $spDashboardMetadataGenerator;
 
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriProd;
-
-    /**
-     * @param ArpGenerator $arpMetadataGenerator
-     * @param PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator
-     * @param SpDashboardMetadataGenerator $spDashboardMetadataGenerator
-     * @param string $oidcPlaygroundUriTest OIDC playgroudn uri
-     * @param string $oidcPlaygroundUriProd OIDC playgroudn uri
-     */
     public function __construct(
         ArpGenerator $arpMetadataGenerator,
         PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
-        $oidcPlaygroundUriTest,
-        $oidcPlaygroundUriProd
+        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
         $this->arpMetadataGenerator = $arpMetadataGenerator;
         $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
-        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
-        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -103,11 +77,6 @@ class JsonGenerator implements GeneratorInterface
             'id' => $entity->getId(),
         ];
 
-        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
-            $data['externalReferenceData'] = [
-                'oidcClient' => $this->generateOidcClient($entity),
-            ];
-        }
 
         return $data;
     }
@@ -130,15 +99,8 @@ class JsonGenerator implements GeneratorInterface
         ];
 
         $metadata += $this->generateAclData($entity);
+        $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
 
-        switch (true) {
-            case ($entity->getProtocol()->getProtocol() == Constants::TYPE_SAML):
-                $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
-                break;
-            case ($entity->getProtocol()->getProtocol() == Constants::TYPE_OPENID_CONNECT):
-                $metadata['oidcClient'] = $this->generateOidcClient($entity);
-                break;
-        }
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
@@ -229,23 +191,19 @@ class JsonGenerator implements GeneratorInterface
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
-            /*
-             * The binding of the ACS URL is always POST.
-             *
-             * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
-             * imports the POST ACS URL. Other formats are not supported by manage or
-             * the dashboard.
-             */
-            $metadata['AssertionConsumerService:0:Binding'] = Constants::BINDING_HTTP_POST;
-            $metadata['AssertionConsumerService:0:Location'] = $entity->getMetaData()->getAcsLocation();
-            $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
-            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-            $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
-        } else if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT) {
-            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-            $metadata["coin:oidc_client"] = '1';
-        }
+        /*
+         * The binding of the ACS URL is always POST.
+         *
+         * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
+         * imports the POST ACS URL. Other formats are not supported by manage or
+         * the dashboard.
+         */
+        $metadata['AssertionConsumerService:0:Binding'] = Constants::BINDING_HTTP_POST;
+        $metadata['AssertionConsumerService:0:Location'] = $entity->getMetaData()->getAcsLocation();
+        $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
+        $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+        $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
+
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0
@@ -274,31 +232,6 @@ class JsonGenerator implements GeneratorInterface
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getMetaData()->getCertData()
             );
-        }
-
-        return $metadata;
-    }
-
-    /**
-     * @param Entity $entity
-     * @return array
-     */
-    private function generateOidcClient(ManageEntity $entity)
-    {
-        $metadata = [];
-        $metadata['clientId'] = OidcClientIdParser::parse($entity->getMetaData()->getEntityId());
-        $metadata['clientSecret'] = $entity->getOidcClient()->getClientSecret();
-        // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
-        $metadata['redirectUris'] = $entity->getOidcClient()->getRedirectUris();
-        $metadata['grantType'] = $entity->getOidcClient()->getGrantType();
-        $metadata['scope'] = ['openid'];
-
-        if ($entity->isEnablePlayground()) {
-            if ($entity->isProduction()) {
-                $metadata['redirectUris'][] = $this->oidcPlaygroundUriProd;
-            } else {
-                $metadata['redirectUris'][] = $this->oidcPlaygroundUriTest;
-            }
         }
 
         return $metadata;

@@ -20,12 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 interface OidcClientInterface
 {
-    /**
-     * @param array $data
-     * @param string $manageProtocol
-     * @return OidcClient|null
-     */
-    public static function fromApiResponse(array $data, $manageProtocol);
+    public static function fromApiResponse(array $data, string $manageProtocol);
 
     /**
      * @return string
@@ -65,4 +60,6 @@ interface OidcClientInterface
     public function getResourceServers();
 
     public function isPlaygroundEnabled(): bool;
+
+    public function resetResourceServers(): void;
 }

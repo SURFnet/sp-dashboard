@@ -25,7 +25,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;

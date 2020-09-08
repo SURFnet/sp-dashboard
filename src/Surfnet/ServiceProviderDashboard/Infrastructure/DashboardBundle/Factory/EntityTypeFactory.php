@@ -18,6 +18,8 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory;
 
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -51,42 +53,21 @@ class EntityTypeFactory
         $this->saveCommandFactory = $saveCommandFactory;
     }
 
-    /**
-     * @param string $type
-     * @param Service $service
-     * @param string $environment
-     * @param Entity|null $entity
-     * @return EntityTypeInterface
-     */
-    public function createCreateForm($type, Service $service, $environment, Entity $entity = null)
+    public function createCreateForm(string $type, Service $service, string $environment)
     {
         switch (true) {
-            case ($type == Constants::TYPE_SAML):
+            case ($type === Constants::TYPE_SAML):
                 $command = SaveSamlEntityCommand::forCreateAction($service);
-                if ($entity) {
-                    $command = SaveSamlEntityCommand::fromEntity($entity);
-                }
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
-//            case ($type == Entity::TYPE_OPENID_CONNECT_TNG):
-//                $command = SaveOidcngEntityCommand::forCreateAction($service);
-//                if ($entity) {
-//                    $command = SaveOidcngEntityCommand::fromEntity($entity);
-//                }
-//                $command->setEnvironment($environment);
-//                return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
-//            case ($type == Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-//                $command = SaveOidcngResourceServerEntityCommand::forCreateAction($service);
-//                if ($entity) {
-//                    $command = SaveOidcngResourceServerEntityCommand::fromEntity($entity);
-//                }
-//                $command->setEnvironment($environment);
-//
-//                return $this->formFactory->create(
-//                    OidcngResourceServerEntityType::class,
-//                    $command,
-//                    $this->buildOptions($environment)
-//                );
+            case ($type === Constants::TYPE_OPENID_CONNECT_TNG):
+                $command = SaveOidcngEntityCommand::forCreateAction($service);
+                $command->setEnvironment($environment);
+                return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
+            case ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
+                $command = SaveOidcngResourceServerEntityCommand::forCreateAction($service);
+                $command->setEnvironment($environment);
+                return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($environment));
         }
 
         throw new InvalidArgumentException("invalid form type requested: " . $type);

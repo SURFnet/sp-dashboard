@@ -48,24 +48,19 @@ class EntityActionsTest extends TestCase
     public static function resetClientOptions()
     {
         return [
-            [false, Constants::TYPE_OPENID_CONNECT, Constants::STATE_PUBLISHED, 'Published OIDC entity should have reset option'],
             [true, Constants::TYPE_OPENID_CONNECT_TNG, Constants::STATE_PUBLISHED, 'Published OIDC TNG entity should have reset option'],
             [true, Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER, Constants::STATE_PUBLISHED, 'Published OIDC Resource Server TNG entity should have reset option'],
 
-            [false, Constants::TYPE_OPENID_CONNECT, Constants::STATE_PUBLICATION_REQUESTED, 'Request for publication OIDC entity should have reset option'],
             [true, Constants::TYPE_OPENID_CONNECT_TNG, Constants::STATE_PUBLICATION_REQUESTED, 'Request for publication OIDC TNG entity should have reset option'],
             [true, Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER, Constants::STATE_PUBLISHED, 'Request for publication OIDC Resource Server TNG entity should have reset option'],
 
             [false, Constants::TYPE_SAML, Constants::STATE_PUBLISHED, 'SAML entities do not perform client resets'],
-
-            [false, Constants::TYPE_OPENID_CONNECT, Constants::STATE_DRAFT, 'Draft OIDC entities do not perform client resets'],
-            [false, Constants::TYPE_OPENID_CONNECT, Constants::STATE_REMOVAL_REQUESTED, 'Removed (requested) entities do not perform client resets'],
         ];
     }
 
     public function test_read_only_restricts_cud_actions()
     {
-        $actions = new EntityActions('manage-id', 1, Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST, Constants::TYPE_OPENID_CONNECT, true);
+        $actions = new EntityActions('manage-id', 1, Constants::STATE_DRAFT, Constants::ENVIRONMENT_TEST, Constants::TYPE_OPENID_CONNECT_TNG, true);
         $this->assertFalse($actions->allowEditAction());
         $this->assertFalse($actions->allowDeleteAction());
         $this->assertFalse($actions->allowAclAction());

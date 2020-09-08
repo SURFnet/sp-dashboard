@@ -59,12 +59,7 @@ class OidcngClient implements OidcClientInterface
      */
     private $resourceServers;
 
-    /**
-     * @param array $data
-     * @param string $manageProtocol
-     * @return OidcngClient
-     */
-    public static function fromApiResponse(array $data, $manageProtocol)
+    public static function fromApiResponse(array $data, string $manageProtocol)
     {
         $clientId = self::getStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
@@ -198,5 +193,10 @@ class OidcngClient implements OidcClientInterface
     {
         $uris = $this->getRedirectUris();
         return in_array(self::PLAYGROUND_URL, $uris);
+    }
+
+    public function resetResourceServers(): void
+    {
+        $this->resourceServers = [];
     }
 }

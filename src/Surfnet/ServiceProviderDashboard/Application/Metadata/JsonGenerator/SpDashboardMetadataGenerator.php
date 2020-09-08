@@ -47,19 +47,19 @@ class SpDashboardMetadataGenerator implements MetadataGenerator
         foreach ($spDashboardAttributes as $attribute) {
             // Get the associated getter
             $getterName = $attribute->getterName;
-
             switch (true) {
-                case $attribute->id == 'teamID':
+                case $attribute->id === 'teamID':
                     $service = $entity->getService();
                     if (method_exists($service, $getterName) && !empty($service->$getterName())) {
                         $attributes[$attribute->urns[0]] = $service->$getterName();
                     }
                     break;
-                case $attribute->id == 'originalMetadataUrl':
-                case $attribute->id == 'applicationUrl':
-                case $attribute->id == 'eula':
-                    if (method_exists($entity, $getterName) && !empty($entity->$getterName())) {
-                        $attributes[$attribute->urns[0]] = $entity->$getterName();
+                case $attribute->id === 'originalMetadataUrl':
+                case $attribute->id === 'applicationUrl':
+                case $attribute->id === 'eula':
+                    $coin = $entity->getMetaData()->getCoin();
+                    if ($coin && $coin->$getterName()) {
+                        $attributes[$attribute->urns[0]] = $coin->$getterName();
                     }
                     break;
             }

@@ -87,7 +87,6 @@ class DeleteEntityClient implements DeleteEntityRepositoryInterface
         $lookup = [
             Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => Protocol::OIDC10_RP,
             Constants::TYPE_OPENID_CONNECT_TNG => Protocol::OIDC10_RP,
-            Constants::TYPE_OPENID_CONNECT => Protocol::SAML20_SP,
             Constants::TYPE_SAML => Protocol::SAML20_SP,
         ];
 

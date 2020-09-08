@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Webmozart\Assert\Assert;
 
 class MetaData
@@ -90,6 +91,9 @@ class MetaData
         $organization = Organization::fromApiResponse($metaDataFields);
         $coin = Coin::fromApiResponse($metaDataFields);
         $logo = Logo::fromApiResponse($metaDataFields);
+        if ($logo->getUrl() === '') {
+            $logo = null;
+        }
 
         return new self(
             $entityId,
@@ -144,6 +148,11 @@ class MetaData
     public function getEntityId(): ?string
     {
         return $this->entityId;
+    }
+
+    public function resetOidcNgEntitId()
+    {
+        $this->entityId = OidcngSpdClientIdParser::parse($this->entityId);
     }
 
     public function getMetaDataUrl(): ?string

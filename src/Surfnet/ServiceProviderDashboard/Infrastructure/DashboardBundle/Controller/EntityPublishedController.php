@@ -42,11 +42,10 @@ class EntityPublishedController extends Controller
         /** @var ManageEntity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
 
-        // Redirects OIDC (including TNG) published entity confirmations to the entity list page and shows a
+        // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
         $protocol = $entity->getProtocol();
-        if ($protocol === Constants::TYPE_OPENID_CONNECT ||
-            $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {
             return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);

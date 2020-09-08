@@ -52,7 +52,7 @@ class Ticket
         string $descriptionTranslationKey,
         string $applicantName,
         string $applicantEmail,
-        string $issueType
+        ?string $issueType
     ) {
         $this->entityId = $entityId;
         $this->manageId = $manageId;

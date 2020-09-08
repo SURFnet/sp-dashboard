@@ -36,7 +36,6 @@ class Constants
     const STATE_REMOVAL_REQUESTED = 'removal requested';
 
     const TYPE_SAML = 'saml20';
-    const TYPE_OPENID_CONNECT = 'oidc';
     const TYPE_OPENID_CONNECT_TNG = 'oidcng';
     const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oidcng_rs';
 

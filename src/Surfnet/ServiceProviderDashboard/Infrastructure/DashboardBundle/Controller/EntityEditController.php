@@ -68,13 +68,6 @@ class EntityEditController extends Controller
         $entity->setService($service);
         $protocol = $entity->getProtocol()->getProtocol();
 
-
-        if ($protocol === Constants::TYPE_OPENID_CONNECT) {
-            throw $this->createNotFoundException(
-                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
-            );
-        }
-
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG &&
             !$this->authorizationService->isOidcngAllowed($service, $environment)
         ) {

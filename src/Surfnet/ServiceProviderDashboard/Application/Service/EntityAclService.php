@@ -52,7 +52,7 @@ class EntityAclService
         $allowedIdps = [];
         if (!$entity->getAllowedIdentityProviders()->isAllowAll()) {
             foreach ($availableIdps as $idp) {
-                if ($entity->getAllowedIdentityProviders()->isAllowAll($idp)) {
+                if ($entity->getAllowedIdentityProviders()->isWhitelisted($idp)) {
                     $allowedIdps[] = $idp;
                 }
             }

@@ -22,8 +22,9 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 
 class EntityAclServiceTest extends MockeryTestCase
@@ -76,9 +77,18 @@ class EntityAclServiceTest extends MockeryTestCase
         $idp1 = new IdentityProvider('0001', 'id1', 'name-1-nl', 'name-1-en');
         $idp0 = new IdentityProvider('0000', 'id0', 'name-0-nl', 'name-0-en');
 
-        $entity = new Entity();
-        $entity->setIdpWhitelist([$idp0, $idp2]);
-        $entity->setIdpAllowAll(false);
+        $allowedIdPs = new AllowedIdentityProviders([], true);
+
+        $idps = array_map(function (IdentityProvider $idp) {
+            return $idp->getEntityId();
+        }, [$idp2, $idp0]);
+
+        $allowedIdpsNew = new AllowedIdentityProviders($idps, false);
+        $allowedIdPs->merge($allowedIdpsNew);
+
+        $entity = m::mock(ManageEntity::class);
+        $entity->shouldReceive('getAllowedIdentityProviders')
+            ->andReturn($allowedIdPs);
 
         // find all returns IDP unsorted!
         $this->repository

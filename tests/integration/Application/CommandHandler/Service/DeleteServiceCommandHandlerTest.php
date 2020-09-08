@@ -121,13 +121,17 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $this->commandBus
             ->shouldReceive('handle')
             ->with($command2)
-            ->once();
+            ->twice();
+
+        $this->deleteCommandFactory
+            ->shouldReceive('from')
+            ->with($entity1)
+            ->andReturn($command2);
 
         $this->deleteCommandFactory
             ->shouldReceive('from')
             ->with($entity2)
-            ->andReturn($command2)
-            ->once();
+            ->andReturn($command2);
 
         $this->repository
             ->shouldReceive('delete')

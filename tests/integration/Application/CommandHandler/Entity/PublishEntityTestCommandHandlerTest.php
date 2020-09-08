@@ -26,10 +26,9 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTes
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -39,11 +38,6 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
      * @var PublishEntityTestCommandHandler
      */
     private $commandHandler;
-
-    /**
-     * @var EntityRepository|Mock
-     */
-    private $repository;
 
     /**
      * @var LoggerInterface|Mock
@@ -67,14 +61,12 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = m::mock(EntityRepository::class);
         $this->client = m::mock(PublishEntityClient::class);
         $this->manageClient = m::mock(QueryClient::class);
         $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
 
         $this->commandHandler = new PublishEntityTestCommandHandler(
-            $this->repository,
             $this->client,
             $this->manageClient,
             $this->logger,
@@ -86,20 +78,15 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
 
     public function test_it_can_publish_to_manage()
     {
-        $entity = m::mock(Entity::class);
-        $entity
-            ->shouldReceive('getNameNl')
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
             ->andReturn('Test Entity Name')
-            ->shouldReceive('getManageId')
-            ->shouldReceive('getProtocol')
+            ->shouldReceive('geMetaData->getManageId')
+            ->shouldReceive('getProtocol->geProtocol')
             ->shouldReceive('setIdpAllowAll')
             ->shouldReceive('setIdpWhitelistRaw')
             ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG);
-
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
 
         $this->logger
             ->shouldReceive('info')
@@ -108,12 +95,10 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $this->client
             ->shouldReceive('publish')
             ->once()
-            ->with($entity)
+            ->with($manageEntity)
             ->andReturn([
-                'id' => 123,
+                'id' => '123',
             ]);
-
-        $manageEntity = m::mock(ManageEntity::class);
         $manageEntity
             ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
             ->andReturn([]);
@@ -121,32 +106,30 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
             ->andReturn(true);
 
+        $manageEntity
+            ->shouldReceive('getId')
+            ->andReturn(123);
+
         $this->manageClient
             ->shouldReceive('findByManageId')
             ->andReturn($manageEntity);
 
-        $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityTestCommand($manageEntity);
         $this->commandHandler->handle($command);
     }
 
     public function test_it_handles_failing_publish()
     {
-        $entity = m::mock(Entity::class);
-        $entity
-            ->shouldReceive('getNameNl')
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
             ->andReturn('Test Entity Name')
-            ->shouldReceive('getManageId')
-            ->shouldReceive('getProtocol')
+            ->shouldReceive('geMetaData->getManageId')
+            ->shouldReceive('getProtocol->geProtocol')
             ->shouldReceive('setIdpAllowAll')
             ->shouldReceive('setIdpWhitelistRaw')
-            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+            ->andReturn(Constants::TYPE_OPENID_CONNECT_TNG);
 
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
-
-        $manageEntity = m::mock(ManageEntity::class);
         $manageEntity
             ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
             ->andReturn([]);
@@ -169,14 +152,14 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $this->client
             ->shouldReceive('publish')
             ->once()
-            ->with($entity)
+            ->with($manageEntity)
             ->andThrow(PublishMetadataException::class);
 
         $this->flashBag
             ->shouldReceive('add')
             ->with('error', 'entity.edit.error.publish');
 
-        $command = new PublishEntityTestCommand('d6f394b2-08b1-4882-8b32-81688c15c489');
+        $command = new PublishEntityTestCommand($manageEntity);
         $this->commandHandler->handle($command);
     }
 }

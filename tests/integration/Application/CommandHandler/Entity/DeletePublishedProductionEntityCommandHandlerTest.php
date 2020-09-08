@@ -24,9 +24,9 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedProductionEntityCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 
 class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
@@ -63,7 +63,7 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
     {
         $command = new DeletePublishedProductionEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
-            Entity::TYPE_OPENID_CONNECT_TNG
+            Constants::TYPE_OPENID_CONNECT_TNG
         );
 
         $this->repository
@@ -77,15 +77,13 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException
-     * @expectedExceptionMessage Deleting the entity yielded an non success response
-     */
     public function test_it_handles_non_error_responses()
     {
+        $this->expectExceptionMessage("Deleting the entity yielded an non success response");
+        $this->expectException(EntityNotDeletedException::class);
         $command = new DeletePublishedProductionEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
-            Entity::TYPE_SAML
+            Constants::TYPE_SAML
         );
 
         $this->repository
@@ -99,19 +97,17 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException
-     */
     public function test_it_handles_failing_delete_requests()
     {
+        $this->expectException(EntityNotDeletedException::class);
         $command = new DeletePublishedProductionEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
-            Entity::TYPE_OPENID_CONNECT
+            Constants::TYPE_OPENID_CONNECT_TNG
         );
 
         $this->repository
             ->shouldReceive('delete')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_OPENID_CONNECT)
+            ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_OPENID_CONNECT_TNG)
             ->andThrow(UnableToDeleteEntityException::class);
 
         $this->logger

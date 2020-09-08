@@ -31,6 +31,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
@@ -125,23 +126,35 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $token = new SamlToken([]);
         $token->setUser($user);
 
-        $entity = m::mock(Entity::class);
-        $entity
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
+            ->andReturn('Test Entity Name');
+
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity)
+            ->andReturn([
+                'id' => '123',
+            ]);
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getEntityId')
+            ->andReturn('https://app.example.com/');
+
+        $manageEntity
             ->shouldReceive('getId')
             ->andReturn('123');
-        $entity
-            ->shouldReceive('getNameEn')
-            ->andReturn('Test Entity Name');
-        $entity
-            ->shouldReceive('getEntityId')
-            ->andReturn('https://app.example.com/');
-        $entity
-            ->shouldReceive('getManageId')
-            ->andReturn('the-manage-id');
-        $entity
+
+        $manageEntity
             ->shouldReceive('setStatus')
             ->with(Constants::STATE_PUBLISHED);
-        $entity
+        $manageEntity
+            ->shouldReceive('setId')
+            ->with('123');
+
+        $manageEntity
             ->shouldReceive('getService->getConnectionStatus');
 
         $issue = m::mock(Issue::class)->makePartial();
@@ -156,30 +169,12 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('findByManageIdAndIssueType')
             ->andReturn(null);
 
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
-
-        $this->repository
-            ->shouldReceive('save')
-            ->with($entity);
-
-        $this->publishEntityClient
-            ->shouldReceive('publish')
-            ->once()
-            ->with($entity)
-            ->andReturn([
-                'id' => 123,
-            ]);
-
         $this->logger
             ->shouldReceive('info')
             ->times(4);
 
-
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
-        $command = new PublishEntityProductionCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
+        $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $this->commandHandler->handle($command);
     }
 
@@ -195,23 +190,35 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $token = new SamlToken([]);
         $token->setUser($user);
 
-        $entity = m::mock(Entity::class);
-        $entity
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
+            ->andReturn('Test Entity Name');
+
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity)
+            ->andReturn([
+                'id' => '123',
+            ]);
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getEntityId')
+            ->andReturn('https://app.example.com/');
+
+        $manageEntity
             ->shouldReceive('getId')
             ->andReturn('123');
-        $entity
-            ->shouldReceive('getNameEn')
-            ->andReturn('Test Entity Name');
-        $entity
-            ->shouldReceive('getEntityId')
-            ->andReturn('https://app.example.com/');
-        $entity
-            ->shouldReceive('getManageId')
-            ->andReturn('the-manage-id');
-        $entity
+
+        $manageEntity
             ->shouldReceive('setStatus')
             ->with(Constants::STATE_PUBLISHED);
-        $entity
+        $manageEntity
+            ->shouldReceive('setId')
+            ->with('123');
+
+        $manageEntity
             ->shouldReceive('getService->getConnectionStatus');
 
         $issue = m::mock(Issue::class)->makePartial();
@@ -229,19 +236,11 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->repository
             ->shouldReceive('findById')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
+            ->andReturn($manageEntity);
 
         $this->repository
             ->shouldReceive('save')
-            ->with($entity);
-
-        $this->publishEntityClient
-            ->shouldReceive('publish')
-            ->once()
-            ->with($entity)
-            ->andReturn([
-                'id' => 123,
-            ]);
+            ->with($manageEntity);
 
         $this->logger
             ->shouldReceive('info')
@@ -249,7 +248,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
-        $command = new PublishEntityProductionCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
+        $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $this->commandHandler->handle($command);
     }
 
@@ -266,48 +265,43 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $token = new SamlToken([]);
         $token->setUser($user);
 
-        $entity = m::mock(Entity::class);
-        $entity
-            ->shouldReceive('getId')
-            ->andReturn('123');
-        $entity
-            ->shouldReceive('getNameEn')
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
             ->andReturn('Test Entity Name');
-        $entity
-            ->shouldReceive('getEntityId')
-            ->andReturn('https://app.example.com/');
-        $entity
-            ->shouldReceive('getManageId')
-            ->andReturn('the-manage-id');
-        $entity
-            ->shouldReceive('setStatus')
-            ->with(Constants::STATE_PUBLISHED);
-        $entity
-            ->shouldReceive('getService->getConnectionStatus');
-
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
-
-        $this->repository
-            ->shouldReceive('save')
-            ->with($entity);
 
         $this->publishEntityClient
             ->shouldReceive('publish')
             ->once()
-            ->with($entity)
+            ->with($manageEntity)
             ->andReturn([
-                'id' => 123,
+                'id' => '123',
             ]);
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getEntityId')
+            ->andReturn('https://app.example.com/');
+
+        $manageEntity
+            ->shouldReceive('getId')
+            ->andReturn('123');
+
+        $manageEntity
+            ->shouldReceive('setStatus')
+            ->with(Constants::STATE_PUBLISHED);
+        $manageEntity
+            ->shouldReceive('setId')
+            ->with('123');
+
+        $manageEntity
+            ->shouldReceive('getService->getConnectionStatus');
 
         $this->logger
             ->shouldReceive('info')
             ->times(2);
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
-        $command = new PublishEntityProductionAfterClientResetCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
+        $command = new PublishEntityProductionAfterClientResetCommand($manageEntity, $applicant);
         $this->commandHandler->handle($command);
     }
 
@@ -319,24 +313,28 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $token = new SamlToken([]);
         $token->setUser($user);
 
-        $entity = m::mock(Entity::class);
-        $entity
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
+            ->andReturn('Test Entity Name');
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getEntityId')
+            ->andReturn('https://app.example.com/');
+
+        $manageEntity
             ->shouldReceive('getId')
             ->andReturn('123');
-        $entity
-            ->shouldReceive('getNameEn')
-            ->andReturn('Test Entity Name');
-        $entity
-            ->shouldReceive('getEntityId')
-            ->andReturn('https://app.example.com/');
-        $entity
-            ->shouldReceive('getManageId')
-            ->andReturn('the-manage-id');
 
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($entity);
+        $manageEntity
+            ->shouldReceive('setStatus')
+            ->with(Constants::STATE_PUBLISHED);
+        $manageEntity
+            ->shouldReceive('setId')
+            ->with('123');
+
+        $manageEntity
+            ->shouldReceive('getService->getConnectionStatus');
 
         $this->ticketService
             ->shouldReceive('createIssueFrom')
@@ -365,7 +363,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
 
-        $command = new PublishEntityProductionCommand('d6f394b2-08b1-4882-8b32-81688c15c489', $applicant);
+        $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $this->commandHandler->handle($command);
     }
 }

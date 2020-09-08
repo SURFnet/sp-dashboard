@@ -55,15 +55,7 @@ class EntityActions
      */
     private $readOnly;
 
-    /**
-     * @param string $id
-     * @param int $serviceId
-     * @param string $status
-     * @param string $environment
-     * @param string $protocol
-     * @param bool $isReadOnly
-     */
-    public function __construct($id, $serviceId, $status, $environment, $protocol, $isReadOnly)
+    public function __construct(string $id, int $serviceId, string $status, string $environment, string $protocol, bool $isReadOnly)
     {
         $this->id = $id;
         $this->serviceId = $serviceId;
@@ -96,7 +88,7 @@ class EntityActions
      */
     public function allowEditAction()
     {
-        if ($this->readOnly) {
+        if ($this->isPublishedToProduction() || $this->readOnly) {
             return false;
         }
         return true;

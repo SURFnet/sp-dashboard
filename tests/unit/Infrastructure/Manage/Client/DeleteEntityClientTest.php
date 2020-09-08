@@ -28,7 +28,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;

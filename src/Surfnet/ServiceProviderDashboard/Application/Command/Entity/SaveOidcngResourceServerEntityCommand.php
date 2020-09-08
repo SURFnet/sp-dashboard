@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
@@ -419,7 +418,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      /**
      * @return string
      */
-    public function getComments()
+    public function getComments(): ?string
     {
         return $this->comments;
     }

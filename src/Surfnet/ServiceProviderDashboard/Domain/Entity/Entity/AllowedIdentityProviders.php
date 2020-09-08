@@ -18,7 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Webmozart\Assert\Assert;
+use function in_array;
 
 class AllowedIdentityProviders
 {
@@ -69,6 +71,15 @@ class AllowedIdentityProviders
     public function isAllowAll()
     {
         return $this->allowAll;
+    }
+
+    /**
+     * @param IdentityProvider $provider
+     * @return bool
+     */
+    public function isWhitelisted(IdentityProvider $provider)
+    {
+        return in_array($provider->getEntityId(), $this->providers);
     }
 
     public function merge(?AllowedIdentityProviders $allowedIdPs)

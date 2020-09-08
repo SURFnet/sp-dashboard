@@ -19,11 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 
 class EntityDetailTest extends WebTestCase
 {
@@ -46,31 +43,6 @@ class EntityDetailTest extends WebTestCase
         $this->assertDetailEquals(1, 'Name EN', 'SP1');
         $this->assertDetailEquals(2, 'First name', 'John', true);
         $this->assertDetailEquals(3, 'Last name', 'Doe', false);
-    }
-
-    /**
-     * See: https://www.pivotaltracker.com/story/show/164598856
-     */
-    public function test_render_details_of_oidc_draft_entity()
-    {
-        $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $this->switchToService('SURFnet');
-
-        /** @var Entity $entity */
-        $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
-        $entity->setProtocol(Constants::TYPE_OPENID_CONNECT);
-        $entity->setGrantType(new OidcGrantType(OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE));
-        $entity->setRedirectUris(['https://sp.example.org', 'https://sp.example.org/redirect2']);
-        $entity->setEnablePlayground(true);
-        $this->getEntityRepository()->save($entity);
-
-        $this->client->request('GET', sprintf('/entity/detail/1/%s', $entity->getId()));
-
-        $this->assertListContains(1, 'Redirect URIs', ['https://sp.example.org', 'https://sp.example.org/redirect2']);
-        $this->assertDetailEquals(2, 'Grant type', 'Authorization code');
-        $this->assertIsChecked(3, 'Playground enabled?');
     }
 
     public function test_render_details_of_manage_entity()

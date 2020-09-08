@@ -100,7 +100,6 @@ class EntityListController extends Controller
         }
         $protocol = $publishedEntity->getProtocol();
         $isOidcProtocol = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Constants::TYPE_OPENID_CONNECT ||
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
 
         return $publishedEntity && $isOidcProtocol && $publishedEntity->getClientSecret();

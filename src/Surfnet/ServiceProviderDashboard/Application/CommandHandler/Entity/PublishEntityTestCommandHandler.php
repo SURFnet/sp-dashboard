@@ -77,7 +77,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
             $this->logger->info(
                 sprintf(
                     'Publishing entity "%s" to Manage in test environment',
-                    $entity->getMetaData()->getNameNl()
+                    $entity->getMetaData()->getNameEn()
                 )
             );
 
@@ -92,7 +92,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $entity->getNameNl(),
+                    $entity->getMetaData()->getNameEn(),
                     $e->getMessage()
                 )
             );
@@ -103,6 +103,6 @@ class PublishEntityTestCommandHandler implements CommandHandler
     private function isNewResourceServer(ManageEntity $entity)
     {
         $isNewEntity = empty($entity->getId());
-        return $isNewEntity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        return $isNewEntity && $entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 }

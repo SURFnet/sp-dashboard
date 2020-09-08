@@ -88,6 +88,7 @@ class EntityMergeService
             null,
             $command->getService()
         );
+        $newEntity->setComments($command->getComments());
         // If no existing ManageEntity is provided, then return the newly created entity
         if (!$manageEntity) {
             return $newEntity;

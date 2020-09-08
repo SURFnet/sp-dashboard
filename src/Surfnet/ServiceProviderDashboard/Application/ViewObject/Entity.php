@@ -17,7 +17,6 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -153,7 +152,7 @@ class Entity
             $result->getStatus(),
             'test',
             $protocol,
-            $protocol === Constants::TYPE_OPENID_CONNECT,
+            false,
             $router
         );
     }
@@ -187,7 +186,7 @@ class Entity
             $status,
             'production',
             $protocol,
-            $protocol === Constants::TYPE_OPENID_CONNECT,
+            false,
             $router
         );
     }
@@ -236,10 +235,7 @@ class Entity
      */
     public function getEntityId()
     {
-        if ($this->getProtocol() !== Constants::TYPE_OPENID_CONNECT) {
-            return $this->entityId;
-        }
-        return OidcClientIdParser::parse($this->entityId);
+        return $this->entityId;
     }
 
     /**
