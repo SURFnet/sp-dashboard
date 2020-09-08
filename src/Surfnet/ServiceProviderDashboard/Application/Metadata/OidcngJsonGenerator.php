@@ -362,7 +362,7 @@ class OidcngJsonGenerator implements GeneratorInterface
     {
         $acl = $entity->getAllowedIdentityProviders();
         $providers = [];
-        if ($acl){
+        if ($acl) {
             if ($acl->isAllowAll()) {
                 return [
                     'allowedEntities' => [],

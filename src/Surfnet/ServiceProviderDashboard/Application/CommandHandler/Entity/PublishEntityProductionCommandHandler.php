@@ -146,7 +146,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     public function handle(PublishProductionCommandInterface $command)
     {
         $entity = $command->getManageEntity();
-        $issue = null;
         try {
             $this->logger->info(
                 sprintf(

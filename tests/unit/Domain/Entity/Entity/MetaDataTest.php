@@ -85,7 +85,6 @@ class MetaDataTest extends TestCase
             $this->metaData('null'),
             $this->metaData('null'),
         ];
-
     }
 
     private function metaData(string $mode)

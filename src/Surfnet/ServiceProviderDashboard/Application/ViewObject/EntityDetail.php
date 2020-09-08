@@ -350,7 +350,6 @@ class EntityDetail
         $entityDetail->preferredLanguageAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
         $entityDetail->personalCodeAttribute = $attributes->findByUrn('urn:schac:dir:attribute-def:schacPersonalUniqueCode');
         $entityDetail->scopedAffiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
-
     }
 
     /**

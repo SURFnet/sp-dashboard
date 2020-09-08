@@ -36,7 +36,6 @@ class OrganizationTest extends TestCase
         self::assertEquals($expectation->getNameNl(), $organization->getNameNl());
         self::assertEquals($expectation->getDisplayNameNl(), $organization->getDisplayNameNl());
         self::assertEquals($expectation->getUrlNl(), $organization->getUrlNl());
-
     }
 
     public function provideOrganizationTestData()

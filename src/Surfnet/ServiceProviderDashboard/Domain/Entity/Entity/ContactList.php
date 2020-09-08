@@ -97,13 +97,16 @@ class ContactList
     {
         $this->clear();
         if ($contacts !== null) {
-            if ($technical = $contacts->findTechnicalContact()) {
+            $technical = $contacts->findTechnicalContact();
+            if ($technical) {
                 $this->add($technical);
             }
-            if ($support = $contacts->findSupportContact()) {
+            $support = $contacts->findSupportContact();
+            if ($support) {
                 $this->add($support);
             }
-            if ($administrative = $contacts->findAdministrativeContact()) {
+            $administrative = $contacts->findAdministrativeContact();
+            if ($administrative) {
                 $this->add($administrative);
             }
         }

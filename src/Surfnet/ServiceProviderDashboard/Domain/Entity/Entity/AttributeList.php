@@ -75,7 +75,7 @@ class AttributeList
     public function merge(AttributeList $attributes)
     {
         $this->clear();
-        foreach ($attributes->getAttributes() as $attribute){
+        foreach ($attributes->getAttributes() as $attribute) {
             $this->add($attribute);
         }
     }

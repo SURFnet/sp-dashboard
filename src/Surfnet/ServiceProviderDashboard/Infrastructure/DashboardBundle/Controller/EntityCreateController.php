@@ -295,7 +295,6 @@ class EntityCreateController extends Controller
                 if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-
                         $response = $this->publishEntity($entity, $command, $flashBag);
 
                         // When a response is returned, publishing was a success

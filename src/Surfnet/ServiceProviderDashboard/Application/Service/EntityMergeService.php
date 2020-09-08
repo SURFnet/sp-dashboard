@@ -36,6 +36,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class EntityMergeService
 {
     /**
@@ -112,8 +115,8 @@ class EntityMergeService
             if ($command->$getterName()) {
                 $commandAttribute = $command->$getterName();
                 $urn = reset($definition->urns);
-                $attributeList->add(new Attribute($urn, '',  'idp',  $commandAttribute->getMotivation()));
-                $attributeList->add(new Attribute($urn, '',  'idp',  $commandAttribute->getMotivation()));
+                $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
+                $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
             }
         }
         return $attributeList;
@@ -126,7 +129,7 @@ class EntityMergeService
             $contactList->add(Contact::fromContact($command->getTechnicalContact(), 'technical'));
         }
         if ($command->getAdministrativeContact()) {
-            $contactList->add(Contact::fromContact($command->getAdministrativeContact(),'administrative'));
+            $contactList->add(Contact::fromContact($command->getAdministrativeContact(), 'administrative'));
         }
         if ($command->getSupportContact()) {
             $contactList->add(Contact::fromContact($command->getSupportContact(), 'support'));
@@ -166,7 +169,7 @@ class EntityMergeService
 
     private function determineProtocol(SaveEntityCommandInterface $command)
     {
-        switch (get_class($command)){
+        switch (get_class($command)) {
             case SaveSamlEntityCommand::class:
                 return Constants::TYPE_SAML;
             case SaveOidcngEntityCommand::class:

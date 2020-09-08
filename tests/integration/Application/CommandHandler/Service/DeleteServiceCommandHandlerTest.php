@@ -118,7 +118,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
 
         $command2 = m::mock(DeletePublishedTestEntityCommand::class);
 
-      $this->commandBus
+        $this->commandBus
             ->shouldReceive('handle')
             ->with($command2)
             ->once();

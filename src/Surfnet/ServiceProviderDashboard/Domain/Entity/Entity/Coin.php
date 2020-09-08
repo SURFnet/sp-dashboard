@@ -113,6 +113,10 @@ class Coin
         return $this->oidcClient;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     public function merge(?Coin $coin)
     {
         // When the new Coin data is not set, reset the data to reflect that state (not set)

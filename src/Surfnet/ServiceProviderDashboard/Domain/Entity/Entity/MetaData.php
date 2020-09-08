@@ -206,6 +206,10 @@ class MetaData
         return $this->logo;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     public function merge(?MetaData $metaData)
     {
         if ($metaData === null) {

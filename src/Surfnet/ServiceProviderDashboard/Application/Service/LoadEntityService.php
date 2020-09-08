@@ -32,8 +32,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Webmozart\Assert\Assert;
 
-;
-
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class LoadEntityService
 {
     /**
@@ -51,60 +52,14 @@ class LoadEntityService
      */
     private $manageProductionClient;
 
-    /**
-     * @var AttributesMetadataRepository
-     */
-    private $attributeMetadataRepository;
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriTest;
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriProd;
-    /**
-     * @var string
-     */
-    private $oidcngPlaygroundUriTest;
-    /**
-     * @var string
-     */
-    private $oidcngPlaygroundUriProd;
-
-    /**
-     * @param EntityRepository $entityRepository
-     * @param ManageClient $manageTestClient
-     * @param ManageClient $manageProductionClient
-     * @param AttributesMetadataRepository $attributeMetadataRepository
-     * @param string $oidcPlaygroundUriTest
-     * @param string $oidcPlaygroundUriProd
-     * @param string $oidcngPlaygroundUriTest
-     * @param string $oidcngPlaygroundUriProd
-     */
     public function __construct(
         EntityRepository $entityRepository,
         ManageClient $manageTestClient,
-        ManageClient $manageProductionClient,
-        AttributesMetadataRepository $attributeMetadataRepository,
-        $oidcPlaygroundUriTest,
-        $oidcPlaygroundUriProd,
-        $oidcngPlaygroundUriTest,
-        $oidcngPlaygroundUriProd
+        ManageClient $manageProductionClient
     ) {
-        Assert::stringNotEmpty($oidcPlaygroundUriTest, 'Please set "playground_uri_test" in parameters.yml');
-        Assert::stringNotEmpty($oidcPlaygroundUriProd, 'Please set "playground_uri_prod" in parameters.yml');
-        Assert::stringNotEmpty($oidcngPlaygroundUriTest, 'Please set "oidcng_playground_uri_test" in parameters.yml');
-        Assert::stringNotEmpty($oidcngPlaygroundUriProd, 'Please set "oidcng_playground_uri_prod" in parameters.yml');
-
         $this->entityRepository = $entityRepository;
         $this->manageTestClient = $manageTestClient;
         $this->manageProductionClient = $manageProductionClient;
-        $this->attributeMetadataRepository = $attributeMetadataRepository;
-        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
-        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
-        $this->oidcngPlaygroundUriTest = $oidcngPlaygroundUriTest;
-        $this->oidcngPlaygroundUriProd = $oidcngPlaygroundUriProd;
     }
 
     /**
@@ -180,38 +135,5 @@ class LoadEntityService
             return 1;
         }
         return 0;
-    }
-
-    /**
-     * When copying a OIDC TNG entity to production, we do NOT copy the related resource server references
-     * along with it. As they do not exist on the other environment.
-     *
-     * @param bool $isCopyToProduction
-     * @param Entity $domainEntity
-     */
-    private function updateAllowedResourceServers($isCopyToProduction, Entity $domainEntity)
-    {
-        if ($isCopyToProduction && $domainEntity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            $domainEntity->setOidcngResourceServers(new ResourceServerCollection([]));
-        }
-    }
-
-    /**
-     * Only when an OIDC TNG entity is copied to production, do we append the https schema back onto the schema-less
-     * client id. This to prevent a validation error when publishing the draft entity (what a copied to production
-     * entity basically is).
-     *
-     * @param bool $isCopyToProduction
-     * @param Entity $domainEntity
-     */
-    private function updateClientId($isCopyToProduction, Entity $domainEntity)
-    {
-        $protocol = $domainEntity->getProtocol();
-        $isOidcngEntity = $protocol === Constants::TYPE_OPENID_CONNECT_TNG
-            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-        if ($isCopyToProduction && $isOidcngEntity) {
-            $clientId = OidcngSpdClientIdParser::parse($domainEntity->getEntityId());
-            $domainEntity->setEntityId($clientId);
-        }
     }
 }
