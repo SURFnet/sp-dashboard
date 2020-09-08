@@ -100,7 +100,7 @@ class ManageEntity
             $oidcClient = OidcClient::fromApiResponse($data, $manageProtocol);
         }
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
-        $protocol = Protocol::fromApiResponse($data, $manageProtocol, Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
+        $protocol = Protocol::fromApiResponse($data, $manageProtocol);
 
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }

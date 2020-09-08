@@ -138,7 +138,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var string
      * @Assert\Choice(
      *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Entity",
+     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Constants",
      *         "getValidNameIdFormats"
      *     },
      *     strict=true
@@ -681,7 +681,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getApplicationUrl()
+    public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
     }
@@ -694,10 +694,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->applicationUrl = $applicationUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getEulaUrl()
+    public function getEulaUrl(): ?string
     {
         return $this->eulaUrl;
     }
@@ -710,10 +707,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->eulaUrl = $eulaUrl;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getAdministrativeContact()
+    public function getAdministrativeContact(): ?Contact
     {
         return $this->administrativeContact;
     }
@@ -726,10 +720,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->administrativeContact = $administrativeContact;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getTechnicalContact(): Contact
+    public function getTechnicalContact(): ?Contact
     {
         return $this->technicalContact;
     }
@@ -742,10 +733,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->technicalContact = $technicalContact;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getSupportContact()
+    public function getSupportContact(): ?Contact
     {
         return $this->supportContact;
     }
@@ -1014,10 +1002,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->comments = $comments;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationNameNl()
+    public function getOrganizationNameNl(): ?string
     {
         return $this->organizationNameNl;
     }
@@ -1030,10 +1015,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationNameNl = $organizationNameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationNameEn()
+    public function getOrganizationNameEn(): ?string
     {
         return $this->organizationNameEn;
     }
@@ -1046,10 +1028,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationNameEn = $organizationNameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameNl()
+    public function getOrganizationDisplayNameNl(): ?string
     {
         return $this->organizationDisplayNameNl;
     }
@@ -1062,10 +1041,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationDisplayNameNl = $organizationDisplayNameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameEn()
+    public function getOrganizationDisplayNameEn(): ?string
     {
         return $this->organizationDisplayNameEn;
     }
@@ -1078,10 +1054,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationDisplayNameEn = $organizationDisplayNameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlNl()
+    public function getOrganizationUrlNl(): ?string
     {
         return $this->organizationUrlNl;
     }
@@ -1094,10 +1067,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationUrlNl = $organizationUrlNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlEn()
+    public function getOrganizationUrlEn(): ?string
     {
         return $this->organizationUrlEn;
     }
@@ -1264,5 +1234,25 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setOidcngResourceServers($resourceServers)
     {
         $this->resourceServers = $resourceServers;
+    }
+
+    public function getMetadataUrl()
+    {
+        return null;
+    }
+
+    public function getCertificate()
+    {
+        return null;
+    }
+
+    public function getNameIdFormat()
+    {
+        return $this->getSubjectType();
+    }
+
+    public function getAcsLocation()
+    {
+        return null;
     }
 }

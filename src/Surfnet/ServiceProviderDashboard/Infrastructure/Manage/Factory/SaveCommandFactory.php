@@ -145,7 +145,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
             $command->setOidcngResourceServers($servers);
         }
 
-        $this->setRedirectUris($command, $manageEntity, $environment, $this->playgroundUriTest, $this->playgroundUriProd);
+        $this->setRedirectUris($command, $manageEntity, $environment);
 
         return $command;
     }
@@ -195,12 +195,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         }
     }
 
-    /**
-     * @param SaveEntityCommandInterface|SaveOidcngResourceServerEntityCommand|SaveOidcngEntityCommand $command
-     * @param ManageEntity $manageEntity
-     * @param $environment
-     */
-    private function setRedirectUris(SaveEntityCommandInterface $command, ManageEntity $manageEntity, $environment)
+    private function setRedirectUris(SaveEntityCommandInterface $command, ManageEntity $manageEntity, string $environment)
     {
         $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
         $playGroundUri = ($environment === self::ENVIRONMENT_PRODUCTION ? $this->playGroundUriProd : $this->playGroundUriTest);

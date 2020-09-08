@@ -101,25 +101,17 @@ class OidcngClient implements OidcClientInterface
     }
 
     /**
-     * @param string $clientId ,
-     * @param string $clientSecret
-     * @param array $redirectUris
-     * @param string $grantType
-     * @param array $scope
-     * @param bool $isPublicClient
-     * @param int $accessTokenValidity
-     * @param array $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        $clientId,
-        $clientSecret,
-        $redirectUris,
-        $grantType,
-        $scope,
-        $isPublicClient,
-        $accessTokenValidity,
-        $resourceServers
+        string $clientId,
+        string $clientSecret,
+        array $redirectUris,
+        string $grantType,
+        array $scope,
+        bool $isPublicClient,
+        int $accessTokenValidity,
+        array $resourceServers
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;

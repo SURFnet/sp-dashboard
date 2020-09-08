@@ -97,7 +97,7 @@ class EntityMergeService
      * Using the attribute repository, map the attributes set on the command to a list of attributes that can
      * be set on the ManageEntity
      */
-    private function buildAttributesFromCommand(SaveSamlEntityCommand $command)
+    private function buildAttributesFromCommand(SaveEntityCommandInterface $command)
     {
         $attributeList = new AttributeList();
         foreach ($this->attributeRepository->findAll() as $definition) {
@@ -106,6 +106,7 @@ class EntityMergeService
             if ($command->$getterName()) {
                 $commandAttribute = $command->$getterName();
                 $urn = reset($definition->urns);
+                $attributeList->add(new Attribute($urn, '',  'idp',  $commandAttribute->getMotivation()));
                 $attributeList->add(new Attribute($urn, '',  'idp',  $commandAttribute->getMotivation()));
             }
         }
@@ -139,7 +140,7 @@ class EntityMergeService
         );
     }
 
-    private function buildCoinFromCommand(SaveSamlEntityCommand $command): Coin
+    private function buildCoinFromCommand(SaveEntityCommandInterface $command): Coin
     {
         return new Coin(
             null,
@@ -152,12 +153,12 @@ class EntityMergeService
         );
     }
 
-    private function buildLogoFromCommand(SaveSamlEntityCommand $command): Logo
+    private function buildLogoFromCommand(SaveEntityCommandInterface $command): Logo
     {
         return new Logo($command->getLogoUrl(), null, null);
     }
 
-    private function determineProtocol(SaveSamlEntityCommand $command)
+    private function determineProtocol(SaveEntityCommandInterface $command)
     {
         switch (get_class($command)){
             case SaveSamlEntityCommand::class:

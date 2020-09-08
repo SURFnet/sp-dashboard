@@ -371,7 +371,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return Contact
      */
-    public function getAdministrativeContact()
+    public function getAdministrativeContact(): ?Contact
     {
         return $this->administrativeContact;
     }
@@ -387,7 +387,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return Contact
      */
-    public function getTechnicalContact()
+    public function getTechnicalContact(): ?Contact
     {
         return $this->technicalContact;
     }
@@ -403,7 +403,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return Contact
      */
-    public function getSupportContact()
+    public function getSupportContact(): ?Contact
     {
         return $this->supportContact;
     }
@@ -435,7 +435,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationNameNl()
+    public function getOrganizationNameNl(): ?string
     {
         return $this->organizationNameNl;
     }
@@ -451,7 +451,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationNameEn()
+    public function getOrganizationNameEn(): ?string
     {
         return $this->organizationNameEn;
     }
@@ -467,7 +467,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameNl()
+    public function getOrganizationDisplayNameNl(): ?string
     {
         return $this->organizationDisplayNameNl;
     }
@@ -483,7 +483,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameEn()
+    public function getOrganizationDisplayNameEn(): ?string
     {
         return $this->organizationDisplayNameEn;
     }
@@ -499,7 +499,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationUrlNl()
+    public function getOrganizationUrlNl(): ?string
     {
         return $this->organizationUrlNl;
     }
@@ -515,7 +515,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationUrlEn()
+    public function getOrganizationUrlEn(): ?string
     {
         return $this->organizationUrlEn;
     }
@@ -589,5 +589,30 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     public function getGrantType()
     {
         return $this->grantType;
+    }
+
+    public function getMetadataUrl()
+    {
+        return null;
+    }
+
+    public function getAcsLocation()
+    {
+        return null;
+    }
+
+    public function getNameIdFormat()
+    {
+        return null;
+    }
+
+    public function getApplicationUrl(): ?string
+    {
+        return null;
+    }
+
+    public function getEulaUrl(): ?string
+    {
+        return null;
     }
 }

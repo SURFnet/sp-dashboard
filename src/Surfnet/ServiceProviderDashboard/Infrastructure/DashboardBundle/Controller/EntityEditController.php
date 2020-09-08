@@ -63,9 +63,11 @@ class EntityEditController extends Controller
     public function editAction(Request $request, string $environment, string $manageId)
     {
         $flashBag = $this->get('session')->getFlashBag();
-        $entity = $this->entityService->getManageEntityById($manageId, $environment);
-        $protocol = $entity->getProtocol()->getProtocol();
         $service = $this->serviceService->getServiceById($this->authorizationService->getActiveServiceId());
+        $entity = $this->entityService->getManageEntityById($manageId, $environment);
+        $entity->setService($service);
+        $protocol = $entity->getProtocol()->getProtocol();
+
 
         if ($protocol === Constants::TYPE_OPENID_CONNECT) {
             throw $this->createNotFoundException(
