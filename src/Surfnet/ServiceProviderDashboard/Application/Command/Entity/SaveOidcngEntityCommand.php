@@ -601,7 +601,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getLogoUrl()
+    public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
     }
@@ -1241,7 +1241,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return null;
     }
 
-    public function getCertificate()
+    public function getCertificate(): ?string
     {
         return null;
     }

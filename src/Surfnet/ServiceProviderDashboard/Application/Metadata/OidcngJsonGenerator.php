@@ -249,11 +249,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @return array
-     */
-    private function generateAllContactsMetadata(ManageEntity $entity)
+    private function generateAllContactsMetadata(ManageEntity $entity): array
     {
         $metadata = [];
         $index = 0;
@@ -288,11 +284,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @return array
-     */
-    private function generateOrganizationMetadata(ManageEntity $entity)
+    private function generateOrganizationMetadata(ManageEntity $entity): array
     {
         $metadata = [];
         $organization = $entity->getMetaData()->getOrganization();
@@ -366,11 +358,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @return array
-     */
-    private function generateAclData(ManageEntity $entity)
+    private function generateAclData(ManageEntity $entity): array
     {
         $acl = $entity->getAllowedIdentityProviders();
         $providers = [];
@@ -412,7 +400,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
     }
 
-    private function setExcludeFromPush(&$metadata, ManageEntity $entity)
+    private function setExcludeFromPush(&$metadata, ManageEntity $entity): void
     {
         // Scenario 1: When publishing to production, the coin:exclude_from_push must be present and set to '1'.
         // This prevents the entity from being pushed to EngineBlock.

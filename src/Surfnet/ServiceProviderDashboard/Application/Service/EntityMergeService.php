@@ -100,6 +100,12 @@ class EntityMergeService
     private function buildAttributesFromCommand(SaveEntityCommandInterface $command)
     {
         $attributeList = new AttributeList();
+
+        // Oidc TNG resource servers do not track attributes in manage
+        if ($command instanceof SaveOidcngResourceServerEntityCommand) {
+            return $attributeList;
+        }
+
         foreach ($this->attributeRepository->findAll() as $definition) {
             $getterName = $definition->getterName;
 

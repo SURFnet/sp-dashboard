@@ -46,4 +46,6 @@ interface SaveEntityCommandInterface extends Command
 
     public function getApplicationUrl(): ?string;
     public function getEulaUrl(): ?string;
+    public function getCertificate(): ?string;
+    public function getLogoUrl(): ?string;
 }

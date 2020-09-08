@@ -21,9 +21,10 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 
 /**
@@ -69,7 +70,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
             'type' => 'oidc10_rp',
-            'id' => $entity->getManageId(),
+            'id' => $entity->getId(),
         ];
     }
 
@@ -150,10 +151,10 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     {
         $metadata = array_merge(
             [
-                'description:en' => $entity->getDescriptionEn(),
-                'description:nl' => $entity->getDescriptionNl(),
-                'name:en' => $entity->getNameEn(),
-                'name:nl' => $entity->getNameNl(),
+                'description:en' => $entity->getMetaData()->getDescriptionEn(),
+                'description:nl' => $entity->getMetaData()->getDescriptionNl(),
+                'name:en' => $entity->getMetaData()->getNameEn(),
+                'name:nl' => $entity->getMetaData()->getNameNl(),
             ],
             $this->generateAllContactsMetadata($entity),
             $this->generateOrganizationMetadata($entity),
@@ -169,7 +170,8 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        $metadata['NameIDFormat'] = $entity->getNameIdFormat();
+        // By default, OIDC TNG Resource servers are configured to have persistent subject type (name id format)
+        $metadata['NameIDFormat'] = Constants::NAME_ID_FORMAT_PERSISTENT;
 
         // Will become configurable some time in the future.
         $metadata['scopes'] = ['openid'];
@@ -188,81 +190,82 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     private function generateOidcClient(ManageEntity $entity)
     {
         $metadata = [];
-        $secret = $entity->getClientSecret();
-        if ($secret) {
-            $metadata['secret'] = $secret;
+        if ($entity->getOidcClient()) {
+            $secret = $entity->getOidcClient()->getClientSecret();
+            if ($secret) {
+                $metadata['secret'] = $secret;
+            }
+            // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
+            $metadata['grants'] = [OidcGrantType::GRANT_TYPE_CLIENT_CREDENTIALS];
+            $metadata['isResourceServer'] = true;
         }
-        // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
-        $metadata['grants'] = [OidcGrantType::GRANT_TYPE_CLIENT_CREDENTIALS];
-        $metadata['isResourceServer'] = true;
-
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @return array
-     */
-    private function generateAllContactsMetadata(ManageEntity $entity)
+    private function generateAllContactsMetadata(ManageEntity $entity): array
     {
         $metadata = [];
         $index = 0;
 
-        if ($entity->getSupportContact()) {
-            $metadata += $this->generateContactMetadata('support', $index++, $entity->getSupportContact());
-        }
+        $contacts = $entity->getMetaData()->getContacts();
 
-        if ($entity->getAdministrativeContact()) {
-            $metadata += $this->generateContactMetadata(
-                'administrative',
-                $index++,
-                $entity->getAdministrativeContact()
-            );
-        }
+        if ($contacts) {
+            if ($contacts->findSupportContact()) {
+                $metadata += $this->generateContactMetadata(
+                    'support',
+                    $index++,
+                    $contacts->findSupportContact()
+                );
+            }
 
-        if ($entity->getTechnicalContact()) {
-            $metadata += $this->generateContactMetadata('technical', $index++, $entity->getTechnicalContact());
-        }
+            if ($contacts->findAdministrativeContact()) {
+                $metadata += $this->generateContactMetadata(
+                    'administrative',
+                    $index++,
+                    $contacts->findAdministrativeContact()
+                );
+            }
 
+            if ($contacts->findTechnicalContact()) {
+                $metadata += $this->generateContactMetadata(
+                    'technical',
+                    $index++,
+                    $contacts->findTechnicalContact()
+                );
+            }
+        }
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @return array
-     */
-    private function generateOrganizationMetadata(ManageEntity $entity)
+    private function generateOrganizationMetadata(ManageEntity $entity): array
     {
-        $metadata = [
-            'OrganizationName:en' => $entity->getOrganizationNameEn(),
-            'OrganizationDisplayName:en' => $entity->getOrganizationDisplayNameEn(),
-            'OrganizationURL:en' => $entity->getOrganizationUrlEn(),
-            'OrganizationName:nl' => $entity->getOrganizationNameNl(),
-            'OrganizationDisplayName:nl' => $entity->getOrganizationDisplayNameNl(),
-            'OrganizationURL:nl' => $entity->getOrganizationUrlNl(),
-        ];
-
+        $metadata = [];
+        $organization = $entity->getMetaData()->getOrganization();
+        if ($organization) {
+            $metadata = [
+                'OrganizationName:en' => $organization->getNameEn(),
+                'OrganizationDisplayName:en' => $organization->getDisplayNameEn(),
+                'OrganizationURL:en' => $organization->getUrlEn(),
+                'OrganizationName:nl' => $organization->getNameNl(),
+                'OrganizationDisplayName:nl' => $organization->getDisplayNameNl(),
+                'OrganizationURL:nl' => $organization->getUrlNl(),
+            ];
+        }
         return array_filter($metadata);
     }
 
-    /**
-     * @param string $contactType
-     * @param int $index
-     * @param Contact $contact
-     * @return array
-     */
-    private function generateContactMetadata($contactType, $index, Contact $contact)
+    private function generateContactMetadata($contactType, $index, Contact $contact): array
     {
         $metadata = [
             sprintf('contacts:%d:contactType', $index) => $contactType,
         ];
 
-        if (!empty($contact->getFirstName())) {
-            $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getFirstName();
+        if (!empty($contact->getGivenName())) {
+            $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getGivenName();
         }
 
-        if (!empty($contact->getLastName())) {
-            $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getLastName();
+        if (!empty($contact->getSurName())) {
+            $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getSurName();
         }
 
         if (!empty($contact->getEmail())) {
@@ -276,33 +279,32 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @return array
-     */
-    private function generateAclData(ManageEntity $entity)
+    private function generateAclData(ManageEntity $entity): array
     {
-        if ($entity->isIdpAllowAll()) {
-            return [
-                'allowedEntities' => [],
-                'allowedall' => true,
-            ];
-        }
-
+        $acl = $entity->getAllowedIdentityProviders();
         $providers = [];
-        foreach ($entity->getIdpWhitelist() as $entityId) {
-            $providers[] = [
-                'name' => $entityId,
-            ];
-        }
+        if ($acl){
+            if ($acl->isAllowAll()) {
+                return [
+                    'allowedEntities' => [],
+                    'allowedall' => true,
+                ];
+            }
 
+
+            foreach ($acl->getAllowedIdentityProviders() as $entityId) {
+                $providers[] = [
+                    'name' => $entityId,
+                ];
+            }
+        }
         return [
             'allowedEntities' => $providers,
             'allowedall' => false,
         ];
     }
 
-    private function setExcludeFromPush(&$metadata, ManageEntity $entity)
+    private function setExcludeFromPush(&$metadata, ManageEntity $entity): void
     {
         // Scenario 1: When publishing to production, the coin:exclude_from_push must be present and set to '1'.
         // This prevents the entity from being pushed to EngineBlock.
@@ -311,7 +313,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         }
 
         // Scenario 2: When dealing with a client secret reset, keep the current exclude from push state.
-        $secret = $entity->getClientSecret();
+        $secret = $entity->getOidcClient()->getClientSecret();
         if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPush()) {
             $metadata['coin:exclude_from_push'] = '0';
         }

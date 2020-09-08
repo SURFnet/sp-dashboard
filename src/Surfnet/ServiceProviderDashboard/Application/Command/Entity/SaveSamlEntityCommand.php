@@ -586,7 +586,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getCertificate()
+    public function getCertificate(): ?string
     {
         return $this->certificate;
     }
@@ -602,7 +602,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getLogoUrl()
+    public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
     }
