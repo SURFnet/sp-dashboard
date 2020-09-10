@@ -18,20 +18,11 @@ services:
       - "80"
     networks:
       - spdashboard
-    volumes:
-      - type: volume
-        source: spddata
-        target: /var/www/html/
-        volume:
-          nocopy: true
-    depends_on:
-      - php-fpm
+    volumes: 
+      - spddata:/var/www/html/:nocopy
     container_name: web     
 
 networks:
   spdashboard:
-    driver: bridge
 volumes:
   spddata:
-#volumes:
-#  data:
