@@ -185,13 +185,7 @@ class QueryClient implements QueryEntityRepository
         }
     }
 
-    /**
-     * @param $teamName
-     * @param $state
-     * @return array
-     * @throws QueryServiceProviderException
-     */
-    public function findOidcngResourceServersByTeamName($teamName, $state)
+    public function findOidcngResourceServersByTeamName(string $teamName, string $state): array
     {
         try {
             // Query manage to get the internal id of every SP entity with given team ID.

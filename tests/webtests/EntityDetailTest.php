@@ -24,48 +24,21 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 
 class EntityDetailTest extends WebTestCase
 {
-    public function test_render_details_of_draft_entity()
-    {
-        $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $this->switchToService('SURFnet');
-
-        $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
-
-        $crawler = $this->client->request('GET', sprintf('/entity/detail/1/%s', $entity->getId()));
-
-        $pageTitle = $crawler->filter('.page-container h1');
-
-        $this->assertContains("Entity details", $pageTitle->text());
-
-        $this->assertDetailEquals(0, 'Entity ID', 'SP1');
-        $this->assertDetailEquals(1, 'Name EN', 'SP1');
-        $this->assertDetailEquals(2, 'First name', 'John', true);
-        $this->assertDetailEquals(3, 'Last name', 'Doe', false);
-    }
 
     public function test_render_details_of_manage_entity()
     {
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $sp3QueryResponse = json_encode((object)[
-            'id' => '9729d851-cfdd-4283-a8f1-a29ba5036261',
-            'type' => Protocol::SAML20_SP,
-            'data' => (object)[
-                'entityid' => 'SP3',
-                'metaDataFields' => (object) [
-                    'name:en' => 'SP3',
-                    'contacts:0:contactType' => 'administrative',
-                    'contacts:0:givenName' => 'Test',
-                    'contacts:0:surName' => 'Test',
-                    'contacts:0:emailAddress' => 'test@example.org',
-                ],
-            ],
-        ]);
-
-        $this->prodMockHandler->append(new Response(200, [], $sp3QueryResponse));
+        $this->registerManageEntity(
+            'production',
+            'saml20_sp',
+            '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'SP3',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
 
         $this->switchToService('SURFnet');
 
@@ -75,10 +48,12 @@ class EntityDetailTest extends WebTestCase
 
         $this->assertContains("Entity details", $pageTitle->text());
 
-        $this->assertDetailEquals(0, 'Entity ID', 'SP3');
-        $this->assertDetailEquals(1, 'Name EN', 'SP3');
-        $this->assertDetailEquals(2, 'First name', 'Test', true);
-        $this->assertDetailEquals(3, 'Last name', 'Test', false);
+        $this->assertDetailEquals(0, 'Metadata URL', 'https://sp1-entityid.example.com/metadata');
+        $this->assertDetailEquals(1, 'ACS location', 'https://sp1-entityid.example.com/acs');
+        $this->assertDetailEquals(2, 'Entity ID', 'https://sp1-entityid.example.com');
+        $this->assertDetailEquals(8, 'Name EN', 'SP3 Name English');
+        $this->assertDetailEquals(10, 'First name', 'givenname', true);
+        $this->assertDetailEquals(11, 'Last name', 'surname', false);
     }
 
 
@@ -87,31 +62,25 @@ class EntityDetailTest extends WebTestCase
      */
     public function test_it_shows_attributes_without_motivation()
     {
+        $this->registerManageEntity(
+            'production',
+            'saml20_sp',
+            '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'SP3',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
+
         $this->loadFixtures();
         $this->logIn('ROLE_ADMINISTRATOR');
 
         $this->switchToService('SURFnet');
 
-        /** @var \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity $entity */
-        $entity = reset($this->getEntityRepository()->findBy(['nameEn' => 'SP1']));
+        $this->client->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
 
-        $commonNameAttribute = new Attribute();
-        $commonNameAttribute->setRequested(true);
-        $commonNameAttribute->setMotivation('Hi there, we want to know your name!');
-
-        // No motivation is set on this attribute
-        $organizationAttribute = new Attribute();
-        $organizationAttribute->setRequested(true);
-
-        $entity->setCommonNameAttribute($commonNameAttribute);
-        $entity->setOrganizationAttribute($organizationAttribute);
-
-        $this->getEntityRepository()->save($entity);
-
-        $this->client->request('GET', sprintf('/entity/detail/1/%s', $entity->getId()));
-
-        $this->assertAttributeDetailEquals(0, 'Common name attribute', 'Hi there, we want to know your name!');
-        $this->assertAttributeDetailEquals(1, 'Organization attribute', 'No motivation set');
+        $this->assertAttributeDetailEquals(0, 'Display name attribute', 'Test Attribute 1');
+        $this->assertAttributeDetailEquals(1, 'Email address attribute', 'No motivation set');
     }
 
     private function assertListContains($position, $expectedLabel, array $expectedValues)
@@ -193,7 +162,6 @@ class EntityDetailTest extends WebTestCase
 
         $attributeValue = $row->filter('span')->last()->text();
         $attributeTitle = $heading->text();
-
         $this->assertEquals(
             $expectedTitle,
             $attributeTitle,

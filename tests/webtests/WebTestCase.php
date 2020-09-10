@@ -22,11 +22,14 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
-use GuzzleHttp\Handler\MockHandler;
+use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
@@ -42,16 +45,38 @@ class WebTestCase extends SymfonyWebTestCase
      * @var \Symfony\Bundle\FrameworkBundle\Client
      */
     protected $client;
-
     /**
-     * @var MockHandler
+     * @var QueryEntityRepository
      */
-    protected $testMockHandler;
-
+    protected $prodQueryClient;
     /**
-     * @var MockHandler
+     * @var QueryEntityRepository
      */
-    protected $prodMockHandler;
+    protected $testQueryClient;
+    /**
+     * @var IdentityProviderRepository
+     */
+    private $testIdPClient;
+    /**
+     * @var IdentityProviderRepository
+     */
+    private $prodIdPClient;
+    /**
+     * @var PublishEntityRepository
+     */
+    protected $prodPublicationClient;
+    /**
+     * @var PublishEntityRepository
+     */
+    protected $testPublicationClient;
+    /**
+     * @var DeleteEntityRepository
+     */
+    protected $prodDeleteClient;
+    /**
+     * @var DeleteEntityRepository
+     */
+    protected $testDeleteClient;
 
     public function setUp()
     {
@@ -66,9 +91,93 @@ class WebTestCase extends SymfonyWebTestCase
         );
 
         $this->client->disableReboot();
+        $this->testQueryClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
+        $this->prodQueryClient = $this->client->getContainer()->get('surfnet.manage.client.query_client.prod_environment');
+        $this->prodIdPClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient');
+        $this->testIdPClient = $this->client->getContainer()->get('surfnet.manage.client.identity_provider_client.test_environment');
+        $this->prodPublicationClient = $this->client->getContainer()->get('surfnet.manage.client.publish_client.prod_environment');
+        $this->testPublicationClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient');
+        $this->testDeleteClient = $this->client->getContainer()->get('surfnet.manage.client.delete_client.test_environment');
+        $this->prodDeleteClient = $this->client->getContainer()->get('surfnet.manage.client.delete_client.prod_environment');
+    }
 
-        $this->testMockHandler = $this->client->getContainer()->get('surfnet.manage.http.guzzle.mock_handler');
-        $this->prodMockHandler = $this->client->getContainer()->get('surfnet.manage.http.guzzle.mock_handler_prod');
+    protected function registerManageEntity(string $env, string $protocol, string $id, string $name, string $entityId, ?string $metadataUrl = null, ?string $teamName = null)
+    {
+        switch ($protocol) {
+            case "saml20_sp":
+            case "oidc10_rp":
+                $this->registerSp($env, $protocol, $id, $name, $entityId, $metadataUrl, $teamName);
+                break;
+            case "saml20_idp":
+                $this->registerIdP($env, $protocol, $id, $name, $entityId);
+                break;
+        }
+    }
+
+    protected function registerManageEntityRaw(string $env, string $json)
+    {
+        switch ($env) {
+            case "production":
+                $this->prodQueryClient->registerEntityRaw($json);
+                break;
+            case "test":
+                $this->testQueryClient->registerEntityRaw($json);
+                break;
+            default:
+                throw new RuntimeException('Unsupported environment');
+        }
+    }
+
+    private function registerSp(string $env, string $protocol, string $id, string $name, string $entityId, ?string $metadataUrl = null, ?string $teamName = null)
+    {
+        switch ($env) {
+            case "production":
+                $this->prodQueryClient->registerEntity(
+                    $protocol,
+                    $id,
+                    $entityId,
+                    $metadataUrl,
+                    $name,
+                    $teamName
+                );
+                break;
+            case "test":
+                $this->testQueryClient->registerEntity(
+                    $protocol,
+                    $id,
+                    $entityId,
+                    $metadataUrl,
+                    $name,
+                    $teamName
+                );
+                break;
+            default:
+                throw new RuntimeException('Unsupported environment');
+        }
+    }
+
+    private function registerIdP(string $env, string $protocol, string $id, string $name, string $entityId)
+    {
+        switch ($env) {
+            case "production":
+                $this->prodIdPClient->registerEntity(
+                    $protocol,
+                    $id,
+                    $entityId,
+                    $name
+                );
+                break;
+            case "test":
+                $this->testIdPClient->registerEntity(
+                    $protocol,
+                    $id,
+                    $entityId,
+                    $name
+                );
+                break;
+            default:
+                throw new RuntimeException('Unsupported environment');
+        }
     }
 
     protected function loadFixtures()
@@ -166,14 +275,6 @@ class WebTestCase extends SymfonyWebTestCase
     protected function getServiceRepository()
     {
         return $this->client->getContainer()->get(ServiceRepository::class);
-    }
-
-    /**
-     * @return EntityRepository
-     */
-    protected function getEntityRepository()
-    {
-        return $this->client->getContainer()->get(EntityRepository::class);
     }
 
     /**

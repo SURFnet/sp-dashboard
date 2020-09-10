@@ -64,12 +64,6 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
             'Expecting a redirect response after saving an entity'
         );
 
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $crawler = $this->client->followRedirect();
         $pageTitle = $crawler->filter('h1')->first()->text();
         $message = $crawler->filter('.page-container .card')->eq(1)->text();
@@ -82,10 +76,6 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
 
-        // There is no save button
-        $buttonNodes = $crawler->filter('button#dashboard_bundle_entity_type_save');
-        $this->assertEquals(0, $buttonNodes->count());
-
         // There is a publish button instead
         $buttonNodes = $crawler->filter('button#dashboard_bundle_entity_type_publishButton');
         $this->assertEquals(1, $buttonNodes->count());
@@ -97,6 +87,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
 
     public function test_it_can_publish_the_form()
     {
+        $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
         $formData = $this->buildValidFormData();
 
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
@@ -105,29 +96,12 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
             ->selectButton('Publish')
             ->form();
 
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-
-        // The Entity is queried from manage in to set IdP ACL data
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        // ClientId validator
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Push to EB through manage
-        $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));
-
         $this->client->submit($form, $formData);
         // The form is now redirected to the list view
         $this->assertTrue(
             $this->client->getResponse() instanceof RedirectResponse,
             'Expecting a redirect to the published "thank you" endpoint'
         );
-
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->client->followRedirect(); // redirect to published page
         $crawler = $this->client->followRedirect(); // redirect to list page to show secret
@@ -146,49 +120,34 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         $this->assertContains('Select OIDC RP to connect this Resource Server to', $flashMessage);
     }
 
-    public function test_it_forwards_to_edit_action_when_publish_failed()
+    public function test_it_stays_on_create_action_when_publication_fails()
     {
-        $formData = $this->buildValidFormData();
+        // Register an enitty with the same entity id.
+        $this->registerManageEntity(
+            'test',
+            'oidc10_rp',
+            'f1e394b2-08b1-4882-8b32-43876c15c743',
+            'Existing RP',
+            'entity-id'
+        );
 
+        $formData = $this->buildValidFormData();
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
 
-        // ClientId validator
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Publish json
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Push to Manage
-        $this->testMockHandler->append(new Response(400, [], '{
-            "timestamp": 1558969891003,
-            "status": "400",
-            "error": "org.springframework.web.client.HttpClientErrorException",
-            "exception": "org.springframework.web.client.HttpClientErrorException",
-            "message": "{\"error\":\"ClientId is already used\"}",
-            "path": "//internal/metadata/"
-        }'));
-
-        $this->client->submit($form, $formData);
-
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting redirect to entity edit form'
-        );
-
-        $crawler = $this->client->followRedirect();
+        $crawler = $this->client->submit($form, $formData);
         // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
 
         $this->assertEquals('Service Provider registration form', $pageTitle);
-
-        $errorMessage = $crawler->filter('div.message.error')->first()->text();
-        $this->assertEquals('Unable to publish the entity, try again later', trim($errorMessage));
+        $errorMessage = $crawler->filter('li.error')->first()->text();
+        $this->assertEquals('Entity has already been registered.', trim($errorMessage));
 
         $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp('/\/entity\/edit/', $uri);
+        $this->assertRegExp('/\/entity\/create/', $uri);
     }
 
     public function test_creating_draft_for_production_is_not_allowed()

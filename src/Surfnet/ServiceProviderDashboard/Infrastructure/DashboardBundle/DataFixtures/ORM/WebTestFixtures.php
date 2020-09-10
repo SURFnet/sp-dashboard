@@ -21,24 +21,14 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFi
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 class WebTestFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $service = $this->createService('SURFnet', 'urn:collab:org:surf.nl')
-            ->addEntity(
-                $this->createEntity('SP1')
-            )
-            ->addEntity(
-                $this->createEntity('SP2')
-            );
-
+        $service = $this->createService('SURFnet', 'urn:collab:org:surf.nl');
         $service->setProductionEntitiesEnabled(false);
         $manager->persist($service);
 
@@ -70,43 +60,6 @@ class WebTestFixtures extends Fixture
         $service->setGuid(Uuid::uuid4());
 
         return $service;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return Entity
-     */
-    private function createEntity($name)
-    {
-        $entity = new Entity();
-        $entity->setId(Uuid::uuid4());
-        $entity->setNameEn($name);
-        $entity->setEntityId($name);
-        $entity->setProtocol(Constants::TYPE_SAML);
-        $entity->setEnvironment('test');
-        $entity->setAdministrativeContact(
-            $this->createContact('John', 'Doe', 'jdoe@example.org')
-        );
-
-        return $entity;
-    }
-
-    /**
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $email
-     *
-     * @return Contact
-     */
-    private function createContact($firstName, $lastName, $email)
-    {
-        $contact = new Contact();
-        $contact->setFirstName($firstName);
-        $contact->setLastName($lastName);
-        $contact->setEmail($email);
-
-        return $contact;
     }
 
     private function createPrivacyQuestions(Service $service)

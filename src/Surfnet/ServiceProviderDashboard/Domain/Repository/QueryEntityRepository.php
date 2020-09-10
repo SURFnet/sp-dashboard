@@ -60,4 +60,6 @@ interface QueryEntityRepository
      * @return ManageEntity|null
      */
     public function findByEntityId($entityId, $state);
+
+    public function findOidcngResourceServersByTeamName(string $teamName, string $state): array;
 }

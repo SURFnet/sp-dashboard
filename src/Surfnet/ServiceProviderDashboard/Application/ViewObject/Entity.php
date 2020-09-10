@@ -18,9 +18,8 @@
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -109,30 +108,6 @@ class Entity
         $this->actions = new EntityActions($id, $serviceId, $state, $environment, $protocol, $isReadOnly);
     }
 
-    public static function fromEntity(DomainEntity $entity, RouterInterface $router)
-    {
-        $contact = $entity->getAdministrativeContact();
-
-        $formattedContact = '';
-
-        if ($contact) {
-            $formattedContact = self::formatDashboardContact($contact);
-        }
-
-        return new self(
-            $entity->getId(),
-            $entity->getEntityId(),
-            $entity->getService()->getId(),
-            $entity->getNameEn(),
-            $formattedContact,
-            $entity->getStatus(),
-            $entity->getEnvironment(),
-            $entity->getProtocol(),
-            $entity->isReadOnly(),
-            $router
-        );
-    }
-
     /**
      * @param ManageEntity $result
      * @param RouterInterface $router
@@ -207,19 +182,6 @@ class Entity
         }
 
         return '';
-    }
-
-    /**
-     * @return string
-     */
-    private static function formatDashboardContact(Contact $contact)
-    {
-        return sprintf(
-            '%s %s (%s)',
-            $contact->getFirstName(),
-            $contact->getLastName(),
-            $contact->getEmail()
-        );
     }
 
     /**

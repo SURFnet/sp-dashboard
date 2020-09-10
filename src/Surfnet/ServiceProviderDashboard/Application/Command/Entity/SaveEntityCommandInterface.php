@@ -49,4 +49,5 @@ interface SaveEntityCommandInterface extends Command
     public function getCertificate(): ?string;
     public function getLogoUrl(): ?string;
     public function getComments(): ?string;
+    public function getEnvironment(): ?string;
 }

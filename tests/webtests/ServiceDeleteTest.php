@@ -26,32 +26,33 @@ class ServiceDeleteTest extends WebTestCase
     public function setUp()
     {
         parent::setUp();
-
         $this->loadFixtures();
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'SP1',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '7398d851-abd1-2283-a8f1-a29ba5036174',
+            'SP2',
+            'https://sp2-entityid.example.com',
+            'https://sp2-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
+        $this->testDeleteClient->registerDeleteRequest('9729d851-cfdd-4283-a8f1-a29ba5036261');
+        $this->testDeleteClient->registerDeleteRequest('7398d851-abd1-2283-a8f1-a29ba5036174');
     }
 
     public function test_removing_a_service_redirects_to_service_overview()
     {
         $this->logIn('ROLE_ADMINISTRATOR');
         $this->switchToService('SURFnet');
-
-        // EntityService::getEntityListForService -> findByTeamName (service/edit first request)
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        // EntityService::getEntityListForService -> findByTeamName (service/edit after delete button click)
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        // The entities are listed on the delete confirmation page (page is visited twice)
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        // EntityService::getEntityListForService -> getEntityListForService
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/1/edit');
 
@@ -84,7 +85,6 @@ class ServiceDeleteTest extends WebTestCase
             ->form();
 
         $this->client->submit($form);
-
         $this->assertTrue(
             $this->client->getResponse() instanceof RedirectResponse,
             'Expecting a redirect response after pressing the delete button on the confirmation page'
@@ -117,24 +117,6 @@ class ServiceDeleteTest extends WebTestCase
     {
         $this->logIn('ROLE_ADMINISTRATOR');
         $this->switchToService('SURFnet');
-
-        // EntityService::getEntityListForService -> findByTeamName (service/edit first request)
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        // EntityService::getEntityListForService -> findByTeamName (service/edit after delete button click)
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        // The entities are listed on the delete confirmation page (page is visited twice)
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        // EntityService::getEntityListForService -> getEntityListForService
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/2/edit');
 

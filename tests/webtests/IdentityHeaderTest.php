@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-
 class IdentityHeaderTest extends WebTestCase
 {
     public function setUp()
@@ -54,11 +52,6 @@ class IdentityHeaderTest extends WebTestCase
 
     public function test_page_header_displays_administration_links_to_administrators()
     {
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $this->logIn('ROLE_ADMINISTRATOR');
 
         $crawler = $this->client->request('GET', '/');

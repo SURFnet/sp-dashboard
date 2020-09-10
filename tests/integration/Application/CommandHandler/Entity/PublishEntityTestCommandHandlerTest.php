@@ -62,13 +62,11 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
     public function setUp()
     {
         $this->client = m::mock(PublishEntityClient::class);
-        $this->manageClient = m::mock(QueryClient::class);
         $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
 
         $this->commandHandler = new PublishEntityTestCommandHandler(
             $this->client,
-            $this->manageClient,
             $this->logger,
             $this->flashBag
         );
@@ -110,10 +108,6 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getId')
             ->andReturn(123);
 
-        $this->manageClient
-            ->shouldReceive('findByManageId')
-            ->andReturn($manageEntity);
-
         $command = new PublishEntityTestCommand($manageEntity);
         $this->commandHandler->handle($command);
     }
@@ -136,10 +130,6 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
             ->andReturn(true);
-
-        $this->manageClient
-            ->shouldReceive('findByManageId')
-            ->andReturn($manageEntity);
 
         $this->logger
             ->shouldReceive('info')

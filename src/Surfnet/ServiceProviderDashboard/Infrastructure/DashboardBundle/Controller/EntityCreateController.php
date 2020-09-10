@@ -184,26 +184,15 @@ class EntityCreateController extends Controller
 
         if ($form->isSubmitted()) {
             try {
-                if ($this->isSaveAction($form)) {
-                    // Only trigger form validation on publish
-                    $this->commandBus->handle($command);
-
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
-                } elseif ($this->isPublishAction($form)) {
+                if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $this->commandBus->handle($command);
-
-                        $entity = $this->entityService->getEntityById($command->getId());
-                        $response = $this->publishEntity($entity, $flashBag);
+                        $response = $this->publishEntity(null, $command, $flashBag);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
                             return $response;
                         }
-
-                        // When publishing failed, forward to the edit action and show the error messages there
-                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }

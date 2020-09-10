@@ -78,7 +78,6 @@ class PublishEntityClientTest extends MockeryTestCase
                 $guzzle,
                 new NullLogger()
             ),
-            $this->buildQueryClient(),
             $this->generator,
             $this->manageConfig,
             $this->logger
@@ -217,14 +216,5 @@ class PublishEntityClientTest extends MockeryTestCase
             ->once();
 
         $this->client->pushMetadata();
-    }
-
-    private function buildQueryClient()
-    {
-        $queryClient = m::mock(QueryClient::class);
-        $queryClient
-            ->shouldReceive('findByManageId')
-            ->andReturn(m::mock(ManageEntity::class));
-        return $queryClient;
     }
 }

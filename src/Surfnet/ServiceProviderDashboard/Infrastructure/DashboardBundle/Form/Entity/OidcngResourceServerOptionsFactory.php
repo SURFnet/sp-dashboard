@@ -20,37 +20,26 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException as QueryServiceProviderExceptionAlias;
 
 class OidcngResourceServerOptionsFactory
 {
-    /**
-     * @var QueryClient
-     */
     private $testEntityRepository;
 
-    /**
-     * @var QueryClient
-     */
     private $productionRepository;
 
     private $testPublicationState;
 
     private $productionPublicationState;
 
-    /**
-     * @param QueryClient $testEntityRepository
-     * @param QueryClient $productionRepository
-     * @param string $testPublicationState
-     * @param string $productionPublicationState
-     */
     public function __construct(
-        QueryClient $testEntityRepository,
-        QueryClient $productionRepository,
-        $testPublicationState,
-        $productionPublicationState
+        QueryEntityRepository $testEntityRepository,
+        QueryEntityRepository $productionRepository,
+        string $testPublicationState,
+        string $productionPublicationState
     ) {
         $this->testEntityRepository = $testEntityRepository;
         $this->productionRepository = $productionRepository;
@@ -60,13 +49,10 @@ class OidcngResourceServerOptionsFactory
 
 
     /**
-     * @param string $teamName
-     * @param string $environment
-     * @return array
      * @throws InvalidEnvironmentException
      * @throws QueryServiceProviderExceptionAlias
      */
-    public function build($teamName, $environment)
+    public function build(string $teamName, string $environment): array
     {
         switch ($environment) {
             case Constants::ENVIRONMENT_TEST:
@@ -89,9 +75,8 @@ class OidcngResourceServerOptionsFactory
 
     /**
      * @param ManageEntity[] $entities
-     * @return array
      */
-    private function createChoicesFrom(array $entities)
+    private function createChoicesFrom(array $entities): array
     {
         $choices = [];
         foreach ($entities as $entity) {

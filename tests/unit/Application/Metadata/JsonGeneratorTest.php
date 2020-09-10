@@ -27,6 +27,8 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashbo
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use function file_get_contents;
+use function json_decode;
 
 class JsonGeneratorTest extends MockeryTestCase
 {
@@ -415,17 +417,21 @@ class JsonGeneratorTest extends MockeryTestCase
 
     public function test_certificate_is_not_required()
     {
-        $this->markTestSkipped('Todo enable this test');
         $generator = new JsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
             $this->spDashboardMetadataGenerator
         );
 
-        $entity = $this->createManageEntity();
+        $entity = $this->createManageEntity(null, null, null, true)->shouldIgnoreMissing();
+
         $entity
-            ->shouldReceive('getMetaData->getCertData')
-            ->andReturn('');
+            ->shouldReceive('isExcludedFromPush')
+            ->andReturn(true);
+
+        $entity
+            ->shouldReceive('isProduction')
+            ->andReturn(false);
 
         $data = $generator->generateForNewEntity($entity, 'prodaccepted');
 
@@ -480,10 +486,14 @@ class JsonGeneratorTest extends MockeryTestCase
     private function createManageEntity(
         ?bool $idpAllowAll = null,
         ?array $idpWhitelist = null,
-        ?string $environment = null
+        ?string $environment = null,
+        bool $noCert = false
     ): ManageEntity {
 
         $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_response.json'), true));
+        if ($noCert) {
+            $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_response_no_cert.json'), true));
+        }
         $service = new Service();
         $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
         $service->setInstitutionId('service-institution-id');

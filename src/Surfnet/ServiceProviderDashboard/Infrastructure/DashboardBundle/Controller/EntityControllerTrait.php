@@ -138,19 +138,14 @@ trait EntityControllerTrait
     }
 
     /**
-     * @param Entity $entity
-     * @param FlashBagInterface $flashBag
-     * @param bool $isClientReset
      * @return RedirectResponse|Form
      */
-    private function publishEntity(ManageEntity $entity, SaveEntityCommandInterface $saveCommand, FlashBagInterface $flashBag, $isClientReset = false)
-    {
-        if ($entity->isReadOnly()) {
-            throw $this->createNotFoundException(
-                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
-            );
-        }
-
+    private function publishEntity(
+        ?ManageEntity $entity,
+        SaveEntityCommandInterface $saveCommand,
+        FlashBagInterface $flashBag,
+        bool $isClientReset = false
+    ) {
         // Merge the save command data into the ManageEntity
         $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
 

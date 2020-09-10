@@ -19,18 +19,13 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
-use Webmozart\Assert\Assert;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -43,19 +38,19 @@ class LoadEntityService
     private $entityRepository;
 
     /**
-     * @var ManageClient
+     * @var QueryEntityRepository
      */
     private $manageTestClient;
 
     /**
-     * @var ManageClient
+     * @var QueryEntityRepository
      */
     private $manageProductionClient;
 
     public function __construct(
         EntityRepository $entityRepository,
-        ManageClient $manageTestClient,
-        ManageClient $manageProductionClient
+        QueryEntityRepository $manageTestClient,
+        QueryEntityRepository $manageProductionClient
     ) {
         $this->entityRepository = $entityRepository;
         $this->manageTestClient = $manageTestClient;

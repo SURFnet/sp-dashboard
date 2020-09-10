@@ -30,11 +30,14 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ContactList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Organization;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -79,16 +82,44 @@ class EntityMergeService
             );
         }
 
+        $oidcClient = null;
+        $secret = null;
+        if (!$manageEntity && $protocol->getProtocol() !== Constants::TYPE_SAML) {
+            $secret = new Secret(20);
+        }
+        if ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
+            /** @var SaveOidcngEntityCommand  $command */
+            $oidcClient = new OidcngClient(
+                $command->getClientId(),
+                $secret->getSecret(),
+                $command->getRedirectUrls(),
+                $command->getGrantType(),
+                $command->getScopes(),
+                $command->isPublicClient(),
+                $command->getAccessTokenValidity(),
+                $command->getOidcngResourceServers()
+            );
+        } else if ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            /** @var SaveOidcngResourceServerEntityCommand  $command */
+            $oidcClient = new OidcngResourceServerClient(
+                $command->getClientId(),
+                $secret->getSecret(),
+                null,
+                $command->getScopes()
+            );
+        }
+
         $newEntity = new ManageEntity(
             null,
             $attributes,
             $metaData,
             $allowedIdPs,
             $protocol,
-            null,
+            $oidcClient,
             $command->getService()
         );
         $newEntity->setComments($command->getComments());
+        $newEntity->setEnvironment($command->getEnvironment());
         // If no existing ManageEntity is provided, then return the newly created entity
         if (!$manageEntity) {
             return $newEntity;

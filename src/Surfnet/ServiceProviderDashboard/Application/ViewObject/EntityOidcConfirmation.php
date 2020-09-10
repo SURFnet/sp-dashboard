@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class EntityOidcConfirmation
 {
@@ -68,12 +69,12 @@ class EntityOidcConfirmation
         $this->protocol = $protocol;
     }
 
-    public static function fromEntity(DomainEntity $entity)
+    public static function fromEntity(ManageEntity $entity)
     {
         return new self(
-            $entity->getEntityId(),
-            $entity->getClientSecret(),
-            $entity->getProtocol()
+            $entity->getMetaData()->getEntityId(),
+            $entity->getOidcClient()->getClientSecret(),
+            $entity->getProtocol()->getProtocol()
         );
     }
 

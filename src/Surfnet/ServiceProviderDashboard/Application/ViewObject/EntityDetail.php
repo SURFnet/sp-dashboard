@@ -288,7 +288,9 @@ class EntityDetail
         $entityDetail->acsLocation = $entity->getMetaData()->getAcsLocation();
         $entityDetail->entityId = $entity->getMetaData()->getEntityId();
         $entityDetail->certificate = $entity->getMetaData()->getCertData();
-        $entityDetail->logoUrl = $entity->getMetaData()->getLogo()->getUrl();
+        if ($entity->getMetaData()->getLogo()) {
+            $entityDetail->logoUrl = $entity->getMetaData()->getLogo()->getUrl();
+        }
         $entityDetail->nameNl = $entity->getMetaData()->getNameNl();
         $entityDetail->nameEn = $entity->getMetaData()->getNameEn();
         $entityDetail->descriptionNl = $entity->getMetaData()->getDescriptionEn();
@@ -317,7 +319,7 @@ class EntityDetail
             $entity->getService()->getId(),
             $entity->getStatus(),
             $entity->getEnvironment(),
-            $entity->getProtocol(),
+            $entity->getProtocol()->getProtocol(),
             $entity->isReadOnly()
         );
         return $entityDetail;

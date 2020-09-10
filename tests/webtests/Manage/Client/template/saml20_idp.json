@@ -1,0 +1,28 @@
+{
+  "id": "%1$s",
+  "_id": "%1$s",
+  "version": 0,
+  "type": "%2$s",
+  "revision": {
+    "number": 0,
+    "created": 1543851541.752,
+    "parentId": null,
+    "updatedBy": "sp-dashboard",
+    "terminated": null
+  },
+  "data": {
+    "entityid": "%3$s",
+    "metadataurl": "%4$s",
+    "active": true,
+    "allowedEntities": [],
+    "allowedall": true,
+    "state": "testaccepted",
+    "type": "%6$s",
+    "metaDataFields": {
+      "name:en": "%5$s Name English",
+      "name:nl": "%5$s Name Dutch",
+      "coin:service_team_id": "%7$s"
+    },
+    "eid": 31
+  }
+}

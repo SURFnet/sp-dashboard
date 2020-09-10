@@ -23,8 +23,8 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
@@ -36,7 +36,7 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
     private $ticketService;
 
     /**
-     * @var ManageQueryClient
+     * @var QueryEntityRepository
      */
     private $queryClient;
 
@@ -65,16 +65,9 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
      */
     private $issueType;
 
-    /**
-     * @param ManageQueryClient $manageProductionQueryClient
-     * @param string $issueType
-     * @param TicketService $ticketService
-     * @param FlashBagInterface $flashBag
-     * @param LoggerInterface $logger
-     */
     public function __construct(
-        ManageQueryClient $manageProductionQueryClient,
-        $issueType,
+        QueryEntityRepository $manageProductionQueryClient,
+        string $issueType,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
         LoggerInterface $logger

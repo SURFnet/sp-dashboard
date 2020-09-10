@@ -22,7 +22,6 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
@@ -36,11 +35,6 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      * @var HttpClient
      */
     private $client;
-
-    /**
-     * @var QueryClient
-     */
-    private $queryClient;
 
     /**
      * @var JsonGeneratorStrategy
@@ -59,13 +53,11 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
 
     public function __construct(
         HttpClient $client,
-        QueryClient $queryClient,
         JsonGeneratorStrategy $generator,
         Config $manageConfig,
         LoggerInterface $logger
     ) {
         $this->client = $client;
-        $this->queryClient = $queryClient;
         $this->generator = $generator;
         $this->manageConfig = $manageConfig;
         $this->logger = $logger;

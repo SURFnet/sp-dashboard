@@ -48,19 +48,12 @@ class PublishEntityTestCommandHandler implements CommandHandler
      */
     private $flashBag;
 
-    /**
-     * @var QueryClient
-     */
-    private $manageQueryClient;
-
     public function __construct(
         PublishEntityRepository $publishClient,
-        QueryClient $queryClient,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
         $this->publishClient = $publishClient;
-        $this->manageQueryClient = $queryClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
     }

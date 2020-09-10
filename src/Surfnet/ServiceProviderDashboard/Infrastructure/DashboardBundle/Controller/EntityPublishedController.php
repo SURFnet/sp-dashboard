@@ -44,7 +44,7 @@ class EntityPublishedController extends Controller
 
         // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
-        $protocol = $entity->getProtocol();
+        $protocol = $entity->getProtocol()->getProtocol();
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {

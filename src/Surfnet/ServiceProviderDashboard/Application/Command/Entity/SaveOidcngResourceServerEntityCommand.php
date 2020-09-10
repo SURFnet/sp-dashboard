@@ -235,10 +235,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->archived = $archived;
     }
 
-    /**
-     * @return string
-     */
-    public function getEnvironment()
+    public function getEnvironment(): ?string
     {
         return $this->environment;
     }
@@ -580,14 +577,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     public function getScopes()
     {
         return $this->scopes;
-    }
-
-    /**
-     * @return OidcGrantType
-     */
-    public function getGrantType()
-    {
-        return $this->grantType;
     }
 
     public function getMetadataUrl()

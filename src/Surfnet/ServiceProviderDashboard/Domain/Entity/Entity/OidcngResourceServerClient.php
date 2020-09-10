@@ -60,18 +60,11 @@ class OidcngResourceServerClient implements OidcClientInterface
         );
     }
 
-    /**
-     * @param string $clientId ,
-     * @param string $clientSecret
-     * @param string $grantType
-     * @param array $scope
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
     public function __construct(
-        $clientId,
-        $clientSecret,
-        $grantType,
-        $scope
+        string $clientId,
+        ?string $clientSecret,
+        ?string $grantType,
+        array $scope
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
