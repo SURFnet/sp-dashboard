@@ -50,7 +50,7 @@ git checkout ${TAG} &&
 
 echo "Running Composer Install";
 curl -sS https://getcomposer.org/installer | php72
-php72 ./composer.phar install -n --prefer-dist -o --ignore-platform-reqs&&
+php72 ./composer.phar install -n --prefer-dist -o --ignore-platform-reqs --optimize-autoloader&&
 yarn install &&
 yarn run encore production &&
 
