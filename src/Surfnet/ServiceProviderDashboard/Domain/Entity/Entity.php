@@ -905,7 +905,7 @@ class Entity
      */
     public function getAcsBinding()
     {
-        return self::BINDING_HTTP_POST;
+        return Constants::BINDING_HTTP_POST;
     }
 
     /**
@@ -1292,17 +1292,17 @@ class Entity
 
     public function isDraft()
     {
-        return ($this->status == self::STATE_DRAFT);
+        return ($this->status == Constants::STATE_DRAFT);
     }
 
     public function isPublished()
     {
-        return ($this->status == self::STATE_PUBLISHED);
+        return ($this->status == Constants::STATE_PUBLISHED);
     }
 
     public function isProduction()
     {
-        return ($this->environment == self::ENVIRONMENT_PRODUCTION);
+        return ($this->environment == Constants::ENVIRONMENT_PRODUCTION);
     }
 
     /**
