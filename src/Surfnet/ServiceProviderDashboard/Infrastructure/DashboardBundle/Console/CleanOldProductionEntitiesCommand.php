@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Consol
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Console\Command\Command;
@@ -32,19 +33,10 @@ class CleanOldProductionEntitiesCommand extends Command
      * @var EntityRepository
      */
     private $entityRepository;
-    /**
-     * @var QueryClient
-     */
-    private $productionManageClient;
 
-    /**
-     * @param EntityRepository $entityRepository
-     * @param QueryClient $productionManageClient
-     */
-    public function __construct(EntityRepository $entityRepository, QueryClient $productionManageClient)
+    public function __construct(EntityRepository $entityRepository)
     {
         $this->entityRepository = $entityRepository;
-        $this->productionManageClient = $productionManageClient;
 
         parent::__construct();
     }

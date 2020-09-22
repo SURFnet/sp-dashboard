@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
@@ -393,10 +392,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->status;
     }
 
-    /**
-     * @return Service
-     */
-    public function getService()
+    public function getService(): Service
     {
         return $this->service;
     }
@@ -455,10 +451,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->importUrl = $importUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getMetadataUrl()
+    public function getMetadataUrl(): ?string
     {
         return $this->metadataUrl;
     }
@@ -490,7 +483,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getAcsLocation()
+    public function getAcsLocation(): ?string
     {
         return $this->acsLocation;
     }
@@ -503,10 +496,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->acsLocation = $acsLocation;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): ?string
     {
         return $this->entityId;
     }
@@ -551,10 +541,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->logoUrl = $logoUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
@@ -567,10 +554,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->nameNl = $nameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameEn()
+    public function getNameEn(): ?string
     {
         return $this->nameEn;
     }
@@ -583,10 +567,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->nameEn = $nameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionNl()
+    public function getDescriptionNl(): ?string
     {
         return $this->descriptionNl;
     }
@@ -599,10 +580,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->descriptionNl = $descriptionNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionEn()
+    public function getDescriptionEn(): ?string
     {
         return $this->descriptionEn;
     }
@@ -936,7 +914,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getNameIdFormat()
+    public function getNameIdFormat(): ?string
     {
         return $this->nameIdFormat;
     }
@@ -1096,5 +1074,4 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     {
         return Constants::TYPE_SAML;
     }
-
 }

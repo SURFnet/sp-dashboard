@@ -22,7 +22,6 @@ use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -206,10 +205,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return $this->status;
     }
 
-    /**
-     * @return Service
-     */
-    public function getService()
+    public function getService(): Service
     {
         return $this->service;
     }
@@ -255,10 +251,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->environment = $environment;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): ?string
     {
         return $this->entityId;
     }
@@ -295,10 +288,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->secret = $secret;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
@@ -311,10 +301,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->nameNl = $nameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameEn()
+    public function getNameEn(): ?string
     {
         return $this->nameEn;
     }
@@ -327,10 +314,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->nameEn = $nameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionNl()
+    public function getDescriptionNl(): ?string
     {
         return $this->descriptionNl;
     }
@@ -346,7 +330,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getDescriptionEn()
+    public function getDescriptionEn(): ?string
     {
         return $this->descriptionEn;
     }
@@ -571,17 +555,17 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return $this->scopes;
     }
 
-    public function getMetadataUrl()
+    public function getMetadataUrl(): ?string
     {
         return null;
     }
 
-    public function getAcsLocation()
+    public function getAcsLocation(): ?string
     {
         return null;
     }
 
-    public function getNameIdFormat()
+    public function getNameIdFormat(): ?string
     {
         return null;
     }

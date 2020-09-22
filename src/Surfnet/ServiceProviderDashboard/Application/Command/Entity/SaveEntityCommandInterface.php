@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 interface SaveEntityCommandInterface extends Command
@@ -32,6 +33,17 @@ interface SaveEntityCommandInterface extends Command
      * @return string
      */
     public function getManageId();
+
+    public function getEntityId(): ?string;
+    public function getMetadataUrl(): ?string;
+    public function getAcsLocation(): ?string;
+    public function getNameIdFormat(): ?string;
+    public function getDescriptionEn(): ?string;
+    public function getDescriptionNl(): ?string;
+    public function getNameEn(): ?string;
+    public function getNameNl(): ?string;
+
+    public function getService(): Service;
 
     public function getTechnicalContact(): ?Contact;
     public function getAdministrativeContact(): ?Contact;
