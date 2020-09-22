@@ -11,7 +11,8 @@ services:
     container_name: fpm
   web:
     build:
-      context: 'docker/httpd/'
+      context: .
+      dockerfile: 'docker/httpd/Dockerfile'
     depends_on:
       - php-fpm
     expose:
