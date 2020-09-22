@@ -1091,4 +1091,10 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     {
         $this->manageId = $manageId;
     }
+
+    public function getProtocol(): string
+    {
+        return Constants::TYPE_SAML;
+    }
+
 }

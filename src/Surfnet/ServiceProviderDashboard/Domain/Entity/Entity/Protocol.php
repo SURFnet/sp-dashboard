@@ -52,9 +52,6 @@ class Protocol
         return new self($protocol);
     }
 
-    /**
-     * @param string $protocol
-     */
     public function __construct(?string $protocol)
     {
         Assert::nullOrString($protocol);

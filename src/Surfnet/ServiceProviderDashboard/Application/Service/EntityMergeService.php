@@ -72,7 +72,7 @@ class EntityMergeService
             $this->buildLogoFromCommand($command)
         );
         $attributes = $this->buildAttributesFromCommand($command);
-        $protocol = new Protocol($this->determineProtocol($command));
+        $protocol = new Protocol($command->getProtocol());
 
         $allowedIdPs = null;
         if ($manageEntity && $manageEntity->getAllowedIdentityProviders()) {
@@ -197,17 +197,5 @@ class EntityMergeService
     private function buildLogoFromCommand(SaveEntityCommandInterface $command): Logo
     {
         return new Logo($command->getLogoUrl(), null, null);
-    }
-
-    private function determineProtocol(SaveEntityCommandInterface $command)
-    {
-        switch (get_class($command)) {
-            case SaveSamlEntityCommand::class:
-                return Constants::TYPE_SAML;
-            case SaveOidcngEntityCommand::class:
-                return Constants::TYPE_OPENID_CONNECT_TNG;
-            case SaveOidcngResourceServerEntityCommand::class:
-                return Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-        }
     }
 }

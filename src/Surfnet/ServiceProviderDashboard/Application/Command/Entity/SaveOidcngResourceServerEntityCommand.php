@@ -174,11 +174,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private $manageId;
 
-    /**
-     * @var string
-     */
-    private $protocol = Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-
     public function __construct()
     {
     }
@@ -563,12 +558,9 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->manageId = $manageId;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): string
     {
-        return $this->protocol;
+        return Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
     /**
