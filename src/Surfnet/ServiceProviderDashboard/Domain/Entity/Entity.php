@@ -20,12 +20,10 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactPerson;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
-use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -407,181 +405,6 @@ class Entity
      * @ORM\Column(type="object", nullable=true)
      */
     private $oidcngResourceServers;
-
-//    /**
-//     * @param ManageEntity $manageEntity
-//     * @param string $environment
-//     * @param Service $service
-//     * @param string $playGroundUriTest
-//     * @param string $playGroundUriProd
-//     * @param string $oidcngPlayGroundUriTest
-//     * @param string $oidcngPlayGroundUriProd
-//     * @return Entity
-//     *
-//     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-//     */
-//    public static function fromManageResponse(
-//        ManageEntity $manageEntity,
-//        $environment,
-//        Service $service,
-//        $playGroundUriTest,
-//        $playGroundUriProd,
-//        $oidcngPlayGroundUriTest,
-//        $oidcngPlayGroundUriProd
-//    ) {
-//        $metaData = $manageEntity->getMetaData();
-//        $coin = $metaData->getCoin();
-//        $arp = $manageEntity->getAttributes();
-//        $entity = new self();
-//        $entity->setEnvironment($environment);
-//        $entity->setStatus($manageEntity->getStatus());
-//        $entity->setManageId($manageEntity->getId());
-//        $entity->setEntityId($metaData->getEntityId());
-//        $entity->setManageId($manageEntity->getId());
-//        $entity->setDescriptionEn($metaData->getDescriptionEn());
-//        $entity->setDescriptionNl($metaData->getDescriptionNl());
-//        $entity->setNameEn($metaData->getNameEn());
-//        $entity->setNameNl($metaData->getNameNl());
-//        $entity->setLogoUrl($metaData->getLogo()->getUrl());
-//        $entity->setOrganizationDisplayNameEn($metaData->getOrganization()->getDisplayNameEn());
-//        $entity->setOrganizationDisplayNameNl($metaData->getOrganization()->getDisplayNameNl());
-//        $entity->setOrganizationNameEn($metaData->getOrganization()->getNameEn());
-//        $entity->setOrganizationNameNl($metaData->getOrganization()->getNameNl());
-//        $entity->setOrganizationUrlEn($metaData->getOrganization()->getUrlEn());
-//        $entity->setOrganizationUrlNl($metaData->getOrganization()->getUrlNl());
-//        $entity->setApplicationUrl($coin->getApplicationUrl());
-//        $entity->setEulaUrl($coin->getEula());
-//
-//        switch ($manageEntity->getProtocol()->getProtocol()) {
-//            case (self::TYPE_OPENID_CONNECT):
-//                $oidcClient = $manageEntity->getOidcClient();
-//                $entity->setClientSecret($oidcClient->getClientSecret());
-//                $entity->setRedirectUris($oidcClient->getRedirectUris());
-//                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-//                $entity->setProtocol(Constants::TYPE_OPENID_CONNECT);
-//                self::setRedirectUrisFromManageResponse(
-//                    $entity,
-//                    $manageEntity,
-//                    $environment,
-//                    $playGroundUriTest,
-//                    $playGroundUriProd
-//                );
-//                break;
-//            case (self::TYPE_OPENID_CONNECT_TNG):
-//                $oidcClient = $manageEntity->getOidcClient();
-//                $entity->setClientSecret($oidcClient->getClientSecret());
-//                $entity->setRedirectUris($oidcClient->getRedirectUris());
-//                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-//                $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG);
-//                $entity->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
-//                $entity->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
-//                $entity->setNameIdFormat($metaData->getNameIdFormat());
-//                self::setRedirectUrisFromManageResponse(
-//                    $entity,
-//                    $manageEntity,
-//                    $environment,
-//                    $oidcngPlayGroundUriTest,
-//                    $oidcngPlayGroundUriProd
-//                );
-//                $entity->setOidcngResourceServers(
-//                    new ResourceServerCollection($manageEntity->getOidcClient()->getResourceServers())
-//                );
-//                break;
-//            case (self::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-//                $oidcClient = $manageEntity->getOidcClient();
-//                $entity->setClientSecret($oidcClient->getClientSecret());
-//                $entity->setGrantType(new OidcGrantType($oidcClient->getGrantType()));
-//                $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER);
-//                $entity->setNameIdFormat($metaData->getNameIdFormat());
-//                break;
-//            case (self::TYPE_SAML):
-//                $entity->setProtocol(Constants::TYPE_SAML);
-//                $entity->setImportUrl($metaData->getEntityId());
-//                $entity->setMetadataUrl($metaData->getMetaDataUrl());
-//                $entity->setAcsLocation($metaData->getAcsLocation());
-//                $entity->setNameIdFormat($metaData->getNameIdFormat());
-//                $entity->setCertificate($metaData->getCertData());
-//                break;
-//        }
-//
-//        $administrative = $metaData->getContacts()->findAdministrativeContact();
-//        if ($administrative) {
-//            $contact = new ContactPerson();
-//            $contact->setFirstName($administrative->getGivenName());
-//            $contact->setLastName($administrative->getSurName());
-//            $contact->setEmail($administrative->getEmail());
-//            $contact->setPhone($administrative->getPhone());
-//            $entity->setAdministrativeContact($contact);
-//        }
-//
-//        $technical = $metaData->getContacts()->findTechnicalContact();
-//        if ($technical) {
-//            $contact = new ContactPerson();
-//            $contact->setFirstName($technical->getGivenName());
-//            $contact->setLastName($technical->getSurName());
-//            $contact->setEmail($technical->getEmail());
-//            $contact->setPhone($technical->getPhone());
-//            $entity->setTechnicalContact($contact);
-//        }
-//
-//        $support = $metaData->getContacts()->findSupportContact();
-//        if ($support) {
-//            $contact = new ContactPerson();
-//            $contact->setFirstName($support->getGivenName());
-//            $contact->setLastName($support->getSurName());
-//            $contact->setEmail($support->getEmail());
-//            $contact->setPhone($support->getPhone());
-//            $entity->setSupportContact($contact);
-//        }
-//
-//        self::setAttributesOn($entity, $arp);
-//        $entity->setService($service);
-//        $entity->idpAllowAll =  $manageEntity->getAllowedIdentityProviders()->isAllowAll();
-//        $entity->idpWhitelist = $manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders();
-//
-//        return $entity;
-//    }
-//
-//    private static function setRedirectUrisFromManageResponse(
-//        Entity $entity,
-//        ManageEntity $manageEntity,
-//        $environment,
-//        $playGroundUriTest,
-//        $playGroundUriProd
-//    ) {
-//        $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
-//        $playGroundUri = ($environment == self::ENVIRONMENT_PRODUCTION ? $playGroundUriProd : $playGroundUriTest);
-//        $entity->setEnablePlayground(false);
-//        if (in_array($playGroundUri, $redirectUris)) {
-//            $entity->setEnablePlayground(true);
-//            $key = array_search($playGroundUri, $redirectUris);
-//            if ($key !== false) {
-//                unset($redirectUris[$key]);
-//            }
-//        }
-//        $entity->setRedirectUris($redirectUris);
-//    }
-//
-//    private static function setAttributesOn($entity, AttributeList $attributeList)
-//    {
-//        $resourcePath = realpath(__DIR__.'/../../../../../app/Resources');
-//        $attributeRepository = new AttributesMetadataRepository($resourcePath);
-//        // Copy the ARP attributes to the new entity based on the data from manage.
-//        foreach ($attributeRepository->findAll() as $attributeDefinition) {
-//            $urn = reset($attributeDefinition->urns);
-//            $manageAttribute = $attributeList->findByUrn($urn);
-//            if (!$manageAttribute) {
-//                continue;
-//            }
-//
-//            $attribute = new Attribute();
-//            $attribute->setRequested(true);
-//            $attribute->setMotivation($manageAttribute->getMotivation());
-//
-//            $setter = $attributeDefinition->setterName;
-//            $entity->{$setter}($attribute);
-//        }
-//    }
 
     /**
      * @param string $id
@@ -1587,6 +1410,6 @@ class Entity
 
     public function isReadOnly()
     {
-        return $this->protocol === self::TYPE_OPENID_CONNECT;
+        return false;
     }
 }
