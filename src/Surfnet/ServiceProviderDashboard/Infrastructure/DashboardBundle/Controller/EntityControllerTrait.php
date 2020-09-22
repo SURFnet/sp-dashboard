@@ -230,19 +230,6 @@ trait EntityControllerTrait
      * @param Form $form
      * @return bool
      */
-    private function isSaveAction(Form $form)
-    {
-        if ($this->assertUsedSubmitButton($form, 'save')) {
-            return true;
-        }
-
-        return $form->has('save') && $this->isDefaultAction($form);
-    }
-
-    /**
-     * @param Form $form
-     * @return bool
-     */
     private function isPublishAction(Form $form)
     {
         if ($this->assertUsedSubmitButton($form, 'publishButton')) {
