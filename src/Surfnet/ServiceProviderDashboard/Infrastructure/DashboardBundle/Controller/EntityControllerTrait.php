@@ -157,7 +157,7 @@ trait EntityControllerTrait
                 $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
                 if ($isClientReset) {
                     $publishEntityCommand = new PublishEntityProductionAfterClientResetCommand(
-                        $entity->getId(),
+                        $entity,
                         $applicant
                     );
                 }
