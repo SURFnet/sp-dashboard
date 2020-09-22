@@ -33,7 +33,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
@@ -124,8 +123,6 @@ trait EntityControllerTrait
             }
         } catch (InvalidArgumentException $e) {
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
-        } catch (Exception $e) {
-            $this->addFlash('error', 'entity.edit.metadata.unknown.exception');
         }
 
         $form = $this->createForm(SamlEntityType::class, $command);
