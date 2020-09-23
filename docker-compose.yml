@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  php-fpm:
+    volumes:
+      - spddata:/var/www/html/ 
+    build: 
+      context: . 
+      dockerfile: 'docker/php-fpm/Dockerfile'
+    networks:
+      - spdashboard
+    container_name: fpm
+  web:
+    build:
+      context: .
+      dockerfile: 'docker/httpd/Dockerfile'
+    depends_on:
+      - php-fpm
+    expose:
+      - "80"
+    networks:
+      - spdashboard
+    volumes: 
+      - spddata:/var/www/html/:nocopy
+    container_name: web     
+
+networks:
+  spdashboard:
+volumes:
+  spddata:
