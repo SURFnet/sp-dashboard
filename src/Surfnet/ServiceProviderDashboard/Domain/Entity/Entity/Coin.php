@@ -117,20 +117,8 @@ class Coin
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function merge(?Coin $coin)
+    public function merge(Coin $coin)
     {
-        // When the new Coin data is not set, reset the data to reflect that state (not set)
-        if (is_null($coin)) {
-            $this->signatureMethod = null;
-            $this->serviceTeamId = null;
-            $this->originalMetadataUrl = null;
-            $this->excludeFromPush = null;
-            $this->applicationUrl = null;
-            $this->eula = null;
-            $this->oidcClient = null;
-            return;
-        }
-
         // Overwrite the current data with that from the new Coin data
         $this->signatureMethod = is_null($coin->getSignatureMethod()) ? null : $coin->getSignatureMethod();
         $this->serviceTeamId = is_null($coin->getServiceTeamId()) ? null : $coin->getServiceTeamId();

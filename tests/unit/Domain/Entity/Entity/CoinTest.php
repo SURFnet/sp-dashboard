@@ -26,7 +26,7 @@ class CoinTest extends TestCase
     /**
      * @dataProvider provideCoinTestData
      */
-    public function test_it_can_merge_data(Coin $coin, ?Coin $newData, ?Coin $expectation)
+    public function test_it_can_merge_data(Coin $coin, Coin $newData, Coin $expectation)
     {
         $coin->merge($newData);
         if ($expectation !== null) {
@@ -54,11 +54,6 @@ class CoinTest extends TestCase
             new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
             new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
             new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1)
-        ];
-        yield [
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
-            null,
-            new Coin(null, null, null, null, null, null, null)
         ];
         yield [
             new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),

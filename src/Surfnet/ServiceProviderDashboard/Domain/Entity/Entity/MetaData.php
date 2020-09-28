@@ -91,9 +91,6 @@ class MetaData
         $organization = Organization::fromApiResponse($metaDataFields);
         $coin = Coin::fromApiResponse($metaDataFields);
         $logo = Logo::fromApiResponse($metaDataFields);
-        if ($logo->getUrl() === '') {
-            $logo = null;
-        }
 
         return new self(
             $entityId,
@@ -125,10 +122,10 @@ class MetaData
         ?string $descriptionNl,
         ?string $nameEn,
         ?string $nameNl,
-        ?ContactList $contacts,
-        ?Organization $organization,
-        ?Coin $coin,
-        ?Logo $logo
+        ContactList $contacts,
+        Organization $organization,
+        Coin $coin,
+        Logo $logo
     ) {
         $this->entityId = $entityId;
         $this->metaDataUrl = $metaDataUrl;
@@ -195,22 +192,22 @@ class MetaData
         return $this->nameNl;
     }
 
-    public function getContacts(): ?ContactList
+    public function getContacts(): ContactList
     {
         return $this->contacts;
     }
 
-    public function getOrganization(): ?Organization
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function getCoin(): ?Coin
+    public function getCoin(): Coin
     {
         return $this->coin;
     }
 
-    public function getLogo(): ?Logo
+    public function getLogo(): Logo
     {
         return $this->logo;
     }
@@ -219,24 +216,8 @@ class MetaData
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function merge(?MetaData $metaData)
+    public function merge(MetaData $metaData)
     {
-        if ($metaData === null) {
-            $this->entityId = null;
-            $this->metaDataUrl = null;
-            $this->acsLocation = null;
-            $this->nameIdFormat = null;
-            $this->certData = null;
-            $this->descriptionEn = null;
-            $this->descriptionNl = null;
-            $this->nameEn = null;
-            $this->nameNl = null;
-            $this->coin = null;
-            $this->contacts->merge(null);
-            $this->organization->merge(null);
-            $this->logo->merge(null);
-            return;
-        }
         $this->entityId = is_null($metaData->getEntityId()) ? null : $metaData->getEntityId();
         $this->metaDataUrl = is_null($metaData->getMetaDataUrl()) ? null : $metaData->getMetaDataUrl();
         $this->acsLocation = is_null($metaData->getAcsLocation()) ? null : $metaData->getAcsLocation();

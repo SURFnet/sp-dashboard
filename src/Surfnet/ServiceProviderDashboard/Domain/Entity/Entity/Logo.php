@@ -61,16 +61,8 @@ class Logo
         return $this->height;
     }
 
-    public function merge(?Logo $logo): void
+    public function merge(Logo $logo): void
     {
-        // When the new logo is not set, reset the logo to reflect that state (not set)
-        if (is_null($logo)) {
-            $this->width = null;
-            $this->height = null;
-            $this->url = null;
-            return;
-        }
-
         // Overwrite the current data with that from the new logo
         $this->url = is_null($logo->getUrl()) ? null : $logo->getUrl();
         $this->width = is_null($logo->getWidth()) ? null : $logo->getWidth();

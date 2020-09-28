@@ -26,7 +26,7 @@ class LogoTest extends TestCase
     /**
      * @dataProvider provideLogoTestData
      */
-    public function test_it_can_merge_data(Logo $logo, ?Logo $newData, array $expectations)
+    public function test_it_can_merge_data(Logo $logo, Logo $newData, array $expectations)
     {
         $logo->merge($newData);
 
@@ -41,11 +41,6 @@ class LogoTest extends TestCase
             new Logo('https://www.url1.com/img/logo.png', 30, 30),
             new Logo('https://www.url2.com/img/logo.png', 30, 34),
             ['url' => 'https://www.url2.com/img/logo.png', 'width' => 30, 'height' => 34]
-        ];
-        yield [
-            new Logo('https://www.url1.com/img/logo.png', 30, 30),
-            null,
-            ['url' => null, 'width' => null, 'height' => null]
         ];
         yield [
             new Logo('https://www.url1.com/img/logo.png', 30, 30),

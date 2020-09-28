@@ -27,7 +27,7 @@ class ContactListTest extends TestCase
     /**
      * @dataProvider provideContactListTestData
      */
-    public function test_it_can_merge_data(ContactList $list, ?ContactList $newData, ContactList $expectations)
+    public function test_it_can_merge_data(ContactList $list, ContactList $newData, ContactList $expectations)
     {
         $list->merge($newData);
         $actualSupport = $list->findSupportContact();
@@ -67,11 +67,6 @@ class ContactListTest extends TestCase
             $this->contactList(null),
             $this->contactList(['administrative', 'support']),
             $this->contactList(['administrative', 'support'])
-        ];
-        yield [
-            $this->contactList(['technical', 'administrative', 'support']),
-            $this->contactList(null),
-            $this->contactList(null)
         ];
     }
 

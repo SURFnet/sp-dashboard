@@ -31,6 +31,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class OidcngJsonGenerator implements GeneratorInterface
 {
@@ -213,7 +214,7 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata += $this->generateOidcClient($entity);
 
-        if (!is_null($entity->getMetaData()->getLogo())) {
+        if ($entity->getMetaData()->getLogo() !== null && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata += $this->generateLogoMetadata($entity);
         }
 

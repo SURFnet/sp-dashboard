@@ -93,7 +93,7 @@ class ContactList
         $this->contacts = [];
     }
 
-    public function merge(?ContactList $contacts)
+    public function merge(ContactList $contacts)
     {
         $this->clear();
         if ($contacts !== null) {

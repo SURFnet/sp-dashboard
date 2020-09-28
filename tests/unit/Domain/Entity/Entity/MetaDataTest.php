@@ -31,7 +31,7 @@ class MetaDataTest extends TestCase
     /**
      * @dataProvider provideMetaDataTestData
      */
-    public function test_it_can_merge_data(MetaData $metaData, ?MetaData $newData, ?MetaData $expectation)
+    public function test_it_can_merge_data(MetaData $metaData, MetaData $newData, MetaData $expectation)
     {
         $metaData->merge($newData);
 
@@ -74,11 +74,6 @@ class MetaDataTest extends TestCase
             $this->metaData('a'),
             $this->metaData('b'),
             $this->metaData('b'),
-        ];
-        yield [
-            $this->metaData('a'),
-            null,
-            $this->metaData('null'),
         ];
         yield [
             $this->metaData('a'),

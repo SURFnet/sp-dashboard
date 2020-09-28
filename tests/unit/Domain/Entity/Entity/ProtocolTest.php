@@ -26,7 +26,7 @@ class ProtocolTest extends TestCase
     /**
      * @dataProvider provideProtocolTestData
      */
-    public function test_it_can_merge_data(Protocol $protocol, ?Protocol $newData, Protocol $expectation)
+    public function test_it_can_merge_data(Protocol $protocol, Protocol $newData, Protocol $expectation)
     {
         $protocol->merge($newData);
 
@@ -43,11 +43,6 @@ class ProtocolTest extends TestCase
             new Protocol('saml20'),
             new Protocol('saml20'),
             new Protocol('saml20'),
-        ];
-        yield [
-            new Protocol('saml20'),
-            null,
-            new Protocol(null)
         ];
         yield [
             new Protocol('oidc'),

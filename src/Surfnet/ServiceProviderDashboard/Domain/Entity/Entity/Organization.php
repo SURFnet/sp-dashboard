@@ -96,18 +96,8 @@ class Organization
         return $this->urlNl;
     }
 
-    public function merge(?Organization $organization)
+    public function merge(Organization $organization)
     {
-        if ($organization === null) {
-            $this->nameEn = null;
-            $this->displayNameEn = null;
-            $this->urlEn = null;
-            $this->nameNl = null;
-            $this->displayNameNl = null;
-            $this->urlNl = null;
-            return;
-        }
-
         $this->nameEn = is_null($organization->getNameEn()) ? null : $organization->getNameEn();
         $this->displayNameEn = is_null($organization->getDisplayNameEn()) ? null : $organization->getDisplayNameEn();
         $this->urlEn = is_null($organization->getUrlEn()) ? null : $organization->getUrlEn();

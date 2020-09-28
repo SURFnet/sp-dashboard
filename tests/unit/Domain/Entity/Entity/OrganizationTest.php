@@ -26,7 +26,7 @@ class OrganizationTest extends TestCase
     /**
      * @dataProvider provideOrganizationTestData
      */
-    public function test_it_can_merge_data(Organization $organization, ?Organization $newData, Organization $expectation)
+    public function test_it_can_merge_data(Organization $organization, Organization $newData, Organization $expectation)
     {
         $organization->merge($newData);
 
@@ -44,11 +44,6 @@ class OrganizationTest extends TestCase
             $this->organization('organization a'),
             $this->organization('organization a'),
             $this->organization('organization a'),
-        ];
-        yield [
-            $this->organization('organization a'),
-            null,
-            $this->organization(null),
         ];
         yield [
             $this->organization('organization a'),

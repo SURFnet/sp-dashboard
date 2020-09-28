@@ -214,7 +214,7 @@ class JsonGenerator implements GeneratorInterface
         if ($entity->isManageEntity() && !$entity->isExcludedFromPush()) {
             $metadata['coin:exclude_from_push'] = '0';
         }
-        if ($entity->getMetaData()->getLogo() !== null) {
+        if ($entity->getMetaData()->getLogo() !== null && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
 
