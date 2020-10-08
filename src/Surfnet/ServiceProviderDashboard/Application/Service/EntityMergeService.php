@@ -37,6 +37,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\NullSecret;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 
 /**
@@ -83,7 +84,7 @@ class EntityMergeService
         }
 
         $oidcClient = null;
-        $secret = null;
+        $secret = new NullSecret();
         if (!$manageEntity && $protocol->getProtocol() !== Constants::TYPE_SAML) {
             $secret = new Secret(20);
         }

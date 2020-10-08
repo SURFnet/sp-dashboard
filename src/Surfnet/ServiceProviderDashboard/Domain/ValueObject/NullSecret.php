@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2020 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-use Exception;
-
-class Secret implements SecretInterface
+class NullSecret implements SecretInterface
 {
     /**
      * @var string
      */
-    private static $allowedChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    /**
-     * @var string
-     */
     private $secret = '';
-
-    /**
-     * @param int $length
-     * @throws Exception
-     */
-    public function __construct($length)
-    {
-        if ($length < 20) {
-            throw new Exception('The secret length should be a value greater or equal to 20');
-        }
-        $nofAllowedChars = strlen(self::$allowedChars) - 1;
-        for ($pos = 0; $pos < $length; $pos++) {
-            $i = random_int(0, $nofAllowedChars);
-            $char = self::$allowedChars[$i];
-            $this->secret .= $char;
-        }
-    }
 
     /**
      * @return string
