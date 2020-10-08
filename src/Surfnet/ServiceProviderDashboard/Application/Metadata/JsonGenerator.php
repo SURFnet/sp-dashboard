@@ -184,7 +184,7 @@ class JsonGenerator implements GeneratorInterface
         );
 
         $service = $entity->getService();
-        if ($service->getInstitutionId() != '') {
+        if ($service->getInstitutionId() && $service->getInstitutionId() != '') {
             $metadata['coin:institution_id'] = $service->getInstitutionId();
         }
         if ($service->getGuid() != '') {
