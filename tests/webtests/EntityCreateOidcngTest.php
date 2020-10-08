@@ -40,7 +40,7 @@ class EntityCreateOidcngTest extends WebTestCase
         // Manage is queried for resource servers
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
         $form = $crawler->filter('.page-container')
-            ->selectButton('Save')
+            ->selectButton('Publish')
             ->form();
 
         $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
@@ -57,7 +57,7 @@ class EntityCreateOidcngTest extends WebTestCase
         $crawler = $this->client->request('GET', "/entity/create/2/oidcng/test");
         // Manage is queried for resource servers
         $form = $crawler->filter('.page-container')
-            ->selectButton('Save')
+            ->selectButton('Publish')
             ->form();
 
         // OIDC NG entities do not have the epti attribute as an ARP option. As it's enabled by default.
@@ -109,7 +109,6 @@ class EntityCreateOidcngTest extends WebTestCase
         $this->client->followRedirect(); // redirect to published page
         $crawler = $this->client->followRedirect(); // redirect to list page to show secret
 
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $confirmation = $crawler->filter('.oidc-confirmation');
         $label = $confirmation->filter('label')->text();
         $span = $confirmation->filter('span')->text();
@@ -139,9 +138,7 @@ class EntityCreateOidcngTest extends WebTestCase
             ->form();
         $crawler = $this->client->submit($form, $formData);
 
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
-
         $this->assertEquals('Service Provider registration form', $pageTitle);
 
         $errorMessage = $crawler->filter('div.message.error')->first()->text();

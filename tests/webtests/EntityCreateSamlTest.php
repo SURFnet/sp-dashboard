@@ -132,7 +132,6 @@ class EntitySamlCreateSamlTest extends WebTestCase
         );
 
         $crawler = $this->client->followRedirect();
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
         $this->assertEquals('Successfully published the entity to test', $pageTitle);
     }
@@ -156,7 +155,6 @@ class EntitySamlCreateSamlTest extends WebTestCase
             ->form();
 
         $crawler = $this->client->submit($form, $formData);
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
         $this->assertEquals('Service Provider registration form', $pageTitle);
 

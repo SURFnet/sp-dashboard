@@ -106,7 +106,6 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         $this->client->followRedirect(); // redirect to published page
         $crawler = $this->client->followRedirect(); // redirect to list page to show secret
 
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $confirmation = $crawler->filter('.oidc-confirmation');
         $label = $confirmation->filter('label')->text();
         $span = $confirmation->filter('span')->text();
@@ -139,7 +138,6 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
             ->form();
 
         $crawler = $this->client->submit($form, $formData);
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
 
         $this->assertEquals('Service Provider registration form', $pageTitle);
