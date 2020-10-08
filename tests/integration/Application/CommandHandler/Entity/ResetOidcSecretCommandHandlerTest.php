@@ -18,144 +18,141 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
 
+use League\Tactician\CommandBus;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\ResetOidcSecretCommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
-use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 
 class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
 {
     /**
      * @var EntityRepository|Mock
      */
-    private $repository;
+    private $commandBus;
+
     /**
-     * @var LoadEntityService|Mock
+     * @var PublishEntityClient
      */
-    private $loadEntityService;
+    private $publicationClient;
 
     /**
      * @var ResetOidcSecretCommandHandler
      */
     private $commandHandler;
+    /**
+     * @var AuthorizationService
+     */
+    private $authorizationService;
 
     public function setUp()
     {
-        $this->repository = m::mock(EntityRepository::class);
-        $this->loadEntityService = m::mock(LoadEntityService::class);
+        $this->commandBus = m::mock(CommandBus::class);
+        $this->authorizationService = m::mock(AuthorizationService::class);
+        $this->publicationClient = m::mock(PublishEntityClient::class);
 
         $this->commandHandler = new ResetOidcSecretCommandHandler(
-            $this->repository,
-            $this->loadEntityService
+            $this->commandBus,
+            $this->authorizationService,
+            $this->publicationClient
         );
     }
 
     public function test_handle_happy_flow()
     {
         $status = Constants::STATE_PUBLISHED;
-        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
-
-        $entity = $this->expectedEntityFrom($command, $status);
-
-        $this->repository
-            ->shouldReceive('save')
-            ->with($entity);
-
-        $this->commandHandler->handle($command);
-
-        $this->assertEquals('my-manage-id', $entity->getManageId());
-    }
-
-    public function test_handle_entity_not_found()
-    {
-        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
-
-        $this->loadEntityService
-            ->shouldReceive('load')
-            ->with(
-                $command->getId(),
-                $command->getManageId(),
-                $command->getService(),
-                $command->getEnvironment(),
-                $command->getEnvironment()
-            )
-            ->andReturn(null);
-
-        $this->expectException(EntityNotFoundException::class);
-        $this->expectExceptionMessage('The requested entity could not be found');
-
+        $command = $this->buildCommand(Constants::ENVIRONMENT_TEST, $status);
+        $this->commandBus
+            ->shouldReceive('handle')
+            ->once();
         $this->commandHandler->handle($command);
     }
 
-    public function test_handle_entity_invalid_protocol()
+    public function test_handle_happy_flow_production()
     {
         $status = Constants::STATE_PUBLISHED;
-        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
-
-        $entity = $this->expectedEntityFrom($command, $status);
-        $entity->setProtocol('oauth');
-
-        $this->expectException(EntityNotFoundException::class);
-        $this->expectExceptionMessage('The requested entity could be found, invalid protocol');
-
+        $command = $this->buildCommand(Constants::ENVIRONMENT_PRODUCTION, $status);
+        $this->commandBus
+            ->shouldReceive('handle')
+            ->once();
+        $this->authorizationService
+            ->shouldReceive('getContact')
+            ->andReturn(m::mock(Contact::class))
+            ->once();
+        $this->publicationClient
+            ->shouldReceive('pushMetadata')
+            ->once();
         $this->commandHandler->handle($command);
     }
 
-    public function test_handle_entity_invalid_publication_status()
+    public function test_handle_happy_flow_production_excluded_from_push()
     {
         $status = Constants::STATE_PUBLISHED;
-        $command = $this->buildCommand(1, 'my-manage-id', Constants::ENVIRONMENT_TEST);
+        $command = $this->buildCommand(Constants::ENVIRONMENT_PRODUCTION, $status, true);
+        $this->commandBus
+            ->shouldReceive('handle')
+            ->once();
+        $this->authorizationService
+            ->shouldReceive('getContact')
+            ->andReturn(m::mock(Contact::class))
+            ->once();
+        $this->commandHandler->handle($command);
+    }
 
-        $entity = $this->expectedEntityFrom($command, $status);
-        $entity->setStatus(Constants::STATE_DRAFT);
+    public function test_invalid_status()
+    {
+        $status = Constants::STATE_DRAFT;
+        $command = $this->buildCommand(Constants::ENVIRONMENT_PRODUCTION, $status);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The requested entity can not be processed, invalid state');
+        $this->commandHandler->handle($command);
+    }
 
-        $this->expectException(EntityNotFoundException::class);
-        $this->expectExceptionMessage('The requested entity could be found, invalid state');
-
+    public function test_invalid_protocol()
+    {
+        $status = Constants::STATE_PUBLISHED;
+        $command = $this->buildCommand(Constants::ENVIRONMENT_PRODUCTION, $status, false, Constants::TYPE_SAML);
+        $command->getManageEntity()
+            ->shouldReceive('getProtocol->getProtocol')
+            ->andReturn(Constants::TYPE_SAML);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Only OIDC TNG entities can be processed');
         $this->commandHandler->handle($command);
     }
 
     /**
      * @return ResetOidcSecretCommand
      */
-    private function buildCommand($id, $manageId, $environment)
-    {
-        return new ResetOidcSecretCommand($id, $manageId, $environment, m::mock(Service::class));
-    }
+    private function buildCommand(
+        string $environment,
+        string $status,
+        bool $isExcludedFromPush = false,
+        string $protocol = Constants::TYPE_OPENID_CONNECT_TNG
+    ) {
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getEnvironment')
+            ->andReturn($environment);
+        $manageEntity
+            ->shouldReceive('getProtocol->getProtocol')
+            ->andReturn($protocol);
+        $manageEntity
+            ->shouldReceive('getStatus')
+            ->andReturn($status);
+        $manageEntity
+            ->shouldReceive('updateClientSecret');
+        $manageEntity
+            ->shouldReceive('isExcludedFromPush')
+            ->andReturn($isExcludedFromPush);
 
-    /**
-     * @param ResetOidcSecretCommand $command
-     * @param string $status
-     * @return Entity
-     */
-    private function expectedEntityFrom(ResetOidcSecretCommand $command, $status)
-    {
-        $entity = new Entity();
-        $entity->setId($command->getId());
-        $entity->setService($command->getService());
-        $entity->setStatus($status);
-        $entity->setEnvironment($entity);
-        $entity->setProtocol(Constants::TYPE_OPENID_CONNECT_TNG);
-
-
-        $this->loadEntityService
-            ->shouldReceive('load')
-            ->with(
-                $command->getId(),
-                $command->getManageId(),
-                $command->getService(),
-                $command->getEnvironment(),
-                $command->getEnvironment()
-            )
-            ->andReturn($entity);
-
-        return $entity;
+        return new ResetOidcSecretCommand($manageEntity);
     }
 }

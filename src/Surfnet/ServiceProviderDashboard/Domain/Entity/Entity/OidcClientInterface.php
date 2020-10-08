@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
+
 interface OidcClientInterface
 {
     public static function fromApiResponse(array $data, string $manageProtocol);
@@ -62,4 +64,6 @@ interface OidcClientInterface
     public function isPlaygroundEnabled(): bool;
 
     public function resetResourceServers(): void;
+
+    public function updateClientSecret(SecretInterface $secret): void;
 }

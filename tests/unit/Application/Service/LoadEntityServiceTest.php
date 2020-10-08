@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
@@ -91,15 +92,14 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The id that was generated for the entity was not unique
-     */
     public function test_service_works_on_new_entities_only()
     {
         $this->entityRepository->shouldReceive('isUnique')
             ->with('dashboardid')
             ->andReturn(false);
+
+        $this->expectExceptionMessage("The id that was generated for the entity was not unique");
+        $this->expectException(InvalidArgumentException::class);
 
         $this->copyService->load(
             'dashboardid',
@@ -110,10 +110,6 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Could not find entity in manage: manageid
-     */
     public function test_handler_finds_remote_entity_in_manage()
     {
         $this->entityRepository->shouldReceive('isUnique')
@@ -124,6 +120,9 @@ class LoadEntityServiceTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn([]);
 
+        $this->expectExceptionMessage("Could not find entity in manage: manageid");
+        $this->expectException(InvalidArgumentException::class);
+
         $this->copyService->load(
             'dashboardid',
             'manageid',
@@ -133,10 +132,6 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The entity you are about to copy does not belong to the selected team
-     */
     public function test_handler_checks_access_rights_of_user()
     {
         $this->entityRepository->shouldReceive('isUnique')
@@ -161,6 +156,9 @@ class LoadEntityServiceTest extends MockeryTestCase
         $this->manageProdClient->shouldReceive('findByManageId')
             ->with('manageid')
             ->andReturn($manageEntity);
+
+        $this->expectExceptionMessage("The entity you are about to copy does not belong to the selected team");
+        $this->expectException(InvalidArgumentException::class);
 
         $this->copyService->load(
             'dashboardid',

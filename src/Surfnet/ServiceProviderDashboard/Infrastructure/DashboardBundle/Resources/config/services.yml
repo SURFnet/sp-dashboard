@@ -109,7 +109,6 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand }
 
     surfnet.dashboard.command_handler.push_metadata:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
@@ -132,8 +131,7 @@ services:
     surfnet.dashboard.command_handler.reset_oidc_secret:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\ResetOidcSecretCommandHandler
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-            - '@Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService'
+            $publishEntityClient: '@surfnet.manage.client.publish_client.prod_environment'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand }

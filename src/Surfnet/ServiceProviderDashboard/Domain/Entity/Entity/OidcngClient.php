@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
 
 class OidcngClient implements OidcClientInterface
@@ -198,5 +199,10 @@ class OidcngClient implements OidcClientInterface
     public function resetResourceServers(): void
     {
         $this->resourceServers = [];
+    }
+
+    public function updateClientSecret(SecretInterface $secret): void
+    {
+        $this->clientSecret = $secret->getSecret();
     }
 }

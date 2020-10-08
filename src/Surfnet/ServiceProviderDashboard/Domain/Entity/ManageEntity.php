@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 
 /**
  * TODO: All factory logic should be offloaded to Application or Infra layers where the
@@ -284,5 +285,10 @@ class ManageEntity
     public function setStatus(string $status)
     {
         $this->status = $status;
+    }
+
+    public function updateClientSecret(SecretInterface $secret)
+    {
+        $this->getOidcClient()->updateClientSecret($secret);
     }
 }

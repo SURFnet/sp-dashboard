@@ -252,59 +252,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
-    /**
-     * Publishing a client reset should not result in creating a Jira ticket. As per:
-     *
-     * https://www.pivotaltracker.com/story/show/173220529
-     */
-    public function test_it_can_publish_a_client_reset()
-    {
-        $contact = new Contact('nameid', 'name@example.org', 'display name');
-        $user = new Identity($contact);
-
-        $token = new SamlToken([]);
-        $token->setUser($user);
-
-        $manageEntity = m::mock(ManageEntity::class);
-        $manageEntity
-            ->shouldReceive('getMetaData->getNameEn')
-            ->andReturn('Test Entity Name');
-
-        $this->publishEntityClient
-            ->shouldReceive('publish')
-            ->once()
-            ->with($manageEntity)
-            ->andReturn([
-                'id' => '123',
-            ]);
-
-        $manageEntity
-            ->shouldReceive('getMetaData->getEntityId')
-            ->andReturn('https://app.example.com/');
-
-        $manageEntity
-            ->shouldReceive('getId')
-            ->andReturn('123');
-
-        $manageEntity
-            ->shouldReceive('setStatus')
-            ->with(Constants::STATE_PUBLISHED);
-        $manageEntity
-            ->shouldReceive('setId')
-            ->with('123');
-
-        $manageEntity
-            ->shouldReceive('getService->getConnectionStatus');
-
-        $this->logger
-            ->shouldReceive('info')
-            ->times(2);
-
-        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
-        $command = new PublishEntityProductionAfterClientResetCommand($manageEntity, $applicant);
-        $this->commandHandler->handle($command);
-    }
-
     public function test_failing_jira_ticket_creation()
     {
         $contact = new Contact('nameid', 'name@example.org', 'display name');

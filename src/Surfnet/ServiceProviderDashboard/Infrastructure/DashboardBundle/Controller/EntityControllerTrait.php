@@ -140,8 +140,7 @@ trait EntityControllerTrait
     private function publishEntity(
         ?ManageEntity $entity,
         SaveEntityCommandInterface $saveCommand,
-        FlashBagInterface $flashBag,
-        bool $isClientReset = false
+        FlashBagInterface $flashBag
     ) {
         // Merge the save command data into the ManageEntity
         $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
@@ -155,12 +154,6 @@ trait EntityControllerTrait
             case Constants::ENVIRONMENT_PRODUCTION:
                 $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
-                if ($isClientReset) {
-                    $publishEntityCommand = new PublishEntityProductionAfterClientResetCommand(
-                        $entity,
-                        $applicant
-                    );
-                }
                 $destination = 'entity_published_production';
                 break;
             default:
