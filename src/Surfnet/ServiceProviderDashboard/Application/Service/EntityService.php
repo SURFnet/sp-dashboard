@@ -301,6 +301,7 @@ class EntityService implements EntityServiceInterface
      * - Finds published entities in Manage (from the 'production' client)
      * - Tries to match Jira issues that mention one of the manage entity id's
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param string $teamName
      * @return array|null
      * @throws QueryServiceProviderException
@@ -324,8 +325,21 @@ class EntityService implements EntityServiceInterface
             // entities
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
-                    if ($issueCollection->getIssueById($entity->getId())) {
-                        $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+                    $issue = $issueCollection->getIssueById($entity->getId());
+                    if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== 'spd-delete-production-entity') {
+                        // A published entity needs no status update unless it's a removal requested entity
+                        continue;
+                    }
+
+                    if ($issue) {
+                        switch ($issue->getIssueType()) {
+                            case 'spd-request-production-entity':
+                                $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
+                                break;
+                            case 'spd-delete-production-entity':
+                                $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+                                break;
+                        }
                     }
                 }
             }
