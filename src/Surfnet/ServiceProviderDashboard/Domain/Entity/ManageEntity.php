@@ -107,7 +107,7 @@ class ManageEntity
         ?string $id,
         AttributeList $attributes,
         MetaData $metaData,
-        ?AllowedIdentityProviders $allowedIdentityProviders,
+        AllowedIdentityProviders $allowedIdentityProviders,
         Protocol $protocol,
         ?OidcClientInterface $oidcClient = null,
         ?Service $service = null

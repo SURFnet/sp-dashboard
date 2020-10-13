@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
@@ -75,7 +74,9 @@ class EntityMergeService
         $attributes = $this->buildAttributesFromCommand($command);
         $protocol = new Protocol($command->getProtocol());
 
-        $allowedIdPs = null;
+        // Create an empty AllowedIdentityProviders with the default values, if no specific values are provided,
+        // use this config as default.
+        $allowedIdPs = new AllowedIdentityProviders([], true);
         if ($manageEntity && $manageEntity->getAllowedIdentityProviders()) {
             $allowedIdPs = new AllowedIdentityProviders(
                 $manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders(),
