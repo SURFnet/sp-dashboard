@@ -84,4 +84,14 @@ class Attribute
     {
         return $this->motivation;
     }
+
+    /**
+     * @param $newSource
+     * @return self
+     */
+    public function updateSource($newSource)
+    {
+        $this->source = $newSource;
+        return clone $this;
+    }
 }

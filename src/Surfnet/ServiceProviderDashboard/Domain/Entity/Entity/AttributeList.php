@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use function array_key_exists;
+
 class AttributeList
 {
     /**
@@ -74,9 +76,22 @@ class AttributeList
 
     public function merge(AttributeList $attributes)
     {
+        $attributeSources = $this->getAttributeSources();
         $this->clear();
         foreach ($attributes->getAttributes() as $attribute) {
+            if (array_key_exists($attribute->getName(), $attributeSources)) {
+                $attribute = $attribute->updateSource($attributeSources[$attribute->getName()]);
+            }
             $this->add($attribute);
         }
+    }
+
+    private function getAttributeSources()
+    {
+        $sources = [];
+        foreach ($this->getAttributes() as $name => $attribute) {
+            $sources[$name] = $attribute->getSource();
+        }
+        return $sources;
     }
 }

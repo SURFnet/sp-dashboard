@@ -32,7 +32,9 @@ class ArpGeneratorTest extends MockeryTestCase
     {
         $entity = m::mock(ManageEntity::class)->makePartial();
         $attribute = m::mock(Attribute::class);
-        $attribute->shouldReceive('hasMotivation');
+        $attribute->shouldReceive('getSource')->andReturn('idp');
+        $attribute->shouldReceive('hasMotivation')->andReturn(true);
+        $attribute->shouldReceive('getMotivation')->andReturn('Motivation');
 
         $entity->shouldReceive('getAttributes->findByUrn')
             ->with('urn:mace:dir:attribute-def:displayName')
@@ -70,7 +72,7 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['value']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
-        $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
+        $this->assertEquals('voot', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['value']);
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-1']);
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:manage-1'][0]['source']);
@@ -126,7 +128,6 @@ class ArpGeneratorTest extends MockeryTestCase
 
     private function buildManageAttribute(ManageEntity $manageEntity, string $attributeName, string $source, string $value)
     {
-
         $attribute = m::mock(Attribute::class);
         $attribute->shouldReceive('getName')
             ->andReturn($attributeName);

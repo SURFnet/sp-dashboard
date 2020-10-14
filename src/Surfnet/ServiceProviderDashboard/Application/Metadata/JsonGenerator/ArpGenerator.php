@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 
 /**
  * Builds ARP metadata for the JSON export.
@@ -45,17 +44,18 @@ class ArpGenerator implements MetadataGenerator
         foreach ($this->repository->findAll() as $definition) {
             $urn = reset($definition->urns);
             $attrribute = $entityAttributes->findByUrn($urn);
+            // Only add the attributes with a motivation
+            if (!$attrribute || !$attrribute->hasMotivation()) {
+                continue;
+            }
             if ($attrribute) {
                 $attributes[$urn] = [
                     [
-                        'source' => 'idp',
+                        'source' => $attrribute->getSource(),
                         'value' => '*',
+                        'motivation' => $attrribute->getMotivation(),
                     ],
                 ];
-
-                if ($attrribute->hasMotivation()) {
-                    $attributes[$urn][0]['motivation'] = $attrribute->getMotivation();
-                }
             }
         }
 
