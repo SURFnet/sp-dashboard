@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
+use function is_null;
 
 class OidcngClient implements OidcClientInterface
 {
@@ -204,5 +205,20 @@ class OidcngClient implements OidcClientInterface
     public function updateClientSecret(SecretInterface $secret): void
     {
         $this->clientSecret = $secret->getSecret();
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function merge(OidcClientInterface $client): void
+    {
+        $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
+        $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
+        $this->redirectUris = is_null($client->getRedirectUris()) ? null : $client->getRedirectUris();
+        $this->grantType = is_null($client->getGrantType()) ? null : $client->getGrantType();
+        $this->scope = is_null($client->getScope()) ? null : $client->getScope();
+        $this->isPublicClient = is_null($client->isPublicClient()) ? null : $client->isPublicClient();
+        $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
+        $this->resourceServers = is_null($client->getResourceServers()) ? null : $client->getResourceServers();
     }
 }

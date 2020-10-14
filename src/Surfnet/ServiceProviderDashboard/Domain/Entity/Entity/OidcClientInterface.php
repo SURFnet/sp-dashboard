@@ -66,4 +66,6 @@ interface OidcClientInterface
     public function resetResourceServers(): void;
 
     public function updateClientSecret(SecretInterface $secret): void;
+
+    public function merge(OidcClientInterface $client): void;
 }

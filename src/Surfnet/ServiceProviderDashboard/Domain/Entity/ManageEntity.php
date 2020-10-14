@@ -280,6 +280,10 @@ class ManageEntity
         $this->service = is_null($newEntity->getService()) ? null : $newEntity->getService();
         $this->metaData->merge($newEntity->getMetaData());
         $this->attributes->merge($newEntity->getAttributes());
+        $protocol = $this->protocol->getProtocol();
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $this->oidcClient->merge($newEntity->getOidcClient());
+        }
     }
 
     public function setStatus(string $status)
