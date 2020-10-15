@@ -22,7 +22,9 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityComman
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
@@ -30,8 +32,6 @@ use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataReposit
 
 class SaveCommandFactory implements SaveCommandFactoryInterface
 {
-    const ENVIRONMENT_PRODUCTION = 'prod';
-
     /**
      * @var AttributesMetadataRepository
      */
@@ -125,14 +125,12 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
         // OidcNg settings
         $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
-        $command->setRedirectUrls($manageEntity->getOidcClient()->getRedirectUris());
         $command->setGrantType($manageEntity->getOidcClient()->getGrantType());
 
         // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
         $command->setSubjectType($metaData->getNameIdFormat());
         $command->setIsPublicClient($manageEntity->getOidcClient()->isPublicClient());
         $command->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
-        $command->setEnablePlayground($manageEntity->getOidcClient()->isPlaygroundEnabled());
         $command->setOidcngResourceServers($manageEntity->getOidcClient()->getResourceServers());
 
         $resourceServers = $command->getOidcngResourceServers();
@@ -198,7 +196,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
     private function setRedirectUris(SaveEntityCommandInterface $command, ManageEntity $manageEntity, string $environment)
     {
         $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
-        $playGroundUri = ($environment === self::ENVIRONMENT_PRODUCTION ? $this->playGroundUriProd : $this->playGroundUriTest);
+        $playGroundUri = ($environment === Constants::ENVIRONMENT_PRODUCTION ? $this->playGroundUriProd : $this->playGroundUriTest);
         if (in_array($playGroundUri, $redirectUris)) {
             $key = array_search($playGroundUri, $redirectUris);
             if ($key !== false) {

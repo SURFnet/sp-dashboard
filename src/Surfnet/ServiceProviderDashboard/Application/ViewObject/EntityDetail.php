@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use function in_array;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -263,24 +264,26 @@ class EntityDetail
     {
     }
 
-    /**
-     * @param ManageEntity $entity
-     *
-     * @return EntityDetail
-     */
-    public static function fromEntity(ManageEntity $entity)
-    {
+    public static function fromEntity(
+        ManageEntity $entity,
+        string $oidcPlaygroundUriTest,
+        string $oidcPlaygroundUriProd
+    ) : EntityDetail {
         $entityDetail = new self();
         $entityDetail->id = $entity->getId();
         $entityDetail->manageId = $entity->getId();
         $entityDetail->protocol = $entity->getProtocol()->getProtocol();
 
-        if ($entity->getProtocol() == Constants::TYPE_OPENID_CONNECT_TNG) {
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
             $entityDetail->grantType = $entity->getOidcClient()->getGrantType();
             $entityDetail->isPublicClient = $entity->getOidcClient()->isPublicClient();
             $entityDetail->accessTokenValidity = $entity->getOidcClient()->getAccessTokenValidity();
             $entityDetail->redirectUris = $entity->getOidcClient()->getRedirectUris();
-            $entityDetail->playgroundEnabled = $entity->getOidcClient()->isPlaygroundEnabled();
+            $entityDetail->playgroundEnabled = self::getIsPlaygroundEnabled(
+                $entity,
+                $oidcPlaygroundUriTest,
+                $oidcPlaygroundUriProd
+            );
             $entityDetail->resourceServers = $entity->getOidcClient()->getResourceServers();
         }
 
@@ -346,6 +349,18 @@ class EntityDetail
         $entityDetail->preferredLanguageAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
         $entityDetail->personalCodeAttribute = $attributes->findByUrn('urn:schac:dir:attribute-def:schacPersonalUniqueCode');
         $entityDetail->scopedAffiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
+    }
+
+    private static function getIsPlaygroundEnabled(ManageEntity $entity, string $playgroundTest, string $playgroundProd): bool
+    {
+        $uris = $entity->getOidcClient()->getRedirectUris();
+        $environment = $entity->getEnvironment();
+        if (($environment === Constants::ENVIRONMENT_TEST && in_array($playgroundTest, $uris)) ||
+            ($environment === Constants::ENVIRONMENT_PRODUCTION && in_array($playgroundProd, $uris))
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**

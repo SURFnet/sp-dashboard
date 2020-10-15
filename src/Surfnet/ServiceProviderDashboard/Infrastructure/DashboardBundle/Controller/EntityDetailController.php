@@ -37,11 +37,25 @@ class EntityDetailController extends Controller
      * @var AuthorizationService
      */
     private $authorizationService;
+    /**
+     * @var string
+     */
+    private $playGroundUriTest;
+    /**
+     * @var string
+     */
+    private $playGroundUriProd;
 
-    public function __construct(EntityServiceInterface $entityService, AuthorizationService $authorizationService)
-    {
+    public function __construct(
+        EntityServiceInterface $entityService,
+        AuthorizationService $authorizationService,
+        string $oidcPlaygroundUriTest,
+        string $oidcPlaygroundUriProd
+    ) {
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
+        $this->playGroundUriTest = $oidcPlaygroundUriTest;
+        $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
     /**
@@ -56,7 +70,7 @@ class EntityDetailController extends Controller
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
-        $viewObject = EntityDetail::fromEntity($entity);
+        $viewObject = EntityDetail::fromEntity($entity, $this->playGroundUriTest, $this->playGroundUriProd);
 
         return ['entity' => $viewObject];
     }

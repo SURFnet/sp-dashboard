@@ -61,8 +61,6 @@ interface OidcClientInterface
      */
     public function getResourceServers();
 
-    public function isPlaygroundEnabled(): bool;
-
     public function resetResourceServers(): void;
 
     public function updateClientSecret(SecretInterface $secret): void;

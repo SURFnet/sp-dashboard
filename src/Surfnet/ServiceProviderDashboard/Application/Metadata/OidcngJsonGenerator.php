@@ -218,14 +218,6 @@ class OidcngJsonGenerator implements GeneratorInterface
             $metadata += $this->generateLogoMetadata($entity);
         }
 
-        if ($entity->getOidcClient()->isPlaygroundEnabled()) {
-            if ($entity->isProduction()) {
-                $metadata['redirectUrls'][] = $this->oidcPlaygroundUriProd;
-            } else {
-                $metadata['redirectUrls'][] = $this->oidcPlaygroundUriTest;
-            }
-        }
-
         return $metadata;
     }
 

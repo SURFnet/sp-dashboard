@@ -36,13 +36,13 @@ class EntityMergeServiceTest extends TestCase
     protected function setUp()
     {
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
-        $this->service = new EntityMergeService($metadataRepository);
+        $this->service = new EntityMergeService($metadataRepository, 'test', 'prod');
         parent::setUp();
     }
 
     public function test_can_create_service()
     {
-        $service = new EntityMergeService(m::mock(AttributesMetadataRepository::class));
+        $service = new EntityMergeService(m::mock(AttributesMetadataRepository::class), 'test', 'prod');
         self::assertInstanceOf(EntityMergeService::class, $service);
     }
 

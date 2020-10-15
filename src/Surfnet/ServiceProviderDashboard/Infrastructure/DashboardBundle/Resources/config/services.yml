@@ -7,6 +7,16 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityDetailController:
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityAclController:
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\:
         resource: '../../Security/Voter'
         tags: ['security.voter']
@@ -285,6 +295,11 @@ services:
     Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
         arguments:
             - '@surfnet.dashboard.repository.issue'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService:
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
     surfnet.dashboard.repository.issue:
 

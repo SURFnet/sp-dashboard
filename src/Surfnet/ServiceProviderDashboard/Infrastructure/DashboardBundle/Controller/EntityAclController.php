@@ -55,18 +55,30 @@ class EntityAclController extends Controller
      * @var EntityAclService
      */
     private $entityAclService;
+    /**
+     * @var string
+     */
+    private $playGroundUriTest;
+    /**
+     * @var string
+     */
+    private $playGroundUriProd;
 
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         AuthorizationService $authorizationService,
-        EntityAclService $entityAclService
+        EntityAclService $entityAclService,
+        string $oidcPlaygroundUriTest,
+        string $oidcPlaygroundUriProd
     ) {
 
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
         $this->entityAclService = $entityAclService;
+        $this->playGroundUriTest = $oidcPlaygroundUriTest;
+        $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
     /**
@@ -95,7 +107,7 @@ class EntityAclController extends Controller
             $this->commandBus->handle($command);
             $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
         }
-        $viewObject = EntityDetail::fromEntity($entity);
+        $viewObject = EntityDetail::fromEntity($entity, $this->playGroundUriTest, $this->playGroundUriProd);
 
         return [
             'form' => $form->createView(),

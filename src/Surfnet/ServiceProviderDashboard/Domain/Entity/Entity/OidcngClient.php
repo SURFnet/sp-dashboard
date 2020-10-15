@@ -25,10 +25,6 @@ use function is_null;
 class OidcngClient implements OidcClientInterface
 {
     /**
-     * TODO: Find a way to set this, or otherwise be able to verify what the playground url is
-     */
-    const PLAYGROUND_URL = 'https://playground.uri';
-    /**
      * @var string
      */
     private $clientId;
@@ -189,12 +185,6 @@ class OidcngClient implements OidcClientInterface
     public function getResourceServers()
     {
         return $this->resourceServers;
-    }
-
-    public function isPlaygroundEnabled(): bool
-    {
-        $uris = $this->getRedirectUris();
-        return in_array(self::PLAYGROUND_URL, $uris);
     }
 
     public function resetResourceServers(): void

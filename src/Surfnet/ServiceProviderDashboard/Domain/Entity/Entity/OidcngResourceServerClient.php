@@ -138,14 +138,6 @@ class OidcngResourceServerClient implements OidcClientInterface
         return [];
     }
 
-    /**
-     * TODO: implement this properly, this involves searing the redirect urls for the presence of the playground uri
-     */
-    public function isPlaygroundEnabled(): bool
-    {
-        return false;
-    }
-
     public function resetResourceServers(): void
     {
         // Nothing to do here.

@@ -38,6 +38,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\NullSecret;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
+use function in_array;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -49,9 +50,24 @@ class EntityMergeService
      */
     private $attributeRepository;
 
-    public function __construct(AttributesMetadataRepository $repository)
-    {
+    /**
+     * @var string
+     */
+    private $playGroundUriTest;
+
+    /**
+     * @var string
+     */
+    private $playGroundUriProd;
+
+    public function __construct(
+        AttributesMetadataRepository $repository,
+        string $oidcPlaygroundUriTest,
+        string $oidcPlaygroundUriProd
+    ) {
         $this->attributeRepository = $repository;
+        $this->playGroundUriTest = $oidcPlaygroundUriTest;
+        $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
     public function mergeEntityCommand(SaveEntityCommandInterface $command, ?ManageEntity $manageEntity = null): ManageEntity
@@ -94,7 +110,7 @@ class EntityMergeService
             $oidcClient = new OidcngClient(
                 $command->getClientId(),
                 $secret->getSecret(),
-                $command->getRedirectUrls(),
+                $this->buildRedirectUrls($command),
                 $command->getGrantType(),
                 $command->getScopes(),
                 $command->isPublicClient(),
@@ -199,5 +215,28 @@ class EntityMergeService
     private function buildLogoFromCommand(SaveEntityCommandInterface $command): Logo
     {
         return new Logo($command->getLogoUrl(), null, null);
+    }
+
+    private function buildRedirectUrls(SaveOidcngEntityCommand $command)
+    {
+        $playgroundUrl = $command->getEnvironment() === Constants::ENVIRONMENT_TEST ? $this->playGroundUriTest : $this->playGroundUriProd;
+        $urls = $command->getRedirectUrls();
+        // Add the playground URL if requested in the form (checkbox was checked)
+        if ($command->isEnablePlayground()) {
+            if (!in_array($playgroundUrl, $urls)) {
+                $urls[] = $playgroundUrl;
+            }
+        }
+        // Test if we should remove the playground URL (checkbox unchecked, but url remained in set)
+        if (!$command->isEnablePlayground()) {
+            if (in_array($playgroundUrl, $urls)) {
+                foreach ($urls as $key => $url) {
+                    if ($url === $playgroundUrl) {
+                        unset($urls[$key]);
+                    }
+                }
+            }
+        }
+        return $urls;
     }
 }
