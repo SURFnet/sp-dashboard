@@ -336,7 +336,7 @@ class EntityDetail
     private static function setAttributes(EntityDetail $entityDetail, AttributeList $attributes)
     {
         $entityDetail->givenNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:givenName');
-        $entityDetail->surNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:surName');
+        $entityDetail->surNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:sn');
         $entityDetail->commonNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:cn');
         $entityDetail->displayNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:displayName');
         $entityDetail->emailAddressAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:mail');
