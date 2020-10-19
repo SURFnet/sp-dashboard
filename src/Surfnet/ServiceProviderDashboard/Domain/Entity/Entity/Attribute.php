@@ -52,7 +52,7 @@ class Attribute
      * @param string $source
      * @param string $motivation
      */
-    private function __construct($name, $value, $source, $motivation)
+    public function __construct($name, $value, $source, $motivation)
     {
         $this->name = $name;
         $this->value = $value;
@@ -75,8 +75,23 @@ class Attribute
         return $this->source;
     }
 
+    public function hasMotivation()
+    {
+        return $this->motivation !== null && $this->motivation !== '';
+    }
+
     public function getMotivation()
     {
         return $this->motivation;
+    }
+
+    /**
+     * @param $newSource
+     * @return self
+     */
+    public function updateSource($newSource)
+    {
+        $this->source = $newSource;
+        return clone $this;
     }
 }

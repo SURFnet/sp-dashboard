@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCo
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 
@@ -71,7 +72,7 @@ class SaveSamlEntityCommandHandler implements CommandHandler
             throw new EntityNotFoundException('The requested Service cannot be found');
         }
 
-        $entity->setProtocol(Entity::TYPE_SAML);
+        $entity->setProtocol(Constants::TYPE_SAML);
         $entity->setService($command->getService());
         $entity->setManageId($command->getManageId());
         $entity->setArchived($command->isArchived());
@@ -114,7 +115,7 @@ class SaveSamlEntityCommandHandler implements CommandHandler
         if ($command->hasNameIdFormat()) {
             $entity->setNameIdFormat($command->getNameIdFormat());
         } else {
-            $entity->setNameIdFormat(Entity::NAME_ID_FORMAT_TRANSIENT);
+            $entity->setNameIdFormat(Constants::NAME_ID_FORMAT_TRANSIENT);
         }
 
         $entity->setOrganizationNameNl($command->getOrganizationNameNl());

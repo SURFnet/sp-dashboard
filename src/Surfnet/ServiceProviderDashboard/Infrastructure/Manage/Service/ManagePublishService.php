@@ -18,10 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
 
 class ManagePublishService
@@ -29,30 +27,19 @@ class ManagePublishService
     private $validEnvironments = ['test', 'production'];
 
     /**
-     * @var PublishEntityClient
+     * @var PublishEntityRepository
      */
     private $testClient;
 
     /**
-     * @var PublishEntityClient
+     * @var PublishEntityRepository
      */
     private $productionClient;
 
-    public function __construct(PublishEntityClient $test, PublishEntityClient $production)
+    public function __construct(PublishEntityRepository $test, PublishEntityRepository $production)
     {
         $this->testClient = $test;
         $this->productionClient = $production;
-    }
-
-    /**
-     * @param string $environment
-     * @param Entity $entity
-     * @throws InvalidArgumentException
-     * @throws PublishMetadataException
-     */
-    public function publish($environment, Entity $entity)
-    {
-        $this->getClient($environment)->publish($entity);
     }
 
     /**

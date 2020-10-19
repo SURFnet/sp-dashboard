@@ -16,33 +16,22 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
+namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Symfony\Component\Validator\Constraints as Assert;
+use RuntimeException;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use function file_get_contents;
+use function json_decode;
+use function sprintf;
+use function str_replace;
 
-class DeleteDraftEntityCommand implements Command
+interface ClientResultInterface
 {
-    /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Uuid
-     */
-    private $id;
+    public function getEntityResult(): array;
 
-    /**
-     * @param string $id
-     */
-    public function __construct($id)
-    {
-        $this->id = $id;
-    }
+    public function getSearchResult(): array;
 
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    public function getId(): string;
+
+    public function getEntityId(): string;
 }

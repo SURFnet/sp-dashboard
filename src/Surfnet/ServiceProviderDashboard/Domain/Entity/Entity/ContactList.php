@@ -87,4 +87,28 @@ class ContactList
         }
         return null;
     }
+
+    private function clear()
+    {
+        $this->contacts = [];
+    }
+
+    public function merge(ContactList $contacts)
+    {
+        $this->clear();
+        if ($contacts !== null) {
+            $technical = $contacts->findTechnicalContact();
+            if ($technical) {
+                $this->add($technical);
+            }
+            $support = $contacts->findSupportContact();
+            if ($support) {
+                $this->add($support);
+            }
+            $administrative = $contacts->findAdministrativeContact();
+            if ($administrative) {
+                $this->add($administrative);
+            }
+        }
+    }
 }

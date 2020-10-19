@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as ContactVO;
 use Webmozart\Assert\Assert;
 
 class Contact
@@ -31,10 +32,10 @@ class Contact
     public static function from(array $contactData)
     {
         $type = $contactData['contactType'];
-        $givenName = isset($contactData['givenName']) ? $contactData['givenName'] : '';
-        $surName = isset($contactData['surName']) ? $contactData['surName'] : '';
-        $email = isset($contactData['emailAddress']) ? $contactData['emailAddress'] : '';
-        $phone = isset($contactData['phone']) ? $contactData['phone'] : '';
+        $givenName = $contactData['givenName'] ?? '';
+        $surName = $contactData['surName'] ?? '';
+        $email = $contactData['emailAddress'] ?? '';
+        $phone = $contactData['telephoneNumber'] ?? '';
 
         Assert::stringNotEmpty($type);
         Assert::string($givenName);
@@ -45,14 +46,18 @@ class Contact
         return new self($type, $givenName, $surName, $email, $phone);
     }
 
-    /**
-     * @param string $type
-     * @param string $givenName
-     * @param string $surName
-     * @param string $email
-     * @param string $phone
-     */
-    private function __construct($type, $givenName, $surName, $email, $phone)
+    public static function fromContact(ContactVO $contact, string $type)
+    {
+        return new self(
+            $type,
+            $contact->getFirstName(),
+            $contact->getLastName(),
+            $contact->getEmail(),
+            $contact->getPhone()
+        );
+    }
+
+    private function __construct(string $type, ?string $givenName, ?string $surName, ?string $email, ?string $phone)
     {
         $this->type = $type;
         $this->givenName = $givenName;

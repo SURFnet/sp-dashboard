@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,7 +41,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
         $form = $crawler->filter('.page-container')
-            ->selectButton('Save')
+            ->selectButton('Publish')
             ->form();
 
         $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
@@ -103,12 +104,6 @@ class EntitySamlCreateSamlTest extends WebTestCase
             'Expecting a redirect response after saving an entity'
         );
 
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $crawler = $this->client->followRedirect();
         $pageTitle = $crawler->filter('h1')->first()->text();
         $message = $crawler->filter('.page-container .card')->eq(1)->text();
@@ -117,67 +112,9 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $this->assertContains('There are no entities configured', $message);
     }
 
-    public function test_it_can_save_the_form()
-    {
-        $formData = $this->buildValidFormData();
-
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
-        );
-
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->followRedirect();
-
-        // Assert the entity id is in one of the td's of the first table row.
-        $entityTr = $crawler->filter('.page-container table tbody tr')->first();
-        $this->assertRegexp('/https:\/\/entity-id/', $entityTr->text());
-    }
-
-    public function test_it_can_save_the_form_without_name_id_format()
-    {
-        $formData = $this->buildValidFormData();
-        // Unset the name id format for this test, this is the case when the SP Dashboard user fills in the form
-        // manually (not using the import feature).
-        unset($formData['dashboard_bundle_entity_type']['nameIdFormat']);
-
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
-        );
-
-        // Test if the entity has got the correct default name id format by loading it from the repository
-        $entities = $this->getEntityRepository()->findAll();
-        /** @var Entity $entity */
-        $entity = end($entities);
-        $this->assertEquals(Entity::NAME_ID_FORMAT_TRANSIENT, $entity->getNameIdFormat());
-    }
-
     public function test_it_can_publish_the_form()
     {
+        $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
         $formData = $this->buildValidFormData();
 
         $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
@@ -185,17 +122,6 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $form = $crawler
             ->selectButton('Publish')
             ->form();
-
-        // Unique entity validator
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        // The Entity is queried from manage in to set IdP ACL data
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        // Publish json
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Push to EB through manage
-        $this->testMockHandler->append(new Response(200, [], '{"status":"OK"}'));
 
         $this->client->submit($form, $formData);
 
@@ -205,20 +131,21 @@ class EntitySamlCreateSamlTest extends WebTestCase
             'Expecting a redirect to the published "thank you" endpoint'
         );
 
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $crawler = $this->client->followRedirect();
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
         $pageTitle = $crawler->filter('h1')->first()->text();
         $this->assertEquals('Successfully published the entity to test', $pageTitle);
     }
 
-    public function test_it_forwards_to_edit_action_when_publish_failed()
+    public function test_it_stays_on_create_action_when_publish_failed()
     {
+        // Register an enitty with the same entity id.
+        $this->registerManageEntity(
+            'test',
+            'oidc10_rp',
+            'f1e394b2-08b1-4882-8b32-43876c15c743',
+            'Existing SP',
+            'https://entity-id'
+        );
         $formData = $this->buildValidFormData();
 
         $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
@@ -227,32 +154,15 @@ class EntitySamlCreateSamlTest extends WebTestCase
             ->selectButton('Publish')
             ->form();
 
-        // Unique entity validator
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        // Publish json
-        $this->testMockHandler->append(new Response(200, [], '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'));
-        // Push to Manage
-        $this->testMockHandler->append(new Response(200, [], '{"status":"failed"}'));
-
-        $this->client->submit($form, $formData);
-
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting redirect to entity edit form'
-        );
-
-        $crawler = $this->client->followRedirect();
-        // Publishing an entity saves and then attempts a publish to Manage, removing the entity afterwards in sp dash.
+        $crawler = $this->client->submit($form, $formData);
         $pageTitle = $crawler->filter('h1')->first()->text();
         $this->assertEquals('Service Provider registration form', $pageTitle);
 
         $errorMessage = $crawler->filter('div.message.error')->first()->text();
-        $this->assertEquals('Unable to publish the entity, try again later', trim($errorMessage));
+        $this->assertEquals('Warning! Some entries are missing or incorrect. Please review and fix those entries below.', trim($errorMessage));
 
         $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp('/\/entity\/edit/', $uri);
+        $this->assertRegExp('/\/entity\/create/', $uri);
     }
 
     public function test_it_shows_flash_message_on_importing_invalid_metadata()
@@ -313,43 +223,6 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $this->client->request('GET', '/entity/create/1/saml20production');
 
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function test_a_privileged_user_can_create_a_production_draft()
-    {
-        // Ibuildings is allowed to create production entities.
-        $this->getAuthorizationService()->changeActiveService(
-            $this->getServiceRepository()->findByName('Ibuildings B.V.')->getId()
-        );
-
-        $formData = $this->buildValidFormData();
-
-        $crawler = $this->client->request('GET', '/entity/create/2/saml20/production');
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
-        );
-
-        // The entity list queries manage for published entities
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->followRedirect();
-
-        // Assert the entity is saved for the production environment.
-        $row = $crawler->filter('table tbody tr')->eq(1);
-
-        $this->assertEquals('https://entity-id', $row->filter('td')->eq(1)->text(), 'Entity ID not found in entity list');
     }
 
     public function test_it_imports_multiple_entity_descriptor_metadata_with_a_single_entity()

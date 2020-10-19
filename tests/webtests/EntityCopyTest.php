@@ -37,29 +37,31 @@ class EntityCopyTest extends WebTestCase
 
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
 
+        $this->registerManageEntityRaw(
+            'test',
+            file_get_contents(
+                __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
+            )
+        );
+        $this->registerManageEntityRaw(
+            'test',
+            file_get_contents(
+                __DIR__ . '/fixtures/entity-copy/remote-oidcng-entity-info.json'
+            )
+        );
+
         $this->switchToService('SURFnet');
     }
 
     public function test_copy_does_not_create_new_entity()
     {
-        $response = file_get_contents(
-            __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
-        );
-        $this->testMockHandler->append(new Response(200, [], $response));
-        $this->testMockHandler->append(new Response(200, [], $response));
-        $this->prodMockHandler->append(new Response(200, [], $response));
-
         $crawler = $this->client->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
-
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $pageTitle = $crawler->filter('.page-container h1');
 
         $this->assertEquals('Service Provider registration form', $pageTitle->text());
 
-        // The form for a published entities should not contain a save button
         $this->assertEquals(1, $crawler->selectButton('Publish')->count());
-        $this->assertEquals(0, $crawler->selectButton('Save')->count());
 
         $form = $crawler->selectButton('Publish')->form();
 
@@ -124,7 +126,7 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
-            'https://engine.dev.support.surfconext.nl/authentication/sp/metadata/1430',
+            'https://engine.dev.support.surfconext.nl/authentication/sp/metadata',
             $form->get('dashboard_bundle_entity_type[metadata][importUrl]')->getValue()
         );
 
@@ -141,17 +143,6 @@ class EntityCopyTest extends WebTestCase
 
     public function test_copy_to_production_does_not_create_new_entity()
     {
-        $response = file_get_contents(
-            __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
-        );
-        $this->testMockHandler->append(new Response(200, [], $response));
-        $this->prodMockHandler->append(new Response(200, [], $response));
-
-        $response = file_get_contents(
-            __DIR__ . '/fixtures/entity-copy/remote-metadata.json'
-        );
-        $this->testMockHandler->append(new Response(200, [], json_decode($response)));
-
         $crawler = $this->client->request('GET', "/entity/copy/1/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
         // Ensure we are not basing further assertions on an error response
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -160,20 +151,12 @@ class EntityCopyTest extends WebTestCase
         $this->assertEquals('OpenConext Engine EN', $nameEn);
 
         // Assert that the newly created entity is indeed a production entity.
-        $entity = $this->getEntityRepository()->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
+        $entity = $this->prodQueryClient->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
         $this->assertEmpty($entity, 'Entity is not saved, but loaded on the form');
     }
 
     public function test_copy_to_production_for_oidcng_entities_yields_a_protocol_prepend_on_client_id_field()
     {
-        $response = file_get_contents(
-            __DIR__ . '/fixtures/entity-copy/remote-oidcng-entity-info.json'
-        );
-        // Read the entity from test
-        $this->testMockHandler->append(new Response(200, [], $response));
-        // Load/find NO resource servers to render on the form
-        $this->testMockHandler->append(new Response(200, [], json_encode([])));
-        $this->prodMockHandler->append(new Response(200, [], json_encode([])));
         $crawler = $this->client->request('GET', "/entity/copy/1/88888888-0000-9999-1111-777777777777/production");
         // Assert that the newly created entity has the updated client id
         $clientId = $crawler->filter('#dashboard_bundle_entity_type_metadata_clientId')->attr('value');
@@ -182,15 +165,6 @@ class EntityCopyTest extends WebTestCase
 
     public function test_no_save_button_after_import()
     {
-        $response = file_get_contents(
-            __DIR__ . '/fixtures/entity-copy/remote-entity-info.json'
-        );
-        $this->testMockHandler->append(new Response(200, [], $response));
-        $this->prodMockHandler->append(new Response(200, [], $response));
-
-        $this->testMockHandler->append(new Response(200, [], $response));
-        $this->testMockHandler->append(new Response(200, [], $response));
-
         $crawler = $this->client->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
         $formData = [
@@ -208,6 +182,5 @@ class EntityCopyTest extends WebTestCase
         $crawler = $this->client->submit($form, $formData);
 
         $this->assertEquals(1, $crawler->selectButton('Publish')->count());
-        $this->assertEquals(0, $crawler->selectButton('Save')->count());
     }
 }

@@ -22,7 +22,9 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
@@ -31,11 +33,6 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityTestCommandHandler implements CommandHandler
 {
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
-
     /**
      * @var PublishEntityRepository
      */
@@ -51,21 +48,12 @@ class PublishEntityTestCommandHandler implements CommandHandler
      */
     private $flashBag;
 
-    /**
-     * @var QueryClient
-     */
-    private $manageQueryClient;
-
     public function __construct(
-        EntityRepository $entityRepository,
         PublishEntityRepository $publishClient,
-        QueryClient $queryClient,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
-        $this->repository = $entityRepository;
         $this->publishClient = $publishClient;
-        $this->manageQueryClient = $queryClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
     }
@@ -77,10 +65,14 @@ class PublishEntityTestCommandHandler implements CommandHandler
      */
     public function handle(PublishEntityTestCommand $command)
     {
-        $entity = $this->repository->findById($command->getId());
-        $this->persistData($entity);
+        $entity = $command->getManageEntity();
         try {
-            $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment', $entity->getNameNl()));
+            $this->logger->info(
+                sprintf(
+                    'Publishing entity "%s" to Manage in test environment',
+                    $entity->getMetaData()->getNameEn()
+                )
+            );
 
             $publishResponse = $this->publishClient->publish($entity);
 
@@ -93,7 +85,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $entity->getNameNl(),
+                    $entity->getMetaData()->getNameEn(),
                     $e->getMessage()
                 )
             );
@@ -101,26 +93,9 @@ class PublishEntityTestCommandHandler implements CommandHandler
         }
     }
 
-    private function isNewResourceServer(Entity $entity)
+    private function isNewResourceServer(ManageEntity $entity)
     {
-        $isNewEntity = empty($entity->getManageId());
-        return $isNewEntity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-    }
-
-    /**
-     * Persist data that would otherwise be lost in the publication
-     * The manage entity is loaded prior to publication. Data that needs to be persisted on the upcoming publication
-     * can be set on the Entity here. This is usefull for data that is only stored in Manage, or data that is not
-     * updated in the entity edit forms.
-     *
-     * @param Entity $entity
-     */
-    private function persistData(Entity $entity)
-    {
-        $manageEntity = $this->manageQueryClient->findByManageId($entity->getManageId());
-        if ($manageEntity) {
-            $entity->setIdpAllowAll($manageEntity->getAllowedIdentityProviders()->isAllowAll());
-            $entity->setIdpWhitelistRaw($manageEntity->getAllowedIdentityProviders()->getAllowedIdentityProviders());
-        }
+        $isNewEntity = empty($entity->getId());
+        return $isNewEntity && $entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 }

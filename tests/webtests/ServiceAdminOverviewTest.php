@@ -38,11 +38,6 @@ class ServiceAdminOverviewTest extends WebTestCase
         $surfNet = $serviceRepository->findByName('SURFnet');
         $ibuildings = $serviceRepository->findByName('Ibuildings B.V.');
 
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $this->logIn('ROLE_ADMINISTRATOR', [$surfNet, $ibuildings]);
 
         $crawler = $this->client->request('GET', '/service/2');

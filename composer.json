@@ -23,6 +23,7 @@
     },
     "require": {
         "php": "7.2.*",
+        "ext-json": "*",
         "doctrine/dbal": "~2.5.12",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",

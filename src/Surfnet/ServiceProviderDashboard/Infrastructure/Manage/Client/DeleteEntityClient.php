@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository as DeleteEntityRepositoryInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\RuntimeException;
@@ -85,10 +85,9 @@ class DeleteEntityClient implements DeleteEntityRepositoryInterface
     private function getProtocol($dashboardProtocol)
     {
         $lookup = [
-            Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => Protocol::OIDC10_RP,
-            Entity::TYPE_OPENID_CONNECT_TNG => Protocol::OIDC10_RP,
-            Entity::TYPE_OPENID_CONNECT => Protocol::SAML20_SP,
-            Entity::TYPE_SAML => Protocol::SAML20_SP,
+            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => Protocol::OIDC10_RP,
+            Constants::TYPE_OPENID_CONNECT_TNG => Protocol::OIDC10_RP,
+            Constants::TYPE_SAML => Protocol::SAML20_SP,
         ];
 
         if (!isset($lookup[$dashboardProtocol])) {

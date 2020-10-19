@@ -1,17 +1,25 @@
 services:
     _defaults:
         autowire: true
+        autoconfigure: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityDetailController:
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityAclController:
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\:
         resource: '../../Security/Voter'
         tags: ['security.voter']
-
-    surfnet.dashboard.middleware.doctrine_transaction:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Middleware\DoctrineTransactionMiddleware
 
     surfnet.dashboard.command_handler.create_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
@@ -24,12 +32,6 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand }
-
-    surfnet.dashboard.command_handler.delete_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeleteDraftEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand }
 
     surfnet.dashboard.command_handler.delete_published_production_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedProductionEntityCommandHandler
@@ -97,12 +99,8 @@ services:
     surfnet.dashboard.command_handler.publish_test_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
-            - '@logger'
-            - '@session.flash_bag'
-        public: true
+            $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
 
@@ -121,7 +119,6 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand }
 
     surfnet.dashboard.command_handler.push_metadata:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
@@ -136,12 +133,7 @@ services:
     surfnet.dashboard.command_handler.update_entity_acl:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\UpdateEntityAclCommandHandler
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
-            - '@logger'
-            - '@session.flash_bag'
-        public: true
+            $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand }
 
@@ -149,8 +141,7 @@ services:
     surfnet.dashboard.command_handler.reset_oidc_secret:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\ResetOidcSecretCommandHandler
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-            - '@Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService'
+            $publishEntityClient: '@surfnet.manage.client.publish_client.prod_environment'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand }
@@ -198,12 +189,8 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator
-        arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
         tags:
             - { name: dashboard.json_generator, identifier: saml20 }
-            - { name: dashboard.json_generator, identifier: oidc }
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator
@@ -309,6 +296,11 @@ services:
         arguments:
             - '@surfnet.dashboard.repository.issue'
 
+    Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService:
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
+
     surfnet.dashboard.repository.issue:
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityService:
@@ -329,11 +321,6 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
-            - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
-            - '%playground_uri_test%'
-            - '%playground_uri_prod%'
-            - '%oidcng_playground_uri_test%'
-            - '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService:
         arguments:
@@ -348,7 +335,6 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
             - '@surfnet.manage.configuration.test'
             - '@logger'
@@ -371,7 +357,6 @@ services:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
         arguments:
         - '@surfnet.manage.http.http_client.prod_environment'
-        - '@surfnet.manage.client.query_client.prod_environment'
         - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
         - '@surfnet.manage.configuration.production'
         - '@logger'
@@ -437,6 +422,12 @@ services:
         factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\ManageClientFactory:createClient"
         arguments:
             - "@surfnet.manage.configuration.production"
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactory
+        arguments:
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand

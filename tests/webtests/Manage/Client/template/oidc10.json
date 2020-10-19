@@ -1,0 +1,75 @@
+{
+  "id": "%1$s",
+  "version": 1,
+  "type": "%2$s",
+  "revision": {
+    "number": 1,
+    "created": 1543851541.752,
+    "parentId": null,
+    "updatedBy": "sp-dashboard",
+    "terminated": null
+  },
+  "data": {
+    "entityid": "%3$s",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "arp": {
+      "enabled": true,
+      "attributes": {
+        "urn:mace:dir:attribute-def:displayName": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "Test Attribute 1"
+          }
+        ],
+        "urn:mace:dir:attribute-def:uid": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "Test Attribute 2"
+          }
+        ]
+      }
+    },
+    "metaDataFields": {
+      "name:en": "%5$s Name English",
+      "name:nl": "%5$s Name Dutch",
+      "description:en": "%5$s Description English",
+      "description:nl": "%5$s Description Dutch",
+      "secret": "test",
+      "redirectUrls": [
+        "uri1",
+        "uri2",
+        "uri3"
+      ],
+      "scopes": [
+        "openid"
+      ],
+      "grants": [
+        "authorization_code",
+        "refresh_token"
+      ],
+      "NameIDFormat": "nameidformat",
+      "isResourceServer": false,
+      "contacts:0:emailAddress": "emailaddress",
+      "contacts:0:contactType": "support",
+      "contacts:0:givenName": "givenname",
+      "contacts:0:surName": "surname",
+      "contacts:0:telephoneNumber": "telephonenumber",
+      "OrganizationName:en": "%5$s Organisation Name English",
+      "OrganizationDisplayName:en": "%5$s Organisation Name English",
+      "OrganizationURL:en": "%5$s Organisation Url English",
+      "OrganizationName:nl": "%5$s Organisation Name Dutch",
+      "OrganizationDisplayName:nl": "%5$s Organisation Name Dutch",
+      "OrganizationURL:nl": "%5$s Organisation Url Dutch",
+      "coin:service_team_id": "%7$s",
+      "isPublicClient": true
+    },
+    "allowedEntities": [],
+    "allowedResourceServers": [],
+    "type": "%6$s",
+    "revisionnote": "Some revision note",
+    "eid": 57
+  }
+}

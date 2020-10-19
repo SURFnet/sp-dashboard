@@ -4,8 +4,6 @@
         <a href="{{ path('entity_delete_request', {serviceId: action.serviceId, manageId: action.id}) }}">
         {% elseif action.isPublished or action.isRequested %}
         <a href="{{ path('entity_delete_published', {serviceId: action.serviceId, manageId: action.id, environment: action.environment}) }}">
-        {% else %}
-        <a href="{{ path('entity_delete', {id: action.id}) }}">
         {% endif %}
             <i class="fa fa-trash" aria-hidden="true"></i>
             {{ 'entity.list.action.delete'|trans }}

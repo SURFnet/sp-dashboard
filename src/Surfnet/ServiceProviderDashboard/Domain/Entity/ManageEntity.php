@@ -18,15 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 
 /**
  * TODO: All factory logic should be offloaded to Application or Infra layers where the
@@ -66,6 +65,15 @@ class ManageEntity
      * @var AllowedIdentityProviders
      */
     private $allowedIdentityProviders;
+    
+    private $comments;
+
+    private $environment;
+
+    /**
+     * @var Service
+     */
+    private $service;
 
     /**
      * @param $data
@@ -79,6 +87,7 @@ class ManageEntity
 
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
+        $oidcClient = null;
         if ($manageProtocol === Protocol::OIDC10_RP) {
             if (isset($data['data']['metaDataFields']['isResourceServer']) &&
                 $data['data']['metaDataFields']['isResourceServer']
@@ -87,9 +96,6 @@ class ManageEntity
             } else {
                 $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
             }
-        } elseif ($manageProtocol === Protocol::SAML20_SP) {
-            // Try to create an OidcClient, the first oidc implementation used SAML20_SP as entity type.
-            $oidcClient = OidcClient::fromApiResponse($data, $manageProtocol);
         }
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
         $protocol = Protocol::fromApiResponse($data, $manageProtocol);
@@ -97,29 +103,35 @@ class ManageEntity
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }
 
-    /**
-     * @param string $id
-     * @param AttributeList $attributes
-     * @param MetaData $metaData
-     * @param AllowedIdentityProviders $allowedIdentityProviders
-     * @param Protocol $protocol
-     * @param OidcClientInterface $oidcClient
-     */
-    private function __construct(
-        $id,
+    public function __construct(
+        ?string $id,
         AttributeList $attributes,
         MetaData $metaData,
         AllowedIdentityProviders $allowedIdentityProviders,
         Protocol $protocol,
-        OidcClientInterface $oidcClient = null
+        ?OidcClientInterface $oidcClient = null,
+        ?Service $service = null
     ) {
         $this->id = $id;
-        $this->status = DomainEntity::STATE_PUBLISHED;
+        $this->status = Constants::STATE_PUBLISHED;
         $this->attributes = $attributes;
         $this->metaData = $metaData;
         $this->oidcClient = $oidcClient;
         $this->protocol = $protocol;
         $this->allowedIdentityProviders = $allowedIdentityProviders;
+        $this->service = $service;
+    }
+
+    public function resetId()
+    {
+        $clone = clone $this;
+        $clone->id = null;
+        return $clone;
+    }
+
+    public function setId(string $id)
+    {
+        $this->id = $id;
     }
 
     public function getId()
@@ -132,7 +144,7 @@ class ManageEntity
         return $this->attributes;
     }
 
-    public function getMetaData()
+    public function getMetaData(): ?MetaData
     {
         return $this->metaData;
     }
@@ -145,6 +157,11 @@ class ManageEntity
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function isPublished()
+    {
+        return ($this->status === 'published');
     }
 
     /**
@@ -194,5 +211,88 @@ class ManageEntity
             return false;
         }
         return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
+    }
+
+    public function isManageEntity(): bool
+    {
+        return !is_null($this->getId());
+    }
+
+    public function setComments(?string $comments): void
+    {
+        $this->comments = $comments;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasComments(): bool
+    {
+        return !(empty($this->comments));
+    }
+
+    public function setEnvironment(string $environment): void
+    {
+        $this->environment = $environment;
+    }
+
+    public function getEnvironment(): ?string
+    {
+        return $this->environment;
+    }
+
+    public function isProduction()
+    {
+        return $this->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION;
+    }
+
+    public function isReadOnly()
+    {
+        // No read only scenarios exist currently. This was used to block oidc entities
+        // (during the Oidc TNG rollover period)
+        return false;
+    }
+
+    public function getService(): Service
+    {
+        return $this->service;
+    }
+
+    public function setService(Service $service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * Merge new data into an existing ManageEntity.
+     * @param ManageEntity $newEntity
+     */
+    public function merge(ManageEntity $newEntity)
+    {
+        $this->service = is_null($newEntity->getService()) ? null : $newEntity->getService();
+        $this->metaData->merge($newEntity->getMetaData());
+        $this->attributes->merge($newEntity->getAttributes());
+        $protocol = $this->protocol->getProtocol();
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $this->oidcClient->merge($newEntity->getOidcClient());
+        }
+    }
+
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
+    }
+
+    public function updateClientSecret(SecretInterface $secret)
+    {
+        $this->getOidcClient()->updateClientSecret($secret);
     }
 }

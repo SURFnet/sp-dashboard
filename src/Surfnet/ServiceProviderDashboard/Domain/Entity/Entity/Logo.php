@@ -39,30 +39,33 @@ class Logo
         return new self($url, $width, $height);
     }
 
-    /**
-     * @param string $url
-     * @param int $width
-     * @param int $height
-     */
-    private function __construct($url, $width, $height)
+    public function __construct(?string $url, ?int $width, ?int $height)
     {
         $this->url = $url;
         $this->width = $width;
         $this->height = $height;
     }
 
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    public function getWidth()
+    public function getWidth(): ?int
     {
         return $this->width;
     }
 
-    public function getHeight()
+    public function getHeight(): ?int
     {
         return $this->height;
+    }
+
+    public function merge(Logo $logo): void
+    {
+        // Overwrite the current data with that from the new logo
+        $this->url = is_null($logo->getUrl()) ? null : $logo->getUrl();
+        $this->width = is_null($logo->getWidth()) ? null : $logo->getWidth();
+        $this->height = is_null($logo->getHeight()) ? null : $logo->getHeight();
     }
 }

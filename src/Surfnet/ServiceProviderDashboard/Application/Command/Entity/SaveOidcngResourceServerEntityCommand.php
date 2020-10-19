@@ -19,10 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -61,7 +60,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"production", "test"}, strict=true)
      */
-    private $environment = Entity::ENVIRONMENT_TEST;
+    private $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * @var string
@@ -174,12 +173,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private $manageId;
 
-    /**
-     * @var string
-     */
-    private $protocol = Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-
-    private function __construct()
+    public function __construct()
     {
     }
 
@@ -191,41 +185,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     {
         $command = new self();
         $command->service = $service;
-
-        return $command;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return SaveOidcngResourceServerEntityCommand
-     */
-    public static function fromEntity(Entity $entity)
-    {
-        $command = new self();
-        $command->id = $entity->getId();
-        $command->status = $entity->getStatus();
-        $command->manageId = $entity->getManageId();
-        $command->service = $entity->getService();
-        $command->archived = $entity->isArchived();
-        $command->environment = $entity->getEnvironment();
-        $command->entityId = $entity->getEntityId();
-        $command->secret = $entity->getClientSecret();
-        $command->nameNl = $entity->getNameNl();
-        $command->nameEn = $entity->getNameEn();
-        $command->comments = $entity->getComments();
-        // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
-        $command->descriptionNl = $entity->getDescriptionNl();
-        $command->descriptionEn = $entity->getDescriptionEn();
-        $command->administrativeContact = $entity->getAdministrativeContact();
-        $command->technicalContact = $entity->getTechnicalContact();
-        $command->supportContact = $entity->getSupportContact();
-        $command->organizationNameNl = $entity->getOrganizationNameNl();
-        $command->organizationNameEn = $entity->getOrganizationNameEn();
-        $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
-        $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
-        $command->organizationUrlNl = $entity->getOrganizationUrlNl();
-        $command->organizationUrlEn = $entity->getOrganizationUrlEn();
 
         return $command;
     }
@@ -246,10 +205,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return $this->status;
     }
 
-    /**
-     * @return Service
-     */
-    public function getService()
+    public function getService(): Service
     {
         return $this->service;
     }
@@ -270,10 +226,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->archived = $archived;
     }
 
-    /**
-     * @return string
-     */
-    public function getEnvironment()
+    public function getEnvironment(): ?string
     {
         return $this->environment;
     }
@@ -286,8 +239,8 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         if (!in_array(
             $environment,
             [
-                Entity::ENVIRONMENT_TEST,
-                Entity::ENVIRONMENT_PRODUCTION,
+                Constants::ENVIRONMENT_TEST,
+                Constants::ENVIRONMENT_PRODUCTION,
             ]
         )) {
             throw new InvalidArgumentException(
@@ -298,10 +251,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->environment = $environment;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): ?string
     {
         return $this->entityId;
     }
@@ -338,10 +288,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->secret = $secret;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
@@ -354,10 +301,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->nameNl = $nameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameEn()
+    public function getNameEn(): ?string
     {
         return $this->nameEn;
     }
@@ -370,10 +314,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->nameEn = $nameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionNl()
+    public function getDescriptionNl(): ?string
     {
         return $this->descriptionNl;
     }
@@ -389,7 +330,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getDescriptionEn()
+    public function getDescriptionEn(): ?string
     {
         return $this->descriptionEn;
     }
@@ -405,7 +346,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return Contact
      */
-    public function getAdministrativeContact()
+    public function getAdministrativeContact(): ?Contact
     {
         return $this->administrativeContact;
     }
@@ -421,7 +362,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return Contact
      */
-    public function getTechnicalContact()
+    public function getTechnicalContact(): ?Contact
     {
         return $this->technicalContact;
     }
@@ -437,7 +378,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return Contact
      */
-    public function getSupportContact()
+    public function getSupportContact(): ?Contact
     {
         return $this->supportContact;
     }
@@ -453,7 +394,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      /**
      * @return string
      */
-    public function getComments()
+    public function getComments(): ?string
     {
         return $this->comments;
     }
@@ -469,7 +410,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationNameNl()
+    public function getOrganizationNameNl(): ?string
     {
         return $this->organizationNameNl;
     }
@@ -485,7 +426,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationNameEn()
+    public function getOrganizationNameEn(): ?string
     {
         return $this->organizationNameEn;
     }
@@ -501,7 +442,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameNl()
+    public function getOrganizationDisplayNameNl(): ?string
     {
         return $this->organizationDisplayNameNl;
     }
@@ -517,7 +458,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameEn()
+    public function getOrganizationDisplayNameEn(): ?string
     {
         return $this->organizationDisplayNameEn;
     }
@@ -533,7 +474,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationUrlNl()
+    public function getOrganizationUrlNl(): ?string
     {
         return $this->organizationUrlNl;
     }
@@ -549,7 +490,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getOrganizationUrlEn()
+    public function getOrganizationUrlEn(): ?string
     {
         return $this->organizationUrlEn;
     }
@@ -564,7 +505,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
 
     public function isForProduction()
     {
-        return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
+        return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function setId($id)
@@ -601,12 +542,9 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->manageId = $manageId;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): string
     {
-        return $this->protocol;
+        return Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
     /**
@@ -617,11 +555,38 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return $this->scopes;
     }
 
-    /**
-     * @return OidcGrantType
-     */
-    public function getGrantType()
+    public function getMetadataUrl(): ?string
     {
-        return $this->grantType;
+        return null;
+    }
+
+    public function getAcsLocation(): ?string
+    {
+        return null;
+    }
+
+    public function getNameIdFormat(): ?string
+    {
+        return null;
+    }
+
+    public function getApplicationUrl(): ?string
+    {
+        return null;
+    }
+
+    public function getEulaUrl(): ?string
+    {
+        return null;
+    }
+
+    public function getCertificate(): ?string
+    {
+        return null;
+    }
+
+    public function getLogoUrl(): ?string
+    {
+        return null;
     }
 }

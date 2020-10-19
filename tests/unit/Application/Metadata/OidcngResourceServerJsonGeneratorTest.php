@@ -20,14 +20,14 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use function file_get_contents;
+use function json_decode;
 
 class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
 {
@@ -68,7 +68,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $data = $generator->generateForNewEntity($this->createOidcngEntity(), 'testaccepted');
+        $data = $generator->generateForNewEntity($this->createManageEntity(), 'testaccepted');
         $this->assertEquals(
             [
                 'data' => [
@@ -78,6 +78,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                     'active' => true,
                     'allowedEntities' => [],
                     'allowedall' => true,
+                    'revisionnote' => 'revisionnote',
                     'metaDataFields' => [
                         'description:en' => 'description en',
                         'description:nl' => 'description nl',
@@ -87,7 +88,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'isResourceServer' => true,
                         'name:en' => 'name en',
                         'name:nl' => 'name nl',
-                        'NameIDFormat' => 'nameidformat',
+                        'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent', // hardcoded
                         'contacts:0:contactType' => 'support',
                         'contacts:0:givenName' => 'givenname',
                         'contacts:0:surName' => 'surname',
@@ -103,7 +104,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'privacy' => 'privacy',
                         'secret' => 'test',
                         'coin:institution_id' => 'service-institution-id',
-                        'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
+                        'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
                     ],
                 ],
                 'type' => 'oidc10_rp',
@@ -119,14 +120,14 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $data = $generator->generateForExistingEntity($this->createOidcngEntity(), 'testaccepted');
+        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
 
         $this->assertEquals(
             array(
                 'pathUpdates' =>
                     array(
                         'entityid' => 'entityid',
-                        'metaDataFields.NameIDFormat' => 'nameidformat',
+                        'metaDataFields.NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
                         'metaDataFields.description:en' => 'description en',
                         'metaDataFields.description:nl' => 'description nl',
                         'metaDataFields.name:en' => 'name en',
@@ -153,7 +154,8 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'allowedall' => true,
                         'metaDataFields.privacy' => 'privacy',
                         'metaDataFields.coin:institution_id' => 'service-institution-id',
-                        'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
+                        'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
+                        'revisionnote' => 'revisionnote'
                     ),
                 'type' => 'oidc10_rp',
                 'id' => 'manageId',
@@ -161,54 +163,45 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $data
         );
     }
+    private function createManageEntity(
+        ?bool $idpAllowAll = null,
+        ?array $idpWhitelist = null,
+        ?string $environment = null
+    ): ManageEntity {
 
-    /**
-     * @return MetadataConversionDto
-     */
-    private function createOidcngEntity()
-    {
-        /** @var Entity $entity */
-        $entity = m::mock(Entity::class)->makePartial();
-
-        $entity->setProtocol('oidcng_rs');
-
-        $entity->setManageId('manageId');
-        $entity->setEntityId('http://entityid');
-        $entity->setNameEn('name en');
-        $entity->setNameNl('name nl');
-        $entity->setNameIdFormat('nameidformat');
-        $entity->setDescriptionEn('description en');
-        $entity->setDescriptionNl('description nl');
-        $entity->setCertificate(
-            <<<CERT
------BEGIN CERTIFICATE-----
-certdata
------END CERTIFICATE-----
-CERT
-        );
-
-        $entity->setOrganizationNameEn('orgen');
-        $entity->setOrganizationDisplayNameEn('orgdisen');
-        $entity->setOrganizationUrlEn('http://orgen');
-        $entity->setOrganizationNameNl('orgnl');
-        $entity->setOrganizationDisplayNameNl('orgdisnl');
-        $entity->setOrganizationUrlNl('http://orgnl');
-
-        $contact = new Contact();
-        $contact->setFirstName('givenname');
-        $contact->setLastName('surname');
-        $contact->setEmail('emailaddress');
-        $contact->setPhone('telephonenumber');
-
-        $entity->setSupportContact($contact);
-        $entity->setClientSecret('test');
-        $entity->shouldReceive('isAllowedAll')->andReturn(true);
-
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oidc10_rp_response.json'), true));
         $service = new Service();
         $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
         $service->setInstitutionId('service-institution-id');
         $entity->setService($service);
+        $entity->setComments('revisionnote');
+        $entity = m::mock($entity);
 
-        return MetadataConversionDto::fromEntity($entity);
+        if ($idpAllowAll !== null) {
+            $entity
+                ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+                ->andReturn($idpAllowAll);
+        } else {
+            $entity
+                ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+                ->andReturn(true);
+        }
+
+        if ($idpWhitelist !== null) {
+            $entity
+                ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+                ->andReturn($idpWhitelist);
+        } else {
+            $entity
+                ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+                ->andReturn([]);
+        }
+
+        if ($environment !== null) {
+            $entity
+                ->shouldReceive('getEnvironment')
+                ->andReturn($environment);
+        }
+        return $entity;
     }
 }

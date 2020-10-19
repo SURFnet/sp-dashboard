@@ -23,7 +23,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class EntityPublishedController extends Controller
@@ -37,22 +39,21 @@ class EntityPublishedController extends Controller
      */
     public function publishedAction()
     {
-        /** @var Entity $entity */
+        /** @var ManageEntity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
 
-        // Redirects OIDC (including TNG) published entity confirmations to the entity list page and shows a
+        // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
-        $protocol = $entity->getProtocol();
-        if ($protocol === Entity::TYPE_OPENID_CONNECT ||
-            $protocol === Entity::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+        $protocol = $entity->getProtocol()->getProtocol();
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {
             return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
         }
 
-        $parameters = ['entityName' => $entity->getNameEn()];
+        $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
 
-        if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
+        if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             return $this->render('@Dashboard/EntityPublished/publishedTest.html.twig', $parameters);
         }
         return $this->render('@Dashboard/EntityPublished/publishedProduction.html.twig', $parameters);

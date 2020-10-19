@@ -22,8 +22,8 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\ManageEntityAccessGrantedVoter;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\ManageEntityAccessGrantedVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 

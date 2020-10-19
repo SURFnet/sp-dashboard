@@ -23,24 +23,18 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactory;
 
 class EntityTypeFactoryTest extends MockeryTestCase
 {
-    /**
-     * @var Entity
-     */
-    private $entity;
-
     /**
      * @var Service
      */
@@ -60,24 +54,19 @@ class EntityTypeFactoryTest extends MockeryTestCase
      * @var FormType
      */
     private $form;
+    /**
+     * @var SaveCommandFactoryInterface&m\Mock
+     */
+    private $saveCommandFactory;
 
     protected function setUp()
     {
 
         $this->formFactory = m::mock(FormFactory::class);
-        $this->entity = m::mock(Entity::class)->makePartial();
+        $this->saveCommandFactory = m::mock(SaveCommandFactoryInterface::class);
         $this->service = m::mock(Service::class);
         $this->form = m::mock(FormType::class);
-
-        $this->entity
-            ->shouldReceive('getGrantType')
-            ->andReturn(new OidcGrantType(OidcGrantType::GRANT_TYPE_IMPLICIT));
-
-        $this->entity
-            ->shouldReceive('getOidcngResourceServers')
-            ->andReturn(new ResourceServerCollection([]));
-
-        $this->factory = new EntityTypeFactory($this->formFactory);
+        $this->factory = new EntityTypeFactory($this->formFactory, $this->saveCommandFactory);
     }
 
     public function test_build_create_new_saml_form()
@@ -103,10 +92,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_SAML,
+            Constants::TYPE_SAML,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            null
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertInstanceOf(FormType::class, $form);
@@ -135,10 +123,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_SAML,
+            Constants::TYPE_SAML,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            $this->entity
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertInstanceOf(FormType::class, $form);
@@ -167,10 +154,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG,
+            Constants::TYPE_OPENID_CONNECT_TNG,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            null
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertInstanceOf(FormType::class, $form);
@@ -199,10 +185,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG,
+            Constants::TYPE_OPENID_CONNECT_TNG,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            $this->entity
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertInstanceOf(FormType::class, $form);
@@ -231,42 +216,9 @@ class EntityTypeFactoryTest extends MockeryTestCase
             ->andReturn($this->form);
 
         $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
+            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            null
-        );
-
-        $this->assertInstanceOf(FormType::class, $form);
-    }
-
-    public function test_build_create_new_oidcng_rs_form_from_entity()
-    {
-        $this->formFactory
-            ->shouldReceive('create')
-            ->with(\Mockery::on(function ($entityType) {
-                $this->assertSame(OidcngResourceServerEntityType::class, $entityType);
-                return true;
-            }), \Mockery::on(function ($command) {
-                $this->assertInstanceOf(SaveOidcngResourceServerEntityCommand::class, $command);
-                return true;
-            }), \Mockery::on(function ($options) {
-                $this->assertSame([
-                    'validation_groups' => [
-                        0 => 'Default',
-                        1 => 'production',
-                    ],
-                ], $options);
-                return true;
-            }))
-            ->once()
-            ->andReturn($this->form);
-
-        $form = $this->factory->createCreateForm(
-            Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
-            $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            $this->entity
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertInstanceOf(FormType::class, $form);

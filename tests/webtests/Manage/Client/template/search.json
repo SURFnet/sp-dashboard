@@ -1,0 +1,14 @@
+{
+  "id": "%s",
+  "type": "%s",
+  "data": {
+    "entityid": "%s",
+    "metaDataFields": {
+      "name:en": "%s",
+      "contacts:0:contactType": "administrative",
+      "contacts:0:givenName": "Test",
+      "contacts:0:surName": "Test",
+      "contacts:0:emailAddress": "test@example.org"
+    }
+  }
+}

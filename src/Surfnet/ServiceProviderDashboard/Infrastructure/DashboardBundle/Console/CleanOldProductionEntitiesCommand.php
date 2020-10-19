@@ -17,8 +17,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Console\Command\Command;
@@ -31,19 +33,10 @@ class CleanOldProductionEntitiesCommand extends Command
      * @var EntityRepository
      */
     private $entityRepository;
-    /**
-     * @var QueryClient
-     */
-    private $productionManageClient;
 
-    /**
-     * @param EntityRepository $entityRepository
-     * @param QueryClient $productionManageClient
-     */
-    public function __construct(EntityRepository $entityRepository, QueryClient $productionManageClient)
+    public function __construct(EntityRepository $entityRepository)
     {
         $this->entityRepository = $entityRepository;
-        $this->productionManageClient = $productionManageClient;
 
         parent::__construct();
     }
@@ -80,7 +73,7 @@ class CleanOldProductionEntitiesCommand extends Command
     private function updateNextBatch(OutputInterface $output)
     {
         // fetch published production entities
-        $clearEntities = $this->entityRepository->findByState(Entity::STATE_PUBLISHED, Entity::ENVIRONMENT_PRODUCTION);
+        $clearEntities = $this->entityRepository->findByState(Constants::STATE_PUBLISHED, Constants::ENVIRONMENT_PRODUCTION);
         if (empty($clearEntities)) {
             return false;
         }

@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -167,8 +167,8 @@ class OidcngEntityType extends AbstractType
                     'expanded' => true,
                     'multiple' => false,
                     'choices'  => [
-                        'entity.edit.label.transient' => Entity::NAME_ID_FORMAT_TRANSIENT,
-                        'entity.edit.label.persistent' => Entity::NAME_ID_FORMAT_PERSISTENT,
+                        'entity.edit.label.transient' => Constants::NAME_ID_FORMAT_TRANSIENT,
+                        'entity.edit.label.persistent' => Constants::NAME_ID_FORMAT_PERSISTENT,
                     ],
                     'attr' => [
                         'class' => 'nameidformat-container',
@@ -493,7 +493,6 @@ class OidcngEntityType extends AbstractType
             ->add('organizationUrlNl', HiddenType::class)
             ->add('organizationUrlEn', HiddenType::class)
 
-            ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
             ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }

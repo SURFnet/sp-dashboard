@@ -25,17 +25,30 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityListTest extends WebTestCase
 {
-    public function test_entity_list_shows_draft_entities()
+    public function test_entity_list_shows_entities()
     {
         $this->loadFixtures();
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'SP1',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '7398d851-abd1-2283-a8f1-a29ba5036174',
+            'SP2',
+            'https://sp2-entityid.example.com',
+            'https://sp2-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
+
         $this->logIn('ROLE_ADMINISTRATOR');
-
         $this->switchToService('SURFnet');
-
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/entities/1');
 
@@ -48,110 +61,25 @@ class EntityListTest extends WebTestCase
 
         unset($data[0][5]); // remove buttons
         $this->assertEquals([
-            'SP1',
-            'SP1',
-            'John Doe (jdoe@example.org)',
+            'SP1 Name English',
+            'https://sp1-entityid.example.com',
+            '',
             'saml20',
-            'draft',
+            'published',
         ], $data[0]);
 
         unset($data[1][5]); // remove buttons
         $this->assertEquals([
-            'SP2',
-            'SP2',
-            'John Doe (jdoe@example.org)',
+            'SP2 Name English',
+            'https://sp2-entityid.example.com',
+            '',
             'saml20',
-            'draft',
+            'published',
         ], $data[1]);
 
         $this->assertEquals([
             'There are no entities configured',
         ], $data[2]);
-    }
-
-    public function test_entity_list_shows_test_entities()
-    {
-        $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $searchResponse = json_encode([
-            (object)[
-                '_id' => '9729d851-cfdd-4283-a8f1-a29ba5036261',
-            ],
-        ]);
-
-        $sp3QueryResponse = json_encode((object)[
-            'id' => '9729d851-cfdd-4283-a8f1-a29ba5036261',
-            'type' => Protocol::SAML20_SP,
-            'data' => (object)[
-                'entityid' => 'SP3',
-                'metaDataFields' => (object) [
-                    'name:en' => 'SP3',
-                    'contacts:0:contactType' => 'administrative',
-                    'contacts:0:givenName' => 'Test',
-                    'contacts:0:surName' => 'Test',
-                    'contacts:0:emailAddress' => 'test@example.org',
-                ],
-            ],
-        ]);
-
-        $this->switchToService('SURFnet');
-
-        $this->testMockHandler->append(new Response(200, [], $searchResponse));
-        $this->testMockHandler->append(new Response(200, [], $searchResponse));
-        $this->testMockHandler->append(new Response(200, [], $sp3QueryResponse));
-        $this->testMockHandler->append(new Response(200, [], $sp3QueryResponse));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->request('GET', '/entities/1');
-
-        $pageTitle = $crawler->filter('.page-container h1');
-
-        $this->assertContains("Entities of service 'SURFnet'", $pageTitle->text());
-        $data =  $this->rowsToArray($crawler->filter('table'));
-
-        $this->assertCount(5, $data, 'Expecting four rows (2 drafts, 2 published and the header)');
-
-        unset($data[0][5]); // remove buttons
-        $this->assertEquals([
-            'SP1',
-            'SP1',
-            'John Doe (jdoe@example.org)',
-            'saml20',
-            'draft',
-        ], $data[0]);
-
-        unset($data[1][5]); // remove buttons
-        $this->assertEquals([
-            'SP2',
-            'SP2',
-            'John Doe (jdoe@example.org)',
-            'saml20',
-            'draft',
-        ], $data[1]);
-
-        unset($data[2][5]); // remove buttons
-        $this->assertEquals([
-            'SP3',
-            'SP3',
-            'Test Test (test@example.org)',
-            'saml20',
-            'published',
-        ], $data[2]);
-
-        unset($data[3][5]); // remove buttons
-        $this->assertEquals([
-            'SP3',
-            'SP3',
-            'Test Test (test@example.org)',
-            'saml20',
-            'published',
-        ], $data[3]);
-
-        $this->assertEquals([
-            'There are no entities configured',
-        ], $data[4]);
     }
 
     public function test_entity_list_shows_add_to_test_link()
@@ -161,11 +89,6 @@ class EntityListTest extends WebTestCase
         // Surfnet is not allowed to create production entities.
         $service = $this->getServiceRepository()->findByName('SURFnet');
         $this->logIn('ROLE_USER', [$service]);
-
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/entities/1');
         $actions = $crawler->filter('a[href="#add-for-test"]');
@@ -182,56 +105,11 @@ class EntityListTest extends WebTestCase
         $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
         $this->logIn('ROLE_USER', [$service]);
 
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $crawler = $this->client->request('GET', '/entities/2');
 
         $actions = $crawler->filter('a[href="#add-for-production"]');
 
         $this->assertContains('Add new entity', $actions->eq(0)->text(), 'Add for production link not found');
-    }
-
-    public function test_create_entity_buttons_trigger_the_entity_type_dialog()
-    {
-        // Todo investigate this issue in depth. For now this test is skipped as the actual value is quite low.
-        $this->markTestSkipped('Submitting the form #add-for-test stopped working after adding oidcng');
-        $this->loadFixtures();
-        $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
-        $this->logIn('ROLE_USER', [$service]);
-
-        // The entity overview page is loaded twice, so manage is asked twice for getting prod & test entities.
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
-        $crawler = $this->client->request('GET', '/entities/2');
-
-        // Assert the two modal windows are on the page and have a form with appropriate form actions.
-        $modalTest = $crawler->filter('#add-for-test form');
-        $modalProd = $crawler->filter('#add-for-production form');
-        $testAction = $modalTest->first()->attr('action');
-        $prodAction = $modalProd->first()->attr('action');
-
-        $this->assertEquals('/entity/create/type/2', $testAction);
-        $this->assertEquals('/entity/create/type/2/production', $prodAction);
-
-        // Now submit one of the forms and ascertain we ended up on the edit entity form
-        $form = $crawler->filter('#add-for-test')
-            ->selectButton('Create')
-            ->form();
-        $this->client->submit($form);
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expected a redirect to the /entity/create/type action'
-        );
-
-        $this->assertRegExp('/\/entity\/create\/type\/2/', $this->client->getRequest()->getRequestUri());
-
-        // TODO: test submitting to the openidconnect form that is yet to be created
     }
 
     private function rowsToArray(Crawler $crawler)

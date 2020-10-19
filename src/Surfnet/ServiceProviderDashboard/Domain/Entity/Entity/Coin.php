@@ -60,23 +60,14 @@ class Coin
         );
     }
 
-    /**
-     * @param string $signatureMethod
-     * @param string $serviceTeamId
-     * @param string $originalMetadataUrl
-     * @param string $excludeFromPush
-     * @param string $applicationUrl
-     * @param string $eula
-     * @param int $oidcClient
-     */
-    private function __construct(
-        $signatureMethod,
-        $serviceTeamId,
-        $originalMetadataUrl,
-        $excludeFromPush,
-        $applicationUrl,
-        $eula,
-        $oidcClient
+    public function __construct(
+        ?string $signatureMethod,
+        ?string $serviceTeamId,
+        ?string $originalMetadataUrl,
+        ?string $excludeFromPush,
+        ?string $applicationUrl,
+        ?string $eula,
+        ?int $oidcClient
     ) {
         $this->signatureMethod = $signatureMethod;
         $this->serviceTeamId = $serviceTeamId;
@@ -120,5 +111,21 @@ class Coin
     public function getOidcClient()
     {
         return $this->oidcClient;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function merge(Coin $coin)
+    {
+        // Overwrite the current data with that from the new Coin data
+        $this->signatureMethod = is_null($coin->getSignatureMethod()) ? null : $coin->getSignatureMethod();
+        $this->serviceTeamId = is_null($coin->getServiceTeamId()) ? null : $coin->getServiceTeamId();
+        $this->originalMetadataUrl = is_null($coin->getOriginalMetadataUrl()) ? null : $coin->getOriginalMetadataUrl();
+        $this->excludeFromPush = is_null($coin->getExcludeFromPush()) ? null : $coin->getExcludeFromPush();
+        $this->applicationUrl = is_null($coin->getApplicationUrl()) ? null : $coin->getApplicationUrl();
+        $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
+        $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
     }
 }

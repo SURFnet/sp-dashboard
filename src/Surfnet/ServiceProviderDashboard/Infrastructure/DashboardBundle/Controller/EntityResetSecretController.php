@@ -18,17 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use Exception;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -56,9 +56,8 @@ class EntityResetSecretController extends Controller
 
         $service = $this->serviceService->getServiceById($serviceId);
 
-        $id = (string) Uuid::uuid1();
-
         $manageEntity = $this->entityService->getManageEntityById($manageId, $environment);
+        $manageEntity->setService($service);
         if ($manageEntity->getProtocol()->getProtocol() === Protocol::OIDC10_RP &&
             !$this->authorizationService->isOidcngAllowed($service, $environment)
         ) {
@@ -67,23 +66,26 @@ class EntityResetSecretController extends Controller
             );
         }
 
-        // fetch entity from manage and reset secret
-        // the entity gets stored local temporarily
-        $resetOidcSecretCommand = new ResetOidcSecretCommand($id, $manageId, $environment, $service);
-        $this->commandBus->handle($resetOidcSecretCommand);
-
-        // publish the entity
-        $entity = $this->entityService->getEntityById($resetOidcSecretCommand->getId());
-        $response = $this->publishEntity($entity, $flashBag, true);
-        if ($entity->getEnvironment() === Entity::ENVIRONMENT_PRODUCTION && !$manageEntity->isExcludedFromPush()) {
-            // Push metadata (note that we also push to production manage upon client secret resets)
-            // https://www.pivotaltracker.com/story/show/173009970
-            $this->commandBus->handle(new PushMetadataCommand($entity->getEnvironment()));
+        $resetOidcSecretCommand = new ResetOidcSecretCommand($manageEntity);
+        try {
+            $this->commandBus->handle($resetOidcSecretCommand);
+        } catch (Exception $e) {
+            $flashBag->add('error', 'entity.edit.error.publish');
         }
-        if ($response instanceof Response) {
-            return $response;
+        // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
+        // page we will be redirecting to in a moment.
+        $this->get('session')->set('published.entity.clone', clone $manageEntity);
+        switch ($manageEntity->getEnvironment()) {
+            case Constants::ENVIRONMENT_TEST:
+                $destination = 'entity_published_test';
+                return $this->redirectToRoute($destination);
+            case Constants::ENVIRONMENT_PRODUCTION:
+                $destination = 'entity_published_production';
+                return $this->redirectToRoute($destination);
+            default:
+                throw new InvalidEnvironmentException(
+                    sprintf('The environment with value "%s" is not supported.', $manageEntity->getEnvironment())
+                );
         }
-
-        return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
     }
 }

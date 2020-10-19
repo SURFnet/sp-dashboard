@@ -20,14 +20,16 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class LoadEntityServiceTest extends MockeryTestCase
 {
@@ -90,29 +92,24 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The id that was generated for the entity was not unique
-     */
     public function test_service_works_on_new_entities_only()
     {
         $this->entityRepository->shouldReceive('isUnique')
             ->with('dashboardid')
             ->andReturn(false);
 
+        $this->expectExceptionMessage("The id that was generated for the entity was not unique");
+        $this->expectException(InvalidArgumentException::class);
+
         $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Could not find entity in manage: manageid
-     */
     public function test_handler_finds_remote_entity_in_manage()
     {
         $this->entityRepository->shouldReceive('isUnique')
@@ -123,19 +120,18 @@ class LoadEntityServiceTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn([]);
 
+        $this->expectExceptionMessage("Could not find entity in manage: manageid");
+        $this->expectException(InvalidArgumentException::class);
+
         $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The entity you are about to copy does not belong to the selected team
-     */
     public function test_handler_checks_access_rights_of_user()
     {
         $this->entityRepository->shouldReceive('isUnique')
@@ -161,12 +157,15 @@ class LoadEntityServiceTest extends MockeryTestCase
             ->with('manageid')
             ->andReturn($manageEntity);
 
+        $this->expectExceptionMessage("The entity you are about to copy does not belong to the selected team");
+        $this->expectException(InvalidArgumentException::class);
+
         $this->copyService->load(
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION
         );
     }
 
@@ -268,8 +267,8 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
     }
 
@@ -371,85 +370,9 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION
         );
-    }
-
-    /**
-     * @dataProvider providePlaygroundUrls
-     */
-    public function test_handler_should_handle_playground_redirect_url_for_production($testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground)
-    {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true);
-
-        $manageDto = ManageEntity::fromApiResponse([
-            'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
-            'type' => 'saml20_sp',
-            'data' => [
-                'entityid' => 'http://example.com',
-                'arp' => [
-                    'attributes' => [
-                        'urn:mace:dir:attribute-def:eduPersonTargetedID' => [[
-                            'source' => 'idp',
-                            'value' => '*',
-                            'motivation' => 'test1',
-                        ]],
-                        'urn:mace:dir:attribute-def:eduPersonPrincipalName' => [[
-                            'source' => 'idp',
-                            'value' => '*',
-                            'motivation' => 'test2',
-                        ]],
-                        'urn:mace:dir:attribute-def:displayName' => [[
-                            'source' => 'idp',
-                            'value' => '*',
-                            'motivation' => 'test3',
-                        ]],
-                    ],
-                ],
-                'metaDataFields' => [
-                    'name:en' => 'name en',
-                    'name:nl' => 'name nl',
-                    'description:en' => 'description en',
-                    'description:nl' => 'description nl',
-                    'coin:service_team_id' => 'testteam',
-                    'coin:oidc_client' => '1',
-                ],
-                'oidcClient' => [
-                    'clientId' => 'http@//entityid',
-                    'clientSecret' => 'test',
-                    'redirectUris' => $redirectUris,
-                    'grantType' => 'implicit',
-                    'scope' => ['openid'],
-                ],
-            ],
-        ]);
-
-        $this->manageProdClient->shouldReceive('findByManageId')
-            ->with('manageid')
-            ->andReturn($manageDto);
-
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
-            ->andReturn($manageDto);
-
-        $entity =$this->copyService->load(
-            'dashboardid',
-            'manageid',
-            $this->service,
-            $sourceEnviroment,
-            $destinationEvironment
-        );
-
-        $redirectUris = $entity->getRedirectUris();
-        $playgroundEnabled = $entity->isEnablePlayground();
-
-        $messageFormat = 'Unexpected outcome for the "%s" test in scenario "%s".';
-
-        $this->assertSame($excpectedUris, $redirectUris, sprintf($messageFormat, 'expectedUris', $testName));
-        $this->assertSame($expectedEnabledPlayground, $playgroundEnabled, sprintf($messageFormat, 'playgroundEnabled', $testName));
     }
 
     public function test_it_removes_resource_servers_on_copy_to_production()
@@ -468,11 +391,11 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertEmpty($entity->getOidcngResourceServers()->getResourceServers());
+        $this->assertEmpty($entity->getOidcClient()->getResourceServers());
     }
 
     public function test_it_keeps_resource_servers_on_copy_to_same_environment()
@@ -494,11 +417,11 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_TEST
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_TEST
         );
 
-        $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
+        $this->assertNotEmpty($entity->getOidcClient()->getResourceServers());
 
         $this->manageProdClient
             ->shouldReceive('findByManageId')
@@ -509,11 +432,11 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_PRODUCTION,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertNotEmpty($entity->getOidcngResourceServers()->getResourceServers());
+        $this->assertNotEmpty($entity->getOidcClient()->getResourceServers());
     }
 
     public function test_it_updates_the_client_id_on_copy_to_production()
@@ -533,50 +456,36 @@ JSON
             'dashboardid',
             'manageid',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertEquals(
             'https://playground.openconext.nl',
-            $entity->getEntityId(),
+            $entity->getMetaData()->getEntityId(),
             'The schema should have been put back in place on a copy to production (relying party)'
         );
 
         // Also verify the Resource Server entity type correctly gets the schema prepend.
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRSMetadata());
-        $this->manageTestClient->shouldReceive('findByManageId')
-            ->with('manageid')
+        $this->manageTestClient
+            ->shouldReceive('findByManageId')
+            ->with('manageid2')
             ->andReturn($manageDto);
         
         $entity = $this->copyService->load(
             'dashboardid',
-            'manageid',
+            'manageid2',
             $this->service,
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION
+            Constants::ENVIRONMENT_TEST,
+            Constants::ENVIRONMENT_PRODUCTION
         );
 
         $this->assertEquals(
             'https://playground.openconext.nl',
-            $entity->getEntityId(),
+            $entity->getMetaData()->getEntityId(),
             'The schema should have been put back in place on a copy to production (resource server)'
         );
-    }
-
-    public function providePlaygroundUrls()
-    {
-        //$testName, $redirectUris, $sourceEnviroment, $destinationEvironment, $excpectedUris, $expectedEnabledPlayground
-        return [
-            ['prod-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['prod-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_PROD], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
-            ['prod-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
-            ['prod-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_PRODUCTION, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
-            ['test-test-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], true],
-            ['test-prod-enabled', ['url1','url2','url3', self::OIDC_PLAYGROUND_URL_TEST], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], true],
-            ['test-test-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_TEST, ['url1','url2','url3'], false],
-            ['test-prod-disabled', ['url1','url2','url3'], Entity::ENVIRONMENT_TEST, Entity::ENVIRONMENT_PRODUCTION, ['url1','url2','url3'], false],
-        ];
     }
 
     private function getOidcNgRPMetadata()
@@ -584,7 +493,7 @@ JSON
         return json_decode(
             '
                 {
-                    "id": "88888888-0000-9999-1111-777777777777",
+                    "id": "manageid2",
                     "version": 2,
                     "type": "oidc10_rp",
                     "resourceServers": [{

@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-
 class EditServiceTest extends WebTestCase
 {
     public function setUp()
@@ -27,9 +25,6 @@ class EditServiceTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
     }
 
     public function test_can_edit_existing_service()
@@ -46,10 +41,6 @@ class EditServiceTest extends WebTestCase
                 ]
             ]
         ];
-
-        // EntityService::getEntityListForService -> findByTeamName
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/1/edit');
 
@@ -76,10 +67,6 @@ class EditServiceTest extends WebTestCase
 
         $this->logIn('ROLE_ADMINISTRATOR');
         $this->switchToService('SURFnet');
-
-        // EntityService::getEntityListForService -> findByTeamName
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $crawler = $this->client->request('GET', '/service/1/edit');
 
@@ -113,12 +100,6 @@ class EditServiceTest extends WebTestCase
         // Step 3: Admin enables the Privacy questions
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        // EntityService::getEntityListForService -> findByTeamName (is called twice on both test and prod)
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $crawler = $this->client->request('GET', '/service/1/edit');
 
         $formData = [
@@ -134,9 +115,6 @@ class EditServiceTest extends WebTestCase
             ->form();
 
         $this->client->submit($form, $formData);
-
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->client->request('GET', '/service/1/privacy');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());

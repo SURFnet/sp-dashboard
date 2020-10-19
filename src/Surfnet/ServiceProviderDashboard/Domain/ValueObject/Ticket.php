@@ -23,7 +23,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
  */
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class Ticket
@@ -46,14 +45,14 @@ class Ticket
     private $issueType;
 
     public function __construct(
-        $entityId,
-        $manageId,
-        $nameEn,
-        $summaryTranslationKey,
-        $descriptionTranslationKey,
-        $applicantName,
-        $applicantEmail,
-        $issueType
+        string $entityId,
+        string $manageId,
+        string $nameEn,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey,
+        string $applicantName,
+        string $applicantEmail,
+        ?string $issueType
     ) {
         $this->entityId = $entityId;
         $this->manageId = $manageId;
@@ -65,21 +64,13 @@ class Ticket
         $this->issueType = $issueType;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @param Applicant $applicant
-     * @param string $issueType
-     * @param string $summaryTranslationKey
-     * @param string $descriptionTranslationKey
-     * @return Ticket
-     */
     public static function fromManageResponse(
         ManageEntity $entity,
         Applicant $applicant,
-        $issueType,
-        $summaryTranslationKey,
-        $descriptionTranslationKey
-    ) {
+        string $issueType,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey
+    ) : Ticket {
         $entityId = $entity->getMetaData()->getEntityId();
         $nameEn = $entity->getMetaData()->getNameEn();
 
@@ -95,69 +86,42 @@ class Ticket
         );
     }
 
-    /**
-     * @param Entity $entity
-     * @param Applicant $applicant
-     * @param string $issueType
-     * @param string $summaryTranslationKey
-     * @param string $descriptionTranslationKey
-     * @return Ticket
-     */
-    public static function fromEntity(
-        Entity $entity,
-        Applicant $applicant,
-        $issueType,
-        $summaryTranslationKey,
-        $descriptionTranslationKey
-    ) {
-        return new self(
-            $entity->getEntityId(),
-            $entity->getId(),
-            $entity->getNameEn(),
-            $summaryTranslationKey,
-            $descriptionTranslationKey,
-            $applicant->getDisplayName(),
-            $applicant->getEmailAddress(),
-            $issueType
-        );
-    }
-
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
 
-    public function getManageId()
+    public function getManageId(): string
     {
         return $this->manageId;
     }
 
-    public function getEntityName()
+    public function getEntityName(): string
     {
         return $this->entityName;
     }
 
-    public function getApplicantName()
+    public function getApplicantName(): string
     {
         return $this->applicantName;
     }
 
-    public function getApplicantEmail()
+    public function getApplicantEmail(): string
     {
         return $this->applicantEmail;
     }
 
-    public function getIssueType()
+    public function getIssueType(): string
     {
         return $this->issueType;
     }
 
-    public function getSummaryTranslationKey()
+    public function getSummaryTranslationKey(): string
     {
         return $this->summaryTranslationKey;
     }
 
-    public function getDescriptionTranslationKey()
+    public function getDescriptionTranslationKey(): string
     {
         return $this->descriptionTranslationKey;
     }

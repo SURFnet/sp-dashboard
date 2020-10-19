@@ -148,10 +148,3 @@ dashboard_saml:
         max_absolute_lifetime: "%session_max_absolute_lifetime%"
         max_relative_lifetime: "%session_max_relative_lifetime%"
     administrator_teams: "%administrator_teams%"
-
-tactician:
-    commandbus:
-        default:
-            middleware:
-                - surfnet.dashboard.middleware.doctrine_transaction
-                - tactician.middleware.command_handler

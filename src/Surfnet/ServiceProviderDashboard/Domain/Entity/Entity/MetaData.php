@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
 use Webmozart\Assert\Assert;
 
 class MetaData
@@ -65,7 +66,7 @@ class MetaData
     {
         $metaDataFields = $data['data']['metaDataFields'];
 
-        $entityId = $data['data']['entityid'];
+        $entityId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $metaDataUrl = isset($data['data']['metadataurl']) ? $data['data']['metadataurl'] : '';
         $acsLocation = isset($metaDataFields['AssertionConsumerService:0:Location'])
             ? $metaDataFields['AssertionConsumerService:0:Location'] : '';
@@ -76,7 +77,7 @@ class MetaData
         $nameEn = isset($metaDataFields['name:en']) ? $metaDataFields['name:en'] : '';
         $nameNl = isset($metaDataFields['name:nl']) ? $metaDataFields['name:nl'] : '';
 
-        Assert::stringNotEmpty($entityId);
+        Assert::string($entityId);
         Assert::string($metaDataUrl);
         Assert::string($acsLocation);
         Assert::string($nameIdFormat);
@@ -109,31 +110,18 @@ class MetaData
     }
 
     /**
-     * @param string $entityId,
-     * @param string $metaDataUrl
-     * @param string $acsLocation
-     * @param string $nameIdFormat
-     * @param string $certData
-     * @param string $descriptionEn
-     * @param string $descriptionNl
-     * @param string $nameEn
-     * @param string $nameNl
-     * @param ContactList $contacts
-     * @param Organization $organization
-     * @param Coin $coin
-     * @param Logo $logo
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    private function __construct(
-        $entityId,
-        $metaDataUrl,
-        $acsLocation,
-        $nameIdFormat,
-        $certData,
-        $descriptionEn,
-        $descriptionNl,
-        $nameEn,
-        $nameNl,
+    public function __construct(
+        ?string $entityId,
+        ?string $metaDataUrl,
+        ?string $acsLocation,
+        ?string $nameIdFormat,
+        ?string $certData,
+        ?string $descriptionEn,
+        ?string $descriptionNl,
+        ?string $nameEn,
+        ?string $nameNl,
         ContactList $contacts,
         Organization $organization,
         Coin $coin,
@@ -154,68 +142,94 @@ class MetaData
         $this->logo = $logo;
     }
 
-    public function getEntityId()
+    public function getEntityId(): ?string
     {
         return $this->entityId;
     }
 
-    public function getMetaDataUrl()
+    public function resetOidcNgEntitId()
+    {
+        $this->entityId = OidcngSpdClientIdParser::parse($this->entityId);
+    }
+
+    public function getMetaDataUrl(): ?string
     {
         return $this->metaDataUrl;
     }
 
-    public function getAcsLocation()
+    public function getAcsLocation(): ?string
     {
         return $this->acsLocation;
     }
 
-    public function getNameIdFormat()
+    public function getNameIdFormat(): ?string
     {
         return $this->nameIdFormat;
     }
 
-    public function getCertData()
+    public function getCertData(): ?string
     {
         return $this->certData;
     }
 
-    public function getDescriptionEn()
+    public function getDescriptionEn(): ?string
     {
         return $this->descriptionEn;
     }
 
-    public function getDescriptionNl()
+    public function getDescriptionNl(): ?string
     {
         return $this->descriptionNl;
     }
 
-    public function getNameEn()
+    public function getNameEn(): ?string
     {
         return $this->nameEn;
     }
 
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
 
-    public function getContacts()
+    public function getContacts(): ContactList
     {
         return $this->contacts;
     }
 
-    public function getOrganization()
+    public function getOrganization(): Organization
     {
         return $this->organization;
     }
 
-    public function getCoin()
+    public function getCoin(): Coin
     {
         return $this->coin;
     }
 
-    public function getLogo()
+    public function getLogo(): Logo
     {
         return $this->logo;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function merge(MetaData $metaData)
+    {
+        $this->entityId = is_null($metaData->getEntityId()) ? null : $metaData->getEntityId();
+        $this->metaDataUrl = is_null($metaData->getMetaDataUrl()) ? null : $metaData->getMetaDataUrl();
+        $this->acsLocation = is_null($metaData->getAcsLocation()) ? null : $metaData->getAcsLocation();
+        $this->nameIdFormat = is_null($metaData->getNameIdFormat()) ? null : $metaData->getNameIdFormat();
+        $this->certData = is_null($metaData->getCertData()) ? null : $metaData->getCertData();
+        $this->descriptionEn = is_null($metaData->getDescriptionEn()) ? null : $metaData->getDescriptionEn();
+        $this->descriptionNl = is_null($metaData->getDescriptionNl()) ? null : $metaData->getDescriptionNl();
+        $this->nameEn = is_null($metaData->getNameEn()) ? null : $metaData->getNameEn();
+        $this->nameNl = is_null($metaData->getNameNl()) ? null : $metaData->getNameNl();
+        $this->coin->merge($metaData->getCoin());
+        $this->contacts->merge($metaData->getContacts());
+        $this->organization->merge($metaData->getOrganization());
+        $this->logo->merge($metaData->getLogo());
     }
 }

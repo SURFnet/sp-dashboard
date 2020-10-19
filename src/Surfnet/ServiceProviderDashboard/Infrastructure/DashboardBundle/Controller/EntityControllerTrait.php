@@ -20,18 +20,20 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Exception;
 use League\Tactician\CommandBus;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteDraftEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -76,20 +78,18 @@ trait EntityControllerTrait
     private $loadEntityService;
 
     /**
-     * @param CommandBus $commandBus
-     * @param EntityService $entityService
-     * @param ServiceService $serviceService
-     * @param AuthorizationService $authorizationService
-     * @param EntityTypeFactory $entityTypeFactory
-     * @param LoadEntityService $loadEntityService
+     * @var EntityMergeService
      */
+    private $entityMergeService;
+
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         ServiceService $serviceService,
         AuthorizationService $authorizationService,
         EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService
+        LoadEntityService $loadEntityService,
+        EntityMergeService $entityMergeService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
@@ -97,6 +97,7 @@ trait EntityControllerTrait
         $this->authorizationService = $authorizationService;
         $this->entityTypeFactory = $entityTypeFactory;
         $this->loadEntityService = $loadEntityService;
+        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -122,13 +123,11 @@ trait EntityControllerTrait
             }
         } catch (InvalidArgumentException $e) {
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
-        } catch (Exception $e) {
-            $this->addFlash('error', 'entity.edit.metadata.unknown.exception');
         }
 
         $form = $this->createForm(SamlEntityType::class, $command);
 
-        if ($command->getStatus() === Entity::STATE_PUBLISHED) {
+        if ($command->getStatus() === Constants::STATE_PUBLISHED) {
             $form->remove('save');
         }
 
@@ -136,41 +135,31 @@ trait EntityControllerTrait
     }
 
     /**
-     * @param Entity $entity
-     * @param FlashBagInterface $flashBag
-     * @param bool $isClientReset
      * @return RedirectResponse|Form
      */
-    private function publishEntity(Entity $entity, FlashBagInterface $flashBag, $isClientReset = false)
-    {
-        if ($entity->isReadOnly()) {
-            throw $this->createNotFoundException(
-                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
-            );
-        }
+    private function publishEntity(
+        ?ManageEntity $entity,
+        SaveEntityCommandInterface $saveCommand,
+        FlashBagInterface $flashBag
+    ) {
+        // Merge the save command data into the ManageEntity
+        $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
 
         switch ($entity->getEnvironment()) {
-            case Entity::ENVIRONMENT_TEST:
-                $publishEntityCommand = new PublishEntityTestCommand($entity->getId());
+            case Constants::ENVIRONMENT_TEST:
+                $publishEntityCommand = new PublishEntityTestCommand($entity);
                 $destination = 'entity_published_test';
                 break;
 
-            case Entity::ENVIRONMENT_PRODUCTION:
+            case Constants::ENVIRONMENT_PRODUCTION:
                 $applicant = $this->authorizationService->getContact();
-                $publishEntityCommand = new PublishEntityProductionCommand($entity->getId(), $applicant);
-                if ($isClientReset) {
-                    $publishEntityCommand = new PublishEntityProductionAfterClientResetCommand(
-                        $entity->getId(),
-                        $applicant
-                    );
-                }
+                $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
                 $destination = 'entity_published_production';
                 break;
             default:
                 throw new InvalidArgumentException(
                     sprintf('The environment with value "%s" is not supported.', $entity->getEnvironment())
                 );
-                break;
         }
 
         try {
@@ -180,17 +169,13 @@ trait EntityControllerTrait
         }
 
         if (!$flashBag->has('error')) {
-            if ($entity->getEnvironment() === Entity::ENVIRONMENT_TEST) {
-                $this->commandBus->handle(new PushMetadataCommand(Entity::ENVIRONMENT_TEST));
+            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
+                $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
             }
 
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
             // page we will be redirecting to in a moment.
             $this->get('session')->set('published.entity.clone', clone $entity);
-
-            // Test entities are removed after they've been published to Manage
-            $deleteCommand = new DeleteDraftEntityCommand($entity->getId());
-            $this->commandBus->handle($deleteCommand);
 
             return $this->redirectToRoute($destination);
         }
@@ -232,19 +217,6 @@ trait EntityControllerTrait
     private function isDefaultAction(Form $form)
     {
         return $this->assertUsedSubmitButton($form, 'default');
-    }
-
-    /**
-     * @param Form $form
-     * @return bool
-     */
-    private function isSaveAction(Form $form)
-    {
-        if ($this->assertUsedSubmitButton($form, 'save')) {
-            return true;
-        }
-
-        return $form->has('save') && $this->isDefaultAction($form);
     }
 
     /**

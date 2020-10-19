@@ -50,16 +50,14 @@ class Organization
         return new self($nameEn, $displayNameEn, $urlEn, $nameNl, $displayNameNl, $urlNl);
     }
 
-    /**
-     * @param string $nameEn
-     * @param string $displayNameEn
-     * @param string $urlEn
-     * @param string $nameNl
-     * @param string $displayNameNl
-     * @param string $urlNl
-     */
-    private function __construct($nameEn, $displayNameEn, $urlEn, $nameNl, $displayNameNl, $urlNl)
-    {
+    public function __construct(
+        ?string $nameEn,
+        ?string $displayNameEn,
+        ?string $urlEn,
+        ?string $nameNl,
+        ?string $displayNameNl,
+        ?string $urlNl
+    ) {
         $this->nameEn = $nameEn;
         $this->displayNameEn = $displayNameEn;
         $this->urlEn = $urlEn;
@@ -68,33 +66,43 @@ class Organization
         $this->urlNl = $urlNl;
     }
 
-    public function getNameEn()
+    public function getNameEn(): ?string
     {
         return $this->nameEn;
     }
 
-    public function getDisplayNameEn()
+    public function getDisplayNameEn(): ?string
     {
         return $this->displayNameEn;
     }
 
-    public function getUrlEn()
+    public function getUrlEn(): ?string
     {
         return $this->urlEn;
     }
 
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
 
-    public function getDisplayNameNl()
+    public function getDisplayNameNl(): ?string
     {
         return $this->displayNameNl;
     }
 
-    public function getUrlNl()
+    public function getUrlNl(): ?string
     {
         return $this->urlNl;
+    }
+
+    public function merge(Organization $organization)
+    {
+        $this->nameEn = is_null($organization->getNameEn()) ? null : $organization->getNameEn();
+        $this->displayNameEn = is_null($organization->getDisplayNameEn()) ? null : $organization->getDisplayNameEn();
+        $this->urlEn = is_null($organization->getUrlEn()) ? null : $organization->getUrlEn();
+        $this->nameNl = is_null($organization->getNameNl()) ? null : $organization->getNameNl();
+        $this->displayNameNl = is_null($organization->getDisplayNameNl()) ? null : $organization->getDisplayNameNl();
+        $this->urlNl = is_null($organization->getUrlNl()) ? null : $organization->getUrlNl();
     }
 }

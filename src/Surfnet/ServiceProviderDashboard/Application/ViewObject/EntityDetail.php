@@ -18,11 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use function in_array;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -263,67 +264,54 @@ class EntityDetail
     {
     }
 
-    /**
-     * @param DomainEntity $entity
-     *
-     * @return EntityDetail
-     */
-    public static function fromEntity(DomainEntity $entity)
-    {
+    public static function fromEntity(
+        ManageEntity $entity,
+        string $oidcPlaygroundUriTest,
+        string $oidcPlaygroundUriProd
+    ) : EntityDetail {
         $entityDetail = new self();
         $entityDetail->id = $entity->getId();
-        $entityDetail->manageId = $entity->getManageId();
-        $entityDetail->protocol = $entity->getProtocol();
-        if ($entity->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT) {
-            $entityDetail->grantType = $entity->getGrantType()->getGrantType();
-            $entityDetail->redirectUris = $entity->getRedirectUris();
-            $entityDetail->playgroundEnabled = $entity->isEnablePlayground();
+        $entityDetail->manageId = $entity->getId();
+        $entityDetail->protocol = $entity->getProtocol()->getProtocol();
+
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
+            $entityDetail->grantType = $entity->getOidcClient()->getGrantType();
+            $entityDetail->isPublicClient = $entity->getOidcClient()->isPublicClient();
+            $entityDetail->accessTokenValidity = $entity->getOidcClient()->getAccessTokenValidity();
+            $entityDetail->redirectUris = $entity->getOidcClient()->getRedirectUris();
+            $entityDetail->playgroundEnabled = self::getIsPlaygroundEnabled(
+                $entity,
+                $oidcPlaygroundUriTest,
+                $oidcPlaygroundUriProd
+            );
+            $entityDetail->resourceServers = $entity->getOidcClient()->getResourceServers();
         }
 
-        if ($entity->getProtocol() == DomainEntity::TYPE_OPENID_CONNECT_TNG) {
-            $entityDetail->grantType = $entity->getGrantType()->getGrantType();
-            $entityDetail->isPublicClient = $entity->isPublicClient();
-            $entityDetail->accessTokenValidity = $entity->getAccessTokenValidity();
-            $entityDetail->redirectUris = $entity->getRedirectUris();
-            $entityDetail->playgroundEnabled = $entity->isEnablePlayground();
-            $entityDetail->resourceServers = $entity->getOidcngResourceServers()->getResourceServers();
+        $entityDetail->metadataUrl = $entity->getMetaData()->getMetaDataUrl();
+        $entityDetail->acsLocation = $entity->getMetaData()->getAcsLocation();
+        $entityDetail->entityId = $entity->getMetaData()->getEntityId();
+        $entityDetail->certificate = $entity->getMetaData()->getCertData();
+        if ($entity->getMetaData()->getLogo()) {
+            $entityDetail->logoUrl = $entity->getMetaData()->getLogo()->getUrl();
         }
+        $entityDetail->nameNl = $entity->getMetaData()->getNameNl();
+        $entityDetail->nameEn = $entity->getMetaData()->getNameEn();
+        $entityDetail->descriptionNl = $entity->getMetaData()->getDescriptionEn();
+        $entityDetail->descriptionEn = $entity->getMetaData()->getDescriptionNl();
+        $entityDetail->applicationUrl = $entity->getMetaData()->getCoin()->getApplicationUrl();
+        $entityDetail->eulaUrl = $entity->getMetaData()->getCoin()->getEula();
+        $entityDetail->administrativeContact = $entity->getMetaData()->getContacts()->findAdministrativeContact();
+        $entityDetail->technicalContact = $entity->getMetaData()->getContacts()->findTechnicalContact();
+        $entityDetail->supportContact = $entity->getMetaData()->getContacts()->findSupportContact();
+        $entityDetail->nameIdFormat = $entity->getMetaData()->getNameIdFormat();
+        $entityDetail->organizationNameNl = $entity->getMetaData()->getOrganization()->getNameNl();
+        $entityDetail->organizationNameEn = $entity->getMetaData()->getOrganization()->getNameEn();
+        $entityDetail->organizationDisplayNameNl = $entity->getMetaData()->getOrganization()->getDisplayNameNl();
+        $entityDetail->organizationDisplayNameEn = $entity->getMetaData()->getOrganization()->getDisplayNameEn();
+        $entityDetail->organizationUrlNl = $entity->getMetaData()->getOrganization()->getUrlNl();
+        $entityDetail->organizationUrlEn = $entity->getMetaData()->getOrganization()->getUrlEn();
 
-        $entityDetail->metadataUrl = $entity->getMetadataUrl();
-        $entityDetail->acsLocation = $entity->getAcsLocation();
-        $entityDetail->entityId = $entity->getEntityId();
-        $entityDetail->certificate = $entity->getCertificate();
-        $entityDetail->logoUrl = $entity->getLogoUrl();
-        $entityDetail->nameNl = $entity->getNameNl();
-        $entityDetail->nameEn = $entity->getNameEn();
-        $entityDetail->descriptionNl = $entity->getDescriptionNl();
-        $entityDetail->descriptionEn = $entity->getDescriptionEn();
-        $entityDetail->applicationUrl = $entity->getApplicationUrl();
-        $entityDetail->eulaUrl = $entity->getEulaUrl();
-        $entityDetail->administrativeContact = $entity->getAdministrativeContact();
-        $entityDetail->technicalContact = $entity->getTechnicalContact();
-        $entityDetail->supportContact = $entity->getSupportContact();
-        $entityDetail->givenNameAttribute = $entity->getGivenNameAttribute();
-        $entityDetail->surNameAttribute = $entity->getSurNameAttribute();
-        $entityDetail->commonNameAttribute = $entity->getCommonNameAttribute();
-        $entityDetail->displayNameAttribute = $entity->getDisplayNameAttribute();
-        $entityDetail->emailAddressAttribute = $entity->getEmailAddressAttribute();
-        $entityDetail->organizationAttribute = $entity->getOrganizationAttribute();
-        $entityDetail->organizationTypeAttribute = $entity->getOrganizationTypeAttribute();
-        $entityDetail->affiliationAttribute = $entity->getAffiliationAttribute();
-        $entityDetail->entitlementAttribute = $entity->getEntitlementAttribute();
-        $entityDetail->principleNameAttribute = $entity->getPrincipleNameAttribute();
-        $entityDetail->uidAttribute = $entity->getUidAttribute();
-        $entityDetail->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
-        $entityDetail->personalCodeAttribute = $entity->getPersonalCodeAttribute();
-        $entityDetail->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
-        $entityDetail->nameIdFormat = $entity->getNameIdFormat();
-        $entityDetail->organizationNameNl = $entity->getOrganizationNameNl();
-        $entityDetail->organizationNameEn = $entity->getOrganizationNameEn();
-        $entityDetail->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
-        $entityDetail->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
-        $entityDetail->organizationUrlNl = $entity->getOrganizationUrlNl();
-        $entityDetail->organizationUrlEn = $entity->getOrganizationUrlEn();
+        self::setAttributes($entityDetail, $entity->getAttributes());
 
         $actionId = $entityDetail->manageId;
         if ($entityDetail->isLocalEntity()) {
@@ -334,7 +322,7 @@ class EntityDetail
             $entity->getService()->getId(),
             $entity->getStatus(),
             $entity->getEnvironment(),
-            $entity->getProtocol(),
+            $entity->getProtocol()->getProtocol(),
             $entity->isReadOnly()
         );
         return $entityDetail;
@@ -343,6 +331,36 @@ class EntityDetail
     public function isLocalEntity()
     {
         return !is_null($this->id);
+    }
+
+    private static function setAttributes(EntityDetail $entityDetail, AttributeList $attributes)
+    {
+        $entityDetail->givenNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:givenName');
+        $entityDetail->surNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:sn');
+        $entityDetail->commonNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:cn');
+        $entityDetail->displayNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:displayName');
+        $entityDetail->emailAddressAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:mail');
+        $entityDetail->organizationAttribute = $attributes->findByUrn('urn:mace:terena:attribute-def:schacHomeOrganization');
+        $entityDetail->organizationTypeAttribute = $attributes->findByUrn('urn:mace:terena:attribute-def:schacHomeOrganizationType');
+        $entityDetail->affiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonAffiliation');
+        $entityDetail->entitlementAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonEntitlement');
+        $entityDetail->principleNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonPrincipalName');
+        $entityDetail->uidAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:uid');
+        $entityDetail->preferredLanguageAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
+        $entityDetail->personalCodeAttribute = $attributes->findByUrn('urn:schac:dir:attribute-def:schacPersonalUniqueCode');
+        $entityDetail->scopedAffiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
+    }
+
+    private static function getIsPlaygroundEnabled(ManageEntity $entity, string $playgroundTest, string $playgroundProd): bool
+    {
+        $uris = $entity->getOidcClient()->getRedirectUris();
+        $environment = $entity->getEnvironment();
+        if (($environment === Constants::ENVIRONMENT_TEST && in_array($playgroundTest, $uris)) ||
+            ($environment === Constants::ENVIRONMENT_PRODUCTION && in_array($playgroundProd, $uris))
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -366,10 +384,7 @@ class EntityDetail
      */
     public function getEntityId()
     {
-        if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
-            return $this->entityId;
-        }
-        return OidcClientIdParser::parse($this->entityId);
+        return $this->entityId;
     }
 
     /**

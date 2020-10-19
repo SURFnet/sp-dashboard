@@ -1,7 +1,7 @@
 {% if value is not empty %}
 <h3>{{ label }}</h3>
 <div class="container contact">
-    {% if value.firstName is not empty %}
+    {% if value.givenName is not empty %}
     <div class="detail">
         {% if informationPopup is defined %}
             <span data-tippy-content="{{ informationPopup|trans }}" class="help-button">
@@ -9,13 +9,13 @@
             </span>
         {% endif %}
         <label>{{ 'entity.detail.contact.first_name'|trans }}</label>
-        <span>{{ value.firstName }}</span>
+        <span>{{ value.givenName }}</span>
     </div>
     {% endif %}
-    {% if value.lastName is not empty %}
+    {% if value.surName is not empty %}
     <div class="detail">
         <label>{{ 'entity.detail.contact.last_name'|trans }}</label>
-        <span>{{ value.lastName }}</span>
+        <span>{{ value.surName }}</span>
     </div>
     {% endif %}
     {% if value.email is not empty %}

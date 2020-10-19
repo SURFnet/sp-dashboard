@@ -18,41 +18,50 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 class EntityEditTest extends WebTestCase
 {
-    private $entityId;
+    private $manageId;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->loadFixtures();
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'SP1',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '7398d851-abd1-2283-a8f1-a29ba5036174',
+            'Ibuildings SP1',
+            'https://sp1-ibuildings.com',
+            'https://sp1-ibuildings.com/metadata',
+            'urn:collab:org:ibuildings.nl'
+        );
+        $this->manageId = '9729d851-cfdd-4283-a8f1-a29ba5036261';
 
         $this->logIn('ROLE_ADMINISTRATOR');
 
-        $service = $this->getServiceRepository()->findByName('SURFnet');
-
         $this->switchToService('SURFnet');
-
-        $this->entityId = $service->getEntities()
-            ->first()
-            ->getId();
     }
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
 
         $form = $crawler->filter('.page-container')
-            ->selectButton('Save')
+            ->selectButton('Publish')
             ->form();
         $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
         $this->assertEquals(
-            'SP1',
+            'SP1 Name English',
             $nameEnfield->getValue(),
             'Expect the NameEN field to be set with value from command'
         );
@@ -61,80 +70,11 @@ class EntityEditTest extends WebTestCase
     public function test_it_rejects_unauthorized_visitors()
     {
         $ibuildings = $this->getServiceRepository()->findByName('Ibuildings B.V.');
-        $surfNet = $this->getServiceRepository()->findByName('SURFnet');
-
-        $surfNetEntityId = $surfNet->getEntities()->first()->getId();
 
         $this->logIn('ROLE_USER', [$ibuildings]);
 
-        $this->client->request('GET', "/entity/edit/{$surfNetEntityId}");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function test_it_updates_form_submissions_to_an_entity()
-    {
-        $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => 'https://www.google.com',
-                    'nameEn' => 'The A Team',
-                ],
-                'contactInformation' => [
-                    'administrativeContact' => [
-                        'firstName' => 'John',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '999',
-                    ],
-                    'technicalContact' => [
-                        'firstName' => 'Johnny',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '888',
-                    ],
-                    'supportContact' => [
-                        'firstName' => 'Jack',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '777',
-                    ],
-                ],
-                'attributes' => [
-                    'givenNameAttribute' => [
-                        'requested' => true,
-                        'motivation' => 'We really need it!',
-                    ],
-                ],
-            ],
-        ];
-
-        $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-        $this->client->submit($form, $formData);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after editing an entity'
-        );
-
-        $entity = $this->getEntityRepository()->findById($this->entityId);
-
-        $this->assertInstanceOf(Contact::class, $entity->getAdministrativeContact());
-        $this->assertEquals('John', $entity->getAdministrativeContact()->getFirstName());
-
-        $this->assertInstanceOf(Contact::class, $entity->getTechnicalContact());
-        $this->assertEquals('Johnny', $entity->getTechnicalContact()->getFirstName());
-
-        $this->assertInstanceOf(Contact::class, $entity->getSupportContact());
-        $this->assertEquals('Jack', $entity->getSupportContact()->getFirstName());
-
-        $givenNameAttribute = $entity->getGivenNameAttribute();
-        $this->assertInstanceOf(Attribute::class, $givenNameAttribute);
-        $this->assertTrue($givenNameAttribute->isRequested());
-        $this->assertEquals('We really need it!', $givenNameAttribute->getMotivation());
+        $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_it_loads_xml_from_url()
@@ -147,38 +87,14 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form);
-        $entity = $this->getEntityRepository()->findById($this->entityId);
-
-        // Should have overwritten existing fields
-        $this->assertEquals('DNEN', $entity->getNameEn());
-
-        // Administrative contact is also an existing field in the fixture
-        $this->assertInstanceOf(Contact::class, $entity->getAdministrativeContact());
-        $this->assertEquals('Test2', $entity->getAdministrativeContact()->getFirstName());
-
-        $this->assertInstanceOf(Contact::class, $entity->getTechnicalContact());
-        $this->assertEquals('Test', $entity->getTechnicalContact()->getFirstName());
-
-        $this->assertInstanceOf(Contact::class, $entity->getSupportContact());
-        $this->assertEquals('Test3', $entity->getSupportContact()->getFirstName());
-
-        $this->assertTrue($entity->getCommonNameAttribute()->isRequested());
-        $this->assertTrue($entity->getUidAttribute()->isRequested());
-        $this->assertTrue($entity->getOrganizationTypeAttribute()->isRequested());
-        $this->assertTrue($entity->getAffiliationAttribute()->isRequested());
+        $this->client->submit($form, $formData);
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_it_handles_valid_but_incomplete_metadata()
@@ -191,7 +107,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
 
         $form = $crawler
             ->selectButton('Import')
@@ -200,24 +116,11 @@ class EntityEditTest extends WebTestCase
         $crawler = $this->client->submit($form, $formData);
 
         $form = $crawler
-            ->selectButton('Save')
+            ->selectButton('Publish')
             ->form();
 
         $this->client->submit($form);
-
-        $entity = $this->getEntityRepository()->findById($this->entityId);
-
-        $this->assertEquals('DNEN', $entity->getNameEn());
-
-        $this->assertFalse($entity->getCommonNameAttribute()->isRequested());
-        $this->assertFalse($entity->getUidAttribute()->isRequested());
-        $this->assertTrue($entity->getOrganizationTypeAttribute()->isRequested());
-        $this->assertTrue($entity->getAffiliationAttribute()->isRequested());
-
-        $this->assertInstanceOf(Contact::class, $entity->getTechnicalContact());
-        $this->assertEquals('Test', $entity->getTechnicalContact()->getFirstName());
-
-        $this->assertNull($entity->getSupportContact());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_it_loads_xml_from_textarea()
@@ -232,7 +135,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
 
         $form = $crawler
             ->selectButton('Import')
@@ -241,32 +144,11 @@ class EntityEditTest extends WebTestCase
         $crawler = $this->client->submit($form, $formData);
 
         $form = $crawler
-            ->selectButton('Save')
+            ->selectButton('Publish')
             ->form();
 
         $this->client->submit($form);
-
-        $entity = $this->getEntityRepository()->findById($this->entityId);
-
-        // Should have overwritten existing fields
-        $this->assertEquals('DNEN', $entity->getNameEn());
-
-        // Administrative contact is also an existing field in the fixture
-        $this->assertInstanceOf(Contact::class, $entity->getAdministrativeContact());
-        $this->assertEquals('Test2', $entity->getAdministrativeContact()->getFirstName());
-
-        $this->assertInstanceOf(Contact::class, $entity->getTechnicalContact());
-        $this->assertEquals('Test', $entity->getTechnicalContact()->getFirstName());
-
-        $this->assertInstanceOf(Contact::class, $entity->getSupportContact());
-        $this->assertEquals('Test3', $entity->getSupportContact()->getFirstName());
-
-        $this->assertTrue($entity->getCommonNameAttribute()->isRequested());
-        $this->assertTrue($entity->getUidAttribute()->isRequested());
-        $this->assertTrue($entity->getOrganizationTypeAttribute()->isRequested());
-        $this->assertTrue($entity->getAffiliationAttribute()->isRequested());
-
-        $this->assertEquals($xml, $entity->getPastedMetadata());
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function test_it_shows_flash_message_on_exception()
@@ -279,7 +161,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
 
         $form = $crawler
             ->selectButton('Import')
@@ -307,7 +189,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/{$this->entityId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
 
         $form = $crawler
             ->selectButton('Import')

@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormEvents;
@@ -50,13 +51,8 @@ class EntityEditController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
-     * @Route("/entity/edit/{id}", name="entity_edit")
-     * @Security("token.hasAccessToEntity(request.get('entity'))")
+     * @Route("/entity/edit/{environment}/{manageId}", name="entity_edit")
      * @Template()
-     *
-     * @param Request $request
-     * @param Entity $entity
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      *
@@ -64,18 +60,16 @@ class EntityEditController extends Controller
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function editAction(Request $request, Entity $entity)
+    public function editAction(Request $request, string $environment, string $manageId)
     {
         $flashBag = $this->get('session')->getFlashBag();
+        $service = $this->serviceService->getServiceById($this->authorizationService->getActiveServiceId());
+        $entity = $this->entityService->getManageEntityById($manageId, $environment);
+        $entity->setService($service);
+        $protocol = $entity->getProtocol()->getProtocol();
 
-        if ($entity->isReadOnly()) {
-            throw $this->createNotFoundException(
-                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
-            );
-        }
-
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($service, $environment)
         ) {
             throw $this->createAccessDeniedException(
                 'You are not allowed to modify oidcng entities for this environment.'
@@ -87,7 +81,7 @@ class EntityEditController extends Controller
             $flashBag->clear();
         }
 
-        $form = $this->entityTypeFactory->createEditForm($entity);
+        $form = $this->entityTypeFactory->createEditForm($entity, $service, $environment);
         $command = $form->getData();
 
         if ($entity->isPublished()) {
@@ -104,16 +98,10 @@ class EntityEditController extends Controller
 
         if ($form->isSubmitted()) {
             try {
-                if ($this->isSaveAction($form)) {
-                    $this->commandBus->handle($command);
-
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
-                } elseif ($this->isPublishAction($form)) {
+                if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
-                    $this->commandBus->handle($command);
-
                     if ($form->isValid()) {
-                        $response = $this->publishEntity($entity, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $flashBag);
 
                         if ($response instanceof Response) {
                             return $response;
@@ -132,7 +120,7 @@ class EntityEditController extends Controller
 
         return [
             'form' => $form->createView(),
-            'type' => $entity->getProtocol(),
+            'type' => $entity->getProtocol()->getProtocol(),
         ];
     }
 

@@ -32,15 +32,13 @@ class ProtocolTest extends MockeryTestCase
     public function test_protocol_determination(array $manageData, $manageProtocol, $expectation)
     {
         $protocol = Protocol::fromApiResponse($manageData, $manageProtocol);
-        $this->assertEquals($expectation, $protocol->getProtocol());
+        self::assertEquals($expectation, $protocol->getProtocol());
     }
 
     public static function manageData()
     {
         return [
             [['data' => ['oidcClient-not-set' => null]], Protocol::SAML20_SP, 'saml20'],
-            // The old OIDC protocol piggy backs on the saml20 entity, and is defined by the oidcClient coin
-            [['data' => ['oidcClient' => 1]], Protocol::SAML20_SP, 'oidc'],
             [['data' => ['oidcClient-not-set' => 1]], Protocol::OIDC10_RP, 'oidcng'],
         ];
     }

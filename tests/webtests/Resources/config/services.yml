@@ -33,23 +33,29 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: logo }
 
-    surfnet.manage.http.guzzle.mock_handler:
-        class: GuzzleHttp\Handler\MockHandler
-        public: true
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeQueryClient
 
-    surfnet.manage.http.guzzle.mock_handler_prod:
-        class: GuzzleHttp\Handler\MockHandler
-        public: true
+    surfnet.manage.client.query_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeQueryClient
 
-    surfnet.manage.http.guzzle.test_environment:
-        class: GuzzleHttp\Client
-        arguments:
-        - handler: '@surfnet.manage.http.guzzle.mock_handler'
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeIdentityProviderClient
 
-    surfnet.manage.http.guzzle.prod_environment:
-        class: GuzzleHttp\Client
-        arguments:
-        - handler: '@surfnet.manage.http.guzzle.mock_handler_prod'
+    surfnet.manage.client.identity_provider_client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeIdentityProviderClient
+
+    surfnet.manage.client.publish_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishEntityClient
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishEntityClient
+
+    surfnet.manage.client.delete_client.prod_environment:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteEntityClient
+
+    surfnet.manage.client.delete_client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteEntityClient
 
     # These services are overloaded for functional tests and have been made public to prevent:
     #

@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclC
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,18 +55,30 @@ class EntityAclController extends Controller
      * @var EntityAclService
      */
     private $entityAclService;
+    /**
+     * @var string
+     */
+    private $playGroundUriTest;
+    /**
+     * @var string
+     */
+    private $playGroundUriProd;
 
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         AuthorizationService $authorizationService,
-        EntityAclService $entityAclService
+        EntityAclService $entityAclService,
+        string $oidcPlaygroundUriTest,
+        string $oidcPlaygroundUriProd
     ) {
 
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
         $this->entityAclService = $entityAclService;
+        $this->playGroundUriTest = $oidcPlaygroundUriTest;
+        $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
     /**
@@ -83,19 +95,19 @@ class EntityAclController extends Controller
     public function aclAction(Request $request, $serviceId, $id)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
-        $entity = $this->entityService->getEntityByIdAndTarget($id, Entity::ENVIRONMENT_TEST, $service);
+        $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
 
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 
-        $command = new UpdateEntityAclCommand($entity->getManageId(), $service->getId(), $selectedIdps, $entity->isIdpAllowAll());
+        $command = new UpdateEntityAclCommand($entity, $selectedIdps, $entity->getAllowedIdentityProviders()->isAllowAll());
         $form = $this->createForm(AclEntityType::class, $command);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commandBus->handle($command);
-            $this->commandBus->handle(new PushMetadataCommand($entity->getEnvironment()));
+            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
         }
-        $viewObject = EntityDetail::fromEntity($entity);
+        $viewObject = EntityDetail::fromEntity($entity, $this->playGroundUriTest, $this->playGroundUriProd);
 
         return [
             'form' => $form->createView(),

@@ -18,20 +18,16 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 /**
- * The JsonGenerator is able to generate Manage SAML 2.0 and OpenID Connect entities (oidc).
- *
- * The oidc entities are actually saved as saml20 entities. This is an early implementation detail in Manage < v4.
- * From version 4 and onward the oidcng (oidc10_rp) entity type is introduced. This generator is not capable of
- * creating that type of json.
+ * The JsonGenerator is able to generate Manage SAML 2.0 JSON metadata
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ElseExpression)
@@ -53,43 +49,17 @@ class JsonGenerator implements GeneratorInterface
      */
     private $spDashboardMetadataGenerator;
 
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriProd;
-
-    /**
-     * @param ArpGenerator $arpMetadataGenerator
-     * @param PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator
-     * @param SpDashboardMetadataGenerator $spDashboardMetadataGenerator
-     * @param string $oidcPlaygroundUriTest OIDC playgroudn uri
-     * @param string $oidcPlaygroundUriProd OIDC playgroudn uri
-     */
     public function __construct(
         ArpGenerator $arpMetadataGenerator,
         PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
-        $oidcPlaygroundUriTest,
-        $oidcPlaygroundUriProd
+        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
         $this->arpMetadataGenerator = $arpMetadataGenerator;
         $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
-        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
-        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
-    /**
-     * @param MetadataConversionDto $entity
-     * @param string $workflowState
-     * @return array
-     */
-    public function generateForNewEntity(MetadataConversionDto $entity, $workflowState)
+    public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         // the type for entities is always saml because manage is using saml internally
         return [
@@ -98,56 +68,39 @@ class JsonGenerator implements GeneratorInterface
         ];
     }
 
-    /**
-     * @param MetadataConversionDto $entity
-     * @param string $workflowState
-     * @return array
-     */
-    public function generateForExistingEntity(MetadataConversionDto $entity, $workflowState)
+    public function generateForExistingEntity(ManageEntity $entity, string $workflowState): array
     {
         // the type for entities is always saml because manage is using saml internally
         $data = [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
             'type' => 'saml20_sp',
-            'id' => $entity->getManageId(),
+            'id' => $entity->getId(),
         ];
 
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT) {
-            $data['externalReferenceData'] = [
-                'oidcClient' => $this->generateOidcClient($entity),
-            ];
-        }
 
         return $data;
     }
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @param string $workflowState
      * @return array
      */
-    private function generateDataForNewEntity(MetadataConversionDto $entity, $workflowState)
+    private function generateDataForNewEntity(ManageEntity $entity, $workflowState)
     {
         // the type for entities is always saml because manage is using saml internally
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
             'type' => 'saml20-sp',
-            'entityid' => $entity->getEntityId(),
+            'entityid' => $entity->getMetaData()->getEntityId(),
             'active' => true,
             'state' => $workflowState,
             'metaDataFields' => $this->generateMetadataFields($entity),
         ];
 
         $metadata += $this->generateAclData($entity);
+        $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
 
-        switch (true) {
-            case ($entity->getProtocol() == Entity::TYPE_SAML):
-                $metadata['metadataurl'] = $entity->getMetadataUrl();
-                break;
-            case ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT):
-                $metadata['oidcClient'] = $this->generateOidcClient($entity);
-                break;
-        }
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
@@ -157,22 +110,22 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @param string $workflowState
      * @return array
      */
-    private function generateDataForExistingEntity(MetadataConversionDto $entity, $workflowState)
+    private function generateDataForExistingEntity(ManageEntity $entity, $workflowState)
     {
         $metadata = [
             'arp' => $this->arpMetadataGenerator->build($entity),
-            'entityid' => $entity->getEntityId(),
+            'entityid' => $entity->getMetaData()->getEntityId(),
             'state' => $workflowState,
         ];
 
         $metadata += $this->generateAclData($entity);
 
-        if ($entity->getProtocol() == Entity::TYPE_SAML) {
-            $metadata['metadataurl'] = $entity->getMetadataUrl();
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
+            $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
         }
 
         $metadata += $this->flattenMetadataFields(
@@ -215,18 +168,14 @@ class JsonGenerator implements GeneratorInterface
         return $flatFields;
     }
 
-    /**
-     * @param Entity $entity
-     * @return array
-     */
-    private function generateMetadataFields(MetadataConversionDto $entity)
+    private function generateMetadataFields(ManageEntity $entity)
     {
         $metadata = array_merge(
             [
-                'description:en' => $entity->getDescriptionEn(),
-                'description:nl' => $entity->getDescriptionNl(),
-                'name:en' => $entity->getNameEn(),
-                'name:nl' => $entity->getNameNl(),
+                'description:en' => $entity->getMetaData()->getDescriptionEn(),
+                'description:nl' => $entity->getMetaData()->getDescriptionNl(),
+                'name:en' => $entity->getMetaData()->getNameEn(),
+                'name:nl' => $entity->getMetaData()->getNameNl(),
             ],
             $this->generateAllContactsMetadata($entity),
             $this->generateOrganizationMetadata($entity),
@@ -235,23 +184,26 @@ class JsonGenerator implements GeneratorInterface
         );
 
         $service = $entity->getService();
-        if ($service->getInstitutionId() != '') {
+        if ($service->getInstitutionId() && $service->getInstitutionId() != '') {
             $metadata['coin:institution_id'] = $service->getInstitutionId();
         }
         if ($service->getGuid() != '') {
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        if ($entity->getProtocol() == Entity::TYPE_SAML) {
-            $metadata['AssertionConsumerService:0:Binding'] = $entity->getAcsBinding();
-            $metadata['AssertionConsumerService:0:Location'] = $entity->getAcsLocation();
-            $metadata['NameIDFormat'] = $entity->getNameIdFormat();
-            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-            $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
-        } else if ($entity->getProtocol() == Entity::TYPE_OPENID_CONNECT) {
-            $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-            $metadata["coin:oidc_client"] = '1';
-        }
+        /*
+         * The binding of the ACS URL is always POST.
+         *
+         * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
+         * imports the POST ACS URL. Other formats are not supported by manage or
+         * the dashboard.
+         */
+        $metadata['AssertionConsumerService:0:Binding'] = Constants::BINDING_HTTP_POST;
+        $metadata['AssertionConsumerService:0:Location'] = $entity->getMetaData()->getAcsLocation();
+        $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
+        $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+        $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
+
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0
@@ -262,7 +214,7 @@ class JsonGenerator implements GeneratorInterface
         if ($entity->isManageEntity() && !$entity->isExcludedFromPush()) {
             $metadata['coin:exclude_from_push'] = '0';
         }
-        if (!empty($entity->getLogoUrl())) {
+        if ($entity->getMetaData()->getLogo() !== null && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
 
@@ -273,38 +225,13 @@ class JsonGenerator implements GeneratorInterface
      * @param Entity $entity
      * @return array
      */
-    private function generateCertDataMetadata(MetadataConversionDto $entity)
+    private function generateCertDataMetadata(ManageEntity $entity)
     {
         $metadata = [];
-        if (!empty($entity->getCertificate())) {
+        if (!empty($entity->getMetaData()->getCertData())) {
             $metadata['certData'] = $this->stripCertificateEnvelope(
-                $entity->getCertificate()
+                $entity->getMetaData()->getCertData()
             );
-        }
-
-        return $metadata;
-    }
-
-    /**
-     * @param Entity $entity
-     * @return array
-     */
-    private function generateOidcClient(MetadataConversionDto $entity)
-    {
-        $metadata = [];
-        $metadata['clientId'] = OidcClientIdParser::parse($entity->getEntityId());
-        $metadata['clientSecret'] = $entity->getClientSecret();
-        // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
-        $metadata['redirectUris'] = $entity->getRedirectUris();
-        $metadata['grantType'] = $entity->getGrantType()->getGrantType();
-        $metadata['scope'] = ['openid'];
-
-        if ($entity->isEnablePlayground()) {
-            if ($entity->isProduction()) {
-                $metadata['redirectUris'][] = $this->oidcPlaygroundUriProd;
-            } else {
-                $metadata['redirectUris'][] = $this->oidcPlaygroundUriTest;
-            }
         }
 
         return $metadata;
@@ -325,48 +252,55 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @return array
      */
-    private function generateAllContactsMetadata(MetadataConversionDto $entity)
+    private function generateAllContactsMetadata(ManageEntity $entity)
     {
         $metadata = [];
         $index = 0;
 
-        if ($entity->getSupportContact()) {
-            $metadata += $this->generateContactMetadata('support', $index++, $entity->getSupportContact());
-        }
-
-        if ($entity->getAdministrativeContact()) {
+        if ($entity->getMetaData()->getContacts()->findSupportContact() !== null) {
             $metadata += $this->generateContactMetadata(
-                'administrative',
+                'support',
                 $index++,
-                $entity->getAdministrativeContact()
+                $entity->getMetaData()->getContacts()->findSupportContact()
             );
         }
 
-        if ($entity->getTechnicalContact()) {
-            $metadata += $this->generateContactMetadata('technical', $index++, $entity->getTechnicalContact());
+        if ($entity->getMetaData()->getContacts()->findAdministrativeContact()) {
+            $metadata += $this->generateContactMetadata(
+                'administrative',
+                $index++,
+                $entity->getMetaData()->getContacts()->findAdministrativeContact()
+            );
+        }
+
+        if ($entity->getMetaData()->getContacts()->findTechnicalContact()) {
+            $metadata += $this->generateContactMetadata(
+                'technical',
+                $index++,
+                $entity->getMetaData()->getContacts()->findTechnicalContact()
+            );
         }
 
         return $metadata;
     }
 
-    /**
-     * @param Entity $entity
-     * @return array
-     */
-    private function generateOrganizationMetadata(MetadataConversionDto $entity)
+    private function generateOrganizationMetadata(ManageEntity $entity): array
     {
-        $metadata = [
-            'OrganizationName:en' => $entity->getOrganizationNameEn(),
-            'OrganizationDisplayName:en' => $entity->getOrganizationDisplayNameEn(),
-            'OrganizationURL:en' => $entity->getOrganizationUrlEn(),
-            'OrganizationName:nl' => $entity->getOrganizationNameNl(),
-            'OrganizationDisplayName:nl' => $entity->getOrganizationDisplayNameNl(),
-            'OrganizationURL:nl' => $entity->getOrganizationUrlNl(),
-        ];
-
+        $metadata = [];
+        $organization = $entity->getMetaData()->getOrganization();
+        if ($organization) {
+            $metadata = [
+                'OrganizationName:en' => $organization->getNameEn(),
+                'OrganizationDisplayName:en' => $organization->getDisplayNameEn(),
+                'OrganizationURL:en' => $organization->getUrlEn(),
+                'OrganizationName:nl' => $organization->getNameNl(),
+                'OrganizationDisplayName:nl' => $organization->getDisplayNameNl(),
+                'OrganizationURL:nl' => $organization->getUrlNl(),
+            ];
+        }
         return array_filter($metadata);
     }
 
@@ -382,12 +316,12 @@ class JsonGenerator implements GeneratorInterface
             sprintf('contacts:%d:contactType', $index) => $contactType,
         ];
 
-        if (!empty($contact->getFirstName())) {
-            $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getFirstName();
+        if (!empty($contact->getGivenName())) {
+            $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getGivenName();
         }
 
-        if (!empty($contact->getLastName())) {
-            $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getLastName();
+        if (!empty($contact->getSurName())) {
+            $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getSurName();
         }
 
         if (!empty($contact->getEmail())) {
@@ -408,40 +342,43 @@ class JsonGenerator implements GeneratorInterface
      * except when the user just created the entity in the interface. We
      * determine the dimensions in those situations.
      *
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @return array
      */
-    private function generateLogoMetadata(MetadataConversionDto $entity)
+    private function generateLogoMetadata(ManageEntity $entity)
     {
-        $metadata = [
-            'logo:0:url' => $entity->getLogoUrl(),
-        ];
+        $logo = $entity->getMetaData()->getLogo();
+        $metadata = [];
+        if ($logo) {
+            $metadata = [
+                'logo:0:url' => $logo->getUrl(),
+            ];
 
-        $logoData = @getimagesize(
-            $entity->getLogoUrl()
-        );
+            $logoData = @getimagesize(
+                $logo->getUrl()
+            );
 
-        if ($logoData !== false) {
-            list($width, $height) = $logoData;
-        } else {
-            $width = 50;
-            $height = 50;
+            if ($logoData !== false) {
+                list($width, $height) = $logoData;
+            } else {
+                $width = 50;
+                $height = 50;
+            }
+
+            $metadata['logo:0:width'] = (string)$width;
+            $metadata['logo:0:height'] = (string)$height;
         }
-
-        $metadata['logo:0:width'] = (string)$width;
-        $metadata['logo:0:height'] = (string)$height;
-
         return $metadata;
     }
 
 
     /**
-     * @param MetadataConversionDto $entity
+     * @param ManageEntity $entity
      * @return array
      */
-    private function generateAclData(MetadataConversionDto $entity)
+    private function generateAclData(ManageEntity $entity)
     {
-        if ($entity->isIdpAllowAll()) {
+        if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
             return [
                 'allowedEntities' => [],
                 'allowedall' => true,
@@ -449,7 +386,7 @@ class JsonGenerator implements GeneratorInterface
         }
 
         $providers = [];
-        foreach ($entity->getIdpWhitelist() as $entityId) {
+        foreach ($entity->getAllowedIdentityProviders()->getAllowedIdentityProviders() as $entityId) {
             $providers[] = [
                 'name' => $entityId,
             ];

@@ -18,33 +18,43 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Webmozart\Assert\Assert;
+use function in_array;
+
 class AllowedIdentityProviders
 {
     /**
      * @var string[]
      */
-    private $providers = [];
+    private $providers;
 
     /**
      * @var bool
      */
     private $allowAll;
 
+    public function __construct(array $providers, bool $allowAll)
+    {
+        Assert::allString($providers);
+        $this->providers = $providers;
+        $this->allowAll = $allowAll;
+    }
+
     public static function fromApiResponse(array $data)
     {
-        $instance = new self();
-
-        $instance->allowAll = true;
+        $providers = [];
+        $allowAll = true;
         if (isset($data['data']['allowedall']) && $data['data']['allowedall'] !== true) {
-            $instance->allowAll = false;
+            $allowAll = false;
 
             $entities = $data['data']['allowedEntities'];
             foreach ($entities as $entity) {
-                $instance->providers[] = $entity['name'];
+                $providers[] = $entity['name'];
             }
         }
 
-        return $instance;
+        return new self($providers, $allowAll);
     }
 
     /**
@@ -61,5 +71,25 @@ class AllowedIdentityProviders
     public function isAllowAll()
     {
         return $this->allowAll;
+    }
+
+    /**
+     * @param IdentityProvider $provider
+     * @return bool
+     */
+    public function isWhitelisted(IdentityProvider $provider)
+    {
+        return in_array($provider->getEntityId(), $this->providers);
+    }
+
+    public function merge(?AllowedIdentityProviders $allowedIdPs)
+    {
+        if ($allowedIdPs === null) {
+            $this->providers = [];
+            $this->allowAll = null;
+            return;
+        }
+        $this->providers = is_null($allowedIdPs->getAllowedIdentityProviders()) ? null : $allowedIdPs->getAllowedIdentityProviders();
+        $this->allowAll = is_null($allowedIdPs->isAllowAll()) ? null : $allowedIdPs->isAllowAll();
     }
 }

@@ -18,7 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
+use function is_null;
 
 class OidcngResourceServerClient implements OidcClientInterface
 {
@@ -38,12 +40,8 @@ class OidcngResourceServerClient implements OidcClientInterface
      * @var array
      */
     private $scope;
-    /**
-     * @param array $data
-     * @param string $manageProtocol
-     * @return OidcngClient
-     */
-    public static function fromApiResponse(array $data, $manageProtocol)
+
+    public static function fromApiResponse(array $data, string $manageProtocol)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
@@ -64,18 +62,11 @@ class OidcngResourceServerClient implements OidcClientInterface
         );
     }
 
-    /**
-     * @param string $clientId ,
-     * @param string $clientSecret
-     * @param string $grantType
-     * @param array $scope
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    private function __construct(
-        $clientId,
-        $clientSecret,
-        $grantType,
-        $scope
+    public function __construct(
+        string $clientId,
+        ?string $clientSecret,
+        ?string $grantType,
+        array $scope
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
@@ -134,7 +125,7 @@ class OidcngResourceServerClient implements OidcClientInterface
     /**
      * @return int
      */
-    public function getAccessTokenValidity()
+    public function getAccessTokenValidity(): int
     {
         return 0;
     }
@@ -145,5 +136,23 @@ class OidcngResourceServerClient implements OidcClientInterface
     public function getResourceServers()
     {
         return [];
+    }
+
+    public function resetResourceServers(): void
+    {
+        // Nothing to do here.
+    }
+
+    public function updateClientSecret(SecretInterface $secret): void
+    {
+        $this->clientSecret = $secret->getSecret();
+    }
+
+    public function merge(OidcClientInterface $client): void
+    {
+        $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
+        $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
+        $this->grantType = is_null($client->getGrantType()) ? null : $client->getGrantType();
+        $this->scope = is_null($client->getScope()) ? null : $client->getScope();
     }
 }

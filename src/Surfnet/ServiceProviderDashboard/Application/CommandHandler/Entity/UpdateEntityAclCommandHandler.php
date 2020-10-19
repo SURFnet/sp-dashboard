@@ -22,20 +22,14 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UpdateEntityAclCommandHandler implements CommandHandler
 {
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
     /**
      * @var PublishEntityRepository
      */
@@ -50,23 +44,15 @@ class UpdateEntityAclCommandHandler implements CommandHandler
      * @var FlashBagInterface
      */
     private $flashBag;
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
 
     public function __construct(
-        EntityService $entityService,
-        ServiceRepository $serviceRepository,
         PublishEntityRepository $publishClient,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
-        $this->entityService = $entityService;
         $this->publishClient = $publishClient;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
-        $this->serviceRepository = $serviceRepository;
     }
 
     /**
@@ -76,21 +62,21 @@ class UpdateEntityAclCommandHandler implements CommandHandler
      */
     public function handle(UpdateEntityAclCommand $command)
     {
-        $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment to update ACL', $command->getEntityManageId()));
+        $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment to update ACL', $command->getManageEntity()->getId()));
 
-        $service = $this->serviceRepository->findById($command->getServiceId());
-        $entity = $this->entityService->getEntityByIdAndTarget($command->getEntityManageId(), Entity::ENVIRONMENT_TEST, $service);
-
-        $entity->setIdpAllowAll($command->isSelectAll());
-        $entity->setIdpWhitelist($command->getSelected());
-
+        $entity = $command->getManageEntity();
+        $idps = array_map(function (IdentityProvider $idp) {
+            return $idp->getEntityId();
+        }, $command->getSelected());
+        $allowedIdps = new AllowedIdentityProviders($idps, $command->isSelectAll());
+        $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {
             $this->publishClient->publish($entity);
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $entity->getNameNl(),
+                    $entity->getMetaData()->getNameEn(),
                     $e->getMessage()
                 )
             );

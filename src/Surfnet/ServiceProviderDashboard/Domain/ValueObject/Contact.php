@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact as ContactEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Contact
@@ -44,6 +45,19 @@ class Contact
      * @var string
      */
     private $phone;
+
+    public static function from(?ContactEntity $contact)
+    {
+        if ($contact) {
+            $instance = new self;
+            $instance->email = $contact->getEmail();
+            $instance->firstName = $contact->getGivenName();
+            $instance->lastName = $contact->getSurName();
+            $instance->phone = $contact->getPhone();
+            return $instance;
+        }
+        return null;
+    }
 
     /**
      * @return string

@@ -18,14 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
+
 interface OidcClientInterface
 {
-    /**
-     * @param array $data
-     * @param string $manageProtocol
-     * @return OidcClient|null
-     */
-    public static function fromApiResponse(array $data, $manageProtocol);
+    public static function fromApiResponse(array $data, string $manageProtocol);
 
     /**
      * @return string
@@ -57,13 +54,16 @@ interface OidcClientInterface
      */
     public function isPublicClient();
 
-    /**
-     * @return int
-     */
-    public function getAccessTokenValidity();
+    public function getAccessTokenValidity(): int;
 
     /**
      * @return array
      */
     public function getResourceServers();
+
+    public function resetResourceServers(): void;
+
+    public function updateClientSecret(SecretInterface $secret): void;
+
+    public function merge(OidcClientInterface $client): void;
 }
