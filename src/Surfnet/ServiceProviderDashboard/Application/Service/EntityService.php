@@ -63,25 +63,6 @@ class EntityService implements EntityServiceInterface
     private $logger;
 
     /**
-     * @var string
-     */
-    private $oidcPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriProd;
-    /**
-     * @var string
-     */
-    private $oidcngPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcngPlaygroundUriProd;
-
-    /**
      * @var Config
      */
     private $testManageConfig;
@@ -98,10 +79,6 @@ class EntityService implements EntityServiceInterface
      * @param Config $productionConfig
      * @param RouterInterface $router
      * @param LoggerInterface $logger
-     * @param string $oidcPlaygroundUriTest
-     * @param string $oidcPlaygroundUriProd
-     * @param string $oidcngPlaygroundUriTest
-     * @param string $oidcngPlaygroundUriProd
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -110,25 +87,12 @@ class EntityService implements EntityServiceInterface
         Config $testConfig,
         Config $productionConfig,
         RouterInterface $router,
-        LoggerInterface $logger,
-        $oidcPlaygroundUriTest,
-        $oidcPlaygroundUriProd,
-        $oidcngPlaygroundUriTest,
-        $oidcngPlaygroundUriProd
+        LoggerInterface $logger
     ) {
-        Assert::stringNotEmpty($oidcPlaygroundUriTest, 'Please set "playground_uri_test" in parameters.yml');
-        Assert::stringNotEmpty($oidcPlaygroundUriProd, 'Please set "playground_uri_prod" in parameters.yml');
-        Assert::stringNotEmpty($oidcngPlaygroundUriTest, 'Please set "oidcng_playground_uri_test" in parameters.yml');
-        Assert::stringNotEmpty($oidcngPlaygroundUriProd, 'Please set "oidcng_playground_uri_prod" in parameters.yml');
-
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
         $this->router = $router;
         $this->logger = $logger;
-        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
-        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
-        $this->oidcngPlaygroundUriTest = $oidcngPlaygroundUriTest;
-        $this->oidcngPlaygroundUriProd = $oidcngPlaygroundUriProd;
         $this->testManageConfig = $testConfig;
         $this->prodManageConfig = $productionConfig;
     }
