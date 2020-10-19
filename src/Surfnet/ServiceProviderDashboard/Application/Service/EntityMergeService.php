@@ -70,6 +70,9 @@ class EntityMergeService
         $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     public function mergeEntityCommand(SaveEntityCommandInterface $command, ?ManageEntity $manageEntity = null): ManageEntity
     {
         $metaData = new MetaData(
@@ -101,8 +104,12 @@ class EntityMergeService
         }
 
         $oidcClient = null;
+        $isNewEntity = !$manageEntity;
+        $isCopyToProduction = $manageEntity && $manageEntity->getId() === null;
+
         $secret = new NullSecret();
-        if (!$manageEntity && $protocol->getProtocol() !== Constants::TYPE_SAML) {
+        // Set the client secret when createing a new entity or when we are copying an entity.
+        if ($protocol->getProtocol() !== Constants::TYPE_SAML && ($isNewEntity || $isCopyToProduction)) {
             $secret = new Secret(20);
         }
         if ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
