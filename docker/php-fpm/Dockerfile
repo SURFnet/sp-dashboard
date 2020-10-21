@@ -26,6 +26,7 @@ RUN apk add --no-cache libxml2-dev \
     SYMFONY_ENV=prod composer run-script symfony-scripts && \
     chown -R www-data /var/www/html/var/cache && \
     chown -R www-data /var/www/html/var/logs && \
-    chown -R www-data /var/www/html/var/sessions
+    chown -R www-data /var/www/html/var/sessions && \
+    rm -rf /var/www/html/var/cache/prod/
 
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
