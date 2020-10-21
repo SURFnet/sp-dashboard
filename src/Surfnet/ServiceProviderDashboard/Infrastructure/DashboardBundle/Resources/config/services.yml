@@ -311,6 +311,8 @@ services:
             - '@surfnet.manage.configuration.production'
             - '@router'
             - '@logger'
+            - '%jira_issue_type_publication_request%'
+            - '%jira_issue_type%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:

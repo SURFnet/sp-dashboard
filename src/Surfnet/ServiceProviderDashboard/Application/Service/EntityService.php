@@ -73,12 +73,16 @@ class EntityService implements EntityServiceInterface
     private $prodManageConfig;
 
     /**
-     * @param EntityQueryRepositoryProvider $entityQueryRepositoryProvider
-     * @param TicketServiceInterface $ticketService
-     * @param Config $testConfig
-     * @param Config $productionConfig
-     * @param RouterInterface $router
-     * @param LoggerInterface $logger
+     * @var string
+     */
+    private $publishStatus;
+
+    /**
+     * @var string
+     */
+    private $removalStatus;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -87,7 +91,9 @@ class EntityService implements EntityServiceInterface
         Config $testConfig,
         Config $productionConfig,
         RouterInterface $router,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        string $publishStatus,
+        string $removalStatus
     ) {
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
@@ -95,6 +101,8 @@ class EntityService implements EntityServiceInterface
         $this->logger = $logger;
         $this->testManageConfig = $testConfig;
         $this->prodManageConfig = $productionConfig;
+        $this->publishStatus = $publishStatus;
+        $this->removalStatus = $removalStatus;
     }
 
     public function createEntityUuid()
@@ -297,10 +305,10 @@ class EntityService implements EntityServiceInterface
 
                     if ($issue) {
                         switch ($issue->getIssueType()) {
-                            case 'spd-request-production-entity':
+                            case $this->publishStatus:
                                 $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
                                 break;
-                            case 'spd-delete-production-entity':
+                            case $this->removalStatus:
                                 $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                                 break;
                         }
