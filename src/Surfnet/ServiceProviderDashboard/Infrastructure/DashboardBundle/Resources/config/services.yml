@@ -197,8 +197,8 @@ services:
         tags:
             - { name: dashboard.json_generator, identifier: oidcng }
         arguments:
-            $oidcPlaygroundUriTest: '%oidcng_playground_uri_test%'
-            $oidcPlaygroundUriProd: '%oidcng_playground_uri_prod%'
+            $oidcPlaygroundUriTest: '%playground_uri_test%'
+            $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator
@@ -311,10 +311,6 @@ services:
             - '@surfnet.manage.configuration.production'
             - '@router'
             - '@logger'
-            - '%playground_uri_test%'
-            - '%playground_uri_prod%'
-            - '%oidcng_playground_uri_test%'
-            - '%oidcng_playground_uri_prod%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
