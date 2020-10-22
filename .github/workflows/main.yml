@@ -21,8 +21,8 @@ jobs:
       with:
         dockerfile: docker/php-fpm/Dockerfile
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
+        password: ${{ secrets.GH_CONTAINER_REGISTRY_PAT }}
+        registry: ghcr.io
         repository: surfnet/sp-dashboard/spdashboard_php-fpm
         tag_with_ref: true
 
@@ -31,7 +31,7 @@ jobs:
       with:
         dockerfile: docker/httpd/Dockerfile
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
+        password: ${{ secrets.GH_CONTAINER_REGISTRY_PAT }}
+        registry: ghcr.io
         repository: surfnet/sp-dashboard/spdashboard_web
         tag_with_ref: true
