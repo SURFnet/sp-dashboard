@@ -18,9 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\UnexpectedResultException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
@@ -185,13 +185,7 @@ class QueryClient implements QueryEntityRepository
         }
     }
 
-    /**
-     * @param $teamName
-     * @param $state
-     * @return array
-     * @throws QueryServiceProviderException
-     */
-    public function findOidcngResourceServersByTeamName($teamName, $state)
+    public function findOidcngResourceServersByTeamName(string $teamName, string $state): array
     {
         try {
             // Query manage to get the internal id of every SP entity with given team ID.

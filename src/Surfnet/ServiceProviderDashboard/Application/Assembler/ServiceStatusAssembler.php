@@ -19,8 +19,8 @@ namespace Surfnet\ServiceProviderDashboard\Application\Assembler;
 
 use Surfnet\ServiceProviderDashboard\Application\Dto\ServiceStatusDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ServiceStatusAssembler

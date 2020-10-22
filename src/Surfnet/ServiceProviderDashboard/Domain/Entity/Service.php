@@ -140,13 +140,6 @@ class Service
     private $contacts;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Entity", mappedBy="service", cascade={"persist"})
-     */
-    private $entities;
-
-    /**
      * @var PrivacyQuestions
      *
      * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service", cascade={"remove"}, orphanRemoval=true)
@@ -163,7 +156,6 @@ class Service
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
-        $this->entities = new ArrayCollection();
     }
 
     /**
@@ -252,28 +244,6 @@ class Service
     public function setTeamName($teamName)
     {
         $this->teamName = $teamName;
-    }
-
-    /**
-     * @return ArrayCollection<Entity>
-     */
-    public function getEntities()
-    {
-        return $this->entities;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return Service
-     */
-    public function addEntity(Entity $entity)
-    {
-        $this->entities[] = $entity;
-
-        $entity->setService($this);
-
-        return $this;
     }
 
     /**

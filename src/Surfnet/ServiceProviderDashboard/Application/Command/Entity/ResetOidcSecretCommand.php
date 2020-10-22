@@ -18,15 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
-use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @SpDashboardAssert\HasAttributes()
@@ -34,94 +28,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ResetOidcSecretCommand implements Command
 {
     /**
-     * @var string
-     * @Assert\Uuid
+     * @var ManageEntity
      */
-    private $id;
+    private $manageEntity;
 
-    /**
-     * @var Service
-     */
-    private $service;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"production", "test"}, strict=true)
-     */
-    private $environment = Entity::ENVIRONMENT_TEST;
-
-    /**
-     * @var string
-     */
-    private $clientSecret;
-
-    /**
-     * @var string
-     */
-    private $manageId;
-
-    /**
-     * @param string $manageId
-     * @param string $environment
-     * @param Service $service
-     */
-    public function __construct($id, $manageId, $environment, Service $service)
+    public function __construct(ManageEntity $manageEntity)
     {
-        $this->id = $id;
-        $this->service = $service;
-        $this->manageId = $manageId;
-
-        if (!in_array($environment, [
-            Entity::ENVIRONMENT_TEST,
-            Entity::ENVIRONMENT_PRODUCTION,
-        ])) {
-            throw new InvalidArgumentException(
-                "Unknown environment '{$environment}'"
-            );
-        }
-
-        $this->environment = $environment;
+        $this->manageEntity = $manageEntity;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getManageEntity()
     {
-        return $this->id;
-    }
-
-    /**
-     * @return Service
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClientSecret()
-    {
-        return $this->clientSecret;
-    }
-
-    /**
-     * @return string
-     */
-    public function getManageId()
-    {
-        return $this->manageId;
+        return $this->manageEntity;
     }
 }

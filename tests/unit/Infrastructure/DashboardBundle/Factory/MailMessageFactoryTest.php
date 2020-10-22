@@ -22,6 +22,7 @@ use Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
 use Symfony\Component\Templating\EngineInterface;
@@ -75,11 +76,11 @@ class MailMessageFactoryTest extends MockeryTestCase
             ->shouldReceive('getTrace')
             ->andReturn([]);
 
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(ManageEntity::class);
         $entity->shouldReceive('getService->getName')
             ->andReturn('ACME corporation');
 
-        $entity->shouldReceive('getEntityId')
+        $entity->shouldReceive('getMetaData->getEntityId')
             ->andReturn('https://www.acme.com/metadata');
 
         $message = $this->factory->buildJiraIssueFailedMessage($e, $entity);

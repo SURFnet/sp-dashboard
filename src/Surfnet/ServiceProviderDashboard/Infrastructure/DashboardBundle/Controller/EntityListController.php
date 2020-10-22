@@ -22,10 +22,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -93,16 +94,15 @@ class EntityListController extends Controller
         ];
     }
 
-    private function showOidcPopup($publishedEntity)
+    private function showOidcPopup(?ManageEntity $publishedEntity)
     {
         if (is_null($publishedEntity)) {
             return false;
         }
-        $protocol = $publishedEntity->getProtocol();
-        $isOidcProtocol = $protocol === Entity::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Entity::TYPE_OPENID_CONNECT ||
-            $protocol === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        $protocol = $publishedEntity->getProtocol()->getProtocol();
+        $isOidcProtocol = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
 
-        return $publishedEntity && $isOidcProtocol && $publishedEntity->getClientSecret();
+        return $publishedEntity && $isOidcProtocol && $publishedEntity->getOidcClient()->getClientSecret();
     }
 }

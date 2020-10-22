@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Manage\Serv
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
@@ -43,18 +42,6 @@ class ManagePublishServiceTest extends MockeryTestCase
         $this->testClient = m::mock(PublishEntityClient::class);
         $this->productionClient = m::mock(PublishEntityClient::class);
         $this->publishService = new ManagePublishService($this->testClient, $this->productionClient);
-    }
-
-    public function test_calling_publish_on_test_client()
-    {
-        $entity = m::mock(Entity::class);
-        $this->testClient
-            ->shouldReceive('publish')
-            ->with($entity)
-            ->once();
-
-        $this->publishService
-            ->publish('test', $entity);
     }
 
     public function test_calling_push_to_production()

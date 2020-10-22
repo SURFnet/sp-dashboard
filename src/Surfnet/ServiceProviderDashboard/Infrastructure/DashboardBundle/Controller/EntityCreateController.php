@@ -24,9 +24,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
@@ -57,7 +59,8 @@ class EntityCreateController extends Controller
         AuthorizationService $authorizationService,
         EntityTypeFactory $entityTypeFactory,
         LoadEntityService $loadEntityService,
-        ProtocolChoiceFactory $protocolChoiceFactory
+        ProtocolChoiceFactory $protocolChoiceFactory,
+        EntityMergeService $entityMergeService
     ) {
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
@@ -66,6 +69,7 @@ class EntityCreateController extends Controller
         $this->entityTypeFactory = $entityTypeFactory;
         $this->loadEntityService = $loadEntityService;
         $this->protocolChoiceFactory = $protocolChoiceFactory;
+        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -145,13 +149,7 @@ class EntityCreateController extends Controller
 
         $service = $this->authorizationService->changeActiveService($serviceId);
 
-        if ($type === Entity::TYPE_OPENID_CONNECT) {
-            throw $this->createNotFoundException(
-                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
-            );
-        }
-
-        if ($type === Entity::TYPE_OPENID_CONNECT_TNG &&
+        if ($type === Constants::TYPE_OPENID_CONNECT_TNG &&
             !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
         ) {
             throw $this->createAccessDeniedException(
@@ -160,7 +158,7 @@ class EntityCreateController extends Controller
         }
 
         if (!$service->isProductionEntitiesEnabled() &&
-            $targetEnvironment !== Entity::ENVIRONMENT_TEST
+            $targetEnvironment !== Constants::ENVIRONMENT_TEST
         ) {
             throw $this->createAccessDeniedException(
                 'You do not have access to create entities without publishing to the test environment first'
@@ -171,7 +169,7 @@ class EntityCreateController extends Controller
         $command = $form->getData();
 
         // The resource server entity type does not support saving of local drafts
-        if ($type === Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+        if ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
             $form->remove('save');
         }
 
@@ -186,26 +184,15 @@ class EntityCreateController extends Controller
 
         if ($form->isSubmitted()) {
             try {
-                if ($this->isSaveAction($form)) {
-                    // Only trigger form validation on publish
-                    $this->commandBus->handle($command);
-
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
-                } elseif ($this->isPublishAction($form)) {
+                if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $this->commandBus->handle($command);
-
-                        $entity = $this->entityService->getEntityById($command->getId());
-                        $response = $this->publishEntity($entity, $flashBag);
+                        $response = $this->publishEntity(null, $command, $flashBag);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
                             return $response;
                         }
-
-                        // When publishing failed, forward to the edit action and show the error messages there
-                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
@@ -261,9 +248,9 @@ class EntityCreateController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
-
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
+        $entity->setEnvironment($targetEnvironment);
+        if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG &&
+            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
         ) {
             throw $this->createAccessDeniedException(
                 'You are not allowed to copy oidcng entities to this environment.'
@@ -271,7 +258,7 @@ class EntityCreateController extends Controller
         }
 
         // load entity into form
-        $form = $this->entityTypeFactory->createCreateForm($entity->getProtocol(), $service, $targetEnvironment, $entity);
+        $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment);
         $command = $form->getData();
 
         // A copy can never be saved as draft: changes are published directly to manage.
@@ -288,18 +275,10 @@ class EntityCreateController extends Controller
 
         if ($form->isSubmitted()) {
             try {
-                if ($this->isSaveAction($form)) {
-                    // Only trigger form validation on publish
-                    $this->commandBus->handle($command);
-
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
-                } elseif ($this->isPublishAction($form)) {
+                if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $this->commandBus->handle($command);
-
-                        $entity = $this->entityService->getEntityById($command->getId());
-                        $response = $this->publishEntity($entity, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $flashBag);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
@@ -307,7 +286,7 @@ class EntityCreateController extends Controller
                         }
 
                         // When publishing failed, forward to the edit action and show the error messages there
-                        return $this->redirectToRoute('entity_edit', ['id' => $entity->getId()]);
+                        return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
@@ -322,7 +301,7 @@ class EntityCreateController extends Controller
 
         return [
             'form' => $form->createView(),
-            'type' => $entity->getProtocol(),
+            'type' => $entity->getProtocol()->getProtocol(),
         ];
     }
 }

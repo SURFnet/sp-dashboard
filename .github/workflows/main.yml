@@ -1,0 +1,41 @@
+name: Build docker container for the SP Dashboard
+
+on:
+  pull_request:
+    branches: [ develop ]
+  release:
+    types: [published]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Check out the repo
+      uses: actions/checkout@v2
+
+    - name: Build the php-fpm container and push to GitHub Packages
+      uses: docker/build-push-action@v1
+      with:
+        dockerfile: docker/Dockerfile
+        username: ${{ github.actor }}
+        password: ${{ secrets.GH_CONTAINER_REGISTRY_PAT }}
+        registry: ghcr.io
+        repository: surfnet/sp-dashboard/spdashboard_php-fpm
+        tag_with_ref: true
+        push: true
+        target: phpfpm-build
+
+    - name: Build the Apache container and push to GitHub Packages
+      uses: docker/build-push-action@v1
+      with:
+        dockerfile: docker/Dockerfile
+        username: ${{ github.actor }}
+        password: ${{ secrets.GH_CONTAINER_REGISTRY_PAT }}
+        registry: ghcr.io
+        repository: surfnet/sp-dashboard/spdashboard_web
+        tag_with_ref: true
+        push: true
+        target: httpd-build

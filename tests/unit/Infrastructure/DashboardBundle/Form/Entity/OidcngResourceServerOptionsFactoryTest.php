@@ -20,10 +20,10 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 
 class OidcngResourceServerOptionsFactoryTest extends MockeryTestCase
 {

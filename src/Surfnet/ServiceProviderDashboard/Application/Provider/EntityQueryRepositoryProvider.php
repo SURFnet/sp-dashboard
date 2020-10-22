@@ -19,9 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Provider;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 
 class EntityQueryRepositoryProvider
 {
@@ -31,57 +31,49 @@ class EntityQueryRepositoryProvider
     private $entityRepository;
 
     /**
-     * @var ManageQueryClient
+     * @var QueryEntityRepository
      */
     private $manageTestQueryClient;
 
     /**
-     * @var ManageQueryClient
+     * @var QueryEntityRepository
      */
     private $manageProductionQueryClient;
 
 
     public function __construct(
         EntityRepository $entityRepository,
-        ManageQueryClient $manageTestQueryClient,
-        ManageQueryClient $manageProductionQueryClient
+        QueryEntityRepository $manageTestQueryClient,
+        QueryEntityRepository $manageProductionQueryClient
     ) {
         $this->entityRepository = $entityRepository;
         $this->manageTestQueryClient = $manageTestQueryClient;
         $this->manageProductionQueryClient = $manageProductionQueryClient;
     }
 
-    /**
-     * @param string $environment
-     * @return ManageQueryClient
-     * @throws InvalidArgumentException
-     */
-    public function fromEnvironment($environment)
+    public function fromEnvironment(string $environment): QueryEntityRepository
     {
         switch ($environment) {
-            case Entity::ENVIRONMENT_TEST:
+            case Constants::ENVIRONMENT_TEST:
                 return $this->manageTestQueryClient;
-                break;
-            case Entity::ENVIRONMENT_PRODUCTION:
+            case Constants::ENVIRONMENT_PRODUCTION:
                 return $this->manageProductionQueryClient;
-                break;
             default:
                 throw new InvalidArgumentException(sprintf('Unsupported environment "%s" requested.', $environment));
-                break;
         }
     }
 
-    public function getEntityRepository()
+    public function getEntityRepository(): EntityRepository
     {
         return $this->entityRepository;
     }
 
-    public function getManageTestQueryClient()
+    public function getManageTestQueryClient(): QueryEntityRepository
     {
         return $this->manageTestQueryClient;
     }
 
-    public function getManageProductionQueryClient()
+    public function getManageProductionQueryClient(): QueryEntityRepository
     {
         return $this->manageProductionQueryClient;
     }

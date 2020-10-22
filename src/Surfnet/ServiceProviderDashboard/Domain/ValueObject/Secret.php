@@ -19,7 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Exception;
 
-class Secret
+class Secret implements SecretInterface
 {
     /**
      * @var string
@@ -40,7 +40,6 @@ class Secret
         if ($length < 20) {
             throw new Exception('The secret length should be a value greater or equal to 20');
         }
-        $this->secret = '';
         $nofAllowedChars = strlen(self::$allowedChars) - 1;
         for ($pos = 0; $pos < $length; $pos++) {
             $i = random_int(0, $nofAllowedChars);
@@ -52,7 +51,7 @@ class Secret
     /**
      * @return string
      */
-    public function getSecret()
+    public function getSecret(): string
     {
         return $this->secret;
     }

@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class SelectServiceCommand implements Command
 {

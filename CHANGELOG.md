@@ -1,3 +1,25 @@
+## 2.7.0
+
+**Feature**
+Removing the Draft entity state was the main goal of this release. The following work was done to reach that point
+
+* Move the ManageEntity to the domain layer #375 
+* Remove save button from entity forms #381
+* Deprovision the oidcng playground uris #383 
+* Ensure client secret set on copy to production #384
+* Inject Jira ticket types in EntityService #387
+
+**Improvements**
+* Build Docker images on Github Actions #377
+* Docker php fpm: Clear cache after installation #386
+* Docker: Add content security policy to the docker httpd config #385
+* Github actions: Move to the new GitHub container registry, which allo… #388
+* Docker: Migrate to one multistage Docker file #389
+ 
+**Security updates**
+* Bump elliptic from 6.5.2 to 6.5.3 #380
+* Bump http-proxy from 1.18.0 to 1.18.1 #382
+
 ## 2.6.5
 When testing 2.6.4 another bug was encountered. This bug pushed the memberOf attribute to manage which was empoty and resulted
 therefore in the removal of the attribute in Manage which shouldn't occur.

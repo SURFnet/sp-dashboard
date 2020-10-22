@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class JsonGeneratorStrategyTest extends MockeryTestCase
 {
@@ -68,37 +69,37 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
     public function test_generate_for_new_entity()
     {
-        $entity = m::mock(MetadataConversionDto::class);
+        $entity = m::mock(ManageEntity::class);
 
-        $entity->shouldReceive('getProtocol')->andReturn('saml');
+        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
         $this->strategy->generateForNewEntity($entity, 'prodaccepted');
 
-        $entity->shouldReceive('getProtocol')->andReturn('oidc');
+        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidc');
         $this->strategy->generateForNewEntity($entity, 'prodaccepted');
 
-        $entity->shouldReceive('getProtocol')->andReturn('oidcng');
+        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
         $this->strategy->generateForNewEntity($entity, 'prodaccepted');
     }
 
     public function test_generate_for_existing_entity()
     {
-        $entity = m::mock(MetadataConversionDto::class);
+        $entity = m::mock(ManageEntity::class);
 
-        $entity->shouldReceive('getProtocol')->andReturn('saml');
+        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
         $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
 
-        $entity->shouldReceive('getProtocol')->andReturn('oidc');
+        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidc');
         $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
 
-        $entity->shouldReceive('getProtocol')->andReturn('oidcng');
+        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
         $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
     }
 
     public function test_add_invalid_strategy()
     {
-        $entity = m::mock(MetadataConversionDto::class);
+        $entity = m::mock(ManageEntity::class);
 
-        $entity->shouldReceive('getProtocol')->andReturn('saml30');
+        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml30');
 
         $this->expectException(JsonGeneratorStrategyNotFoundException::class);
         $this->expectExceptionMessage('The requested JsonGenerator for protocol "saml30" is not registered');

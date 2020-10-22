@@ -17,7 +17,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class ChooseEntityTypeCommand
 {
@@ -31,7 +31,7 @@ class ChooseEntityTypeCommand
      */
     private $choices;
 
-    public function __construct($type = Entity::TYPE_SAML)
+    public function __construct($type = Constants::TYPE_SAML)
     {
         $this->type = $type;
     }

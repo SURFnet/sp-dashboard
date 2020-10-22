@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -56,11 +57,6 @@ class EntityDeleteController extends Controller
      */
     private $authorizationService;
 
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
@@ -72,56 +68,6 @@ class EntityDeleteController extends Controller
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
         $this->commandFactory = $commandFactory;
-        $this->serviceService = $serviceService;
-    }
-
-    /**
-     * @Method({"GET", "POST"})
-     * @ParamConverter("entity", class="SurfnetServiceProviderDashboard:Entity")
-     * @Route("/entity/delete/{id}", name="entity_delete")
-     * @Security("has_role('ROLE_USER') and token.hasAccessToEntity(request.get('entity'))")
-     * @Template()
-     *
-     * @param Request $request
-     * @param Entity $entity
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
-    public function deleteAction(Request $request, Entity $entity)
-    {
-        if ($entity->isReadOnly()) {
-            throw $this->createNotFoundException(
-                'OIDC enitty have been made read-only. Use OIDC TNG entities instead.'
-            );
-        }
-
-        $form = $this->createForm(DeleteEntityType::class);
-        $form->handleRequest($request);
-
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($entity->getService(), $entity->getEnvironment())
-        ) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to delete oidcng entities for this environment.'
-            );
-        }
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->getClickedButton()->getName() === 'delete') {
-                $this->commandBus->handle(
-                    $this->commandFactory->buildDeleteDraftEntityCommand($entity->getId())
-                );
-            }
-
-            return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
-        }
-
-        return [
-            'form' => $form->createView(),
-            'environment' => $entity->getEnvironment(),
-            'status' => $entity->getStatus(),
-            'entityName' => $entity->getNameEn(),
-        ];
     }
 
     /**
@@ -175,7 +121,7 @@ class EntityDeleteController extends Controller
         return [
             'form' => $form->createView(),
             'environment' => $environment,
-            'status' => $excludeFromPush === "1" ? Entity::STATE_PUBLICATION_REQUESTED : Entity::STATE_PUBLISHED,
+            'status' => $excludeFromPush === "1" ? Constants::STATE_PUBLICATION_REQUESTED : Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
         ];
     }
@@ -230,7 +176,7 @@ class EntityDeleteController extends Controller
         return [
             'form' => $form->createView(),
             'environment' => $environment,
-            'status' => Entity::STATE_PUBLISHED,
+            'status' => Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
         ];
     }

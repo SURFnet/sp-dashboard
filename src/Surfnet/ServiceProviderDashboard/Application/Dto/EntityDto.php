@@ -18,9 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class EntityDto
 {
@@ -81,22 +82,22 @@ class EntityDto
         return new self(
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
-            Entity::ENVIRONMENT_TEST,
-            Entity::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_TEST,
+            Constants::STATE_PUBLISHED,
             $manageResponse->getProtocol()->getProtocol()
         );
     }
 
     public static function fromManageProductionResult(ManageEntity $manageResponse)
     {
-        $state = Entity::STATE_PUBLISHED;
+        $state = Constants::STATE_PUBLISHED;
         if ($manageResponse->getMetaData()->getCoin()->getExcludeFromPush()) {
-            $state = Entity::STATE_PUBLICATION_REQUESTED;
+            $state = Constants::STATE_PUBLICATION_REQUESTED;
         }
         return new self(
             $manageResponse->getId(),
             $manageResponse->getMetaData()->getEntityId(),
-            Entity::ENVIRONMENT_PRODUCTION,
+            Constants::ENVIRONMENT_PRODUCTION,
             $state,
             $manageResponse->getProtocol()->getProtocol()
         );

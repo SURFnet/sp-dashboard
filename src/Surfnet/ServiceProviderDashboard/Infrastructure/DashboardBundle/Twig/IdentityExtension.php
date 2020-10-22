@@ -17,7 +17,6 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
-use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Environment;
 use Twig_Extension;

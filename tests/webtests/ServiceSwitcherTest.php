@@ -30,11 +30,6 @@ class ServiceSwitcherTest extends WebTestCase
     public function setUp()
     {
         parent::setUp();
-
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
     }
 
     public function test_switcher_is_not_displayed_when_there_is_only_one_option()

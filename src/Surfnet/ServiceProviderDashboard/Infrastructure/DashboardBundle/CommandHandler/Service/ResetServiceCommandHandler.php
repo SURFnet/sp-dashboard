@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Comman
 
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 
 class ResetServiceCommandHandler implements CommandHandler

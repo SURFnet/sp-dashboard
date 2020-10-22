@@ -18,10 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 
 /**
  * Builds ARP metadata for the JSON export.
@@ -38,28 +37,25 @@ class ArpGenerator implements MetadataGenerator
         $this->repository = $repository;
     }
 
-    public function build(MetadataConversionDto $entity)
+    public function build(ManageEntity $entity): array
     {
         $attributes = [];
-
+        $entityAttributes = $entity->getAttributes();
         foreach ($this->repository->findAll() as $definition) {
-            $getterName = $definition->getterName;
-
-            $attr = $entity->$getterName();
-
-            if ($attr instanceof Attribute && $attr->isRequested()) {
-                $urn = reset($definition->urns);
+            $urn = reset($definition->urns);
+            $attrribute = $entityAttributes->findByUrn($urn);
+            // Only add the attributes with a motivation
+            if (!$attrribute || !$attrribute->hasMotivation()) {
+                continue;
+            }
+            if ($attrribute) {
                 $attributes[$urn] = [
                     [
-                        'source' => 'idp',
+                        'source' => $attrribute->getSource(),
                         'value' => '*',
+                        'motivation' => $attrribute->getMotivation(),
                     ],
                 ];
-
-                if ($attr->hasMotivation()) {
-                    $attributes[$urn][0]['motivation'] = $attr->getMotivation();
-                }
-                $this->mergeWithManageAttributes($attributes, $urn, $entity);
             }
         }
 
@@ -71,13 +67,13 @@ class ArpGenerator implements MetadataGenerator
         ];
     }
 
-    private function addManageOnlyAttributes(array &$attributes, MetadataConversionDto $entity)
+    private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
     {
         $managedAttributeUrns = $this->repository->findAllAttributeUrns();
 
         if ($entity->isManageEntity()) {
             // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
-            foreach ($entity->getArpAttributes()->getAttributes() as $manageAttribute) {
+            foreach ($entity->getAttributes()->getAttributes() as $manageAttribute) {
                 if (!array_key_exists($manageAttribute->getName(), $attributes) && !in_array($manageAttribute->getName(), $managedAttributeUrns)) {
                     $attributes[$manageAttribute->getName()] = [
                         [
@@ -92,7 +88,7 @@ class ArpGenerator implements MetadataGenerator
             }
         }
 
-        if ($entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
             // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
             // The user cannot configure EPTI @ ARP settings but the value is used internally.
             $attributes['urn:mace:dir:attribute-def:eduPersonTargetedID'] = [
@@ -102,22 +98,6 @@ class ArpGenerator implements MetadataGenerator
                     'motivation' => 'OIDC requires EduPersonTargetedID by default',
                 ]
             ];
-        }
-    }
-
-    /**
-     * Preserves Manage attribute data, which would otherwise be reset to '*' and 'idp'
-     *
-     * @param array $attributes
-     * @param string $urn
-     * @param MetadataConversionDto $entity
-     */
-    private function mergeWithManageAttributes(array &$attributes, $urn, MetadataConversionDto $entity)
-    {
-        if ($entity->isManageEntity() && $entity->getArpAttributes()->findByUrn($urn)) {
-            $manageAttribute = $entity->getArpAttributes()->findByUrn($urn);
-            $attributes[$urn][0]['source'] = $manageAttribute->getSource();
-            $attributes[$urn][0]['value'] = $manageAttribute->getValue();
         }
     }
 }

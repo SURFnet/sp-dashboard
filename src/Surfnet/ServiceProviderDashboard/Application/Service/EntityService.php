@@ -22,15 +22,17 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
 use Webmozart\Assert\Assert;
@@ -61,25 +63,6 @@ class EntityService implements EntityServiceInterface
     private $logger;
 
     /**
-     * @var string
-     */
-    private $oidcPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriProd;
-    /**
-     * @var string
-     */
-    private $oidcngPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcngPlaygroundUriProd;
-
-    /**
      * @var Config
      */
     private $testManageConfig;
@@ -90,16 +73,16 @@ class EntityService implements EntityServiceInterface
     private $prodManageConfig;
 
     /**
-     * @param EntityQueryRepositoryProvider $entityQueryRepositoryProvider
-     * @param TicketServiceInterface $ticketService
-     * @param Config $testConfig
-     * @param Config $productionConfig
-     * @param RouterInterface $router
-     * @param LoggerInterface $logger
-     * @param string $oidcPlaygroundUriTest
-     * @param string $oidcPlaygroundUriProd
-     * @param string $oidcngPlaygroundUriTest
-     * @param string $oidcngPlaygroundUriProd
+     * @var string
+     */
+    private $publishStatus;
+
+    /**
+     * @var string
+     */
+    private $removalStatus;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -109,26 +92,17 @@ class EntityService implements EntityServiceInterface
         Config $productionConfig,
         RouterInterface $router,
         LoggerInterface $logger,
-        $oidcPlaygroundUriTest,
-        $oidcPlaygroundUriProd,
-        $oidcngPlaygroundUriTest,
-        $oidcngPlaygroundUriProd
+        string $publishStatus,
+        string $removalStatus
     ) {
-        Assert::stringNotEmpty($oidcPlaygroundUriTest, 'Please set "playground_uri_test" in parameters.yml');
-        Assert::stringNotEmpty($oidcPlaygroundUriProd, 'Please set "playground_uri_prod" in parameters.yml');
-        Assert::stringNotEmpty($oidcngPlaygroundUriTest, 'Please set "oidcng_playground_uri_test" in parameters.yml');
-        Assert::stringNotEmpty($oidcngPlaygroundUriProd, 'Please set "oidcng_playground_uri_prod" in parameters.yml');
-
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
         $this->router = $router;
         $this->logger = $logger;
-        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
-        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
-        $this->oidcngPlaygroundUriTest = $oidcngPlaygroundUriTest;
-        $this->oidcngPlaygroundUriProd = $oidcngPlaygroundUriProd;
         $this->testManageConfig = $testConfig;
         $this->prodManageConfig = $productionConfig;
+        $this->publishStatus = $publishStatus;
+        $this->removalStatus = $removalStatus;
     }
 
     public function createEntityUuid()
@@ -143,18 +117,18 @@ class EntityService implements EntityServiceInterface
     public function getEntityById($id)
     {
         $entity = $this->queryRepositoryProvider->getEntityRepository()->findById($id);
-        if ($entity && $entity->getProtocol() === Entity::TYPE_OPENID_CONNECT_TNG) {
+        if ($entity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
             // Load the Possibly connected resource servers
             $resourceServers = [];
             switch ($entity->getEnvironment()) {
-                case Entity::ENVIRONMENT_TEST:
+                case Constants::ENVIRONMENT_TEST:
                     foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
                         $resourceServers[] = $this->queryRepositoryProvider
                             ->getManageTestQueryClient()
                             ->findByEntityId($clientId, $this->testManageConfig->getPublicationStatus()->getStatus());
                     }
                     break;
-                case Entity::ENVIRONMENT_PRODUCTION:
+                case Constants::ENVIRONMENT_PRODUCTION:
                     foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
                         $resourceServers[] = $this->queryRepositoryProvider
                             ->getManageProductionQueryClient()
@@ -171,8 +145,8 @@ class EntityService implements EntityServiceInterface
      * @param string $id
      * @param string $manageTarget
      * @param Service $service
-     * @return mixed|Entity|null
-     * @throws QueryServiceProviderException
+     * @return ManageEntity
+     * @throws EntityNotFoundException
      */
     public function getEntityByIdAndTarget($id, $manageTarget, Service $service)
     {
@@ -181,11 +155,12 @@ class EntityService implements EntityServiceInterface
                 $entity = $this->queryRepositoryProvider
                     ->getManageProductionQueryClient()
                     ->findByManageId($id);
-
-                // Entities that are still excluded from push are not realy published, but have a publication request
+                $entity->setEnvironment($manageTarget);
+                $entity->setService($service);
+                // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
                 if ($entity->getMetaData()->getCoin()->getExcludeFromPush()) {
-                    $entity->updateStatus(Entity::STATE_PUBLICATION_REQUESTED);
+                    $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
                 }
 
                 $issue = $this->findIssueBy($entity);
@@ -193,45 +168,28 @@ class EntityService implements EntityServiceInterface
                     $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
                 }
 
-                return Entity::fromManageResponse(
-                    $entity,
-                    $manageTarget,
-                    $service,
-                    $this->oidcPlaygroundUriTest,
-                    $this->oidcPlaygroundUriProd,
-                    $this->oidcngPlaygroundUriTest,
-                    $this->oidcngPlaygroundUriProd
-                );
-                break;
+                return $entity;
             case 'test':
                 $entity = $this->queryRepositoryProvider
                     ->getManageTestQueryClient()
                     ->findByManageId($id);
+                $entity->setEnvironment($manageTarget);
+                $entity->setService($service);
+                return $entity;
 
-                return Entity::fromManageResponse(
-                    $entity,
-                    $manageTarget,
-                    $service,
-                    $this->oidcPlaygroundUriTest,
-                    $this->oidcPlaygroundUriProd,
-                    $this->oidcngPlaygroundUriTest,
-                    $this->oidcngPlaygroundUriProd
-                );
-                break;
             default:
-                return $this->getEntityById($id);
-                break;
+                throw new EntityNotFoundException(
+                    sprintf(
+                        'Unable to find ManageEntity for environment "%s"',
+                        $manageTarget
+                    )
+                );
         }
     }
 
     public function getEntityListForService(Service $service)
     {
         $entities = [];
-
-        $draftEntities = $this->findDraftEntitiesByServiceId($service->getId());
-        foreach ($draftEntities as $entity) {
-            $entities[] = ViewObject\Entity::fromEntity($entity, $this->router);
-        }
 
         $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
         foreach ($testEntities as $result) {
@@ -279,9 +237,11 @@ class EntityService implements EntityServiceInterface
      */
     public function getManageEntityById($manageId, $env = 'test')
     {
-        return $this->queryRepositoryProvider
+        $entity = $this->queryRepositoryProvider
             ->fromEnvironment($env)
             ->findByManageId($manageId);
+        $entity->setEnvironment($env);
+        return $entity;
     }
 
     /**
@@ -313,6 +273,7 @@ class EntityService implements EntityServiceInterface
      * - Finds published entities in Manage (from the 'production' client)
      * - Tries to match Jira issues that mention one of the manage entity id's
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @param string $teamName
      * @return array|null
      * @throws QueryServiceProviderException
@@ -336,8 +297,21 @@ class EntityService implements EntityServiceInterface
             // entities
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
-                    if ($issueCollection->getIssueById($entity->getId())) {
-                        $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
+                    $issue = $issueCollection->getIssueById($entity->getId());
+                    if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== 'spd-delete-production-entity') {
+                        // A published entity needs no status update unless it's a removal requested entity
+                        continue;
+                    }
+
+                    if ($issue) {
+                        switch ($issue->getIssueType()) {
+                            case $this->publishStatus:
+                                $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
+                                break;
+                            case $this->removalStatus:
+                                $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+                                break;
+                        }
                     }
                 }
             }
@@ -375,7 +349,7 @@ class EntityService implements EntityServiceInterface
     private function updateEntityStatusWithJiraTicketStatus(ManageEntity $entity, Issue $issue)
     {
         if ($issue instanceof Issue) {
-            $entity->updateStatus(Entity::STATE_REMOVAL_REQUESTED);
+            $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
         }
     }
 }

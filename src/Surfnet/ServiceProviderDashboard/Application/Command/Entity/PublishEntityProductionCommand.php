@@ -20,16 +20,18 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityProductionCommand implements PublishProductionCommandInterface, Command
 {
     /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Uuid
+     * @var ManageEntity
+     * @Assert\Type{
+     *      type="\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity"
+     * }
      */
-    private $id;
+    private $manageEntity;
 
     /**
      * @var Contact
@@ -39,21 +41,21 @@ class PublishEntityProductionCommand implements PublishProductionCommandInterfac
     /**
      * @param string $id
      */
-    public function __construct($id, Contact $applicatant)
+    public function __construct(ManageEntity $entity, Contact $applicatant)
     {
-        $this->id = $id;
+        $this->manageEntity = $entity;
         $this->applicant = $applicatant;
     }
 
     /**
      * @return string
      */
-    public function getId()
+    public function getManageEntity(): ManageEntity
     {
-        return $this->id;
+        return $this->manageEntity;
     }
 
-    public function getApplicant()
+    public function getApplicant(): Contact
     {
         return $this->applicant;
     }

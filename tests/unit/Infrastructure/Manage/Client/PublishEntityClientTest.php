@@ -28,10 +28,11 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException as PushMetadataExceptionAlias;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 class PublishEntityClientTest extends MockeryTestCase
@@ -77,7 +78,6 @@ class PublishEntityClientTest extends MockeryTestCase
                 $guzzle,
                 new NullLogger()
             ),
-            $this->buildQueryClient(),
             $this->generator,
             $this->manageConfig,
             $this->logger
@@ -90,17 +90,18 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(ManageEntity::class);
         $entity
-            ->shouldReceive('getEntityId')
+            ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('http://test');
 
         $entity
-            ->shouldReceive('getManageId')
+            ->shouldReceive('getId')
             ->andReturn(null);
 
         $this->manageConfig
             ->shouldReceive('getPublicationStatus->getStatus')
+            ->andReturn('testaccepted')
             ->once();
 
         $this->logger
@@ -120,17 +121,18 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(ManageEntity::class);
         $entity
-            ->shouldReceive('getEntityId')
+            ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('http://test');
 
         $entity
-            ->shouldReceive('getManageId')
+            ->shouldReceive('getId')
             ->andReturn('25055635-8c2c-4f54-95a6-68891a554e95');
 
         $this->manageConfig
             ->shouldReceive('getPublicationStatus->getStatus')
+            ->andReturn('prodaccepted')
             ->once();
 
         $this->logger
@@ -144,29 +146,29 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->assertEquals('1', $response['id']);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException
-     * @expectedExceptionMessage Unable to publish the metadata to Manage
-     */
     public function test_it_handles_failing_publish_action()
     {
+        $this->expectExceptionMessage("Unable to publish the metadata to Manage");
+        $this->expectException(PublishMetadataException::class);
+
         $this->mockHandler->append(new Response(418));
 
         $json = file_get_contents(__DIR__ . '/fixture/metadata.json');
 
-        $entity = m::mock(Entity::class);
+        $entity = m::mock(ManageEntity::class);
         $entity
-            ->shouldReceive('getEntityId')
+            ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('http://test');
         $entity
             ->shouldReceive('getMetadataUrl')
             ->andReturn('https://fobar.example.com');
         $entity
-            ->shouldReceive('getManageId')
+            ->shouldReceive('getId')
             ->andReturn(null);
 
         $this->manageConfig
             ->shouldReceive('getPublicationStatus->getStatus')
+            ->andReturn('prodaccepted')
             ->once();
 
         $this->logger
@@ -190,12 +192,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->assertEquals('OK', $response['status']);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException
-     * @expectedExceptionMessage Unable to push the metadata to Engineblock
-     */
     public function test_it_handles_failing_push_action()
     {
+        $this->expectExceptionMessage("Unable to push the metadata to Engineblock");
+        $this->expectException(PushMetadataExceptionAlias::class);
         $this->logger
             ->shouldReceive('error')
             ->once();
@@ -204,12 +204,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->client->pushMetadata();
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException
-     * @expectedExceptionMessage Pushing did not succeed
-     */
     public function test_it_handles_failing_push_action_with_response()
     {
+        $this->expectExceptionMessage("Pushing did not succeed");
+        $this->expectException(PushMetadataExceptionAlias::class);
         // First call represents the 'xml to json' POST on the Manage endpoint
         $this->mockHandler->append(new Response(200, [], '{"status": "failed", "validation": "invalid enum"}'));
 
@@ -218,14 +216,5 @@ class PublishEntityClientTest extends MockeryTestCase
             ->once();
 
         $this->client->pushMetadata();
-    }
-
-    private function buildQueryClient()
-    {
-        $queryClient = m::mock(QueryClient::class);
-        $queryClient
-            ->shouldReceive('findByManageId')
-            ->andReturn(m::mock(ManageEntity::class));
-        return $queryClient;
     }
 }

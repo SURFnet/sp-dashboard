@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 
 class EntityAclService
@@ -41,17 +42,17 @@ class EntityAclService
     }
 
     /**
-     * @param Entity $entity
+     * @param ManageEntity $entity
      * @return IdentityProvider[]
      */
-    public function getAllowedIdpsFromEntity(Entity $entity)
+    public function getAllowedIdpsFromEntity(ManageEntity $entity)
     {
         $availableIdps = $this->getAvailableIdps();
 
         $allowedIdps = [];
-        if (!$entity->isIdpAllowAll()) {
+        if (!$entity->getAllowedIdentityProviders()->isAllowAll()) {
             foreach ($availableIdps as $idp) {
-                if ($entity->isWhitelisted($idp)) {
+                if ($entity->getAllowedIdentityProviders()->isWhitelisted($idp)) {
                     $allowedIdps[] = $idp;
                 }
             }

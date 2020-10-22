@@ -17,10 +17,9 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact as Contact;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -109,30 +108,6 @@ class Entity
         $this->actions = new EntityActions($id, $serviceId, $state, $environment, $protocol, $isReadOnly);
     }
 
-    public static function fromEntity(DomainEntity $entity, RouterInterface $router)
-    {
-        $contact = $entity->getAdministrativeContact();
-
-        $formattedContact = '';
-
-        if ($contact) {
-            $formattedContact = self::formatDashboardContact($contact);
-        }
-
-        return new self(
-            $entity->getId(),
-            $entity->getEntityId(),
-            $entity->getService()->getId(),
-            $entity->getNameEn(),
-            $formattedContact,
-            $entity->getStatus(),
-            $entity->getEnvironment(),
-            $entity->getProtocol(),
-            $entity->isReadOnly(),
-            $router
-        );
-    }
-
     /**
      * @param ManageEntity $result
      * @param RouterInterface $router
@@ -152,7 +127,7 @@ class Entity
             $result->getStatus(),
             'test',
             $protocol,
-            $protocol === DomainEntity::TYPE_OPENID_CONNECT,
+            false,
             $router
         );
     }
@@ -174,7 +149,7 @@ class Entity
 
         $excludeFromPush = $result->getMetaData()->getCoin()->getExcludeFromPush();
         if ($excludeFromPush === 1) {
-            $status = DomainEntity::STATE_PUBLICATION_REQUESTED;
+            $status = Constants::STATE_PUBLICATION_REQUESTED;
         }
         $protocol = $result->getProtocol()->getProtocol();
         return new self(
@@ -186,7 +161,7 @@ class Entity
             $status,
             'production',
             $protocol,
-            $protocol === DomainEntity::TYPE_OPENID_CONNECT,
+            false,
             $router
         );
     }
@@ -212,19 +187,6 @@ class Entity
     /**
      * @return string
      */
-    private static function formatDashboardContact(Contact $contact)
-    {
-        return sprintf(
-            '%s %s (%s)',
-            $contact->getFirstName(),
-            $contact->getLastName(),
-            $contact->getEmail()
-        );
-    }
-
-    /**
-     * @return string
-     */
     public function getId()
     {
         return $this->id;
@@ -235,10 +197,7 @@ class Entity
      */
     public function getEntityId()
     {
-        if ($this->getProtocol() !== DomainEntity::TYPE_OPENID_CONNECT) {
-            return $this->entityId;
-        }
-        return OidcClientIdParser::parse($this->entityId);
+        return $this->entityId;
     }
 
     /**

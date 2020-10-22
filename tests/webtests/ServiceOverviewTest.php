@@ -44,11 +44,6 @@ class ServiceOverviewTest extends WebTestCase
 
         $this->logIn('ROLE_USER', [$surfNet]);
 
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-
         $crawler = $this->client->request('GET', '/');
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
@@ -68,15 +63,6 @@ class ServiceOverviewTest extends WebTestCase
         $serviceRepository = $this->getServiceRepository();
         $surfNet = $serviceRepository->findByName('SURFnet');
         $ibuildings = $serviceRepository->findByName('Ibuildings B.V.');
-
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->logIn('ROLE_USER', [$surfNet, $ibuildings]);
 
@@ -105,14 +91,24 @@ class ServiceOverviewTest extends WebTestCase
         $surfNet = $serviceRepository->findByName('SURFnet');
         $ibuildings = $serviceRepository->findByName('Ibuildings B.V.');
 
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'SP1',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '7398d851-abd1-2283-a8f1-a29ba5036174',
+            'SP2',
+            'https://sp2-entityid.example.com',
+            'https://sp2-entityid.example.com/metadata',
+            'urn:collab:org:surf.nl'
+        );
 
         $this->logIn('ROLE_USER', [$surfNet, $ibuildings]);
 
@@ -145,8 +141,8 @@ class ServiceOverviewTest extends WebTestCase
             ['No entities found.'],
             [""],
             ['Entities @ test environment'],
-            ["SP1", "SP1", "saml20", "draft"],
-            ["SP2", "SP2", "saml20", "draft"],
+            ["SP1 Name English", "https://sp1-entityid.example.com", "saml20", "published"],
+            ["SP2 Name English", "https://sp2-entityid.example.com", "saml20", "published"],
         ], $result2);
     }
 
@@ -182,11 +178,6 @@ class ServiceOverviewTest extends WebTestCase
     {
         $serviceRepository = $this->getServiceRepository();
         $surfNet = $serviceRepository->findByName('SURFnet');
-
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->testMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
-        $this->prodMockHandler->append(new Response(200, [], '[]'));
 
         $this->logIn('ROLE_USER', [$surfNet]);
 

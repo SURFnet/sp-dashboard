@@ -1,6 +1,6 @@
 {% if action.allowEditAction %}
     <li>
-        <a href="{{ path('entity_edit', {id: action.id, environment: action.environment}) }}">
+        <a href="{{ path('entity_edit', {manageId: action.id, environment: action.environment}) }}">
             <i class="fa fa-pencil-square" aria-hidden="true"></i>
             {{ 'entity.list.action.edit'|trans }}
         </a>

@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
 
@@ -59,7 +59,7 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
             ->shouldReceive('isOidcngEnabled')
             ->andReturn($oidcngEnabledForService);
 
-        $testOptions = $this->protocolChoiceFactory->buildOptions(Entity::ENVIRONMENT_TEST);
+        $testOptions = $this->protocolChoiceFactory->buildOptions(Constants::ENVIRONMENT_TEST);
         $this->assertEquals($expectation, array_values($testOptions), $testDescription);
     }
 
@@ -87,7 +87,7 @@ class ProtocolChoiceFactoryTest extends MockeryTestCase
             ->shouldReceive('isOidcngEnabled')
             ->andReturn($oidcngEnabledForService);
 
-        $testOptions = $this->protocolChoiceFactory->buildOptions(Entity::ENVIRONMENT_PRODUCTION);
+        $testOptions = $this->protocolChoiceFactory->buildOptions(Constants::ENVIRONMENT_PRODUCTION);
         $this->assertEquals($expectation, array_values($testOptions), $testDescription);
     }
 

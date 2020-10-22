@@ -20,15 +20,13 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateEntityAclCommand implements Command
 {
-    /** @var string */
-    private $entityManageId;
-
-    /** @var string */
-    private $serviceId;
+    private $manageEntity;
 
     /**
      * @var IdentityProvider[]
@@ -44,34 +42,19 @@ class UpdateEntityAclCommand implements Command
      */
     private $selectAll = false;
 
-    /**
-     * @param string $entityManageId
-     * @param string $serviceId
-     * @param IdentityProvider[] $selectedIdps
-     * @param bool $selectAll
-     */
-    public function __construct($entityManageId, $serviceId, array $selectedIdps, $selectAll)
+    public function __construct(ManageEntity $entity, array $selectedIdps, bool $selectAll)
     {
-        $this->entityManageId = $entityManageId;
-        $this->serviceId = $serviceId;
+        $this->manageEntity = $entity;
         $this->selected = $selectedIdps;
-        $this->selectAll = (bool) $selectAll;
+        $this->selectAll = $selectAll;
     }
 
     /**
      * @return string
      */
-    public function getEntityManageId()
+    public function getManageEntity()
     {
-        return $this->entityManageId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceId()
-    {
-        return $this->serviceId;
+        return $this->manageEntity;
     }
 
     /**

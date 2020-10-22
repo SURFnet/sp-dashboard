@@ -19,13 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -65,7 +64,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"production", "test"}, strict=true)
      */
-    private $environment = Entity::ENVIRONMENT_TEST;
+    private $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * @var string
@@ -131,19 +130,19 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $logoUrl;
 
     /**
-     * The subject type is comparable to the SAML name id format, that is why the Entity::NAME_ID_FORMAT_DEFAULT
+     * The subject type is comparable to the SAML name id format, that is why the Constants::NAME_ID_FORMAT_DEFAULT
      * (transient) is used to set the default value.
      *
      * @var string
      * @Assert\Choice(
      *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Entity",
+     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Constants",
      *         "getValidNameIdFormats"
      *     },
      *     strict=true
      * )
      */
-    private $subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
+    private $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string
@@ -377,16 +376,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $enablePlayground;
 
     /**
-     * @var string
-     */
-    private $protocol = Entity::TYPE_OPENID_CONNECT_TNG;
-
-    /**
      * @var string[]
      */
     private $resourceServers = [];
 
-    private function __construct()
+    public function __construct()
     {
     }
 
@@ -398,74 +392,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     {
         $command = new self();
         $command->service = $service;
-        return $command;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return SaveOidcngEntityCommand
-     */
-    public static function fromEntity(Entity $entity)
-    {
-        $command = new self();
-        $command->id = $entity->getId();
-        $command->status = $entity->getStatus();
-        $command->manageId = $entity->getManageId();
-        $command->service = $entity->getService();
-        $command->archived = $entity->isArchived();
-        $command->environment = $entity->getEnvironment();
-        $command->entityId = $entity->getEntityId();
-        $command->secret = $entity->getClientSecret();
-        $command->redirectUrls = $entity->getRedirectUris();
-        $command->grantType = $entity->getGrantType()->getGrantType();
-        $command->logoUrl = $entity->getLogoUrl();
-        $command->nameNl = $entity->getNameNl();
-        $command->nameEn = $entity->getNameEn();
-        // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
-        $command->setSubjectType($entity->getNameIdFormat());
-        $command->descriptionNl = $entity->getDescriptionNl();
-        $command->descriptionEn = $entity->getDescriptionEn();
-        $command->applicationUrl = $entity->getApplicationUrl();
-        $command->eulaUrl = $entity->getEulaUrl();
-        $command->administrativeContact = $entity->getAdministrativeContact();
-        $command->technicalContact = $entity->getTechnicalContact();
-        $command->supportContact = $entity->getSupportContact();
-        $command->givenNameAttribute = $entity->getGivenNameAttribute();
-        $command->surNameAttribute = $entity->getSurNameAttribute();
-        $command->commonNameAttribute = $entity->getCommonNameAttribute();
-        $command->displayNameAttribute = $entity->getDisplayNameAttribute();
-        $command->emailAddressAttribute = $entity->getEmailAddressAttribute();
-        $command->organizationAttribute = $entity->getOrganizationAttribute();
-        $command->organizationTypeAttribute = $entity->getOrganizationTypeAttribute();
-        $command->affiliationAttribute = $entity->getAffiliationAttribute();
-        $command->entitlementAttribute = $entity->getEntitlementAttribute();
-        $command->principleNameAttribute = $entity->getPrincipleNameAttribute();
-        $command->uidAttribute = $entity->getUidAttribute();
-        $command->preferredLanguageAttribute = $entity->getPreferredLanguageAttribute();
-        $command->personalCodeAttribute = $entity->getPersonalCodeAttribute();
-        $command->scopedAffiliationAttribute = $entity->getScopedAffiliationAttribute();
-        $command->eduPersonTargetedIDAttribute = $entity->getEduPersonTargetedIDAttribute();
-        $command->comments = $entity->getComments();
-        $command->organizationNameNl = $entity->getOrganizationNameNl();
-        $command->organizationNameEn = $entity->getOrganizationNameEn();
-        $command->organizationDisplayNameNl = $entity->getOrganizationDisplayNameNl();
-        $command->organizationDisplayNameEn = $entity->getOrganizationDisplayNameEn();
-        $command->organizationUrlNl = $entity->getOrganizationUrlNl();
-        $command->organizationUrlEn = $entity->getOrganizationUrlEn();
-        $command->isPublicClient = $entity->isPublicClient();
-        $command->accessTokenValidity = (int) $entity->getAccessTokenValidity();
-        $command->enablePlayground = $entity->isEnablePlayground();
-        $command->resourceServers = $entity->getOidcngResourceServers()->getResourceServers();
-
-        if (is_array($command->resourceServers) && reset($command->resourceServers) instanceof ManageEntity) {
-            $servers = $entity->getOidcngResourceServers()->getResourceServers();
-            $resourceServers = [];
-            foreach ($servers as $resourceServer) {
-                $resourceServers[$resourceServer->getMetaData()->getEntityId()] = $resourceServer->getMetaData()->getEntityId();
-            }
-            $command->resourceServers = $resourceServers;
-        }
         return $command;
     }
 
@@ -485,10 +411,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return $this->status;
     }
 
-    /**
-     * @return Service
-     */
-    public function getService()
+    public function getService(): Service
     {
         return $this->service;
     }
@@ -509,10 +432,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->archived = $archived;
     }
 
-    /**
-     * @return string
-     */
-    public function getEnvironment()
+    public function getEnvironment(): ?string
     {
         return $this->environment;
     }
@@ -525,8 +445,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         if (!in_array(
             $environment,
             [
-                Entity::ENVIRONMENT_TEST,
-                Entity::ENVIRONMENT_PRODUCTION,
+                Constants::ENVIRONMENT_TEST,
+                Constants::ENVIRONMENT_PRODUCTION,
             ]
         )) {
             throw new InvalidArgumentException(
@@ -537,10 +457,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->environment = $environment;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): ?string
     {
         return $this->entityId;
     }
@@ -600,7 +517,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getLogoUrl()
+    public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
     }
@@ -613,10 +530,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->logoUrl = $logoUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
@@ -629,10 +543,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->nameNl = $nameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameEn()
+    public function getNameEn(): ?string
     {
         return $this->nameEn;
     }
@@ -645,10 +556,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->nameEn = $nameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionNl()
+    public function getDescriptionNl(): ?string
     {
         return $this->descriptionNl;
     }
@@ -661,10 +569,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->descriptionNl = $descriptionNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionEn()
+    public function getDescriptionEn(): ?string
     {
         return $this->descriptionEn;
     }
@@ -680,7 +585,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getApplicationUrl()
+    public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
     }
@@ -693,10 +598,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->applicationUrl = $applicationUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getEulaUrl()
+    public function getEulaUrl(): ?string
     {
         return $this->eulaUrl;
     }
@@ -709,10 +611,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->eulaUrl = $eulaUrl;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getAdministrativeContact()
+    public function getAdministrativeContact(): ?Contact
     {
         return $this->administrativeContact;
     }
@@ -725,10 +624,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->administrativeContact = $administrativeContact;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getTechnicalContact()
+    public function getTechnicalContact(): ?Contact
     {
         return $this->technicalContact;
     }
@@ -741,10 +637,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->technicalContact = $technicalContact;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getSupportContact()
+    public function getSupportContact(): ?Contact
     {
         return $this->supportContact;
     }
@@ -835,6 +728,14 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setEmailAddressAttribute($emailAddressAttribute)
     {
         $this->emailAddressAttribute = $emailAddressAttribute;
+    }
+
+    /**
+     * @param Attribute $eduPersonTargetedIDAttribute
+     */
+    public function setEduPersonTargetedIDAttribute($eduPersonTargetedIDAttribute)
+    {
+        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
     }
 
     /**
@@ -992,7 +893,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getComments()
+    public function getComments(): ?string
     {
         return $this->comments;
     }
@@ -1005,10 +906,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->comments = $comments;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationNameNl()
+    public function getOrganizationNameNl(): ?string
     {
         return $this->organizationNameNl;
     }
@@ -1021,10 +919,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationNameNl = $organizationNameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationNameEn()
+    public function getOrganizationNameEn(): ?string
     {
         return $this->organizationNameEn;
     }
@@ -1037,10 +932,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationNameEn = $organizationNameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameNl()
+    public function getOrganizationDisplayNameNl(): ?string
     {
         return $this->organizationDisplayNameNl;
     }
@@ -1053,10 +945,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationDisplayNameNl = $organizationDisplayNameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameEn()
+    public function getOrganizationDisplayNameEn(): ?string
     {
         return $this->organizationDisplayNameEn;
     }
@@ -1069,10 +958,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationDisplayNameEn = $organizationDisplayNameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlNl()
+    public function getOrganizationUrlNl(): ?string
     {
         return $this->organizationUrlNl;
     }
@@ -1085,10 +971,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->organizationUrlNl = $organizationUrlNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlEn()
+    public function getOrganizationUrlEn(): ?string
     {
         return $this->organizationUrlEn;
     }
@@ -1103,7 +986,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     public function isForProduction()
     {
-        return $this->environment === Entity::ENVIRONMENT_PRODUCTION;
+        return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
     public function setId($id)
@@ -1140,12 +1023,9 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->manageId = $manageId;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): string
     {
-        return $this->protocol;
+        return Constants::TYPE_OPENID_CONNECT_TNG;
     }
 
     /**
@@ -1237,7 +1117,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         // If the SubjectType is not set in the draft, we set the default value (transient) as requested in:
         // https://www.pivotaltracker.com/story/show/167511146
         if (is_null($subjectType)) {
-            $this->subjectType = Entity::NAME_ID_FORMAT_TRANSIENT;
+            $this->subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
         }
     }
 
@@ -1255,5 +1135,25 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setOidcngResourceServers($resourceServers)
     {
         $this->resourceServers = $resourceServers;
+    }
+
+    public function getMetadataUrl(): ?string
+    {
+        return null;
+    }
+
+    public function getCertificate(): ?string
+    {
+        return null;
+    }
+
+    public function getNameIdFormat(): string
+    {
+        return $this->getSubjectType();
+    }
+
+    public function getAcsLocation(): ?string
+    {
+        return null;
     }
 }

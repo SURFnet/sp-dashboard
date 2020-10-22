@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Parser\OidcClientIdParser;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity as DomainEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class EntityOidcConfirmation
 {
@@ -51,9 +52,8 @@ class EntityOidcConfirmation
         $protocol
     ) {
         $supportedProtocols = [
-            DomainEntity::TYPE_OPENID_CONNECT,
-            DomainEntity::TYPE_OPENID_CONNECT_TNG,
-            DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            Constants::TYPE_OPENID_CONNECT_TNG,
+            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ];
 
         if (!in_array($protocol, $supportedProtocols)) {
@@ -69,12 +69,12 @@ class EntityOidcConfirmation
         $this->protocol = $protocol;
     }
 
-    public static function fromEntity(DomainEntity $entity)
+    public static function fromEntity(ManageEntity $entity)
     {
         return new self(
-            $entity->getEntityId(),
-            $entity->getClientSecret(),
-            $entity->getProtocol()
+            $entity->getMetaData()->getEntityId(),
+            $entity->getOidcClient()->getClientSecret(),
+            $entity->getProtocol()->getProtocol()
         );
     }
 
@@ -83,13 +83,7 @@ class EntityOidcConfirmation
      */
     public function getEntityId()
     {
-        $isOidcng = $this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG ||
-            $this->protocol === DomainEntity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-        if ($isOidcng) {
-            return OidcngClientIdParser::parse($this->entityId);
-        }
-
-        return OidcClientIdParser::parse($this->entityId);
+        return OidcngClientIdParser::parse($this->entityId);
     }
 
     /**

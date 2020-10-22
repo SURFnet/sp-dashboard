@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
+use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;

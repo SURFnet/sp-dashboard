@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntity
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
@@ -83,7 +84,7 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         }
 
         if (!$command->getManageId()) {
-            $secret = new Secret(Entity::OIDC_SECRET_LENGTH);
+            $secret = new Secret(Constants::OIDC_SECRET_LENGTH);
             $entity->setClientSecret($secret->getSecret());
         }
 

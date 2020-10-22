@@ -18,71 +18,80 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
+use League\Tactician\CommandBus;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
-use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 
 class ResetOidcSecretCommandHandler implements CommandHandler
 {
     /**
-     * @var EntityRepository
+     * @var CommandBus
      */
-    private $repository;
-    /**
-     * @var LoadEntityService
-     */
-    private $loadEntityService;
+    private $commandBus;
 
     /**
-     * @param EntityRepository $repository
-     * @param LoadEntityService $loadEntityService
+     * @var AuthorizationService
      */
-    public function __construct(EntityRepository $repository, LoadEntityService $loadEntityService)
-    {
-        $this->repository = $repository;
-        $this->loadEntityService = $loadEntityService;
+    private $authorizationService;
+
+    /**
+     * @var PublishEntityClient
+     */
+    private $publishEntityClient;
+
+    public function __construct(
+        CommandBus $commandBus,
+        AuthorizationService $authorizationService,
+        PublishEntityClient $publishEntityClient
+    ) {
+        $this->commandBus = $commandBus;
+        $this->authorizationService = $authorizationService;
+        $this->publishEntityClient = $publishEntityClient;
     }
 
     /**
      * @param ResetOidcSecretCommand $command
-     * @throws EntityNotFoundException
      * @throws InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
+     * @throws QueryServiceProviderException
      */
     public function handle(ResetOidcSecretCommand $command)
     {
-        $entity = $this->loadEntityService->load(
-            $command->getId(),
-            $command->getManageId(),
-            $command->getService(),
-            $command->getEnvironment(),
-            $command->getEnvironment()
-        );
+        $entity = $command->getManageEntity();
 
-        if (!$entity) {
-            throw new EntityNotFoundException('The requested entity could not be found');
-        }
-
-        $protocol = $entity->getProtocol();
-        if ($protocol !== Entity::TYPE_OPENID_CONNECT_TNG &&
-            $protocol !== Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+        $protocol = $entity->getProtocol()->getProtocol();
+        if ($protocol !== Constants::TYPE_OPENID_CONNECT_TNG &&
+            $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {
-            throw new EntityNotFoundException('The requested entity could be found, invalid protocol');
+            throw new InvalidArgumentException('Only OIDC TNG entities can be processed');
         }
 
-        if ($entity->getStatus() !== Entity::STATE_PUBLISHED) {
-            throw new EntityNotFoundException('The requested entity could be found, invalid state');
+        if ($entity->getStatus() !== Constants::STATE_PUBLISHED) {
+            throw new InvalidArgumentException('The requested entity can not be processed, invalid state');
         }
 
-        $secret = new Secret(Entity::OIDC_SECRET_LENGTH);
+        $secret = new Secret(Constants::OIDC_SECRET_LENGTH);
 
-        $entity->setClientSecret($secret->getSecret());
-        $entity->setManageId($command->getManageId());
-        $this->repository->save($entity);
+        $entity->updateClientSecret($secret);
+
+        if ($entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION) {
+            $publishCommand = new PublishEntityProductionCommand($entity, $this->authorizationService->getContact());
+            $this->commandBus->handle($publishCommand);
+            if (!$entity->isExcludedFromPush()) {
+                // Push metadata (we push to production manage upon client secret resets)
+                // https://www.pivotaltracker.com/story/show/173009970
+                $this->publishEntityClient->pushMetadata();
+            }
+        } else if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
+            $publishCommand = new PublishEntityTestCommand($entity);
+            $this->commandBus->handle($publishCommand);
+        }
     }
 }

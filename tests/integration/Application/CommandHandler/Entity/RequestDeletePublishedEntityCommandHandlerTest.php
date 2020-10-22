@@ -28,11 +28,11 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePub
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\RequestDeletePublishedEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase

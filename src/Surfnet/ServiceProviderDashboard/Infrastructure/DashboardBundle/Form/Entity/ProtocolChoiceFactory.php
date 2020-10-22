@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Service\OidcngEnabledMarshaller;
 
@@ -41,9 +41,9 @@ class ProtocolChoiceFactory
     private $service;
 
     private $availableOptions = [
-        Entity::TYPE_SAML => 'entity.type.saml20.title',
-        Entity::TYPE_OPENID_CONNECT_TNG => 'entity.type.oidcng.client.title',
-        Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => 'entity.type.oidcng.resource_server.title',
+        Constants::TYPE_SAML => 'entity.type.saml20.title',
+        Constants::TYPE_OPENID_CONNECT_TNG => 'entity.type.oidcng.client.title',
+        Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => 'entity.type.oidcng.resource_server.title',
     ];
 
     public function __construct(
@@ -51,8 +51,8 @@ class ProtocolChoiceFactory
         Config $manageConfigProd
     ) {
         $this->manageConfig = [
-            Entity::ENVIRONMENT_TEST => $manageConfigTest,
-            Entity::ENVIRONMENT_PRODUCTION => $manageConfigProd,
+            Constants::ENVIRONMENT_TEST => $manageConfigTest,
+            Constants::ENVIRONMENT_PRODUCTION => $manageConfigProd,
         ];
 
         $this->oidcngEnabledMarshaller = new OidcngEnabledMarshaller();
@@ -73,8 +73,8 @@ class ProtocolChoiceFactory
         $manageConfig = $this->manageConfig[$targetEnvironment];
         $options = $this->availableOptions;
         if (!$this->oidcngEnabledMarshaller->allowed($this->service, $manageConfig->getOidcngEnabled()->isEnabled())) {
-            unset($options[Entity::TYPE_OPENID_CONNECT_TNG]);
-            unset($options[Entity::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER]);
+            unset($options[Constants::TYPE_OPENID_CONNECT_TNG]);
+            unset($options[Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER]);
         }
 
         return array_flip($options);

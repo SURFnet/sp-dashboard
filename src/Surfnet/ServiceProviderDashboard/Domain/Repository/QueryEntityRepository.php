@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Dto\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 interface QueryEntityRepository
 {
@@ -60,4 +60,6 @@ interface QueryEntityRepository
      * @return ManageEntity|null
      */
     public function findByEntityId($entityId, $state);
+
+    public function findOidcngResourceServersByTeamName(string $teamName, string $state): array;
 }

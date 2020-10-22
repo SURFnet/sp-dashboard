@@ -21,9 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonG
 use DateTime;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
@@ -37,8 +36,7 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 
     public function test_it_can_build_privacy_question_metadata()
     {
-        /** @var Entity $entity */
-        $entity = m::mock(Entity::class)->makePartial();
+        $entity = m::mock(ManageEntity::class)->makePartial();
         $service = m::mock(Service::class)->makePartial();
         $privacyQuestions = new PrivacyQuestions();
 
@@ -62,8 +60,6 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $service->setPrivacyQuestions($privacyQuestions);
         $entity->setService($service);
 
-        $entity = MetadataConversionDto::fromEntity($entity);
-
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
@@ -82,8 +78,7 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 
     public function test_it_retuns_empty_array_when_disabled()
     {
-        /** @var Entity $entity */
-        $entity = m::mock(Entity::class)->makePartial();
+        $entity = m::mock(ManageEntity::class)->makePartial();
         $service = m::mock(Service::class)->makePartial();
         $privacyQuestions = new PrivacyQuestions();
 
@@ -95,7 +90,6 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
-        $entity = MetadataConversionDto::fromEntity($entity);
         $metadata = $factory->build($entity);
 
         $this->assertEmpty($metadata);

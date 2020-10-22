@@ -1,0 +1,65 @@
+{
+  "id": "manageId",
+  "version": 0,
+  "type": "saml20_sp",
+  "revision": {
+    "number": 0,
+    "created": 1543851541.752,
+    "parentId": null,
+    "updatedBy": "sp-dashboard",
+    "terminated": null
+  },
+  "data": {
+    "arp": {
+      "attributes": {
+        "urn:mace:dir:attribute-def:displayName": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "asddsafadfsafdsfdasfadsafds dafs ad fsad fsafd saf ds"
+          }
+        ],
+        "urn:mace:dir:attribute-def:uid": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "fd fads fdasafd s fdasfda s dfas dfa"
+          }
+        ]
+      },
+      "enabled": true
+    },
+    "entityid": "http:\/\/entityid",
+    "metadataurl": "http:\/\/metadata",
+    "active": true,
+    "allowedEntities": [],
+    "allowedall": true,
+    "state": "testaccepted",
+    "type": "saml20-sp",
+    "metaDataFields": {
+      "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+      "AssertionConsumerService:0:Location": "http:\/\/acs",
+      "NameIDFormat": "nameidformat",
+      "description:en": "description en",
+      "description:nl": "description nl",
+      "name:en": "name en",
+      "name:nl": "name nl",
+      "coin:signature_method": "http:\/\/www.w3.org\/2001\/04\/xmldsig-more#rsa-sha256",
+      "certData": "certdata",
+      "contacts:0:contactType": "support",
+      "contacts:0:givenName": "givenname",
+      "contacts:0:surName": "surname",
+      "contacts:0:emailAddress": "emailaddress",
+      "contacts:0:telephoneNumber": "telephonenumber",
+      "OrganizationName:en": "orgen",
+      "OrganizationDisplayName:en": "orgdisen",
+      "OrganizationURL:en": "http:\/\/orgen",
+      "OrganizationName:nl": "orgnl",
+      "OrganizationDisplayName:nl": "orgdisnl",
+      "OrganizationURL:nl": "http://orgnl",
+      "coin:service_team_id": "service-institution-id",
+      "coin:original_metadata_url": "https:\/\/engine.surfconext.nl\/authentication\/sp\/metadata"
+    },
+    "eid": 31
+  }
+}

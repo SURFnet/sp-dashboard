@@ -16,7 +16,6 @@ app/js/coverage
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
-/app/bootstrap.php.cache
 /.idea
 /node_modules
 /web/build
