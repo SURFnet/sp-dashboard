@@ -159,13 +159,7 @@ class EntityService implements EntityServiceInterface
                 $entity->setService($service);
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
-                $excludeFromPush = $entity->getMetaData()->getCoin()->getExcludeFromPush();
-                if ($excludeFromPush === '1') {
-                    $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
-                }
-                if ($excludeFromPush === '0') {
-                    $entity->updateStatus(Constants::STATE_PUBLISHED);
-                }
+                $this->updateStatus($entity);
 
                 // Todo: Remove this, the exclude from push flag is clear enough, no need to read Jira ticket.
                 $issue = $this->findIssueBy($entity);
@@ -246,6 +240,7 @@ class EntityService implements EntityServiceInterface
             ->fromEnvironment($env)
             ->findByManageId($manageId);
         $entity->setEnvironment($env);
+        $this->updateStatus($entity);
         return $entity;
     }
 
@@ -355,6 +350,17 @@ class EntityService implements EntityServiceInterface
     {
         if ($issue instanceof Issue) {
             $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+        }
+    }
+
+    private function updateStatus(ManageEntity $entity)
+    {
+        $excludeFromPush = $entity->getMetaData()->getCoin()->getExcludeFromPush();
+        if ($excludeFromPush === '1') {
+            $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
+        }
+        if ($excludeFromPush === '0') {
+            $entity->updateStatus(Constants::STATE_PUBLISHED);
         }
     }
 }
