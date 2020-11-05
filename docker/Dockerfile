@@ -1,5 +1,5 @@
 FROM php:7.2-fpm-alpine AS node-build
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 COPY . /var/www/html/
 WORKDIR /var/www/html/
 ENV SYMFONY_ENV=prod
