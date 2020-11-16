@@ -161,9 +161,12 @@ class EntityService implements EntityServiceInterface
                 // with the service desk.
                 $this->updateStatus($entity);
 
-                // Todo: Remove this, the exclude from push flag is clear enough, no need to read Jira ticket.
+                // Todo: review this construction, The ticket is used to determine request for removal, but not for the
+                // publication state
                 $issue = $this->findIssueBy($entity);
-                if ($issue) {
+                $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
+                    $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
+                if ($issue && $shouldUseTicketStatus) {
                     $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
                 }
 
