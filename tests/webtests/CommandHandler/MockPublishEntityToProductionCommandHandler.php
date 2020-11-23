@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\CommandHandler;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 

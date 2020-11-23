@@ -65,6 +65,13 @@ class EntityEditController extends Controller
         $flashBag = $this->get('session')->getFlashBag();
         $service = $this->serviceService->getServiceById($this->authorizationService->getActiveServiceId());
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
+
+        if ($entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to edit a published production entity'
+            );
+        }
+
         $entity->setService($service);
         $protocol = $entity->getProtocol()->getProtocol();
 
@@ -83,10 +90,6 @@ class EntityEditController extends Controller
 
         $form = $this->entityTypeFactory->createEditForm($entity, $service, $environment);
         $command = $form->getData();
-
-        if ($entity->isPublished()) {
-            $form->remove('save');
-        }
 
         $form->handleRequest($request);
 
