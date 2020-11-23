@@ -159,12 +159,14 @@ class EntityService implements EntityServiceInterface
                 $entity->setService($service);
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
-                if ($entity->getMetaData()->getCoin()->getExcludeFromPush()) {
-                    $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
-                }
+                $this->updateStatus($entity);
 
+                // Todo: review this construction, The ticket is used to determine request for removal, but not for the
+                // publication state
                 $issue = $this->findIssueBy($entity);
-                if ($issue) {
+                $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
+                    $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
+                if ($issue && $shouldUseTicketStatus) {
                     $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
                 }
 
@@ -241,6 +243,7 @@ class EntityService implements EntityServiceInterface
             ->fromEnvironment($env)
             ->findByManageId($manageId);
         $entity->setEnvironment($env);
+        $this->updateStatus($entity);
         return $entity;
     }
 
@@ -350,6 +353,17 @@ class EntityService implements EntityServiceInterface
     {
         if ($issue instanceof Issue) {
             $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+        }
+    }
+
+    private function updateStatus(ManageEntity $entity)
+    {
+        $excludeFromPush = $entity->getMetaData()->getCoin()->getExcludeFromPush();
+        if ($excludeFromPush === '1') {
+            $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
+        }
+        if ($excludeFromPush === '0') {
+            $entity->updateStatus(Constants::STATE_PUBLISHED);
         }
     }
 }

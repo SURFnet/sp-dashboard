@@ -107,8 +107,6 @@ services:
     surfnet.dashboard.command_handler.publish_production_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
             - '@surfnet.manage.client.publish_client.prod_environment'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@session.flash_bag'

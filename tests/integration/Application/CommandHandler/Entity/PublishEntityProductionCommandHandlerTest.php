@@ -24,19 +24,15 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
@@ -49,11 +45,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
      * @var PublishEntityProductionCommandHandler
      */
     private $commandHandler;
-
-    /**
-     * @var EntityRepository|Mock
-     */
-    private $repository;
 
     /**
      * @var PublishEntityRepository|Mock
@@ -85,16 +76,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
      */
     private $mailFactory;
 
-    /**
-     * @var ServiceRepository|Mock
-     */
-    private $serviceRepository;
-
     public function setUp()
     {
-
-        $this->repository = m::mock(EntityRepository::class);
-        $this->serviceRepository = m::mock(ServiceRepository::class);
         $this->publishEntityClient = m::mock(PublishEntityRepository::class);
         $this->ticketService = m::mock(TicketService::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
@@ -104,8 +87,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->mailFactory = m::mock(MailMessageFactory::class);
 
         $this->commandHandler = new PublishEntityProductionCommandHandler(
-            $this->repository,
-            $this->serviceRepository,
             $this->publishEntityClient,
             $this->ticketService,
             $this->flashBag,
@@ -232,15 +213,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->ticketService
             ->shouldReceive('createIssueFrom')
             ->andReturn($issue);
-
-        $this->repository
-            ->shouldReceive('findById')
-            ->with('d6f394b2-08b1-4882-8b32-81688c15c489')
-            ->andReturn($manageEntity);
-
-        $this->repository
-            ->shouldReceive('save')
-            ->with($manageEntity);
 
         $this->logger
             ->shouldReceive('info')

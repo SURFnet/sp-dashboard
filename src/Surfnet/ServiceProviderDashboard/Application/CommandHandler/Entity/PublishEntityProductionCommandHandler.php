@@ -42,16 +42,6 @@ use Webmozart\Assert\Assert;
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
     /**
-     * @var EntityRepository
-     */
-    private $repository;
-
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
-
-    /**
      * @var PublishEntityRepository
      */
     private $publishClient;
@@ -96,8 +86,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $descriptionTranslationKey;
 
     /**
-     * @param EntityRepository $entityRepository
-     * @param ServiceRepository $serviceRepository
      * @param PublishEntityRepository $publishClient
      * @param TicketService $ticketService
      * @param FlashBagInterface $flashBag
@@ -107,19 +95,15 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      * @param string $issueType
      */
     public function __construct(
-        EntityRepository $entityRepository,
-        ServiceRepository $serviceRepository,
         PublishEntityRepository $publishClient,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
         MailMessageFactory $mailFactory,
         Mailer $mailer,
         LoggerInterface $logger,
-        $issueType
+        string $issueType
     ) {
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_publication_request" in parameters.yml');
-        $this->repository = $entityRepository;
-        $this->serviceRepository = $serviceRepository;
         $this->publishClient = $publishClient;
         $this->ticketService = $ticketService;
         $this->mailFactory = $mailFactory;
