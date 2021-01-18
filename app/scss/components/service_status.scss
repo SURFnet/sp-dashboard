@@ -111,6 +111,16 @@
   }
 }
 
+.service-status-entities-table {
+  &:not(:first-of-type) {
+    margin-top: 2rem;
+  }
+
+  tr:first-of-type {
+    border-top: 0;
+  }
+}
+
 #chartjs-tooltip {
   position: absolute;
   display: block;

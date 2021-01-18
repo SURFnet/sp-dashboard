@@ -48,13 +48,11 @@
 
                     <h2>{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h2>
 
-                    <table>
-                        {# Production entities #}
-                        <tr>
-                            <td colspan="4">
-                                <h3>{{ 'service.overview.entitylist.production.title'|trans }}</h3>
-                            </td>
-                        </tr>
+                    {# Production entities #}
+                    <table class="service-status-entities-table">
+                        <caption>
+                            <h3>{{ 'service.overview.entitylist.production.title'|trans }}</h3>
+                        </caption>
                         <tr>
                             <th>{{ 'service.overview.entitylist.name'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
@@ -89,18 +87,13 @@
                                 <td colspan="4">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
+                    </table>
 
-                        {# Spacing #}
-                        <tr>
-                            <td colspan="4"></td>
-                        </tr>
-
-                        {# Test entities #}
-                        <tr>
-                            <td colspan="4">
-                                <h3>{{ 'service.overview.entitylist.test.title'|trans }}</h3>
-                            </td>
-                        </tr>
+                    {# Test entities #}
+                    <table class="service-status-entities-table">
+                        <caption>
+                            <h3>{{ 'service.overview.entitylist.test.title'|trans }}</h3>
+                        </caption>
                         <tr>
                             <th>{{ 'service.overview.entitylist.name'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
@@ -136,7 +129,6 @@
                             </tr>
                         {% endif %}
                     </table>
-
                 </div>
             </div>
         </div>
