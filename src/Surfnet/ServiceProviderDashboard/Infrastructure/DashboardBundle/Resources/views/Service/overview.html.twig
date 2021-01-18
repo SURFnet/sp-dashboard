@@ -12,12 +12,6 @@
     {% for service in services %}
         <div class="fieldset card action">
             <ul>
-                <li>
-                    <a href="{{ path('entity_list', {'serviceId': service.id}) }}">
-                        <i class="fa fa-bars" aria-hidden="true"></i>
-                        {{ 'service.overview.action.entityList'|trans }}
-                    </a>
-                </li>
                 {% if service.arePrivacyQuestionsEnabled %}
                 <li>
                     <a href="{{ path('privacy_questions', {'serviceId': service.id}) }}">
