@@ -450,9 +450,9 @@ privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 privacy.form.label.accessData.html: 2. Who can access the data?
 privacy.form.label.certification.html: "5. Can you supply a Third Party Memorandum? If not: skip to question 9"
-privacy.form.label.certificationValidFrom.html: 7. Valid from:
+privacy.form.label.certificationValidFrom.html: "7. Valid from:"
 privacy.form.label.certificationLocation.html: 6. Where can an institution find/request it?
-privacy.form.label.certificationValidTo.html: 8. Valid to:
+privacy.form.label.certificationValidTo.html: "8. Valid to:"
 privacy.form.label.country.html: 3. In what country is the data stored?
 privacy.form.label.otherInfo.html: 14. Other data privacy and security information
 privacy.form.label.privacyPolicy.html: "12. Do you publish your privacy policy? If not: skip to question 14"
@@ -513,14 +513,13 @@ service.form.label.service_type_non_institute: Not an institute
 service.form.label.institution_id: Institute ID
 service.form.label.institution_guid:  Institute GUID
 service.admin_overview.title: Service overview
-service.overview.title: My services
-service.overview.action.entityList: Detailed entities overview
+service.overview.title: "%name% overview"
 service.overview.action.privacyQuestions: Privacy questions
 service.overview.action.serviceEdit: Edit service
 service.overview.action.serviceDelete: Delete service
-service.overview.entitylist.title: Entities of service %name%
-service.overview.entitylist.test.title: Entities @ test environment
-service.overview.entitylist.production.title: Entities @ production environment
+service.overview.entitylist.title: "%name% entities"
+service.overview.entitylist.test.title: Test entities
+service.overview.entitylist.production.title: Production entities
 service.overview.entitylist.name: Name
 service.overview.entitylist.entityId: Entity ID
 service.overview.entitylist.protocol: Protocol

@@ -1,15 +1,10 @@
 {% extends '::base.html.twig' %}
 
 {% block body_container %}
-
-    <h1>{% block page_heading %}{% spaceless %}
-        {% if isAdmin %}
-        {{ 'service.admin_overview.title'|trans }}
-        {% else %}
-        {{ 'service.overview.title'|trans }}
-        {% endif %}{% endspaceless %}{% endblock %}</h1>
-
+    {# todo: ensure this no longer is an array of services #}
     {% for service in services %}
+        <h1>{% block page_heading %}{{ 'service.overview.title'|trans({'%name%': service.name }) }}{% endblock %}</h1>
+
         <div class="fieldset card action">
             <ul>
                 {% if service.arePrivacyQuestionsEnabled %}
