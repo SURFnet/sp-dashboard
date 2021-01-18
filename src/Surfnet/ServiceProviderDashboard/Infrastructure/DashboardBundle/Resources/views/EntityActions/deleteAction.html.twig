@@ -1,10 +1,13 @@
 {% if action.allowDeleteAction %}
-    <li>
+    {% set deletePath %}
         {% if action.isPublishedToProduction %}
-        <a href="{{ path('entity_delete_request', {serviceId: action.serviceId, manageId: action.id}) }}">
+            {{ path('entity_delete_request', {serviceId: action.serviceId, manageId: action.id}) }}
         {% elseif action.isPublished or action.isRequested %}
-        <a href="{{ path('entity_delete_published', {serviceId: action.serviceId, manageId: action.id, environment: action.environment}) }}">
+            {{ path('entity_delete_published', {serviceId: action.serviceId, manageId: action.id, environment: action.environment}) }}
         {% endif %}
+    {% endset %}
+    <li>
+        <a href="{{ deletePath }}">
             <i class="fa fa-trash" aria-hidden="true"></i>
             {{ 'entity.list.action.delete'|trans }}
         </a>

@@ -45,9 +45,7 @@
         </div>
 
         <div class="fieldset card">
-
             <div class="service-status-container">
-
                 <div class="service-status-title">
                     <a href="{{ path('entity_list', {serviceId: service.id }) }}">{{ service.name }}</a>
                 </div>
@@ -68,6 +66,7 @@
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.state'|trans }}</th>
+                            <th>{{ ''|trans }}</th>
                         </tr>
                         {% set hasEntities = false %}
                         {% for entity in service.entityList %}
@@ -75,9 +74,17 @@
                                 {% set hasEntities = true %}
                                 <tr>
                                     <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                                    <td>{{ entity.entityId }}</td>
+                                    <td>{{ entity.protocol }}</td>
+                                    <td>{{ entity.state }}</td>
+                                    <td class="actions">
+                                        <div tabindex="0">
+                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                                            {% include '@Dashboard/EntityActions/actionsForList.html.twig' with {entity: entity.actions} %}
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -103,6 +110,7 @@
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.state'|trans }}</th>
+                            <th>{{ ''|trans }}</th>
                         </tr>
                         {% set hasEntities = false %}
                         {% for entity in service.entityList %}
@@ -113,6 +121,14 @@
                                     <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
                                     <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
                                     <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                                    <td class="actions">
+                                        <div tabindex="0">
+                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                                            {% include '@Dashboard/EntityActions/actionsForList.html.twig' with {entity: entity.actions} %}
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
