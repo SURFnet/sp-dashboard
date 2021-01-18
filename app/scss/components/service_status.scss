@@ -29,7 +29,6 @@
   .service-status-graph {
     display: block;
     position: relative;
-    float: left;
     width: 400px;
     height: 450px;
 
@@ -84,8 +83,6 @@
 
   .service-status-entities {
     display: block;
-    float: right;
-    width: 550px;
     font-weight: bold;
 
     animation: fadein 2s;
