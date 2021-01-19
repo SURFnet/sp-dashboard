@@ -72,6 +72,9 @@ class EntityDetailController extends Controller
         $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
         $viewObject = EntityDetail::fromEntity($entity, $this->playGroundUriTest, $this->playGroundUriProd);
 
-        return ['entity' => $viewObject];
+        return [
+            'entity' => $viewObject,
+            'isAdmin' => $this->isGranted('ROLE_ADMINISTRATOR'),
+        ];
     }
 }
