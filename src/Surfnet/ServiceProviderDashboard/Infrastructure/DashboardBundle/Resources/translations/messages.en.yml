@@ -140,10 +140,6 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-entity.list.title: Entities of service '%serviceName%'
-entity.list.title_no_service_selected: No service selected
-entity.list.empty: There are no entities configured
-entity.list.no_service_selected: Please select a service
 entity.list.add_to_test: New test entity
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
@@ -160,8 +156,6 @@ entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
 entity.list.action.reset_secret: Reset client secret
-entity.list.table.title.test: Test environment (engine.test.surfconext.nl)
-entity.list.table.title.prod: Production environment (engine.surfconext.nl)
 entity.list.modal.oidc_confirmation:
   title: Confirmation
   client_id:

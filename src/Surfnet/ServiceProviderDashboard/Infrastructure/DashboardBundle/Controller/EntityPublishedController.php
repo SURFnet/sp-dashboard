@@ -48,7 +48,7 @@ class EntityPublishedController extends Controller
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {
-            return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
+            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
         }
 
         $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];

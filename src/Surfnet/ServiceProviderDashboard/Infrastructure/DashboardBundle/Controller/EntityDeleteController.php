@@ -115,7 +115,7 @@ class EntityDeleteController extends Controller
             }
 
             $service = $this->authorizationService->changeActiveService($serviceId);
-            return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
         }
 
         return [
@@ -170,7 +170,7 @@ class EntityDeleteController extends Controller
                 );
             }
             $service = $this->authorizationService->changeActiveService($serviceId);
-            return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
         }
 
         return [

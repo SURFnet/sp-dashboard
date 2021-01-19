@@ -42,9 +42,7 @@ class EntityTest extends MockeryTestCase
         Entity $entity,
         $mayEdit,
         $mayDelete,
-        $mayClone,
-        $mayCopy,
-        $mayCopyToProduction
+        $mayClone
     ) {
         $messageFormat = 'Unexpected outcome for the "%s" test in scenario "%s".';
 
@@ -62,16 +60,6 @@ class EntityTest extends MockeryTestCase
             $mayClone,
             $entity->getActions()->allowCloneAction(),
             sprintf($messageFormat, 'mayClone', $testName)
-        );
-        $this->assertEquals(
-            $mayCopy,
-            $entity->getActions()->allowCopyAction(),
-            sprintf($messageFormat, 'mayCopy', $testName)
-        );
-        $this->assertEquals(
-            $mayCopyToProduction,
-            $entity->getActions()->allowCopyToProductionAction(),
-            sprintf($messageFormat, 'mayCopyToProduction', $testName)
         );
     }
 

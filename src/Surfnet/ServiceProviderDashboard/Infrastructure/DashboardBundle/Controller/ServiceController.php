@@ -219,7 +219,7 @@ class ServiceController extends Controller
             $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
+                return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
             } catch (EntityNotFoundException $e) {

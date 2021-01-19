@@ -188,7 +188,7 @@ class EntityCreateController extends Controller
                     }
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+                    return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
@@ -269,13 +269,13 @@ class EntityCreateController extends Controller
                         }
 
                         // When publishing failed, forward to the edit action and show the error messages there
-                        return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
+                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+                    return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
