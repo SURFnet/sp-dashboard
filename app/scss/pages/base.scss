@@ -1,14 +1,20 @@
 .page-container {
-
   @include page;
 
   h1 {
-    margin: 35px 0 20px 0;
     font-size: 30px;
+    margin: 35px 0 20px 0;
   }
 
   h2 {
     margin: 35px 0 20px 0;
+  }
+
+  h2.section-title {
+    font-size: $h2Font;
+  }
+
+  h2:not(.section-title) {
     font-size: 22px;
   }
 

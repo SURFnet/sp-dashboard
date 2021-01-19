@@ -1,7 +1,6 @@
 {% extends '::base.html.twig' %}
 
 {% block body_container %}
-    {# todo: ensure this no longer is an array of services #}
     {% for service in services %}
         <h1>{% block page_heading %}{{ 'service.overview.title'|trans({'%name%': service.name }) }}{% endblock %}</h1>
 

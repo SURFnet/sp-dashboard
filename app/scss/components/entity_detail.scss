@@ -23,13 +23,13 @@
       font-family: monospace;
     }
   }
+}
 
-  h3 {
-    border-bottom: 3px solid $lighter-grey;
-    color: $dark-grey;
-    font-size: 18px;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    text-transform: none;
-  }
+.entity-detail-h3 {
+  border-bottom: 3px solid $lighter-grey;
+  color: $dark-grey;
+  font-size: 18px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  text-transform: none;
 }
