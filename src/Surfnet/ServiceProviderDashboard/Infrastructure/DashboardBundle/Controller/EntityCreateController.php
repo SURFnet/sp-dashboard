@@ -87,9 +87,10 @@ class EntityCreateController extends Controller
      *
      * @param int $serviceId
      * @param string $targetEnvironment
+     * @param string $inputId
      * @return array|RedirectResponse
      */
-    public function typeAction(Request $request, $serviceId, $targetEnvironment)
+    public function typeAction(Request $request, $serviceId, $targetEnvironment, string $inputId)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -122,6 +123,7 @@ class EntityCreateController extends Controller
             'form' => $form->createView(),
             'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
+            'inputId' => $inputId,
         ];
     }
 
@@ -188,7 +190,11 @@ class EntityCreateController extends Controller
                     }
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                    if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                    }
+
+                    return $this->redirectToRoute('service_overview');
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
@@ -275,7 +281,11 @@ class EntityCreateController extends Controller
                     }
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                    if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                    }
+
+                    return $this->redirectToRoute('service_overview');
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');

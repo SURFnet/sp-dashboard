@@ -1,8 +1,42 @@
 {% extends '::base.html.twig' %}
 
 {% block body_container %}
+    {% set flashes = app.session.flashbag.all %}
+    {% if flashes is not empty %}
+        <div class="card messages">
+            {% for type, messages in flashes %}
+                {% for message in messages %}
+                    {% if type == 'wysiwyg' %}
+                        <div class="message {{ type }}">{{ message|trans|wysiwyg }}</div>
+                    {% else %}
+                        <div class="message {{ type }}">{{ message|trans }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {%  endif %}
+    {% set pageHeadingContent = 'service.overview.title'|trans %}
+
+    {# if user is not an admin there might be more services #}
+    {% if not isAdmin %}{% spaceless %}
+        <h1 class="service-title">
+            {{ pageHeadingContent }}
+        </h1>
+    {% endspaceless %}{% endif %}
+
     {% for service in services %}
-        <h1>{% block page_heading %}{{ 'service.overview.title'|trans({'%name%': service.name }) }}{% endblock %}</h1>
+        {# if user is admin there is only one Service #}
+        {% if isAdmin %}
+            {% set pageHeadingContent = 'separvice.admin_overview.title'|trans({'%name%': service.name }) %}
+            <h1 class="service-title">{% spaceless %}
+                {{ pageHeadingContent }}
+            {% endspaceless %}</h1>
+        {% endif %}
+
+        {# we cannot have a block twice, so we need to do that here #}
+        {% block page_heading %}
+            {{ pageHeadingContent }}
+        {% endblock %}
 
         <nav class="fieldset card action">
             <ul>
@@ -37,7 +71,9 @@
             {% set testId = "add-for-test-" ~ shortName %}
             {% set productionId = "add-for-production-" ~ shortName %}
             <input type="checkbox" id="{{ testId }}" name="{{ testId }}" />
-            <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
+            {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
+                <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
+            {% endif %}
             <div class="service-status-container">
                 <h2 class="service-status-title">
                     <a href="{{ path('entity_list', {serviceId: service.id }) }}">{{ service.name }}</a>
@@ -51,10 +87,12 @@
                         <caption>{% spaceless %}
                             <h4 class="service-status-entities-table-title">
                                 {{ 'service.overview.entitylist.production.title'|trans }}
-                                <label for="{{ productionId }}" class="button blue">
-                                    <i class="fa fa-plus"></i>
-                                    {{ 'entity.list.add_to_production'|trans}}
-                                </label>
+                                {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
+                                    <label for="{{ productionId }}" class="button blue">{% spaceless %}
+                                        <i class="fa fa-plus"></i>
+                                        {{ 'entity.list.add_to_production'|trans}}
+                                    {% endspaceless %}</label>
+                                {% endif %}
                             </h4>
                         {% endspaceless %}</caption>
                         <tr>
@@ -86,20 +124,20 @@
                         {% endfor %}
                         {% if hasEntities == false %}
                             <tr>
-                                <td colspan="4">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                                <td colspan="4" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
                     </table>
 
                     {# Test entities #}
-                    <table class="service-status-entities-table">
+                    <table class="service-status-entities-table test-entities">
                         <caption>{% spaceless %}
                             <h4 class="service-status-entities-table-title">
                                 {{ 'service.overview.entitylist.test.title'|trans }}
-                                <label for="{{ testId }}" class="button blue">
+                                <label for="{{ testId }}" class="button blue">{% spaceless %}
                                     <i class="fa fa-plus"></i>
                                     {{ 'entity.list.add_to_test'|trans}}
-                                </label>
+                                {% endspaceless %}</label>
                             </h4>
                         {% endspaceless %}</caption>
                         <tr>
@@ -131,16 +169,29 @@
                         {% endfor %}
                         {% if hasEntities == false %}
                             <tr>
-                                <td colspan="4">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                                <td colspan="4" class="no-entities-test">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
                     </table>
                 </section>
             </div>
             <div class="blocker">
-                <div class="modal" role="dialog" aria-labelledby="" aria-describedby="" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production"})) }}</div>
-                <div class="modal" role="dialog" aria-labelledby="" aria-describedby="" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test"})) }}</div>
+                {# todo: add aria-labelledby-id and aria-describedby-id #}
+                {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
+                    <div class="modal" role="dialog" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
+                {% endif %}
+                <div class="modal" role="dialog" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
             </div>
         </article>
     {% endfor %}
+
+    {% if showOidcPopup %}
+        <div class="modal" id="oidc-published-popup">
+            {{ render(controller('DashboardBundle:EntityPublished:oidcConfirmationModal', {'entity': publishedEntity})) }}
+        </div>
+    {% endif %}
+
+    <div class="modal oidc-confirmation" id="reset-secret-confirmation">
+        {% include "@Dashboard/EntityModal/secretResetModal.html.twig" %}
+    </div>
 {% endblock %}

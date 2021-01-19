@@ -54,7 +54,7 @@ class EntityEditTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler->filter('.page-container')
             ->selectButton('Publish')
@@ -73,7 +73,7 @@ class EntityEditTest extends WebTestCase
 
         $this->logIn('ROLE_USER', [$ibuildings]);
 
-        $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $this->client->request('GET', "/entity/edit/test/{$this->manageId}/2");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
 
@@ -87,7 +87,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
@@ -107,7 +107,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
@@ -135,7 +135,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
@@ -161,7 +161,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
@@ -189,7 +189,7 @@ class EntityEditTest extends WebTestCase
             ],
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}");
+        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
