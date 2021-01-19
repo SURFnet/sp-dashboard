@@ -34,7 +34,9 @@
       width: 100%;
 
       .legend-item {
-        animation: fadein 2s;
+        @include motion {
+          animation: fadein 2s;
+        }
         display: inline-block;
         font-size: $smallFont;
         margin: 0 10px 10px;
@@ -52,7 +54,9 @@
     }
 
     .service-status-percentage {
-      animation: fadein 2s;
+      @include motion {
+        animation: fadein 2s;
+      }
       color: #d1d2d6;
       display: block;
       font-size: $h2Font;
@@ -76,7 +80,9 @@
   }
 
   .service-status-entities {
-    animation: fadein 2s;
+    @include motion {
+      animation: fadein 2s;
+    }
     display: block;
     font-weight: bold;
     margin-top: 3rem;
