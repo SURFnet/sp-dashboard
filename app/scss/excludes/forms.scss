@@ -6,7 +6,7 @@ h2 {
   font-size: 22px;
 }
 
-label {
+label:not(.button) {
   color: $medium-grey;
   display: block;
 

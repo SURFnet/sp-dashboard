@@ -5,7 +5,7 @@
     {% for service in services %}
         <h1>{% block page_heading %}{{ 'service.overview.title'|trans({'%name%': service.name }) }}{% endblock %}</h1>
 
-        <div class="fieldset card action">
+        <nav class="fieldset card action">
             <ul>
                 {% if service.arePrivacyQuestionsEnabled %}
                 <li>
@@ -31,27 +31,36 @@
                 </li>
                 {% endif %}
             </ul>
-        </div>
+        </nav>
 
-        <div class="fieldset card">
+        <article class="fieldset card">
+            {% set shortName = service.name|replace(' ', '-') %}
+            {% set testId = "add-for-test-" ~ shortName %}
+            {% set productionId = "add-for-production-" ~ shortName %}
+            <input type="checkbox" id="{{ testId }}" name="{{ testId }}" />
+            <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
             <div class="service-status-container">
-                <div class="service-status-title">
+                <h2 class="service-status-title">
                     <a href="{{ path('entity_list', {serviceId: service.id }) }}">{{ service.name }}</a>
-                </div>
-                <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
-                <div class="service-status-entities">
-
-                    <h2>{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h2>
+                </h2>
+                <section class="service-status-graph" data-service-id="{{ service.id }}"></section>
+                <section class="service-status-entities">
+                    <h3 class="service-status-section-title">{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h3>
 
                     {# Production entities #}
                     <table class="service-status-entities-table">
-                        <caption>
-                            <h3>{{ 'service.overview.entitylist.production.title'|trans }}</h3>
-                        </caption>
+                        <caption>{% spaceless %}
+                            <h4 class="service-status-entities-table-title">
+                                {{ 'service.overview.entitylist.production.title'|trans }}
+                                <label for="{{ productionId }}" class="button blue">
+                                    <i class="fa fa-plus"></i>
+                                    {{ 'entity.list.add_to_production'|trans}}
+                                </label>
+                            </h4>
+                        {% endspaceless %}</caption>
                         <tr>
                             <th>{{ 'service.overview.entitylist.name'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
-                            <th>{{ 'entity.list.primary_contact'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.state'|trans }}</th>
                             <th>{{ ''|trans }}</th>
@@ -63,7 +72,6 @@
                                 <tr>
                                     <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
                                     <td>{{ entity.entityId }}</td>
-                                    <td>{{ entity.contact }}</td>
                                     <td>{{ entity.protocol }}</td>
                                     <td>{{ entity.state }}</td>
                                     <td class="actions">
@@ -86,13 +94,18 @@
 
                     {# Test entities #}
                     <table class="service-status-entities-table">
-                        <caption>
-                            <h3>{{ 'service.overview.entitylist.test.title'|trans }}</h3>
-                        </caption>
+                        <caption>{% spaceless %}
+                            <h4 class="service-status-entities-table-title">
+                                {{ 'service.overview.entitylist.test.title'|trans }}
+                                <label for="{{ testId }}" class="button blue">
+                                    <i class="fa fa-plus"></i>
+                                    {{ 'entity.list.add_to_test'|trans}}
+                                </label>
+                            </h4>
+                        {% endspaceless %}</caption>
                         <tr>
                             <th>{{ 'service.overview.entitylist.name'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
-                            <th>{{ 'entity.list.primary_contact'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.state'|trans }}</th>
                             <th>{{ ''|trans }}</th>
@@ -104,7 +117,6 @@
                                 <tr>
                                     <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
                                     <td>{{ entity.entityId }}</td>
-                                    <td>{{ entity.contact }}</td>
                                     <td>{{ entity.protocol }}</td>
                                     <td>{{ entity.state }}</td>
                                     <td class="actions">
@@ -124,8 +136,12 @@
                             </tr>
                         {% endif %}
                     </table>
-                </div>
+                </section>
             </div>
-        </div>
+            <div class="blocker">
+                <div class="modal" role="dialog" aria-labelledby="" aria-describedby="" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production"})) }}</div>
+                <div class="modal" role="dialog" aria-labelledby="" aria-describedby="" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test"})) }}</div>
+            </div>
+        </article>
     {% endfor %}
 {% endblock %}

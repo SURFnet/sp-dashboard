@@ -121,6 +121,56 @@
   }
 }
 
+.service-status-section-title {
+  font-size: $h2Font;
+  margin: 35px 0 20px 0;
+}
+
+.service-status-entities-table-title {
+  align-items: center;
+  border-bottom: 3px solid $lighter-grey;
+  color: $dark-grey;
+  display: flex;
+  font-size: $bigFont;
+  font-weight: bold;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  text-transform: none;
+}
+
+.button[for^="add-for-test"],
+.button[for^="add-for-production"] {
+  font-size: $normalFont;
+  margin-right: 0;
+  text-transform: none;
+}
+
+[id^="add-for-production"],
+[id^="add-for-test"] {
+  display: none;
+
+  &:not(:checked) ~ .blocker {
+    display: none;
+
+    .modal {
+      display: none;
+    }
+  }
+
+  &:checked ~ .blocker {
+    display: block;
+  }
+}
+
+[id^="add-for-production"]:checked ~ .blocker .modal[data-for^="add-for-production"] {
+  display: inline-block;
+}
+
+[id^="add-for-test"]:checked ~ .blocker .modal[data-for^="add-for-test"] {
+  display: inline-block;
+}
+
 #chartjs-tooltip {
   position: absolute;
   display: block;

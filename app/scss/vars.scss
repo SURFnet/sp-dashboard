@@ -1,8 +1,9 @@
+@import './utilities/functions';
+
 // Colors
 $blue: #4DB2CF;
 $lighter-blue: #a8d9e6;
 $light-blue: #f0fafe;
-
 $darker-blue: #4da7c0;
 $red: #B62222;
 $lighter-red: #ffe5e5;
@@ -29,3 +30,10 @@ $br: 3px;
 
 // Screen
 $medium: 1080px;
+
+// Font-sizes
+$smallFont: calculateRem(14px);
+$normalFont: calculateRem(16px);
+$bigFont: calculateRem(18px);
+$h1Font: calculateRem(30px);
+$h2Font: calculateRem(24px);
