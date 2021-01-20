@@ -3,8 +3,7 @@
   clear: both;
   height: auto;
   overflow: auto;
-  border-bottom: 1px solid #4DB2CF;
-  padding: 30px 0 50px;
+  padding: 2rem 0 0;
 
   a {
     color: #428bca;
@@ -108,8 +107,44 @@
 
 // todo: refactor base.css so we no longer need this convoluted selector
 .page-container .card .service-status-container h2.service-status-title {
+  align-items: center;
+  color: $blue;
+  display: flex;
   font-size: $h2Font;
+  justify-content: space-between;
   margin: 0;
+}
+
+.service-status-back-to-top {
+  text-align: right;
+}
+
+.service-status-back-to-top-link {
+  color: $blue;
+  font-size: $backToTopFont;
+  padding: .5rem;
+
+  &:focus,
+  &:hover {
+    outline: 3px solid $blue;
+  }
+}
+
+.service {
+  margin: 2rem 0;
+}
+
+.service-status-title-actions {
+  display: flex;
+}
+
+.service-status-graph-title {
+  align-items: center;
+  display: flex;
+  font-size: $h2Font;
+  font-weight: 700;
+  justify-content: space-between;
+  width: calc(100% - 1.25rem - .675rem);
 }
 
 .service-status-entities-table {
@@ -124,7 +159,7 @@
 
 .service-status-section-title {
   font-size: $h2Font;
-  margin: 35px 0 20px 0;
+  margin: 2rem 0 1.25rem 0;
 }
 
 .service-status-entities-table-title {
@@ -145,6 +180,23 @@
   font-size: $normalFont;
   margin-right: 0;
   text-transform: none;
+}
+
+a.service-status-title-button.blue.button.title {
+  min-width: 5rem;
+
+  &:focus,
+  &:hover {
+    color: white;
+  }
+}
+
+.service-status-title-action-item {
+  &:not(:last-of-type) {
+    .service-status-title-button {
+      margin-right: .25rem;
+    }
+  }
 }
 
 [id^="add-for-production"],

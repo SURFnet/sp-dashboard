@@ -468,11 +468,7 @@ privacy.information.snDpaWhyNot: What items of the SURF model Data Processing Ag
 privacy.information.surfmarketDpaAgreement: Did you agree a Data Processing Agreement with SURFmarket?
 privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF Data Processing Agreement?
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
-service:
-  admin_overview:
-    title: Service overview
-    introduction:
-      html: "Please use the service switcher to manage the entities of one of the services."
+service.admin_overview.introduction.html: "Please use the service switcher to manage the entities of one of the services."
 service.create.title: Add new service
 service.edit.title: Edit service
 service.delete.title: "Delete service"
@@ -506,8 +502,8 @@ service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
 service.form.label.institution_id: Institute ID
 service.form.label.institution_guid:  Institute GUID
-service.admin_overview.title: Service overview
-service.overview.title: "%name% overview"
+service.admin_overview.title: "%name% overview"
+service.overview.title: My services
 service.overview.action.privacyQuestions: Privacy questions
 service.overview.action.serviceEdit: Edit service
 service.overview.action.serviceDelete: Delete service

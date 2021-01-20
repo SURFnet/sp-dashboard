@@ -47,7 +47,7 @@ class ServiceOverviewTest extends WebTestCase
         $crawler = $this->client->request('GET', '/');
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
-        $h1 = $crawler->filter('.page-container h1');
+        $h1 = $crawler->filter('.service-title');
         $this->assertContains('My services', $h1->first()->text());
         $nodes = $crawler->filter('.service-status-container .service-status-title');
         $serviceNode = $nodes->first();
@@ -68,8 +68,8 @@ class ServiceOverviewTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
 
-        // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
-        $nodes = $crawler->filter('.service-status-container .service-status-title');
+        // By retrieving the h2 titles (stating the services) we can conclude if the correct data is displayed.
+        $nodes = $crawler->filter('.service-status-title');
 
         // Two services should be on page: surf and ibuildings.
         $this->assertEquals(2, $nodes->count());
@@ -88,8 +88,8 @@ class ServiceOverviewTest extends WebTestCase
     public function test_entitites_of_a_service_are_listed()
     {
         $serviceRepository = $this->getServiceRepository();
-        $surfNet = $serviceRepository->findByName('SURFnet');
-        $ibuildings = $serviceRepository->findByName('Ibuildings B.V.');
+        $surfNetService = $serviceRepository->findByName('SURFnet');
+        $ibuildingsService = $serviceRepository->findByName('Ibuildings B.V.');
 
         $this->registerManageEntity(
             'test',
@@ -110,40 +110,48 @@ class ServiceOverviewTest extends WebTestCase
             'urn:collab:org:surf.nl'
         );
 
-        $this->logIn('ROLE_USER', [$surfNet, $ibuildings]);
+        $this->logIn('ROLE_USER', [$surfNetService, $ibuildingsService]);
 
         $crawler = $this->client->request('GET', '/');
 
-        // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
+        // By retrieving the h2 titles (stating the services) we can conclude if the correct data is displayed.
         $nodes = $crawler->filter('.service-status-container');
 
         // Two services should be on page: surf and ibuildings.
         $this->assertEquals(2, $nodes->count());
 
-        $serviceNode = $nodes->first();
-        $service2 = $nodes->eq(1);
+        $Ibuildings = $nodes->first();
+        $SURF = $nodes->eq(1);
 
-        $tableService1 = $serviceNode->filter('.service-status-entities');
-        $tableService2 = $service2->filter('.service-status-entities');
+        $productionTableIbuildings = $Ibuildings->filter('.service-status-entities-table.production-entities');
+        $this->assertContains(
+            'Production entities',
+            $productionTableIbuildings->filter('.service-status-entities-table-title')->text()
+        );
+        $productionNoEntitiesIbuildings = $Ibuildings->filter('.no-entities-production')->text();
+        $this->assertEquals('No entities found.', $productionNoEntitiesIbuildings);
 
-        $result1 = $this->rowsToArray($tableService1);
-        $result2 = $this->rowsToArray($tableService2);
+        $testTableIbuildings = $Ibuildings->filter('.service-status-entities-table.test-entities');
+        $this->assertContains(
+            'Test entities',
+            $testTableIbuildings->filter('.service-status-entities-table-title')->text()
+        );
+        $testNoEntitiesIbuildings = $Ibuildings->filter('.no-entities-test')->text();
+        $this->assertEquals('No entities found.', $testNoEntitiesIbuildings);
 
-        $this->assertEquals([
-            ['Entities @ production environment'],
-            ['No entities found.'],
-            [''],
-            ['Entities @ test environment'],
-            ['No entities found.'],
-        ], $result1);
-        $this->assertEquals([
-            ['Entities @ production environment'],
-            ['No entities found.'],
-            [""],
-            ['Entities @ test environment'],
-            ["SP1 Name English", "https://sp1-entityid.example.com", "saml20", "published"],
-            ["SP2 Name English", "https://sp2-entityid.example.com", "saml20", "published"],
-        ], $result2);
+        $productionTableSurf = $SURF->filter('.service-status-entities-table.production-entities');
+        $this->assertContains(
+            'Production entities',
+            $productionTableSurf->filter('.service-status-entities-table-title')->text()
+        );
+        $productionNoEntitiesSurf = $SURF->filter('.no-entities-production')->text();
+        $this->assertEquals('No entities found.', $productionNoEntitiesSurf);
+
+        $testTableSurf = $SURF->filter('.service-status-entities-table.test-entities');
+        $this->assertContains('Test entities', $testTableSurf->filter('.service-status-entities-table-title')->text());
+        $actionsRow = "ViewEditEditIdPwhitelistDelete";
+        $this->assertContains("SP1 Name English", $testTableSurf->text());
+        $this->assertContains("SP2 Name English", $testTableSurf->text());
     }
 
     public function test_service_overview_redirects_to_service_add_when_no_service_exists()
@@ -171,27 +179,39 @@ class ServiceOverviewTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertContains('Service overview', $response->getContent());
-        $this->assertContains('Please use the service switcher to manage the entities of one of the services.', $response->getContent());
+        $this->assertContains(
+            'Please use the service switcher to manage the entities of one of the services.',
+            $response->getContent()
+        );
     }
 
-    public function test_users_redirect_to_entity_overview_on_title_click()
+    public function test_entity_list_shows_add_to_test_link()
     {
-        $serviceRepository = $this->getServiceRepository();
-        $surfNet = $serviceRepository->findByName('SURFnet');
+        $this->loadFixtures();
 
-        $this->logIn('ROLE_USER', [$surfNet]);
+        // Surfnet is not allowed to create production entities.
+        $service = $this->getServiceRepository()->findByName('SURFnet');
+        $this->logIn('ROLE_USER', [$service]);
+
+        $crawler = $this->client->request('GET', '/');
+        $actions = $crawler->filter('.button[for^="#add-for-test"]');
+
+        $this->assertContains('New test entity', $actions->eq(0)->text(), 'Add for test link not found');
+    }
+
+    public function test_entity_list_shows_add_to_production_link()
+    {
+        $this->loadFixtures();
+
+        // Ibuildings is allowed to create production entities.
+        $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+        $this->logIn('ROLE_USER', [$service]);
 
         $crawler = $this->client->request('GET', '/');
 
-        $link = $crawler->filter('.service-status-title > a:nth-child(1)');
-        $this->client->request('GET', $link->attr('href'));
+        $actions = $crawler->filter('.button[for^="#add-for-production"]');
 
-        $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp(
-            '/\/entities\/1/',
-            $uri,
-            'Visiting the anchor on the service title should end up on the entity detail page'
-        );
+        $this->assertContains('New production entity', $actions->eq(0)->text(), 'Add for production link not found');
     }
 
     private function rowsToArray(Crawler $crawler)
@@ -204,7 +224,7 @@ class ServiceOverviewTest extends WebTestCase
             if (count($columns) > 0) {
                 foreach ($columns as $columnId => $column) {
                     /** @var $column \DOMElement */
-                    $result[$r][$columnId] = trim($column->textContent);
+                    $result[$r][$columnId] = preg_replace('\s', '', $column->textContent);
                 }
                 $r++;
             }

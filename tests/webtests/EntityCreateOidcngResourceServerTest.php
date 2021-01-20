@@ -65,11 +65,13 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         );
 
         $crawler = $this->client->followRedirect();
-        $pageTitle = $crawler->filter('h1')->first()->text();
-        $message = $crawler->filter('.page-container .card')->eq(1)->text();
+        $pageTitle = $crawler->filter('.service-title')->first()->text();
+        $messageTest = $crawler->filter('.no-entities-test')->text();
+        $messageProduction = $crawler->filter('.no-entities-production')->text();
 
-        $this->assertContains("Entities of service 'Ibuildings B.V.'", $pageTitle);
-        $this->assertContains('There are no entities configured', $message);
+        $this->assertContains("Ibuildings B.V. overview", $pageTitle);
+        $this->assertContains('No entities found.', $messageTest);
+        $this->assertContains('No entities found.', $messageProduction);
     }
 
     public function test_it_can_not_save_the_form_drafts_are_disabled()

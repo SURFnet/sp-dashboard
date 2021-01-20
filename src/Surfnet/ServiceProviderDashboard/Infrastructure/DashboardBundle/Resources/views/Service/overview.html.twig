@@ -15,58 +15,20 @@
             {% endfor %}
         </div>
     {%  endif %}
-    {% set pageHeadingContent = 'service.overview.title'|trans %}
 
-    {# if user is not an admin there might be more services #}
-    {% if not isAdmin %}{% spaceless %}
-        <h1 class="service-title">
-            {{ pageHeadingContent }}
-        </h1>
-    {% endspaceless %}{% endif %}
+    <h1 id="main" class="service-title">
+        {% spaceless %}
+            {# if user is not an admin there might be more than one service #}
+            {% if isAdmin %}
+                {{ 'service.admin_overview.title'|trans({'%name%': services.services[0].name|default('Service') }) }}
+            {% else %}
+                {{ 'service.overview.title'|trans }}
+            {% endif %}
+        {% endspaceless %}
+    </h1>
 
     {% for service in services %}
-        {# if user is admin there is only one Service #}
-        {% if isAdmin %}
-            {% set pageHeadingContent = 'separvice.admin_overview.title'|trans({'%name%': service.name }) %}
-            <h1 class="service-title">{% spaceless %}
-                {{ pageHeadingContent }}
-            {% endspaceless %}</h1>
-        {% endif %}
-
-        {# we cannot have a block twice, so we need to do that here #}
-        {% block page_heading %}
-            {{ pageHeadingContent }}
-        {% endblock %}
-
-        <nav class="fieldset card action">
-            <ul>
-                {% if service.arePrivacyQuestionsEnabled %}
-                <li>
-                    <a href="{{ path('privacy_questions', {'serviceId': service.id}) }}">
-                        <i class="fa fa-key" aria-hidden="true"></i>
-                        {{ 'service.overview.action.privacyQuestions'|trans }}
-                    </a>
-                </li>
-                {% endif %}
-
-                {% if isAdmin %}
-                <li>
-                    <a href="{{ path('service_edit', {'serviceId': service.id}) }}">
-                        <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                        {{ 'service.overview.action.serviceEdit'|trans }}
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('service_delete', {'serviceId': service.id}) }}">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        {{ 'service.overview.action.serviceDelete'|trans }}
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-
-        <article class="fieldset card">
+        <article class="fieldset card service">
             {% set shortName = service.name|replace(' ', '-') %}
             {% set testId = "add-for-test-" ~ shortName %}
             {% set productionId = "add-for-production-" ~ shortName %}
@@ -76,14 +38,53 @@
             {% endif %}
             <div class="service-status-container">
                 <h2 class="service-status-title">
-                    <a href="{{ path('entity_list', {serviceId: service.id }) }}">{{ service.name }}</a>
+                    {{ service.name }}
+                    {% if isAdmin %}
+                        <ul class="service-status-title-actions">
+                            <li class="service-status-title-action-item">
+                                <a
+                                    class="button blue title service-status-title-button"
+                                    href="{{ path('service_edit', {'serviceId': service.id}) }}"
+                                >
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                    {{ 'service.overview.action.serviceEdit'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    class="button blue title service-status-title-button"
+                                    href="{{ path('service_delete', {'serviceId': service.id}) }}"
+                                >
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    {{ 'service.overview.action.serviceDelete'|trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
                 </h2>
-                <section class="service-status-graph" data-service-id="{{ service.id }}"></section>
+                <details open class="service-status-graph-container">
+                    <summary class="service-status-graph-summary">
+                        <h3 class="service-status-graph-title">
+                            {{ 'service.overview.graph.title'|trans({'%name%': service.name}) }}
+                            {% if service.arePrivacyQuestionsEnabled %}
+                                <a
+                                    class="button blue title service-status-title-button"
+                                    href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
+                                >
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                    {{ 'service.overview.action.privacyQuestions'|trans }}
+                                </a>
+                            {% endif %}
+                        </h3>
+                    </summary>
+                    <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
+                    <noscript><p>{{ 'service.overview.graph.noscript'|trans }}</p></noscript>
+                </details>
                 <section class="service-status-entities">
                     <h3 class="service-status-section-title">{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h3>
 
                     {# Production entities #}
-                    <table class="service-status-entities-table">
+                    <table class="service-status-entities-table production-entities">
                         <caption>{% spaceless %}
                             <h4 class="service-status-entities-table-title">
                                 {{ 'service.overview.entitylist.production.title'|trans }}
@@ -124,7 +125,7 @@
                         {% endfor %}
                         {% if hasEntities == false %}
                             <tr>
-                                <td colspan="4" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                                <td colspan="5" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
                     </table>
@@ -169,7 +170,7 @@
                         {% endfor %}
                         {% if hasEntities == false %}
                             <tr>
-                                <td colspan="4" class="no-entities-test">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                                <td colspan="5" class="no-entities-test">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
                     </table>
@@ -182,6 +183,12 @@
                 {% endif %}
                 <div class="modal" role="dialog" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
             </div>
+            <p class="service-status-back-to-top">
+                <a href="#main" class="service-status-back-to-top-link">
+                    <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
+                    <span class="sr-only">Back to top</span>
+                </a>
+            </p>
         </article>
     {% endfor %}
 
