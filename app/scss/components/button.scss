@@ -54,4 +54,15 @@
       font-size: larger;
     }
   }
+
+  &.title {
+    font-size: $normalFont;
+    min-width: 5rem;
+    padding: .5rem;
+    text-transform: none;
+
+    i {
+      margin-left: 0;
+    }
+  }
 }

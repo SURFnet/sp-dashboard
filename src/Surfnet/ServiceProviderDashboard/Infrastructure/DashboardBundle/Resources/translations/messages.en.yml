@@ -507,7 +507,9 @@ service.overview.title: My services
 service.overview.action.privacyQuestions: Privacy questions
 service.overview.action.serviceEdit: Edit service
 service.overview.action.serviceDelete: Delete service
+service.overview.graph.title: "%name% status summary"
 service.overview.entitylist.title: "%name% entities"
+service.overview.entitylist.noscript: "The status progress graph needs JavaScript to work.  Please enable JavaScript if you want to view it."
 service.overview.entitylist.test.title: Test entities
 service.overview.entitylist.production.title: Production entities
 service.overview.entitylist.name: Name
