@@ -37,10 +37,6 @@ class ConfigFactory
             $config['publication_status']
         );
 
-        $oidcEnabled = new OidcngEnabled(
-            $config['oidcng_enabled']
-        );
-
-        return new Config($environment, $connection, $publicationStatus, $oidcEnabled);
+        return new Config($environment, $connection, $publicationStatus);
     }
 }

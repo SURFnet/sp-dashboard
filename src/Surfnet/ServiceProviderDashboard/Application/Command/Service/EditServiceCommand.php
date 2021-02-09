@@ -57,11 +57,6 @@ class EditServiceCommand implements Command
     private $privacyQuestionsEnabled = true;
 
     /**
-     * @var bool
-     */
-    private $oidcngEnabled = true;
-
-    /**
      * @var string
      * @Assert\NotBlank
      */
@@ -102,7 +97,6 @@ class EditServiceCommand implements Command
      * @param string $teamName
      * @param bool $productionEntitiesEnabled
      * @param bool $privacyQuestionsEnabled
-     * @param bool $oidcngEnabled
      * @param string $serviceType
      * @param string $intakeStatus
      * @param string $contractSigned
@@ -117,7 +111,6 @@ class EditServiceCommand implements Command
         $teamName,
         $productionEntitiesEnabled,
         $privacyQuestionsEnabled,
-        $oidcngEnabled,
         $serviceType,
         $intakeStatus,
         $contractSigned,
@@ -131,7 +124,6 @@ class EditServiceCommand implements Command
         $this->teamName = $teamName;
         $this->productionEntitiesEnabled = $productionEntitiesEnabled;
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-        $this->oidcngEnabled = $oidcngEnabled;
         $this->serviceType = $serviceType;
         $this->intakeStatus = $intakeStatus;
         $this->contractSigned = $contractSigned;
@@ -178,14 +170,6 @@ class EditServiceCommand implements Command
     public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-    }
-
-    /**
-     * @param bool $oidcngEnabled
-     */
-    public function setOidcngEnabled($oidcngEnabled)
-    {
-        $this->oidcngEnabled = $oidcngEnabled;
     }
 
     /**
@@ -330,14 +314,6 @@ class EditServiceCommand implements Command
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOidcngEnabled()
-    {
-        return $this->oidcngEnabled;
     }
 
     /**
