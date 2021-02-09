@@ -101,8 +101,6 @@ class Service
      */
     private $privacyQuestionsEnabled = true;
 
-    private $oidcngEnabled = true;
-
     /**
      * @var string
      * @ORM\Column(length=50)
@@ -263,14 +261,6 @@ class Service
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOidcngEnabled()
-    {
-        return $this->oidcngEnabled;
     }
 
     /**

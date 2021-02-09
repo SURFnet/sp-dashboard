@@ -194,7 +194,6 @@ class ServiceController extends Controller
             $service->getTeamName(),
             $service->isProductionEntitiesEnabled(),
             $service->isPrivacyQuestionsEnabled(),
-            $service->isOidcngEnabled(),
             $service->getServiceType(),
             $service->getIntakeStatus(),
             $service->getContractSigned(),
