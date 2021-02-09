@@ -43,22 +43,33 @@
                         <ul class="service-status-title-actions">
                             <li class="service-status-title-action-item">
                                 <a
-                                    class="button blue title service-status-title-button"
+                                    class="button admin title service-status-title-button"
                                     href="{{ path('service_edit', {'serviceId': service.id}) }}"
                                 >
                                     <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                     {{ 'service.overview.action.serviceEdit'|trans }}
                                 </a>
                             </li>
-                            <li>
+                            <li class="service-status-title-action-item">
                                 <a
-                                    class="button blue title service-status-title-button"
+                                    class="button admin title service-status-title-button"
                                     href="{{ path('service_delete', {'serviceId': service.id}) }}"
                                 >
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     {{ 'service.overview.action.serviceDelete'|trans }}
                                 </a>
                             </li>
+                            {% if service.arePrivacyQuestionsEnabled %}
+                                <li class="service-status-title-action-item">
+                                    <a
+                                            class="button blue title service-status-title-button"
+                                            href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
+                                    >
+                                        <i class="fa fa-key" aria-hidden="true"></i>
+                                        {{ 'service.overview.action.privacyQuestions'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
                         </ul>
                     {% endif %}
                 </h2>
@@ -108,7 +119,7 @@
                             {% if entity.environment == 'production' %}
                                 {% set hasEntities = true %}
                                 <tr>
-                                    <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
+                                    <td>{{ entity.name }}</td>
                                     <td>{{ entity.entityId }}</td>
                                     <td>{{ entity.protocol }}</td>
                                     <td>{{ entity.state }}</td>
@@ -128,6 +139,19 @@
                                 <td colspan="5" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
+                        {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
+                            <tr class="service-status-entities-table-add-entity">
+                                <td>
+                                    <label for="{{ productionId }}" class="link">
+                                        {{ 'entity.list.add_to_production'|trans}}
+                                    </label>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endif %}
                     </table>
 
                     {# Test entities #}
@@ -135,10 +159,6 @@
                         <caption>{% spaceless %}
                             <h4 class="service-status-entities-table-title">
                                 {{ 'service.overview.entitylist.test.title'|trans }}
-                                <label for="{{ testId }}" class="button blue">{% spaceless %}
-                                    <i class="fa fa-plus"></i>
-                                    {{ 'entity.list.add_to_test'|trans}}
-                                {% endspaceless %}</label>
                             </h4>
                         {% endspaceless %}</caption>
                         <tr>
@@ -153,7 +173,7 @@
                             {% if entity.environment == 'test' %}
                                 {% set hasEntities = true %}
                                 <tr>
-                                    <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
+                                    <td>{{ entity.name }}</td>
                                     <td>{{ entity.entityId }}</td>
                                     <td>{{ entity.protocol }}</td>
                                     <td>{{ entity.state }}</td>
@@ -173,7 +193,25 @@
                                 <td colspan="5" class="no-entities-test">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
+                        <tr class="service-status-entities-table-add-entity">
+                            <td>
+                                <label for="{{ testId }}" class="link">
+                                    {{ 'entity.list.add_to_test'|trans}}
+                                </label>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </table>
+                </section>
+                <section class="service-status-graph-container">
+                    <h3 class="service-status-graph-title">
+                        {{ 'service.overview.graph.title'|trans({'%name%': service.name}) }}
+                    </h3>
+                    <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
+                    <noscript><p>{{ 'service.overview.graph.noscript'|trans }}</p></noscript>
                 </section>
             </div>
             <div class="blocker">

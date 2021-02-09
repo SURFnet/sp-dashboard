@@ -7,7 +7,7 @@ h2:not(.section-title) {
   font-size: 22px;
 }
 
-label:not(.button) {
+label:not(.button):not(.link) {
   color: $medium-grey;
   display: block;
 
@@ -93,7 +93,7 @@ div.form-row.warning {
 }
 
 .button {
-  min-width: 200px;
+  min-width: 9rem;
 }
 
 div.checkbox {

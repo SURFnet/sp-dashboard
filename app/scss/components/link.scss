@@ -1,0 +1,22 @@
+.link {
+  color: $blue;
+  cursor: pointer;
+  padding: .5rem;
+  text-decoration: underline;
+
+  &.contrast {
+    color: $contrast-blue;
+
+    &:focus,
+    &:hover {
+      color: $contrast-blue;
+    }
+  }
+
+  &:focus,
+  &:hover {
+    box-shadow: $light-blue 0 0 10px 4px;
+    color: $blue;
+    outline: 3px solid $lighter-blue;
+  }
+}
