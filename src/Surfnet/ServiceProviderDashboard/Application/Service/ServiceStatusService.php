@@ -49,7 +49,7 @@ class ServiceStatusService
     public function hasPrivacyQuestions(Service $service)
     {
         if ($this->privacyStatusRepository->findByService($service)) {
-            // At some point, the privacy questions where answered (they might be all empty now but there is a record)
+            // At some point, the privacy questions were answered (they might be all empty now but there is a record)
             return true;
         }
         return false;

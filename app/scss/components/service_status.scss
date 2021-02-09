@@ -1,18 +1,24 @@
 .service-status-container {
   display: block;
-  clear: both;
-  height: auto;
-  overflow: auto;
   padding: 2rem 0 0;
 
   a {
     color: #428bca;
-    text-decoration: none;
+    text-decoration: underline;
   }
 
   a:hover, a:focus {
     color: #2a6496;
     text-decoration: underline;
+  }
+
+  a.admin:hover, a.admin:focus {
+    border: 1px dashed white;
+    color: $white;
+
+    i {
+      color: inherit;
+    }
   }
 
   &:last-child {
@@ -36,6 +42,7 @@
         @include motion {
           animation: fadein 2s;
         }
+        color: $black;
         display: inline-block;
         font-size: $smallFont;
         margin: 0 10px 10px;
@@ -111,7 +118,7 @@
   color: $blue;
   display: flex;
   font-size: $h2Font;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin: 0;
 }
 
@@ -136,6 +143,11 @@
 
 .service-status-title-actions {
   display: flex;
+  margin-left: 1rem;
+}
+
+.service-status-graph-container {
+  margin-top: 3rem;
 }
 
 .service-status-graph-title {
@@ -144,7 +156,6 @@
   font-size: $h2Font;
   font-weight: 700;
   justify-content: space-between;
-  width: calc(100% - 1.25rem - .675rem);
 }
 
 .service-status-entities-table {
@@ -224,6 +235,10 @@ a.service-status-title-button.blue.button.title {
   display: inline-block;
 }
 
+label[for^="add-for"].link, .privacy-notification-link {
+  padding-left: 0;
+}
+
 #chartjs-tooltip {
   position: absolute;
   display: block;
@@ -243,4 +258,11 @@ a.service-status-title-button.blue.button.title {
     color: #428bca;
     text-decoration: underline;
   }
+}
+
+.privacy-notification-title {
+  color: $red;
+  font-size: $h2Font;
+  font-weight: 700;
+  margin: 0 0 1.25rem 0;
 }

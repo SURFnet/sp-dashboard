@@ -127,10 +127,12 @@ class ServiceController extends Controller
 
         $serviceObjects = [];
         $productionEntityEnabled = [];
+        $privacyOK = [];
         foreach ($services as $service) {
             $productionEntityEnabled[] = $service->isProductionEntitiesEnabled();
             $entityList = $this->entityService->getEntityListForService($service);
             $serviceObjects[] = Service::fromService($service, $entityList, $this->router);
+            $privacyOK[] = $this->serviceStatusService->hasPrivacyQuestions($service);
         }
         $serviceList = new ServiceList($serviceObjects);
 
@@ -145,6 +147,7 @@ class ServiceController extends Controller
             'publishedEntity' => $publishedEntity,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'productionEntitiesEnabled' => $productionEntityEnabled,
+            'privacyStatusEntities' => $privacyOK,
         ]);
     }
 
@@ -286,6 +289,7 @@ class ServiceController extends Controller
             'entityList' => $this->entityService->getEntityListForService($service),
         ];
     }
+
     /**
      * @Method({"GET", "POST"})
      * @Route("/service/select", name="select_service")
@@ -317,7 +321,8 @@ class ServiceController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entityList = $this->entityService->getEntityListForService($service);
         $serviceList = new ServiceList([Service::fromService($service, $entityList, $this->router)]);
-        $productionEntitiesEnabled = $service->isProductionEntitiesEnabled();
+        $productionEntitiesEnabled = [$service->isProductionEntitiesEnabled()];
+        $privacyOK = [$this->serviceStatusService->hasPrivacyQuestions($service)];
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
         // to display the oidc confirmation popup.
@@ -330,6 +335,7 @@ class ServiceController extends Controller
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'publishedEntity' => $publishedEntity,
             'production_entities_enabled' => $productionEntitiesEnabled,
+            'privacyStatusEntities' => $privacyOK,
         ]);
     }
 

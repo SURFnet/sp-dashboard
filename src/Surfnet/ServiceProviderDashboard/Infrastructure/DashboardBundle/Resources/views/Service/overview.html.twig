@@ -33,7 +33,7 @@
             {% set testId = "add-for-test-" ~ shortName %}
             {% set productionId = "add-for-production-" ~ shortName %}
             <input type="checkbox" id="{{ testId }}" name="{{ testId }}" />
-            {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
+            {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
                 <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
             {% endif %}
             <div class="service-status-container">
@@ -62,8 +62,8 @@
                             {% if service.arePrivacyQuestionsEnabled %}
                                 <li class="service-status-title-action-item">
                                     <a
-                                            class="button blue title service-status-title-button"
-                                            href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
+                                        class="button blue title service-status-title-button"
+                                        href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
                                     >
                                         <i class="fa fa-key" aria-hidden="true"></i>
                                         {{ 'service.overview.action.privacyQuestions'|trans }}
@@ -73,24 +73,9 @@
                         </ul>
                     {% endif %}
                 </h2>
-                <details open class="service-status-graph-container">
-                    <summary class="service-status-graph-summary">
-                        <h3 class="service-status-graph-title">
-                            {{ 'service.overview.graph.title'|trans({'%name%': service.name}) }}
-                            {% if service.arePrivacyQuestionsEnabled %}
-                                <a
-                                    class="button blue title service-status-title-button"
-                                    href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
-                                >
-                                    <i class="fa fa-key" aria-hidden="true"></i>
-                                    {{ 'service.overview.action.privacyQuestions'|trans }}
-                                </a>
-                            {% endif %}
-                        </h3>
-                    </summary>
-                    <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
-                    <noscript><p>{{ 'service.overview.graph.noscript'|trans }}</p></noscript>
-                </details>
+                {% if not privacyStatusEntities[loop.index0] %}
+                    {% include '@Dashboard/Privacy/notification.html.twig' with { hlvl: "3"} %}
+                {% endif %}
                 <section class="service-status-entities">
                     <h3 class="service-status-section-title">{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h3>
 
@@ -99,12 +84,6 @@
                         <caption>{% spaceless %}
                             <h4 class="service-status-entities-table-title">
                                 {{ 'service.overview.entitylist.production.title'|trans }}
-                                {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
-                                    <label for="{{ productionId }}" class="button blue">{% spaceless %}
-                                        <i class="fa fa-plus"></i>
-                                        {{ 'entity.list.add_to_production'|trans}}
-                                    {% endspaceless %}</label>
-                                {% endif %}
                             </h4>
                         {% endspaceless %}</caption>
                         <tr>
@@ -139,7 +118,7 @@
                                 <td colspan="5" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
-                        {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
+                        {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
                             <tr class="service-status-entities-table-add-entity">
                                 <td>
                                     <label for="{{ productionId }}" class="link">
