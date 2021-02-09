@@ -42,7 +42,9 @@
   },
   "resolutions": {
     "jquery": "3.5.0",
-    "braces": "^2.3.1"
+    "braces": "^2.3.1",
+    "yargs-parser": "^13.1.2",
+    "lodash": "^4.17"
   },
   "scripts": {
     "build": "encore production",
