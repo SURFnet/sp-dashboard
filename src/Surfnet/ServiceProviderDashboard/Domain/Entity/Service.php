@@ -101,11 +101,6 @@ class Service
      */
     private $privacyQuestionsEnabled = true;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
     private $oidcngEnabled = true;
 
     /**
@@ -228,14 +223,6 @@ class Service
     public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-    }
-
-    /**
-     * @param bool $oidcngEnabled
-     */
-    public function setOidcngEnabled($oidcngEnabled)
-    {
-        $this->oidcngEnabled = $oidcngEnabled;
     }
 
     /**
