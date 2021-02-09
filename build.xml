@@ -149,9 +149,7 @@
     </target>
 
     <target name="security-tests">
-        <exec executable="vendor/bin/security-checker" failonerror="true">
-            <arg line="security:check" />
-        </exec>
+        <exec executable="bin/securityChecker.sh" failonerror="true"></exec>
 
         <exec executable="yarn" failonerror="false">
             <arg line="audit" />
