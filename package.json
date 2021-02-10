@@ -11,7 +11,7 @@
     "extract-loader": "^3.0.0",
     "file-loader": "^2.0.0",
     "import-glob-loader": "^1.1.0",
-    "jest": "^23.6.0",
+    "jest": "^26.6.3",
     "jest-canvas-mock": "^1.1.0",
     "jscpd": "^0.6.23",
     "node-sass": "^4.9.3",
