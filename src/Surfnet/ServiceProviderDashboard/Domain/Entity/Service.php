@@ -146,6 +146,34 @@ class Service
      */
     private $institutionId;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=false)
+     */
+    private $organizationDisplayNameNl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=false)
+     */
+    private $organizationDisplayNameEn;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=false)
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=false)
+     */
+    private $organizationNameEn;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -349,5 +377,68 @@ class Service
     public function setInstitutionId($institutionId)
     {
         $this->institutionId = $institutionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameNl(): string
+    {
+        return $this->organizationDisplayNameNl;
+    }
+
+    /**
+     * @param string $organizationDisplayNameNl
+     */
+    public function setOrganizationDisplayNameNl(string $organizationDisplayNameNl): void
+    {
+        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameEn(): string
+    {
+        return $this->organizationDisplayNameEn;
+    }
+
+    /**
+     * @param string $organizationDisplayNameEn
+     */
+    public function setOrganizationDisplayNameEn(string $organizationDisplayNameEn): void
+    {
+        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
+    }
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl(): string
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $organizationNameNl
+     */
+    public function setOrganizationNameNl(string $organizationNameNl): void
+    {
+        $this->organizationNameNl = $organizationNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn(): string
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $organizationNameEn
+     */
+    public function setOrganizationNameEn(string $organizationNameEn): void
+    {
+        $this->organizationNameEn = $organizationNameEn;
     }
 }
