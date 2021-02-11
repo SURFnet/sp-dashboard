@@ -454,11 +454,6 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
         tags: ['form.type']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory:
-      arguments:
-        - '@surfnet.manage.configuration.test'
-        - '@surfnet.manage.configuration.production'
-
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType:
       arguments:
         - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService'

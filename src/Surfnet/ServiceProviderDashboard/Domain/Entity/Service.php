@@ -102,13 +102,6 @@ class Service
     private $privacyQuestionsEnabled = true;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $oidcngEnabled = true;
-
-    /**
      * @var string
      * @ORM\Column(length=50)
      */
@@ -231,14 +224,6 @@ class Service
     }
 
     /**
-     * @param bool $oidcngEnabled
-     */
-    public function setOidcngEnabled($oidcngEnabled)
-    {
-        $this->oidcngEnabled = $oidcngEnabled;
-    }
-
-    /**
      * @param string $teamName
      */
     public function setTeamName($teamName)
@@ -276,14 +261,6 @@ class Service
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOidcngEnabled()
-    {
-        return $this->oidcngEnabled;
     }
 
     /**

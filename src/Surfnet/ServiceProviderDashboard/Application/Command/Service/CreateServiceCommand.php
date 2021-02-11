@@ -58,11 +58,6 @@ class CreateServiceCommand implements Command
     private $privacyQuestionsEnabled = true;
 
     /**
-     * @var bool
-     */
-    private $oidcngEnabled = false;
-
-    /**
      * @var string
      * @Assert\NotBlank
      */
@@ -122,14 +117,6 @@ class CreateServiceCommand implements Command
     public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-    }
-
-    /**
-     * @param bool $oidcngEnabled
-     */
-    public function setOidcngEnabled($oidcngEnabled)
-    {
-        $this->oidcngEnabled = $oidcngEnabled;
     }
 
     /**
@@ -210,14 +197,6 @@ class CreateServiceCommand implements Command
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOidcngEnabled()
-    {
-        return $this->oidcngEnabled;
     }
 
     /**

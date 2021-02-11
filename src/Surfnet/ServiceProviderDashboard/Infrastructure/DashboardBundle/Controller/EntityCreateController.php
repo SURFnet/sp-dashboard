@@ -29,7 +29,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
@@ -94,8 +93,7 @@ class EntityCreateController extends Controller
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
-        $this->protocolChoiceFactory->setService($service);
-        $choices = $this->protocolChoiceFactory->buildOptions($targetEnvironment);
+        $choices = $this->protocolChoiceFactory->buildOptions();
 
         $command = new ChooseEntityTypeCommand();
         $command->setProtocolChoices($choices);
@@ -148,14 +146,6 @@ class EntityCreateController extends Controller
         $flashBag->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);
-
-        if ($type === Constants::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
-        ) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to create oidcng entities for this environment.'
-            );
-        }
 
         if (!$service->isProductionEntitiesEnabled() &&
             $targetEnvironment !== Constants::ENVIRONMENT_TEST
@@ -249,13 +239,6 @@ class EntityCreateController extends Controller
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
         $entity->setEnvironment($targetEnvironment);
-        if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
-        ) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to copy oidcng entities to this environment.'
-            );
-        }
 
         // load entity into form
         $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment);

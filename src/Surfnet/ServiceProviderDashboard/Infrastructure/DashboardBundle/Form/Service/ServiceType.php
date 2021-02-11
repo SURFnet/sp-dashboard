@@ -71,14 +71,6 @@ class ServiceType extends AbstractType
                             'attr' => ['class' => 'privacy-questions-toggle'],
                         ]
                     )
-                    ->add(
-                        'oidcngEnabled',
-                        CheckboxType::class,
-                        [
-                            'required' => false,
-                            'attr' => ['class' => 'privacy-questions-toggle'],
-                        ]
-                    )
                     ->add('guid', TextType::class, ['label' => 'CRM ID'])
             )
             ->add(
