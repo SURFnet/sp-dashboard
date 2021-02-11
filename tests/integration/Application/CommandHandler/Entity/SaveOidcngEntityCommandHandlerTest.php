@@ -55,6 +55,8 @@ class SaveOidcngEntityCommandHandlerTest extends MockeryTestCase
     public function test_it_can_handle_saving_of_a_save_command()
     {
         $service = m::mock(Service::class);
+        $service->shouldReceive('getOrganizationNameEn', 'getOrganizationNameNl', 'getOrganizationDisplayNameEn', 'getOrganizationDisplayNameNl')
+            ->andReturn('Organization Name');
 
         $command = SaveOidcngEntityCommand::forCreateAction($service);
         $command->setEntityId('test_entity');

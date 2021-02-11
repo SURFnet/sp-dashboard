@@ -197,11 +197,11 @@ class EntityMergeService
     private function buildOrganizationFromCommand(SaveEntityCommandInterface $command): Organization
     {
         return new Organization(
-            $command->getOrganizationNameEn(),
-            $command->getOrganizationDisplayNameEn(),
+            $command->getService()->getOrganizationNameEn(),
+            $command->getService()->getOrganizationDisplayNameEn(),
             $command->getOrganizationUrlEn(),
-            $command->getOrganizationNameNl(),
-            $command->getOrganizationDisplayNameNl(),
+            $command->getService()->getOrganizationNameNl(),
+            $command->getService()->getOrganizationDisplayNameNl(),
             $command->getOrganizationUrlNl()
         );
     }

@@ -59,7 +59,11 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            '123'
+            '123',
+            'Foobar Inc',
+            'Foobar Inc',
+            'Foobar Inc',
+            'Foobar Inc'
         );
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
@@ -119,7 +123,11 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            '123'
+            '123',
+            'Foobar Inc',
+            'Foobar Inc',
+            'Foobar Inc',
+            'Foobar Inc'
         );
 
         $this->repository->shouldReceive('findById')->andReturn(null)->once();
@@ -146,7 +154,11 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'no',
             'no',
             true,
-            '123'
+            '123',
+            'Foobar Inc',
+            'Foobar Inc',
+            'Foobar Inc',
+            'Foobar Inc'
         );
 
         $mockEntity = m::mock(Service::class)->makePartial();

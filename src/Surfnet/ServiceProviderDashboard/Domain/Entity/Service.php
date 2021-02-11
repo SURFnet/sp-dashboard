@@ -382,7 +382,7 @@ class Service
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameNl(): string
+    public function getOrganizationDisplayNameNl(): ?string
     {
         return $this->organizationDisplayNameNl;
     }
@@ -398,7 +398,7 @@ class Service
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameEn(): string
+    public function getOrganizationDisplayNameEn(): ?string
     {
         return $this->organizationDisplayNameEn;
     }
@@ -413,7 +413,7 @@ class Service
     /**
      * @return string
      */
-    public function getOrganizationNameNl(): string
+    public function getOrganizationNameNl(): ?string
     {
         return $this->organizationNameNl;
     }

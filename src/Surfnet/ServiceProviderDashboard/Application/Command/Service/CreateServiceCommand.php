@@ -22,6 +22,9 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class CreateServiceCommand implements Command
 {
     /**
@@ -78,6 +81,30 @@ class CreateServiceCommand implements Command
      * @var string
      */
     private $surfconextRepresentativeApproved = Service::SURFCONEXT_APPROVED_NO;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationNameEn;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationDisplayNameNl;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationDisplayNameEn;
 
     /**
      * @param string $guid
@@ -246,5 +273,69 @@ class CreateServiceCommand implements Command
     public function getInstitutionId()
     {
         return $this->institutionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameNl(): ?string
+    {
+        return $this->organizationDisplayNameNl;
+    }
+
+    /**
+     * @param string $organizationDisplayNameNl
+     */
+    public function setOrganizationDisplayNameNl(string $organizationDisplayNameNl): void
+    {
+        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameEn(): ?string
+    {
+        return $this->organizationDisplayNameEn;
+    }
+
+    /**
+     * @param string $organizationDisplayNameEn
+     */
+    public function setOrganizationDisplayNameEn(string $organizationDisplayNameEn): void
+    {
+        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl(): ?string
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $organizationNameNl
+     */
+    public function setOrganizationNameNl(string $organizationNameNl): void
+    {
+        $this->organizationNameNl = $organizationNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn(): ?string
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $organizationNameEn
+     */
+    public function setOrganizationNameEn(string $organizationNameEn): void
+    {
+        $this->organizationNameEn = $organizationNameEn;
     }
 }
