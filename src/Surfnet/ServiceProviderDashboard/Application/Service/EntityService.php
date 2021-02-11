@@ -75,11 +75,6 @@ class EntityService implements EntityServiceInterface
     /**
      * @var string
      */
-    private $publishStatus;
-
-    /**
-     * @var string
-     */
     private $removalStatus;
 
     /**
@@ -92,7 +87,6 @@ class EntityService implements EntityServiceInterface
         Config $productionConfig,
         RouterInterface $router,
         LoggerInterface $logger,
-        string $publishStatus,
         string $removalStatus
     ) {
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
@@ -101,7 +95,6 @@ class EntityService implements EntityServiceInterface
         $this->logger = $logger;
         $this->testManageConfig = $testConfig;
         $this->prodManageConfig = $productionConfig;
-        $this->publishStatus = $publishStatus;
         $this->removalStatus = $removalStatus;
     }
 
@@ -161,13 +154,11 @@ class EntityService implements EntityServiceInterface
                 // with the service desk.
                 $this->updateStatus($entity);
 
-                // Todo: review this construction, The ticket is used to determine request for removal, but not for the
-                // publication state
                 $issue = $this->findIssueBy($entity);
                 $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
                     $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
                 if ($issue && $shouldUseTicketStatus) {
-                    $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
+                    $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                 }
 
                 return $entity;
@@ -293,6 +284,7 @@ class EntityService implements EntityServiceInterface
             // Extract the Manage entity id's
             $manageIds = [];
             foreach ($entities as $entity) {
+                $this->updateStatus($entity);
                 $manageIds[] = $entity->getId();
             }
             $issueCollection = $this->ticketService->findByManageIds($manageIds);
@@ -300,21 +292,15 @@ class EntityService implements EntityServiceInterface
             // entities
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
+                    $this->updateStatus($entity);
                     $issue = $issueCollection->getIssueById($entity->getId());
-                    if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== 'spd-delete-production-entity') {
+                    if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== $this->removalStatus) {
                         // A published entity needs no status update unless it's a removal requested entity
                         continue;
                     }
 
-                    if ($issue) {
-                        switch ($issue->getIssueType()) {
-                            case $this->publishStatus:
-                                $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
-                                break;
-                            case $this->removalStatus:
-                                $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
-                                break;
-                        }
+                    if ($issue && $issue->getIssueType() === $this->removalStatus) {
+                        $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                     }
                 }
             }
@@ -347,13 +333,6 @@ class EntityService implements EntityServiceInterface
             );
         }
         return null;
-    }
-
-    private function updateEntityStatusWithJiraTicketStatus(ManageEntity $entity, Issue $issue)
-    {
-        if ($issue instanceof Issue) {
-            $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
-        }
     }
 
     private function updateStatus(ManageEntity $entity)
