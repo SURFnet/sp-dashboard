@@ -1,3 +1,8 @@
+## 2.7.2
+
+**Bugfix**
+Set correct publication state for prod entities PART II #394
+
 ## 2.7.1
 
 **Bugfix**
