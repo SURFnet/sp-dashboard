@@ -109,8 +109,11 @@ div.checkbox {
 }
 
 div.radio-container {
-  label {
+  display: flex;
+
+  label:not(.button):not(.link) {
     display: inline-block;
+    padding: 10px 0 10px 9px;
   }
 }
 
@@ -121,4 +124,3 @@ div.radio-container {
     }
   }
 }
-
