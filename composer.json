@@ -5,7 +5,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-           "Surfnet\\": "src/Surfnet"
+            "Surfnet\\": "src/Surfnet"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -23,7 +23,13 @@
     },
     "require": {
         "php": "7.2.*",
+        "ext-curl": "*",
+        "ext-gd": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-mysqli": "*",
+        "ext-soap": "*",
+        "ext-xml": "*",
         "doctrine/dbal": "~2.5.12",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
