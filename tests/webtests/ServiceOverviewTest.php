@@ -193,10 +193,10 @@ class ServiceOverviewTest extends WebTestCase
         $service = $this->getServiceRepository()->findByName('SURFnet');
         $this->logIn('ROLE_USER', [$service]);
 
-        $crawler = $this->client->request('GET', '/');
-        $actions = $crawler->filter('.button[for^="#add-for-test"]');
+        $crawler = $this->client->request('GET', '/service/1');
+        $actions = $crawler->filter('.link[for^="#add-for-test-SURFnet"]');
 
-        $this->assertContains('New test entity', $actions->eq(0)->text(), 'Add for test link not found');
+        $this->assertContains('Add new entity', $actions->eq(0)->text(), 'Add for test link not found');
     }
 
     public function test_entity_list_shows_add_to_production_link()
@@ -207,11 +207,11 @@ class ServiceOverviewTest extends WebTestCase
         $service = $this->getServiceRepository()->findByName('Ibuildings B.V.');
         $this->logIn('ROLE_USER', [$service]);
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', '/service/2');
 
-        $actions = $crawler->filter('.button[for^="#add-for-production"]');
+        $actions = $crawler->filter('.link[for^="#add-for-production-Ibuildings B.V."]');
 
-        $this->assertContains('New production entity', $actions->eq(0)->text(), 'Add for production link not found');
+        $this->assertContains('Add new entity', $actions->eq(0)->text(), 'Add for production link not found');
     }
 
     private function rowsToArray(Crawler $crawler)

@@ -73,7 +73,7 @@ class EntityEditTest extends WebTestCase
 
         $this->logIn('ROLE_USER', [$ibuildings]);
 
-        $this->client->request('GET', "/entity/edit/test/{$this->manageId}/2");
+        $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
 
