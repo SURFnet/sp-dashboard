@@ -286,10 +286,6 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: attribute }
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\HasAttributesValidator:
-        tags:
-            - { name: validator.constraint_validator, alias: has_attributes }
-
     Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
         arguments:
             - '@surfnet.dashboard.repository.issue'
