@@ -338,26 +338,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      */
-    private $organizationNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationNameEn;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameEn;
-
-    /**
-     * @var string
-     */
     private $organizationUrlNl;
 
     /**
@@ -904,58 +884,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setComments($comments)
     {
         $this->comments = $comments;
-    }
-
-    public function getOrganizationNameNl(): ?string
-    {
-        return $this->organizationNameNl;
-    }
-
-    /**
-     * @param string $organizationNameNl
-     */
-    public function setOrganizationNameNl($organizationNameNl)
-    {
-        $this->organizationNameNl = $organizationNameNl;
-    }
-
-    public function getOrganizationNameEn(): ?string
-    {
-        return $this->organizationNameEn;
-    }
-
-    /**
-     * @param string $organizationNameEn
-     */
-    public function setOrganizationNameEn($organizationNameEn)
-    {
-        $this->organizationNameEn = $organizationNameEn;
-    }
-
-    public function getOrganizationDisplayNameNl(): ?string
-    {
-        return $this->organizationDisplayNameNl;
-    }
-
-    /**
-     * @param string $organizationDisplayNameNl
-     */
-    public function setOrganizationDisplayNameNl($organizationDisplayNameNl)
-    {
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
-    }
-
-    public function getOrganizationDisplayNameEn(): ?string
-    {
-        return $this->organizationDisplayNameEn;
-    }
-
-    /**
-     * @param string $organizationDisplayNameEn
-     */
-    public function setOrganizationDisplayNameEn($organizationDisplayNameEn)
-    {
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
     }
 
     public function getOrganizationUrlNl(): ?string

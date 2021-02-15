@@ -141,26 +141,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @var string
      */
-    private $organizationNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationNameEn;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameEn;
-
-    /**
-     * @var string
-     */
     private $organizationUrlNl;
 
     /**
@@ -405,70 +385,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     public function setComments($comments)
     {
         $this->comments = $comments;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationNameNl(): ?string
-    {
-        return $this->organizationNameNl;
-    }
-
-    /**
-     * @param string $organizationNameNl
-     */
-    public function setOrganizationNameNl($organizationNameNl)
-    {
-        $this->organizationNameNl = $organizationNameNl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationNameEn(): ?string
-    {
-        return $this->organizationNameEn;
-    }
-
-    /**
-     * @param string $organizationNameEn
-     */
-    public function setOrganizationNameEn($organizationNameEn)
-    {
-        $this->organizationNameEn = $organizationNameEn;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameNl(): ?string
-    {
-        return $this->organizationDisplayNameNl;
-    }
-
-    /**
-     * @param string $organizationDisplayNameNl
-     */
-    public function setOrganizationDisplayNameNl($organizationDisplayNameNl)
-    {
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameEn(): ?string
-    {
-        return $this->organizationDisplayNameEn;
-    }
-
-    /**
-     * @param string $organizationDisplayNameEn
-     */
-    public function setOrganizationDisplayNameEn($organizationDisplayNameEn)
-    {
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
     }
 
     /**

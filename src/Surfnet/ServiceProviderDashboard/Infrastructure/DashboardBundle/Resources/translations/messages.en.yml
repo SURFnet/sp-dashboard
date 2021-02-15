@@ -486,6 +486,10 @@ service.delete.confirmation: "You are about to delete '%name%'. Are you sure?"
 service.delete.entity_list_text: "With this, you are also deleting the following entities:"
 service.form.general.title: General
 service.form.status.title: Service status
+service.form.label.organization_display_name_en: Organization display name English
+service.form.label.organization_name_nl: Organization name Dutch
+service.form.label.organization_name_en: Organization name English
+service.form.label.organization_display_name_nl: Organization display name Dutch
 service.form.label.connection_status: Connection status
 service.form.label.connection_status_not_requested: Not requested
 service.form.label.connection_status_requested: Requested

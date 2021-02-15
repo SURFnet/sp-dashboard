@@ -41,6 +41,10 @@ class ServiceCreateTest extends WebTestCase
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
+                    'organizationDisplayNameNl' => 'team-a',
+                    'organizationDisplayNameEn' => 'team-a',
+                    'organizationNameNl' => 'team-a',
+                    'organizationNameEn' => 'team-a',
                 ]
             ]
         ];
@@ -69,6 +73,10 @@ class ServiceCreateTest extends WebTestCase
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
+                    'organizationDisplayNameNl' => 'team-a',
+                    'organizationDisplayNameEn' => 'team-a',
+                    'organizationNameNl' => 'team-a',
+                    'organizationNameEn' => 'team-a',
                 ]
             ]
         ];
@@ -102,6 +110,10 @@ class ServiceCreateTest extends WebTestCase
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
+                    'organizationDisplayNameNl' => 'team-a',
+                    'organizationDisplayNameEn' => 'team-a',
+                    'organizationNameNl' => 'team-a',
+                    'organizationNameEn' => 'team-a',
                 ]
             ]
         ];
@@ -131,6 +143,10 @@ class ServiceCreateTest extends WebTestCase
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'urn:collab:org:surf.nl',
+                    'organizationDisplayNameNl' => 'team-a',
+                    'organizationDisplayNameEn' => 'team-a',
+                    'organizationNameNl' => 'team-a',
+                    'organizationNameEn' => 'team-a',
                 ]
             ]
         ];
@@ -162,6 +178,10 @@ class ServiceCreateTest extends WebTestCase
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
+                    'organizationDisplayNameNl' => 'team-a',
+                    'organizationDisplayNameEn' => 'team-a',
+                    'organizationNameNl' => 'team-a',
+                    'organizationNameEn' => 'team-a',
                 ]
             ]
         ];

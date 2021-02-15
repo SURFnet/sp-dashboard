@@ -21,6 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class EditServiceCommand implements Command
 {
     /**
@@ -89,6 +92,30 @@ class EditServiceCommand implements Command
     private $institutionId;
 
     /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationNameEn;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationDisplayNameNl;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationDisplayNameEn;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      *
      * @param int $id
@@ -103,6 +130,10 @@ class EditServiceCommand implements Command
      * @param string $surfconextRepresentativeApproved
      * @param string $privacyQuestionsAnswered
      * @param string $institutionId
+     * @param string $organizationNameNl
+     * @param string $organizationNameEn
+     * @param string $organizationDisplayNameNl
+     * @param string $organizationDisplayNameEn
      */
     public function __construct(
         $id,
@@ -116,7 +147,11 @@ class EditServiceCommand implements Command
         $contractSigned,
         $surfconextRepresentativeApproved,
         $privacyQuestionsAnswered,
-        $institutionId
+        $institutionId,
+        $organizationNameNl,
+        $organizationNameEn,
+        $organizationDisplayNameNl,
+        $organizationDisplayNameEn
     ) {
         $this->id = $id;
         $this->guid = $guid;
@@ -130,6 +165,10 @@ class EditServiceCommand implements Command
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
         $this->institutionId = $institutionId;
+        $this->organizationNameEn = $organizationNameEn;
+        $this->organizationNameNl = $organizationNameNl;
+        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
+        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
     }
 
     /**
@@ -322,5 +361,69 @@ class EditServiceCommand implements Command
     public function getInstitutionId()
     {
         return $this->institutionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameNl(): ?string
+    {
+        return $this->organizationDisplayNameNl;
+    }
+
+    /**
+     * @param string $organizationDisplayNameNl
+     */
+    public function setOrganizationDisplayNameNl(string $organizationDisplayNameNl): void
+    {
+        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationDisplayNameEn(): ?string
+    {
+        return $this->organizationDisplayNameEn;
+    }
+
+    /**
+     * @param string $organizationDisplayNameEn
+     */
+    public function setOrganizationDisplayNameEn(string $organizationDisplayNameEn): void
+    {
+        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl(): ?string
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $organizationNameNl
+     */
+    public function setOrganizationNameNl(string $organizationNameNl): void
+    {
+        $this->organizationNameNl = $organizationNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn(): ?string
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $organizationNameEn
+     */
+    public function setOrganizationNameEn(string $organizationNameEn): void
+    {
+        $this->organizationNameEn = $organizationNameEn;
     }
 }

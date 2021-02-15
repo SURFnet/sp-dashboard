@@ -168,10 +168,6 @@ class OidcngResourceServerEntityType extends AbstractType
             ->add('status', HiddenType::class)
             ->add('manageId', HiddenType::class)
             ->add('environment', HiddenType::class)
-            ->add('organizationNameNl', HiddenType::class)
-            ->add('organizationNameEn', HiddenType::class)
-            ->add('organizationDisplayNameNl', HiddenType::class)
-            ->add('organizationDisplayNameEn', HiddenType::class)
             ->add('organizationUrlNl', HiddenType::class)
             ->add('organizationUrlEn', HiddenType::class)
 
