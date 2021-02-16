@@ -41,9 +41,9 @@ class SamlToken extends AbstractToken
     /**
      * @return bool
      */
-    public function hasAccessToEntity(Entity $entity)
+    public function hasAccessToEntity(Service $service)
     {
-        return $this->hasAccessToService($entity->getService());
+        return $this->hasAccessToService($service);
     }
 
     /**

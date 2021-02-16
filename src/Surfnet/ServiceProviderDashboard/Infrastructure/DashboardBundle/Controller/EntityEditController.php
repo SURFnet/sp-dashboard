@@ -55,17 +55,24 @@ class EntityEditController extends Controller
      * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function editAction(Request $request, string $environment, string $manageId, string $serviceId)
+    public function editAction(Request $request, string $environment, string $manageId, int $serviceId)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $service = $this->serviceService->getServiceById($serviceId);
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
-
+        $entityServiceId = $entity->getService()->getId();
+        // Verify the Entity Service Id is one of the logged in users services
+        $this->authorizationService->assertServiceIdAllowed($entityServiceId);
+        // Don't trust the url provided service id, check it against the Service Id associated with the entity
+        if ($entityServiceId !== $serviceId) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to view an Entity from another Service'
+            );
+        }
         if ($entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION) {
             throw $this->createAccessDeniedException(
                 'You are not allowed to edit a published production entity'

@@ -198,7 +198,6 @@ class AuthorizationService
         return $this->session->has('selected_service_id');
     }
 
-
     /**
      * Get all service names keyed by ID the user has access to.
      *
