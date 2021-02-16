@@ -43,13 +43,13 @@ class ServiceAdminOverviewTest extends WebTestCase
         $crawler = $this->client->request('GET', '/service/2');
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
-        $h1 = $crawler->filter('.page-container h1');
-        $this->assertEquals('Service overview', $h1->first()->text());
+        $h1 = $crawler->filter('.page-container .service-title');
+        $this->assertEquals('Ibuildings B.V. overview', trim($h1->first()->text()));
 
-        $nodes = $crawler->filter('.service-status-container .service-status-title a');
+        $nodes = $crawler->filter('.service-status-container .service-status-title');
 
         // One service should be on page: ibuildings
         $this->assertEquals(1, $nodes->count());
-        $this->assertEquals('Ibuildings B.V.', $nodes->first()->text());
+        $this->assertContains('Ibuildings B.V.', $nodes->first()->text());
     }
 }

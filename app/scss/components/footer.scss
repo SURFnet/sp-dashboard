@@ -1,8 +1,8 @@
-div.footer {
-
-  padding: 15px;
+footer {
   border-top: 3px solid white;
+  font-size: $smallFont;
   margin-top: 25px;
+  padding: 15px;
 
   div.footer-inner {
     @include page;

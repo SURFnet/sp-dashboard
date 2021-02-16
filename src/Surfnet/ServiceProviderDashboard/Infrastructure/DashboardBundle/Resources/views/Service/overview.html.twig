@@ -1,130 +1,221 @@
 {% extends '::base.html.twig' %}
 
 {% block body_container %}
+    {% set flashes = app.session.flashbag.all %}
+    {% if flashes is not empty %}
+        <div class="card messages">
+            {% for type, messages in flashes %}
+                {% for message in messages %}
+                    {% if type == 'wysiwyg' %}
+                        <div class="message {{ type }}">{{ message|trans|wysiwyg }}</div>
+                    {% else %}
+                        <div class="message {{ type }}">{{ message|trans }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {%  endif %}
 
-    <h1>{% block page_heading %}{% spaceless %}
-        {% if isAdmin %}
-        {{ 'service.admin_overview.title'|trans }}
-        {% else %}
-        {{ 'service.overview.title'|trans }}
-        {% endif %}{% endspaceless %}{% endblock %}</h1>
+    <h1 id="main" class="service-title">
+        {% spaceless %}
+            {# if user is not an admin there might be more than one service #}
+            {% if isAdmin %}
+                {{ 'service.admin_overview.title'|trans({'%name%': services.services[0].name|default('Service') }) }}
+            {% else %}
+                {{ 'service.overview.title'|trans }}
+            {% endif %}
+        {% endspaceless %}
+    </h1>
 
     {% for service in services %}
-        <div class="fieldset card action">
-            <ul>
-                <li>
-                    <a href="{{ path('entity_list', {'serviceId': service.id}) }}">
-                        <i class="fa fa-bars" aria-hidden="true"></i>
-                        {{ 'service.overview.action.entityList'|trans }}
-                    </a>
-                </li>
-                {% if service.arePrivacyQuestionsEnabled %}
-                <li>
-                    <a href="{{ path('privacy_questions', {'serviceId': service.id}) }}">
-                        <i class="fa fa-key" aria-hidden="true"></i>
-                        {{ 'service.overview.action.privacyQuestions'|trans }}
-                    </a>
-                </li>
-                {% endif %}
-
-                {% if isAdmin %}
-                <li>
-                    <a href="{{ path('service_edit', {'serviceId': service.id}) }}">
-                        <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                        {{ 'service.overview.action.serviceEdit'|trans }}
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('service_delete', {'serviceId': service.id}) }}">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        {{ 'service.overview.action.serviceDelete'|trans }}
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-
-        <div class="fieldset card">
-
+        <article class="fieldset card service">
+            {% set shortName = service.name|replace(' ', '-') %}
+            {% set testId = "add-for-test-" ~ shortName %}
+            {% set productionId = "add-for-production-" ~ shortName %}
+            <input type="checkbox" id="{{ testId }}" name="{{ testId }}" />
+            {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
+                <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
+            {% endif %}
             <div class="service-status-container">
+                <h2 class="service-status-title">
+                    {{ service.name }}
+                    {% if isAdmin %}
+                        <ul class="service-status-title-actions">
+                            <li class="service-status-title-action-item">
+                                <a
+                                    class="button admin title service-status-title-button"
+                                    href="{{ path('service_edit', {'serviceId': service.id}) }}"
+                                >
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                    {{ 'service.overview.action.serviceEdit'|trans }}
+                                </a>
+                            </li>
+                            <li class="service-status-title-action-item">
+                                <a
+                                    class="button admin title service-status-title-button"
+                                    href="{{ path('service_delete', {'serviceId': service.id}) }}"
+                                >
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    {{ 'service.overview.action.serviceDelete'|trans }}
+                                </a>
+                            </li>
+                            {% if service.arePrivacyQuestionsEnabled %}
+                                <li class="service-status-title-action-item">
+                                    <a
+                                        class="button blue title service-status-title-button"
+                                        href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
+                                    >
+                                        <i class="fa fa-key" aria-hidden="true"></i>
+                                        {{ 'service.overview.action.privacyQuestions'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </h2>
+                {% if not privacyStatusEntities[loop.index0] %}
+                    {% include '@Dashboard/Privacy/notification.html.twig' with { hlvl: "3"} %}
+                {% endif %}
+                <section class="service-status-entities">
+                    <h3 class="service-status-section-title">{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h3>
 
-                <div class="service-status-title">
-                    <a href="{{ path('entity_list', {serviceId: service.id }) }}">{{ service.name }}</a>
-                </div>
-                <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
-                <div class="service-status-entities">
-
-                    <h2>{{ 'service.overview.entitylist.title'|trans({'%name%': service.name}) }}</h2>
-
-                    <table>
-                        {# Production entities #}
-                        <tr>
-                            <td colspan="4">
-                                <h3>{{ 'service.overview.entitylist.production.title'|trans }}</h3>
-                            </td>
-                        </tr>
+                    {# Production entities #}
+                    <table class="service-status-entities-table production-entities">
+                        <caption>{% spaceless %}
+                            <h4 class="service-status-entities-table-title">
+                                {{ 'service.overview.entitylist.production.title'|trans }}
+                            </h4>
+                        {% endspaceless %}</caption>
                         <tr>
                             <th>{{ 'service.overview.entitylist.name'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.state'|trans }}</th>
+                            <th>{{ ''|trans }}</th>
                         </tr>
                         {% set hasEntities = false %}
                         {% for entity in service.entityList %}
                             {% if entity.environment == 'production' %}
                                 {% set hasEntities = true %}
                                 <tr>
-                                    <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                                    <td>{{ entity.name }}</td>
+                                    <td>{{ entity.entityId }}</td>
+                                    <td>{{ entity.protocol }}</td>
+                                    <td>{{ entity.state }}</td>
+                                    <td class="actions">
+                                        <div tabindex="0">
+                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                                            {% include '@Dashboard/EntityActions/actionsForList.html.twig' with {entity: entity.actions} %}
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
                         {% if hasEntities == false %}
                             <tr>
-                                <td colspan="4">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                                <td colspan="5" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
+                        {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
+                            <tr class="service-status-entities-table-add-entity">
+                                <td>
+                                    <label for="{{ productionId }}" class="link">
+                                        {{ 'entity.list.add_to_production'|trans}}
+                                    </label>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endif %}
+                    </table>
 
-                        {# Spacing #}
-                        <tr>
-                            <td colspan="4"></td>
-                        </tr>
-
-                        {# Test entities #}
-                        <tr>
-                            <td colspan="4">
-                                <h3>{{ 'service.overview.entitylist.test.title'|trans }}</h3>
-                            </td>
-                        </tr>
+                    {# Test entities #}
+                    <table class="service-status-entities-table test-entities">
+                        <caption>{% spaceless %}
+                            <h4 class="service-status-entities-table-title">
+                                {{ 'service.overview.entitylist.test.title'|trans }}
+                            </h4>
+                        {% endspaceless %}</caption>
                         <tr>
                             <th>{{ 'service.overview.entitylist.name'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.entityId'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.protocol'|trans }}</th>
                             <th>{{ 'service.overview.entitylist.state'|trans }}</th>
+                            <th>{{ ''|trans }}</th>
                         </tr>
                         {% set hasEntities = false %}
                         {% for entity in service.entityList %}
                             {% if entity.environment == 'test' %}
                                 {% set hasEntities = true %}
                                 <tr>
-                                    <td><a href="{{ entity.link }}">{{ entity.name }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.entityId }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.protocol }}</a></td>
-                                    <td><a href="{{ entity.link }}">{{ entity.state }}</a></td>
+                                    <td>{{ entity.name }}</td>
+                                    <td>{{ entity.entityId }}</td>
+                                    <td>{{ entity.protocol }}</td>
+                                    <td>{{ entity.state }}</td>
+                                    <td class="actions">
+                                        <div tabindex="0">
+                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+
+                                            {% include '@Dashboard/EntityActions/actionsForList.html.twig' with {entity: entity.actions} %}
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
                         {% if hasEntities == false %}
                             <tr>
-                                <td colspan="4">{{ 'service.overview.entitylist.empty'|trans }}</td>
+                                <td colspan="5" class="no-entities-test">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
+                        <tr class="service-status-entities-table-add-entity">
+                            <td>
+                                <label for="{{ testId }}" class="link">
+                                    {{ 'entity.list.add_to_test'|trans}}
+                                </label>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </table>
-
-                </div>
+                </section>
+                <section class="service-status-graph-container">
+                    <h3 class="service-status-graph-title">
+                        {{ 'service.overview.graph.title'|trans({'%name%': service.name}) }}
+                    </h3>
+                    <div class="service-status-graph" data-service-id="{{ service.id }}"></div>
+                    <noscript><p>{{ 'service.overview.graph.noscript'|trans }}</p></noscript>
+                </section>
             </div>
-        </div>
+            <div class="blocker">
+                {# todo: add aria-labelledby-id and aria-describedby-id #}
+                {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
+                    <div class="modal" role="dialog" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
+                {% endif %}
+                <div class="modal" role="dialog" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
+            </div>
+            <p class="service-status-back-to-top">
+                <a href="#main" class="service-status-back-to-top-link">
+                    <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
+                    <span class="sr-only">Back to top</span>
+                </a>
+            </p>
+        </article>
     {% endfor %}
+
+    {% if showOidcPopup %}
+        <div class="modal" id="oidc-published-popup">
+            {{ render(controller('DashboardBundle:EntityPublished:oidcConfirmationModal', {'entity': publishedEntity})) }}
+        </div>
+    {% endif %}
+
+    <div class="modal oidc-confirmation" id="reset-secret-confirmation">
+        {% include "@Dashboard/EntityModal/secretResetModal.html.twig" %}
+    </div>
 {% endblock %}

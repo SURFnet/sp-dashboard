@@ -1,14 +1,10 @@
 .service-status-container {
   display: block;
-  clear: both;
-  height: auto;
-  overflow: auto;
-  border-bottom: 1px solid #4DB2CF;
-  padding: 30px 0 50px;
+  padding: 2rem 0 0;
 
   a {
     color: #428bca;
-    text-decoration: none;
+    text-decoration: underline;
   }
 
   a:hover, a:focus {
@@ -16,37 +12,42 @@
     text-decoration: underline;
   }
 
+  a.admin:hover, a.admin:focus {
+    border: 1px dashed white;
+    color: $white;
+
+    i {
+      color: inherit;
+    }
+  }
+
   &:last-child {
     border: none;
     padding-bottom: 20px;
   }
 
-  .service-status-title {
-    font-size: 25px;
-    margin-bottom: 0;
-  }
-
   .service-status-graph {
     display: block;
     position: relative;
-    float: left;
     width: 400px;
     height: 450px;
 
     .service-status-legend {
       clear: both;
       display: block;
+      text-align: center;
       width: 100%;
 
-      text-align: center;
-
       .legend-item {
-        font-size: 12px;
+        @include motion {
+          animation: fadein 2s;
+        }
+        color: $black;
         display: inline-block;
-        padding: 2px 5px;
+        font-size: $smallFont;
         margin: 0 10px 10px;
+        padding: 2px 5px;
 
-        animation: fadein 2s;
         @keyframes fadein {
           from {
             opacity: 0;
@@ -59,18 +60,20 @@
     }
 
     .service-status-percentage {
-      display: block;
-      position: absolute;
-      left: 200px;
-      top: 200px;
-      font-size: 25px;
-      width: 200px;
-      margin-left: -100px;
-      line-height: 0;
-      text-align: center;
+      @include motion {
+        animation: fadein 2s;
+      }
       color: #d1d2d6;
+      display: block;
+      font-size: $h2Font;
+      left: 200px;
+      line-height: 0;
+      margin-left: -100px;
+      position: absolute;
+      text-align: center;
+      top: 200px;
+      width: 200px;
 
-      animation: fadein 2s;
       @keyframes fadein {
         from {
           opacity: 0;
@@ -83,12 +86,13 @@
   }
 
   .service-status-entities {
+    @include motion {
+      animation: fadein 2s;
+    }
     display: block;
-    float: right;
-    width: 550px;
     font-weight: bold;
+    margin-top: 3rem;
 
-    animation: fadein 2s;
     @keyframes fadein {
       from {
         opacity: 0;
@@ -98,20 +102,134 @@
       }
     }
 
-    h2 {
-      font-size: 25px;
+    .section-title {
       font-weight: normal;
     }
 
-    h3 {
-      font-size: 16px;
-      font-weight: bold;
-    }
-
     td, th {
-      font-size: 12px;
+      font-size: $smallFont;
     }
   }
+}
+
+// todo: refactor base.css so we no longer need this convoluted selector
+.page-container .card .service-status-container h2.service-status-title {
+  align-items: center;
+  color: $blue;
+  display: flex;
+  font-size: $h2Font;
+  justify-content: flex-start;
+  margin: 0;
+}
+
+.service-status-back-to-top {
+  text-align: right;
+}
+
+.service-status-back-to-top-link {
+  color: $blue;
+  font-size: $backToTopFont;
+  padding: .5rem;
+
+  &:focus,
+  &:hover {
+    outline: 3px solid $blue;
+  }
+}
+
+.service {
+  margin: 2rem 0;
+}
+
+.service-status-title-actions {
+  display: flex;
+  margin-left: 1rem;
+}
+
+.service-status-graph-container {
+  margin-top: 3rem;
+}
+
+.service-status-graph-title {
+  align-items: center;
+  display: flex;
+  font-size: $h2Font;
+  font-weight: 700;
+  justify-content: space-between;
+}
+
+.service-status-entities-table {
+  &:not(:first-of-type) {
+    margin-top: 2rem;
+  }
+
+  tr:first-of-type {
+    border-top: 0;
+  }
+}
+
+.service-status-section-title {
+  font-size: $h2Font;
+  margin: 2rem 0 1.25rem 0;
+}
+
+.service-status-entities-table-title {
+  align-items: center;
+  border-bottom: 3px solid $lighter-grey;
+  color: $dark-grey;
+  display: flex;
+  font-size: $bigFont;
+  font-weight: bold;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  text-transform: none;
+}
+
+a.service-status-title-button.blue.button.title {
+  min-width: 5rem;
+
+  &:focus,
+  &:hover {
+    color: white;
+  }
+}
+
+.service-status-title-action-item {
+  &:not(:last-of-type) {
+    .service-status-title-button {
+      margin-right: .25rem;
+    }
+  }
+}
+
+[id^="add-for-production"],
+[id^="add-for-test"] {
+  display: none;
+
+  &:not(:checked) ~ .blocker {
+    display: none;
+
+    .modal {
+      display: none;
+    }
+  }
+
+  &:checked ~ .blocker {
+    display: block;
+  }
+}
+
+[id^="add-for-production"]:checked ~ .blocker .modal[data-for^="add-for-production"] {
+  display: inline-block;
+}
+
+[id^="add-for-test"]:checked ~ .blocker .modal[data-for^="add-for-test"] {
+  display: inline-block;
+}
+
+label[for^="add-for"].link, .privacy-notification-link {
+  padding-left: 0;
 }
 
 #chartjs-tooltip {
@@ -133,4 +251,11 @@
     color: #428bca;
     text-decoration: underline;
   }
+}
+
+.privacy-notification-title {
+  color: $red;
+  font-size: $h2Font;
+  font-weight: 700;
+  margin: 0 0 1.25rem 0;
 }

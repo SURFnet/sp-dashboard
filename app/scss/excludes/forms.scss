@@ -1,12 +1,13 @@
 div {
   margin-bottom: 25px;
 }
-h2 {
+
+h2:not(.section-title) {
   margin: 35px 0 20px 0;
   font-size: 22px;
 }
 
-label {
+label:not(.button):not(.link) {
   color: $medium-grey;
   display: block;
 
@@ -92,7 +93,7 @@ div.form-row.warning {
 }
 
 .button {
-  min-width: 200px;
+  min-width: 9rem;
 }
 
 div.checkbox {
@@ -108,8 +109,11 @@ div.checkbox {
 }
 
 div.radio-container {
-  label {
+  display: flex;
+
+  label:not(.button):not(.link) {
     display: inline-block;
+    padding: 10px 0 10px 9px;
   }
 }
 
@@ -120,4 +124,3 @@ div.radio-container {
     }
   }
 }
-

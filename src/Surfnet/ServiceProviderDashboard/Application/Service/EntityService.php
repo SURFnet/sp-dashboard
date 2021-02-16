@@ -53,6 +53,11 @@ class EntityService implements EntityServiceInterface
     private $ticketService;
 
     /**
+     * @var ServiceService
+     */
+    private $serviceService;
+
+    /**
      * @var RouterInterface
      */
     private $router;
@@ -83,6 +88,7 @@ class EntityService implements EntityServiceInterface
     public function __construct(
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         TicketServiceInterface $ticketService,
+        ServiceService $serviceService,
         Config $testConfig,
         Config $productionConfig,
         RouterInterface $router,
@@ -91,6 +97,7 @@ class EntityService implements EntityServiceInterface
     ) {
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
+        $this->serviceService = $serviceService;
         $this->router = $router;
         $this->logger = $logger;
         $this->testManageConfig = $testConfig;
@@ -110,6 +117,8 @@ class EntityService implements EntityServiceInterface
     public function getEntityById($id)
     {
         $entity = $this->queryRepositoryProvider->getEntityRepository()->findById($id);
+        $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+        $entity->setService($service);
         if ($entity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
             // Load the Possibly connected resource servers
             $resourceServers = [];
@@ -148,6 +157,10 @@ class EntityService implements EntityServiceInterface
                 $entity = $this->queryRepositoryProvider
                     ->getManageProductionQueryClient()
                     ->findByManageId($id);
+                $serviceFromEntity = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+                if ($serviceFromEntity->getId() !== $service->getId()) {
+                    throw new InvalidArgumentException('The service from the entity did not match the service passed to this method.');
+                }
                 $entity->setEnvironment($manageTarget);
                 $entity->setService($service);
                 // Entities that are still excluded from push are not really published, but have a publication request
@@ -234,6 +247,9 @@ class EntityService implements EntityServiceInterface
             ->fromEnvironment($env)
             ->findByManageId($manageId);
         $entity->setEnvironment($env);
+        // Set the service associated to the entity on the entity.
+        $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+        $entity->setService($service);
         $this->updateStatus($entity);
         return $entity;
     }

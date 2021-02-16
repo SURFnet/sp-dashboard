@@ -89,4 +89,9 @@ class ServiceService
     {
         return $this->services->findById($id);
     }
+
+    public function getServiceByTeamName(?string $serviceTeamName)
+    {
+        return $this->services->findByTeamName($serviceTeamName);
+    }
 }

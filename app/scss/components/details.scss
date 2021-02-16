@@ -1,0 +1,29 @@
+summary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  margin: 2rem 0 1.25rem 0;
+
+  &::-webkit-details-marker,
+  &::marker {
+    display: none
+  }
+
+  &:before {
+    background: $blue;
+    border-radius: 5px;
+    color: white;
+    content: "+";
+    display: inline-block;
+    font-size: $h2Font;
+    font-weight: 700;
+    height: max-content;
+    margin: 0 .675rem 0 0;
+    text-align: center;
+    width: 1.25rem;
+  }
+}
+
+details[open] summary:before {
+  content: "-";
+}

@@ -2,6 +2,7 @@
 
 1. [Architecture](architecture.md)
 2. [Testing](testing.md)
+3. [Testing the front-end with different priviliges](testing-with-different-priviliges.md)
 3. [Ubiquitous language](ubiquitous_language.md)
 3. [Frontend tooling](frontend_tooling.md)
 3. [Translations](translations.md)
