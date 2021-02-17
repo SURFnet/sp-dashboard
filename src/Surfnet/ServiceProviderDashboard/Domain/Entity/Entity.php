@@ -1190,44 +1190,6 @@ class Entity
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameEn()
-    {
-        return $this->organizationDisplayNameEn;
-    }
-
-    /**
-     * @param string $value
-     * @return Entity
-     */
-    public function setOrganizationDisplayNameEn($value)
-    {
-        $this->organizationDisplayNameEn = (string) $value;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlEn()
-    {
-        return $this->organizationUrlEn;
-    }
-
-    /**
-     * @param string $value
-     * @return Entity
-     */
-    public function setOrganizationUrlEn($value)
-    {
-        $this->organizationUrlEn = (string) $value;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getOrganizationNameNl()
     {
         return $this->organizationNameNl;
@@ -1240,44 +1202,6 @@ class Entity
     public function setOrganizationNameNl($value)
     {
         $this->organizationNameNl = (string) $value;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameNl()
-    {
-        return $this->organizationDisplayNameNl;
-    }
-
-    /**
-     * @param string $value
-     * @return Entity
-     */
-    public function setOrganizationDisplayNameNl($value)
-    {
-        $this->organizationDisplayNameNl = (string) $value;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlNl()
-    {
-        return $this->organizationUrlNl;
-    }
-
-    /**
-     * @param string $value
-     * @return Entity
-     */
-    public function setOrganizationUrlNl($value)
-    {
-        $this->organizationUrlNl = (string) $value;
 
         return $this;
     }

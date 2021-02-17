@@ -151,20 +151,6 @@ class Service
      *
      * @ORM\Column(length=255, nullable=false)
      */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(length=255, nullable=false)
-     */
-    private $organizationDisplayNameEn;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(length=255, nullable=false)
-     */
     private $organizationNameNl;
 
     /**
@@ -379,37 +365,6 @@ class Service
         $this->institutionId = $institutionId;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameNl(): ?string
-    {
-        return $this->organizationDisplayNameNl;
-    }
-
-    /**
-     * @param string $organizationDisplayNameNl
-     */
-    public function setOrganizationDisplayNameNl(string $organizationDisplayNameNl): void
-    {
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameEn(): ?string
-    {
-        return $this->organizationDisplayNameEn;
-    }
-
-    /**
-     * @param string $organizationDisplayNameEn
-     */
-    public function setOrganizationDisplayNameEn(string $organizationDisplayNameEn): void
-    {
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
-    }
     /**
      * @return string
      */

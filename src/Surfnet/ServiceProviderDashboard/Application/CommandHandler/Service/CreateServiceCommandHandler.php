@@ -58,8 +58,6 @@ class CreateServiceCommandHandler implements CommandHandler
         $service->setInstitutionId($command->getInstitutionId());
         $service->setOrganizationNameEn($command->getOrganizationNameEn());
         $service->setOrganizationNameNl($command->getOrganizationNameNl());
-        $service->setOrganizationDisplayNameEn($command->getOrganizationDisplayNameEn());
-        $service->setOrganizationDisplayNameNl($command->getOrganizationDisplayNameNl());
 
         $this->serviceRepository->isUnique($service);
 

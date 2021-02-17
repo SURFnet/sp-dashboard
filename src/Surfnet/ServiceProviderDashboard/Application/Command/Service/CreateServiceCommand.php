@@ -95,18 +95,6 @@ class CreateServiceCommand implements Command
     private $organizationNameEn;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationDisplayNameEn;
-
-    /**
      * @param string $guid
      */
     public function setGuid($guid)
@@ -273,38 +261,6 @@ class CreateServiceCommand implements Command
     public function getInstitutionId()
     {
         return $this->institutionId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameNl(): ?string
-    {
-        return $this->organizationDisplayNameNl;
-    }
-
-    /**
-     * @param string $organizationDisplayNameNl
-     */
-    public function setOrganizationDisplayNameNl(string $organizationDisplayNameNl): void
-    {
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameEn(): ?string
-    {
-        return $this->organizationDisplayNameEn;
-    }
-
-    /**
-     * @param string $organizationDisplayNameEn
-     */
-    public function setOrganizationDisplayNameEn(string $organizationDisplayNameEn): void
-    {
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
     }
 
     /**

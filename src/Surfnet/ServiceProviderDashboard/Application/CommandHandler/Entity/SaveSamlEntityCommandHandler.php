@@ -118,11 +118,9 @@ class SaveSamlEntityCommandHandler implements CommandHandler
             $entity->setNameIdFormat(Constants::NAME_ID_FORMAT_TRANSIENT);
         }
 
-        // OrganizationName and OrganizationDisplayName are tracked on the Service
+        // OrganizationName is tracked on the Service
         $entity->setOrganizationNameNl($entity->getService()->getOrganizationNameNl());
         $entity->setOrganizationNameEn($entity->getService()->getOrganizationNameEn());
-        $entity->setOrganizationDisplayNameNl($entity->getService()->getOrganizationDisplayNameNl());
-        $entity->setOrganizationDisplayNameEn($entity->getService()->getOrganizationDisplayNameEn());
         $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
         $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
 

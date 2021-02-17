@@ -244,11 +244,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         if ($organization) {
             $metadata = [
                 'OrganizationName:en' => $organization->getNameEn(),
-                'OrganizationDisplayName:en' => $organization->getDisplayNameEn(),
-                'OrganizationURL:en' => $organization->getUrlEn(),
                 'OrganizationName:nl' => $organization->getNameNl(),
-                'OrganizationDisplayName:nl' => $organization->getDisplayNameNl(),
-                'OrganizationURL:nl' => $organization->getUrlNl(),
             ];
         }
         return array_filter($metadata);

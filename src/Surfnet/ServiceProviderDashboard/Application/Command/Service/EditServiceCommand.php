@@ -104,18 +104,6 @@ class EditServiceCommand implements Command
     private $organizationNameEn;
 
     /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationDisplayNameEn;
-
-    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      *
      * @param int $id
@@ -132,8 +120,6 @@ class EditServiceCommand implements Command
      * @param string $institutionId
      * @param string $organizationNameNl
      * @param string $organizationNameEn
-     * @param string $organizationDisplayNameNl
-     * @param string $organizationDisplayNameEn
      */
     public function __construct(
         $id,
@@ -149,9 +135,7 @@ class EditServiceCommand implements Command
         $privacyQuestionsAnswered,
         $institutionId,
         $organizationNameNl,
-        $organizationNameEn,
-        $organizationDisplayNameNl,
-        $organizationDisplayNameEn
+        $organizationNameEn
     ) {
         $this->id = $id;
         $this->guid = $guid;
@@ -167,8 +151,6 @@ class EditServiceCommand implements Command
         $this->institutionId = $institutionId;
         $this->organizationNameEn = $organizationNameEn;
         $this->organizationNameNl = $organizationNameNl;
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
     }
 
     /**
@@ -361,38 +343,6 @@ class EditServiceCommand implements Command
     public function getInstitutionId()
     {
         return $this->institutionId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameNl(): ?string
-    {
-        return $this->organizationDisplayNameNl;
-    }
-
-    /**
-     * @param string $organizationDisplayNameNl
-     */
-    public function setOrganizationDisplayNameNl(string $organizationDisplayNameNl): void
-    {
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationDisplayNameEn(): ?string
-    {
-        return $this->organizationDisplayNameEn;
-    }
-
-    /**
-     * @param string $organizationDisplayNameEn
-     */
-    public function setOrganizationDisplayNameEn(string $organizationDisplayNameEn): void
-    {
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
     }
 
     /**

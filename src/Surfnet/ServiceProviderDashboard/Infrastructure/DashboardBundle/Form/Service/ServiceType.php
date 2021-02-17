@@ -63,22 +63,6 @@ class ServiceType extends AbstractType
                         ]
                     )
                     ->add(
-                        'organizationDisplayNameNl',
-                        TextType::class,
-                        [
-                            'required' => true,
-                            'label' => 'service.form.label.organization_display_name_nl',
-                        ]
-                    )
-                    ->add(
-                        'organizationDisplayNameEn',
-                        TextType::class,
-                        [
-                            'required' => true,
-                            'label' => 'service.form.label.organization_display_name_en',
-                        ]
-                    )
-                    ->add(
                         'institutionId',
                         TextType::class,
                         [
