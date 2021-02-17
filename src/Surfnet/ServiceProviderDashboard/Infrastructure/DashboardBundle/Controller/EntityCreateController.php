@@ -74,7 +74,7 @@ class EntityCreateController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route(
-     *     "/entity/create/type/{serviceId}/{targetEnvironment}",
+     *     "/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}",
      *     defaults={
      *          "targetEnvironment" = "test",
      *     },
