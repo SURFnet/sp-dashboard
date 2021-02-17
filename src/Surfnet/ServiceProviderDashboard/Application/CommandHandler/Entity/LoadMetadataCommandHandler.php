@@ -102,11 +102,7 @@ class LoadMetadataCommandHandler implements CommandHandler
             'applicationUrlEn' => ['getApplicationUrl', 'setApplicationUrl'],
             'certificate' => ['getCertificate', 'setCertificate'],
             'organizationNameEn' => ['getOrganizationNameEn', 'setOrganizationNameEn'],
-            'organizationDisplayNameEn' => ['getOrganizationDisplayNameEn', 'setOrganizationDisplayNameEn'],
-            'organizationUrlEn' => ['getOrganizationUrlEn', 'setOrganizationUrlEn'],
             'organizationNameNl' => ['getOrganizationNameNl', 'setOrganizationNameNl'],
-            'organizationDisplayNameNl' => ['getOrganizationDisplayNameNl', 'setOrganizationDisplayNameNl'],
-            'organizationUrlNl' => ['getOrganizationUrlNl', 'setOrganizationUrlNl'],
         ];
 
         $this->map($map, $command, $metadata);

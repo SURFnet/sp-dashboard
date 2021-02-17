@@ -105,8 +105,6 @@ class SaveOidcngResourceServerEntityCommandHandler implements CommandHandler
         // OrganizationName is tracked on the Service
         $entity->setOrganizationNameNl($entity->getService()->getOrganizationNameNl());
         $entity->setOrganizationNameEn($entity->getService()->getOrganizationNameEn());
-        $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
-        $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
 
         $entity->setComments($command->getComments());
 

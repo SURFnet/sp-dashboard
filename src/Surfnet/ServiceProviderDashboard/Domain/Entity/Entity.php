@@ -329,36 +329,11 @@ class Entity
      * @ORM\Column(type="text", nullable=true)
      */
     private $organizationNameEn;
-
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $organizationDisplayNameEn;
-
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $organizationUrlEn;
-
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
     private $organizationNameNl;
-
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $organizationUrlNl;
 
     /**
      * @var string
