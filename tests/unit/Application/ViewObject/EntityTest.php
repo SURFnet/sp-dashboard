@@ -94,7 +94,7 @@ class EntityTest extends MockeryTestCase
             $state,
             $env,
             $protocol,
-            $protocol === 'oidc' ? true : false,
+            false,
             $router
         );
     }
