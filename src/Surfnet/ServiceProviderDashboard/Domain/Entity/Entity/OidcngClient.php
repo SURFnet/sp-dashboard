@@ -62,7 +62,7 @@ class OidcngClient implements OidcClientInterface
         $clientId = self::getStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
         $redirectUris = self::getStringOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
-        $scope = self::getStringOrEmpty($data['data']['metaDataFields'], 'scopes');
+        $scope = self::getStringOrNull($data['data']['metaDataFields'], 'scopes');
 
         $grantType = isset($data['data']['metaDataFields']['grants'])
             ? reset($data['data']['metaDataFields']['grants']) : '';
@@ -76,7 +76,7 @@ class OidcngClient implements OidcClientInterface
         Assert::string($clientSecret);
         Assert::isArray($redirectUris);
         Assert::string($grantType);
-        Assert::isArray($scope);
+        Assert::nullOrIsArray($scope);
         Assert::boolean($isPublicClient);
         Assert::numeric($accessTokenValidity);
         Assert::isArray($resourceServers);
@@ -101,7 +101,7 @@ class OidcngClient implements OidcClientInterface
         string $clientSecret,
         array $redirectUris,
         string $grantType,
-        array $scope,
+        ?array $scope,
         bool $isPublicClient,
         int $accessTokenValidity,
         array $resourceServers
@@ -124,6 +124,16 @@ class OidcngClient implements OidcClientInterface
     private static function getStringOrEmpty(array $data, $key)
     {
         return isset($data[$key]) ? $data[$key] : '';
+    }
+
+    /**
+     * @param array $data
+     * @param $key
+     * @return string|null
+     */
+    private static function getStringOrNull(array $data, $key)
+    {
+        return isset($data[$key]) ? $data[$key] : null;
     }
 
     /**

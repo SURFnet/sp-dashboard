@@ -116,7 +116,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                             'uri3',
                         ],
                         'secret' => 'test',
-                        'scopes' => ['openid'],
                         'coin:institution_id' => 'service-institution-id',
                         'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                     ],
@@ -171,7 +170,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'metaDataFields.OrganizationDisplayName:nl' => 'orgdisnl',
                         'metaDataFields.OrganizationURL:nl' => 'http://orgnl',
                         'metaDataFields.privacy' => 'privacy',
-                        'metaDataFields.scopes' => ['openid'],
                         'metaDataFields.secret' => 'test',
                         'metaDataFields.redirectUrls' => [
                             'uri1',
