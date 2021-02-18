@@ -202,12 +202,9 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
 
         // If the entity exists in Manage, use the scopes configured there.
-        if ($entity->isManageEntity()) {
+        if ($entity->isManageEntity() && $entity->getOidcClient()->getScope()) {
             // This prevents overwriting the scopes attribute. See: https://www.pivotaltracker.com/story/show/170868465
             $metadata['scopes'] = $entity->getOidcClient()->getScope();
-        } else {
-            // Will become configurable some time in the future.
-            $metadata['scopes'] = ['openid'];
         }
 
         $this->setExcludeFromPush($metadata, $entity);
