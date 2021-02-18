@@ -45,11 +45,6 @@ class ProtocolTest extends TestCase
             new Protocol('saml20'),
         ];
         yield [
-            new Protocol('oidc'),
-            new Protocol('oidcng'),
-            new Protocol('oidcng')
-        ];
-        yield [
             new Protocol('saml20'),
             new Protocol(null),
             new Protocol(null),

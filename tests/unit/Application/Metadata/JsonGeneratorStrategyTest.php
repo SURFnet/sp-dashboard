@@ -63,7 +63,6 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
         $this->strategy = new JsonGeneratorStrategy();
         $this->strategy->addStrategy('saml', $this->generator1);
-        $this->strategy->addStrategy('oidc', $this->generator2);
         $this->strategy->addStrategy('oidcng', $this->generator3);
     }
 
@@ -72,9 +71,6 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
         $entity = m::mock(ManageEntity::class);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
-        $this->strategy->generateForNewEntity($entity, 'prodaccepted');
-
-        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidc');
         $this->strategy->generateForNewEntity($entity, 'prodaccepted');
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
@@ -86,9 +82,6 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
         $entity = m::mock(ManageEntity::class);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
-        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
-
-        $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidc');
         $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
