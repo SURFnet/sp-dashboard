@@ -36,7 +36,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Service;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\ServiceList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
@@ -138,7 +137,7 @@ class ServiceController extends Controller
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
         // to display the oidc confirmation popup.
-        /** @var Entity $publishedEntity */
+        /** @var ManageEntity $publishedEntity */
         $publishedEntity = $this->get('session')->get('published.entity.clone');
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [
@@ -324,7 +323,7 @@ class ServiceController extends Controller
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
         // to display the oidc confirmation popup.
-        /** @var Entity $publishedEntity */
+        /** @var ManageEntity $publishedEntity */
         $publishedEntity = $this->get('session')->get('published.entity.clone');
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [

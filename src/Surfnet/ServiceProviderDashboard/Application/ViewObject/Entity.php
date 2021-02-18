@@ -19,7 +19,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

@@ -18,9 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 

@@ -46,8 +46,6 @@ class ValidMetadataUrlValidatorTest extends ConstraintValidatorTestCase
     protected function createValidator()
     {
         $this->mockHandler = new MockHandler();
-        $this->repository = m::mock(EntityRepository::class);
-
         return new ValidMetadataUrlValidator();
     }
 

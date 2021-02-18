@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -173,7 +172,7 @@ class OidcngJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
+     * @param ManageEntity $entity
      * @return array
      */
     private function generateMetadataFields(ManageEntity $entity)

@@ -28,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryP
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
@@ -111,39 +110,6 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param int $id
-     * @return Entity|null
-     */
-    public function getEntityById($id)
-    {
-        $entity = $this->queryRepositoryProvider->getEntityRepository()->findById($id);
-        $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
-        $entity->setService($service);
-        if ($entity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            // Load the Possibly connected resource servers
-            $resourceServers = [];
-            switch ($entity->getEnvironment()) {
-                case Constants::ENVIRONMENT_TEST:
-                    foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
-                        $resourceServers[] = $this->queryRepositoryProvider
-                            ->getManageTestQueryClient()
-                            ->findByEntityId($clientId, $this->testManageConfig->getPublicationStatus()->getStatus());
-                    }
-                    break;
-                case Constants::ENVIRONMENT_PRODUCTION:
-                    foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
-                        $resourceServers[] = $this->queryRepositoryProvider
-                            ->getManageProductionQueryClient()
-                            ->findByEntityId($clientId, $this->prodManageConfig->getPublicationStatus()->getStatus());
-                    }
-                    break;
-            }
-            $entity->setOidcngResourceServers(new ResourceServerCollection($resourceServers));
-        }
-        return $entity;
-    }
-
-    /**
      * @param string $id
      * @param string $manageTarget
      * @param Service $service
@@ -214,11 +180,6 @@ class EntityService implements EntityServiceInterface
     {
         $entities = [];
 
-        $draftEntities = $this->findDraftEntitiesByServiceId($service->getId());
-        foreach ($draftEntities as $entity) {
-            $entities[] = EntityDto::fromEntity($entity);
-        }
-
         $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
         foreach ($testEntities as $result) {
             $entities[] = EntityDto::fromManageTestResult($result);
@@ -252,17 +213,6 @@ class EntityService implements EntityServiceInterface
         $entity->setService($service);
         $this->updateStatus($entity);
         return $entity;
-    }
-
-    /**
-     * @param int $serviceId
-     * @return Entity[]
-     */
-    private function findDraftEntitiesByServiceId($serviceId)
-    {
-        return $this->queryRepositoryProvider
-            ->getEntityRepository()
-            ->findByServiceId($serviceId);
     }
 
     /**
