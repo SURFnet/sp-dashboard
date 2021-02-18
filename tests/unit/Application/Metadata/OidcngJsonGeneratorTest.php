@@ -93,6 +93,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'description:nl' => 'description nl',
                         'grants' => [
                             'authorization_code',
+                            'refresh_token',
+                        ],
+                        'scopes' => [
+                            'oidc',
                         ],
                         'isPublicClient' => true,
                         'name:en' => 'name en',
@@ -170,7 +174,9 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         ],
                         'metaDataFields.grants' => [
                             'authorization_code',
+                            'refresh_token',
                         ],
+                        'metaDataFields.scopes' => ['oidc'],
                         'metaDataFields.isPublicClient' => true,
                         'revisionnote' => 'revisionnote',
                         'state' => 'testaccepted',

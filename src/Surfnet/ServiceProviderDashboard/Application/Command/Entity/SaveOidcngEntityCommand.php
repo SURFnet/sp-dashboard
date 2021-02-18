@@ -94,21 +94,16 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $redirectUrls;
 
     /**
-     * @var array
-     */
-    private $scopes = ['openid'];
-
-    /**
      * @var bool
      */
     private $isPublicClient;
 
     /**
-     * @var string $grantType defaults to OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE
+     * @var array $grants defaults to OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE
      *
      * @Assert\NotBlank()
      */
-    private $grantType = OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE;
+    private $grants = [OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE];
 
     /**
      * @var int
@@ -940,14 +935,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @return array
-     */
-    public function getScopes()
-    {
-        return $this->scopes;
-    }
-
-    /**
      * @return bool
      */
     public function isPublicClient()
@@ -998,17 +985,17 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return OidcGrantType
      */
-    public function getGrantType()
+    public function getGrants()
     {
-        return $this->grantType;
+        return $this->grants;
     }
 
     /**
-     * @param OidcGrantType $grantType
+     * @param OidcGrantType $grants
      */
-    public function setGrantType($grantType)
+    public function setGrants($grants)
     {
-        $this->grantType = $grantType;
+        $this->grants = $grants;
     }
 
     /**

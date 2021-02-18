@@ -35,7 +35,7 @@ class OidcngResourceServerClient implements OidcClientInterface
     /**
      * @var string
      */
-    private $grantType;
+    private $grants;
     /**
      * @var array
      */
@@ -45,19 +45,19 @@ class OidcngResourceServerClient implements OidcClientInterface
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $grantType = isset($data['data']['metaDataFields']['grants'])
-            ? reset($data['data']['metaDataFields']['grants']) : '';
+        $grants = isset($data['data']['metaDataFields']['grants'])
+            ? $data['data']['metaDataFields']['grants'] : [];
         $scope = isset($data['data']['metaDataFields']['scopes']) ? $data['data']['metaDataFields']['scopes'] : '';
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
-        Assert::string($grantType);
+        Assert::isArray($grants);
         Assert::isArray($scope);
 
         return new self(
             $clientId,
             $clientSecret,
-            $grantType,
+            $grants,
             $scope
         );
     }
@@ -65,12 +65,12 @@ class OidcngResourceServerClient implements OidcClientInterface
     public function __construct(
         string $clientId,
         ?string $clientSecret,
-        ?string $grantType,
+        array $grants,
         array $scope
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
-        $this->grantType = $grantType;
+        $this->grants = $grants;
         $this->scope = $scope;
     }
 
@@ -90,12 +90,9 @@ class OidcngResourceServerClient implements OidcClientInterface
         return $this->clientSecret;
     }
 
-    /**
-     * @return string
-     */
-    public function getGrantType()
+    public function getGrants(): array
     {
-        return $this->grantType;
+        return $this->grants;
     }
 
     /**
@@ -152,7 +149,7 @@ class OidcngResourceServerClient implements OidcClientInterface
     {
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
-        $this->grantType = is_null($client->getGrantType()) ? null : $client->getGrantType();
+        $this->grants = is_null($client->getGrants()) ? null : $client->getGrants();
         $this->scope = is_null($client->getScope()) ? null : $client->getScope();
     }
 }

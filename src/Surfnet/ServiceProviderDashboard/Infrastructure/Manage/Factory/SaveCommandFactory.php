@@ -128,7 +128,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
         // OidcNg settings
         $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
-        $command->setGrantType($manageEntity->getOidcClient()->getGrantType());
+        $command->setGrants($manageEntity->getOidcClient()->getGrants());
 
         // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
         $command->setSubjectType($metaData->getNameIdFormat());

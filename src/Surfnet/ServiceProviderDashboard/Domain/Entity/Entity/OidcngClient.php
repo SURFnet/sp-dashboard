@@ -18,12 +18,20 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
+use function array_diff;
+use function array_intersect;
 use function is_null;
 
 class OidcngClient implements OidcClientInterface
 {
+    const FORM_MANAGED_GRANTS = [
+        'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
+        'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT
+    ];
+
     /**
      * @var string
      */
@@ -37,9 +45,9 @@ class OidcngClient implements OidcClientInterface
      */
     private $redirectUris;
     /**
-     * @var string
+     * @var array
      */
-    private $grantType;
+    private $grants;
     /**
      * @var array
      */
@@ -65,7 +73,7 @@ class OidcngClient implements OidcClientInterface
         $scope = self::getStringOrNull($data['data']['metaDataFields'], 'scopes');
 
         $grantType = isset($data['data']['metaDataFields']['grants'])
-            ? reset($data['data']['metaDataFields']['grants']) : '';
+            ? $data['data']['metaDataFields']['grants'] : [];
         $isPublicClient = isset($data['data']['metaDataFields']['isPublicClient'])
             ? $data['data']['metaDataFields']['isPublicClient'] : true;
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
@@ -75,7 +83,7 @@ class OidcngClient implements OidcClientInterface
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
         Assert::isArray($redirectUris);
-        Assert::string($grantType);
+        Assert::isArray($grantType);
         Assert::nullOrIsArray($scope);
         Assert::boolean($isPublicClient);
         Assert::numeric($accessTokenValidity);
@@ -100,7 +108,7 @@ class OidcngClient implements OidcClientInterface
         string $clientId,
         string $clientSecret,
         array $redirectUris,
-        string $grantType,
+        array $grants,
         ?array $scope,
         bool $isPublicClient,
         int $accessTokenValidity,
@@ -109,7 +117,7 @@ class OidcngClient implements OidcClientInterface
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUris = $redirectUris;
-        $this->grantType = $grantType;
+        $this->grants = $grants;
         $this->scope = $scope;
         $this->isPublicClient = $isPublicClient;
         $this->accessTokenValidity = $accessTokenValidity;
@@ -170,12 +178,9 @@ class OidcngClient implements OidcClientInterface
         return $this->redirectUris;
     }
 
-    /**
-     * @return string
-     */
-    public function getGrantType()
+    public function getGrants(): array
     {
-        return $this->grantType;
+        return $this->grants;
     }
 
     /**
@@ -225,10 +230,21 @@ class OidcngClient implements OidcClientInterface
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
         $this->redirectUris = is_null($client->getRedirectUris()) ? null : $client->getRedirectUris();
-        $this->grantType = is_null($client->getGrantType()) ? null : $client->getGrantType();
+        $this->mergeGrants($client->getGrants());
         $this->scope = is_null($client->getScope()) ? null : $client->getScope();
         $this->isPublicClient = is_null($client->isPublicClient()) ? null : $client->isPublicClient();
         $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
         $this->resourceServers = is_null($client->getResourceServers()) ? null : $client->getResourceServers();
+    }
+
+    /**
+     * Remove the form managed grants from the Manage grants, and reset them with the grants selected on the form
+     * @param array $formGrants
+     */
+    private function mergeGrants(array $formGrants)
+    {
+        $manageGrants = $this->grants;
+        $manageGrants = array_diff($manageGrants, self::FORM_MANAGED_GRANTS);
+        $this->grants = array_merge($manageGrants, $formGrants);
     }
 }

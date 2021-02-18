@@ -118,8 +118,8 @@ class EntityMergeService
                 $command->getClientId(),
                 $secret->getSecret(),
                 $this->buildRedirectUrls($command),
-                $command->getGrantType(),
-                $command->getScopes(),
+                $command->getGrants(),
+                null,
                 $command->isPublicClient(),
                 $command->getAccessTokenValidity(),
                 $command->getOidcngResourceServers()

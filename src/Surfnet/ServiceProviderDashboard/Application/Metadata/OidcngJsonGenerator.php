@@ -204,6 +204,8 @@ class OidcngJsonGenerator implements GeneratorInterface
         if ($entity->isManageEntity() && $entity->getOidcClient()->getScope()) {
             // This prevents overwriting the scopes attribute. See: https://www.pivotaltracker.com/story/show/170868465
             $metadata['scopes'] = $entity->getOidcClient()->getScope();
+        } else {
+            $metadata['scopes'] = ['oidc'];
         }
 
         $this->setExcludeFromPush($metadata, $entity);
@@ -231,7 +233,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             }
             // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
             $metadata['redirectUrls'] = $entity->getOidcClient()->getRedirectUris();
-            $metadata['grants'] = [$entity->getOidcClient()->getGrantType()];
+            $metadata['grants'] = $entity->getOidcClient()->getGrants();
             $metadata['accessTokenValidity'] = $entity->getOidcClient()->getAccessTokenValidity();
             $metadata['isPublicClient'] = $entity->getOidcClient()->isPublicClient();
         }

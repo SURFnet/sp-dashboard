@@ -77,11 +77,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     private $secret;
 
     /**
-     * @var array
-     */
-    private $scopes = ['openid'];
-
-    /**
      * @var string
      * @Assert\NotBlank()
      */
