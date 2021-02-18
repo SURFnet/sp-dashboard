@@ -134,14 +134,9 @@ class SaveOidcngEntityCommandHandler implements CommandHandler
         $entity->setScopedAffiliationAttribute($command->getScopedAffiliationAttribute());
         $entity->setComments($command->getComments());
 
-        // OrganizationName and OrganizationDisplayName are tracked on the Service
+        // OrganizationName is tracked on the Service
         $entity->setOrganizationNameNl($entity->getService()->getOrganizationNameNl());
         $entity->setOrganizationNameEn($entity->getService()->getOrganizationNameEn());
-        $entity->setOrganizationDisplayNameNl($entity->getService()->getOrganizationDisplayNameNl());
-        $entity->setOrganizationDisplayNameEn($entity->getService()->getOrganizationDisplayNameEn());
-
-        $entity->setOrganizationUrlNl($command->getOrganizationUrlNl());
-        $entity->setOrganizationUrlEn($command->getOrganizationUrlEn());
         $entity->setOidcngResourceServers(new ResourceServerCollection($command->getOidcngResourceServers()));
 
         $this->repository->save($entity);

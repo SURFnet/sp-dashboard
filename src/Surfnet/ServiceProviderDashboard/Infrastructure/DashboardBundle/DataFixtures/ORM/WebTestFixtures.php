@@ -58,8 +58,6 @@ class WebTestFixtures extends Fixture
         $service->setGuid(Uuid::uuid4());
         $service->setInstitutionId(Uuid::uuid4());
         $service->setGuid(Uuid::uuid4());
-        $service->setOrganizationDisplayNameEn($name);
-        $service->setOrganizationDisplayNameNl($name);
         $service->setOrganizationNameEn($name);
         $service->setOrganizationNameNl($name);
         return $service;

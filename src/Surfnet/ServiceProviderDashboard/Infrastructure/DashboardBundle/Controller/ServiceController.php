@@ -218,9 +218,7 @@ class ServiceController extends Controller
             $this->serviceStatusService->hasPrivacyQuestions($service),
             $service->getInstitutionId(),
             $service->getOrganizationNameNl(),
-            $service->getOrganizationNameEn(),
-            $service->getOrganizationDisplayNameNl(),
-            $service->getOrganizationDisplayNameEn()
+            $service->getOrganizationNameEn()
         );
 
         $form = $this->createForm(EditServiceType::class, $command);

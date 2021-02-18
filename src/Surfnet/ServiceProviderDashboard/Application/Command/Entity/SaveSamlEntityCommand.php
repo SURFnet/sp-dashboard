@@ -329,16 +329,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      */
-    private $organizationUrlNl;
-
-    /**
-     * @var string
-     */
-    private $organizationUrlEn;
-
-    /**
-     * @var string
-     */
     private $manageId;
 
     public function __construct()
@@ -913,38 +903,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     public function hasNameIdFormat()
     {
         return !empty($this->nameIdFormat);
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlNl(): ?string
-    {
-        return $this->organizationUrlNl;
-    }
-
-    /**
-     * @param string $organizationUrlNl
-     */
-    public function setOrganizationUrlNl($organizationUrlNl)
-    {
-        $this->organizationUrlNl = $organizationUrlNl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlEn(): ?string
-    {
-        return $this->organizationUrlEn;
-    }
-
-    /**
-     * @param string $organizationUrlEn
-     */
-    public function setOrganizationUrlEn($organizationUrlEn)
-    {
-        $this->organizationUrlEn = $organizationUrlEn;
     }
 
     public function isForProduction()

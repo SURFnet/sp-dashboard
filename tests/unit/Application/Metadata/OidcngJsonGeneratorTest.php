@@ -104,11 +104,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'contacts:0:emailAddress' => 'emailaddress',
                         'contacts:0:telephoneNumber' => 'telephonenumber',
                         'OrganizationName:en' => 'orgen',
-                        'OrganizationDisplayName:en' => 'orgdisen',
-                        'OrganizationURL:en' => 'http://orgen',
                         'OrganizationName:nl' => 'orgnl',
-                        'OrganizationDisplayName:nl' => 'orgdisnl',
-                        'OrganizationURL:nl' => 'http://orgnl',
                         'privacy' => 'privacy',
                         'redirectUrls' => [
                             'uri1',
@@ -164,11 +160,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
                         'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
                         'metaDataFields.OrganizationName:en' => 'orgen',
-                        'metaDataFields.OrganizationDisplayName:en' => 'orgdisen',
-                        'metaDataFields.OrganizationURL:en' => 'http://orgen',
                         'metaDataFields.OrganizationName:nl' => 'orgnl',
-                        'metaDataFields.OrganizationDisplayName:nl' => 'orgdisnl',
-                        'metaDataFields.OrganizationURL:nl' => 'http://orgnl',
                         'metaDataFields.privacy' => 'privacy',
                         'metaDataFields.secret' => 'test',
                         'metaDataFields.redirectUrls' => [

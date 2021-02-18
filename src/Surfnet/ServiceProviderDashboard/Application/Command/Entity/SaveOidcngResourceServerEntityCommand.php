@@ -141,16 +141,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @var string
      */
-    private $organizationUrlNl;
-
-    /**
-     * @var string
-     */
-    private $organizationUrlEn;
-
-    /**
-     * @var string
-     */
     private $manageId;
 
     public function __construct()
@@ -385,38 +375,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     public function setComments($comments)
     {
         $this->comments = $comments;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlNl(): ?string
-    {
-        return $this->organizationUrlNl;
-    }
-
-    /**
-     * @param string $organizationUrlNl
-     */
-    public function setOrganizationUrlNl($organizationUrlNl)
-    {
-        $this->organizationUrlNl = $organizationUrlNl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrganizationUrlEn(): ?string
-    {
-        return $this->organizationUrlEn;
-    }
-
-    /**
-     * @param string $organizationUrlEn
-     */
-    public function setOrganizationUrlEn($organizationUrlEn)
-    {
-        $this->organizationUrlEn = $organizationUrlEn;
     }
 
     public function isForProduction()

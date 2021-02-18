@@ -58,8 +58,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setIntakeStatus('yes');
         $service->setSurfconextRepresentativeApproved('yes');
         $service->setContractSigned('yes');
-        $service->setOrganizationDisplayNameEn('Organization Display Name EN');
-        $service->setOrganizationDisplayNameNl('Organization Display Name NL');
         $service->setOrganizationNameEn('Organization Name EN');
         $service->setOrganizationNameNl('Organization Name NL');
 
@@ -69,8 +67,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setGuid($service->getGuid());
         $command->setPrivacyQuestionsEnabled($service->isPrivacyQuestionsEnabled());
         $command->setProductionEntitiesEnabled($service->isProductionEntitiesEnabled());
-        $command->setOrganizationDisplayNameEn($service->getOrganizationDisplayNameEn());
-        $command->setOrganizationDisplayNameNl($service->getOrganizationDisplayNameNl());
         $command->setOrganizationNameEn($service->getOrganizationNameEn());
         $command->setOrganizationNameNl($service->getOrganizationNameNl());
         $command->setServiceType($service->getServiceType());
@@ -103,8 +99,6 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setIntakeStatus('yes');
         $command->setSurfconextRepresentativeApproved('yes');
         $command->setContractSigned('yes');
-        $command->setOrganizationDisplayNameEn('Organization name');
-        $command->setOrganizationDisplayNameNl('Organization name');
         $command->setOrganizationNameEn('Organization name');
         $command->setOrganizationNameNl('Organization name');
 

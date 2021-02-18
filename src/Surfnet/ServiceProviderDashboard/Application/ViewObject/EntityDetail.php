@@ -306,8 +306,6 @@ class EntityDetail
         $entityDetail->nameIdFormat = $entity->getMetaData()->getNameIdFormat();
         $entityDetail->organizationNameNl = $entity->getMetaData()->getOrganization()->getNameNl();
         $entityDetail->organizationNameEn = $entity->getMetaData()->getOrganization()->getNameEn();
-        $entityDetail->organizationDisplayNameNl = $entity->getMetaData()->getOrganization()->getDisplayNameNl();
-        $entityDetail->organizationDisplayNameEn = $entity->getMetaData()->getOrganization()->getDisplayNameEn();
         $entityDetail->organizationUrlNl = $entity->getMetaData()->getOrganization()->getUrlNl();
         $entityDetail->organizationUrlEn = $entity->getMetaData()->getOrganization()->getUrlEn();
 

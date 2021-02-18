@@ -38,8 +38,6 @@ class EditServiceTest extends WebTestCase
                     'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',
                     'name' => 'The A Team',
                     'teamName' => 'team-a',
-                    'organizationDisplayNameNl' => 'team-a',
-                    'organizationDisplayNameEn' => 'team-a',
                     'organizationNameNl' => 'team-a',
                     'organizationNameEn' => 'team-a',
                 ]

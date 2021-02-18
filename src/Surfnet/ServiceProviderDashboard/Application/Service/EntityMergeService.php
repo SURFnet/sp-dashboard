@@ -198,11 +198,11 @@ class EntityMergeService
     {
         return new Organization(
             $command->getService()->getOrganizationNameEn(),
-            $command->getService()->getOrganizationDisplayNameEn(),
-            $command->getOrganizationUrlEn(),
+            null,
+            null,
             $command->getService()->getOrganizationNameNl(),
-            $command->getService()->getOrganizationDisplayNameNl(),
-            $command->getOrganizationUrlNl()
+            null,
+            null
         );
     }
 
