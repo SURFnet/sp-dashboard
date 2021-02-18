@@ -138,6 +138,32 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $this->assertEquals('Successfully published the entity to test', $pageTitle);
     }
 
+
+    public function test_attribute_is_not_required()
+    {
+        $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
+        $formData = $this->buildValidFormData();
+        unset($formData['dashboard_bundle_entity_type']['attributes']);
+
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        // The form is now redirected to the list view
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect to the published "thank you" endpoint'
+        );
+
+        $crawler = $this->client->followRedirect();
+        $pageTitle = $crawler->filter('h1')->first()->text();
+        $this->assertEquals('Successfully published the entity to test', $pageTitle);
+    }
+
     public function test_it_stays_on_create_action_when_publish_failed()
     {
         // Register an enitty with the same entity id.
