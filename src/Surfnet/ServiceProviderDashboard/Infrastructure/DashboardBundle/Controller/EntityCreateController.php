@@ -28,10 +28,10 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\CreateNewEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -90,32 +90,45 @@ class EntityCreateController extends Controller
      * @param string $inputId
      * @return array|RedirectResponse
      */
-    public function typeAction(Request $request, $serviceId, $targetEnvironment, string $inputId)
+    public function typeAction(Request $request, $serviceId, string $targetEnvironment, string $inputId)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
-
         $choices = $this->protocolChoiceFactory->buildOptions();
+        $formId = $targetEnvironment . '_' . $service->getGuid();
 
-        $command = new ChooseEntityTypeCommand();
-        $command->setProtocolChoices($choices);
-
-        $form = $this->createForm(ChooseEntityTypeType::class, $command);
-
-        // Todo: Temporary solution: when handling a production form, handle the form with the correct form count, this
-        // is achieved by making a second instance of the form.
-        // This could be fixed by replacing the two forms by just one. This entails loading of conditional entity type
-        // choices. And this is out of scope for now.
-        if ($request->request->has('dashboard_bundle_choose_entity_type_1')) {
-            $form = $this->createForm(ChooseEntityTypeType::class, $command);
-        }
+        $entityList = $this->entityService
+            ->getEntityListForService($service)
+            ->sortEntitiesByEnvironment()
+            ->getEntities();
+        $form = $this->createForm(CreateNewEntityType::class, $formId);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // forward to create action.
-            return $this->redirectToRoute('entity_add', [
+            $protocol = $request->get($formId . '_protocol');
+            $environment = $request->get($formId . '_environment');
+            $withTemplate = $request->get($formId . '_withtemplate');
+            $manageId = false;
+            $sourceEnvironment = null;
+
+            if ($withTemplate === 'yes') {
+                $template = explode('/', $request->get($formId . '_entityid/value'));
+                $manageId = $template[0];
+                $sourceEnvironment = $template[1];
+            }
+
+            if (!$manageId) {
+                return $this->redirectToRoute('entity_add', [
+                    'serviceId' => $service->getId(),
+                    'targetEnvironment' => $environment,
+                    'type' => $protocol
+                ]);
+            }
+
+            return $this->redirectToRoute('entity_copy', [
                 'serviceId' => $service->getId(),
-                'targetEnvironment' => $targetEnvironment,
-                'type' => $form->get('type')->getData()
+                'manageId' => $manageId,
+                'targetEnvironment' => $environment,
+                'sourceEnvironment' => $sourceEnvironment,
             ]);
         }
 
@@ -124,6 +137,10 @@ class EntityCreateController extends Controller
             'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
             'inputId' => $inputId,
+            'protocols' => $choices,
+            'productionEnabled' => $service->isProductionEntitiesEnabled(),
+            'entities' => $entityList,
+            'manageId' => $formId,
         ];
     }
 

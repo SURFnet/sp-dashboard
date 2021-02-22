@@ -581,3 +581,12 @@ entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute: Edu person targ
 entity.actions.modal.oidc_client_reset.title: Confirmation
 entity.actions.modal.oidc_client_reset.warning: This action cannot be undone
 entity.actions.modal.oidc_client_reset.info.html: <p>Are you sure you would like to reset the openid connect client secret.</p>
+entity.add.environment.title: Environment?
+entity.add.environment.production: production
+entity.add.environment.test: test
+entity.add.protocol.title: Protocol?
+entity.add.template.title: From template?
+entity.add.template.no: No, create blank registration form.
+entity.add.template.yes: Yes
+entity.add.create: Create
+entity.add.cancel: Cancel

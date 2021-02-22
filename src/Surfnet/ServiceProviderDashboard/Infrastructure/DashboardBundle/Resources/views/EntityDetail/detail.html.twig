@@ -5,7 +5,6 @@
 
     <h1>{% block page_heading %}{{ 'entity.detail.title'|trans }}{% endblock %}</h1>
 
-    <h2>{{ isAdmin }}</h2>
     <div class="fieldset card action">
         {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions, isAdmin: isAdmin} %}
     </div>

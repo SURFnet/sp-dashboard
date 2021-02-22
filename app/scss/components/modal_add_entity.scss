@@ -1,0 +1,77 @@
+.add-entity-yes {
+  align-self: flex-start;
+}
+
+.add-entity-field {
+  display: flex;
+}
+
+.modal.add-entity-modal {
+  max-width: 75ch;
+
+  fieldset.add-entity-fieldset {
+    div:not(.add-entity-field) {
+      margin-bottom: 0;
+    }
+
+    .add-entity-field {
+      margin-bottom: 1rem;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.add-entity-fieldset {
+  display: flex;
+  padding: 1.5rem 0;
+
+  &:first-of-type {
+    padding-top: 0;
+  }
+}
+
+.add-entity-protocol {
+  border-bottom: 1px solid $black;
+}
+
+.add-entity-fieldset-fields {
+  margin-left: 2rem;
+}
+
+.add-entity-question {
+  color: $black;
+  font-weight: 700;
+  min-width: 130px;
+}
+
+.add-entity-radio {
+  color: $black;
+
+  &:disabled, &:disabled + label {
+    cursor: not-allowed;
+    filter: grayscale(100%);
+    opacity: .6;
+  }
+}
+
+.entity-type form fieldset.add-entity-fieldset .add-entity-field label.add-entity-label {
+  color: $black;
+}
+
+form.add-entity fieldset.add-entity-fieldset .add-entity-field .add-entity-radio:disabled + .add-entity-label {
+  cursor: not-allowed;
+  filter: grayscale(100%);
+  opacity: .6;
+}
+
+.add-entity-yes ~ .add-entity-template-choices {
+  display: none;
+  margin-left: 1rem;
+}
+
+.add-entity-yes:checked ~ .add-entity-template-choices {
+  display: block;
+}
