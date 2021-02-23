@@ -24,7 +24,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -77,7 +76,7 @@ class EntityPublishedController extends Controller
      */
     public function oidcConfirmationModalAction()
     {
-        /** @var Entity $entity */
+        /** @var ManageEntity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
 
         // Show the confirmation modal only once in this request

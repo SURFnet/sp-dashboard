@@ -57,24 +57,6 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand }
 
-    surfnet.dashboard.command_handler.edit_saml_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveSamlEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand }
-
-    surfnet.dashboard.command_handler.edit_oidcng_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand }
-
-    surfnet.dashboard.command_handler.edit_oidcng_rs_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\SaveOidcngResourceServerEntityCommandHandler
-        public: true
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand }
-
     surfnet.dashboard.command_handler.edit_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\EditServiceCommandHandler
         public: true
@@ -220,10 +202,6 @@ services:
     Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
         arguments:  ['%kernel.root_dir%/Resources']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository:
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Entity]
-
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
         factory: ['@doctrine', 'getRepository']
         arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions]
@@ -258,7 +236,6 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityIdValidator:
         arguments:
             - '@surfnet.manage.query_service'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
         tags:
             - { name: validator.constraint_validator, alias: unique_entity_id }
 
@@ -313,7 +290,6 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
 
@@ -323,7 +299,6 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider:
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
 
@@ -423,13 +398,6 @@ services:
         arguments:
             $oidcPlaygroundUriTest: '%playground_uri_test%'
             $oidcPlaygroundUriProd: '%playground_uri_prod%'
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Console\CleanOldProductionEntitiesCommand
-        arguments:
-          - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\EntityRepository'
-          - '@surfnet.manage.client.query_client.prod_environment'
-        tags: ['console.command']
 
     Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory:
         arguments:

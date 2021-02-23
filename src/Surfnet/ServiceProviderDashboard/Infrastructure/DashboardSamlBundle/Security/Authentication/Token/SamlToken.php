@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token;
 
 use SAML2\Assertion;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Role\Role;

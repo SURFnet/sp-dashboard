@@ -21,16 +21,10 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Provider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageQueryClient;
 
 class EntityQueryRepositoryProviderTest extends MockeryTestCase
 {
-    /**
-     * @var EntityRepository
-     */
-    private $entityRepository;
-
     /**
      * @var ManageQueryClient
      */
@@ -49,12 +43,10 @@ class EntityQueryRepositoryProviderTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->entityRepository = m::mock(EntityRepository::class);
         $this->manageTestQueryClient = m::mock(ManageQueryClient::class);
         $this->manageProductionQueryClient = m::mock(ManageQueryClient::class);
 
         $this->provider = new EntityQueryRepositoryProvider(
-            $this->entityRepository,
             $this->manageTestQueryClient,
             $this->manageProductionQueryClient
         );
@@ -68,18 +60,15 @@ class EntityQueryRepositoryProviderTest extends MockeryTestCase
         $this->assertEquals($this->manageProductionQueryClient, $productionClient);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage  Unsupported environment "fest" requested
-     */
     public function test_reject_invalid_environment()
     {
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unsupported environment \"fest\" requested");
         $this->provider->fromEnvironment('fest');
     }
 
     public function test_getters()
     {
-        $this->assertInstanceOf(EntityRepository::class, $this->provider->getEntityRepository());
         $this->assertInstanceOf(ManageQueryClient::class, $this->provider->getManageProductionQueryClient());
         $this->assertInstanceOf(ManageQueryClient::class, $this->provider->getManageTestQueryClient());
     }

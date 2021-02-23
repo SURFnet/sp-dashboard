@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
@@ -143,11 +142,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return $flatFields;
     }
 
-    /**
-     * @param Entity $entity
-     * @return array
-     */
-    private function generateMetadataFields(ManageEntity $entity)
+    private function generateMetadataFields(ManageEntity $entity): array
     {
         $metadata = array_merge(
             [

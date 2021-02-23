@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -221,11 +220,7 @@ class JsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param Entity $entity
-     * @return array
-     */
-    private function generateCertDataMetadata(ManageEntity $entity)
+    private function generateCertDataMetadata(ManageEntity $entity): array
     {
         $metadata = [];
         if (!empty($entity->getMetaData()->getCertData())) {

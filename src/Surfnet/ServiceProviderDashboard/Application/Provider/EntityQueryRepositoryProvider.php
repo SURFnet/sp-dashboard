@@ -20,16 +20,10 @@ namespace Surfnet\ServiceProviderDashboard\Application\Provider;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 
 class EntityQueryRepositoryProvider
 {
-    /**
-     * @var EntityRepository
-     */
-    private $entityRepository;
-
     /**
      * @var QueryEntityRepository
      */
@@ -42,11 +36,9 @@ class EntityQueryRepositoryProvider
 
 
     public function __construct(
-        EntityRepository $entityRepository,
         QueryEntityRepository $manageTestQueryClient,
         QueryEntityRepository $manageProductionQueryClient
     ) {
-        $this->entityRepository = $entityRepository;
         $this->manageTestQueryClient = $manageTestQueryClient;
         $this->manageProductionQueryClient = $manageProductionQueryClient;
     }
@@ -61,11 +53,6 @@ class EntityQueryRepositoryProvider
             default:
                 throw new InvalidArgumentException(sprintf('Unsupported environment "%s" requested.', $environment));
         }
-    }
-
-    public function getEntityRepository(): EntityRepository
-    {
-        return $this->entityRepository;
     }
 
     public function getManageTestQueryClient(): QueryEntityRepository

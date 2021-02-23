@@ -19,13 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;

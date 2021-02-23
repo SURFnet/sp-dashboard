@@ -31,12 +31,6 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 {
-
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
-
     /**
      * @var m\MockInterface&ManageQueryService
      */
@@ -50,19 +44,13 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        $this->repository = m::mock(EntityRepository::class);
-
         $this->queryService = m::mock(ManageQueryService::class);
 
-        return new UniqueEntityIdValidator(
-            $this->queryService,
-            $this->repository
-        );
+        return new UniqueEntityIdValidator($this->queryService);
     }
 
     public function test_success()
     {
-
         $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andReturn(null);
 
         $entityCommand = m::mock(SaveSamlEntityCommand::class);
@@ -70,9 +58,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
         $entityCommand->shouldReceive('getManageId')->andReturn(1);
 
         $this->mockFormData($entityCommand);
-
-        $this->repository->shouldReceive('findById')
-            ->andReturn(null);
 
         $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
 
@@ -88,10 +73,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
         $entityCommand->shouldReceive('getManageId')->andReturn(1);
 
         $this->mockFormData($entityCommand);
-
-        $this->repository->shouldReceive('findById')
-            ->andReturn(null);
-
         $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
 
         $this->assertNoViolation();
@@ -107,10 +88,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
         $entityCommand->shouldReceive('getManageId')->andReturn('11111');
 
         $this->mockFormData($entityCommand);
-
-        $this->repository->shouldReceive('findById')
-            ->andReturn(null);
-
         $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
 
         $violations = $this->context->getViolations();
@@ -132,9 +109,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
         $this->mockFormData($entityCommand);
 
-        $this->repository->shouldReceive('findById')
-            ->andReturn(null);
-
         $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
 
         $violations = $this->context->getViolations();
@@ -155,9 +129,6 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
         $entityCommand->shouldReceive('getManageId')->andReturn(1);
 
         $this->mockFormData($entityCommand);
-
-        $this->repository->shouldReceive('findById')
-            ->andReturn(null);
 
         $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
 

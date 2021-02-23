@@ -28,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFac
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -23,12 +23,10 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 
 class LoadEntityServiceTest extends MockeryTestCase
@@ -37,11 +35,6 @@ class LoadEntityServiceTest extends MockeryTestCase
      * @var LoadEntityService
      */
     private $copyService;
-
-    /**
-     * @var EntityRepository|m\Mock
-     */
-    private $entityRepository;
 
     /**
      * @var ManageClient
@@ -72,7 +65,6 @@ class LoadEntityServiceTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->entityRepository = m::mock(EntityRepository::class);
         $this->manageTestClient = m::mock(ManageClient::class);
         $this->manageProdClient = m::mock(ManageClient::class);
         $this->attributesMetadataRepository = m::mock(AttributesMetadataRepository::class);
@@ -81,7 +73,6 @@ class LoadEntityServiceTest extends MockeryTestCase
         $this->service->setTeamName('testteam');
 
         $this->copyService = new LoadEntityService(
-            $this->entityRepository,
             $this->manageTestClient,
             $this->manageProdClient,
             $this->attributesMetadataRepository,
@@ -92,30 +83,8 @@ class LoadEntityServiceTest extends MockeryTestCase
         );
     }
 
-    public function test_service_works_on_new_entities_only()
-    {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(false);
-
-        $this->expectExceptionMessage("The id that was generated for the entity was not unique");
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->copyService->load(
-            'dashboardid',
-            'manageid',
-            $this->service,
-            Constants::ENVIRONMENT_TEST,
-            Constants::ENVIRONMENT_TEST
-        );
-    }
-
     public function test_handler_finds_remote_entity_in_manage()
     {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true);
-
         $this->manageTestClient->shouldReceive('findByManageId')
             ->with('manageid')
             ->andReturn([]);
@@ -134,10 +103,6 @@ class LoadEntityServiceTest extends MockeryTestCase
 
     public function test_handler_checks_access_rights_of_user()
     {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true);
-
         $manageEntity = m::mock(ManageEntity::class);
 
         $coin = m::mock(Coin::class);
@@ -171,23 +136,6 @@ class LoadEntityServiceTest extends MockeryTestCase
 
     public function test_handler_loads_metadata_onto_new_entity_test()
     {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true);
-
-        $this->entityRepository->shouldReceive('save')
-            ->with((\Mockery::on(function ($savedEntity) {
-                /** @var $savedEntity Entity|null */
-                $this->assertTrue($savedEntity->getEduPersonTargetedIDAttribute()->isRequested());
-                $this->assertTrue($savedEntity->getPrincipleNameAttribute()->isRequested());
-                $this->assertTrue($savedEntity->getDisplayNameAttribute()->isRequested());
-                $this->assertEquals('test1', $savedEntity->getEduPersonTargetedIDAttribute()->getMotivation());
-                $this->assertEquals('test2', $savedEntity->getPrincipleNameAttribute()->getMotivation());
-                $this->assertEquals('test3', $savedEntity->getDisplayNameAttribute()->getMotivation());
-
-                return true;
-            })));
-
         $manageDto = ManageEntity::fromApiResponse([
             'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
             'type' => 'saml20_sp',
@@ -274,23 +222,6 @@ JSON
 
     public function test_handler_loads_metadata_onto_new_entity_prod()
     {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true);
-
-        $this->entityRepository->shouldReceive('save')
-            ->with((\Mockery::on(function ($savedEntity) {
-                /** @var $savedEntity Entity|null */
-                $this->assertTrue($savedEntity->getEduPersonTargetedIDAttribute()->isRequested());
-                $this->assertTrue($savedEntity->getPrincipleNameAttribute()->isRequested());
-                $this->assertTrue($savedEntity->getDisplayNameAttribute()->isRequested());
-                $this->assertEquals('test1', $savedEntity->getEduPersonTargetedIDAttribute()->getMotivation());
-                $this->assertEquals('test2', $savedEntity->getPrincipleNameAttribute()->getMotivation());
-                $this->assertEquals('test3', $savedEntity->getDisplayNameAttribute()->getMotivation());
-
-                return true;
-            })));
-
         $manageDto = ManageEntity::fromApiResponse([
             'id' => '161438a5-50ae-49a6-8ce4-88ea44eef68d',
             'type' => 'saml20_sp',
@@ -377,12 +308,7 @@ JSON
 
     public function test_it_removes_resource_servers_on_copy_to_production()
     {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true);
-
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
-
         $this->manageTestClient->shouldReceive('findByManageId')
             ->with('manageid')
             ->andReturn($manageDto);
@@ -400,12 +326,6 @@ JSON
 
     public function test_it_keeps_resource_servers_on_copy_to_same_environment()
     {
-        $this->entityRepository
-            ->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true)
-            ->twice();
-
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
 
         $this->manageTestClient
@@ -441,11 +361,6 @@ JSON
 
     public function test_it_updates_the_client_id_on_copy_to_production()
     {
-        $this->entityRepository->shouldReceive('isUnique')
-            ->with('dashboardid')
-            ->andReturn(true)
-            ->twice();
-
         $manageDto = ManageEntity::fromApiResponse($this->getOidcNgRPMetadata());
 
         $this->manageTestClient->shouldReceive('findByManageId')

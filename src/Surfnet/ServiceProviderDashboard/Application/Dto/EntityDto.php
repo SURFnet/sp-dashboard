@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class EntityDto
@@ -69,12 +68,6 @@ class EntityDto
         $this->environment = $environment;
         $this->state = $state;
         $this->protocol = $protocol;
-    }
-
-
-    public static function fromEntity(Entity $entity)
-    {
-        return new self($entity->getId(), $entity->getEntityId(), $entity->getEnvironment(), $entity->getStatus(), $entity->getProtocol());
     }
 
     public static function fromManageTestResult(ManageEntity $manageResponse)
