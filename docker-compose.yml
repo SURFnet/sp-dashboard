@@ -18,9 +18,9 @@ services:
         aliases:
           - db.vm.openconext.org
           - manage.vm.openconext.org
-            #    volumes:
-            # - spdashboard_mysql:/var/lib/mysql
-        #     - spdashboard_mongo:/var/lib/mongo
+    volumes:
+      - spdashboard_mysql:/var/lib/mysql
+      - spdashboard_mongo:/var/lib/mongo
     ports:
       - "443:443"
     expose: 
@@ -58,6 +58,6 @@ services:
 networks:
   spdashboard:
 
-    #volumes:
-    #spdashboard_mysql:
-    #spdashboard_mongo:
+volumes:
+  spdashboard_mysql:
+  spdashboard_mongo:
