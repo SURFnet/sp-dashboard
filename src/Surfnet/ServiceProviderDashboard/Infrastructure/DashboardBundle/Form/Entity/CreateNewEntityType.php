@@ -18,15 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ChooseEntityTypeType extends AbstractType
+class CreateNewEntityType extends AbstractType
 {
-    private $formCount = 0;
+    private $id;
 
     /**
      * @param FormBuilderInterface $builder
@@ -34,31 +31,12 @@ class ChooseEntityTypeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->formCount++;
-
-        /** @var ChooseEntityTypeCommand $command */
-        $command = $builder->getData();
-        $choices = $command->getProtocolChoices();
-
-        $builder
-            ->add('type', ChoiceType::class, [
-                'choices' => $choices,
-                'choice_translation_domain' => true,
-                'label' => false,
-                'expanded' => true,
-                'multiple' => false,
-            ]);
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => ChooseEntityTypeCommand::class
-        ));
+        $this->id = $builder->getData();
     }
 
     public function getBlockPrefix()
     {
-        return 'dashboard_bundle_choose_entity_type_' . $this->formCount;
+        $prefix = 'dashboard_bundle_choose_entity_type_' . $this->id;
+        return $prefix;
     }
 }

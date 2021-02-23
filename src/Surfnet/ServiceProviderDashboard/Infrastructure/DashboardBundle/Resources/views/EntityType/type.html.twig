@@ -10,13 +10,7 @@
 
     <div class="row entity-type">
         {{ form_start(form, {'action': path('entity_type', {'serviceId': serviceId, 'targetEnvironment': environment, 'inputId': inputId})}) }}
-        {{ form_widget(form) }}
-
-        <div class="button-row">
-            <button type="submit" class="button pull-right blue">Create</button>
-            <label class="button pull-right" for="{{ inputId }}" rel="modal:close">Cancel</label>
-        </div>
-
+        {% include "@Dashboard/EntityModal/addEntityModal.html.twig" %}
         {{ form_end(form) }}
     </div>
 

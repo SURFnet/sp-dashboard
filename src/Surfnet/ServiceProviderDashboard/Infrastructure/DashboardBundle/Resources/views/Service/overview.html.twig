@@ -195,10 +195,10 @@
             </div>
             <div class="blocker">
                 {# todo: add aria-labelledby-id and aria-describedby-id #}
-                {% if (production_entities_enabled is defined and production_entities_enabled) or (productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0]) %}
-                    <div class="modal" role="dialog" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
+                {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
+                    <div class="modal add-entity-modal" role="dialog" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
                 {% endif %}
-                <div class="modal" role="dialog" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
+                <div class="modal add-entity-modal" role="dialog" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
             </div>
             <p class="service-status-back-to-top">
                 <a href="#main" class="service-status-back-to-top-link">
