@@ -1,0 +1,46 @@
+{
+  "id": "710c61af-411d-4bfb-af16-251d9f7b8027",
+  "version": 1,
+  "type": "oauth20_rs",
+  "revision": {
+    "number": 1,
+    "created": 1570441986.983,
+    "parentId": null,
+    "updatedBy": "urn:collab:person:example.com:admin",
+    "terminated": null
+  },
+  "data": {
+    "entityid": "test.oauth20_rs.example.com",
+    "state": "prodaccepted",
+    "metaDataFields": {
+      "name:en": "MijnUu app | Uu",
+      "secret": "$2a$10$DX5wtBQtWT3SkhJVzEeb1uBGOJyBjVNcsOFkoJtABKmd7tYxy9UQy",
+      "scopes": [
+        "openid"
+      ],
+      "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+      "contacts:2:givenName": "Test",
+      "contacts:1:surName": "Test",
+      "contacts:2:emailAddress": "test@uu.example.com",
+      "logo:0:width": 200,
+      "contacts:0:emailAddress": "test@uu.example.com",
+      "contacts:0:contactType": "technical",
+      "contacts:2:contactType": "administrative",
+      "contacts:1:contactType": "support",
+      "contacts:1:givenName": "Test",
+      "name:nl": "MijnUu app | Uu",
+      "description:en": "MijnUu app",
+      "coin:service_team_id": "team-UU",
+      "contacts:2:surName": "Test",
+      "description:nl": "MijnUu app",
+      "logo:0:url": "https://static.openconext.nl/media/sp/Uu.png",
+      "contacts:0:givenName": "Test",
+      "contacts:0:surName": "Test",
+      "contacts:1:emailAddress": "test@uu.example.com",
+      "logo:0:height": 160
+    },
+    "type": "oauth20_rs",
+    "revisionnote": "Some revision note",
+    "eid": 53
+  }
+}

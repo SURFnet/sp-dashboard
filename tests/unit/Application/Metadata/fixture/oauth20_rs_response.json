@@ -1,0 +1,44 @@
+{
+  "id": "manageId",
+  "type": "oauth20_rs",
+  "data": {
+    "entityid": "entityid",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "arp": {
+      "enabled": true,
+      "attributes": {
+        "urn:mace:dir:attribute-def:uid": [
+          {
+            "value": "*",
+            "source": "idp",
+            "motivation": ""
+          }
+        ]
+      }
+    },
+    "metaDataFields": {
+      "coin:institution_guid" : "96d75330-beed-11e7-8f1a-0800200c9a66",
+      "coin:service_team_id" : "urn:collab:group:test.example.com:test",
+      "contacts:1:contactType" : "support",
+      "contacts:1:emailAddress" : "emailaddress",
+      "contacts:1:givenName" : "givenname",
+      "contacts:1:surName" : "surname",
+      "contacts:1:telephoneNumber" : "telephonenumber",
+      "description:en" : "description en",
+      "description:nl" : "description nl",
+      "name:en" : "name en",
+      "name:nl" : "name nl",
+      "OrganizationName:en": "orgen",
+      "OrganizationDisplayName:en": "orgdisen",
+      "OrganizationURL:en": "http://orgen",
+      "OrganizationName:nl": "orgnl",
+      "OrganizationDisplayName:nl": "orgdisnl",
+      "OrganizationURL:nl": "http://orgnl",
+      "scopes" : [ "openid" ],
+      "secret" : "test"
+    },
+    "type": "oauth20-rs",
+    "revisionnote": "Some revision note"
+  }
+}

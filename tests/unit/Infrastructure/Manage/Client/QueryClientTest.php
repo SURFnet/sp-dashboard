@@ -25,6 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use function file_get_contents;
 
 class QueryClientTest extends MockeryTestCase
 {
@@ -56,7 +57,8 @@ class QueryClientTest extends MockeryTestCase
         $this->mockHandler
             ->append(
                 new Response(200, [], '[]'),
-                new Response(200, [], file_get_contents(__DIR__ . '/fixture/query_response.json'))
+                new Response(200, [], file_get_contents(__DIR__ . '/fixture/query_response.json')),
+                new Response(200, [], '[]')
             );
         $id = $this->client->findManageIdByEntityId('https://example.com/metadata');
         $this->assertEquals('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $id);
@@ -68,7 +70,8 @@ class QueryClientTest extends MockeryTestCase
         $this->mockHandler
             ->append(
                 new Response(200, [], '[]'),
-                new Response(200, [], file_get_contents(__DIR__ . '/fixture/read_response.json'))
+                new Response(200, [], file_get_contents(__DIR__ . '/fixture/read_response.json')),
+                new Response(200, [], '[]')
             );
         $response = $this->client->findByManageId('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33');
         $this->assertEquals('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $response->getId());
@@ -106,26 +109,29 @@ class QueryClientTest extends MockeryTestCase
                     [],
                     file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/search_oidc.json')
                 ),
+                # The oauth search endpoint is queried
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/search_oauth.json')
+                ),
                 # Next the oidc entities are retrieved from manage by id, first trying the SAML endpoint, then OIDC
-                new Response(404, [], '[]'),
                 new Response(
                     200,
                     [],
                     file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_oidc1.json')
                 ),
-                new Response(404, [], '[]'),
                 new Response(
                     200,
                     [],
                     file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_oidc2.json')
                 ),
-                new Response(404, [], '[]'),
                 new Response(
                     200,
                     [],
                     file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_oidc3.json')
                 ),
-                # Finally the SAML entities are loaded
+                # The SAML entities are loaded
                 new Response(
                     200,
                     [],
@@ -135,6 +141,12 @@ class QueryClientTest extends MockeryTestCase
                     200,
                     [],
                     file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_saml2.json')
+                ),
+                # The oauth20_rs entities are loaded
+                new Response(
+                    200,
+                    [],
+                    file_get_contents(__DIR__.'/fixture/search_result_overwrite_bug/read_response_oauth.json')
                 )
             );
         $response = $this->client->findByTeamName('team-UU', 'prodaccepted');
@@ -144,14 +156,15 @@ class QueryClientTest extends MockeryTestCase
         $this->assertEquals('oidcng', $response[2]->getProtocol()->getProtocol());
         $this->assertEquals('saml20', $response[3]->getProtocol()->getProtocol());
         $this->assertEquals('saml20', $response[4]->getProtocol()->getProtocol());
+        $this->assertEquals('oauth20_rs', $response[5]->getProtocol()->getProtocol());
 
-        $this->assertCount(5, $response);
+        $this->assertCount(6, $response);
     }
 
     public function test_it_can_query_non_existent_data()
     {
         // When the queried entityId does not exist, an empty array is returned
-        $this->mockHandler->append(new Response(200, [], '[]'), new Response(200, [], '[]'));
+        $this->mockHandler->append(new Response(200, [], '[]'), new Response(200, [], '[]'), new Response(200, [], '[]'));
         $response = $this->client->findByManageId('does-not-exists');
         $this->assertEmpty($response);
     }
@@ -163,12 +176,10 @@ class QueryClientTest extends MockeryTestCase
         $this->assertEquals($response, '<xml></xml>');
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
-     * @expectedExceptionMessage Unable to find entity with internal manage ID: "xyz"
-     */
     public function test_it_handles_failing_query_action()
     {
+        $this->expectExceptionMessage("Unable to find entity with internal manage ID: \"xyz\"");
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException::class);
         $this->mockHandler->append(new Response(418));
         $this->client->findByManageId('xyz');
     }

@@ -1,0 +1,15 @@
+[
+  {
+    "_id": "710c61af-411d-4bfb-af16-251d9f7b8028",
+    "version": 1,
+    "type": "oauth20_rs",
+    "data": {
+      "entityid": "test.oauth-rs.example.com",
+      "state": "prodaccepted",
+      "metaDataFields": {
+        "name:en": "Test 8 | UU",
+        "name:nl": "Test 8 | UU"
+      }
+    }
+  }
+]

@@ -72,20 +72,14 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
         $this->assertEquals(
             [
                 'data' => [
-                    'type' => 'oidc10-rp',
+                    'type' => 'oauth20_rs',
                     'state' => 'testaccepted',
                     'entityid' => 'entityid',
                     'active' => true,
-                    'allowedEntities' => [],
-                    'allowedall' => true,
                     'revisionnote' => 'revisionnote',
                     'metaDataFields' => [
                         'description:en' => 'description en',
                         'description:nl' => 'description nl',
-                        'grants' => [
-                            'client_credentials',
-                        ],
-                        'isResourceServer' => true,
                         'name:en' => 'name en',
                         'name:nl' => 'name nl',
                         'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent', // hardcoded
@@ -103,7 +97,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
                     ],
                 ],
-                'type' => 'oidc10_rp',
+                'type' => 'oauth20_rs',
             ],
             $data
         );
@@ -137,20 +131,15 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'metaDataFields.OrganizationName:nl' => 'orgnl',
                         'metaDataFields.scopes' => ['openid'],
                         'metaDataFields.secret' => 'test',
-                        'metaDataFields.grants' => [
-                            'client_credentials',
-                        ],
-                        'metaDataFields.isResourceServer' => true,
                         'state' => 'testaccepted',
-                        'allowedEntities' => [],
-                        'allowedall' => true,
                         'metaDataFields.privacy' => 'privacy',
                         'metaDataFields.coin:institution_id' => 'service-institution-id',
                         'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
                         'revisionnote' => 'revisionnote'
                     ),
-                'type' => 'oidc10_rp',
+                'type' => 'oauth20_rs',
                 'id' => 'manageId',
+                'active' => true,
             ),
             $data
         );
@@ -161,7 +150,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
         ?string $environment = null
     ): ManageEntity {
 
-        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oidc10_rp_response.json'), true));
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oauth20_rs_response.json'), true));
         $service = new Service();
         $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
         $service->setInstitutionId('service-institution-id');

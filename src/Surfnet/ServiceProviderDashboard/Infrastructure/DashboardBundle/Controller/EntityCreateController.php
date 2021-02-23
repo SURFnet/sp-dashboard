@@ -177,11 +177,6 @@ class EntityCreateController extends Controller
         $form = $this->entityTypeFactory->createCreateForm($type, $service, $targetEnvironment);
         $command = $form->getData();
 
-        // The resource server entity type does not support saving of local drafts
-        if ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $form->remove('save');
-        }
-
         if ($request->isMethod('post')) {
             $form->handleRequest($request);
         }

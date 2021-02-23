@@ -27,28 +27,24 @@ class Protocol
 
     const OIDC10_RP = 'oidc10_rp';
 
+    const OAUTH20_RS = 'oauth20_rs';
+
     private static $protocolMapping = [
         self::SAML20_SP => Constants::TYPE_SAML,
-        self::OIDC10_RP => Constants::TYPE_OPENID_CONNECT_TNG
+        self::OIDC10_RP => Constants::TYPE_OPENID_CONNECT_TNG,
+        self::OAUTH20_RS => Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
     ];
 
     private $protocol;
 
     /**
-     * @param array $data
      * @param string $manageProtocol
      * @return Protocol
      * @SuppressWarnings(PHPMD.UndefinedVariable) - protocolMapping is defined, md does not seem to resolve correctly
      */
-    public static function fromApiResponse(array $data, $manageProtocol)
+    public static function fromApiResponse($manageProtocol)
     {
         $protocol = self::$protocolMapping[$manageProtocol];
-
-        $isResourceServer = isset($data['data']['metaDataFields']['isResourceServer']) && $data['data']['metaDataFields']['isResourceServer'];
-        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG && $isResourceServer) {
-            $protocol = Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-        }
-
         return new self($protocol);
     }
 

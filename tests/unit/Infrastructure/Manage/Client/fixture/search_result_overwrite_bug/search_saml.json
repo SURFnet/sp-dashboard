@@ -2,6 +2,7 @@
   {
     "_id": "1c7b3d8b-7897-4cc1-8521-df4f65b615c5",
     "version": 0,
+    "type": "saml20_sp",
     "data": {
       "entityid": "https://test1.saml.example.com",
       "state": "prodaccepted",
@@ -14,6 +15,7 @@
   {
     "_id": "2c7b3d8b-7897-4cc1-8521-df4f65b615c5",
     "version": 0,
+    "type": "saml20_sp",
     "data": {
       "entityid": "https://test2.saml.example.com",
       "state": "prodaccepted",

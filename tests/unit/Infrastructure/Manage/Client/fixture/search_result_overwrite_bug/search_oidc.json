@@ -2,6 +2,7 @@
   {
     "_id": "710c61af-411d-4bfb-af16-251d9f7b8027",
     "version": 1,
+    "type": "oidc10_rp",
     "data": {
       "entityid": "test.oidcng.example.com",
       "state": "prodaccepted",
@@ -14,6 +15,7 @@
   {
     "_id": "810c61af-411d-4bfb-af16-251d9f7b8027",
     "version": 1,
+    "type": "oidc10_rp",
     "data": {
       "entityid": "test2.oidcng.example.com",
       "state": "prodaccepted",
@@ -26,6 +28,7 @@
   {
     "_id": "910c61af-411d-4bfb-af16-251d9f7b8027",
     "version": 1,
+    "type": "oidc10_rp",
     "data": {
       "entityid": "test3.oidcng.example.com",
       "state": "prodaccepted",

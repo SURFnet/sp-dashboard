@@ -24,13 +24,12 @@ use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use function in_array;
 
 /**
- * The OidcngResourceServerJsonGenerator generates oidc10_rp resource server entity json
+ * The OidcngResourceServerJsonGenerator generates oauth20-rs resource server entity json
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.ElseExpression)
  */
 class OidcngResourceServerJsonGenerator implements GeneratorInterface
 {
@@ -60,7 +59,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     {
         return [
             'data' => $this->generateDataForNewEntity($entity, $workflowState),
-            'type' => 'oidc10_rp',
+            'type' => 'oauth20_rs',
         ];
     }
 
@@ -68,7 +67,8 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     {
         return [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
-            'type' => 'oidc10_rp',
+            'type' => 'oauth20_rs',
+            'active' => true,
             'id' => $entity->getId(),
         ];
     }
@@ -77,19 +77,16 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     {
         // the type for entities is always oidc10-rp because manage is using saml internally
         $metadata = [
-            'type' => 'oidc10-rp',
+            'type' => 'oauth20_rs',
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'active' => true,
             'state' => $workflowState,
             'metaDataFields' => $this->generateMetadataFields($entity),
         ];
 
-        $metadata += $this->generateAclData($entity);
-
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
         }
-
         return $metadata;
     }
 
@@ -99,8 +96,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'state' => $workflowState,
         ];
-
-        $metadata += $this->generateAclData($entity);
 
         $metadata += $this->flattenMetadataFields(
             $this->generateMetadataFields($entity)
@@ -167,10 +162,12 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
         // By default, OIDC TNG Resource servers are configured to have persistent subject type (name id format)
         $metadata['NameIDFormat'] = Constants::NAME_ID_FORMAT_PERSISTENT;
+        // Scopes 'openid' is hardcoded, but other Manage set values should not be overwritten
+        $metadata['scopes'] = $entity->getOidcClient()->getScope();
 
-        // Will become configurable some time in the future.
-        $metadata['scopes'] = ['openid'];
-
+        if (!in_array('openid', $metadata['scopes'])) {
+            $metadata['scopes'][] ='openid';
+        }
         $this->setExcludeFromPush($metadata, $entity);
 
         $metadata += $this->generateOidcClient($entity);
@@ -190,9 +187,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             if ($secret) {
                 $metadata['secret'] = $secret;
             }
-            // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
-            $metadata['grants'] = [OidcGrantType::GRANT_TYPE_CLIENT_CREDENTIALS];
-            $metadata['isResourceServer'] = true;
         }
         return $metadata;
     }
@@ -268,31 +262,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         }
 
         return $metadata;
-    }
-
-    private function generateAclData(ManageEntity $entity): array
-    {
-        $acl = $entity->getAllowedIdentityProviders();
-        $providers = [];
-        if ($acl) {
-            if ($acl->isAllowAll()) {
-                return [
-                    'allowedEntities' => [],
-                    'allowedall' => true,
-                ];
-            }
-
-
-            foreach ($acl->getAllowedIdentityProviders() as $entityId) {
-                $providers[] = [
-                    'name' => $entityId,
-                ];
-            }
-        }
-        return [
-            'allowedEntities' => $providers,
-            'allowedall' => false,
-        ];
     }
 
     private function setExcludeFromPush(&$metadata, ManageEntity $entity): void

@@ -37,7 +37,7 @@ class Constants
 
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT_TNG = 'oidcng';
-    const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oidcng_rs';
+    const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oauth20_rs';
 
     const OIDC_SECRET_LENGTH = 20;
 

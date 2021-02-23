@@ -42,7 +42,7 @@
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.access_token_validity'|trans, value: entity.accessTokenValidity, informationPopup: 'entity.edit.information.accessTokenValidity'} %}
         {% endif %}
 
-        {% if entity.protocol == "oidcng_rs" %}
+        {% if entity.protocol == "oauth20_rs" %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
         {% endif %}
 
@@ -75,7 +75,7 @@
 
     </div>
 
-    {% if entity.protocol != "oidcng_rs" %}
+    {% if entity.protocol != "oauth20_rs" %}
 
     <div class="fieldset card">
         <h2>{{ ('entity.detail.attribute.' ~ type ~ '.title')|trans }}</h2>
