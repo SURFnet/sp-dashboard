@@ -65,13 +65,17 @@ class EntityTypeFactory
             case ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
                 $command = SaveOidcngResourceServerEntityCommand::forCreateAction($service);
                 $command->setEnvironment($environment);
-                return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($environment));
+                return $this->formFactory->create(
+                    OidcngResourceServerEntityType::class,
+                    $command,
+                    $this->buildOptions($environment)
+                );
         }
 
         throw new InvalidArgumentException("invalid form type requested: " . $type);
     }
 
-    public function createEditForm(ManageEntity $entity, Service $service, string $environment)
+    public function createEditForm(ManageEntity $entity, Service $service, string $environment, $isCopy = false)
     {
         switch ($entity->getProtocol()->getProtocol()) {
             case (Constants::TYPE_SAML):
@@ -79,13 +83,23 @@ class EntityTypeFactory
                 $command->setService($service);
                 return $this->formFactory->create(SamlEntityType::class, $command, $this->buildOptions($environment));
             case (Constants::TYPE_OPENID_CONNECT_TNG):
-                $command = $this->saveCommandFactory->buildOidcngCommandByManageEntity($entity, $environment);
+                $command = $this->saveCommandFactory->buildOidcngCommandByManageEntity($entity, $environment, $isCopy);
                 $command->setService($service);
                 return $this->formFactory->create(OidcngEntityType::class, $command, $this->buildOptions($environment));
             case (Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-                $command = $this->saveCommandFactory->buildOidcngRsCommandByManageEntity($entity, $environment);
+                $command = $this
+                    ->saveCommandFactory
+                    ->buildOidcngRsCommandByManageEntity(
+                        $entity,
+                        $environment,
+                        $isCopy
+                    );
                 $command->setService($service);
-                return $this->formFactory->create(OidcngResourceServerEntityType::class, $command, $this->buildOptions($environment));
+                return $this->formFactory->create(
+                    OidcngResourceServerEntityType::class,
+                    $command,
+                    $this->buildOptions($environment)
+                );
         }
 
         throw new InvalidArgumentException("invalid form type requested");
