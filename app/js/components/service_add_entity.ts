@@ -24,6 +24,11 @@ function handleModalChange(value: string, modal: JQuery) {
     .find(`.add-entity-field:not([data-protocol="${value}"])`)
     .addClass('hidden');
 
+  // preselect first value
+  templateChoices
+    .find('.add-entity-field:not(.hidden):first-of-type .add-entity-radio')
+    .attr('checked', 'checked');
+
   // disable yesButton if there are no valid protocol choices
   const visibleItems = templateChoices.find('.add-entity-field:not(.hidden)');
   if (!visibleItems.length) {

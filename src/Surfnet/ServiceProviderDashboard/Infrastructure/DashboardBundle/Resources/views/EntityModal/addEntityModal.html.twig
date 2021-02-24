@@ -44,10 +44,11 @@
                         <label class="add-entity-label" for={{ fieldId }}>{{ 'entity.add.template.yes'|trans }}</label>
                         <ul class="add-entity-template-choices">
                             {% set fieldName = manageId ~ '_entityid/value' %}
+                            {% set checkedSelected = false %}
                             {% for entity in entities %}
                                 {%  set fieldId = manageId ~ '_template_' ~ loop.index %}
                                 <li class="add-entity-field{% if  entity.protocol != "saml20" %} hidden{% endif %}" data-protocol="{{ entity.protocol }}" data-environment="{{ entity.environment }}">
-                                    <input class="add-entity-radio" type="radio" name={{ fieldName }} id={{ fieldId }} value="{{ entity.id }}/{{ entity.environment }}"{% if loop.first %} checked="checked"{% endif %}>
+                                    <input class="add-entity-radio" type="radio" name={{ fieldName }} id={{ fieldId }} value="{{ entity.id }}/{{ entity.environment }}"{% if not checkedSelected and entity.protocol == "saml20" %} checked="checked" {% set checkedSelected = true %}{% endif %}>
                                     <label class="add-entity-label" for={{ fieldId }}>({{ entity.environment }})
                                         {{ entity.name }}</label>
                                 </li>
