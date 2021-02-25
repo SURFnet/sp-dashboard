@@ -78,8 +78,9 @@ class OidcngEntityType extends AbstractType
 
         /** @var SaveOidcngEntityCommand $command */
         $command = $options['data'];
-        $manageId = $options['data']->getManageId();
-        if (!empty($manageId)) {
+        $copy = $command->isCopy();
+        $manageId = $command->getManageId();
+        if (!empty($manageId) && !$copy) {
             $metadata->remove('clientId');
             $metadata
                 ->add(

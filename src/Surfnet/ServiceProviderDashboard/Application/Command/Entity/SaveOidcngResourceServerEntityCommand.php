@@ -143,18 +143,23 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private $manageId;
 
+    /** @var bool */
+    private $isCopy;
+
     public function __construct()
     {
     }
 
     /**
      * @param Service $service
+     * @param bool $isCopy
      * @return SaveOidcngResourceServerEntityCommand
      */
-    public static function forCreateAction(Service $service)
+    public static function forCreateAction(Service $service, bool $isCopy = false): SaveOidcngResourceServerEntityCommand
     {
         $command = new self();
         $command->service = $service;
+        $command->isCopy = $isCopy;
 
         return $command;
     }
@@ -178,6 +183,22 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     public function getService(): Service
     {
         return $this->service;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCopy()
+    {
+        return $this->isCopy;
+    }
+
+    /**
+     * @param bool $isCopy
+     */
+    public function setIsCopy(bool $isCopy)
+    {
+        $this->isCopy = $isCopy;
     }
 
     /**

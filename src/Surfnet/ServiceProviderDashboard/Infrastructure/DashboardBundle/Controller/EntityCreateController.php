@@ -264,7 +264,7 @@ class EntityCreateController extends Controller
         $entity->setEnvironment($targetEnvironment);
 
         // load entity into form
-        $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment);
+        $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment, true);
         $command = $form->getData();
 
         // A copy can never be saved as draft: changes are published directly to manage.
