@@ -9,6 +9,10 @@
 .modal.add-entity-modal {
   max-width: 75ch;
 
+  .wysiwyg {
+    margin-bottom: 0;
+  }
+
   fieldset.add-entity-fieldset {
     div:not(.add-entity-field) {
       margin-bottom: 0;
@@ -22,10 +26,19 @@
       }
     }
   }
+
+  .button-row {
+    display: flex;
+    justify-content: flex-end;
+
+    .button {
+      height: 2.5rem;
+      line-height: normal;
+    }
+  }
 }
 
 .add-entity-fieldset {
-  display: flex;
   padding: 1.5rem 0;
 
   &:first-of-type {
@@ -35,16 +48,26 @@
 
 .add-entity-protocol {
   border-bottom: 1px solid $black;
+  padding-top: 1rem;
 }
 
 .add-entity-fieldset-fields {
-  margin-left: 2rem;
+  margin-top: 1rem;
 }
 
 .add-entity-question {
   color: $black;
-  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
   min-width: 130px;
+
+  .title {
+    font-weight: 700;
+  }
+
+  .explanationLink {
+    color: $blue;
+  }
 }
 
 .add-entity-radio {
