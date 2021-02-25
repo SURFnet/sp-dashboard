@@ -61,7 +61,7 @@ class OidcngClient implements OidcClientInterface
     {
         $clientId = self::getStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
-        $redirectUris = self::getStringOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
+        $redirectUris = self::getArrayOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
         $scope = self::getStringOrNull($data['data']['metaDataFields'], 'scopes');
 
         $grantType = isset($data['data']['metaDataFields']['grants'])
@@ -124,6 +124,16 @@ class OidcngClient implements OidcClientInterface
     private static function getStringOrEmpty(array $data, $key)
     {
         return isset($data[$key]) ? $data[$key] : '';
+    }
+
+    /**
+     * @param array $data
+     * @param $key
+     * @return array
+     */
+    private static function getArrayOrEmpty(array $data, $key)
+    {
+        return isset($data[$key]) ? $data[$key] : [];
     }
 
     /**
