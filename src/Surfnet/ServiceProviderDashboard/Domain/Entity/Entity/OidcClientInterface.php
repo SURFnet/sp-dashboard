@@ -44,7 +44,7 @@ interface OidcClientInterface
     /**
      * @return array
      */
-    public function getScope();
+    public function getScopes();
 
     /**
      * @return bool

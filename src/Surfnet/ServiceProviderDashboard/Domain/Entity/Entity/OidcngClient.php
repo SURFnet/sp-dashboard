@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
 use function array_diff;
-use function array_intersect;
 use function is_null;
 
 class OidcngClient implements OidcClientInterface
@@ -49,10 +48,6 @@ class OidcngClient implements OidcClientInterface
      */
     private $grants;
     /**
-     * @var array
-     */
-    private $scope;
-    /**
      * @var bool
      */
     private $isPublicClient;
@@ -70,7 +65,6 @@ class OidcngClient implements OidcClientInterface
         $clientId = self::getStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
         $redirectUris = self::getArrayOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
-        $scope = self::getStringOrNull($data['data']['metaDataFields'], 'scopes');
 
         $grantType = isset($data['data']['metaDataFields']['grants'])
             ? $data['data']['metaDataFields']['grants'] : [];
@@ -84,7 +78,6 @@ class OidcngClient implements OidcClientInterface
         Assert::string($clientSecret);
         Assert::isArray($redirectUris);
         Assert::isArray($grantType);
-        Assert::nullOrIsArray($scope);
         Assert::boolean($isPublicClient);
         Assert::numeric($accessTokenValidity);
         Assert::isArray($resourceServers);
@@ -94,7 +87,6 @@ class OidcngClient implements OidcClientInterface
             $clientSecret,
             $redirectUris,
             $grantType,
-            $scope,
             $isPublicClient,
             $accessTokenValidity,
             $resourceServers
@@ -109,7 +101,6 @@ class OidcngClient implements OidcClientInterface
         string $clientSecret,
         array $redirectUris,
         array $grants,
-        ?array $scope,
         bool $isPublicClient,
         int $accessTokenValidity,
         array $resourceServers
@@ -118,7 +109,6 @@ class OidcngClient implements OidcClientInterface
         $this->clientSecret = $clientSecret;
         $this->redirectUris = $redirectUris;
         $this->grants = $grants;
-        $this->scope = $scope;
         $this->isPublicClient = $isPublicClient;
         $this->accessTokenValidity = $accessTokenValidity;
         $this->resourceServers = $resourceServers;
@@ -144,17 +134,7 @@ class OidcngClient implements OidcClientInterface
         return isset($data[$key]) ? $data[$key] : [];
     }
 
-    /**
-     * @param array $data
-     * @param $key
-     * @return string|null
-     */
-    private static function getStringOrNull(array $data, $key)
-    {
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    /**
+     /**
      * @return string
      */
     public function getClientId()
@@ -186,9 +166,9 @@ class OidcngClient implements OidcClientInterface
     /**
      * @return array
      */
-    public function getScope()
+    public function getScopes()
     {
-        return $this->scope;
+        // Not implemented for OIDC RPs as per https://www.pivotaltracker.com/story/show/176961848
     }
 
     /**
@@ -231,7 +211,6 @@ class OidcngClient implements OidcClientInterface
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
         $this->redirectUris = is_null($client->getRedirectUris()) ? null : $client->getRedirectUris();
         $this->mergeGrants($client->getGrants());
-        $this->scope = is_null($client->getScope()) ? null : $client->getScope();
         $this->isPublicClient = is_null($client->isPublicClient()) ? null : $client->isPublicClient();
         $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
         $this->resourceServers = is_null($client->getResourceServers()) ? null : $client->getResourceServers();

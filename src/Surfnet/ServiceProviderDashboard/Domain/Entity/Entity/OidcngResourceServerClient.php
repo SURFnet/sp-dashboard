@@ -98,7 +98,7 @@ class OidcngResourceServerClient implements OidcClientInterface
     /**
      * @return array
      */
-    public function getScope()
+    public function getScopes()
     {
         return $this->scope;
     }
@@ -150,6 +150,6 @@ class OidcngResourceServerClient implements OidcClientInterface
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
         $this->grants = is_null($client->getGrants()) ? null : $client->getGrants();
-        $this->scope = is_null($client->getScope()) ? null : $client->getScope();
+        $this->scope = is_null($client->getScopes()) ? null : $client->getScopes();
     }
 }

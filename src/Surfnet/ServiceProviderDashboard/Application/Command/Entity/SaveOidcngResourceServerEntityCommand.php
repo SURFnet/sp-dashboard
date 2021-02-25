@@ -141,9 +141,10 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /** @var bool */
     private $isCopy;
 
-    public function __construct()
-    {
-    }
+    /**
+     * @var string[]
+     */
+    private $scopes = ['oidc'];
 
     /**
      * @param Service $service

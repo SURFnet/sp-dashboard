@@ -119,7 +119,6 @@ class EntityMergeService
                 $secret->getSecret(),
                 $this->buildRedirectUrls($command),
                 $command->getGrants(),
-                null,
                 $command->isPublicClient(),
                 $command->getAccessTokenValidity(),
                 $command->getOidcngResourceServers()
@@ -129,7 +128,7 @@ class EntityMergeService
             $oidcClient = new OidcngResourceServerClient(
                 $command->getClientId(),
                 $secret->getSecret(),
-                null,
+                [],
                 $command->getScopes()
             );
         }
