@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -39,7 +40,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OidcngEntityType extends AbstractType
 {
-
     /**
      * @var OidcngResourceServerOptionsFactory
      */
@@ -147,18 +147,19 @@ class OidcngEntityType extends AbstractType
                 ]
             )
             ->add(
-                'grantType',
+                'grants',
                 ChoiceType::class,
                 [
                     'expanded' => true,
-                    'multiple' => false,
-                    'choices'  => [
-                        'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
-                        'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT,
-                    ],
+                    'multiple' => true,
+                    'required' => true,
+                    'choices'  => OidcngClient::FORM_MANAGED_GRANTS,
                     'attr' => [
                         'data-help' => 'entity.edit.information.grantType',
                     ],
+                    'choice_attr' => function () {
+                        return ['class' => 'decorated'];
+                    },
                 ]
             )
             ->add(

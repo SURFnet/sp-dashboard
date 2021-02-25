@@ -49,28 +49,14 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private $spDashboardMetadataGenerator;
 
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriProd;
-
     public function __construct(
         ArpGenerator $arpMetadataGenerator,
         PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
-        string $oidcPlaygroundUriTest,
-        string $oidcPlaygroundUriProd
+        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
         $this->arpMetadataGenerator = $arpMetadataGenerator;
         $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
-        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
-        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -200,12 +186,6 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
 
-        // If the entity exists in Manage, use the scopes configured there.
-        if ($entity->isManageEntity() && $entity->getOidcClient()->getScope()) {
-            // This prevents overwriting the scopes attribute. See: https://www.pivotaltracker.com/story/show/170868465
-            $metadata['scopes'] = $entity->getOidcClient()->getScope();
-        }
-
         $this->setExcludeFromPush($metadata, $entity);
 
         $metadata += $this->generateOidcClient($entity);
@@ -231,7 +211,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             }
             // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
             $metadata['redirectUrls'] = $entity->getOidcClient()->getRedirectUris();
-            $metadata['grants'] = [$entity->getOidcClient()->getGrantType()];
+            $metadata['grants'] = $entity->getOidcClient()->getGrants();
             $metadata['accessTokenValidity'] = $entity->getOidcClient()->getAccessTokenValidity();
             $metadata['isPublicClient'] = $entity->getOidcClient()->isPublicClient();
         }

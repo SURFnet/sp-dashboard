@@ -18,12 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
+use function array_diff;
 use function is_null;
 
 class OidcngClient implements OidcClientInterface
 {
+    const FORM_MANAGED_GRANTS = [
+        'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
+        'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT
+    ];
+
     /**
      * @var string
      */
@@ -37,13 +44,9 @@ class OidcngClient implements OidcClientInterface
      */
     private $redirectUris;
     /**
-     * @var string
-     */
-    private $grantType;
-    /**
      * @var array
      */
-    private $scope;
+    private $grants;
     /**
      * @var bool
      */
@@ -62,10 +65,9 @@ class OidcngClient implements OidcClientInterface
         $clientId = self::getStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
         $redirectUris = self::getArrayOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
-        $scope = self::getStringOrNull($data['data']['metaDataFields'], 'scopes');
 
         $grantType = isset($data['data']['metaDataFields']['grants'])
-            ? reset($data['data']['metaDataFields']['grants']) : '';
+            ? $data['data']['metaDataFields']['grants'] : [];
         $isPublicClient = isset($data['data']['metaDataFields']['isPublicClient'])
             ? $data['data']['metaDataFields']['isPublicClient'] : true;
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
@@ -75,8 +77,7 @@ class OidcngClient implements OidcClientInterface
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
         Assert::isArray($redirectUris);
-        Assert::string($grantType);
-        Assert::nullOrIsArray($scope);
+        Assert::isArray($grantType);
         Assert::boolean($isPublicClient);
         Assert::numeric($accessTokenValidity);
         Assert::isArray($resourceServers);
@@ -86,7 +87,6 @@ class OidcngClient implements OidcClientInterface
             $clientSecret,
             $redirectUris,
             $grantType,
-            $scope,
             $isPublicClient,
             $accessTokenValidity,
             $resourceServers
@@ -100,8 +100,7 @@ class OidcngClient implements OidcClientInterface
         string $clientId,
         string $clientSecret,
         array $redirectUris,
-        string $grantType,
-        ?array $scope,
+        array $grants,
         bool $isPublicClient,
         int $accessTokenValidity,
         array $resourceServers
@@ -109,8 +108,7 @@ class OidcngClient implements OidcClientInterface
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUris = $redirectUris;
-        $this->grantType = $grantType;
-        $this->scope = $scope;
+        $this->grants = $grants;
         $this->isPublicClient = $isPublicClient;
         $this->accessTokenValidity = $accessTokenValidity;
         $this->resourceServers = $resourceServers;
@@ -136,17 +134,7 @@ class OidcngClient implements OidcClientInterface
         return isset($data[$key]) ? $data[$key] : [];
     }
 
-    /**
-     * @param array $data
-     * @param $key
-     * @return string|null
-     */
-    private static function getStringOrNull(array $data, $key)
-    {
-        return isset($data[$key]) ? $data[$key] : null;
-    }
-
-    /**
+     /**
      * @return string
      */
     public function getClientId()
@@ -170,20 +158,17 @@ class OidcngClient implements OidcClientInterface
         return $this->redirectUris;
     }
 
-    /**
-     * @return string
-     */
-    public function getGrantType()
+    public function getGrants(): array
     {
-        return $this->grantType;
+        return $this->grants;
     }
 
     /**
      * @return array
      */
-    public function getScope()
+    public function getScopes()
     {
-        return $this->scope;
+        // Not implemented for OIDC RPs as per https://www.pivotaltracker.com/story/show/176961848
     }
 
     /**
@@ -225,10 +210,20 @@ class OidcngClient implements OidcClientInterface
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
         $this->redirectUris = is_null($client->getRedirectUris()) ? null : $client->getRedirectUris();
-        $this->grantType = is_null($client->getGrantType()) ? null : $client->getGrantType();
-        $this->scope = is_null($client->getScope()) ? null : $client->getScope();
+        $this->mergeGrants($client->getGrants());
         $this->isPublicClient = is_null($client->isPublicClient()) ? null : $client->isPublicClient();
         $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
         $this->resourceServers = is_null($client->getResourceServers()) ? null : $client->getResourceServers();
+    }
+
+    /**
+     * Remove the form managed grants from the Manage grants, and reset them with the grants selected on the form
+     * @param array $formGrants
+     */
+    private function mergeGrants(array $formGrants)
+    {
+        $manageGrants = $this->grants;
+        $manageGrants = array_diff($manageGrants, self::FORM_MANAGED_GRANTS);
+        $this->grants = array_merge($manageGrants, $formGrants);
     }
 }

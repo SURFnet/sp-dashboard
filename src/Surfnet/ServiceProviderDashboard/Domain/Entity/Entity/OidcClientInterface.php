@@ -39,15 +39,12 @@ interface OidcClientInterface
      */
     public function getRedirectUris();
 
-    /**
-     * @return string
-     */
-    public function getGrantType();
+    public function getGrants(): array;
 
     /**
      * @return array
      */
-    public function getScope();
+    public function getScopes();
 
     /**
      * @return bool

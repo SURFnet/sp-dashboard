@@ -77,11 +77,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     private $secret;
 
     /**
-     * @var array
-     */
-    private $scopes = ['openid'];
-
-    /**
      * @var string
      * @Assert\NotBlank()
      */
@@ -146,9 +141,10 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /** @var bool */
     private $isCopy;
 
-    public function __construct()
-    {
-    }
+    /**
+     * @var string[]
+     */
+    private $scopes = ['oidc'];
 
     /**
      * @param Service $service
