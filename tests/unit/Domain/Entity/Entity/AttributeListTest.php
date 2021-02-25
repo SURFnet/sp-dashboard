@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\Entity\Entity;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
+use function reset;
 
 class AttributeListTest extends TestCase
 {
@@ -38,6 +39,7 @@ class AttributeListTest extends TestCase
 
         self::assertEquals($expectedUrns, $actualUrns);
         foreach ($actualAttributes as $attribute) {
+            $attribute = reset($attribute);
             $expectedAttribute = $expectations->findByUrn($attribute->getName());
             // Verify the attribute values have been updated correctly
             self::assertEquals($expectedAttribute->getName(), $attribute->getName());

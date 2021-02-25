@@ -43,18 +43,16 @@ class ArpGenerator implements MetadataGenerator
         $entityAttributes = $entity->getAttributes();
         foreach ($this->repository->findAll() as $definition) {
             $urn = reset($definition->urns);
-            $attrribute = $entityAttributes->findByUrn($urn);
+            $attrributeList = $entityAttributes->findAllByUrn($urn);
             // Only add the attributes with a motivation
-            if (!$attrribute || !$attrribute->hasMotivation()) {
-                continue;
-            }
-            if ($attrribute) {
-                $attributes[$urn] = [
-                    [
-                        'source' => $attrribute->getSource(),
-                        'value' => '*',
-                        'motivation' => $attrribute->getMotivation(),
-                    ],
+            foreach ($attrributeList as $attribute) {
+                if (!$attribute || !$attribute->hasMotivation()) {
+                    continue;
+                }
+                $attributes[$urn][] = [
+                    'source' => $attribute->getSource(),
+                    'value' => $attribute->getValue(),
+                    'motivation' => $attribute->getMotivation(),
                 ];
             }
         }
@@ -73,16 +71,20 @@ class ArpGenerator implements MetadataGenerator
 
         if ($entity->isManageEntity()) {
             // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
-            foreach ($entity->getAttributes()->getAttributes() as $manageAttribute) {
-                if (!array_key_exists($manageAttribute->getName(), $attributes) && !in_array($manageAttribute->getName(), $managedAttributeUrns)) {
-                    $attributes[$manageAttribute->getName()] = [
-                        [
-                            'source' => $manageAttribute->getSource(),
-                            'value' => $manageAttribute->getValue(),
-                        ]
-                    ];
-                    if (!empty($manageAttribute->getMotivation())) {
-                        $attributes[$manageAttribute->getName()][0]['motivation'] = $manageAttribute->getMotivation();
+            foreach ($entity->getAttributes()->getAttributes() as $manageAttributes) {
+                foreach ($manageAttributes as $manageAttribute) {
+                    if (!array_key_exists($manageAttribute->getName(), $attributes) &&
+                        !in_array($manageAttribute->getName(), $managedAttributeUrns)
+                    ) {
+                        $attributes[$manageAttribute->getName()] = [
+                            [
+                                'source' => $manageAttribute->getSource(),
+                                'value' => $manageAttribute->getValue(),
+                            ]
+                        ];
+                        if (!empty($manageAttribute->getMotivation())) {
+                            $attributes[$manageAttribute->getName()][0]['motivation'] = $manageAttribute->getMotivation();
+                        }
                     }
                 }
             }

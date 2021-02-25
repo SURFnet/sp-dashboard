@@ -94,4 +94,10 @@ class Attribute
         $this->source = $newSource;
         return clone $this;
     }
+
+    public function updateMotivation(string $motivation): self
+    {
+        $this->motivation = $motivation;
+        return clone $this;
+    }
 }
