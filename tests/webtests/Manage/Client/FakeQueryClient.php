@@ -97,4 +97,9 @@ class FakeQueryClient implements QueryEntityRepository
             }
         }
     }
+
+    public function findByManageIdAndProtocol(string $manageId, string $protocol) :? ManageEntity
+    {
+        return $this->findByManageId($manageId);
+    }
 }

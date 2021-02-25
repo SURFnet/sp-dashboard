@@ -183,7 +183,7 @@ services:
     Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator:
         class: Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator
         tags:
-            - { name: dashboard.json_generator, identifier: oidcng_rs }
+            - { name: dashboard.json_generator, identifier: oauth20_rs }
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:

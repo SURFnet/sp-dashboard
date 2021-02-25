@@ -30,7 +30,7 @@ entity:
       oidcng:
         title: Information
         html: <strong>information about this view</strong>
-      oidcng_rs:
+      oauth20_rs:
         title: Information
         html: <strong>information about this view</strong>
     metadata:
@@ -63,7 +63,7 @@ entity:
       oidcng:
         title: Metadata
         html: <strong>information about the metadata fields</strong>
-      oidcng_rs:
+      oauth20_rs:
         title: Metadata
         html: <strong>information about the metadata fields</strong>
     contact:
@@ -83,7 +83,7 @@ entity:
       oidcng:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
-      oidcng_rs:
+      oauth20_rs:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
     attribute:
@@ -251,8 +251,8 @@ should be present.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 "
-entity.edit.info.oidcng_rs.title: Info
-entity.edit.info.oidcng_rs.html: "
+entity.edit.info.oauth20_rs.title: Info
+entity.edit.info.oauth20_rs.html: "
 <p>Documentation about this SP registration form can be found at:
 <a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
 
@@ -272,13 +272,13 @@ entity.edit.metadata.fetch.exception: "Unable to load the metadata from the prov
 entity.edit.metadata.saml20.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oidc.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oidcng.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
-entity.edit.metadata.oidcng_rs.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
+entity.edit.metadata.oauth20_rs.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
 entity.edit.metadata.validation-failed: "Warning! Some entries are missing or incorrect. Please review and fix those entries below."
 entity.edit.metadata.saml20.title: Metadata
 entity.edit.metadata.oidc.title: Metadata
 entity.edit.metadata.oidcng.title: Metadata
-entity.edit.metadata.oidcng_rs.title: Metadata
+entity.edit.metadata.oauth20_rs.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
 entity.edit.contact_information.title: Contact information
 entity.edit.contact_information.html: "
@@ -320,8 +320,8 @@ entity.edit.attributes.oidcng.html: "
 
 <p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
 "
-entity.edit.attributes.oidcng_rs.title: Attributes
-entity.edit.attributes.oidcng_rs.html: "
+entity.edit.attributes.oauth20_rs.title: Attributes
+entity.edit.attributes.oauth20_rs.html: "
 <p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a entity. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
 
 <p>Possibly some boxes have already been checked. This information is reused from the metadata.</p>

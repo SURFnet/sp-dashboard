@@ -88,17 +88,13 @@ class ManageEntity
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
         $oidcClient = null;
-        if ($manageProtocol === Protocol::OIDC10_RP) {
-            if (isset($data['data']['metaDataFields']['isResourceServer']) &&
-                $data['data']['metaDataFields']['isResourceServer']
-            ) {
-                $oidcClient = OidcngResourceServerClient::fromApiResponse($data, $manageProtocol);
-            } else {
-                $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
-            }
+        if ($manageProtocol === Protocol::OAUTH20_RS) {
+            $oidcClient = OidcngResourceServerClient::fromApiResponse($data, $manageProtocol);
+        } elseif ($manageProtocol === Protocol::OIDC10_RP) {
+            $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
         }
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
-        $protocol = Protocol::fromApiResponse($data, $manageProtocol);
+        $protocol = Protocol::fromApiResponse($manageProtocol);
 
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }

@@ -193,7 +193,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(FormType::class, $form);
     }
 
-    public function test_build_create_new_oidcng_rs_form()
+    public function test_build_create_new_oauth20_rs_form()
     {
         $this->formFactory
             ->shouldReceive('create')

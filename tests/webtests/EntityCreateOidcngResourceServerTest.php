@@ -36,7 +36,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_rs/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Publish')
             ->form();
@@ -52,7 +52,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_rs/test");
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
@@ -76,7 +76,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
 
     public function test_it_can_not_save_the_form_drafts_are_disabled()
     {
-        $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_rs/test");
 
         // There is a publish button instead
         $buttonNodes = $crawler->filter('button#dashboard_bundle_entity_type_publishButton');
@@ -92,7 +92,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_rs/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -133,7 +133,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         );
 
         $formData = $this->buildValidFormData();
-        $crawler = $this->client->request('GET', "/entity/create/2/oidcng_rs/test");
+        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_rs/test");
 
         $form = $crawler
             ->selectButton('Publish')
@@ -155,7 +155,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         // SURFnet is not allowed to create production entities.
         $this->switchToService('SURFnet');
 
-        $this->client->request('GET', "/entity/create/1/oidcng_rs/production");
+        $this->client->request('GET', "/entity/create/1/oauth20_rs/production");
 
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
