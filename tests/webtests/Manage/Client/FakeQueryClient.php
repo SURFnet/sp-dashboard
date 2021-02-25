@@ -88,7 +88,7 @@ class FakeQueryClient implements QueryEntityRepository
         return $results;
     }
 
-    public function findByEntityId($entityId, $state)
+    public function findResourceServerByEntityId($entityId, $state)
     {
         foreach ($this->entities as $entity) {
             $result = $entity->getEntityResult();

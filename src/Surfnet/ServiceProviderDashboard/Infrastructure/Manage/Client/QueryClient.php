@@ -227,14 +227,14 @@ class QueryClient implements QueryEntityRepository
 
             $searchResults = $this->client->post(
                 json_encode($params),
-                sprintf('/manage/api/internal/search/oidc10_rp')
+                sprintf('/manage/api/internal/search/oauth20_rs')
             );
 
             // For each search result, query manage to get the full SP entity data.
             return array_filter(array_map(
                 function ($result) {
                     $entity = $this->findByManageId($result['_id']);
-                    if ($entity && $entity->isOidcngResourceServer()) {
+                    if ($entity) {
                         return $entity;
                     }
                 },
@@ -249,9 +249,8 @@ class QueryClient implements QueryEntityRepository
         }
     }
 
-    public function findByEntityId($entityId, $state)
+    public function findResourceServerByEntityId($entityId, $state)
     {
-        // Query manage to get the internal id of every SP entity with given team ID.
         $params = [
             'entityid' => $entityId,
             'state' => $state
@@ -259,7 +258,7 @@ class QueryClient implements QueryEntityRepository
 
         $searchResults = $this->client->post(
             json_encode($params),
-            sprintf('/manage/api/internal/search/oidc10_rp')
+            sprintf('/manage/api/internal/search/oauth20_rs')
         );
 
         $count = count($searchResults);
@@ -302,7 +301,7 @@ class QueryClient implements QueryEntityRepository
             $resourceServers = [];
             $rs = isset($data['data']['allowedResourceServers']) ? $data['data']['allowedResourceServers'] : [];
             foreach ($rs as $resourceServer) {
-                $resourceServers[] = $this->findByEntityId($resourceServer['name'], $data['data']['state']);
+                $resourceServers[] = $this->findResourceServerByEntityId($resourceServer['name'], $data['data']['state']);
             }
             $data['resourceServers'] = $resourceServers;
         }
