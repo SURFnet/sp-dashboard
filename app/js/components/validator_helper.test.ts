@@ -112,11 +112,13 @@ describe('validation functions', () => {
 
   it('should correctly flip urls', () => {
     const expectancies = [
-      { url: 'com.example.foobar://whatever', flipped: 'whatever://foobar.example.com' },
-      { url: 'com.github://https/client', flipped: 'https://github.com/client' },
-      { url: 'https://foobar.example.com', flipped: 'foobar.example.com://https' },
-      { url: 'https://foobar.example.com/foo/bar', flipped: 'foobar.example.com://https/foo/bar' },
-      { url: 'http://11.22.33.44', flipped: '11.22.33.44://http' },
+      { url: 'com.example.foobar://https', flipped: 'https://foobar.example.com/' },
+      { url: 'com.example.foobar:/https', flipped: 'https://foobar.example.com/' },
+      { url: 'com.example.foobar:/https/redirect/to/somewhere', flipped: 'https://foobar.example.com/redirect/to/somewhere' },
+      { url: 'nl.myapp:/redirect', flipped: 'https://myapp.nl/redirect' },
+      { url: 'com.example.foobar://https/foo/bar', flipped: 'https://foobar.example.com/foo/bar' },
+      { url: 'com.example.foobar://https:7777/foo/bar', flipped: 'https://foobar.example.com:7777/foo/bar' },
+      { url: '44.33.22.11://http', flipped: 'http://11.22.33.44/' },
     ];
     const helper = new ValidatorHelper();
     for (const expectation of expectancies) {

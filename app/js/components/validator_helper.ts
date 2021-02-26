@@ -1,6 +1,4 @@
 // tslint:disable-next-line:no-var-requires
-const Url = require('url-parse');
-
 export class ValidatorHelper {
 
   public validateEmpty(value: string): boolean {
@@ -67,15 +65,25 @@ export class ValidatorHelper {
    * This helper method is designed to turn a reverse redirect url into a validatable regular url
    */
   public flipProtocol(value: string): string {
-    const url = new Url(value.trim());
     // The hostname is provided in reverse as per https://tools.ietf.org/html/rfc8252#section-7.1
-    const originalHost = url.protocol.replace(':', '');
-    const reversedHost = originalHost.split('.').reverse().join('.');
-    // Store the protocol (stored in the host), removing the port if present.
-    const originalProtocol = (url.host.includes(url.port)) ? url.host.replace(`:${url.port}`, '') : url.host;
-    url.host = reversedHost;
-    url.protocol = originalProtocol;
-    return url.toString();
+    const endScheme = value.indexOf(':/');
+    const scheme = value.substring(0, endScheme);
+    let protocol = value.indexOf('https') > -1 ? 'https' : '';
+    // if not https specified, see if http is specified
+    protocol = (value.indexOf('http') > -1 && !protocol) ? 'http' : 'https';
+    const port = this.getPort(value, protocol);
+    const protocolAndPort = port ? `${protocol}:${port}` : `${protocol}`;
+    const newSchemeAndPort = port ? `${this.reverseScheme(scheme)}:${port}` : this.reverseScheme(scheme);
+    const destination = value.substring(endScheme)
+                              // remove : before protocol delimiter
+                             .replace(':', '')
+                              // remove protocol & port
+                             .replace(protocolAndPort, '')
+                              // remove /// if user used ://
+                             .replace('///', '/')
+                              // remove // if user used :/
+                             .replace('//', '/');
+    return `${protocol}://${newSchemeAndPort}${destination}`;
   }
 
   private invalidProtocol(input: string, isReverseUrl: boolean = false): boolean {
@@ -84,17 +92,11 @@ export class ValidatorHelper {
       return false;
     }
     const regex = /^https?:\/{2}/i;
-    if (!input.match(regex)) {
-      return true;
-    }
-    return false;
+    return !input.match(regex);
   }
 
   private missingTld(url: URL): boolean {
-    if (url.host.includes('.')) {
-      return false;
-    }
-    return true;
+    return !url.host.includes('.');
   }
 
   private isIp(host: string): boolean {
@@ -105,9 +107,20 @@ export class ValidatorHelper {
   }
 
   private isReverseUrl(url: string): boolean {
-    if (this.invalidProtocol(url)) {
-      return true;
-    }
-    return false;
+    return this.invalidProtocol(url);
+  }
+
+  private reverseScheme(str: string): string {
+    return str.split('.').reverse().join('.');
+  }
+
+  private getPort(url: string, protocol: string): string {
+    const protocolStart = url.indexOf(protocol);
+    const portStart = protocolStart + protocol.length;
+    const hasPort = url[portStart] === ':';
+    const portEnd = url.indexOf('/', portStart);
+    if (hasPort) return url.substring(portStart + 1, portEnd);
+
+    return '';
   }
 }
