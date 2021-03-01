@@ -26,8 +26,8 @@ class IssueCollectionTest extends TestCase
 {
     public function test_get_issue_by_key()
     {
-        $issue1 = new Issue('CTX-0123', 'issue-type-1');
-        $issue2 = new Issue('CTX-0124', 'issue-type-2');
+        $issue1 = new Issue('CTX-0123', 'issue-type-1', 'OPEN');
+        $issue2 = new Issue('CTX-0124', 'issue-type-2', 'OPEN');
 
         $collection = new IssueCollection(
             ['00000000-0000-0000-0000-000000000000' => $issue1, '00000000-0000-0000-0000-000000000001' => $issue2]
@@ -40,13 +40,13 @@ class IssueCollectionTest extends TestCase
 
     public function test_count()
     {
-        $issue1 = new Issue('00000000-0000-0000-0000-000000000000', 'issue-type-1');
-        $issue2 = new Issue('00000000-0000-0000-0000-000000000001', 'issue-type-2');
-        $issue3 = new Issue('00000000-0000-0000-0000-000000000002', 'issue-type-3');
-        $issue4 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4');
+        $issue1 = new Issue('00000000-0000-0000-0000-000000000000', 'issue-type-1', 'OPEN');
+        $issue2 = new Issue('00000000-0000-0000-0000-000000000001', 'issue-type-2', 'OPEN');
+        $issue3 = new Issue('00000000-0000-0000-0000-000000000002', 'issue-type-3', 'OPEN');
+        $issue4 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4', 'OPEN');
         // Duplicate entries are not counted/added
-        $issue5 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4');
-        $issue6 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4');
+        $issue5 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4', 'OPEN');
+        $issue6 = new Issue('00000000-0000-0000-0000-000000000003', 'issue-type-4', 'OPEN');
 
         $collection = new IssueCollection([
             $issue1->getKey() => $issue1,
