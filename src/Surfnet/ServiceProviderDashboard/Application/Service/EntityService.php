@@ -262,8 +262,7 @@ class EntityService implements EntityServiceInterface
                         // A published entity needs no status update unless it's a removal requested entity
                         continue;
                     }
-
-                    if ($issue && $issue->getIssueType() === $this->removalStatus) {
+                    if ($issue && $issue->getIssueType() === $this->removalStatus && !$issue->isClosedOrResolved()) {
                         $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                     }
                 }

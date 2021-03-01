@@ -25,21 +25,22 @@ class Issue implements JsonSerializable
 {
     const IDENTIFIER_KEY = 'key';
     const IDENTIFIER_ISSUE_TYPE = 'issueType';
+    const IDENTIFIER_TICKET_STATUS = 'ticketStatus';
 
-    /**
-     * @var string
-     */
+    const STATUS_CLOSED = 'CLOSED';
+    const STATUS_RESOLVED = 'RESOLVED';
+
     private $key;
-    /**
-     * @var string
-     */
+
     private $issueType;
+
+    private $ticketStatus;
 
     /**
      * @param string $key
      * @param string $issueType
      */
-    public function __construct($key, $issueType)
+    public function __construct(string $key, string $issueType, string $status)
     {
         if (!is_string($key) || empty($key)) {
             throw new InvalidArgumentException("An invalid issue key is provided, must be a non empty string");
@@ -50,12 +51,17 @@ class Issue implements JsonSerializable
         }
 
         $this->key = $key;
+        $this->ticketStatus = $status;
         $this->issueType = $issueType;
     }
 
     public static function fromSerializedData($issueData)
     {
-        return new self($issueData[self::IDENTIFIER_KEY], $issueData[self::IDENTIFIER_ISSUE_TYPE]);
+        return new self(
+            $issueData[self::IDENTIFIER_KEY],
+            $issueData[self::IDENTIFIER_ISSUE_TYPE],
+            $issueData[self::IDENTIFIER_TICKET_STATUS]
+        );
     }
 
     /**
@@ -74,11 +80,17 @@ class Issue implements JsonSerializable
         return $this->issueType;
     }
 
+    public function isClosedOrResolved(): bool
+    {
+        return $this->ticketStatus === self::STATUS_CLOSED || $this->ticketStatus === self::STATUS_RESOLVED;
+    }
+
     public function jsonSerialize()
     {
         return [
             self::IDENTIFIER_KEY => $this->key,
-            self::IDENTIFIER_ISSUE_TYPE => $this->issueType
+            self::IDENTIFIER_ISSUE_TYPE => $this->issueType,
+            self::IDENTIFIER_TICKET_STATUS => $this->ticketStatus
         ];
     }
 }
