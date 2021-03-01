@@ -286,7 +286,7 @@ class ManageEntity
         $this->attributes->merge($newEntity->getAttributes());
         $protocol = $this->protocol->getProtocol();
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $this->oidcClient->merge($newEntity->getOidcClient());
+            $this->oidcClient->merge($newEntity->getOidcClient(), $this->getService()->getTeamName());
         }
     }
 

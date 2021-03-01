@@ -19,9 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
 use function array_diff;
+use function array_filter;
+use function array_merge;
 use function is_null;
 
 class OidcngClient implements OidcClientInterface
@@ -205,15 +208,37 @@ class OidcngClient implements OidcClientInterface
     /**
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function merge(OidcClientInterface $client): void
+    public function merge(OidcClientInterface $client, string $homeTeam): void
     {
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
         $this->redirectUris = is_null($client->getRedirectUris()) ? null : $client->getRedirectUris();
-        $this->mergeGrants($client->getGrants());
         $this->isPublicClient = is_null($client->isPublicClient()) ? null : $client->isPublicClient();
         $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
-        $this->resourceServers = is_null($client->getResourceServers()) ? null : $client->getResourceServers();
+        $this->mergeGrants($client->getGrants());
+        $this->mergeResourceServers($client->getResourceServers(), $homeTeam);
+    }
+
+    /**
+     * The team name is used to distinguish between Manage selected RS's (possibly outside of own team)
+     * and the ones configured in SPD.
+     */
+    private function mergeResourceServers(array $clientResourceServers, string $homeTeam)
+    {
+        $manageResourceServers = $this->resourceServers;
+        // Filter out the Manage managed RS servers, from outside the 'home' team.
+        $manageResourceServers = array_filter($manageResourceServers, function (ManageEntity $server) use ($homeTeam) {
+            $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
+            return $homeTeam !== $teamName;
+        });
+        $manageRsEntityIds = [];
+        // Reduce the manage entities to only their entityId
+        foreach ($manageResourceServers as $server) {
+            $manageRsEntityIds[] = $server->getMetaData()->getEntityId();
+        }
+        // The combination of the manage specific entityIds and the ones configured on the form is the
+        // desired combination.
+        $this->resourceServers = array_merge($clientResourceServers, $manageRsEntityIds);
     }
 
     /**
