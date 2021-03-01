@@ -287,7 +287,11 @@ class EntityCreateController extends Controller
                         }
 
                         // When publishing failed, forward to the edit action and show the error messages there
-                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
+                        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                        }
+
+                        return $this->redirectToRoute('service_overview');
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
