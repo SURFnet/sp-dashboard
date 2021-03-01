@@ -17,7 +17,13 @@
                 </ul>
             </fieldset>
             <fieldset class="add-entity-fieldset add-entity-protocol" aria-describedby="fieldset2">
-                <h5 class="add-entity-question" id="fieldset2">{{ 'entity.add.protocol.title'|trans }}</h5>
+                {% set link = 'entity.add.protocol.link.url'|trans %}
+                {% set linkText = 'entity.add.protocol.link.text'|trans %}
+                {% set protocolTitle = 'entity.add.protocol.title'|trans %}
+                <h5 class="add-entity-question" id="fieldset2">
+                    <span class="title">{{ protocolTitle }}</span>
+                    <a href="{{ link }}" class="explanationLink">{{ linkText }}</a>
+                </h5>
                 <ul class="add-entity-fieldset-fields">
                     {% set fieldName = manageId ~ '_protocol' %}
                     {% for title, value in protocols %}
@@ -30,7 +36,18 @@
                 </ul>
             </fieldset>
             <fieldset class="add-entity-fieldset add-entity-template" aria-describedby="fieldset3">
-                <h5 class="add-entity-question" id="fieldset3">{{ 'entity.add.template.title'|trans }}</h5>
+                {% set templateTitle = 'entity.add.template.title'|trans %}
+                {% set allowedTags = 'allowed.html.tags'|trans %}
+                <input type="checkbox" name="templateTooltip" id="templateTooltip" hidden class="tooltip tooltipCheckbox" />
+                <h5 class="add-entity-question" id="fieldset3">
+                    <span class="title">{{ templateTitle }}</span>
+                    <label for="templateTooltip" class="tooltip tooltipLabel">
+                        {{ 'entity.add.template.title.tooltip.srText'|trans }}
+                    </label>
+                </h5>
+                <div class="tooltip tooltipContent">
+                    {{ 'entity.add.template.title.tooltip.text'|striptags('<br><wbr><p><a><ul><ol><li><dl><dd><dt><blockquote><cite><strong><em><div><span><address><time>')|trans|raw }}
+                </div>
                 {% set fieldName = manageId ~ '_withtemplate' %}
                 <ul class="add-entity-fieldset-fields">
                     <li class="add-entity-field">
@@ -58,8 +75,8 @@
                 </ul>
             </fieldset>
             <div class="button-row">
-                <button type="submit" class="button pull-right blue">{{ 'entity.add.create'|trans }}</button>
-                <label class="button pull-right" for="{{ inputId }}" rel="modal:close">{{ 'entity.add.cancel'|trans }}</label>
+                <label class="button" for="{{ inputId }}" rel="modal:close">{{ 'entity.add.cancel'|trans }}</label>
+                <button type="submit" class="button blue">{{ 'entity.add.create'|trans }}</button>
             </div>
     </div>
 {% endblock %}
