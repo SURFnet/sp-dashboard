@@ -172,7 +172,6 @@ class EntityMergeService
                 $commandAttribute = $command->$getterName();
                 $urn = reset($definition->urns);
                 $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
-                $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
             }
         }
         return $attributeList;

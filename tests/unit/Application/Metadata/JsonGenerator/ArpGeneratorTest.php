@@ -33,19 +33,21 @@ class ArpGeneratorTest extends MockeryTestCase
         $entity = m::mock(ManageEntity::class)->makePartial();
         $attribute = m::mock(Attribute::class);
         $attribute->shouldReceive('getSource')->andReturn('idp');
+        $attribute->shouldReceive('getValue')->andReturn('*');
         $attribute->shouldReceive('hasMotivation')->andReturn(true);
         $attribute->shouldReceive('getMotivation')->andReturn('Motivation');
 
-        $entity->shouldReceive('getAttributes->findByUrn')
+        $entity->shouldReceive('getAttributes->findAllByUrn')
             ->with('urn:mace:dir:attribute-def:displayName')
-            ->andReturn($attribute);
-        $entity->shouldReceive('getAttributes->findByUrn')
+            ->andReturn([$attribute]);
+        $entity->shouldReceive('getAttributes->findAllByUrn')
             ->with('urn:mace:dir:attribute-def:cn')
-            ->andReturn($attribute);
+            ->andReturn([$attribute]);
+
         $entity->shouldReceive('getProtocol->getProtocol')
             ->andReturn('saml20');
 
-        $entity->shouldReceive('getAttributes->findByUrn');
+        $entity->shouldReceive('getAttributes->findAllByUrn')->andReturn([]);
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new ArpGenerator($metadataRepository);
@@ -74,12 +76,12 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
         $this->assertEquals('voot', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['value']);
-        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-1']);
-        $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:manage-1'][0]['source']);
-        $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:manage-1'][0]['value']);
-        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:manage-2']);
-        $this->assertEquals('sab', $metadata['attributes']['urn:mace:dir:attribute-def:manage-2'][0]['source']);
-        $this->assertEquals('/^foobar(.*)$/i', $metadata['attributes']['urn:mace:dir:attribute-def:manage-2'][0]['value']);
+        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:givenName']);
+        $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['source']);
+        $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['value']);
+        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement']);
+        $this->assertEquals('sab', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['source']);
+        $this->assertEquals('/^foobar(.*)$/i', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['value']);
     }
 
     public function test_adds_epti_for_oidcng_entities()
@@ -106,16 +108,34 @@ class ArpGeneratorTest extends MockeryTestCase
             $attributes = [
                 $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:cn', 'voot', '*'),
                 $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*'),
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-1', 'idp', '*'),
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:manage-2', 'sab', '/^foobar(.*)$/i'),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:givenName', 'idp', '*'),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:eduPersonEntitlement', 'sab', '/^foobar(.*)$/i'),
             ];
+            $manageEntity
+                ->shouldReceive('getAttributes->findAllByUrn')
+                ->with('urn:mace:dir:attribute-def:cn')
+                ->andReturn([$attributes[0]]);
+            $manageEntity
+                ->shouldReceive('getAttributes->findAllByUrn')
+                ->with('urn:mace:dir:attribute-def:displayName')
+                ->andReturn([$attributes[1]]);
+            $manageEntity
+                ->shouldReceive('getAttributes->findAllByUrn')
+                ->with('urn:mace:dir:attribute-def:givenName')
+                ->andReturn([$attributes[2]]);
+            $manageEntity
+                ->shouldReceive('getAttributes->findAllByUrn')
+                ->with('urn:mace:dir:attribute-def:eduPersonEntitlement')
+                ->andReturn([$attributes[3]]);
         }
         $manageEntity
             ->shouldReceive('getAttributes->getAttributes')
             ->andReturn($attributes);
 
+        // all the rest yield no search results
         $manageEntity
-            ->shouldReceive('getAttributes->findByUrn');
+            ->shouldReceive('getAttributes->findAllByUrn')
+            ->andReturn([]);
         $manageEntity
             ->shouldReceive('isManageEntity')
             ->andReturn(true);
