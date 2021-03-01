@@ -4,7 +4,9 @@ on:
   pull_request:
     branches: [ develop ]
   release:
-    types: [published]
+    types: [ published ]
+  push: 
+    branches: [ develop ]
 
 jobs:
   build:
