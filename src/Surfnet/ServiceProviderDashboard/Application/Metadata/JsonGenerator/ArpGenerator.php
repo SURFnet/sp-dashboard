@@ -51,7 +51,7 @@ class ArpGenerator implements MetadataGenerator
                 }
                 $attributes[$urn][] = [
                     'source' => $attribute->getSource(),
-                    'value' => $attribute->getValue(),
+                    'value' => $attribute->getValue() === '' ? '*' : $attribute->getValue(),
                     'motivation' => $attribute->getMotivation(),
                 ];
             }

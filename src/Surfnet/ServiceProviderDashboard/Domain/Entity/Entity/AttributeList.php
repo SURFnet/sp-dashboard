@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use function array_key_exists;
 use function reset;
 
 class AttributeList
@@ -105,8 +106,14 @@ class AttributeList
         $originalAttributes = $this->attributes;
         $this->clear();
         foreach ($attributes->getAttributes() as $urn => $attributeList) {
-            // Grab the matching original manage attribute set
-            $manageAttribute = $originalAttributes[$urn];
+            // If the attribute was not yet created, use the new value
+            $manageAttribute = $attributes->getAttributes()[$urn];
+
+            // Else, grab the matching original manage attribute set
+            if (array_key_exists($urn, $originalAttributes)) {
+                $manageAttribute = $originalAttributes[$urn];
+            }
+
             $newMotivation = '';
             foreach ($attributeList as $attr) {
                 if ($attr->hasMotivation()) {
