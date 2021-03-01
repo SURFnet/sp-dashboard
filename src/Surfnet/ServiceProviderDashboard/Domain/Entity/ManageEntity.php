@@ -74,6 +74,10 @@ class ManageEntity
      * @var Service
      */
     private $service;
+    /**
+     * @var bool
+     */
+    private $readOnly = false;
 
     /**
      * @param $data
@@ -250,11 +254,15 @@ class ManageEntity
         return $this->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function isReadOnly()
+    public function setIsReadOnly()
     {
-        // No read only scenarios exist currently. This was used to block oidc entities
-        // (during the Oidc TNG rollover period)
-        return false;
+        $this->readOnly = true;
+    }
+
+    public function isReadOnly(): bool
+    {
+        // Entities from outside the current team can be read only (can happen in RP -> RS connections created in Manage)
+        return $this->readOnly;
     }
 
     public function getService(): Service
@@ -278,7 +286,7 @@ class ManageEntity
         $this->attributes->merge($newEntity->getAttributes());
         $protocol = $this->protocol->getProtocol();
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $this->oidcClient->merge($newEntity->getOidcClient());
+            $this->oidcClient->merge($newEntity->getOidcClient(), $this->getService()->getTeamName());
         }
     }
 

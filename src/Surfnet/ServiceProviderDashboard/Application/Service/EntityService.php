@@ -31,10 +31,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
-use Webmozart\Assert\Assert;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

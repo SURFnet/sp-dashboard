@@ -145,7 +145,7 @@ class OidcngResourceServerClient implements OidcClientInterface
         $this->clientSecret = $secret->getSecret();
     }
 
-    public function merge(OidcClientInterface $client): void
+    public function merge(OidcClientInterface $client, string $homeTeam): void
     {
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();

@@ -62,5 +62,10 @@ interface OidcClientInterface
 
     public function updateClientSecret(SecretInterface $secret): void;
 
-    public function merge(OidcClientInterface $client): void;
+    /**
+     * Merges the new Oidc data with the existing data already present on the entity.
+     * The home team is used to distinguish Manage tracked resource servers from
+     * outside of the team the entity is associated with.
+     */
+    public function merge(OidcClientInterface $client, string $homeTeam): void;
 }
