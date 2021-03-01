@@ -46,8 +46,9 @@ class ArpGeneratorTest extends MockeryTestCase
 
         $entity->shouldReceive('getProtocol->getProtocol')
             ->andReturn('saml20');
-
+        $entity->shouldReceive('getAttributes->getOriginalAttributes')->andReturn([]);
         $entity->shouldReceive('getAttributes->findAllByUrn')->andReturn([]);
+
         $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
 
         $factory = new ArpGenerator($metadataRepository);
@@ -131,6 +132,9 @@ class ArpGeneratorTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getAttributes->getAttributes')
             ->andReturn($attributes);
+        $manageEntity
+            ->shouldReceive('getAttributes->getOriginalAttributes')
+            ->andReturn([]);
 
         // all the rest yield no search results
         $manageEntity

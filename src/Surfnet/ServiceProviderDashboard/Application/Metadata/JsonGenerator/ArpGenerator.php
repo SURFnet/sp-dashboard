@@ -21,6 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
+use function array_diff;
+use function array_intersect;
+use function array_keys;
 
 /**
  * Builds ARP metadata for the JSON export.
@@ -67,26 +70,18 @@ class ArpGenerator implements MetadataGenerator
 
     private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
     {
-        $managedAttributeUrns = $this->repository->findAllAttributeUrns();
+        $spDashboardTracked = $this->repository->findAllAttributeUrns();
+        $originalAttributes = $entity->getAttributes()->getOriginalAttributes();
+        $nonTrackedUrns = array_diff(array_keys($originalAttributes), $spDashboardTracked);
 
-        if ($entity->isManageEntity()) {
-            // Also add the attributes that are not managed in the SPD entity, but have been configured in Manage
-            foreach ($entity->getAttributes()->getAttributes() as $manageAttributes) {
-                foreach ($manageAttributes as $manageAttribute) {
-                    if (!array_key_exists($manageAttribute->getName(), $attributes) &&
-                        !in_array($manageAttribute->getName(), $managedAttributeUrns)
-                    ) {
-                        $attributes[$manageAttribute->getName()] = [
-                            [
-                                'source' => $manageAttribute->getSource(),
-                                'value' => $manageAttribute->getValue(),
-                            ]
-                        ];
-                        if (!empty($manageAttribute->getMotivation())) {
-                            $attributes[$manageAttribute->getName()][0]['motivation'] = $manageAttribute->getMotivation();
-                        }
-                    }
-                }
+        foreach ($nonTrackedUrns as $urn) {
+            $attributes[$urn] = [];
+            foreach ($originalAttributes[$urn] as $attribute) {
+                $attributes[$urn][] = [
+                    'source' => $attribute->getSource(),
+                    'value' => $attribute->getValue(),
+                    'motivation' => $attribute->getMotivation()
+                ];
             }
         }
 
