@@ -77,7 +77,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     {
         // the type for entities is always oidc10-rp because manage is using saml internally
         $metadata = [
-            'type' => 'oauth20_rs',
+            'type' => 'oauth20-rs',
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'active' => true,
             'state' => $workflowState,
