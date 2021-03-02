@@ -50,7 +50,7 @@ class ValidRedirectUrlValidator extends UrlValidator
         // Test if we have Url violations, if so re validate the url with the reverse redirect URL rules
         $violations = $this->context->getViolations();
         if ($violations->count() > $numberOfViolations) {
-            $parts = parse_url($value);
+            $parts = parse_url($this->allowSingleSlash($value));
             if (!isset($parts['host'])) {
                 return;
             }
@@ -99,6 +99,17 @@ class ValidRedirectUrlValidator extends UrlValidator
     private function reverseHostname($hostname)
     {
         return implode('.', array_reverse(explode('.', $hostname)));
+    }
+
+    private function allowSingleSlash(string $url)
+    {
+        $hasDoubleSlash = strpos($url, '://');
+        $hasSingleSlash = strpos($url, ':/');
+        if (!$hasDoubleSlash && $hasSingleSlash) {
+            return str_replace(':/', '://', $url);
+        }
+
+        return $url;
     }
 
     private function dropLastAddedErrors(
