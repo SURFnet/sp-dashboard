@@ -72,7 +72,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
         $this->assertEquals(
             [
                 'data' => [
-                    'type' => 'oauth20_rs',
+                    'type' => 'oauth20-rs',
                     'state' => 'testaccepted',
                     'entityid' => 'entityid',
                     'active' => true,
