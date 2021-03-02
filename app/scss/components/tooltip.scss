@@ -3,6 +3,10 @@
   max-height: 0;
   opacity: 0;
 
+  * {
+    display: none;
+  }
+
   @include motion {
     transition: max-height .4s, opacity .4s;
   }
@@ -28,8 +32,12 @@ label.tooltipLabel:not(.joske):not(.is):not(.nen):not(.koolmarchant) {
 }
 
 .tooltipCheckbox:checked ~ .tooltipContent {
-  max-height: 10vh;
+  max-height: 25vh;
   opacity: 1;
+
+  * {
+    display: initial;
+  }
 
   @include motion {
     transition: max-height .4s, opacity .4s;
