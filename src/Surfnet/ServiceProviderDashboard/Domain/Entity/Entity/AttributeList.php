@@ -28,6 +28,8 @@ class AttributeList
      */
     private $attributes = [];
 
+    private $originalAttributes = [];
+
     public static function fromApiResponse(array $data)
     {
         $list = new self();
@@ -96,6 +98,14 @@ class AttributeList
         return $this->attributes;
     }
 
+    /**
+     * @return Attribute[]
+     */
+    public function getOriginalAttributes(): array
+    {
+        return $this->originalAttributes;
+    }
+
     private function clear()
     {
         $this->attributes = [];
@@ -103,15 +113,15 @@ class AttributeList
 
     public function merge(AttributeList $attributes)
     {
-        $originalAttributes = $this->attributes;
+        $this->originalAttributes = $this->attributes;
         $this->clear();
         foreach ($attributes->getAttributes() as $urn => $attributeList) {
             // If the attribute was not yet created, use the new value
             $manageAttribute = $attributes->getAttributes()[$urn];
 
             // Else, grab the matching original manage attribute set
-            if (array_key_exists($urn, $originalAttributes)) {
-                $manageAttribute = $originalAttributes[$urn];
+            if (array_key_exists($urn, $this->originalAttributes)) {
+                $manageAttribute = $this->originalAttributes[$urn];
             }
 
             $newMotivation = '';
