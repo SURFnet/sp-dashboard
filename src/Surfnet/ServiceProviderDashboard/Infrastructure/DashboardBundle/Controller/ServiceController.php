@@ -331,7 +331,7 @@ class ServiceController extends Controller
             'isAdmin' => true,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'publishedEntity' => $publishedEntity,
-            'production_entities_enabled' => $productionEntitiesEnabled,
+            'productionEntitiesEnabled' => $productionEntitiesEnabled,
             'privacyStatusEntities' => $privacyOK,
         ]);
     }

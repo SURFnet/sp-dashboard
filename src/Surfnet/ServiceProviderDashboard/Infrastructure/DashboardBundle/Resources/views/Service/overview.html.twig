@@ -120,15 +120,11 @@
                         {% endif %}
                         {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
                             <tr class="service-status-entities-table-add-entity">
-                                <td>
+                                <td colspan="5">
                                     <label for="{{ productionId }}" class="link">
                                         {{ 'entity.list.add_to_production'|trans}}
                                     </label>
                                 </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
                             </tr>
                         {% endif %}
                     </table>
@@ -173,15 +169,11 @@
                             </tr>
                         {% endif %}
                         <tr class="service-status-entities-table-add-entity">
-                            <td>
+                            <td colspan="5">
                                 <label for="{{ testId }}" class="link">
                                     {{ 'entity.list.add_to_test'|trans}}
                                 </label>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
                         </tr>
                     </table>
                 </section>
