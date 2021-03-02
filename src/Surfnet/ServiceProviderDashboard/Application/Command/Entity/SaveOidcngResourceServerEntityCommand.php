@@ -144,7 +144,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @var string[]
      */
-    private $scopes = ['oidc'];
+    private $scopes = ['openid'];
 
     /**
      * @param Service $service
