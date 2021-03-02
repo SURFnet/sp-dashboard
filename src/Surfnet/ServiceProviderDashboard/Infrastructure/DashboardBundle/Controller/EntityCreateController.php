@@ -262,9 +262,6 @@ class EntityCreateController extends Controller
         $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment, true);
         $command = $form->getData();
 
-        // A copy can never be saved as draft: changes are published directly to manage.
-        $form->remove('save');
-
         if ($request->isMethod('post')) {
             $form->handleRequest($request);
         }
@@ -279,6 +276,7 @@ class EntityCreateController extends Controller
                 if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
+                        $entity = $entity->resetId();
                         $response = $this->publishEntity($entity, $command, $flashBag);
 
                         // When a response is returned, publishing was a success
