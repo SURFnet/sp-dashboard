@@ -42,11 +42,6 @@ interface OidcClientInterface
     public function getGrants(): array;
 
     /**
-     * @return array
-     */
-    public function getScopes();
-
-    /**
      * @return bool
      */
     public function isPublicClient();

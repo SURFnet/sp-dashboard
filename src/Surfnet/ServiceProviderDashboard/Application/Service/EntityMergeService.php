@@ -128,8 +128,7 @@ class EntityMergeService
             $oidcClient = new OidcngResourceServerClient(
                 $command->getClientId(),
                 $secret->getSecret(),
-                [],
-                $command->getScopes()
+                []
             );
         }
 

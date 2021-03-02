@@ -167,14 +167,6 @@ class OidcngClient implements OidcClientInterface
     }
 
     /**
-     * @return array
-     */
-    public function getScopes()
-    {
-        // Not implemented for OIDC RPs as per https://www.pivotaltracker.com/story/show/176961848
-    }
-
-    /**
      * @return bool
      */
     public function isPublicClient()

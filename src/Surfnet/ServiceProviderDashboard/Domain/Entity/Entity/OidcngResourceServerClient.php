@@ -36,10 +36,6 @@ class OidcngResourceServerClient implements OidcClientInterface
      * @var string
      */
     private $grants;
-    /**
-     * @var array
-     */
-    private $scope;
 
     public static function fromApiResponse(array $data, string $manageProtocol)
     {
@@ -47,31 +43,26 @@ class OidcngResourceServerClient implements OidcClientInterface
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
         $grants = isset($data['data']['metaDataFields']['grants'])
             ? $data['data']['metaDataFields']['grants'] : [];
-        $scope = isset($data['data']['metaDataFields']['scopes']) ? $data['data']['metaDataFields']['scopes'] : '';
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
         Assert::isArray($grants);
-        Assert::isArray($scope);
 
         return new self(
             $clientId,
             $clientSecret,
-            $grants,
-            $scope
+            $grants
         );
     }
 
     public function __construct(
         string $clientId,
         ?string $clientSecret,
-        array $grants,
-        array $scope
+        array $grants
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->grants = $grants;
-        $this->scope = $scope;
     }
 
     /**
@@ -93,14 +84,6 @@ class OidcngResourceServerClient implements OidcClientInterface
     public function getGrants(): array
     {
         return $this->grants;
-    }
-
-    /**
-     * @return array
-     */
-    public function getScopes()
-    {
-        return $this->scope;
     }
 
     /**
@@ -150,6 +133,5 @@ class OidcngResourceServerClient implements OidcClientInterface
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
         $this->grants = is_null($client->getGrants()) ? null : $client->getGrants();
-        $this->scope = is_null($client->getScopes()) ? null : $client->getScopes();
     }
 }
