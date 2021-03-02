@@ -103,7 +103,7 @@ class EntityCreateController extends Controller
         $form = $this->createForm(CreateNewEntityType::class, $formId);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (($form->isSubmitted() || $request->isMethod('post')) && $form->isValid()) {
             $protocol = $request->get($formId . '_protocol');
             $environment = $request->get($formId . '_environment');
             $withTemplate = $request->get($formId . '_withtemplate');
