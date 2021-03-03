@@ -162,12 +162,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
         // By default, OIDC TNG Resource servers are configured to have persistent subject type (name id format)
         $metadata['NameIDFormat'] = Constants::NAME_ID_FORMAT_PERSISTENT;
-        // Scopes 'openid' is hardcoded, but other Manage set values should not be overwritten
-        $metadata['scopes'] = $entity->getOidcClient()->getScopes();
 
-        if (!in_array('openid', $metadata['scopes'])) {
-            $metadata['scopes'][] ='openid';
-        }
         $this->setExcludeFromPush($metadata, $entity);
 
         $metadata += $this->generateOidcClient($entity);
