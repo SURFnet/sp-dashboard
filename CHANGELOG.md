@@ -1,4 +1,4 @@
-## 2.8.0
+## 3.0.0
 An updated theme, further deprovisioning of the ORM layer and some nifty changes to the entity actions.
 
 **Features**
