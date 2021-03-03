@@ -1,7 +1,8 @@
 {% block body %}
     <div class="row entity-type">
-            <fieldset class="add-entity-fieldset add-entity-environment hidden" aria-describedby="fieldset1">
-                <h5 class="add-entity-question" id="fieldset1">{{ 'entity.add.environment.title'|trans }}</h5>
+            {% set fieldsetTitleId = 'fieldset1' ~ manageId %}
+            <fieldset class="add-entity-fieldset add-entity-environment hidden" aria-describedby={{ fieldsetTitleId }}>
+                <h5 class="add-entity-question" id={{ fieldsetTitleId }}>{{ 'entity.add.environment.title'|trans }}</h5>
                 <ul class="add-entity-fieldset-fields">
                     {% set fieldName = manageId ~ '_environment' %}
                     <li class="add-entity-field">
@@ -16,11 +17,12 @@
                     </li>
                 </ul>
             </fieldset>
-            <fieldset class="add-entity-fieldset add-entity-protocol" aria-describedby="fieldset2">
+            {% set fieldsetTitleId = 'fieldset2' ~ manageId %}
+            <fieldset class="add-entity-fieldset add-entity-protocol" aria-describedby={{ fieldsetTitleId }}>
                 {% set link = 'entity.add.protocol.link.url'|trans %}
                 {% set linkText = 'entity.add.protocol.link.text'|trans %}
                 {% set protocolTitle = 'entity.add.protocol.title'|trans %}
-                <h5 class="add-entity-question" id="fieldset2">
+                <h5 class="add-entity-question" id={{ fieldsetTitleId }}>
                     <span class="title">{{ protocolTitle }}</span>
                     <a href="{{ link }}" class="explanationLink">{{ linkText }}</a>
                 </h5>
@@ -35,12 +37,13 @@
                     {% endfor %}
                 </ul>
             </fieldset>
-            <fieldset class="add-entity-fieldset add-entity-template" aria-describedby="fieldset3">
+            {% set fieldsetTitleId = 'fieldset3' ~ manageId %}
+            <fieldset class="add-entity-fieldset add-entity-template" aria-describedby={{ fieldsetTitleId }}>
                 {% set templateTitle = 'entity.add.template.title'|trans %}
                 {% set tooltipId = manageId  ~ 'tooltip' %}
                 {% set allowedTags = 'allowed.html.tags'|trans %}
                 <input type="checkbox" name="templateTooltip" id={{ tooltipId}} hidden class="tooltip tooltipCheckbox" />
-                <h5 class="add-entity-question" id="fieldset3">
+                <h5 class="add-entity-question" id={{ fieldsetTitleId }}>
                     <span class="title">{{ templateTitle }}</span>
                     <label for="{{ tooltipId}}" class="tooltip tooltipLabel">
                         {{ 'entity.add.template.title.tooltip.srText'|trans }}
