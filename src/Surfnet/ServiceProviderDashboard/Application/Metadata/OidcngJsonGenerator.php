@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -50,28 +49,14 @@ class OidcngJsonGenerator implements GeneratorInterface
      */
     private $spDashboardMetadataGenerator;
 
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $oidcPlaygroundUriProd;
-
     public function __construct(
         ArpGenerator $arpMetadataGenerator,
         PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
-        string $oidcPlaygroundUriTest,
-        string $oidcPlaygroundUriProd
+        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
         $this->arpMetadataGenerator = $arpMetadataGenerator;
         $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
         $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
-        $this->oidcPlaygroundUriTest = $oidcPlaygroundUriTest;
-        $this->oidcPlaygroundUriProd = $oidcPlaygroundUriProd;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -173,7 +158,7 @@ class OidcngJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param Entity $entity
+     * @param ManageEntity $entity
      * @return array
      */
     private function generateMetadataFields(ManageEntity $entity)
@@ -201,15 +186,6 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
 
-        // If the entity exists in Manage, use the scopes configured there.
-        if ($entity->isManageEntity()) {
-            // This prevents overwriting the scopes attribute. See: https://www.pivotaltracker.com/story/show/170868465
-            $metadata['scopes'] = $entity->getOidcClient()->getScope();
-        } else {
-            // Will become configurable some time in the future.
-            $metadata['scopes'] = ['openid'];
-        }
-
         $this->setExcludeFromPush($metadata, $entity);
 
         $metadata += $this->generateOidcClient($entity);
@@ -235,7 +211,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             }
             // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
             $metadata['redirectUrls'] = $entity->getOidcClient()->getRedirectUris();
-            $metadata['grants'] = [$entity->getOidcClient()->getGrantType()];
+            $metadata['grants'] = $entity->getOidcClient()->getGrants();
             $metadata['accessTokenValidity'] = $entity->getOidcClient()->getAccessTokenValidity();
             $metadata['isPublicClient'] = $entity->getOidcClient()->isPublicClient();
         }
@@ -284,11 +260,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         if ($organization) {
             $metadata = [
                 'OrganizationName:en' => $organization->getNameEn(),
-                'OrganizationDisplayName:en' => $organization->getDisplayNameEn(),
-                'OrganizationURL:en' => $organization->getUrlEn(),
                 'OrganizationName:nl' => $organization->getNameNl(),
-                'OrganizationDisplayName:nl' => $organization->getDisplayNameNl(),
-                'OrganizationURL:nl' => $organization->getUrlNl(),
             ];
         }
         return array_filter($metadata);

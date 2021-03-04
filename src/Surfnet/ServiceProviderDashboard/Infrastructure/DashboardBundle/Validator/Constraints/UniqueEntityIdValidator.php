@@ -23,7 +23,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityComman
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository as DoctrineRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -35,20 +34,9 @@ class UniqueEntityIdValidator extends ConstraintValidator
      */
     private $queryService;
 
-    /**
-     * @var DoctrineRepository
-     */
-    private $doctrineRepository;
-
-    /**
-     * @param DoctrineRepository $doctrineRepository
-     */
-    public function __construct(
-        ManageQueryService $queryService,
-        DoctrineRepository $doctrineRepository
-    ) {
+    public function __construct(ManageQueryService $queryService)
+    {
         $this->queryService = $queryService;
-        $this->doctrineRepository = $doctrineRepository;
     }
 
     /**

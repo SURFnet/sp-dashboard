@@ -36,6 +36,7 @@
     </target>
 
     <target name="static-analysis">
+
         <echo message="docheader:" />
         <exec executable="vendor/bin/docheader" failonerror="true">
             <arg line="check src/ tests/" />
@@ -66,11 +67,6 @@
             <arg path="tests" />
         </exec>
 
-        <echo message="${line.separator}jscpd:" />
-        <exec executable="node_modules/jscpd/bin/jscpd" failonerror="true">
-            <arg line='--exclude "**/*.test.ts"' />
-            <arg line="--limit=-1" />
-        </exec>
 
         <echo message="${line.separator}phpcpd:" />
         <exec executable="vendor/bin/phpcpd" failonerror="false">
@@ -149,9 +145,7 @@
     </target>
 
     <target name="security-tests">
-        <exec executable="vendor/bin/security-checker" failonerror="true">
-            <arg line="security:check" />
-        </exec>
+        <exec executable="bin/securityChecker.sh" failonerror="true"></exec>
 
         <exec executable="yarn" failonerror="false">
             <arg line="audit" />

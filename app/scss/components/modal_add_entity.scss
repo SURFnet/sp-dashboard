@@ -1,0 +1,100 @@
+.add-entity-yes {
+  align-self: flex-start;
+}
+
+.add-entity-field {
+  display: flex;
+}
+
+.modal.add-entity-modal {
+  max-width: 75ch;
+
+  .wysiwyg {
+    margin-bottom: 0;
+  }
+
+  fieldset.add-entity-fieldset {
+    div:not(.add-entity-field) {
+      margin-bottom: 0;
+    }
+
+    .add-entity-field {
+      margin-bottom: 1rem;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .button-row {
+    display: flex;
+    justify-content: flex-end;
+
+    .button {
+      height: 2.5rem;
+      line-height: normal;
+    }
+  }
+}
+
+.add-entity-fieldset {
+  padding: 1.5rem 0;
+
+  &:first-of-type {
+    padding-top: 0;
+  }
+}
+
+.add-entity-protocol {
+  border-bottom: 1px solid $black;
+  padding-top: 1rem;
+}
+
+.add-entity-fieldset-fields {
+  margin-top: 1rem;
+}
+
+.add-entity-question {
+  color: $black;
+  display: flex;
+  justify-content: space-between;
+  min-width: 130px;
+
+  .title {
+    font-weight: 700;
+  }
+
+  .explanationLink {
+    color: $blue;
+  }
+}
+
+.add-entity-radio {
+  color: $black;
+
+  &:disabled, &:disabled + label {
+    cursor: not-allowed;
+    filter: grayscale(100%);
+    opacity: .6;
+  }
+}
+
+.entity-type form fieldset.add-entity-fieldset .add-entity-field label.add-entity-label {
+  color: $black;
+}
+
+form.add-entity fieldset.add-entity-fieldset .add-entity-field .add-entity-radio:disabled + .add-entity-label {
+  cursor: not-allowed;
+  filter: grayscale(100%);
+  opacity: .6;
+}
+
+.add-entity-yes ~ .add-entity-template-choices {
+  display: none;
+  margin-left: 1rem;
+}
+
+.add-entity-yes:checked ~ .add-entity-template-choices {
+  display: block;
+}

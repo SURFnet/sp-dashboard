@@ -79,7 +79,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
     public function createIssueFrom(Ticket $ticket)
     {
         $this->loadData();
-        $issue = new Issue($ticket->getManageId(), $ticket->getIssueType());
+        $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), 'OPEN');
         $this->data[$ticket->getManageId()] = $issue;
         $this->storeData();
         return $issue;

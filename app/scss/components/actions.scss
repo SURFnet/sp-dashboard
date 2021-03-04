@@ -15,35 +15,37 @@ div.add-entity-actions {
   }
 }
 
-div.actions {
-  min-width: 50px;
+td.actions {
   text-align: right;
+}
+
+div.actions, td.actions > div[tabindex="0"] {
+  border-width: 1px;
+  border-color: $lighter-grey;
+  border-radius: 2px;
+  border-style: solid;
+  display: inline-block;
+  margin: 0 0 0 auto;
+  min-width: 185px;
+  padding: 6px 6px 6px 6px;
   position: relative;
+  text-align: right;
+  white-space: nowrap;
+
+  > i.fa-caret-down {
+    color: $dark-grey;
+  }
 
   a {
     color: $blue;
+    text-decoration: none;
 
     &:visited, &:hover {
       text-decoration: none;
     }
-    text-decoration: none;
 
-    &.opener {
-      border-width: 1px;
-      border-color: $lighter-grey;
-      border-radius: 2px;
-      border-style: solid;
-      padding: 6px 6px 6px 6px;
-      position: absolute;
-      right: 0;
-      white-space: nowrap;
-
-      i {
-        &.fa-caret-down {
-          color: $dark-grey;
-        }
-        padding: 0 4px;
-      }
+    > i {
+      padding: 0 4px;
     }
   }
 
@@ -52,12 +54,13 @@ div.actions {
     border-radius: 2px;
     box-shadow: 1px 2px 6px 1px $lighter-grey;
     display: none;
-    min-width: 170px;
+    min-width: 125px;
     position: absolute;
     right: 0;
     text-align: left;
-    top: 34px;
+    top: 33px;
     z-index: 100;
+    width: 100%;
 
     li {
       border-bottom: 1px;
@@ -87,7 +90,7 @@ div.actions {
     }
   }
 
-  a.opener:hover + ul, ul:hover{
+  &:hover ul, ul:hover, &:focus ul, &:focus-within ul {
     display: block;
   }
 }

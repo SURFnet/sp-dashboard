@@ -35,12 +35,15 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Service;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\ServiceList;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -122,15 +125,28 @@ class ServiceController extends Controller
         }
 
         $serviceObjects = [];
+        $productionEntityEnabled = [];
+        $privacyOK = [];
         foreach ($services as $service) {
+            $productionEntityEnabled[] = $service->isProductionEntitiesEnabled();
             $entityList = $this->entityService->getEntityListForService($service);
             $serviceObjects[] = Service::fromService($service, $entityList, $this->router);
+            $privacyOK[] = $this->serviceStatusService->hasPrivacyQuestions($service);
         }
         $serviceList = new ServiceList($serviceObjects);
 
+        // Try to get a published entity from the session, if there is one, we just published an entity and might need
+        // to display the oidc confirmation popup.
+        /** @var ManageEntity $publishedEntity */
+        $publishedEntity = $this->get('session')->get('published.entity.clone');
+
         return $this->render('DashboardBundle:Service:overview.html.twig', [
             'services' => $serviceList,
-            'isAdmin' => false
+            'isAdmin' => false,
+            'publishedEntity' => $publishedEntity,
+            'showOidcPopup' => $this->showOidcPopup($publishedEntity),
+            'productionEntitiesEnabled' => $productionEntityEnabled,
+            'privacyStatusEntities' => $privacyOK,
         ]);
     }
 
@@ -194,13 +210,14 @@ class ServiceController extends Controller
             $service->getTeamName(),
             $service->isProductionEntitiesEnabled(),
             $service->isPrivacyQuestionsEnabled(),
-            $service->isOidcngEnabled(),
             $service->getServiceType(),
             $service->getIntakeStatus(),
             $service->getContractSigned(),
             $service->getSurfconextRepresentativeApproved(),
             $this->serviceStatusService->hasPrivacyQuestions($service),
-            $service->getInstitutionId()
+            $service->getInstitutionId(),
+            $service->getOrganizationNameNl(),
+            $service->getOrganizationNameEn()
         );
 
         $form = $this->createForm(EditServiceType::class, $command);
@@ -216,7 +233,7 @@ class ServiceController extends Controller
             $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('entity_list', ['serviceId' => $serviceId]);
+                return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
             } catch (EntityNotFoundException $e) {
@@ -269,6 +286,7 @@ class ServiceController extends Controller
             'entityList' => $this->entityService->getEntityListForService($service),
         ];
     }
+
     /**
      * @Method({"GET", "POST"})
      * @Route("/service/select", name="select_service")
@@ -300,10 +318,21 @@ class ServiceController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entityList = $this->entityService->getEntityListForService($service);
         $serviceList = new ServiceList([Service::fromService($service, $entityList, $this->router)]);
+        $productionEntitiesEnabled = [$service->isProductionEntitiesEnabled()];
+        $privacyOK = [$this->serviceStatusService->hasPrivacyQuestions($service)];
+
+        // Try to get a published entity from the session, if there is one, we just published an entity and might need
+        // to display the oidc confirmation popup.
+        /** @var ManageEntity $publishedEntity */
+        $publishedEntity = $this->get('session')->get('published.entity.clone');
 
         return $this->render('DashboardBundle:Service:overview.html.twig', [
             'services' => $serviceList,
-            'isAdmin' => true
+            'isAdmin' => true,
+            'showOidcPopup' => $this->showOidcPopup($publishedEntity),
+            'publishedEntity' => $publishedEntity,
+            'productionEntitiesEnabled' => $productionEntitiesEnabled,
+            'privacyStatusEntities' => $privacyOK,
         ]);
     }
 
@@ -332,5 +361,17 @@ class ServiceController extends Controller
         }
 
         return $button->getName() === $expectedButtonName;
+    }
+
+    private function showOidcPopup(?ManageEntity $publishedEntity)
+    {
+        if (is_null($publishedEntity)) {
+            return false;
+        }
+        $protocol = $publishedEntity->getProtocol()->getProtocol();
+        $isOidcProtocol = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+
+        return $publishedEntity && $isOidcProtocol && $publishedEntity->getOidcClient()->getClientSecret();
     }
 }

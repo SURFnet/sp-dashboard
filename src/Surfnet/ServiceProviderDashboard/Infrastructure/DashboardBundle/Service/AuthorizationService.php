@@ -22,8 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundExcept
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Service\OidcngEnabledMarshaller;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\ManageConfigNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -46,11 +44,6 @@ class AuthorizationService
     private $tokenStorage;
 
     /**
-     * @var OidcngEnabledMarshaller
-     */
-    private $oidcngMarshaller;
-
-    /**
      * @var Config[]
      */
     private $manageConfig;
@@ -70,7 +63,6 @@ class AuthorizationService
             'prod' => $manageProdConfig,
             'production' => $manageProdConfig,
         ];
-        $this->oidcngMarshaller = new OidcngEnabledMarshaller();
     }
 
     /**
@@ -206,7 +198,6 @@ class AuthorizationService
         return $this->session->has('selected_service_id');
     }
 
-
     /**
      * Get all service names keyed by ID the user has access to.
      *
@@ -291,25 +282,5 @@ class AuthorizationService
         /** @var Identity $user */
         $user = $this->tokenStorage->getToken()->getUser();
         return $user->getContact();
-    }
-
-    /**
-     * @param Service $service
-     * @param string $environment
-     * @return bool
-     * @throws ManageConfigNotFoundException
-     */
-    public function isOidcngAllowed(Service $service, $environment)
-    {
-        if (!isset($this->manageConfig[$environment])) {
-            throw new ManageConfigNotFoundException(
-                sprintf('The manage configuration for environment "%s" can not be found.', $environment)
-            );
-        }
-
-        return $this->oidcngMarshaller->allowed(
-            $service,
-            $this->manageConfig[$environment]->getOidcngEnabled()->isEnabled()
-        );
     }
 }

@@ -28,11 +28,10 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Entity\ChooseEntityTypeCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ChooseEntityTypeType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\CreateNewEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -75,7 +74,7 @@ class EntityCreateController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route(
-     *     "/entity/create/type/{serviceId}/{targetEnvironment}",
+     *     "/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}",
      *     defaults={
      *          "targetEnvironment" = "test",
      *     },
@@ -88,35 +87,49 @@ class EntityCreateController extends Controller
      *
      * @param int $serviceId
      * @param string $targetEnvironment
+     * @param string $inputId
      * @return array|RedirectResponse
      */
-    public function typeAction(Request $request, $serviceId, $targetEnvironment)
+    public function typeAction(Request $request, $serviceId, string $targetEnvironment, string $inputId)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
+        $choices = $this->protocolChoiceFactory->buildOptions();
+        $formId = $targetEnvironment . '_' . $service->getGuid();
 
-        $this->protocolChoiceFactory->setService($service);
-        $choices = $this->protocolChoiceFactory->buildOptions($targetEnvironment);
-
-        $command = new ChooseEntityTypeCommand();
-        $command->setProtocolChoices($choices);
-
-        $form = $this->createForm(ChooseEntityTypeType::class, $command);
-
-        // Todo: Temporary solution: when handling a production form, handle the form with the correct form count, this
-        // is achieved by making a second instance of the form.
-        // This could be fixed by replacing the two forms by just one. This entails loading of conditional entity type
-        // choices. And this is out of scope for now.
-        if ($request->request->has('dashboard_bundle_choose_entity_type_1')) {
-            $form = $this->createForm(ChooseEntityTypeType::class, $command);
-        }
+        $entityList = $this->entityService
+            ->getEntityListForService($service)
+            ->sortEntitiesByEnvironment()
+            ->getEntities();
+        $form = $this->createForm(CreateNewEntityType::class, $formId);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            // forward to create action.
-            return $this->redirectToRoute('entity_add', [
+
+        if ($form->isSubmitted() || $request->isMethod('post')) {
+            $protocol = $request->get($formId . '_protocol');
+            $environment = $request->get($formId . '_environment');
+            $withTemplate = $request->get($formId . '_withtemplate');
+            $manageId = false;
+            $sourceEnvironment = null;
+
+            if ($withTemplate === 'yes') {
+                $template = explode('/', $request->get($formId . '_entityid/value'));
+                $manageId = $template[0];
+                $sourceEnvironment = $template[1];
+            }
+
+            if (!$manageId) {
+                return $this->redirectToRoute('entity_add', [
+                    'serviceId' => $service->getId(),
+                    'targetEnvironment' => $environment,
+                    'type' => $protocol
+                ]);
+            }
+
+            return $this->redirectToRoute('entity_copy', [
                 'serviceId' => $service->getId(),
-                'targetEnvironment' => $targetEnvironment,
-                'type' => $form->get('type')->getData()
+                'manageId' => $manageId,
+                'targetEnvironment' => $environment,
+                'sourceEnvironment' => $sourceEnvironment,
             ]);
         }
 
@@ -124,6 +137,11 @@ class EntityCreateController extends Controller
             'form' => $form->createView(),
             'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
+            'inputId' => $inputId,
+            'protocols' => $choices,
+            'productionEnabled' => $service->isProductionEntitiesEnabled(),
+            'entities' => $entityList,
+            'manageId' => $formId,
         ];
     }
 
@@ -149,14 +167,6 @@ class EntityCreateController extends Controller
 
         $service = $this->authorizationService->changeActiveService($serviceId);
 
-        if ($type === Constants::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
-        ) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to create oidcng entities for this environment.'
-            );
-        }
-
         if (!$service->isProductionEntitiesEnabled() &&
             $targetEnvironment !== Constants::ENVIRONMENT_TEST
         ) {
@@ -167,11 +177,6 @@ class EntityCreateController extends Controller
 
         $form = $this->entityTypeFactory->createCreateForm($type, $service, $targetEnvironment);
         $command = $form->getData();
-
-        // The resource server entity type does not support saving of local drafts
-        if ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $form->remove('save');
-        }
 
         if ($request->isMethod('post')) {
             $form->handleRequest($request);
@@ -198,7 +203,11 @@ class EntityCreateController extends Controller
                     }
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+                    if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                    }
+
+                    return $this->redirectToRoute('service_overview');
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
@@ -249,20 +258,10 @@ class EntityCreateController extends Controller
 
         $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
         $entity->setEnvironment($targetEnvironment);
-        if ($entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($service, $targetEnvironment)
-        ) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to copy oidcng entities to this environment.'
-            );
-        }
 
         // load entity into form
-        $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment);
+        $form = $this->entityTypeFactory->createEditForm($entity, $service, $targetEnvironment, true);
         $command = $form->getData();
-
-        // A copy can never be saved as draft: changes are published directly to manage.
-        $form->remove('save');
 
         if ($request->isMethod('post')) {
             $form->handleRequest($request);
@@ -278,6 +277,7 @@ class EntityCreateController extends Controller
                 if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
+                        $entity = $entity->resetId();
                         $response = $this->publishEntity($entity, $command, $flashBag);
 
                         // When a response is returned, publishing was a success
@@ -286,13 +286,21 @@ class EntityCreateController extends Controller
                         }
 
                         // When publishing failed, forward to the edit action and show the error messages there
-                        return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
+                        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                        }
+
+                        return $this->redirectToRoute('service_overview');
                     } else {
                         $this->addFlash('error', 'entity.edit.metadata.validation-failed');
                     }
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+                    if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+                    }
+
+                    return $this->redirectToRoute('service_overview');
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');

@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -69,9 +70,17 @@ class EntityDetailController extends Controller
     public function detailAction(string $id, int $serviceId, string $manageTarget)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
+        $team = $service->getTeamName();
+        /** @var ManageEntity $entity */
         $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
+        if ($entity->getMetaData()->getCoin()->getServiceTeamId() !== $team) {
+            $entity->setIsReadOnly();
+        }
         $viewObject = EntityDetail::fromEntity($entity, $this->playGroundUriTest, $this->playGroundUriProd);
 
-        return ['entity' => $viewObject];
+        return [
+            'entity' => $viewObject,
+            'isAdmin' => $this->isGranted('ROLE_ADMINISTRATOR'),
+        ];
     }
 }

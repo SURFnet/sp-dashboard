@@ -93,6 +93,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'description:nl' => 'description nl',
                         'grants' => [
                             'authorization_code',
+                            'refresh_token',
                         ],
                         'isPublicClient' => true,
                         'name:en' => 'name en',
@@ -104,11 +105,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'contacts:0:emailAddress' => 'emailaddress',
                         'contacts:0:telephoneNumber' => 'telephonenumber',
                         'OrganizationName:en' => 'orgen',
-                        'OrganizationDisplayName:en' => 'orgdisen',
-                        'OrganizationURL:en' => 'http://orgen',
                         'OrganizationName:nl' => 'orgnl',
-                        'OrganizationDisplayName:nl' => 'orgdisnl',
-                        'OrganizationURL:nl' => 'http://orgnl',
                         'privacy' => 'privacy',
                         'redirectUrls' => [
                             'uri1',
@@ -116,7 +113,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                             'uri3',
                         ],
                         'secret' => 'test',
-                        'scopes' => ['openid'],
                         'coin:institution_id' => 'service-institution-id',
                         'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                     ],
@@ -165,13 +161,8 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
                         'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
                         'metaDataFields.OrganizationName:en' => 'orgen',
-                        'metaDataFields.OrganizationDisplayName:en' => 'orgdisen',
-                        'metaDataFields.OrganizationURL:en' => 'http://orgen',
                         'metaDataFields.OrganizationName:nl' => 'orgnl',
-                        'metaDataFields.OrganizationDisplayName:nl' => 'orgdisnl',
-                        'metaDataFields.OrganizationURL:nl' => 'http://orgnl',
                         'metaDataFields.privacy' => 'privacy',
-                        'metaDataFields.scopes' => ['openid'],
                         'metaDataFields.secret' => 'test',
                         'metaDataFields.redirectUrls' => [
                             'uri1',
@@ -180,6 +171,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         ],
                         'metaDataFields.grants' => [
                             'authorization_code',
+                            'refresh_token',
                         ],
                         'metaDataFields.isPublicClient' => true,
                         'revisionnote' => 'revisionnote',

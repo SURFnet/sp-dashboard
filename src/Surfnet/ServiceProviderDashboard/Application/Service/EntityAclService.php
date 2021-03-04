@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;

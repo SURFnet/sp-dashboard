@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Service Provider dashboard | SURFconext{% endblock %}</title>
@@ -43,18 +43,18 @@
         </div>
         <div class="page-container">
             {% block body_container %}
-            <h1>{% block page_heading %}{% endblock %}</h1>
-            <div class="card">
-                {% block body %}{% endblock %}
-            </div>
+                <h1>{% block page_heading %}{% endblock %}</h1>
+                <div class="card">
+                    {% block body %}{% endblock %}
+                </div>
             {% endblock %}
         </div>
-        <div class="footer">
+        <footer class="footer">
             <div class="footer-inner">
                 <span><a href="{{ 'page.footer.privacy_link'|trans }}" target="_blank">{{ 'page.footer.privacy'|trans }}</a></span>
                 <span><a href="{{ 'page.footer.contact_link'|trans }}" target="_blank">{{ 'page.footer.contact'|trans }}</a></span>
             </div>
-        </div>
+        </footer>
         {% block javascripts %}
             <script src="{{ asset('build/app.js') }}"></script>
         {% endblock %}

@@ -5,18 +5,11 @@
 {% block page_heading %} {{ 'entity.type.title'|trans }} {% endblock %}
 
 {% block body %}
-
     <div class="wysiwyg">{{ 'entity.type.description.html'|trans|wysiwyg }}</div>
 
     <div class="row entity-type">
-        {{ form_start(form, {'action': path('entity_type', {'serviceId': serviceId, 'targetEnvironment': environment})}) }}
-        {{ form_widget(form) }}
-
-        <div class="button-row">
-            <button type="submit" class="button pull-right blue">Create</button>
-            <a href="#close" class="button pull-right" rel="modal:close">Cancel</a>
-        </div>
-
+        {{ form_start(form, {'action': path('entity_type', {'serviceId': serviceId, 'targetEnvironment': environment, 'inputId': inputId})}) }}
+        {% include "@Dashboard/EntityModal/addEntityModal.html.twig" %}
         {{ form_end(form) }}
     </div>
 

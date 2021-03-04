@@ -23,20 +23,13 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LoadEntityService
 {
-    /**
-     * @var EntityRepository
-     */
-    private $entityRepository;
-
     /**
      * @var QueryEntityRepository
      */
@@ -48,11 +41,9 @@ class LoadEntityService
     private $manageProductionClient;
 
     public function __construct(
-        EntityRepository $entityRepository,
         QueryEntityRepository $manageTestClient,
         QueryEntityRepository $manageProductionClient
     ) {
-        $this->entityRepository = $entityRepository;
         $this->manageTestClient = $manageTestClient;
         $this->manageProductionClient = $manageProductionClient;
     }
@@ -71,12 +62,6 @@ class LoadEntityService
      */
     public function load($dashboardId, $manageId, Service $service, $sourceEnvironment, $environment, $isClientReset = false)
     {
-        if (!$this->entityRepository->isUnique($dashboardId)) {
-            throw new InvalidArgumentException(
-                'The id that was generated for the entity was not unique, please try again'
-            );
-        }
-
         $manageClient = $this->manageProductionClient;
         if ($sourceEnvironment == 'test') {
             $manageClient = $this->manageTestClient;

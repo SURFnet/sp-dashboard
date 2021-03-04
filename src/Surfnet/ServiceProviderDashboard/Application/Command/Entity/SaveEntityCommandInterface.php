@@ -49,13 +49,6 @@ interface SaveEntityCommandInterface extends Command
     public function getAdministrativeContact(): ?Contact;
     public function getSupportContact(): ?Contact;
 
-    public function getOrganizationNameEn(): ?string;
-    public function getOrganizationDisplayNameEn(): ?string;
-    public function getOrganizationUrlEn(): ?string;
-    public function getOrganizationNameNl(): ?string;
-    public function getOrganizationDisplayNameNl(): ?string;
-    public function getOrganizationUrlNl(): ?string;
-
     public function getApplicationUrl(): ?string;
     public function getEulaUrl(): ?string;
     public function getCertificate(): ?string;

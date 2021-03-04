@@ -1,0 +1,86 @@
+{% block body %}
+    <div class="row entity-type">
+            {% set fieldsetTitleId = 'fieldset1' ~ manageId %}
+            <fieldset class="add-entity-fieldset add-entity-environment hidden" aria-describedby={{ fieldsetTitleId }}>
+                <h5 class="add-entity-question" id={{ fieldsetTitleId }}>{{ 'entity.add.environment.title'|trans }}</h5>
+                <ul class="add-entity-fieldset-fields">
+                    {% set fieldName = manageId ~ '_environment' %}
+                    <li class="add-entity-field">
+                        {% set fieldId = manageId ~ '_prod' %}
+                        <input class="add-entity-radio" type="radio" name={{ fieldName }} id="{{ fieldId }}" value="production"{% if not productionEnabled %} disabled="disabled"{% endif %}{% if environment is same as('production') and productionEnabled %} checked="checked"{% endif %}>
+                        <label class="add-entity-label" for="{{ fieldId }}">{{ 'entity.add.environment.production'|trans }}</label>
+                    </li>
+                    <li class="add-entity-field">
+                        {% set fieldId = manageId ~ '_test' %}
+                        <input class="add-entity-radio" type="radio" name={{ fieldName }} id={{ fieldId }} value="test"{% if environment is same as('test') %} checked="checked"{% endif %}>
+                        <label class="add-entity-label" for={{ fieldId }}>{{ 'entity.add.environment.test'|trans }}</label>
+                    </li>
+                </ul>
+            </fieldset>
+            {% set fieldsetTitleId = 'fieldset2' ~ manageId %}
+            <fieldset class="add-entity-fieldset add-entity-protocol" aria-describedby={{ fieldsetTitleId }}>
+                {% set link = 'entity.add.protocol.link.url'|trans %}
+                {% set linkText = 'entity.add.protocol.link.text'|trans %}
+                {% set protocolTitle = 'entity.add.protocol.title'|trans %}
+                <h5 class="add-entity-question" id={{ fieldsetTitleId }}>
+                    <span class="title">{{ protocolTitle }}</span>
+                    <a href="{{ link }}" class="explanationLink">{{ linkText }}</a>
+                </h5>
+                <ul class="add-entity-fieldset-fields">
+                    {% set fieldName = manageId ~ '_protocol' %}
+                    {% for title, value in protocols %}
+                        {% set fieldId = manageId ~ '_' ~ value %}
+                        <li class="add-entity-field">
+                            <input class="add-entity-radio" type="radio" name={{ fieldName }} id={{ fieldId }} value={{ value }}{% if loop.first %} checked="checked"{% endif %}>
+                            <label class="add-entity-label" for={{ fieldId }}>{{ title|trans }}</label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </fieldset>
+            {% set fieldsetTitleId = 'fieldset3' ~ manageId %}
+            <fieldset class="add-entity-fieldset add-entity-template" aria-describedby={{ fieldsetTitleId }}>
+                {% set templateTitle = 'entity.add.template.title'|trans %}
+                {% set tooltipId = manageId  ~ 'tooltip' %}
+                {% set allowedTags = 'allowed.html.tags'|trans %}
+                <input type="checkbox" name="templateTooltip" id={{ tooltipId}} hidden class="tooltip tooltipCheckbox" />
+                <h5 class="add-entity-question" id={{ fieldsetTitleId }}>
+                    <span class="title">{{ templateTitle }}</span>
+                    <label for="{{ tooltipId}}" class="tooltip tooltipLabel">
+                        {{ 'entity.add.template.title.tooltip.srText'|trans }}
+                    </label>
+                </h5>
+                <div class="tooltip tooltipContent">
+                    {{ 'entity.add.template.title.tooltip.text'|striptags('<br><wbr><p><a><ul><ol><li><dl><dd><dt><blockquote><cite><strong><em><div><span><address><time>')|trans|raw }}
+                </div>
+                {% set fieldName = manageId ~ '_withtemplate' %}
+                <ul class="add-entity-fieldset-fields">
+                    <li class="add-entity-field">
+                        {% set fieldId = manageId ~ '_notemplate' %}
+                        <input class="add-entity-radio" type="radio" name={{ fieldName }} id={{ fieldId }} value="no" checked="checked">
+                        <label class="add-entity-label" for={{ fieldId }}>{{ 'entity.add.template.no'|trans }}</label>
+                    </li>
+                    <li class="add-entity-field">
+                        {% set fieldId = manageId ~ '_yestemplate' %}
+                        <input class="add-entity-radio add-entity-yes" type="radio" name={{ fieldName }} id={{ fieldId }} value="yes"{% if not entities|length %} disabled="disabled"{% endif %}>
+                        <label class="add-entity-label" for={{ fieldId }}>{{ 'entity.add.template.yes'|trans }}</label>
+                        <ul class="add-entity-template-choices">
+                            {% set fieldName = manageId ~ '_entityid/value' %}
+                            {% set checkedSelected = false %}
+                            {% for entity in entities %}
+                                {%  set fieldId = manageId ~ '_template_' ~ loop.index %}
+                                <li class="add-entity-field{% if  entity.protocol != "saml20" %} hidden{% endif %}" data-protocol="{{ entity.protocol }}" data-environment="{{ entity.environment }}">
+                                    <input class="add-entity-radio" type="radio" name={{ fieldName }} id={{ fieldId }} value="{{ entity.id }}/{{ entity.environment }}"{% if not checkedSelected and entity.protocol == "saml20" %} checked="checked" {% set checkedSelected = true %}{% endif %}>
+                                    <label class="add-entity-label" for={{ fieldId }}>({{ entity.environment }})
+                                        {{ entity.name }}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </fieldset>
+            <div class="button-row">
+                <label class="button" for="{{ inputId }}" rel="modal:close">{{ 'entity.add.cancel'|trans }}</label>
+                <button type="submit" class="button blue">{{ 'entity.add.create'|trans }}</button>
+            </div>
+    </div>
+{% endblock %}

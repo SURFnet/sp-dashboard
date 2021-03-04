@@ -85,10 +85,8 @@ class ParserTest extends MockeryTestCase
         $this->assertEquals($metadata->supportContact->getPhone(), '456789123');
 
         $this->assertEquals($metadata->organizationNameEn, 'orgen');
-        $this->assertEquals($metadata->organizationDisplayNameEn, 'orgdisen');
         $this->assertEquals($metadata->organizationUrlEn, 'http://orgen');
         $this->assertEquals($metadata->organizationNameNl, 'orgnl');
-        $this->assertEquals($metadata->organizationDisplayNameNl, 'orgdisnl');
         $this->assertEquals($metadata->organizationUrlNl, 'http://orgnl');
 
         $this->assertEquals(

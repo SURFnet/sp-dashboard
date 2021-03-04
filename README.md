@@ -10,17 +10,31 @@
 
 The Service Provider Dashboard is a dashboard application where
 [SURFconext](https://www.surf.nl/diensten-en-producten/surfconext/index.html) Service Providers can register and manage
-their services. This can be both SAML 2.0 and OpenID Connect entities.
+their services. This can be both SAML 2.0, OpenID Connect Relying Parties and Oauth 2.0 Resource Server entities.
 
 ## Prerequisites
 
-- [PHP](https://secure.php.net/manual/en/install.php) (5.6 or higher)
+- [PHP](https://secure.php.net/manual/en/install.php) (7.2)
 - [Composer](https://getcomposer.org/doc/00-intro.md)
 - [Apache Ant](https://ant.apache.org/manual/install.html)
 - [Ansible](https://docs.ansible.com/ansible/intro_installation.html)
 - [Vagrant](https://www.vagrantup.com/docs/installation/)
   - Optional, but recommended: [Hostsupdater plugin](https://github.com/cogitatio/vagrant-hostsupdater)
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
+As of release 2.8 the Vagrant + Ansible dev environment has been discontinued in favour of a docker-compose installable
+dev machine. Instructions below should still help you in building a Vagrant based dev env, but this will be removed from
+the project in the next release. For now use `docker-compose up -d` to create and build the development environment.
+
+An entry in your hostsfile is still required for things to work. An example entry would look like:
+
+```
+127.0.0.1 welcome.vm.openconext.org static.vm.openconext.org mujina-sp.vm.openconext.org mujina-idp.vm.openconext.org engine-api.vm.openconext.org oidc.vm.openconext.org manage.vm.openconext.org spdashboard.vm.openconext.org
+```
+
+
+**Deprecation warning!**
 The Ansible playbook for SP Dashboard depends on some roles from
 [OpenConext-deploy](https://github.com/OpenConext/OpenConext-deploy), so in order to provision the Vagrant box you need
 to have that repository checked out in a directory called `OpenConext-deploy` in the parent directory of where this
@@ -28,6 +42,7 @@ project lives.
 
 ## Provision the VM
 
+**Deprecation warning!** Try the Docker dev env! 
 The VM is provisioned using Ansible and Vagrant. After you have installed those, you can run
 ```
 vagrant up
@@ -45,27 +60,18 @@ ANSIBLE_TAGS=eb,profile vagrant provision
 
 First, run `composer install`. This will install all PHP dependencies, including the development dependencies.
 
-In order to start the development environment, run `vagrant up`. This will build and start the virtual machine that is
-used in development to run the application. When started for the first time, the Vagrant box will be provisioned using
-Ansible.
-
-Note: if you don't use the Vagrant Hostsupdater plugin, you have to manually add
-`192.168.33.19  dev.support.surfconext.nl` to your hosts file so that requests will be routed to the virtual machine.
+In order to start the development environment, run `docker-compose up -d`. This will build and start the container that is
+used in development to run the application. 
 
 Install database migrations
 ```
-bin/console doctrine:migrations:migrate
+$ docker exec sp-dashboard_php-fpm_1  /var/www/html/bin/console doctrine:migrations:migrate
 ```
 
-Now follow the instructions in [SAML configuration for development](docs/saml-dev-setup.md) to setup authentication.
- 
 The application is now up and running and can be accessed at
-[https://spdashboard.dev.support.surfconext.nl/](https://spdashboard.dev.support.surfconext.nl/). Note that in development the `app_dev.php`
+[https://spdashboard.vm.openconext.org/](https://spdashboard.vm.openconext.org). Note that in development the `app_dev.php`
 front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
-* To view mails caught by Mailcatcher, visit [spdashboard.dev.support.surfconext.nl:1080](https://spdashboard.dev.support.surfconext.nl:1080/)
-
-If you run into the `shibsp::ConfigurationException`, please reload your box, the issue should be resolved after a 
-reboot. The Shiboleth deamon might not come out 100% correctly out of the initial provisioning run.
+* To view mails caught by Mailcatcher, visit [spdashboard.vm.openconext.org:1080](https://spdashboard.vm.openconext.org:1080/)
 
 ### Running the tests
 

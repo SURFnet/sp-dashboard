@@ -58,6 +58,8 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $service->setIntakeStatus('yes');
         $service->setSurfconextRepresentativeApproved('yes');
         $service->setContractSigned('yes');
+        $service->setOrganizationNameEn('Organization Name EN');
+        $service->setOrganizationNameNl('Organization Name NL');
 
         $command = new CreateServiceCommand();
         $command->setName($service->getName());
@@ -65,7 +67,8 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setGuid($service->getGuid());
         $command->setPrivacyQuestionsEnabled($service->isPrivacyQuestionsEnabled());
         $command->setProductionEntitiesEnabled($service->isProductionEntitiesEnabled());
-
+        $command->setOrganizationNameEn($service->getOrganizationNameEn());
+        $command->setOrganizationNameNl($service->getOrganizationNameNl());
         $command->setServiceType($service->getServiceType());
         $command->setIntakeStatus($service->getIntakeStatus());
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
@@ -96,6 +99,8 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setIntakeStatus('yes');
         $command->setSurfconextRepresentativeApproved('yes');
         $command->setContractSigned('yes');
+        $command->setOrganizationNameEn('Organization name');
+        $command->setOrganizationNameNl('Organization name');
 
         $this->repository
             ->shouldReceive('isUnique')

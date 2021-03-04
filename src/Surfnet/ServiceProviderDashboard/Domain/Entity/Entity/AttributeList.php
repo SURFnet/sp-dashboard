@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use function array_key_exists;
+use function reset;
 
 class AttributeList
 {
@@ -26,6 +27,8 @@ class AttributeList
      * @var Attribute[]
      */
     private $attributes = [];
+
+    private $originalAttributes = [];
 
     public static function fromApiResponse(array $data)
     {
@@ -46,19 +49,45 @@ class AttributeList
 
     public function add(Attribute $attribute)
     {
-        $this->attributes[$attribute->getName()] = $attribute;
+        $this->attributes[$attribute->getName()][] = $attribute;
     }
 
     /**
+     * Returns the first attribute with a motivation
+     *
+     * If not a single motivation is present, it returns the first attribute.
+     *
      * @param $urn
      * @return Attribute|null
      */
     public function findByUrn($urn)
     {
         if (isset($this->attributes[$urn])) {
-            return $this->attributes[$urn];
+            if (count($this->attributes[$urn]) > 1) {
+                // Look for the attribute with a motivation, if it is not found, return the first in line
+                foreach ($this->attributes[$urn] as $attribute) {
+                    if ($attribute->hasMotivation()) {
+                        return $attribute;
+                    }
+                }
+            }
+            // One attribute on this attr, return it without it being wrapped in an array
+            return reset($this->attributes[$urn]);
         }
         return null;
+    }
+
+    public function findAllByUrn(string $urn): array
+    {
+        $attributes = [];
+        foreach ($this->getAttributes() as $attributeCandidates) {
+            foreach ($attributeCandidates as $attributeCandidate) {
+                if ($attributeCandidate->getName() === $urn) {
+                    $attributes[] = $attributeCandidate;
+                }
+            }
+        }
+        return $attributes;
     }
 
     /**
@@ -69,6 +98,14 @@ class AttributeList
         return $this->attributes;
     }
 
+    /**
+     * @return Attribute[]
+     */
+    public function getOriginalAttributes(): array
+    {
+        return $this->originalAttributes;
+    }
+
     private function clear()
     {
         $this->attributes = [];
@@ -76,22 +113,28 @@ class AttributeList
 
     public function merge(AttributeList $attributes)
     {
-        $attributeSources = $this->getAttributeSources();
+        $this->originalAttributes = $this->attributes;
         $this->clear();
-        foreach ($attributes->getAttributes() as $attribute) {
-            if (array_key_exists($attribute->getName(), $attributeSources)) {
-                $attribute = $attribute->updateSource($attributeSources[$attribute->getName()]);
-            }
-            $this->add($attribute);
-        }
-    }
+        foreach ($attributes->getAttributes() as $urn => $attributeList) {
+            // If the attribute was not yet created, use the new value
+            $manageAttribute = $attributes->getAttributes()[$urn];
 
-    private function getAttributeSources()
-    {
-        $sources = [];
-        foreach ($this->getAttributes() as $name => $attribute) {
-            $sources[$name] = $attribute->getSource();
+            // Else, grab the matching original manage attribute set
+            if (array_key_exists($urn, $this->originalAttributes)) {
+                $manageAttribute = $this->originalAttributes[$urn];
+            }
+
+            $newMotivation = '';
+            foreach ($attributeList as $attr) {
+                if ($attr->hasMotivation()) {
+                    $newMotivation = $attr->getMotivation();
+                }
+            }
+            /** @var Attribute $attribute */
+            foreach ($manageAttribute as $attribute) {
+                $attribute = $attribute->updateMotivation($newMotivation);
+                $this->add($attribute);
+            }
         }
-        return $sources;
     }
 }

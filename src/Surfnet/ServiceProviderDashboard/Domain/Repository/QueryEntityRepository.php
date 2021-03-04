@@ -29,12 +29,20 @@ interface QueryEntityRepository
      */
     public function findManageIdByEntityId($entityId);
 
+
     /**
      * @param string $manageId
      *
      * @return ManageEntity|null
      */
     public function findByManageId($manageId);
+
+    /**
+     * Use of this method is discouraged, it will try saml, openic and oauth endpoints to find
+     * the entity. If you already know the data type (protocol) of the entity,
+     * please use the findByManageIdAndProtocol instead
+     */
+    public function findByManageIdAndProtocol(string $manageId, string $protocol) :? ManageEntity;
 
     /**
      * @param string $manageId
@@ -59,7 +67,7 @@ interface QueryEntityRepository
      *
      * @return ManageEntity|null
      */
-    public function findByEntityId($entityId, $state);
+    public function findResourceServerByEntityId($entityId, $state);
 
     public function findOidcngResourceServersByTeamName(string $teamName, string $state): array;
 }

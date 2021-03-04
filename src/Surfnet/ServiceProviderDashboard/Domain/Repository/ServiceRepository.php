@@ -72,4 +72,6 @@ interface ServiceRepository
      * @return mixed
      */
     public function delete(Service $service);
+
+    public function findByTeamName(?string $serviceTeamName);
 }

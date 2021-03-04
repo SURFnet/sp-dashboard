@@ -58,13 +58,6 @@ class EntityResetSecretController extends Controller
 
         $manageEntity = $this->entityService->getManageEntityById($manageId, $environment);
         $manageEntity->setService($service);
-        if ($manageEntity->getProtocol()->getProtocol() === Protocol::OIDC10_RP &&
-            !$this->authorizationService->isOidcngAllowed($service, $environment)
-        ) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to reset the client secret for oidcng entities to this environment.'
-            );
-        }
 
         $resetOidcSecretCommand = new ResetOidcSecretCommand($manageEntity);
         try {

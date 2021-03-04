@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2018 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +15,19 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Service;
+namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-
-/**
- * Contains the decision logic to determine if the service can/may use
- * the open id connect - the next generation feature.
- */
-class OidcngEnabledMarshaller
+class Grants
 {
-    /**
-     * @param Service $service
-     * @param bool $enabledForManage
-     * @return bool
-     */
-    public function allowed(Service $service, $enabledForManage)
+    private $grants = [];
+
+    public function addGrant(OidcGrantType $grant): void
     {
-        return $service->isOidcngEnabled() && $enabledForManage;
+        $this->grants[$grant->getGrantType()] = $grant;
+    }
+
+    public function getGrants(): array
+    {
+        return $this->grants;
     }
 }

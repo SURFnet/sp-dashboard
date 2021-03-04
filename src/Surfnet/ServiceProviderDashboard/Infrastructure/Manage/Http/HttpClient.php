@@ -29,7 +29,6 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\Unread
 final class HttpClient
 {
     const MODE_TEST = 'test';
-    const MODE_PROD = 'production';
 
     /**
      * @var ClientInterface

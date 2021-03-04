@@ -28,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFac
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -115,7 +114,11 @@ class EntityDeleteController extends Controller
             }
 
             $service = $this->authorizationService->changeActiveService($serviceId);
-            return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+            if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+            }
+
+            return $this->redirectToRoute('service_overview');
         }
 
         return [
@@ -170,7 +173,7 @@ class EntityDeleteController extends Controller
                 );
             }
             $service = $this->authorizationService->changeActiveService($serviceId);
-            return $this->redirectToRoute('entity_list', ['serviceId' => $service->getId()]);
+            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
         }
 
         return [

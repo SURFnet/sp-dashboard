@@ -24,7 +24,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -48,7 +47,11 @@ class EntityPublishedController extends Controller
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
         ) {
-            return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
+            if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
+            }
+
+            return $this->redirectToRoute('service_overview');
         }
 
         $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
@@ -73,7 +76,7 @@ class EntityPublishedController extends Controller
      */
     public function oidcConfirmationModalAction()
     {
-        /** @var Entity $entity */
+        /** @var ManageEntity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
 
         // Show the confirmation modal only once in this request

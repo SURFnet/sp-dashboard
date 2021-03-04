@@ -1,3 +1,42 @@
+## 3.0.0
+An updated theme, further deprovisioning of the ORM layer and some nifty changes to the entity actions.
+
+**Features**
+ - Adjust create new entity modal #408
+ - The entity details screen was replaced by a detailed service overview page #392
+ - A Docker dev env was introduced, replacing Vagrant and Ansible with Docker #407
+ - Use `oauth20_rs` Manage entity scheme for resource servers #409
+ - The OIDCng restriction is no longer configurable. OIDCng for all! #396
+ - Organization name is now manageble for Services #397  
+ - Drop attribute constraint, an entity without ARP is allowed #399
+ - Allow setting multiple grants #412
+    
+**Bugfixes**
+ - Remove trailing slashes from ClientID #402
+ - Refrain from overwriting Manage tracked attributes #421
+
+**Improvements**
+Infra: 
+ - Apache: Set the Referer policy header #393
+ - Register required php extensions in composer.json #368
+     
+Jira:
+ - Stop matching the Jira status to the entity status #394
+ - Consider closed and resolved status from Jira #419
+
+Other:
+ - Remove default scope from Oidcng RP entities #404
+ - Remove remaining OIDC crud #405
+ - Remove all leftover Entity entity references #406
+ - Support attributes with multiple values #413
+ - Allow Resource Servers from outside of RP's team #418
+ - Add info fields to create entity titles #415
+
+## 2.7.2
+
+**Bugfix**
+Set correct publication state for prod entities PART II #394
+
 ## 2.7.1
 
 **Bugfix**

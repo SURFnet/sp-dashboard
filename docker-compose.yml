@@ -1,29 +1,63 @@
-version: "3.7"
+---
+
+version: "3.8"
+
 services:
-  php-fpm:
-    volumes:
-      - spddata:/var/www/html/ 
-    build: 
-      context: . 
-      dockerfile: 'docker/php-fpm/Dockerfile'
+  openconext:
+    build:
+      context: 'docker/'
+      dockerfile: Dockerfiledev
+      target: openconext
+    extra_hosts:
+      engine-api.vm.openconext.org: 127.0.0.2
+      engine.vm.openconext.org: 127.0.0.1
+      manage.vm.openconext.org: 127.0.0.1
+    privileged: true
     networks:
-      - spdashboard
-    container_name: fpm
+      spdashboard:
+        aliases:
+          - db.vm.openconext.org
+          - manage.vm.openconext.org
+    volumes:
+      - spdashboard_mysql:/var/lib/mysql
+      - spdashboard_mongo:/var/lib/mongo
+    ports:
+      - "443:443"
+    expose: 
+      - 3306
+  php-fpm:
+    build:
+      context: 'docker/'
+      dockerfile: Dockerfiledev
+      target: spdphpfpm
+    volumes:
+      - .:/var/www/html/
+      - type: bind
+        source: /dev/log
+        target: /dev/log
+    networks:
+      spdashboard:
+        aliases: 
+          - spdashboard_php-fpm
   web:
     build:
-      context: .
-      dockerfile: 'docker/httpd/Dockerfile'
+      context: 'docker/'
+      dockerfile: Dockerfiledev
+      target: spdhttpd
     depends_on:
       - php-fpm
-    expose:
-      - "80"
+    volumes:
+      - .:/var/www/html/
+    ports: 
+      - "8080:80"
     networks:
-      - spdashboard
-    volumes: 
-      - spddata:/var/www/html/:nocopy
-    container_name: web     
+      spdashboard:
+        aliases: 
+          - spdashboard_web
 
 networks:
   spdashboard:
+
 volumes:
-  spddata:
+  spdashboard_mysql:
+  spdashboard_mongo:

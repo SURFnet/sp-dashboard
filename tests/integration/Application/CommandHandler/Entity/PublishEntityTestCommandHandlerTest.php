@@ -25,7 +25,6 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;

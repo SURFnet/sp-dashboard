@@ -102,13 +102,6 @@ class Service
     private $privacyQuestionsEnabled = true;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $oidcngEnabled = true;
-
-    /**
      * @var string
      * @ORM\Column(length=50)
      */
@@ -152,6 +145,20 @@ class Service
      * @ORM\Column(length=255, nullable=true)
      */
     private $institutionId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=false)
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(length=255, nullable=false)
+     */
+    private $organizationNameEn;
 
     public function __construct()
     {
@@ -231,14 +238,6 @@ class Service
     }
 
     /**
-     * @param bool $oidcngEnabled
-     */
-    public function setOidcngEnabled($oidcngEnabled)
-    {
-        $this->oidcngEnabled = $oidcngEnabled;
-    }
-
-    /**
      * @param string $teamName
      */
     public function setTeamName($teamName)
@@ -276,14 +275,6 @@ class Service
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOidcngEnabled()
-    {
-        return $this->oidcngEnabled;
     }
 
     /**
@@ -372,5 +363,37 @@ class Service
     public function setInstitutionId($institutionId)
     {
         $this->institutionId = $institutionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl(): ?string
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $organizationNameNl
+     */
+    public function setOrganizationNameNl(string $organizationNameNl): void
+    {
+        $this->organizationNameNl = $organizationNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn(): string
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $organizationNameEn
+     */
+    public function setOrganizationNameEn(string $organizationNameEn): void
+    {
+        $this->organizationNameEn = $organizationNameEn;
     }
 }

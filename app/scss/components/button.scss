@@ -26,6 +26,15 @@
     color: $medium-grey;
   }
 
+  &.admin {
+    background-color: $contrast-gold;
+    color: white;
+    border: none;
+    i {
+      color: white;
+    }
+  }
+
   &.blue {
     background-color: $blue;
     color: white;
@@ -52,6 +61,17 @@
       color: white;
       margin:0;
       font-size: larger;
+    }
+  }
+
+  &.title {
+    font-size: $normalFont;
+    min-width: 5rem;
+    padding: .5rem;
+    text-transform: none;
+
+    i {
+      margin-left: 0;
     }
   }
 }

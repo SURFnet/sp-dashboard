@@ -28,14 +28,12 @@ use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryP
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ResourceServerCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
-use Webmozart\Assert\Assert;
+use function sprintf;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -51,6 +49,11 @@ class EntityService implements EntityServiceInterface
      * @var TicketServiceInterface
      */
     private $ticketService;
+
+    /**
+     * @var ServiceService
+     */
+    private $serviceService;
 
     /**
      * @var RouterInterface
@@ -75,11 +78,6 @@ class EntityService implements EntityServiceInterface
     /**
      * @var string
      */
-    private $publishStatus;
-
-    /**
-     * @var string
-     */
     private $removalStatus;
 
     /**
@@ -88,20 +86,20 @@ class EntityService implements EntityServiceInterface
     public function __construct(
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         TicketServiceInterface $ticketService,
+        ServiceService $serviceService,
         Config $testConfig,
         Config $productionConfig,
         RouterInterface $router,
         LoggerInterface $logger,
-        string $publishStatus,
         string $removalStatus
     ) {
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
+        $this->serviceService = $serviceService;
         $this->router = $router;
         $this->logger = $logger;
         $this->testManageConfig = $testConfig;
         $this->prodManageConfig = $productionConfig;
-        $this->publishStatus = $publishStatus;
         $this->removalStatus = $removalStatus;
     }
 
@@ -111,74 +109,30 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param int $id
-     * @return Entity|null
-     */
-    public function getEntityById($id)
-    {
-        $entity = $this->queryRepositoryProvider->getEntityRepository()->findById($id);
-        if ($entity && $entity->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            // Load the Possibly connected resource servers
-            $resourceServers = [];
-            switch ($entity->getEnvironment()) {
-                case Constants::ENVIRONMENT_TEST:
-                    foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
-                        $resourceServers[] = $this->queryRepositoryProvider
-                            ->getManageTestQueryClient()
-                            ->findByEntityId($clientId, $this->testManageConfig->getPublicationStatus()->getStatus());
-                    }
-                    break;
-                case Constants::ENVIRONMENT_PRODUCTION:
-                    foreach ($entity->getOidcngResourceServers()->getResourceServers() as $clientId) {
-                        $resourceServers[] = $this->queryRepositoryProvider
-                            ->getManageProductionQueryClient()
-                            ->findByEntityId($clientId, $this->prodManageConfig->getPublicationStatus()->getStatus());
-                    }
-                    break;
-            }
-            $entity->setOidcngResourceServers(new ResourceServerCollection($resourceServers));
-        }
-        return $entity;
-    }
-
-    /**
-     * @param string $id
-     * @param string $manageTarget
-     * @param Service $service
-     * @return ManageEntity
      * @throws EntityNotFoundException
      */
-    public function getEntityByIdAndTarget($id, $manageTarget, Service $service)
+    public function getEntityByIdAndTarget(string $id, string $manageTarget, Service $service): ManageEntity
     {
         switch ($manageTarget) {
             case 'production':
-                $entity = $this->queryRepositoryProvider
-                    ->getManageProductionQueryClient()
-                    ->findByManageId($id);
+                $entity = $this->findAndverifyAccessAllowed($id, $manageTarget, $service);
                 $entity->setEnvironment($manageTarget);
                 $entity->setService($service);
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
                 $this->updateStatus($entity);
-
-                // Todo: review this construction, The ticket is used to determine request for removal, but not for the
-                // publication state
                 $issue = $this->findIssueBy($entity);
                 $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
                     $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
                 if ($issue && $shouldUseTicketStatus) {
-                    $this->updateEntityStatusWithJiraTicketStatus($entity, $issue);
+                    $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                 }
-
                 return $entity;
             case 'test':
-                $entity = $this->queryRepositoryProvider
-                    ->getManageTestQueryClient()
-                    ->findByManageId($id);
+                $entity = $this->findAndverifyAccessAllowed($id, $manageTarget, $service);
                 $entity->setEnvironment($manageTarget);
                 $entity->setService($service);
                 return $entity;
-
             default:
                 throw new EntityNotFoundException(
                     sprintf(
@@ -187,6 +141,32 @@ class EntityService implements EntityServiceInterface
                     )
                 );
         }
+    }
+
+    private function findAndverifyAccessAllowed(string $id, string $environment, Service $service): ManageEntity
+    {
+
+        $entity = $this->queryRepositoryProvider
+            ->fromEnvironment($environment)
+            ->findByManageId($id);
+        if ($entity === null) {
+            throw new EntityNotFoundException(
+                sprintf(
+                    'Unable to find ManageEntity for environment "%s"',
+                    $environment
+                )
+            );
+        }
+
+        // Allow actions on Resource Servers (viewing them outside of our team)
+        if ($entity->getProtocol()->getProtocol() !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $serviceFromEntity = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+            if ($serviceFromEntity->getId() !== $service->getId()) {
+                throw new InvalidArgumentException('The service from the entity did not match the service passed to this method.');
+            }
+        }
+
+        return $entity;
     }
 
     public function getEntityListForService(Service $service)
@@ -209,11 +189,6 @@ class EntityService implements EntityServiceInterface
     public function getEntitiesForService(Service $service)
     {
         $entities = [];
-
-        $draftEntities = $this->findDraftEntitiesByServiceId($service->getId());
-        foreach ($draftEntities as $entity) {
-            $entities[] = EntityDto::fromEntity($entity);
-        }
 
         $testEntities = $this->findPublishedTestEntitiesByTeamName($service->getTeamName());
         foreach ($testEntities as $result) {
@@ -243,19 +218,11 @@ class EntityService implements EntityServiceInterface
             ->fromEnvironment($env)
             ->findByManageId($manageId);
         $entity->setEnvironment($env);
+        // Set the service associated to the entity on the entity.
+        $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+        $entity->setService($service);
         $this->updateStatus($entity);
         return $entity;
-    }
-
-    /**
-     * @param int $serviceId
-     * @return Entity[]
-     */
-    private function findDraftEntitiesByServiceId($serviceId)
-    {
-        return $this->queryRepositoryProvider
-            ->getEntityRepository()
-            ->findByServiceId($serviceId);
     }
 
     /**
@@ -293,6 +260,7 @@ class EntityService implements EntityServiceInterface
             // Extract the Manage entity id's
             $manageIds = [];
             foreach ($entities as $entity) {
+                $this->updateStatus($entity);
                 $manageIds[] = $entity->getId();
             }
             $issueCollection = $this->ticketService->findByManageIds($manageIds);
@@ -300,21 +268,14 @@ class EntityService implements EntityServiceInterface
             // entities
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
+                    $this->updateStatus($entity);
                     $issue = $issueCollection->getIssueById($entity->getId());
-                    if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== 'spd-delete-production-entity') {
+                    if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== $this->removalStatus) {
                         // A published entity needs no status update unless it's a removal requested entity
                         continue;
                     }
-
-                    if ($issue) {
-                        switch ($issue->getIssueType()) {
-                            case $this->publishStatus:
-                                $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
-                                break;
-                            case $this->removalStatus:
-                                $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
-                                break;
-                        }
+                    if ($issue && $issue->getIssueType() === $this->removalStatus && !$issue->isClosedOrResolved()) {
+                        $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                     }
                 }
             }
@@ -347,13 +308,6 @@ class EntityService implements EntityServiceInterface
             );
         }
         return null;
-    }
-
-    private function updateEntityStatusWithJiraTicketStatus(ManageEntity $entity, Issue $issue)
-    {
-        if ($issue instanceof Issue) {
-            $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
-        }
     }
 
     private function updateStatus(ManageEntity $entity)

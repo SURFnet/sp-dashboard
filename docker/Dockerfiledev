@@ -1,0 +1,25 @@
+FROM ghcr.io/openconext/openconext-deploy/openconext-core:merge AS openconext
+COPY ./conf/prep_oc.sh /tmp/prep_oc.sh
+COPY ./conf/saml20_sp.json /tmp/saml20_sp.json
+COPY ./conf/engineblock.crt /etc/openconext/engineblock.crt
+COPY ./conf/engineblock.pem /etc/openconext/engineblock.pem
+COPY ./conf/start.sh /tmp/start.sh
+CMD ["/tmp/start.sh"]
+
+FROM ghcr.io/surfnet/sp-dashboard/spdashboard_php-fpm:2.7.2 AS spdphpfpm
+WORKDIR /var/www/html/
+COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
+COPY ./conf/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN /usr/sbin/update-ca-certificates && \
+    rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ && \
+    apk --update --no-cache add autoconf g++ make && \
+    pecl install -f xdebug && \
+    docker-php-ext-enable xdebug && \
+    apk del --purge autoconf g++ make
+
+CMD ["/usr/local/sbin/php-fpm" , "-F"]
+
+FROM ghcr.io/surfnet/sp-dashboard/spdashboard_web:2.7.2 AS spdhttpd
+COPY ./conf/000-default-dev.conf /usr/local/apache2/conf/000-default.conf
+EXPOSE 80
+CMD ["httpd", "-D", "FOREGROUND"]

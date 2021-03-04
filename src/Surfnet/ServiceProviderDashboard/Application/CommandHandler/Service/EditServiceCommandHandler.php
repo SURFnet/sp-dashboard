@@ -57,7 +57,6 @@ class EditServiceCommandHandler implements CommandHandler
         $service->setTeamName($command->getTeamName());
         $service->setProductionEntitiesEnabled($command->isProductionEntitiesEnabled());
         $service->setPrivacyQuestionsEnabled($command->isPrivacyQuestionsEnabled());
-        $service->setOidcngEnabled($command->isOidcngEnabled());
 
         $service->setServiceType($command->getServiceType());
         $service->setContractSigned($command->getContractSigned());
@@ -65,6 +64,8 @@ class EditServiceCommandHandler implements CommandHandler
         $service->setSurfconextRepresentativeApproved($command->getSurfconextRepresentativeApproved());
 
         $service->setInstitutionId($command->getInstitutionId());
+        $service->setOrganizationNameEn($command->getOrganizationNameEn());
+        $service->setOrganizationNameNl($command->getOrganizationNameNl());
 
         $this->serviceRepository->isUnique($service);
 

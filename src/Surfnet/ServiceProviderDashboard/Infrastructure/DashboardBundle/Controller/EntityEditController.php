@@ -19,13 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,21 +48,28 @@ class EntityEditController extends Controller
 
     /**
      * @Method({"GET", "POST"})
-     * @Route("/entity/edit/{environment}/{manageId}", name="entity_edit")
+     * @Route("/entity/edit/{environment}/{manageId}/{serviceId}", name="entity_edit")
      * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function editAction(Request $request, string $environment, string $manageId)
+    public function editAction(Request $request, string $environment, string $manageId, int $serviceId)
     {
         $flashBag = $this->get('session')->getFlashBag();
-        $service = $this->serviceService->getServiceById($this->authorizationService->getActiveServiceId());
+        $service = $this->serviceService->getServiceById($serviceId);
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
-
+        $entityServiceId = $entity->getService()->getId();
+        // Verify the Entity Service Id is one of the logged in users services
+        $this->authorizationService->assertServiceIdAllowed($entityServiceId);
+        // Don't trust the url provided service id, check it against the Service Id associated with the entity
+        if ($entityServiceId !== $serviceId) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to view an Entity from another Service'
+            );
+        }
         if ($entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION) {
             throw $this->createAccessDeniedException(
                 'You are not allowed to edit a published production entity'
@@ -73,15 +77,6 @@ class EntityEditController extends Controller
         }
 
         $entity->setService($service);
-        $protocol = $entity->getProtocol()->getProtocol();
-
-        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG &&
-            !$this->authorizationService->isOidcngAllowed($service, $environment)
-        ) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to modify oidcng entities for this environment.'
-            );
-        }
 
         // Only clear the flash bag when this request did not come from the 'entity_add' action.
         if (!$this->requestFromCreateAction($request)) {
@@ -114,7 +109,11 @@ class EntityEditController extends Controller
                     }
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
-                    return $this->redirectToRoute('entity_list', ['serviceId' => $entity->getService()->getId()]);
+                    if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
+                    }
+
+                    return $this->redirectToRoute('service_overview');
                 }
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');

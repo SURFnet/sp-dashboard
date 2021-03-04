@@ -21,6 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class EditServiceCommand implements Command
 {
     /**
@@ -57,11 +60,6 @@ class EditServiceCommand implements Command
     private $privacyQuestionsEnabled = true;
 
     /**
-     * @var bool
-     */
-    private $oidcngEnabled = true;
-
-    /**
      * @var string
      * @Assert\NotBlank
      */
@@ -94,6 +92,18 @@ class EditServiceCommand implements Command
     private $institutionId;
 
     /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationNameNl;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     */
+    private $organizationNameEn;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      *
      * @param int $id
@@ -102,13 +112,14 @@ class EditServiceCommand implements Command
      * @param string $teamName
      * @param bool $productionEntitiesEnabled
      * @param bool $privacyQuestionsEnabled
-     * @param bool $oidcngEnabled
      * @param string $serviceType
      * @param string $intakeStatus
      * @param string $contractSigned
      * @param string $surfconextRepresentativeApproved
      * @param string $privacyQuestionsAnswered
      * @param string $institutionId
+     * @param string $organizationNameNl
+     * @param string $organizationNameEn
      */
     public function __construct(
         $id,
@@ -117,13 +128,14 @@ class EditServiceCommand implements Command
         $teamName,
         $productionEntitiesEnabled,
         $privacyQuestionsEnabled,
-        $oidcngEnabled,
         $serviceType,
         $intakeStatus,
         $contractSigned,
         $surfconextRepresentativeApproved,
         $privacyQuestionsAnswered,
-        $institutionId
+        $institutionId,
+        $organizationNameNl,
+        $organizationNameEn
     ) {
         $this->id = $id;
         $this->guid = $guid;
@@ -131,13 +143,14 @@ class EditServiceCommand implements Command
         $this->teamName = $teamName;
         $this->productionEntitiesEnabled = $productionEntitiesEnabled;
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-        $this->oidcngEnabled = $oidcngEnabled;
         $this->serviceType = $serviceType;
         $this->intakeStatus = $intakeStatus;
         $this->contractSigned = $contractSigned;
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
         $this->institutionId = $institutionId;
+        $this->organizationNameEn = $organizationNameEn;
+        $this->organizationNameNl = $organizationNameNl;
     }
 
     /**
@@ -178,14 +191,6 @@ class EditServiceCommand implements Command
     public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-    }
-
-    /**
-     * @param bool $oidcngEnabled
-     */
-    public function setOidcngEnabled($oidcngEnabled)
-    {
-        $this->oidcngEnabled = $oidcngEnabled;
     }
 
     /**
@@ -333,18 +338,42 @@ class EditServiceCommand implements Command
     }
 
     /**
-     * @return bool
-     */
-    public function isOidcngEnabled()
-    {
-        return $this->oidcngEnabled;
-    }
-
-    /**
      * @return string
      */
     public function getInstitutionId()
     {
         return $this->institutionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameNl(): ?string
+    {
+        return $this->organizationNameNl;
+    }
+
+    /**
+     * @param string $organizationNameNl
+     */
+    public function setOrganizationNameNl(string $organizationNameNl): void
+    {
+        $this->organizationNameNl = $organizationNameNl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationNameEn(): ?string
+    {
+        return $this->organizationNameEn;
+    }
+
+    /**
+     * @param string $organizationNameEn
+     */
+    public function setOrganizationNameEn(string $organizationNameEn): void
+    {
+        $this->organizationNameEn = $organizationNameEn;
     }
 }

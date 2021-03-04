@@ -57,8 +57,10 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
-    public function buildSamlCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveSamlEntityCommand
-    {
+    public function buildSamlCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment
+    ): SaveSamlEntityCommand {
         $command = new SaveSamlEntityCommand();
         $metaData = $manageEntity->getMetaData();
         $coins = $manageEntity->getMetaData()->getCoin();
@@ -94,7 +96,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         return $command;
     }
 
-    public function buildOidcngCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveOidcngEntityCommand
+    public function buildOidcngCommandByManageEntity(ManageEntity $manageEntity, string $environment, bool $isCopy = false): SaveOidcngEntityCommand
     {
         $command = new SaveOidcngEntityCommand();
         $metaData = $manageEntity->getMetaData();
@@ -109,6 +111,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
         $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));
         $command->setSupportContact(Contact::from($metaData->getContacts()->findSupportContact()));
+        $command->setIsCopy($isCopy);
 
         // Organization data
         $command->setNameNl($metaData->getNameNl());
@@ -125,7 +128,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
         // OidcNg settings
         $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
-        $command->setGrantType($manageEntity->getOidcClient()->getGrantType());
+        $command->setGrants($manageEntity->getOidcClient()->getGrants());
 
         // The SAML nameidformat is used as the OIDC subject type https://www.pivotaltracker.com/story/show/167511146
         $command->setSubjectType($metaData->getNameIdFormat());
@@ -148,8 +151,11 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         return $command;
     }
 
-    public function buildOidcngRsCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveOidcngResourceServerEntityCommand
-    {
+    public function buildOidcngRsCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment,
+        bool $isCopy = false
+    ): SaveOidcngResourceServerEntityCommand {
         $command = new SaveOidcngResourceServerEntityCommand();
         $metaData = $manageEntity->getMetaData();
 
@@ -158,6 +164,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setStatus($manageEntity->getStatus());
         $command->setEnvironment($environment);
         $command->setEntityId($metaData->getEntityId());
+        $command->setIsCopy($isCopy);
 
         $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
 
@@ -182,14 +189,12 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
                 continue;
             }
 
-            if ($manageAttribute->hasMotivation()) {
-                $attribute = new Attribute();
-                $attribute->setRequested(true);
-                $attribute->setMotivation($manageAttribute->getMotivation());
+            $attribute = new Attribute();
+            $attribute->setRequested(true);
+            $attribute->setMotivation($manageAttribute->getMotivation());
 
-                $setter = $attributeDefinition->setterName;
-                $command->{$setter}($attribute);
-            }
+            $setter = $attributeDefinition->setterName;
+            $command->{$setter}($attribute);
         }
     }
 

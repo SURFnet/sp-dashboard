@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
@@ -32,19 +31,7 @@ interface EntityServiceInterface
      */
     public function createEntityUuid();
 
-    /**
-     * @param string $id
-     * @param string $manageTarget
-     * @param Service $service
-     * @return mixed
-     */
-    public function getEntityByIdAndTarget($id, $manageTarget, Service $service);
-
-    /**
-     * @param int $id
-     * @return Entity|null
-     */
-    public function getEntityById($id);
+    public function getEntityByIdAndTarget(string $id, string $manageTarget, Service $service): ManageEntity;
 
     /**
      * @param Service $service

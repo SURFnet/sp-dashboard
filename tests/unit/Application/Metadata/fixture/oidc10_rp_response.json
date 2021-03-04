@@ -40,9 +40,6 @@
         "uri2",
         "uri3"
       ],
-      "scopes": [
-        "openid"
-      ],
       "grants": [
         "authorization_code",
         "refresh_token"

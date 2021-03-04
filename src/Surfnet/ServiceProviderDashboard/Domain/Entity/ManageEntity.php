@@ -74,6 +74,10 @@ class ManageEntity
      * @var Service
      */
     private $service;
+    /**
+     * @var bool
+     */
+    private $readOnly = false;
 
     /**
      * @param $data
@@ -88,17 +92,13 @@ class ManageEntity
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
         $oidcClient = null;
-        if ($manageProtocol === Protocol::OIDC10_RP) {
-            if (isset($data['data']['metaDataFields']['isResourceServer']) &&
-                $data['data']['metaDataFields']['isResourceServer']
-            ) {
-                $oidcClient = OidcngResourceServerClient::fromApiResponse($data, $manageProtocol);
-            } else {
-                $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
-            }
+        if ($manageProtocol === Protocol::OAUTH20_RS) {
+            $oidcClient = OidcngResourceServerClient::fromApiResponse($data, $manageProtocol);
+        } elseif ($manageProtocol === Protocol::OIDC10_RP) {
+            $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
         }
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
-        $protocol = Protocol::fromApiResponse($data, $manageProtocol);
+        $protocol = Protocol::fromApiResponse($manageProtocol);
 
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }
@@ -254,11 +254,15 @@ class ManageEntity
         return $this->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function isReadOnly()
+    public function setIsReadOnly()
     {
-        // No read only scenarios exist currently. This was used to block oidc entities
-        // (during the Oidc TNG rollover period)
-        return false;
+        $this->readOnly = true;
+    }
+
+    public function isReadOnly(): bool
+    {
+        // Entities from outside the current team can be read only (can happen in RP -> RS connections created in Manage)
+        return $this->readOnly;
     }
 
     public function getService(): Service
@@ -282,7 +286,7 @@ class ManageEntity
         $this->attributes->merge($newEntity->getAttributes());
         $protocol = $this->protocol->getProtocol();
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $this->oidcClient->merge($newEntity->getOidcClient());
+            $this->oidcClient->merge($newEntity->getOidcClient(), $this->getService()->getTeamName());
         }
     }
 

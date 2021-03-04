@@ -30,7 +30,7 @@ entity:
       oidcng:
         title: Information
         html: <strong>information about this view</strong>
-      oidcng_rs:
+      oauth20_rs:
         title: Information
         html: <strong>information about this view</strong>
     metadata:
@@ -63,7 +63,7 @@ entity:
       oidcng:
         title: Metadata
         html: <strong>information about the metadata fields</strong>
-      oidcng_rs:
+      oauth20_rs:
         title: Metadata
         html: <strong>information about the metadata fields</strong>
     contact:
@@ -83,7 +83,7 @@ entity:
       oidcng:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
-      oidcng_rs:
+      oauth20_rs:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
     attribute:
@@ -140,12 +140,8 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-entity.list.title: Entities of service '%serviceName%'
-entity.list.title_no_service_selected: No service selected
-entity.list.empty: There are no entities configured
-entity.list.no_service_selected: Please select a service
-entity.list.add_to_test: Add new entity
-entity.list.add_to_production: Add new entity
+entity.list.add_to_test: New test entity
+entity.list.add_to_production: New production entity
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
 entity.list.primary_contact: Primary contact
@@ -160,8 +156,6 @@ entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
 entity.list.action.reset_secret: Reset client secret
-entity.list.table.title.test: Test environment (engine.test.surfconext.nl)
-entity.list.table.title.prod: Production environment (engine.surfconext.nl)
 entity.list.modal.oidc_confirmation:
   title: Confirmation
   client_id:
@@ -257,8 +251,8 @@ should be present.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 "
-entity.edit.info.oidcng_rs.title: Info
-entity.edit.info.oidcng_rs.html: "
+entity.edit.info.oauth20_rs.title: Info
+entity.edit.info.oauth20_rs.html: "
 <p>Documentation about this SP registration form can be found at:
 <a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
 
@@ -278,13 +272,13 @@ entity.edit.metadata.fetch.exception: "Unable to load the metadata from the prov
 entity.edit.metadata.saml20.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oidc.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oidcng.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
-entity.edit.metadata.oidcng_rs.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
+entity.edit.metadata.oauth20_rs.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
 entity.edit.metadata.validation-failed: "Warning! Some entries are missing or incorrect. Please review and fix those entries below."
 entity.edit.metadata.saml20.title: Metadata
 entity.edit.metadata.oidc.title: Metadata
 entity.edit.metadata.oidcng.title: Metadata
-entity.edit.metadata.oidcng_rs.title: Metadata
+entity.edit.metadata.oauth20_rs.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
 entity.edit.contact_information.title: Contact information
 entity.edit.contact_information.html: "
@@ -326,8 +320,8 @@ entity.edit.attributes.oidcng.html: "
 
 <p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
 "
-entity.edit.attributes.oidcng_rs.title: Attributes
-entity.edit.attributes.oidcng_rs.html: "
+entity.edit.attributes.oauth20_rs.title: Attributes
+entity.edit.attributes.oauth20_rs.html: "
 <p>When an end-user logs in to your SP, SURFconext sends a SAML-assertion to the SP. The SAML-assertion contains statements about the user, including identity and possibly a number of other attributes (see list below). Select the attributes this service requires to operate. For each attribute you request a <strong>valid reason</strong> must be provided which will be reviewed. Note: <strong>every extra attribute you request could complicate the contractual phase</strong>: just one more reason to not select more attributes than you absolutely need. Also note that SURFconext operates with a minimal disclosure principle. This means that only the absolute necessary (personal) information is transferred to a entity. Check this page for more information: <a href=\"https://wiki.surfnet.nl/x/xcpWAw\">https://wiki.surfnet.nl/x/xcpWAw</a>.</p>
 
 <p>Possibly some boxes have already been checked. This information is reused from the metadata.</p>
@@ -450,9 +444,9 @@ privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 privacy.form.label.accessData.html: 2. Who can access the data?
 privacy.form.label.certification.html: "5. Can you supply a Third Party Memorandum? If not: skip to question 9"
-privacy.form.label.certificationValidFrom.html: 7. Valid from:
+privacy.form.label.certificationValidFrom.html: "7. Valid from:"
 privacy.form.label.certificationLocation.html: 6. Where can an institution find/request it?
-privacy.form.label.certificationValidTo.html: 8. Valid to:
+privacy.form.label.certificationValidTo.html: "8. Valid to:"
 privacy.form.label.country.html: 3. In what country is the data stored?
 privacy.form.label.otherInfo.html: 14. Other data privacy and security information
 privacy.form.label.privacyPolicy.html: "12. Do you publish your privacy policy? If not: skip to question 14"
@@ -474,11 +468,7 @@ privacy.information.snDpaWhyNot: What items of the SURF model Data Processing Ag
 privacy.information.surfmarketDpaAgreement: Did you agree a Data Processing Agreement with SURFmarket?
 privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF Data Processing Agreement?
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
-service:
-  admin_overview:
-    title: Service overview
-    introduction:
-      html: "Please use the service switcher to manage the entities of one of the services."
+service.admin_overview.introduction.html: "Please use the service switcher to manage the entities of one of the services."
 service.create.title: Add new service
 service.edit.title: Edit service
 service.delete.title: "Delete service"
@@ -486,6 +476,10 @@ service.delete.confirmation: "You are about to delete '%name%'. Are you sure?"
 service.delete.entity_list_text: "With this, you are also deleting the following entities:"
 service.form.general.title: General
 service.form.status.title: Service status
+service.form.label.organization_display_name_en: Organization display name English
+service.form.label.organization_name_nl: Organization name Dutch
+service.form.label.organization_name_en: Organization name English
+service.form.label.organization_display_name_nl: Organization display name Dutch
 service.form.label.connection_status: Connection status
 service.form.label.connection_status_not_requested: Not requested
 service.form.label.connection_status_requested: Requested
@@ -508,15 +502,19 @@ service.form.label.service_type_institute: Institute
 service.form.label.service_type_non_institute: Not an institute
 service.form.label.institution_id: Institute ID
 service.form.label.institution_guid:  Institute GUID
-service.admin_overview.title: Service overview
+service.admin_overview.title: "%name% overview"
 service.overview.title: My services
-service.overview.action.entityList: Detailed entities overview
 service.overview.action.privacyQuestions: Privacy questions
 service.overview.action.serviceEdit: Edit service
 service.overview.action.serviceDelete: Delete service
-service.overview.entitylist.title: Entities of service %name%
-service.overview.entitylist.test.title: Entities @ test environment
-service.overview.entitylist.production.title: Entities @ production environment
+service.overview.graph.title: "%name% status summary"
+service.overview.privacy.notification.title: "Privacy questions status"
+service.overview.privacy.notification.message: "The privacy questions for this service provider have not been answered.  Please answer "
+service.overview.privacy.notification.link: "the privacy questions"
+service.overview.entitylist.title: "%name% entities"
+service.overview.entitylist.noscript: "The status progress graph needs JavaScript to work.  Please enable JavaScript if you want to view it."
+service.overview.entitylist.test.title: Test entities
+service.overview.entitylist.production.title: Production entities
 service.overview.entitylist.name: Name
 service.overview.entitylist.entityId: Entity ID
 service.overview.entitylist.protocol: Protocol
@@ -583,3 +581,16 @@ entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute: Edu person targ
 entity.actions.modal.oidc_client_reset.title: Confirmation
 entity.actions.modal.oidc_client_reset.warning: This action cannot be undone
 entity.actions.modal.oidc_client_reset.info.html: <p>Are you sure you would like to reset the openid connect client secret.</p>
+entity.add.environment.title: Environment?
+entity.add.environment.production: production
+entity.add.environment.test: test
+entity.add.protocol.title: Protocol?
+entity.add.protocol.link.url: https://example.com
+entity.add.protocol.link.text: More info on protocols
+entity.add.template.title: From existing entity?
+entity.add.template.no: No, create blank registration form.
+entity.add.template.yes: Yes
+entity.add.template.title.tooltip.srText: What does this mean?
+entity.add.template.title.tooltip.text: <p>If you select an existing entity as the basis for your new entity, its data will be copied into the new entity.  That way you can avoid filling in a lot of duplicate info.  <strong>Do make sure you check all metadata to ensure it's correct for the new entity!</strong></p>
+entity.add.create: Create
+entity.add.cancel: Cancel

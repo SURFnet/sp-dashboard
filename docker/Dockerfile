@@ -40,4 +40,6 @@ RUN apk add --no-cache libxml2-dev \
     chown -R www-data /var/www/html/var/sessions && \
     rm -rf /var/www/html/var/cache/prod/
 
+COPY ./docker/conf/zz-docker.conf /usr/local/etc/php-fpm.d
+
 CMD ["/usr/local/sbin/php-fpm" , "-F"]

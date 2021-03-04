@@ -42,6 +42,7 @@ class OidcngClientIdParserTest extends TestCase
             ['https://www.google.com/entityId', 'www.google.com/entityId', 'parses https with path'],
             ['http://www.google.com', 'www.google.com', 'parses http'],
             ['http://www.google.com/entityId', 'www.google.com/entityId', 'parses https with path'],
+            ['http://www.google.com/', 'www.google.com', 'strips trailing slash'],
         ];
     }
 }

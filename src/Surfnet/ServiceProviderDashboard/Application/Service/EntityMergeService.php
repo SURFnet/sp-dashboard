@@ -118,8 +118,7 @@ class EntityMergeService
                 $command->getClientId(),
                 $secret->getSecret(),
                 $this->buildRedirectUrls($command),
-                $command->getGrantType(),
-                $command->getScopes(),
+                $command->getGrants(),
                 $command->isPublicClient(),
                 $command->getAccessTokenValidity(),
                 $command->getOidcngResourceServers()
@@ -129,8 +128,7 @@ class EntityMergeService
             $oidcClient = new OidcngResourceServerClient(
                 $command->getClientId(),
                 $secret->getSecret(),
-                null,
-                $command->getScopes()
+                []
             );
         }
 
@@ -173,7 +171,6 @@ class EntityMergeService
                 $commandAttribute = $command->$getterName();
                 $urn = reset($definition->urns);
                 $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
-                $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
             }
         }
         return $attributeList;
@@ -197,12 +194,12 @@ class EntityMergeService
     private function buildOrganizationFromCommand(SaveEntityCommandInterface $command): Organization
     {
         return new Organization(
-            $command->getOrganizationNameEn(),
-            $command->getOrganizationDisplayNameEn(),
-            $command->getOrganizationUrlEn(),
-            $command->getOrganizationNameNl(),
-            $command->getOrganizationDisplayNameNl(),
-            $command->getOrganizationUrlNl()
+            $command->getService()->getOrganizationNameEn(),
+            null,
+            null,
+            $command->getService()->getOrganizationNameNl(),
+            null,
+            null
         );
     }
 

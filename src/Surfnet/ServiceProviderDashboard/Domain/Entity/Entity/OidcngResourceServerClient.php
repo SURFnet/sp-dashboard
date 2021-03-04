@@ -35,43 +35,34 @@ class OidcngResourceServerClient implements OidcClientInterface
     /**
      * @var string
      */
-    private $grantType;
-    /**
-     * @var array
-     */
-    private $scope;
+    private $grants;
 
     public static function fromApiResponse(array $data, string $manageProtocol)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $grantType = isset($data['data']['metaDataFields']['grants'])
-            ? reset($data['data']['metaDataFields']['grants']) : '';
-        $scope = isset($data['data']['metaDataFields']['scopes']) ? $data['data']['metaDataFields']['scopes'] : '';
+        $grants = isset($data['data']['metaDataFields']['grants'])
+            ? $data['data']['metaDataFields']['grants'] : [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
-        Assert::string($grantType);
-        Assert::isArray($scope);
+        Assert::isArray($grants);
 
         return new self(
             $clientId,
             $clientSecret,
-            $grantType,
-            $scope
+            $grants
         );
     }
 
     public function __construct(
         string $clientId,
         ?string $clientSecret,
-        ?string $grantType,
-        array $scope
+        array $grants
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
-        $this->grantType = $grantType;
-        $this->scope = $scope;
+        $this->grants = $grants;
     }
 
     /**
@@ -90,20 +81,9 @@ class OidcngResourceServerClient implements OidcClientInterface
         return $this->clientSecret;
     }
 
-    /**
-     * @return string
-     */
-    public function getGrantType()
+    public function getGrants(): array
     {
-        return $this->grantType;
-    }
-
-    /**
-     * @return array
-     */
-    public function getScope()
-    {
-        return $this->scope;
+        return $this->grants;
     }
 
     /**
@@ -148,11 +128,10 @@ class OidcngResourceServerClient implements OidcClientInterface
         $this->clientSecret = $secret->getSecret();
     }
 
-    public function merge(OidcClientInterface $client): void
+    public function merge(OidcClientInterface $client, string $homeTeam): void
     {
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
-        $this->grantType = is_null($client->getGrantType()) ? null : $client->getGrantType();
-        $this->scope = is_null($client->getScope()) ? null : $client->getScope();
+        $this->grants = is_null($client->getGrants()) ? null : $client->getGrants();
     }
 }

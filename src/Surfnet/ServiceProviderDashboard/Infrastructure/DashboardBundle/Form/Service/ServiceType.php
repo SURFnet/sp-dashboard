@@ -47,6 +47,22 @@ class ServiceType extends AbstractType
                 )
                     ->add('name')
                     ->add(
+                        'organizationNameNl',
+                        TextType::class,
+                        [
+                            'required' => true,
+                            'label' => 'service.form.label.organization_name_nl',
+                        ]
+                    )
+                    ->add(
+                        'organizationNameEn',
+                        TextType::class,
+                        [
+                            'required' => true,
+                            'label' => 'service.form.label.organization_name_en',
+                        ]
+                    )
+                    ->add(
                         'institutionId',
                         TextType::class,
                         [
@@ -65,14 +81,6 @@ class ServiceType extends AbstractType
                     )
                     ->add(
                         'privacyQuestionsEnabled',
-                        CheckboxType::class,
-                        [
-                            'required' => false,
-                            'attr' => ['class' => 'privacy-questions-toggle'],
-                        ]
-                    )
-                    ->add(
-                        'oidcngEnabled',
                         CheckboxType::class,
                         [
                             'required' => false,

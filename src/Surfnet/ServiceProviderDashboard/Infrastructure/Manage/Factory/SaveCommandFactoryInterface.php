@@ -25,9 +25,20 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 interface SaveCommandFactoryInterface
 {
-    public function buildSamlCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveSamlEntityCommand;
+    public function buildSamlCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment
+    ): SaveSamlEntityCommand;
 
-    public function buildOidcngCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveOidcngEntityCommand;
+    public function buildOidcngCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment,
+        bool $isCopy = false
+    ): SaveOidcngEntityCommand;
 
-    public function buildOidcngRsCommandByManageEntity(ManageEntity $manageEntity, string $environment): SaveOidcngResourceServerEntityCommand;
+    public function buildOidcngRsCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment,
+        bool $isCopy = false
+    ): SaveOidcngResourceServerEntityCommand;
 }

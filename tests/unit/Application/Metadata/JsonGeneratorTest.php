@@ -105,11 +105,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('certdata', $fields['certData']);
 
         $this->assertEquals('orgen', $fields['OrganizationName:en']);
-        $this->assertEquals('orgdisen', $fields['OrganizationDisplayName:en']);
-        $this->assertEquals('http://orgen', $fields['OrganizationURL:en']);
         $this->assertEquals('orgnl', $fields['OrganizationName:nl']);
-        $this->assertEquals('orgdisnl', $fields['OrganizationDisplayName:nl']);
-        $this->assertEquals('http://orgnl', $fields['OrganizationURL:nl']);
 
         $this->assertEquals('support', $fields['contacts:0:contactType']);
         $this->assertEquals('givenname', $fields['contacts:0:givenName']);
@@ -153,11 +149,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('certdata', $metadata['metaDataFields.certData']);
 
         $this->assertEquals('orgen', $metadata['metaDataFields.OrganizationName:en']);
-        $this->assertEquals('orgdisen', $metadata['metaDataFields.OrganizationDisplayName:en']);
-        $this->assertEquals('http://orgen', $metadata['metaDataFields.OrganizationURL:en']);
         $this->assertEquals('orgnl', $metadata['metaDataFields.OrganizationName:nl']);
-        $this->assertEquals('orgdisnl', $metadata['metaDataFields.OrganizationDisplayName:nl']);
-        $this->assertEquals('http://orgnl', $metadata['metaDataFields.OrganizationURL:nl']);
 
         $this->assertEquals('support', $metadata['metaDataFields.contacts:0:contactType']);
         $this->assertEquals('givenname', $metadata['metaDataFields.contacts:0:givenName']);
@@ -203,11 +195,7 @@ class JsonGeneratorTest extends MockeryTestCase
                             'contacts:0:emailAddress' => 'emailaddress',
                             'contacts:0:telephoneNumber' => 'telephonenumber',
                             'OrganizationName:en' => 'orgen',
-                            'OrganizationDisplayName:en' => 'orgdisen',
-                            'OrganizationURL:en' => 'http://orgen',
                             'OrganizationName:nl' => 'orgnl',
-                            'OrganizationDisplayName:nl' => 'orgdisnl',
-                            'OrganizationURL:nl' => 'http://orgnl',
                             'privacy' => 'privacy',
                             'sp' => 'sp',
                             'AssertionConsumerService:0:Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
@@ -255,11 +243,7 @@ class JsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
                     'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
                     'metaDataFields.OrganizationName:en' => 'orgen',
-                    'metaDataFields.OrganizationDisplayName:en' => 'orgdisen',
-                    'metaDataFields.OrganizationURL:en' => 'http://orgen',
                     'metaDataFields.OrganizationName:nl' => 'orgnl',
-                    'metaDataFields.OrganizationDisplayName:nl' => 'orgdisnl',
-                    'metaDataFields.OrganizationURL:nl' => 'http://orgnl',
                     'metaDataFields.privacy' => 'privacy',
                     'metaDataFields.sp' => 'sp',
                     'metaDataFields.AssertionConsumerService:0:Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
@@ -462,11 +446,7 @@ class JsonGeneratorTest extends MockeryTestCase
                             'contacts:0:emailAddress' => 'emailaddress',
                             'contacts:0:telephoneNumber' => 'telephonenumber',
                             'OrganizationName:en' => 'orgen',
-                            'OrganizationDisplayName:en' => 'orgdisen',
-                            'OrganizationURL:en' => 'http://orgen',
                             'OrganizationName:nl' => 'orgnl',
-                            'OrganizationDisplayName:nl' => 'orgdisnl',
-                            'OrganizationURL:nl' => 'http://orgnl',
                             'privacy' => 'privacy',
                             'sp' => 'sp',
                             'AssertionConsumerService:0:Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',

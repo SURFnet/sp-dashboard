@@ -21,10 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\UnexpectedResultException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use function in_array;
+use function sprintf;
 
 /**
  * The QueryClient can be used to perform queries on the manage /manage/api/internal/search/saml20_sp|oidc10_rp endpoint
@@ -47,7 +50,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 class QueryClient implements QueryEntityRepository
 {
 
-    private $protocolSupport = [Protocol::SAML20_SP, Protocol::OIDC10_RP];
+    private $protocolSupport = [Protocol::SAML20_SP, Protocol::OIDC10_RP, Protocol::OAUTH20_RS];
 
     /**
      * @var HttpClient
@@ -125,14 +128,13 @@ class QueryClient implements QueryEntityRepository
         try {
             // TODO: investigate if we can add the protocol to the param list of this method to prevent the try/retry
             //  construction below.
-            $data = $this->client->read(
-                sprintf('/manage/api/internal/metadata/saml20_sp/%s', $manageId)
-            );
+            $data = $this->read(Protocol::SAML20_SP, $manageId);
             // If the saml endpoint yields no results, try the oidc.
             if (empty($data)) {
-                $data = $this->client->read(
-                    sprintf('/manage/api/internal/metadata/oidc10_rp/%s', $manageId)
-                );
+                $data = $this->read(Protocol::OIDC10_RP, $manageId);
+            }
+            if (empty($data)) {
+                $data = $this->read(Protocol::OAUTH20_RS, $manageId);
             }
             if (empty($data)) {
                 return null;
@@ -148,6 +150,35 @@ class QueryClient implements QueryEntityRepository
                 $e
             );
         }
+    }
+
+    public function findByManageIdAndProtocol(string $manageId, string $protocol) :? ManageEntity
+    {
+        try {
+            $data = $this->read($protocol, $manageId);
+            if (empty($data)) {
+                return null;
+            }
+            $this->loadDetailedResourceServers($data);
+            return ManageEntity::fromApiResponse($data);
+        } catch (HttpException $e) {
+            throw new QueryServiceProviderException(
+                sprintf('Unable to find entity with internal manage ID: "%s" and protocol "%s"', $manageId, $protocol),
+                0,
+                $e
+            );
+        }
+    }
+
+    private function read(string $protocol, string $manageId) :? array
+    {
+        if (!in_array($protocol, $this->protocolSupport)) {
+            throw new InvalidArgumentException(sprintf('You are to read an unsupported protocol "%s"', $protocol));
+        }
+
+        return $this->client->read(
+            sprintf('/manage/api/internal/metadata/%s/%s', $protocol, $manageId)
+        );
     }
 
     /**
@@ -172,7 +203,7 @@ class QueryClient implements QueryEntityRepository
             // For each search result, query manage to get the full SP entity data.
             return array_map(
                 function ($result) {
-                    return $this->findByManageId($result['_id']);
+                    return $this->findByManageIdAndProtocol($result['_id'], $result['type']);
                 },
                 $searchResults
             );
@@ -196,14 +227,14 @@ class QueryClient implements QueryEntityRepository
 
             $searchResults = $this->client->post(
                 json_encode($params),
-                sprintf('/manage/api/internal/search/oidc10_rp')
+                sprintf('/manage/api/internal/search/oauth20_rs')
             );
 
             // For each search result, query manage to get the full SP entity data.
             return array_filter(array_map(
                 function ($result) {
                     $entity = $this->findByManageId($result['_id']);
-                    if ($entity && $entity->isOidcngResourceServer()) {
+                    if ($entity) {
                         return $entity;
                     }
                 },
@@ -218,9 +249,8 @@ class QueryClient implements QueryEntityRepository
         }
     }
 
-    public function findByEntityId($entityId, $state)
+    public function findResourceServerByEntityId($entityId, $state)
     {
-        // Query manage to get the internal id of every SP entity with given team ID.
         $params = [
             'entityid' => $entityId,
             'state' => $state
@@ -228,7 +258,7 @@ class QueryClient implements QueryEntityRepository
 
         $searchResults = $this->client->post(
             json_encode($params),
-            sprintf('/manage/api/internal/search/oidc10_rp')
+            sprintf('/manage/api/internal/search/oauth20_rs')
         );
 
         $count = count($searchResults);
@@ -271,7 +301,7 @@ class QueryClient implements QueryEntityRepository
             $resourceServers = [];
             $rs = isset($data['data']['allowedResourceServers']) ? $data['data']['allowedResourceServers'] : [];
             foreach ($rs as $resourceServer) {
-                $resourceServers[] = $this->findByEntityId($resourceServer['name'], $data['data']['state']);
+                $resourceServers[] = $this->findResourceServerByEntityId($resourceServer['name'], $data['data']['state']);
             }
             $data['resourceServers'] = $resourceServers;
         }

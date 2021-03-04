@@ -47,4 +47,21 @@ class EntityList implements IteratorAggregate
     {
         return new ArrayIterator($this->entities);
     }
+
+    public function sortEntitiesByEnvironment()
+    {
+        $sortEntitiesByEnvironment = function (Entity $first, Entity $second) {
+            $envFirst = $first->getEnvironment();
+            $envSecond = $second->getEnvironment();
+
+            if ($envFirst === $envSecond) {
+                return ($first->getName() < $second->getName()) ? -1 : 1;
+            }
+
+            return ($envFirst < $envSecond) ? -1 : 1;
+        };
+        usort($this->entities, $sortEntitiesByEnvironment);
+
+        return $this;
+    }
 }

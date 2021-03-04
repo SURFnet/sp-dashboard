@@ -29,17 +29,18 @@ class ProtocolTest extends MockeryTestCase
      * @param int $manageProtocol
      * @param string $expectation
      */
-    public function test_protocol_determination(array $manageData, $manageProtocol, $expectation)
+    public function test_protocol_determination($manageProtocol, $expectation)
     {
-        $protocol = Protocol::fromApiResponse($manageData, $manageProtocol);
+        $protocol = Protocol::fromApiResponse($manageProtocol);
         self::assertEquals($expectation, $protocol->getProtocol());
     }
 
     public static function manageData()
     {
         return [
-            [['data' => ['oidcClient-not-set' => null]], Protocol::SAML20_SP, 'saml20'],
-            [['data' => ['oidcClient-not-set' => 1]], Protocol::OIDC10_RP, 'oidcng'],
+            [Protocol::SAML20_SP, 'saml20'],
+            [Protocol::OIDC10_RP, 'oidcng'],
+            [Protocol::OAUTH20_RS, 'oauth20_rs'],
         ];
     }
 }

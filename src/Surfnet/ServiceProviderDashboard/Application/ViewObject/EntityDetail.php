@@ -236,9 +236,9 @@ class EntityDetail
     private $redirectUris;
 
     /**
-     * @var string
+     * @var array
      */
-    private $grantType;
+    private $grants;
 
     /**
      * @var bool
@@ -275,7 +275,7 @@ class EntityDetail
         $entityDetail->protocol = $entity->getProtocol()->getProtocol();
 
         if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            $entityDetail->grantType = $entity->getOidcClient()->getGrantType();
+            $entityDetail->grants = $entity->getOidcClient()->getGrants();
             $entityDetail->isPublicClient = $entity->getOidcClient()->isPublicClient();
             $entityDetail->accessTokenValidity = $entity->getOidcClient()->getAccessTokenValidity();
             $entityDetail->redirectUris = $entity->getOidcClient()->getRedirectUris();
@@ -306,8 +306,6 @@ class EntityDetail
         $entityDetail->nameIdFormat = $entity->getMetaData()->getNameIdFormat();
         $entityDetail->organizationNameNl = $entity->getMetaData()->getOrganization()->getNameNl();
         $entityDetail->organizationNameEn = $entity->getMetaData()->getOrganization()->getNameEn();
-        $entityDetail->organizationDisplayNameNl = $entity->getMetaData()->getOrganization()->getDisplayNameNl();
-        $entityDetail->organizationDisplayNameEn = $entity->getMetaData()->getOrganization()->getDisplayNameEn();
         $entityDetail->organizationUrlNl = $entity->getMetaData()->getOrganization()->getUrlNl();
         $entityDetail->organizationUrlEn = $entity->getMetaData()->getOrganization()->getUrlEn();
 
@@ -675,12 +673,9 @@ class EntityDetail
         return $this->redirectUris;
     }
 
-    /**
-     * @return string
-     */
-    public function getGrantType()
+    public function getGrants(): array
     {
-        return $this->grantType;
+        return $this->grants;
     }
 
     /**

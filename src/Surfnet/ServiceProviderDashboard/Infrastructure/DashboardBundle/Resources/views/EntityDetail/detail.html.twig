@@ -6,7 +6,7 @@
     <h1>{% block page_heading %}{{ 'entity.detail.title'|trans }}{% endblock %}</h1>
 
     <div class="fieldset card action">
-        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions, isAdmin: isAdmin} %}
     </div>
     <div class="fieldset card">
         <h2>{{ ('entity.detail.info.' ~ type ~ '.title')|trans }}</h2>
@@ -25,24 +25,17 @@
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_id_format'|trans, value: entity.nameIdFormat|replace({'urn:oasis:names:tc:SAML:2.0:nameid-format:': ''}), informationPopup: 'entity.edit.information.nameIdFormat'} %}
         {% endif %}
 
-        {% if entity.protocol == "oidc" %}
-            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
-            {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.redirect_uris'|trans, value: entity.redirectUris, informationPopup: 'entity.edit.information.redirectUris'} %}
-            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.grant_type'|trans, value: ('entity.edit.label.' ~ entity.grantType)|trans, informationPopup: 'entity.edit.information.grantType'} %}
-            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.enablePlayground'} %}
-        {% endif %}
-
         {% if entity.protocol == "oidcng" %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
             {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.redirect_uris'|trans, value: entity.redirectUris, informationPopup: 'entity.edit.information.redirectUris'} %}
-            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.grant_type'|trans, value: ('entity.edit.label.' ~ entity.grantType)|trans, informationPopup: 'entity.edit.information.grantType'} %}
+            {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.grant_type'|trans, value: entity.grants, informationPopup: 'entity.edit.information.grantType'} %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.subject_type'|trans, value: entity.nameIdFormat|replace({'urn:oasis:names:tc:SAML:2.0:nameid-format:': ''}), informationPopup: 'entity.edit.information.subjectType'} %}
             {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.enablePlayground'} %}
             {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.is_public_client'|trans, value: entity.publicClient, informationPopup: 'entity.edit.information.isPublicClient'} %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.access_token_validity'|trans, value: entity.accessTokenValidity, informationPopup: 'entity.edit.information.accessTokenValidity'} %}
         {% endif %}
 
-        {% if entity.protocol == "oidcng_rs" %}
+        {% if entity.protocol == "oauth20_rs" %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
         {% endif %}
 
@@ -75,7 +68,7 @@
 
     </div>
 
-    {% if entity.protocol != "oidcng_rs" %}
+    {% if entity.protocol != "oauth20_rs" %}
 
     <div class="fieldset card">
         <h2>{{ ('entity.detail.attribute.' ~ type ~ '.title')|trans }}</h2>

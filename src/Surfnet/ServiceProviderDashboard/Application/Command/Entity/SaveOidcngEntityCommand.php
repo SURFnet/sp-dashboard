@@ -32,8 +32,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- *
- * @SpDashboardAssert\HasAttributes()
  */
 class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 {
@@ -96,21 +94,16 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $redirectUrls;
 
     /**
-     * @var array
-     */
-    private $scopes = ['openid'];
-
-    /**
      * @var bool
      */
     private $isPublicClient;
 
     /**
-     * @var string $grantType defaults to OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE
+     * @var array $grants defaults to OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE
      *
      * @Assert\NotBlank()
      */
-    private $grantType = OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE;
+    private $grants = [OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE];
 
     /**
      * @var int
@@ -338,36 +331,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      */
-    private $organizationNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationNameEn;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameEn;
-
-    /**
-     * @var string
-     */
-    private $organizationUrlNl;
-
-    /**
-     * @var string
-     */
-    private $organizationUrlEn;
-
-    /**
-     * @var string
-     */
     private $manageId;
 
     /**
@@ -380,18 +343,23 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     private $resourceServers = [];
 
+    /** @var bool */
+    private $isCopy;
+
     public function __construct()
     {
     }
 
     /**
      * @param Service $service
+     * @param bool $isCopy
      * @return SaveOidcngEntityCommand
      */
-    public static function forCreateAction(Service $service)
+    public static function forCreateAction(Service $service, bool $isCopy = false)
     {
         $command = new self();
         $command->service = $service;
+        $command->isCopy = $isCopy;
         return $command;
     }
 
@@ -414,6 +382,22 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function getService(): Service
     {
         return $this->service;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCopy()
+    {
+        return $this->isCopy;
+    }
+
+    /**
+     * @param bool $isCopy
+     */
+    public function setIsCopy(bool $isCopy)
+    {
+        $this->isCopy = $isCopy;
     }
 
     /**
@@ -906,84 +890,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->comments = $comments;
     }
 
-    public function getOrganizationNameNl(): ?string
-    {
-        return $this->organizationNameNl;
-    }
-
-    /**
-     * @param string $organizationNameNl
-     */
-    public function setOrganizationNameNl($organizationNameNl)
-    {
-        $this->organizationNameNl = $organizationNameNl;
-    }
-
-    public function getOrganizationNameEn(): ?string
-    {
-        return $this->organizationNameEn;
-    }
-
-    /**
-     * @param string $organizationNameEn
-     */
-    public function setOrganizationNameEn($organizationNameEn)
-    {
-        $this->organizationNameEn = $organizationNameEn;
-    }
-
-    public function getOrganizationDisplayNameNl(): ?string
-    {
-        return $this->organizationDisplayNameNl;
-    }
-
-    /**
-     * @param string $organizationDisplayNameNl
-     */
-    public function setOrganizationDisplayNameNl($organizationDisplayNameNl)
-    {
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
-    }
-
-    public function getOrganizationDisplayNameEn(): ?string
-    {
-        return $this->organizationDisplayNameEn;
-    }
-
-    /**
-     * @param string $organizationDisplayNameEn
-     */
-    public function setOrganizationDisplayNameEn($organizationDisplayNameEn)
-    {
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
-    }
-
-    public function getOrganizationUrlNl(): ?string
-    {
-        return $this->organizationUrlNl;
-    }
-
-    /**
-     * @param string $organizationUrlNl
-     */
-    public function setOrganizationUrlNl($organizationUrlNl)
-    {
-        $this->organizationUrlNl = $organizationUrlNl;
-    }
-
-    public function getOrganizationUrlEn(): ?string
-    {
-        return $this->organizationUrlEn;
-    }
-
-    /**
-     * @param string $organizationUrlEn
-     */
-    public function setOrganizationUrlEn($organizationUrlEn)
-    {
-        $this->organizationUrlEn = $organizationUrlEn;
-    }
-
     public function isForProduction()
     {
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
@@ -1026,14 +932,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function getProtocol(): string
     {
         return Constants::TYPE_OPENID_CONNECT_TNG;
-    }
-
-    /**
-     * @return array
-     */
-    public function getScopes()
-    {
-        return $this->scopes;
     }
 
     /**
@@ -1087,17 +985,17 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return OidcGrantType
      */
-    public function getGrantType()
+    public function getGrants()
     {
-        return $this->grantType;
+        return $this->grants;
     }
 
     /**
-     * @param OidcGrantType $grantType
+     * @param OidcGrantType $grants
      */
-    public function setGrantType($grantType)
+    public function setGrants($grants)
     {
-        $this->grantType = $grantType;
+        $this->grants = $grants;
     }
 
     /**

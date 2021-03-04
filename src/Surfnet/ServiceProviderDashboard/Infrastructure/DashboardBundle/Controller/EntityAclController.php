@@ -112,6 +112,7 @@ class EntityAclController extends Controller
         return [
             'form' => $form->createView(),
             'entity' => $viewObject,
+            'isAdmin' => $this->authorizationService->isAdministrator(),
         ];
     }
 }

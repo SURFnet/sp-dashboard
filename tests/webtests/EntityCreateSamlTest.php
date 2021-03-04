@@ -18,9 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -105,17 +102,45 @@ class EntitySamlCreateSamlTest extends WebTestCase
         );
 
         $crawler = $this->client->followRedirect();
-        $pageTitle = $crawler->filter('h1')->first()->text();
-        $message = $crawler->filter('.page-container .card')->eq(1)->text();
+        $pageTitle = $crawler->filter('.service-title')->first()->text();
+        $messageTest = $crawler->filter('.no-entities-test')->text();
+        $messageProduction = $crawler->filter('.no-entities-production')->text();
 
-        $this->assertContains("Entities of service 'Ibuildings B.V.'", $pageTitle);
-        $this->assertContains('There are no entities configured', $message);
+        $this->assertContains("Ibuildings B.V. overview", $pageTitle);
+        $this->assertContains('No entities found.', $messageTest);
+        $this->assertContains('No entities found.', $messageProduction);
     }
 
     public function test_it_can_publish_the_form()
     {
         $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
         $formData = $this->buildValidFormData();
+
+        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $this->client->submit($form, $formData);
+
+        // The form is now redirected to the list view
+        $this->assertTrue(
+            $this->client->getResponse() instanceof RedirectResponse,
+            'Expecting a redirect to the published "thank you" endpoint'
+        );
+
+        $crawler = $this->client->followRedirect();
+        $pageTitle = $crawler->filter('h1')->first()->text();
+        $this->assertEquals('Successfully published the entity to test', $pageTitle);
+    }
+
+
+    public function test_attribute_is_not_required()
+    {
+        $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
+        $formData = $this->buildValidFormData();
+        unset($formData['dashboard_bundle_entity_type']['attributes']);
 
         $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
 
