@@ -33,6 +33,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
+use function sprintf;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -108,45 +109,30 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param string $id
-     * @param string $manageTarget
-     * @param Service $service
-     * @return ManageEntity
      * @throws EntityNotFoundException
      */
-    public function getEntityByIdAndTarget($id, $manageTarget, Service $service)
+    public function getEntityByIdAndTarget(string $id, string $manageTarget, Service $service): ManageEntity
     {
         switch ($manageTarget) {
             case 'production':
-                $entity = $this->queryRepositoryProvider
-                    ->getManageProductionQueryClient()
-                    ->findByManageId($id);
-                $serviceFromEntity = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
-                if ($serviceFromEntity->getId() !== $service->getId()) {
-                    throw new InvalidArgumentException('The service from the entity did not match the service passed to this method.');
-                }
+                $entity = $this->findAndverifyAccessAllowed($id, $manageTarget, $service);
                 $entity->setEnvironment($manageTarget);
                 $entity->setService($service);
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
                 $this->updateStatus($entity);
-
                 $issue = $this->findIssueBy($entity);
                 $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
                     $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
                 if ($issue && $shouldUseTicketStatus) {
                     $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
                 }
-
                 return $entity;
             case 'test':
-                $entity = $this->queryRepositoryProvider
-                    ->getManageTestQueryClient()
-                    ->findByManageId($id);
+                $entity = $this->findAndverifyAccessAllowed($id, $manageTarget, $service);
                 $entity->setEnvironment($manageTarget);
                 $entity->setService($service);
                 return $entity;
-
             default:
                 throw new EntityNotFoundException(
                     sprintf(
@@ -155,6 +141,32 @@ class EntityService implements EntityServiceInterface
                     )
                 );
         }
+    }
+
+    private function findAndverifyAccessAllowed(string $id, string $environment, Service $service): ManageEntity
+    {
+
+        $entity = $this->queryRepositoryProvider
+            ->fromEnvironment($environment)
+            ->findByManageId($id);
+        if ($entity === null) {
+            throw new EntityNotFoundException(
+                sprintf(
+                    'Unable to find ManageEntity for environment "%s"',
+                    $environment
+                )
+            );
+        }
+
+        // Allow actions on Resource Servers (viewing them outside of our team)
+        if ($entity->getProtocol()->getProtocol() !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $serviceFromEntity = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+            if ($serviceFromEntity->getId() !== $service->getId()) {
+                throw new InvalidArgumentException('The service from the entity did not match the service passed to this method.');
+            }
+        }
+
+        return $entity;
     }
 
     public function getEntityListForService(Service $service)

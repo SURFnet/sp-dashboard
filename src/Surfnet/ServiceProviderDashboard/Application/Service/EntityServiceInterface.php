@@ -31,13 +31,7 @@ interface EntityServiceInterface
      */
     public function createEntityUuid();
 
-    /**
-     * @param string $id
-     * @param string $manageTarget
-     * @param Service $service
-     * @return mixed
-     */
-    public function getEntityByIdAndTarget($id, $manageTarget, Service $service);
+    public function getEntityByIdAndTarget(string $id, string $manageTarget, Service $service): ManageEntity;
 
     /**
      * @param Service $service
