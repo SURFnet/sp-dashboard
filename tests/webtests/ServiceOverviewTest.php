@@ -52,7 +52,8 @@ class ServiceOverviewTest extends WebTestCase
         $nodes = $crawler->filter('.service-status-container .service-status-title');
         $serviceNode = $nodes->first();
 
-        $this->assertEquals('SURFnet', trim($serviceNode->text()));
+        $this->assertContains('SURFnet', trim($serviceNode->text()));
+        $this->assertContains('Privacy questions', trim($serviceNode->text()));
     }
 
     /**
@@ -78,8 +79,9 @@ class ServiceOverviewTest extends WebTestCase
         $serviceNode = $nodes->first();
         $service2 = $nodes->eq(1);
 
-        $this->assertEquals('Ibuildings B.V.', trim($serviceNode->text()));
-        $this->assertEquals('SURFnet', trim($service2->text()));
+        $this->assertContains('Ibuildings B.V.', trim($serviceNode->text()));
+        $this->assertContains('Privacy questions', trim($serviceNode->text()));
+        $this->assertContains('SURFnet', trim($service2->text()));
     }
 
     /**
