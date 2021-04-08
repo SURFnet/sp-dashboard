@@ -261,10 +261,7 @@ class Service
         $this->privacyQuestions = $privacyQuestions;
     }
 
-    /**
-     * @return bool
-     */
-    public function isProductionEntitiesEnabled()
+    public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled;
     }

@@ -38,6 +38,11 @@ class Service
     private $privacyQuestionsEnabled;
 
     /**
+     * @var bool
+     */
+    private $productionEntitiesEnabled;
+
+    /**
      * @var EntityList
      */
     private $entityList;
@@ -47,20 +52,21 @@ class Service
      */
     private $router;
 
-    /**
-     * @param string $id
-     * @param string $name
-     * @param bool $privacyQuestionsEnabled
-     * @param EntityList $entityList
-     * @param RouterInterface $router
-     */
-    public function __construct($id, $name, $privacyQuestionsEnabled, EntityList $entityList, RouterInterface $router)
-    {
+    public function __construct(
+        String $id,
+        String $name,
+        bool $privacyQuestionsEnabled,
+        EntityList $entityList,
+        RouterInterface $router,
+        bool $productionEntitiesEnabled = false
+    ) {
+    
         $this->id = $id;
         $this->name = $name;
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
         $this->entityList = $entityList;
         $this->router = $router;
+        $this->productionEntitiesEnabled = $productionEntitiesEnabled;
     }
 
     public static function fromService(DomainService $service, EntityList $entityList, RouterInterface $router)
@@ -70,7 +76,8 @@ class Service
             $service->getName(),
             $service->isPrivacyQuestionsEnabled(),
             $entityList,
-            $router
+            $router,
+            $service->isProductionEntitiesEnabled()
         );
     }
 
@@ -112,5 +119,18 @@ class Service
     public function arePrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
+    }
+
+    public function hasTestEntities() : bool
+    {
+        return $this->getEntityList()->hasTestEntities();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProductionEntitiesEnabled()
+    {
+        return $this->productionEntitiesEnabled || $this->hasTestEntities();
     }
 }

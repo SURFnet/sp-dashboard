@@ -73,6 +73,7 @@
                         </ul>
                     {% endif %}
                 </h2>
+
                 {% if not privacyStatusEntities[loop.index0] and service.arePrivacyQuestionsEnabled %}
                     {% include '@Dashboard/Privacy/notification.html.twig' with { hlvl: "3"} %}
                 {% endif %}
@@ -118,7 +119,7 @@
                                 <td colspan="5" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
                             </tr>
                         {% endif %}
-                        {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
+                        {% if service.isProductionEntitiesEnabled %}
                             <tr class="service-status-entities-table-add-entity">
                                 <td colspan="5">
                                     <label for="{{ productionId }}" class="link">
@@ -187,7 +188,7 @@
             </div>
             <div class="blocker">
                 {# todo: add aria-labelledby-id and aria-describedby-id #}
-                {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
+                {% if service.isProductionEntitiesEnabled %}
                     <div class="modal add-entity-modal" role="dialog" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
                 {% endif %}
                 <div class="modal add-entity-modal" role="dialog" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
