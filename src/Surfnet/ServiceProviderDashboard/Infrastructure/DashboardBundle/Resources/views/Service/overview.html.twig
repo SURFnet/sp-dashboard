@@ -73,7 +73,7 @@
                         </ul>
                     {% endif %}
                 </h2>
-                {% if not privacyStatusEntities[loop.index0] %}
+                {% if not privacyStatusEntities[loop.index0] and service.arePrivacyQuestionsEnabled %}
                     {% include '@Dashboard/Privacy/notification.html.twig' with { hlvl: "3"} %}
                 {% endif %}
                 <section class="service-status-entities">
