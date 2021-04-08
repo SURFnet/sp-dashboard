@@ -95,11 +95,10 @@ class EntityCreateController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
         $choices = $this->protocolChoiceFactory->buildOptions();
         $formId = $targetEnvironment . '_' . $service->getGuid();
-
         $entityList = $this->entityService
             ->getEntityListForService($service)
-            ->sortEntitiesByEnvironment()
-            ->getEntities();
+            ->sortEntitiesByEnvironment();
+        $isProductionEnabled = $entityList->hasTestEntities() || $service->isProductionEntitiesEnabled();
         $form = $this->createForm(CreateNewEntityType::class, $formId);
 
         $form->handleRequest($request);
@@ -139,8 +138,8 @@ class EntityCreateController extends Controller
             'environment' => $targetEnvironment,
             'inputId' => $inputId,
             'protocols' => $choices,
-            'productionEnabled' => $service->isProductionEntitiesEnabled(),
-            'entities' => $entityList,
+            'productionEnabled' => $isProductionEnabled,
+            'entities' => $entityList->getEntities(),
             'manageId' => $formId,
         ];
     }
@@ -166,10 +165,11 @@ class EntityCreateController extends Controller
         $flashBag->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);
+        $hasTestEntities = $this->entityService
+            ->getEntityListForService($service)->hasTestEntities();
 
-        if (!$service->isProductionEntitiesEnabled() &&
-            $targetEnvironment !== Constants::ENVIRONMENT_TEST
-        ) {
+        if (!$service->isProductionEntitiesEnabled() && !$hasTestEntities &&
+            $targetEnvironment !== Constants::ENVIRONMENT_TEST) {
             throw $this->createAccessDeniedException(
                 'You do not have access to create entities without publishing to the test environment first'
             );

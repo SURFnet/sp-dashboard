@@ -33,7 +33,7 @@
             {% set testId = "add-for-test-" ~ shortName %}
             {% set productionId = "add-for-production-" ~ shortName %}
             <input type="checkbox" id="{{ testId }}" name="{{ testId }}" />
-            {% if productionEntitiesEnabled is defined and productionEntitiesEnabled[loop.index0] %}
+            {% if service.isProductionEntitiesEnabled %}
                 <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
             {% endif %}
             <div class="service-status-container">
