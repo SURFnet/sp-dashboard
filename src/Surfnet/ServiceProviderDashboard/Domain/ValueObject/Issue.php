@@ -29,6 +29,7 @@ class Issue implements JsonSerializable
 
     const STATUS_CLOSED = 'CLOSED';
     const STATUS_RESOLVED = 'RESOLVED';
+    const STATUS_OPEN = 'To Do';
 
     private $key;
 

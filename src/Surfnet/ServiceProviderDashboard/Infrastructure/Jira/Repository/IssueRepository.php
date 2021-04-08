@@ -100,7 +100,7 @@ class IssueRepository implements TicketServiceInterface
         foreach ($issues->issues as $issue) {
             $manageId = $issue->fields->customFields[$this->manageIdFieldName];
             if (in_array($manageId, $manageIds)) {
-                $collection[$manageId] = new Issue($issue->key, $this->issueType, $issue->fields->status);
+                $collection[$manageId] = new Issue($issue->key, $this->issueType, $issue->fields->status->name);
             }
         }
         return new IssueCollection($collection);
@@ -121,7 +121,7 @@ class IssueRepository implements TicketServiceInterface
         );
         if ($issues->getTotal() > 0) {
             $issue = $issues->getIssue(0);
-            return new Issue($issue->key, $this->issueType, $issue->fields->status);
+            return new Issue($issue->key, $this->issueType, $issue->fields->status->name);
         }
         return null;
     }
@@ -141,7 +141,7 @@ class IssueRepository implements TicketServiceInterface
         );
         if ($issues->getTotal() > 0) {
             $issue = $issues->getIssue(0);
-            return new Issue($issue->key, $issueType, $issue->fields->status);
+            return new Issue($issue->key, $issueType, $issue->fields->status->name);
         }
         return null;
     }
@@ -151,7 +151,7 @@ class IssueRepository implements TicketServiceInterface
         $issueField = $this->issueFactory->fromTicket($ticket);
         $issueService = $this->jiraFactory->buildIssueService();
         $issue = $issueService->create($issueField);
-        return new Issue($issue->key, $ticket->getIssueType(), $issue->fields->status);
+        return new Issue($issue->key, $ticket->getIssueType(), Issue::STATUS_OPEN);
     }
 
     public function delete($issueKey)
