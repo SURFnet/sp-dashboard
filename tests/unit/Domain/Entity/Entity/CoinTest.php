@@ -58,12 +58,12 @@ class CoinTest extends TestCase
         yield [
             new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
             new Coin('signatureMethod', null, 'https://www.example.com', null, 'https://example.com', 'https://example.com/eula', 1),
-            new Coin('signatureMethod', null, 'https://www.example.com', null, 'https://example.com', 'https://example.com/eula', 1),
+            new Coin('signatureMethod', null, 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
         ];
         yield [
             new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
             new Coin(null, null, null, null, null, null, null),
-            new Coin(null, null, null, null, null, null, null)
+            new Coin(null, null, null, '1', null, null, null)
         ];
     }
 }
