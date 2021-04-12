@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use Exception;
 use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -25,6 +26,8 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use function in_array;
+use function is_null;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)

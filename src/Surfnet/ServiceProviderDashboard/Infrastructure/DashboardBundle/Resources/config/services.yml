@@ -429,6 +429,11 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
         tags: ['form.type']
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OauthClientCredentialEntityType:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
+        tags: ['form.type']
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
