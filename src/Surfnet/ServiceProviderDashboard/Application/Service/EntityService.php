@@ -121,6 +121,7 @@ class EntityService implements EntityServiceInterface
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
                 $this->updateStatus($entity);
+                $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
                 $issue = $this->findIssueBy($entity);
                 $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
                     $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
@@ -132,6 +133,7 @@ class EntityService implements EntityServiceInterface
                 $entity = $this->findAndverifyAccessAllowed($id, $manageTarget, $service);
                 $entity->setEnvironment($manageTarget);
                 $entity->setService($service);
+                $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
                 return $entity;
             default:
                 throw new EntityNotFoundException(
@@ -222,6 +224,8 @@ class EntityService implements EntityServiceInterface
         $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
         $entity->setService($service);
         $this->updateStatus($entity);
+        // As the organization names are tracked on the Service, we update it on the Manage Entity Organization VO
+        $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
         return $entity;
     }
 
@@ -319,5 +323,15 @@ class EntityService implements EntityServiceInterface
         if ($excludeFromPush === '0') {
             $entity->updateStatus(Constants::STATE_PUBLISHED);
         }
+    }
+
+    /**
+     * As the organization names are tracked on the Service, we update it on the Manage
+     * Entity Organization
+     */
+    public function updateOrganizationNames(ManageEntity $entity, $orgNameEn, $orgNameNl)
+    {
+        $entity->getMetaData()->getOrganization()->updateNameEn($orgNameEn);
+        $entity->getMetaData()->getOrganization()->updateNameNl($orgNameNl);
     }
 }

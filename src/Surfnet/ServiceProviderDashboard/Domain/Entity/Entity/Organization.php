@@ -105,4 +105,14 @@ class Organization
         $this->displayNameNl = is_null($organization->getDisplayNameNl()) ? null : $organization->getDisplayNameNl();
         $this->urlNl = is_null($organization->getUrlNl()) ? null : $organization->getUrlNl();
     }
+
+    public function updateNameEn($nameEn)
+    {
+        $this->nameEn = $nameEn;
+    }
+
+    public function updateNameNl($nameNl)
+    {
+        $this->nameNl = $nameNl;
+    }
 }
