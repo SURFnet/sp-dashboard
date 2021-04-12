@@ -102,6 +102,12 @@ class Service
     private $privacyQuestionsEnabled = true;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    private $clientCredentialClientsEnabled = false;
+
+    /**
      * @var string
      * @ORM\Column(length=50)
      */
@@ -272,6 +278,22 @@ class Service
     public function isPrivacyQuestionsEnabled()
     {
         return $this->privacyQuestionsEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClientCredentialClientsEnabled(): bool
+    {
+        return $this->clientCredentialClientsEnabled;
+    }
+
+    /**
+     * @param bool $clientCredentialClientsEnabled
+     */
+    public function setClientCredentialClientsEnabled(bool $clientCredentialClientsEnabled): void
+    {
+        $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
     }
 
     /**

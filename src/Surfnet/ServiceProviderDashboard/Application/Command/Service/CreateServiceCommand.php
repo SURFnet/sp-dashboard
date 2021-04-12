@@ -61,6 +61,11 @@ class CreateServiceCommand implements Command
     private $privacyQuestionsEnabled = true;
 
     /**
+     * @var bool
+     */
+    private $clientCredentialClientsEnabled = false;
+
+    /**
      * @var string
      * @Assert\NotBlank
      */
@@ -293,5 +298,15 @@ class CreateServiceCommand implements Command
     public function setOrganizationNameEn(string $organizationNameEn): void
     {
         $this->organizationNameEn = $organizationNameEn;
+    }
+
+    public function isClientCredentialClientsEnabled(): bool
+    {
+        return $this->clientCredentialClientsEnabled;
+    }
+
+    public function setClientCredentialClientsEnabled(bool $clientCredentialClientsEnabled): void
+    {
+        $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
     }
 }

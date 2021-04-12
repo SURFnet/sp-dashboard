@@ -207,6 +207,7 @@ class ServiceController extends Controller
             $service->getTeamName(),
             $service->isProductionEntitiesEnabled(),
             $service->isPrivacyQuestionsEnabled(),
+            $service->isClientCredentialClientsEnabled(),
             $service->getServiceType(),
             $service->getIntakeStatus(),
             $service->getContractSigned(),

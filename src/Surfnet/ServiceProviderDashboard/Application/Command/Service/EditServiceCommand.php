@@ -60,6 +60,11 @@ class EditServiceCommand implements Command
     private $privacyQuestionsEnabled = true;
 
     /**
+     * @var bool
+     */
+    private $clientCredentialClientsEnabled = false;
+
+    /**
      * @var string
      * @Assert\NotBlank
      */
@@ -105,37 +110,23 @@ class EditServiceCommand implements Command
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
-     *
-     * @param int $id
-     * @param string $guid
-     * @param string $name
-     * @param string $teamName
-     * @param bool $productionEntitiesEnabled
-     * @param bool $privacyQuestionsEnabled
-     * @param string $serviceType
-     * @param string $intakeStatus
-     * @param string $contractSigned
-     * @param string $surfconextRepresentativeApproved
-     * @param string $privacyQuestionsAnswered
-     * @param string $institutionId
-     * @param string $organizationNameNl
-     * @param string $organizationNameEn
      */
     public function __construct(
-        $id,
-        $guid,
-        $name,
-        $teamName,
-        $productionEntitiesEnabled,
-        $privacyQuestionsEnabled,
-        $serviceType,
-        $intakeStatus,
-        $contractSigned,
-        $surfconextRepresentativeApproved,
-        $privacyQuestionsAnswered,
-        $institutionId,
-        $organizationNameNl,
-        $organizationNameEn
+        int $id,
+        string $guid,
+        string $name,
+        string $teamName,
+        bool $productionEntitiesEnabled,
+        bool $privacyQuestionsEnabled,
+        bool $clientCredentialClientsEnabled,
+        ?string $serviceType,
+        ?string $intakeStatus,
+        ?string $contractSigned,
+        ?string $surfconextRepresentativeApproved,
+        ?string $privacyQuestionsAnswered,
+        ?string $institutionId,
+        ?string $organizationNameNl,
+        ?string $organizationNameEn
     ) {
         $this->id = $id;
         $this->guid = $guid;
@@ -143,6 +134,7 @@ class EditServiceCommand implements Command
         $this->teamName = $teamName;
         $this->productionEntitiesEnabled = $productionEntitiesEnabled;
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
+        $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
         $this->serviceType = $serviceType;
         $this->intakeStatus = $intakeStatus;
         $this->contractSigned = $contractSigned;
@@ -375,5 +367,15 @@ class EditServiceCommand implements Command
     public function setOrganizationNameEn(string $organizationNameEn): void
     {
         $this->organizationNameEn = $organizationNameEn;
+    }
+
+    public function isClientCredentialClientsEnabled(): bool
+    {
+        return $this->clientCredentialClientsEnabled;
+    }
+
+    public function setClientCredentialClientsEnabled(bool $clientCredentialClientsEnabled): void
+    {
+        $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
     }
 }
