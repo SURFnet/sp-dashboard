@@ -53,11 +53,15 @@ class EntityResetSecretController extends Controller
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
-
-        $service = $this->serviceService->getServiceById($serviceId);
-
         $manageEntity = $this->entityService->getManageEntityById($manageId, $environment);
-        $manageEntity->setService($service);
+        $entityServiceId = $manageEntity->getService()->getId();
+        if ($serviceId !== $entityServiceId) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to view an Entity from another Service'
+            );
+        }
+        // Verify the Entity Service Id is one of the logged in users services
+        $this->authorizationService->assertServiceIdAllowed($entityServiceId);
 
         $resetOidcSecretCommand = new ResetOidcSecretCommand($manageEntity);
         try {
