@@ -1,4 +1,4 @@
-FROM ghcr.io/openconext/openconext-deploy/openconext-core:merge AS openconext
+FROM ghcr.io/openconext/openconext-deploy/openconext-core:master AS openconext
 COPY ./conf/prep_oc.sh /tmp/prep_oc.sh
 COPY ./conf/saml20_sp.json /tmp/saml20_sp.json
 COPY ./conf/engineblock.crt /etc/openconext/engineblock.crt
