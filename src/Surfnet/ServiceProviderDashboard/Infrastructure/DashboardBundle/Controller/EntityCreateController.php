@@ -94,6 +94,9 @@ class EntityCreateController extends Controller
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $choices = $this->protocolChoiceFactory->buildOptions();
+        if (!$service->isClientCredentialClientsEnabled()) {
+            unset($choices['entity.type.oauth20.ccc.title']);
+        }
         $formId = $targetEnvironment . '_' . $service->getGuid();
         $entityList = $this->entityService
             ->getEntityListForService($service)
