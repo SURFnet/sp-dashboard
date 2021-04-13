@@ -1,3 +1,29 @@
+## 3.1.1
+**Bugfixes**
+- Resolved client secret reset issues #443
+   - Send the Organization names to Manage when performing a secret reset
+   - Allow client reset for 'requested production publication' production entities
+   - Prevent loss of connected Resource Servers during secret reset
+
+## 3.1.0
+
+**Bugfixes**
+ - Only trigger privacy warning when enabled
+ - Show privacy links button for regular users
+ - Ensure exclude from push coin value is honoured
+ - Repair faulty status implementation
+ - Ensure production entities can be published once a test entity is published
+ - Fix Jira status handling
+ - Ensure APR attributes is an object when empty
+
+**Cleanup**
+ - Removed some obsolete config parameters and fixed some typos
+
+**Infra**
+ - Add Opcache to FPM Docker image
+ - Use the latest php-fpm and Apache images in the Docker dev container
+ - Make Docker develop container compatible with Xdebug 3
+
 ## 3.0.0
 An updated theme, further deprovisioning of the ORM layer and some nifty changes to the entity actions.
 

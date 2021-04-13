@@ -288,6 +288,7 @@ class ManageEntity
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
             $this->oidcClient->merge($newEntity->getOidcClient(), $this->getService()->getTeamName());
         }
+        $this->comments = $newEntity->getComments();
     }
 
     public function setStatus(string $status)

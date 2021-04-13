@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
+use function array_key_exists;
 
 class DevelopmentIssueRepository implements TicketServiceInterface
 {
@@ -79,7 +80,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
     public function createIssueFrom(Ticket $ticket)
     {
         $this->loadData();
-        $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), 'OPEN');
+        $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), Issue::STATUS_OPEN);
         $this->data[$ticket->getManageId()] = $issue;
         $this->storeData();
         return $issue;
@@ -117,6 +118,9 @@ class DevelopmentIssueRepository implements TicketServiceInterface
     {
         $output = [];
         foreach ($rawData as $issueData) {
+            if (!array_key_exists(Issue::IDENTIFIER_TICKET_STATUS, $issueData)) {
+                $issueData[Issue::IDENTIFIER_TICKET_STATUS] = Issue::STATUS_OPEN;
+            }
             $output[$issueData['key']] = Issue::fromSerializedData($issueData);
         }
 

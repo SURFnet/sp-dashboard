@@ -125,10 +125,8 @@ class ServiceController extends Controller
         }
 
         $serviceObjects = [];
-        $productionEntityEnabled = [];
         $privacyOK = [];
         foreach ($services as $service) {
-            $productionEntityEnabled[] = $service->isProductionEntitiesEnabled();
             $entityList = $this->entityService->getEntityListForService($service);
             $serviceObjects[] = Service::fromService($service, $entityList, $this->router);
             $privacyOK[] = $this->serviceStatusService->hasPrivacyQuestions($service);
@@ -145,7 +143,6 @@ class ServiceController extends Controller
             'isAdmin' => false,
             'publishedEntity' => $publishedEntity,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
-            'productionEntitiesEnabled' => $productionEntityEnabled,
             'privacyStatusEntities' => $privacyOK,
         ]);
     }
@@ -318,7 +315,6 @@ class ServiceController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entityList = $this->entityService->getEntityListForService($service);
         $serviceList = new ServiceList([Service::fromService($service, $entityList, $this->router)]);
-        $productionEntitiesEnabled = [$service->isProductionEntitiesEnabled()];
         $privacyOK = [$this->serviceStatusService->hasPrivacyQuestions($service)];
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
@@ -331,7 +327,6 @@ class ServiceController extends Controller
             'isAdmin' => true,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'publishedEntity' => $publishedEntity,
-            'productionEntitiesEnabled' => $productionEntitiesEnabled,
             'privacyStatusEntities' => $privacyOK,
         ]);
     }

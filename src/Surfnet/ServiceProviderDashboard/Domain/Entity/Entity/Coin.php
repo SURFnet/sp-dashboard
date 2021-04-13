@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Webmozart\Assert\Assert;
+use function is_null;
 
 class Coin
 {
@@ -123,7 +124,7 @@ class Coin
         $this->signatureMethod = is_null($coin->getSignatureMethod()) ? null : $coin->getSignatureMethod();
         $this->serviceTeamId = is_null($coin->getServiceTeamId()) ? null : $coin->getServiceTeamId();
         $this->originalMetadataUrl = is_null($coin->getOriginalMetadataUrl()) ? null : $coin->getOriginalMetadataUrl();
-        $this->excludeFromPush = is_null($coin->getExcludeFromPush()) ? null : $coin->getExcludeFromPush();
+        $this->excludeFromPush = is_null($coin->getExcludeFromPush()) ? $this->excludeFromPush : $coin->getExcludeFromPush();
         $this->applicationUrl = is_null($coin->getApplicationUrl()) ? null : $coin->getApplicationUrl();
         $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();

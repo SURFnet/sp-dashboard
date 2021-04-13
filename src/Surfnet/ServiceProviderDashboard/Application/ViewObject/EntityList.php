@@ -19,6 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use ArrayIterator;
 use IteratorAggregate;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class EntityList implements IteratorAggregate
 {
@@ -46,6 +47,19 @@ class EntityList implements IteratorAggregate
     public function getIterator()
     {
         return new ArrayIterator($this->entities);
+    }
+
+    public function hasTestEntities() : bool
+    {
+        foreach ($this->getEntities() as $entity) {
+            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST
+                && $entity->getState() === Constants::STATE_PUBLISHED
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function sortEntitiesByEnvironment()

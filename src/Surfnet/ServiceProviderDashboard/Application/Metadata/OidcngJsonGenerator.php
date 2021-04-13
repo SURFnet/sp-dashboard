@@ -356,6 +356,11 @@ class OidcngJsonGenerator implements GeneratorInterface
             $collection = $client->getResourceServers();
             if ($collection) {
                 foreach ($collection as $clientId) {
+                    // When Client resetting, the collection of RS is built of ManageEntities, in other cases
+                    // they are entity Id strings
+                    if ($clientId instanceof ManageEntity) {
+                        $clientId = $clientId->getMetaData()->getEntityId();
+                    }
                     $allowedResourceServers[]['name'] = $clientId;
                 }
             }

@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
+use stdClass;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -61,6 +62,16 @@ class ArpGenerator implements MetadataGenerator
         }
 
         $this->addManageOnlyAttributes($attributes, $entity);
+
+        /**
+         * If $attributes is empty, json-conversion will be to an empty array rather than to an empty object.
+         * In the case of a non-empty array it'll be converted to an object.
+         * We want both cases to be an object.
+         * So if it's an empty array return a simple stdClass (which does get converted to an empty object)
+         */
+        if (empty($attributes)) {
+            $attributes = new stdClass();
+        }
 
         return [
             'attributes' => $attributes,

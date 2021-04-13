@@ -126,7 +126,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
         $this->getEntityManager()->flush($service);
     }
 
-    public function findByTeamName(?string $serviceTeamName)
+    public function findByTeamName(?string $serviceTeamName): ?Service
     {
         return parent::findOneBy([
             'teamName' => $serviceTeamName,
