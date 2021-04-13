@@ -73,7 +73,8 @@ class ResetOidcSecretCommandHandler implements CommandHandler
             throw new InvalidArgumentException('Only OIDC TNG entities can be processed');
         }
 
-        if ($entity->getStatus() !== Constants::STATE_PUBLISHED) {
+        $status = $entity->getStatus();
+        if ($status !== Constants::STATE_PUBLISHED && $status !== Constants::STATE_PUBLICATION_REQUESTED) {
             throw new InvalidArgumentException('The requested entity can not be processed, invalid state');
         }
 

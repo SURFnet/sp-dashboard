@@ -42,22 +42,22 @@ class EntityResetSecretController extends Controller
      * @Route("/entity/reset-secret/{serviceId}/{manageId}/{environment}", name="entity_reset_secret")
      * @Security("has_role('ROLE_USER')")
      *
-     * @param Request $request
-     * @param string $manageId
-     * @param string $environment
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function resetAction(Request $request, $serviceId, $manageId, $environment)
+    public function resetAction(Request $request, int $serviceId, string $manageId, string $environment)
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
-
-        $service = $this->serviceService->getServiceById($serviceId);
-
         $manageEntity = $this->entityService->getManageEntityById($manageId, $environment);
-        $manageEntity->setService($service);
+        $entityServiceId = $manageEntity->getService()->getId();
+        if ($serviceId !== $entityServiceId) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to view an Entity from another Service'
+            );
+        }
+        // Verify the Entity Service Id is one of the logged in users services
+        $this->authorizationService->assertServiceIdAllowed($entityServiceId);
 
         $resetOidcSecretCommand = new ResetOidcSecretCommand($manageEntity);
         try {

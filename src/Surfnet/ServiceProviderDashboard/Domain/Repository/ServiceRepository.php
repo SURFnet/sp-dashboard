@@ -73,5 +73,5 @@ interface ServiceRepository
      */
     public function delete(Service $service);
 
-    public function findByTeamName(?string $serviceTeamName);
+    public function findByTeamName(?string $serviceTeamName): ?Service;
 }
