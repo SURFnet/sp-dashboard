@@ -72,7 +72,6 @@ class LoadMetadataCommandHandler implements CommandHandler
                 break;
             default:
                 throw new InvalidArgumentException('Unable to load XML from the LoadMetadataCommand');
-                break;
         }
 
         $metadata = $this->metadataParser->parseXml($xml);
@@ -101,8 +100,6 @@ class LoadMetadataCommandHandler implements CommandHandler
             'descriptionEn' => ['getDescriptionEn', 'setDescriptionEn'],
             'applicationUrlEn' => ['getApplicationUrl', 'setApplicationUrl'],
             'certificate' => ['getCertificate', 'setCertificate'],
-            'organizationNameEn' => ['getOrganizationNameEn', 'setOrganizationNameEn'],
-            'organizationNameNl' => ['getOrganizationNameNl', 'setOrganizationNameNl'],
         ];
 
         $this->map($map, $command, $metadata);
