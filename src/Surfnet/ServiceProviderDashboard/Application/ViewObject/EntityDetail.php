@@ -173,6 +173,11 @@ class EntityDetail
     /**
      * @var Attribute
      */
+    private $eduPersonTargetedIDAttribute;
+
+    /**
+     * @var Attribute
+     */
     private $uidAttribute;
 
     /**
@@ -338,14 +343,17 @@ class EntityDetail
         $entityDetail->commonNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:cn');
         $entityDetail->displayNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:displayName');
         $entityDetail->emailAddressAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:mail');
-        $entityDetail->organizationAttribute = $attributes->findByUrn('urn:mace:terena:attribute-def:schacHomeOrganization');
-        $entityDetail->organizationTypeAttribute = $attributes->findByUrn('urn:mace:terena:attribute-def:schacHomeOrganizationType');
+        $entityDetail->organizationAttribute =
+            $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganization');
+        $entityDetail->organizationTypeAttribute =
+            $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganizationType');
         $entityDetail->affiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonAffiliation');
         $entityDetail->entitlementAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonEntitlement');
         $entityDetail->principleNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonPrincipalName');
+        $entityDetail->eduPersonTargetedIDAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonTargetedID');
         $entityDetail->uidAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:uid');
         $entityDetail->preferredLanguageAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
-        $entityDetail->personalCodeAttribute = $attributes->findByUrn('urn:schac:dir:attribute-def:schacPersonalUniqueCode');
+        $entityDetail->personalCodeAttribute = $attributes->findByUrn('urn:schac:attribute-def:schacPersonalUniqueCode');
         $entityDetail->scopedAffiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
     }
 
@@ -583,6 +591,15 @@ class EntityDetail
     public function getScopedAffiliationAttribute()
     {
         return $this->scopedAffiliationAttribute;
+    }
+
+
+    /**
+     * @return Attribute
+     */
+    public function getEduPersonTargetedIDAttribute()
+    {
+        return $this->eduPersonTargetedIDAttribute;
     }
 
     /**
