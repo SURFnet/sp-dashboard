@@ -92,4 +92,10 @@ class AllowedIdentityProviders
         $this->providers = is_null($allowedIdPs->getAllowedIdentityProviders()) ? null : $allowedIdPs->getAllowedIdentityProviders();
         $this->allowAll = is_null($allowedIdPs->isAllowAll()) ? null : $allowedIdPs->isAllowAll();
     }
+
+    public function clear()
+    {
+        $this->allowAll = true;
+        $this->providers = [];
+    }
 }
