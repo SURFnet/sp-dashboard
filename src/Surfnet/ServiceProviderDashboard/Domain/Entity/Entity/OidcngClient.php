@@ -63,7 +63,7 @@ class OidcngClient implements OidcClientInterface
      */
     private $resourceServers;
 
-    public static function fromApiResponse(array $data, string $manageProtocol)
+    public static function fromApiResponse(array $data)
     {
         $clientId = self::getStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');

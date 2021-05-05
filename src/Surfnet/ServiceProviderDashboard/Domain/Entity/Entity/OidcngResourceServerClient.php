@@ -37,7 +37,7 @@ class OidcngResourceServerClient implements OidcClientInterface
      */
     private $grants;
 
-    public static function fromApiResponse(array $data, string $manageProtocol)
+    public static function fromApiResponse(array $data)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';

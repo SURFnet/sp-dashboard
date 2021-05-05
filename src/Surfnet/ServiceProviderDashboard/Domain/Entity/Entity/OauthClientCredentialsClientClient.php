@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Grants;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
 use function is_null;
@@ -35,7 +34,7 @@ class OauthClientCredentialsClientClient implements OidcClientInterface
      */
     private $clientSecret;
 
-    public static function fromApiResponse(array $data, string $manageProtocol)
+    public static function fromApiResponse(array $data)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
