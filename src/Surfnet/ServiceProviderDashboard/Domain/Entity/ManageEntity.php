@@ -298,7 +298,10 @@ class ManageEntity
         $this->metaData->merge($newEntity->getMetaData());
         $this->attributes->merge($newEntity->getAttributes());
         $protocol = $this->protocol->getProtocol();
-        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            || $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        ) {
             $this->oidcClient->merge($newEntity->getOidcClient(), $this->getService()->getTeamName());
         }
         $this->comments = $newEntity->getComments();

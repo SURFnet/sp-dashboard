@@ -183,6 +183,35 @@ class OauthClientCredentialEntityType extends AbstractType
                 ]
             );
         $builder->add($metadata);
+        // Load the choices for the resource server choice form section
+        $choices = $this->oidcngResourceServerOptionsFactory->build(
+            $command->getService()->getTeamName(),
+            $command->getEnvironment()
+        );
+        // If no resource servers are present, do not render the resource server section.
+        if (!empty($choices)) {
+            $builder
+                ->add(
+                    $builder->create('oidcngResourceServers', FormType::class, ['inherit_data' => true])
+                        ->add(
+                            'oidcngResourceServers',
+                            ChoiceType::class,
+                            [
+                                'choices' => $choices,
+                                'expanded' => true,
+                                'multiple' => true,
+                                'by_reference' => false,
+                                'attr' => [
+                                    'data-help' => 'entity.edit.information.oidcngResourceServers',
+                                    'class' => 'wide'
+                                ],
+                                'choice_attr' => function () {
+                                    return ['class' => 'decorated'];
+                                },
+                            ]
+                        )
+                );
+        }
 
         $builder
             ->add(

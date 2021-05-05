@@ -30,6 +30,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
+use function is_array;
+use function reset;
 
 class SaveCommandFactory implements SaveCommandFactoryInterface
 {
@@ -204,6 +206,17 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setNameEn($metaData->getNameEn());
         $command->setDescriptionNl($metaData->getDescriptionNl());
         $command->setDescriptionEn($metaData->getDescriptionEn());
+
+        $resourceServers = $command->getOidcngResourceServers();
+        if (is_array($resourceServers) && reset($resourceServers) instanceof ManageEntity) {
+            $resourceServers = $command->getOidcngResourceServers();
+            $servers = [];
+            foreach ($resourceServers as $resourceServer) {
+                $servers[$resourceServer->getMetaData()->getEntityId()] = $resourceServer->getMetaData()->getEntityId();
+            }
+            $command->setOidcngResourceServers($servers);
+        }
+
         // Coin data
         $command->setApplicationUrl($coins->getApplicationUrl());
         $command->setEulaUrl($coins->getEula());

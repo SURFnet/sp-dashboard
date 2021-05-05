@@ -132,11 +132,12 @@ class EntityMergeService
                 $secret->getSecret(),
                 []
             );
-        }else if ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+        } else if ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
             /** @var SaveOauthClientCredentialClientCommand $command */
             $oidcClient = new OauthClientCredentialsClientClient(
                 $command->getClientId(),
-                $secret->getSecret()
+                $secret->getSecret(),
+                $command->getOidcngResourceServers()
             );
         }
 
