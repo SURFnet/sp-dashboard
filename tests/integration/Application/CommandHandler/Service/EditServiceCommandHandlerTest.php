@@ -54,14 +54,13 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'team-foobar',
             false,
             false,
+            true,
             'institution',
             'not-applicable',
             'no',
             'no',
             true,
             '123',
-            'Foobar Inc',
-            'Foobar Inc',
             'Foobar Inc',
             'Foobar Inc'
         );
