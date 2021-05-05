@@ -207,7 +207,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $givenNameAttribute;
 
@@ -215,7 +215,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $surNameAttribute;
 
@@ -223,7 +223,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $commonNameAttribute;
 
@@ -231,7 +231,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $displayNameAttribute;
 
@@ -239,7 +239,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $emailAddressAttribute;
 
@@ -247,7 +247,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $organizationAttribute;
 
@@ -255,7 +255,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $organizationTypeAttribute;
 
@@ -263,7 +263,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $affiliationAttribute;
 
@@ -271,7 +271,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $entitlementAttribute;
 
@@ -279,7 +279,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $principleNameAttribute;
 
@@ -287,7 +287,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $uidAttribute;
 
@@ -295,7 +295,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $preferredLanguageAttribute;
 
@@ -303,7 +303,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $personalCodeAttribute;
 
@@ -311,7 +311,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $scopedAffiliationAttribute;
 
@@ -319,7 +319,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var Attribute
      *
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute(groups={"production"})
+     * @SpDashboardAssert\ValidAttribute
      */
     private $eduPersonTargetedIDAttribute;
 
