@@ -181,17 +181,6 @@ class OauthClientCredentialEntityType extends AbstractType
                         'data-parsley-trigger' => 'blur',
                     ],
                 ]
-            )
-            ->add(
-                'enablePlayground',
-                CheckboxType::class,
-                [
-                    'required' => false,
-                    'attr' => [
-                        'class' => 'requested',
-                        'data-help' => 'entity.edit.information.enablePlayground',
-                    ]
-                ]
             );
         $builder->add($metadata);
 

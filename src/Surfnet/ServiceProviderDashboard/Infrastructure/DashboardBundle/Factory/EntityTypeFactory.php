@@ -110,6 +110,10 @@ class EntityTypeFactory
                     $command,
                     $this->buildOptions($environment)
                 );
+            case (Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT):
+                $command = $this->saveCommandFactory->buildOauthCccCommandByManageEntity($entity, $environment, $isCopy);
+                $command->setService($service);
+                return $this->formFactory->create(OauthClientCredentialEntityType::class, $command, $this->buildOptions($environment));
         }
 
         throw new InvalidArgumentException("invalid form type requested");

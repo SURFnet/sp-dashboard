@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -172,6 +173,40 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setNameEn($metaData->getNameEn());
         $command->setDescriptionNl($metaData->getDescriptionNl());
         $command->setDescriptionEn($metaData->getDescriptionEn());
+
+        $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
+        $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));
+        $command->setSupportContact(Contact::from($metaData->getContacts()->findSupportContact()));
+
+        return $command;
+    }
+
+    public function buildOauthCccCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment,
+        bool $isCopy = false
+    ): SaveOauthClientCredentialClientCommand {
+        $command = new SaveOauthClientCredentialClientCommand();
+        $metaData = $manageEntity->getMetaData();
+        $coins = $manageEntity->getMetaData()->getCoin();
+
+        $command->setId($manageEntity->getId());
+        $command->setManageId($manageEntity->getId());
+        $command->setStatus($manageEntity->getStatus());
+        $command->setEnvironment($environment);
+        $command->setEntityId($metaData->getEntityId());
+        $command->setIsCopy($isCopy);
+
+        $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
+        $command->setLogoUrl($metaData->getLogo()->getUrl());
+
+        $command->setNameNl($metaData->getNameNl());
+        $command->setNameEn($metaData->getNameEn());
+        $command->setDescriptionNl($metaData->getDescriptionNl());
+        $command->setDescriptionEn($metaData->getDescriptionEn());
+        // Coin data
+        $command->setApplicationUrl($coins->getApplicationUrl());
+        $command->setEulaUrl($coins->getEula());
 
         $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
         $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));
