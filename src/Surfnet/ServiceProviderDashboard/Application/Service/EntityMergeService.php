@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
@@ -29,6 +30,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ContactList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OauthClientCredentialsClientClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Organization;
@@ -130,6 +132,12 @@ class EntityMergeService
                 $secret->getSecret(),
                 []
             );
+        }else if ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+            /** @var SaveOauthClientCredentialClientCommand $command */
+            $oidcClient = new OauthClientCredentialsClientClient(
+                $command->getClientId(),
+                $secret->getSecret()
+            );
         }
 
         $newEntity = new ManageEntity(
@@ -160,7 +168,10 @@ class EntityMergeService
         $attributeList = new AttributeList();
 
         // Oidc TNG resource servers do not track attributes in manage
-        if ($command instanceof SaveOidcngResourceServerEntityCommand) {
+        // Neither do the Oauth Client Credentials clients
+        if ($command instanceof SaveOidcngResourceServerEntityCommand ||
+            $command instanceof SaveOauthClientCredentialClientCommand
+        ) {
             return $attributeList;
         }
 

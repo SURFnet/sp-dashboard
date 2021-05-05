@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
@@ -30,8 +30,8 @@ use function is_null;
 class OidcngClient implements OidcClientInterface
 {
     const FORM_MANAGED_GRANTS = [
-        'entity.edit.label.authorization_code' => OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE,
-        'entity.edit.label.implicit' => OidcGrantType::GRANT_TYPE_IMPLICIT
+        'entity.edit.label.authorization_code' => Constants::GRANT_TYPE_AUTHORIZATION_CODE,
+        'entity.edit.label.implicit' => Constants::GRANT_TYPE_IMPLICIT
     ];
 
     /**

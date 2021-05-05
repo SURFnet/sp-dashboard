@@ -99,11 +99,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $isPublicClient;
 
     /**
-     * @var array $grants defaults to OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE
+     * @var array $grants defaults to Constants::GRANT_TYPE_AUTHORIZATION_CODE
      *
      * @Assert\NotBlank()
      */
-    private $grants = [OidcGrantType::GRANT_TYPE_AUTHORIZATION_CODE];
+    private $grants = [Constants::GRANT_TYPE_AUTHORIZATION_CODE];
 
     /**
      * @var int

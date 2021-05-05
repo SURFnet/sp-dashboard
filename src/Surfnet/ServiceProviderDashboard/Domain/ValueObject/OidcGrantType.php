@@ -18,17 +18,14 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class OidcGrantType
 {
-    const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
-    const GRANT_TYPE_IMPLICIT = 'implicit';
-    const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
-
     private static $validGrantTypes = [
-        self::GRANT_TYPE_AUTHORIZATION_CODE,
-        self::GRANT_TYPE_IMPLICIT,
-        self::GRANT_TYPE_CLIENT_CREDENTIALS,
+        Constants::GRANT_TYPE_AUTHORIZATION_CODE,
+        Constants::GRANT_TYPE_IMPLICIT,
+        Constants::GRANT_TYPE_CLIENT_CREDENTIALS,
     ];
 
     /**
@@ -39,7 +36,7 @@ class OidcGrantType
     /**
      * @param string $grantType
      */
-    public function __construct($grantType = self::GRANT_TYPE_AUTHORIZATION_CODE)
+    public function __construct($grantType = Constants::GRANT_TYPE_AUTHORIZATION_CODE)
     {
         if (!in_array($grantType, self::$validGrantTypes)) {
             throw new InvalidArgumentException("invalid grant type");
