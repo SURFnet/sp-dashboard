@@ -9,3 +9,4 @@
 3. [Legacy code](legacy_code.md)
 3. [Third party frontend packages](third_party_packages.md)
 3. [Jira docker setup guide](jira.md)
+3. [Release guide](release.md)
