@@ -1,5 +1,5 @@
 # Check whether we ran before
-if [ -f /etc//first_run_done ]
+if [ -f /etc/first_run_done ]
     then exit
 fi
 
@@ -9,7 +9,7 @@ while ! mysqladmin ping -h localhost --silent; do
 done
 
 # First we create the spdashboard database and user
-mysql -e "create database spdashboard"
+mysql -e "create database if not exists spdashboard"
 mysql -e "grant all on spdashboard.* to spdrw identified by 'secret'"
 
 # We wait until manage becomes available
@@ -32,7 +32,8 @@ systemctl restart manage
 # Add spdashboard to the loadbalancer. We reuse the welcome backend for it 
 echo "  backend spdashboard_be" >> /etc/haproxy/haproxy_backend.cfg
 echo "  server spd spdashboard_web:80" >> /etc/haproxy/haproxy_backend.cfg
-sed -i 's/welcome/spdashboard/g' /etc/haproxy/haproxy_frontend.cfg
+echo "spdashboard.vm.openconext.org spdashboard_be"  >> /etc/haproxy/maps/backends.map
+echo "spdashboard.vm.openconext.org" >> /etc/haproxy/acls/validvhostsunrestricted.acl
 systemctl reload haproxy
 
 # Finished, make sure we don't run again

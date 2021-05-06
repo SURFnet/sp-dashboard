@@ -1,3 +1,21 @@
+## 3.1.2
+**Bugfixes**
+- Add 4 missing attributes when viewing (not editing) an entity:
+  - schacHomeOrganization
+  - schacHomeOrganizationType
+  - shacpersonalUniqueCode
+  - eduPersonTargetedID (not shown for oidc entities)
+- ensure ACL is not copied when using a test entity as a template for a production entity
+- ensured motivations for attributes need to be given on test, as was already the case on production
+- fix two small issues which kept popping up in the logs
+
+**Infra**
+- add cache headers for the production Apache docker image
+- use the latest openconext docker image
+
+**Security**
+- bump version of SSRI dependency to resolve security issue
+
 ## 3.1.1
 **Bugfixes**
 - Resolved client secret reset issues #443

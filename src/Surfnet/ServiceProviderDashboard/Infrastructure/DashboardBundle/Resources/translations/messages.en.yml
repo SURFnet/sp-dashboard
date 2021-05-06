@@ -106,6 +106,7 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
+        edu_person_targeted_id: Edu person targeted ID attribute
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>

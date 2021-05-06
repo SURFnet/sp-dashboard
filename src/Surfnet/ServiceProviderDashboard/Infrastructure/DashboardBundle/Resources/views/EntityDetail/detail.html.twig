@@ -88,7 +88,9 @@
         {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.prefered_language')|trans, value: entity.preferredLanguageAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.preferredLanguageAttribute'} %}
         {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.personal_code')|trans, value: entity.personalCodeAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.personalCodeAttribute'} %}
         {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.scoped_affiliation')|trans, value: entity.scopedAffiliationAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.scopedAffiliationAttribute'} %}
-
+        {% if entity.protocol == "saml20" %}
+            {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.edu_person_targeted_id')|trans, value: entity.eduPersonTargetedIDAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.eduPersonTargetedIDAttribute'} %}
+        {% endif %}
     </div>
 
     {% endif %}

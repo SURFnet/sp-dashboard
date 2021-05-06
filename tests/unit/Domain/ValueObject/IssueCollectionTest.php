@@ -24,6 +24,12 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 
 class IssueCollectionTest extends TestCase
 {
+    public function test_can_be_used_with_empty_issue_set()
+    {
+        $collection = new IssueCollection([]);
+        self::assertEquals(0, $collection->count());
+    }
+
     public function test_get_issue_by_key()
     {
         $issue1 = new Issue('CTX-0123', 'issue-type-1', 'OPEN');

@@ -25,7 +25,7 @@ class IssueCollection implements Countable
     /**
      * @var Issue[]
      */
-    private $issues;
+    private $issues = [];
 
     /**
      * @param Issue[] $issues
