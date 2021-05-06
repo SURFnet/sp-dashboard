@@ -28,11 +28,8 @@ class EntityCreateClientCredentialsClientTest extends WebTestCase
     public function setUp()
     {
         parent::setUp();
-
         $this->loadFixtures();
-
         $this->logIn('ROLE_ADMINISTRATOR');
-
         $this->switchToService('Ibuildings B.V.');
     }
 

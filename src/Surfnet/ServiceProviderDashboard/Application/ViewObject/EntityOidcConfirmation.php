@@ -53,7 +53,8 @@ class EntityOidcConfirmation
     ) {
         $supportedProtocols = [
             Constants::TYPE_OPENID_CONNECT_TNG,
-            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
+            Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ];
 
         if (!in_array($protocol, $supportedProtocols)) {

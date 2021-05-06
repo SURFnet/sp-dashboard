@@ -45,7 +45,8 @@ class EntityPublishedController extends Controller
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
         $protocol = $entity->getProtocol()->getProtocol();
         if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
+            $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
             if ($this->isGranted('ROLE_ADMINISTRATOR')) {
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
