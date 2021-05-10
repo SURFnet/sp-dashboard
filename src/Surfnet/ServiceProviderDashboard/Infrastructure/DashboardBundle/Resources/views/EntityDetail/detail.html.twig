@@ -72,7 +72,7 @@
 
     </div>
 
-    {% if entity.protocol != "oauth20_rs" %}
+    {% if entity.protocol != "oauth20_rs" and entity.protocol != "oauth20_ccc" %}
 
     <div class="fieldset card">
         <h2>{{ ('entity.detail.attribute.' ~ type ~ '.title')|trans }}</h2>
