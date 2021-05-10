@@ -94,13 +94,19 @@ class ManageEntity
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
         $oidcClient = null;
-        if ($manageProtocol === Protocol::OAUTH20_RS) {
-            $oidcClient = OidcngResourceServerClient::fromApiResponse($data);
-        } elseif ($manageProtocol === Protocol::OIDC10_RP) {
-            $oidcClient = OidcngClient::fromApiResponse($data);
-        } elseif ($manageProtocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
-            $oidcClient = OauthClientCredentialsClientClient::fromApiResponse($data);
+
+        switch ($manageProtocol) {
+            case Protocol::OAUTH20_RS:
+                $oidcClient = OidcngResourceServerClient::fromApiResponse($data);
+                break;
+            case Protocol::OIDC10_RP:
+                $oidcClient = OidcngClient::fromApiResponse($data);
+                break;
+            case Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT:
+                $oidcClient = OauthClientCredentialsClientClient::fromApiResponse($data);
+                break;
         }
+
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
         $protocol = Protocol::fromApiResponse($manageProtocol);
 
@@ -298,11 +304,7 @@ class ManageEntity
         $this->service = is_null($newEntity->getService()) ? null : $newEntity->getService();
         $this->metaData->merge($newEntity->getMetaData());
         $this->attributes->merge($newEntity->getAttributes());
-        $protocol = $this->protocol->getProtocol();
-        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG
-            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
-            || $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
-        ) {
+        if ($this->hasOicdClient()) {
             $this->oidcClient->merge($newEntity->getOidcClient(), $this->getService()->getTeamName());
         }
         $this->comments = $newEntity->getComments();
@@ -316,5 +318,13 @@ class ManageEntity
     public function updateClientSecret(SecretInterface $secret)
     {
         $this->getOidcClient()->updateClientSecret($secret);
+    }
+
+    private function hasOicdClient()
+    {
+        $protocol = $this->protocol->getProtocol();
+        return $protocol === Constants::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            || $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 }
