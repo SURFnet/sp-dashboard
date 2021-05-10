@@ -39,6 +39,10 @@
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
         {% endif %}
 
+        {% if entity.protocol == "oauth20_ccc" %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
+        {% endif %}
+
 
         {% include '@Dashboard/EntityDetail/detailFormattedField.html.twig' with {label: 'entity.detail.metadata.certificate'|trans, value: entity.certificate, informationPopup: 'entity.edit.information.certificate'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.logo_url'|trans, value: entity.logoUrl, informationPopup: 'entity.edit.information.logoUrl'} %}
@@ -51,7 +55,7 @@
 
     </div>
 
-    {% if entity.protocol == "oidcng" %}
+    {% if entity.protocol == "oidcng" or entity.protocol == 'oauth20_ccc' %}
     <div class="fieldset card">
         <h2>{{ 'entity.detail.metadata.resource_servers'|trans }}</h2>
         {% include '@Dashboard/EntityDetail/detailResourceServersField.html.twig' with {label: 'entity.detail.metadata.resource_servers'|trans, value: entity.resourceServers, entity: entity, informationPopup: 'entity.edit.information.resourceServers'} %}
