@@ -21,12 +21,15 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Infrastructure\Dash
 use Exception;
 use Mockery as m;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueEntityIdValidator;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
@@ -61,6 +64,17 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
 
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider validClientIdCommands
+     */
+    public function test_success_client_ids($command)
+    {
+        $this->queryService->shouldReceive('test', 'findManageIdByEntityId')->andReturn(null);
+        $this->mockFormData($command);
+        $this->validator->validate('https://sub.domain.org', new UniqueEntityId());
         $this->assertNoViolation();
     }
 
@@ -162,5 +176,23 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
         $form->expects($this->any())->method('getData')->willReturn($data);
 
         $this->setRoot($form);
+    }
+
+    public function validClientIdCommands()
+    {
+        $entityCommand = m::mock(SaveOidcngResourceServerEntityCommand::class);
+        $entityCommand->shouldReceive('isForProduction')->andReturn(false);
+        $entityCommand->shouldReceive('getManageId')->andReturn(1);
+        yield [$entityCommand];
+
+        $entityCommand = m::mock(SaveOauthClientCredentialClientCommand::class);
+        $entityCommand->shouldReceive('isForProduction')->andReturn(false);
+        $entityCommand->shouldReceive('getManageId')->andReturn(1);
+        yield [$entityCommand];
+
+        $entityCommand = m::mock(SaveOidcngEntityCommand::class);
+        $entityCommand->shouldReceive('isForProduction')->andReturn(false);
+        $entityCommand->shouldReceive('getManageId')->andReturn(1);
+        yield [$entityCommand];
     }
 }
