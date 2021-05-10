@@ -131,7 +131,8 @@ class ManageEntity
         $manageProtocol = $data['type'] ?? '';
         $grantTypes = $data['data']['metaDataFields']['grants'] ?? [];
         // No dedicated Manage protocol / entity type is defined yet for oauth client credential entities
-        $isClientCredentialsClient = in_array(Constants::GRANT_TYPE_CLIENT_CREDENTIALS, $grantTypes);
+        $isClientCredentialsClient = in_array(Constants::GRANT_TYPE_CLIENT_CREDENTIALS, $grantTypes)
+            && count($grantTypes) === 1;
         return $isClientCredentialsClient ? Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT : $manageProtocol;
     }
 
