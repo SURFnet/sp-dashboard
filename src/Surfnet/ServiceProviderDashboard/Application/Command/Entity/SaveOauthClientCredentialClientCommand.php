@@ -551,18 +551,12 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         $this->isPublicClient = $isPublicClient;
     }
 
-    /**
-     * @return int
-     */
-    public function getAccessTokenValidity()
+    public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
     }
 
-    /**
-     * @param int $accessTokenValidity
-     */
-    public function setAccessTokenValidity($accessTokenValidity)
+    public function setAccessTokenValidity(int $accessTokenValidity)
     {
         $this->accessTokenValidity = (int) $accessTokenValidity;
     }

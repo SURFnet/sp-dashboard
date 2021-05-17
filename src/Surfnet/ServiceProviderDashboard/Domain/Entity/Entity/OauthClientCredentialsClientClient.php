@@ -41,18 +41,27 @@ class OauthClientCredentialsClientClient implements OidcClientInterface
      */
     private $resourceServers;
 
+    /**
+     * @var int
+     */
+    private $accessTokenValidity;
+
     public static function fromApiResponse(array $data)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
         $resourceServers = isset($data['resourceServers']) ? $data['resourceServers'] : [];
+        $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
+            ? (int) $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
+        Assert::integer($accessTokenValidity);
         Assert::isArray($resourceServers);
 
 
         return new self(
             $clientId,
+            $accessTokenValidity,
             $clientSecret,
             $resourceServers
         );
@@ -60,12 +69,14 @@ class OauthClientCredentialsClientClient implements OidcClientInterface
 
     public function __construct(
         string $clientId,
+        int $accessTokenValidity,
         ?string $clientSecret,
         array $resourceServers
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->resourceServers = $resourceServers;
+        $this->accessTokenValidity = $accessTokenValidity;
     }
 
     /**
@@ -105,7 +116,7 @@ class OauthClientCredentialsClientClient implements OidcClientInterface
      */
     public function getAccessTokenValidity(): int
     {
-        return 0;
+        return $this->accessTokenValidity;
     }
 
     public function getResourceServers()
@@ -132,6 +143,7 @@ class OauthClientCredentialsClientClient implements OidcClientInterface
     {
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
+        $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
         $this->mergeResourceServers($client->getResourceServers(), $homeTeam);
     }
 

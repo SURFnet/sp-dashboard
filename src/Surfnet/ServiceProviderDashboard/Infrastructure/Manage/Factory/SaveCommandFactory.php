@@ -207,6 +207,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setDescriptionNl($metaData->getDescriptionNl());
         $command->setDescriptionEn($metaData->getDescriptionEn());
 
+        $command->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
         $resourceServers = $command->getOidcngResourceServers();
         if (is_array($resourceServers) && reset($resourceServers) instanceof ManageEntity) {
             $resourceServers = $command->getOidcngResourceServers();

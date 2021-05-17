@@ -136,6 +136,7 @@ class EntityMergeService
             /** @var SaveOauthClientCredentialClientCommand $command */
             $oidcClient = new OauthClientCredentialsClientClient(
                 $command->getClientId(),
+                $command->getAccessTokenValidity(),
                 $secret->getSecret(),
                 $command->getOidcngResourceServers()
             );
