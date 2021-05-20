@@ -1,3 +1,7 @@
+## 3.2.0
+**Feature**
+ - Add support for Client Credential Clients  #445
+
 ## 3.1.2
 **Bugfixes**
 - Add 4 missing attributes when viewing (not editing) an entity:
