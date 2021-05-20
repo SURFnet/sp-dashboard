@@ -67,6 +67,9 @@ class ClientResult implements ClientResultInterface
             case "oidc10_rp":
                 $json = file_get_contents(__DIR__ . '/template/oidc10.json');
                 break;
+            case "oauth20_ccc":
+                $json = file_get_contents(__DIR__ . '/template/ccc.json');
+                break;
             default:
                 throw new RuntimeException(sprintf("Protocol %s is not supported", $this->protocol));
         }

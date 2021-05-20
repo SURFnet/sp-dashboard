@@ -51,6 +51,7 @@ class CreateServiceCommandHandler implements CommandHandler
         $service->setTeamName($command->getTeamName());
         $service->setProductionEntitiesEnabled($command->isProductionEntitiesEnabled());
         $service->setPrivacyQuestionsEnabled($command->isPrivacyQuestionsEnabled());
+        $service->setClientCredentialClientsEnabled($command->isClientCredentialClientsEnabled());
         $service->setServiceType($command->getServiceType());
         $service->setContractSigned($command->getContractSigned());
         $service->setIntakeStatus($command->getIntakeStatus());

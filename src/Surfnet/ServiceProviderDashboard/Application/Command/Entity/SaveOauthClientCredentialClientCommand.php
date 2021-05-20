@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2021 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,23 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use Exception;
 use InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use function in_array;
+use function is_null;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
- * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class SaveOidcngEntityCommand implements SaveEntityCommandInterface
+class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterface
 {
     /**
      * @var string
@@ -79,31 +80,16 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $secret;
 
     /**
-     * @var string[]
-     * @Assert\Count(
-     *      min = 1,
-     *      max = 1000,
-     *      minMessage = "You need to add a minimum of {{ limit }} redirect Url.|You need to add a minimum of {{ limit }} redirect Urls.",
-     * )
-     * @Assert\All({
-     *     @Assert\NotBlank(),
-     *     @SpDashboardAssert\ValidRedirectUrl()
-     * })
-     * @SpDashboardAssert\UniqueRedirectUrls()
-     */
-    private $redirectUrls;
-
-    /**
      * @var bool
      */
     private $isPublicClient;
 
     /**
-     * @var array $grants defaults to Constants::GRANT_TYPE_AUTHORIZATION_CODE
+     * @var array $grants defaults to Constants::GRANT_TYPE_CLIENT_CREDENTIALS
      *
      * @Assert\NotBlank()
      */
-    private $grants = [Constants::GRANT_TYPE_AUTHORIZATION_CODE];
+    private $grants = [Constants::GRANT_TYPE_CLIENT_CREDENTIALS];
 
     /**
      * @var int
@@ -204,126 +190,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $supportContact;
 
     /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $givenNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $surNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $commonNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $displayNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $emailAddressAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $organizationAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $organizationTypeAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $affiliationAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $entitlementAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $principleNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $uidAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $preferredLanguageAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $personalCodeAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $scopedAffiliationAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $eduPersonTargetedIDAttribute;
-
-    /**
      * @var string
      */
     private $comments;
@@ -332,11 +198,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var string
      */
     private $manageId;
-
-    /**
-     * @var bool
-     */
-    private $enablePlayground;
 
     /**
      * @var string[]
@@ -479,26 +340,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @return string[]
-     */
-    public function getRedirectUrls()
-    {
-        if (!is_array($this->redirectUrls)) {
-            return [];
-        }
-
-        return array_values($this->redirectUrls);
-    }
-
-    /**
-     * @param string[] $redirectUrls
-     */
-    public function setRedirectUrls($redirectUrls)
-    {
-        $this->redirectUrls = $redirectUrls;
-    }
-
-    /**
      * @return string
      */
     public function getLogoUrl(): ?string
@@ -635,246 +476,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @return Attribute
-     */
-    public function getGivenNameAttribute()
-    {
-        return $this->givenNameAttribute;
-    }
-
-    /**
-     * @param Attribute $givenNameAttribute
-     */
-    public function setGivenNameAttribute($givenNameAttribute)
-    {
-        $this->givenNameAttribute = $givenNameAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getSurNameAttribute()
-    {
-        return $this->surNameAttribute;
-    }
-
-    /**
-     * @param Attribute $surNameAttribute
-     */
-    public function setSurNameAttribute($surNameAttribute)
-    {
-        $this->surNameAttribute = $surNameAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getCommonNameAttribute()
-    {
-        return $this->commonNameAttribute;
-    }
-
-    /**
-     * @param Attribute $commonNameAttribute
-     */
-    public function setCommonNameAttribute($commonNameAttribute)
-    {
-        $this->commonNameAttribute = $commonNameAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getDisplayNameAttribute()
-    {
-        return $this->displayNameAttribute;
-    }
-
-    /**
-     * @param Attribute $displayNameAttribute
-     */
-    public function setDisplayNameAttribute($displayNameAttribute)
-    {
-        $this->displayNameAttribute = $displayNameAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getEmailAddressAttribute()
-    {
-        return $this->emailAddressAttribute;
-    }
-
-    /**
-     * @param Attribute $emailAddressAttribute
-     */
-    public function setEmailAddressAttribute($emailAddressAttribute)
-    {
-        $this->emailAddressAttribute = $emailAddressAttribute;
-    }
-
-    /**
-     * @param Attribute $eduPersonTargetedIDAttribute
-     */
-    public function setEduPersonTargetedIDAttribute($eduPersonTargetedIDAttribute)
-    {
-        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationAttribute()
-    {
-        return $this->organizationAttribute;
-    }
-
-    /**
-     * @param Attribute $organizationAttribute
-     */
-    public function setOrganizationAttribute($organizationAttribute)
-    {
-        $this->organizationAttribute = $organizationAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationTypeAttribute()
-    {
-        return $this->organizationTypeAttribute;
-    }
-
-    /**
-     * @param Attribute $organizationTypeAttribute
-     */
-    public function setOrganizationTypeAttribute($organizationTypeAttribute)
-    {
-        $this->organizationTypeAttribute = $organizationTypeAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getAffiliationAttribute()
-    {
-        return $this->affiliationAttribute;
-    }
-
-    /**
-     * @param Attribute $affiliationAttribute
-     */
-    public function setAffiliationAttribute($affiliationAttribute)
-    {
-        $this->affiliationAttribute = $affiliationAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getEntitlementAttribute()
-    {
-        return $this->entitlementAttribute;
-    }
-
-    /**
-     * @param Attribute $entitlementAttribute
-     */
-    public function setEntitlementAttribute($entitlementAttribute)
-    {
-        $this->entitlementAttribute = $entitlementAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getPrincipleNameAttribute()
-    {
-        return $this->principleNameAttribute;
-    }
-
-    /**
-     * @param Attribute $principleNameAttribute
-     */
-    public function setPrincipleNameAttribute($principleNameAttribute)
-    {
-        $this->principleNameAttribute = $principleNameAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getUidAttribute()
-    {
-        return $this->uidAttribute;
-    }
-
-    /**
-     * @param Attribute $uidAttribute
-     */
-    public function setUidAttribute($uidAttribute)
-    {
-        $this->uidAttribute = $uidAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getPreferredLanguageAttribute()
-    {
-        return $this->preferredLanguageAttribute;
-    }
-
-    /**
-     * @param Attribute $preferredLanguageAttribute
-     */
-    public function setPreferredLanguageAttribute($preferredLanguageAttribute)
-    {
-        $this->preferredLanguageAttribute = $preferredLanguageAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getPersonalCodeAttribute()
-    {
-        return $this->personalCodeAttribute;
-    }
-
-    /**
-     * @param Attribute $personalCodeAttribute
-     */
-    public function setPersonalCodeAttribute($personalCodeAttribute)
-    {
-        $this->personalCodeAttribute = $personalCodeAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getScopedAffiliationAttribute()
-    {
-        return $this->scopedAffiliationAttribute;
-    }
-
-    /**
-     * @param Attribute $scopedAffiliationAttribute
-     */
-    public function setScopedAffiliationAttribute($scopedAffiliationAttribute)
-    {
-        $this->scopedAffiliationAttribute = $scopedAffiliationAttribute;
-    }
-
-    /**
-     * @return Attribute
-     */
-    public function getEduPersonTargetedIDAttribute()
-    {
-        return $this->eduPersonTargetedIDAttribute;
-    }
-
-    /**
      * @return string
      */
     public function getComments(): ?string
@@ -931,7 +532,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     public function getProtocol(): string
     {
-        return Constants::TYPE_OPENID_CONNECT_TNG;
+        return Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 
     /**
@@ -950,36 +551,14 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->isPublicClient = $isPublicClient;
     }
 
-    /**
-     * @return int
-     */
-    public function getAccessTokenValidity()
+    public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
     }
 
-    /**
-     * @param int $accessTokenValidity
-     */
-    public function setAccessTokenValidity($accessTokenValidity)
+    public function setAccessTokenValidity(int $accessTokenValidity)
     {
         $this->accessTokenValidity = (int) $accessTokenValidity;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnablePlayground()
-    {
-        return $this->enablePlayground;
-    }
-
-    /**
-     * @param bool $enablePlayground
-     */
-    public function setEnablePlayground($enablePlayground)
-    {
-        $this->enablePlayground = $enablePlayground;
     }
 
     /**

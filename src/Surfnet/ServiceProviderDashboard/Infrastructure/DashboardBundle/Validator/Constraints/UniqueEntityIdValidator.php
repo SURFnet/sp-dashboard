@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
@@ -54,7 +55,10 @@ class UniqueEntityIdValidator extends ConstraintValidator
 
         $mode = $entityCommand->isForProduction() ? 'production' : 'test';
 
-        if ($entityCommand instanceof SaveOidcngEntityCommand || $entityCommand instanceof SaveOidcngResourceServerEntityCommand) {
+        if ($entityCommand instanceof SaveOidcngEntityCommand ||
+            $entityCommand instanceof SaveOidcngResourceServerEntityCommand ||
+            $entityCommand instanceof SaveOauthClientCredentialClientCommand
+        ) {
             // Remove the protocol to ensure we can lookup the Oidc TNG entities for existence
             $value = OidcngClientIdParser::parse($value);
         }

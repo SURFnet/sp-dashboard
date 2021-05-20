@@ -106,6 +106,7 @@ class WebTestCase extends SymfonyWebTestCase
         switch ($protocol) {
             case "saml20_sp":
             case "oidc10_rp":
+            case "oauth20_ccc":
                 $this->registerSp($env, $protocol, $id, $name, $entityId, $metadataUrl, $teamName);
                 break;
             case "saml20_idp":

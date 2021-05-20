@@ -68,14 +68,10 @@ class ResetOidcSecretCommandHandler implements CommandHandler
 
         $protocol = $entity->getProtocol()->getProtocol();
         if ($protocol !== Constants::TYPE_OPENID_CONNECT_TNG &&
-            $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER &&
+            $protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
-            throw new InvalidArgumentException('Only OIDC TNG entities can be processed');
-        }
-
-        $status = $entity->getStatus();
-        if ($status !== Constants::STATE_PUBLISHED && $status !== Constants::STATE_PUBLICATION_REQUESTED) {
-            throw new InvalidArgumentException('The requested entity can not be processed, invalid state');
+            throw new InvalidArgumentException('Only OIDC TNG and Oauth CC entities can be processed');
         }
 
         $secret = new Secret(Constants::OIDC_SECRET_LENGTH);

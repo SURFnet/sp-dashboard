@@ -26,6 +26,7 @@ class ProtocolChoiceFactory
         Constants::TYPE_SAML => 'entity.type.saml20.title',
         Constants::TYPE_OPENID_CONNECT_TNG => 'entity.type.oidcng.client.title',
         Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => 'entity.type.oidcng.resource_server.title',
+        Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT => 'entity.type.oauth20.ccc.title',
     ];
 
     /**

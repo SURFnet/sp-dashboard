@@ -182,6 +182,11 @@ services:
         tags:
             - { name: dashboard.json_generator, identifier: oauth20_rs }
 
+    Surfnet\ServiceProviderDashboard\Application\Metadata\OauthClientCredentialsClientJsonGenerator:
+        class: Surfnet\ServiceProviderDashboard\Application\Metadata\OauthClientCredentialsClientJsonGenerator
+        tags:
+            - { name: dashboard.json_generator, identifier: oauth20_ccc }
+
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
@@ -425,6 +430,11 @@ services:
       tags: ['form.type']
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
+        tags: ['form.type']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OauthClientCredentialEntityType:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
         tags: ['form.type']
