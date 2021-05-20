@@ -26,11 +26,14 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use function file_get_contents;
 
 class DeleteEntityClientTest extends MockeryTestCase
 {
@@ -83,17 +86,33 @@ class DeleteEntityClientTest extends MockeryTestCase
         $this->assertEquals(DeleteEntityRepository::RESULT_SUCCESS, $response);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException
-     * @expectedExceptionMessage Not allowed to delete entity with internal manage ID
-     */
     public function test_it_can_handle_error_response()
     {
+        $this->expectException(UnableToDeleteEntityException::class);
+        $this->expectExceptionMessage("Not allowed to delete entity with internal manage ID");
         // When the queried entityId is found
         $this->mockHandler
             ->append(
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/delete_response_failure.json'))
             );
         $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', Constants::TYPE_OPENID_CONNECT_TNG);
+    }
+
+    /**
+     * @dataProvider provideInvalidProtocols
+     */
+    public function test_it_maps_enitty_types_correctly($invalidType)
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(sprintf('The protocol "%s" can not be mapped to a manage entity type', $invalidType));
+        $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $invalidType);
+    }
+
+    public function provideInvalidProtocols()
+    {
+        yield ['saml20_sp'];
+        yield ['oicd_ccc'];
+        yield ['oauth_ccc'];
+        yield ['i-dont-exist'];
     }
 }

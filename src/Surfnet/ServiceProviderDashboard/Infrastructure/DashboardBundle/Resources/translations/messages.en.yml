@@ -33,6 +33,9 @@ entity:
       oauth20_rs:
         title: Information
         html: <strong>information about this view</strong>
+      oauth20_ccc:
+        title: Information
+        html: <strong>information about this view</strong>
     metadata:
       metadata_url: Metadata URL
       acs_location: ACS location
@@ -66,6 +69,9 @@ entity:
       oauth20_rs:
         title: Metadata
         html: <strong>information about the metadata fields</strong>
+      oauth20_ccc:
+        title: Metadata
+        html: <strong>information about the metadata fields</strong>
     contact:
       administrative: Administrative contact
       technical: Technical contact
@@ -84,6 +90,9 @@ entity:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
       oauth20_rs:
+        title: Contact information
+        html: <strong>information about the contact information fields</strong>
+      oauth20_ccc:
         title: Contact information
         html: <strong>information about the contact information fields</strong>
     attribute:
@@ -141,7 +150,11 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-entity.list.add_to_test: New test entity
+
+  type:
+    oauth20:
+      ccc:
+        title:entity.list.add_to_test: New test entity
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
@@ -267,6 +280,21 @@ should be present.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 "
+entity.edit.info.oauth20_ccc.title: Info
+entity.edit.info.oauth20_ccc.html: "
+<p>Documentation about this SP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
+
+<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
+In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
+<ul>
+<li>Various contacts responsible for the entity. Support, administrative and technical
+should be present.</li>
+<li>Information about SAML 2.0 configuration.</li>
+<li>Metadata information including URL, certificate and logo of your entity.</li>
+<li>A list of the attributes your Service Provider requires to operate.</li>
+</ul>
+"
 entity.edit.general.title: General
 entity.edit.general.html: "<p>Enter/edit your contact information below. We will use this information in case we have additional questions.</p>"
 entity.edit.metadata.fetch.exception: "Unable to load the metadata from the provided import url."
@@ -274,12 +302,14 @@ entity.edit.metadata.saml20.html: "Please provide the metadata URL of your entit
 entity.edit.metadata.oidc.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oidcng.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.oauth20_rs.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
+entity.edit.metadata.oauth20_ccc.html: "Please provide the metadata URL of your entity. The URL will be validated and the fields below will be filled in automatically (when available in the metadata). <strong>If the input is not correct please change the settings in your SAML enabled software.</strong> Note that the fields with a * are required and need to be correctly configured. Check the following page for more information: <a href=\"https://wiki.surfnet.nl/x/vclWAw\">https://wiki.surfnet.nl/x/vclWAw</a>."
 entity.edit.metadata.invalid.exception: "An error occurred while importing the metadata."
 entity.edit.metadata.validation-failed: "Warning! Some entries are missing or incorrect. Please review and fix those entries below."
 entity.edit.metadata.saml20.title: Metadata
 entity.edit.metadata.oidc.title: Metadata
 entity.edit.metadata.oidcng.title: Metadata
 entity.edit.metadata.oauth20_rs.title: Metadata
+entity.edit.metadata.oauth20_ccc.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
 entity.edit.contact_information.title: Contact information
 entity.edit.contact_information.html: "
@@ -441,6 +471,7 @@ entity.type.oidc.title: OpenID Connect
 entity.type.oidcng.title: OpenID Connect - The Next Generation
 entity.type.oidcng.client.title: OpenID Connect client - The Next Generation
 entity.type.oidcng.resource_server.title: OpenID Connect resource server - The Next Generation
+entity.type.oauth20.ccc.title: OAuth2 client credential client
 privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 privacy.form.label.accessData.html: 2. Who can access the data?

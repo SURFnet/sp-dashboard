@@ -87,6 +87,13 @@ class ServiceType extends AbstractType
                             'attr' => ['class' => 'privacy-questions-toggle'],
                         ]
                     )
+                    ->add(
+                        'clientCredentialClientsEnabled',
+                        CheckboxType::class,
+                        [
+                            'required' => false,
+                        ]
+                    )
                     ->add('guid', TextType::class, ['label' => 'CRM ID'])
             )
             ->add(

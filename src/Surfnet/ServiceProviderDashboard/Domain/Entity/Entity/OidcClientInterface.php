@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 
 interface OidcClientInterface
 {
-    public static function fromApiResponse(array $data, string $manageProtocol);
+    public static function fromApiResponse(array $data);
 
     /**
      * @return string

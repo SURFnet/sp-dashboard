@@ -27,6 +27,10 @@ class Constants
     const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
     const NAME_ID_FORMAT_UNSPECIFIED = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
 
+    const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
+    const GRANT_TYPE_IMPLICIT = 'implicit';
+    const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
+
     const ENVIRONMENT_TEST = 'test';
     const ENVIRONMENT_PRODUCTION = 'production';
 
@@ -38,6 +42,7 @@ class Constants
     const TYPE_SAML = 'saml20';
     const TYPE_OPENID_CONNECT_TNG = 'oidcng';
     const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oauth20_rs';
+    const TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT = 'oauth20_ccc';
 
     const OIDC_SECRET_LENGTH = 20;
 

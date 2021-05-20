@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory;
 
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -35,6 +36,12 @@ interface SaveCommandFactoryInterface
         string $environment,
         bool $isCopy = false
     ): SaveOidcngEntityCommand;
+
+    public function buildOauthCccCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment,
+        bool $isCopy = false
+    ): SaveOauthClientCredentialClientCommand;
 
     public function buildOidcngRsCommandByManageEntity(
         ManageEntity $manageEntity,

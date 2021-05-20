@@ -107,15 +107,6 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
-    public function test_invalid_status()
-    {
-        $status = Constants::STATE_DRAFT;
-        $command = $this->buildCommand(Constants::ENVIRONMENT_PRODUCTION, $status);
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The requested entity can not be processed, invalid state');
-        $this->commandHandler->handle($command);
-    }
-
     public function test_invalid_protocol()
     {
         $status = Constants::STATE_PUBLISHED;
@@ -124,7 +115,7 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getProtocol->getProtocol')
             ->andReturn(Constants::TYPE_SAML);
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Only OIDC TNG entities can be processed');
+        $this->expectExceptionMessage('Only OIDC TNG and Oauth CC entities can be processed');
         $this->commandHandler->handle($command);
     }
 

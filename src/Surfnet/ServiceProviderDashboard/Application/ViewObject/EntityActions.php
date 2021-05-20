@@ -145,7 +145,8 @@ class EntityActions
         }
         return $this->status == Constants::STATE_PUBLISHED &&
             $this->environment == Constants::ENVIRONMENT_TEST &&
-            $this->protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+            $this->protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER &&
+            $this->protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 
     /**
@@ -159,7 +160,8 @@ class EntityActions
         $protocol = $this->protocol;
         $status = $this->status;
         $meetsProtocolRequirement = $protocol == Constants::TYPE_OPENID_CONNECT_TNG ||
-            $protocol == Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+            $protocol == Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
+            $protocol == Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
         $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED || $status == Constants::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }

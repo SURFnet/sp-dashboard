@@ -279,7 +279,9 @@ class EntityDetail
         $entityDetail->manageId = $entity->getId();
         $entityDetail->protocol = $entity->getProtocol()->getProtocol();
 
-        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
+        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $entity->getProtocol()->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        ) {
             $entityDetail->grants = $entity->getOidcClient()->getGrants();
             $entityDetail->isPublicClient = $entity->getOidcClient()->isPublicClient();
             $entityDetail->accessTokenValidity = $entity->getOidcClient()->getAccessTokenValidity();

@@ -207,6 +207,7 @@ class ServiceController extends Controller
             $service->getTeamName(),
             $service->isProductionEntitiesEnabled(),
             $service->isPrivacyQuestionsEnabled(),
+            $service->isClientCredentialClientsEnabled(),
             $service->getServiceType(),
             $service->getIntakeStatus(),
             $service->getContractSigned(),
@@ -364,9 +365,10 @@ class ServiceController extends Controller
             return false;
         }
         $protocol = $publishedEntity->getProtocol()->getProtocol();
-        $isOidcProtocol = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        $protocolUsesSecret = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
+            $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
 
-        return $publishedEntity && $isOidcProtocol && $publishedEntity->getOidcClient()->getClientSecret();
+        return $publishedEntity && $protocolUsesSecret && $publishedEntity->getOidcClient()->getClientSecret();
     }
 }

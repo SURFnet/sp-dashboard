@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2021 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,15 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
+use function array_filter;
+use function array_merge;
 use function is_null;
 
-class OidcngResourceServerClient implements OidcClientInterface
+class OauthClientCredentialsClientClient implements OidcClientInterface
 {
     /**
      * @var string
@@ -33,36 +37,46 @@ class OidcngResourceServerClient implements OidcClientInterface
      */
     private $clientSecret;
     /**
-     * @var string
+     * @var array
      */
-    private $grants;
+    private $resourceServers;
+
+    /**
+     * @var int
+     */
+    private $accessTokenValidity;
 
     public static function fromApiResponse(array $data)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $grants = isset($data['data']['metaDataFields']['grants'])
-            ? $data['data']['metaDataFields']['grants'] : [];
-
+        $resourceServers = isset($data['resourceServers']) ? $data['resourceServers'] : [];
+        $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
+            ? (int) $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
-        Assert::isArray($grants);
+        Assert::integer($accessTokenValidity);
+        Assert::isArray($resourceServers);
+
 
         return new self(
             $clientId,
+            $accessTokenValidity,
             $clientSecret,
-            $grants
+            $resourceServers
         );
     }
 
     public function __construct(
         string $clientId,
+        int $accessTokenValidity,
         ?string $clientSecret,
-        array $grants
+        array $resourceServers
     ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
-        $this->grants = $grants;
+        $this->resourceServers = $resourceServers;
+        $this->accessTokenValidity = $accessTokenValidity;
     }
 
     /**
@@ -79,11 +93,6 @@ class OidcngResourceServerClient implements OidcClientInterface
     public function getClientSecret()
     {
         return $this->clientSecret;
-    }
-
-    public function getGrants(): array
-    {
-        return $this->grants;
     }
 
     /**
@@ -107,20 +116,22 @@ class OidcngResourceServerClient implements OidcClientInterface
      */
     public function getAccessTokenValidity(): int
     {
-        return 0;
+        return $this->accessTokenValidity;
     }
 
-    /**
-     * @return array
-     */
     public function getResourceServers()
     {
-        return [];
+        return $this->resourceServers;
     }
 
     public function resetResourceServers(): void
     {
-        // Nothing to do here.
+        $this->resourceServers = [];
+    }
+
+    public function getGrants(): array
+    {
+        return [Constants::GRANT_TYPE_CLIENT_CREDENTIALS];
     }
 
     public function updateClientSecret(SecretInterface $secret): void
@@ -132,6 +143,25 @@ class OidcngResourceServerClient implements OidcClientInterface
     {
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
-        $this->grants = is_null($client->getGrants()) ? null : $client->getGrants();
+        $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
+        $this->mergeResourceServers($client->getResourceServers(), $homeTeam);
+    }
+
+    private function mergeResourceServers(array $clientResourceServers, string $homeTeam)
+    {
+        $manageResourceServers = $this->resourceServers;
+        // Filter out the Manage managed RS servers, from outside the 'home' team.
+        $manageResourceServers = array_filter($manageResourceServers, function (ManageEntity $server) use ($homeTeam) {
+            $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
+            return $homeTeam !== $teamName;
+        });
+        $manageRsEntityIds = [];
+        // Reduce the manage entities to only their entityId
+        foreach ($manageResourceServers as $server) {
+            $manageRsEntityIds[] = $server->getMetaData()->getEntityId();
+        }
+        // The combination of the manage specific entityIds and the ones configured on the form is the
+        // desired combination.
+        $this->resourceServers = array_merge($clientResourceServers, $manageRsEntityIds);
     }
 }

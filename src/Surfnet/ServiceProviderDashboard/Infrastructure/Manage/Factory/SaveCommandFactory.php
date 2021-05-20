@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -29,6 +30,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
+use function is_array;
+use function reset;
 
 class SaveCommandFactory implements SaveCommandFactoryInterface
 {
@@ -172,6 +175,52 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setNameEn($metaData->getNameEn());
         $command->setDescriptionNl($metaData->getDescriptionNl());
         $command->setDescriptionEn($metaData->getDescriptionEn());
+
+        $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
+        $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));
+        $command->setSupportContact(Contact::from($metaData->getContacts()->findSupportContact()));
+
+        return $command;
+    }
+
+    public function buildOauthCccCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment,
+        bool $isCopy = false
+    ): SaveOauthClientCredentialClientCommand {
+        $command = new SaveOauthClientCredentialClientCommand();
+        $metaData = $manageEntity->getMetaData();
+        $coins = $manageEntity->getMetaData()->getCoin();
+
+        $command->setId($manageEntity->getId());
+        $command->setManageId($manageEntity->getId());
+        $command->setStatus($manageEntity->getStatus());
+        $command->setEnvironment($environment);
+        $command->setEntityId($metaData->getEntityId());
+        $command->setIsCopy($isCopy);
+
+        $command->setSecret($manageEntity->getOidcClient()->getClientSecret());
+        $command->setLogoUrl($metaData->getLogo()->getUrl());
+
+        $command->setNameNl($metaData->getNameNl());
+        $command->setNameEn($metaData->getNameEn());
+        $command->setDescriptionNl($metaData->getDescriptionNl());
+        $command->setDescriptionEn($metaData->getDescriptionEn());
+
+        $command->setAccessTokenValidity($manageEntity->getOidcClient()->getAccessTokenValidity());
+        $resourceServers = $command->getOidcngResourceServers();
+        if (is_array($resourceServers) && reset($resourceServers) instanceof ManageEntity) {
+            $resourceServers = $command->getOidcngResourceServers();
+            $servers = [];
+            foreach ($resourceServers as $resourceServer) {
+                $servers[$resourceServer->getMetaData()->getEntityId()] = $resourceServer->getMetaData()->getEntityId();
+            }
+            $command->setOidcngResourceServers($servers);
+        }
+
+        // Coin data
+        $command->setApplicationUrl($coins->getApplicationUrl());
+        $command->setEulaUrl($coins->getEula());
 
         $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
         $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));

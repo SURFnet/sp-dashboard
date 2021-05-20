@@ -21,11 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OauthClientCredentialsClientClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
+use function in_array;
 
 /**
  * TODO: All factory logic should be offloaded to Application or Infra layers where the
@@ -87,16 +89,24 @@ class ManageEntity
      */
     public static function fromApiResponse($data)
     {
-        $manageProtocol = isset($data['type']) ? $data['type'] : '';
+        $manageProtocol = self::extractManageProtocol($data);
 
         $attributeList = AttributeList::fromApiResponse($data);
         $metaData = MetaData::fromApiResponse($data);
         $oidcClient = null;
-        if ($manageProtocol === Protocol::OAUTH20_RS) {
-            $oidcClient = OidcngResourceServerClient::fromApiResponse($data, $manageProtocol);
-        } elseif ($manageProtocol === Protocol::OIDC10_RP) {
-            $oidcClient = OidcngClient::fromApiResponse($data, $manageProtocol);
+
+        switch ($manageProtocol) {
+            case Protocol::OAUTH20_RS:
+                $oidcClient = OidcngResourceServerClient::fromApiResponse($data);
+                break;
+            case Protocol::OIDC10_RP:
+                $oidcClient = OidcngClient::fromApiResponse($data);
+                break;
+            case Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT:
+                $oidcClient = OauthClientCredentialsClientClient::fromApiResponse($data);
+                break;
         }
+
         $allowedEdentityProviders = AllowedIdentityProviders::fromApiResponse($data);
         $protocol = Protocol::fromApiResponse($manageProtocol);
 
@@ -120,6 +130,16 @@ class ManageEntity
         $this->protocol = $protocol;
         $this->allowedIdentityProviders = $allowedIdentityProviders;
         $this->service = $service;
+    }
+
+    private static function extractManageProtocol(array $data): string
+    {
+        $manageProtocol = $data['type'] ?? '';
+        $grantTypes = $data['data']['metaDataFields']['grants'] ?? [];
+        // No dedicated Manage protocol / entity type is defined yet for oauth client credential entities
+        $isClientCredentialsClient = in_array(Constants::GRANT_TYPE_CLIENT_CREDENTIALS, $grantTypes)
+            && count($grantTypes) === 1;
+        return $isClientCredentialsClient ? Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT : $manageProtocol;
     }
 
     public function resetId()
@@ -284,8 +304,7 @@ class ManageEntity
         $this->service = is_null($newEntity->getService()) ? null : $newEntity->getService();
         $this->metaData->merge($newEntity->getMetaData());
         $this->attributes->merge($newEntity->getAttributes());
-        $protocol = $this->protocol->getProtocol();
-        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+        if ($this->hasOicdClient()) {
             $this->oidcClient->merge($newEntity->getOidcClient(), $this->getService()->getTeamName());
         }
         $this->comments = $newEntity->getComments();
@@ -299,5 +318,13 @@ class ManageEntity
     public function updateClientSecret(SecretInterface $secret)
     {
         $this->getOidcClient()->updateClientSecret($secret);
+    }
+
+    private function hasOicdClient()
+    {
+        $protocol = $this->protocol->getProtocol();
+        return $protocol === Constants::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            || $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 }
