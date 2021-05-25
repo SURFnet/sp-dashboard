@@ -45,6 +45,7 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
           "commonName",
           "organization",
           "organizationType",
+          "organizationUnit",
           "surName",
           "givenName",
           "entitlement",
@@ -57,7 +58,7 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
 
         $attributes = $this->repository->findAll();
 
-        $this->assertCount(15, $attributes);
+        $this->assertCount(16, $attributes);
         foreach ($attributes as $attribute) {
             $this->assertContains($attribute->id, $expectedAttributes);
         }
@@ -117,6 +118,7 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
             'urn:mace:dir:attribute-def:cn',
             'urn:mace:terena.org:attribute-def:schacHomeOrganization',
             'urn:mace:terena.org:attribute-def:schacHomeOrganizationType',
+            "urn:mace:dir:attribute-def:ou",
             'urn:mace:dir:attribute-def:sn',
             'urn:mace:dir:attribute-def:givenName',
             'urn:mace:dir:attribute-def:eduPersonEntitlement',
@@ -129,7 +131,7 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
 
         $urns = $this->repository->findAllAttributeUrns();
 
-        $this->assertCount(15, $urns);
+        $this->assertCount(16, $urns);
         $this->assertEquals($expectedAttributes, $urns);
     }
 }

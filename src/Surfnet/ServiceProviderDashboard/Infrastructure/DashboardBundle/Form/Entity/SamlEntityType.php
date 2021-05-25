@@ -327,6 +327,16 @@ class SamlEntityType extends AbstractType
                         ]
                     )
                     ->add(
+                        'organizationUnitAttribute',
+                        AttributeType::class,
+                        [
+                            'label' => 'entity.edit.form.attributes.saml20.organizationUnitAttribute',
+                            'by_reference' => false ,
+                            'required' => false,
+                            'attr' => ['data-help' => 'entity.edit.information.saml20.organizationUnitAttribute'],
+                        ]
+                    )
+                    ->add(
                         'affiliationAttribute',
                         AttributeType::class,
                         [

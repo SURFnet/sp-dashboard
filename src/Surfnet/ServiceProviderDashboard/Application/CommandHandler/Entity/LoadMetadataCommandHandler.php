@@ -117,6 +117,7 @@ class LoadMetadataCommandHandler implements CommandHandler
             'entitlementAttribute' => ['getEntitlementAttribute', 'setEntitlementAttribute'],
             'organizationAttribute' => ['getOrganizationAttribute', 'setOrganizationAttribute'],
             'organizationTypeAttribute' => ['getOrganizationTypeAttribute', 'setOrganizationTypeAttribute'],
+            'organizationUnitAttribute' => ['getOrganizationUnitAttribute', 'setOrganizationUnitAttribute'],
             'principleNameAttribute' => ['getPrincipleNameAttribute', 'setPrincipleNameAttribute'],
             'uidAttribute' => ['getUidAttribute', 'setUidAttribute'],
             'preferredLanguageAttribute' => ['getPreferredLanguageAttribute', 'setPreferredLanguageAttribute'],

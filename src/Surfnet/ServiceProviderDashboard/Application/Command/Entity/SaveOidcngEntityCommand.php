@@ -265,6 +265,14 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
      * @SpDashboardAssert\ValidAttribute
      */
+    private $organizationUnitAttribute;
+
+    /**
+     * @var Attribute
+     *
+     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
+     * @SpDashboardAssert\ValidAttribute
+     */
     private $affiliationAttribute;
 
     /**
@@ -634,242 +642,152 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->supportContact = $supportContact;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getGivenNameAttribute()
+    public function getGivenNameAttribute(): ?Attribute
     {
         return $this->givenNameAttribute;
     }
 
-    /**
-     * @param Attribute $givenNameAttribute
-     */
-    public function setGivenNameAttribute($givenNameAttribute)
+    public function setGivenNameAttribute(?Attribute $givenNameAttribute)
     {
         $this->givenNameAttribute = $givenNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getSurNameAttribute()
+    public function getSurNameAttribute(): ?Attribute
     {
         return $this->surNameAttribute;
     }
 
-    /**
-     * @param Attribute $surNameAttribute
-     */
-    public function setSurNameAttribute($surNameAttribute)
+    public function setSurNameAttribute(?Attribute $surNameAttribute)
     {
         $this->surNameAttribute = $surNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getCommonNameAttribute()
+    public function getCommonNameAttribute(): ?Attribute
     {
         return $this->commonNameAttribute;
     }
 
-    /**
-     * @param Attribute $commonNameAttribute
-     */
-    public function setCommonNameAttribute($commonNameAttribute)
+    public function setCommonNameAttribute(?Attribute $commonNameAttribute)
     {
         $this->commonNameAttribute = $commonNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getDisplayNameAttribute()
+    public function getDisplayNameAttribute(): ?Attribute
     {
         return $this->displayNameAttribute;
     }
 
-    /**
-     * @param Attribute $displayNameAttribute
-     */
-    public function setDisplayNameAttribute($displayNameAttribute)
+    public function setDisplayNameAttribute(?Attribute $displayNameAttribute)
     {
         $this->displayNameAttribute = $displayNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getEmailAddressAttribute()
+    public function getEmailAddressAttribute(): ?Attribute
     {
         return $this->emailAddressAttribute;
     }
 
-    /**
-     * @param Attribute $emailAddressAttribute
-     */
-    public function setEmailAddressAttribute($emailAddressAttribute)
+    public function setEmailAddressAttribute(?Attribute $emailAddressAttribute)
     {
         $this->emailAddressAttribute = $emailAddressAttribute;
     }
 
-    /**
-     * @param Attribute $eduPersonTargetedIDAttribute
-     */
-    public function setEduPersonTargetedIDAttribute($eduPersonTargetedIDAttribute)
+    public function setEduPersonTargetedIDAttribute(?Attribute $eduPersonTargetedIDAttribute)
     {
         $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationAttribute()
+    public function getOrganizationAttribute(): ?Attribute
     {
         return $this->organizationAttribute;
     }
 
-    /**
-     * @param Attribute $organizationAttribute
-     */
-    public function setOrganizationAttribute($organizationAttribute)
+    public function setOrganizationAttribute(?Attribute $organizationAttribute)
     {
         $this->organizationAttribute = $organizationAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationTypeAttribute()
+    public function getOrganizationTypeAttribute(): ?Attribute
     {
         return $this->organizationTypeAttribute;
     }
 
-    /**
-     * @param Attribute $organizationTypeAttribute
-     */
-    public function setOrganizationTypeAttribute($organizationTypeAttribute)
+    public function setOrganizationTypeAttribute(?Attribute $organizationTypeAttribute)
     {
         $this->organizationTypeAttribute = $organizationTypeAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getAffiliationAttribute()
+    public function getAffiliationAttribute(): ?Attribute
     {
         return $this->affiliationAttribute;
     }
 
-    /**
-     * @param Attribute $affiliationAttribute
-     */
-    public function setAffiliationAttribute($affiliationAttribute)
+    public function setAffiliationAttribute(?Attribute $affiliationAttribute)
     {
         $this->affiliationAttribute = $affiliationAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getEntitlementAttribute()
+    public function getEntitlementAttribute(): ?Attribute
     {
         return $this->entitlementAttribute;
     }
 
-    /**
-     * @param Attribute $entitlementAttribute
-     */
-    public function setEntitlementAttribute($entitlementAttribute)
+    public function setEntitlementAttribute(?Attribute $entitlementAttribute)
     {
         $this->entitlementAttribute = $entitlementAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPrincipleNameAttribute()
+    public function getPrincipleNameAttribute(): ?Attribute
     {
         return $this->principleNameAttribute;
     }
 
-    /**
-     * @param Attribute $principleNameAttribute
-     */
-    public function setPrincipleNameAttribute($principleNameAttribute)
+    public function setPrincipleNameAttribute(?Attribute $principleNameAttribute)
     {
         $this->principleNameAttribute = $principleNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getUidAttribute()
+    public function getUidAttribute(): ?Attribute
     {
         return $this->uidAttribute;
     }
 
-    /**
-     * @param Attribute $uidAttribute
-     */
-    public function setUidAttribute($uidAttribute)
+    public function setUidAttribute(?Attribute $uidAttribute)
     {
         $this->uidAttribute = $uidAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPreferredLanguageAttribute()
+    public function getPreferredLanguageAttribute(): ?Attribute
     {
         return $this->preferredLanguageAttribute;
     }
 
-    /**
-     * @param Attribute $preferredLanguageAttribute
-     */
-    public function setPreferredLanguageAttribute($preferredLanguageAttribute)
+    public function setPreferredLanguageAttribute(?Attribute $preferredLanguageAttribute)
     {
         $this->preferredLanguageAttribute = $preferredLanguageAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPersonalCodeAttribute()
+    public function getPersonalCodeAttribute(): ?Attribute
     {
         return $this->personalCodeAttribute;
     }
 
-    /**
-     * @param Attribute $personalCodeAttribute
-     */
-    public function setPersonalCodeAttribute($personalCodeAttribute)
+    public function setPersonalCodeAttribute(?Attribute $personalCodeAttribute)
     {
         $this->personalCodeAttribute = $personalCodeAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getScopedAffiliationAttribute()
+    public function getScopedAffiliationAttribute(): ?Attribute
     {
         return $this->scopedAffiliationAttribute;
     }
 
-    /**
-     * @param Attribute $scopedAffiliationAttribute
-     */
-    public function setScopedAffiliationAttribute($scopedAffiliationAttribute)
+    public function setScopedAffiliationAttribute(?Attribute $scopedAffiliationAttribute)
     {
         $this->scopedAffiliationAttribute = $scopedAffiliationAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getEduPersonTargetedIDAttribute()
+    public function getEduPersonTargetedIDAttribute(): ?Attribute
     {
         return $this->eduPersonTargetedIDAttribute;
     }
@@ -1053,5 +971,15 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function getAcsLocation(): ?string
     {
         return null;
+    }
+
+    public function getOrganizationUnitAttribute(): ?Attribute
+    {
+        return $this->organizationUnitAttribute;
+    }
+
+    public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
+    {
+        $this->organizationUnitAttribute = $organizationUnitAttribute;
     }
 }

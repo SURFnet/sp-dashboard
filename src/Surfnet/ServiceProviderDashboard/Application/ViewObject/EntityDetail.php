@@ -30,6 +30,7 @@ use function in_array;
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class EntityDetail
 {
@@ -231,6 +232,11 @@ class EntityDetail
     private $organizationUrlEn;
 
     /**
+     * @var Attribute
+     */
+    private $organizationUnitAttribute;
+
+    /**
      * @var EntityActions
      */
     private $actions;
@@ -349,18 +355,27 @@ class EntityDetail
             $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganization');
         $entityDetail->organizationTypeAttribute =
             $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganizationType');
+        $entityDetail->organizationUnitAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:ou');
         $entityDetail->affiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonAffiliation');
         $entityDetail->entitlementAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonEntitlement');
-        $entityDetail->principleNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonPrincipalName');
-        $entityDetail->eduPersonTargetedIDAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonTargetedID');
+        $entityDetail->principleNameAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonPrincipalName');
+        $entityDetail->eduPersonTargetedIDAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonTargetedID');
         $entityDetail->uidAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:uid');
-        $entityDetail->preferredLanguageAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
-        $entityDetail->personalCodeAttribute = $attributes->findByUrn('urn:schac:attribute-def:schacPersonalUniqueCode');
-        $entityDetail->scopedAffiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
+        $entityDetail->preferredLanguageAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
+        $entityDetail->personalCodeAttribute =
+            $attributes->findByUrn('urn:schac:attribute-def:schacPersonalUniqueCode');
+        $entityDetail->scopedAffiliationAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
     }
 
-    private static function getIsPlaygroundEnabled(ManageEntity $entity, string $playgroundTest, string $playgroundProd): bool
-    {
+    private static function getIsPlaygroundEnabled(
+        ManageEntity $entity,
+        string $playgroundTest,
+        string $playgroundProd
+    ): bool {
         $uris = $entity->getOidcClient()->getRedirectUris();
         $environment = $entity->getEnvironment();
         if (($environment === Constants::ENVIRONMENT_TEST && in_array($playgroundTest, $uris)) ||
@@ -721,11 +736,8 @@ class EntityDetail
         return $this->isPublicClient;
     }
 
-    /**
-     * @return ManageEntity[]|null
-     */
-    public function getResourceServers()
+    public function getOrganizationUnitAttribute(): ?Attribute
     {
-        return $this->resourceServers;
+        return $this->organizationUnitAttribute;
     }
 }
