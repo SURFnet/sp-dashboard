@@ -263,7 +263,15 @@ class QueryClient implements QueryEntityRepository
 
         $count = count($searchResults);
         if ($count != 1) {
-            throw new UnexpectedResultException(sprintf('Expected one search result, found %s results', $count));
+            throw new UnexpectedResultException(
+                sprintf(
+                    'Unable to find resource server with entityId "%s". ' .
+                    'Expected one search result, found %s results. ' .
+                    'Please verify this entity exists in Manage. ',
+                    $entityId,
+                    $count
+                )
+            );
         }
 
         $searchResult = reset($searchResults);
