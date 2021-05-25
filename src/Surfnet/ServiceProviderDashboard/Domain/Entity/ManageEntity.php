@@ -181,7 +181,7 @@ class ManageEntity
 
     public function isPublished()
     {
-        return ($this->status === 'published');
+        return ($this->status === Constants::STATE_PUBLISHED);
     }
 
     /**
