@@ -19,7 +19,7 @@ done
 
 # Add the SPdashboard SAML client to Manage and push 
 pass=$(cat /opt/manage/manage-api-users.yml | grep -A1 sysadmin | grep password | cut -d '"' -f2)
-curl  -H 'Content-Type: application/json' -u sysadmin:$pass -d@/tmp/saml20_sp.json -XPOST https://manage.vm.openconext.org/manage/api/internal/metadata
+curl  -H 'Content-Type: application/json' -u sysadmin:$pass -d@/usr/local/etc/saml20_sp.json -XPOST https://manage.vm.openconext.org/manage/api/internal/metadata
 curl  -u sysadmin:$pass -XGET https://manage.vm.openconext.org/manage/api/internal/push
 
 # Add the sp-dashboard user to the manage api user list

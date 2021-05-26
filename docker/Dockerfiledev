@@ -12,7 +12,7 @@ COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.p
 COPY ./conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
 
 RUN /usr/sbin/update-ca-certificates && \
-    rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ 
+    rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/
 
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
 
