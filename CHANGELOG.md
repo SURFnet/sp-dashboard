@@ -1,3 +1,7 @@
+## 3.2.1
+**Bugfix**
+ - Prevent double JQuery installations #467 
+
 ## 3.2.0
 **Feature**
  - Add support for Client Credential Clients  #445
