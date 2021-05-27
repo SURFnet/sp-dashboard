@@ -303,8 +303,8 @@ class EntityDetail
         }
         $entityDetail->nameNl = $entity->getMetaData()->getNameNl();
         $entityDetail->nameEn = $entity->getMetaData()->getNameEn();
-        $entityDetail->descriptionNl = $entity->getMetaData()->getDescriptionEn();
-        $entityDetail->descriptionEn = $entity->getMetaData()->getDescriptionNl();
+        $entityDetail->descriptionNl = $entity->getMetaData()->getDescriptionNl();
+        $entityDetail->descriptionEn = $entity->getMetaData()->getDescriptionEn();
         $entityDetail->applicationUrl = $entity->getMetaData()->getCoin()->getApplicationUrl();
         $entityDetail->eulaUrl = $entity->getMetaData()->getCoin()->getEula();
         $entityDetail->administrativeContact = $entity->getMetaData()->getContacts()->findAdministrativeContact();
