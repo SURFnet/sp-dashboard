@@ -150,11 +150,7 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-
-  type:
-    oauth20:
-      ccc:
-        title:entity.list.add_to_test: New test entity
+entity.list.add_to_test: New test entity
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
