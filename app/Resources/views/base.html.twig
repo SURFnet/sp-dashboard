@@ -42,6 +42,8 @@
             </div>
         </div>
         <div class="page-container">
+            {{ render(controller('DashboardBundle:SiteNotice:showGlobalSiteNotice')) }}
+
             {% block body_container %}
                 <h1>{% block page_heading %}{% endblock %}</h1>
                 <div class="card">
