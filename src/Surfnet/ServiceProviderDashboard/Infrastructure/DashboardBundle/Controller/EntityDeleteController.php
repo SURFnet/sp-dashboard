@@ -173,7 +173,11 @@ class EntityDeleteController extends Controller
                 );
             }
             $service = $this->authorizationService->changeActiveService($serviceId);
-            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+            if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);
+            }
+
+            return $this->redirectToRoute('service_overview');
         }
 
         return [
