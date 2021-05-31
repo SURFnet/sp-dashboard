@@ -194,7 +194,7 @@ class OidcngEntityType extends AbstractType
                 'nameNl',
                 TextType::class,
                 [
-                    'required' => false,
+                    'required' => true,
                     'attr' => ['data-help' => 'entity.edit.information.nameNl'],
                 ]
             )
@@ -213,7 +213,7 @@ class OidcngEntityType extends AbstractType
                 'nameEn',
                 TextType::class,
                 [
-                    'required' => false,
+                    'required' => true,
                     'attr' => ['data-help' => 'entity.edit.information.nameEn'],
                 ]
             )
