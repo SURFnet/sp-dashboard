@@ -116,6 +116,7 @@ entity:
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
         edu_person_targeted_id: Edu person targeted ID attribute
+        organization_unit: Organization unit
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
@@ -150,6 +151,7 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
+        organization_unit: Organization unit
 entity.list.add_to_test: New test entity
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
@@ -392,6 +394,7 @@ entity.edit.information.saml20.displayNameAttribute: Text should be set in web t
 entity.edit.information.saml20.emailAddressAttribute: Text should be set in web translations
 entity.edit.information.saml20.organizationAttribute: Text should be set in web translations
 entity.edit.information.saml20.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.saml20.organizationUnitAttribute: Text should be set in web translations
 entity.edit.information.saml20.affiliationAttribute: Text should be set in web translations
 entity.edit.information.saml20.entitlementAttribute: Text should be set in web translations
 entity.edit.information.saml20.principleNameAttribute: Text should be set in web translations
@@ -407,6 +410,7 @@ entity.edit.information.oidc.displayNameAttribute: Text should be set in web tra
 entity.edit.information.oidc.emailAddressAttribute: Text should be set in web translations
 entity.edit.information.oidc.organizationAttribute: Text should be set in web translations
 entity.edit.information.oidc.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.oidc.organizationUnitAttribute: Text should be set in web translations
 entity.edit.information.oidc.affiliationAttribute: Text should be set in web translations
 entity.edit.information.oidc.entitlementAttribute: Text should be set in web translations
 entity.edit.information.oidc.principleNameAttribute: Text should be set in web translations
@@ -422,6 +426,7 @@ entity.edit.information.oidcng.displayNameAttribute: Text should be set in web t
 entity.edit.information.oidcng.emailAddressAttribute: Text should be set in web translations
 entity.edit.information.oidcng.organizationAttribute: Text should be set in web translations
 entity.edit.information.oidcng.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.oidcng.organizationUnitAttribute: Text should be set in web translations
 entity.edit.information.oidcng.affiliationAttribute: Text should be set in web translations
 entity.edit.information.oidcng.entitlementAttribute: Text should be set in web translations
 entity.edit.information.oidcng.principleNameAttribute: Text should be set in web translations
@@ -582,6 +587,7 @@ entity.edit.form.attributes.oidc.displayNameAttribute: Display name attribute
 entity.edit.form.attributes.oidc.emailAddressAttribute: Email address attribute
 entity.edit.form.attributes.oidc.organizationAttribute: Organization attribute
 entity.edit.form.attributes.oidc.organizationTypeAttribute: Organization type attribute
+entity.edit.form.attributes.oidc.organizationUnitAttribute: Organization unit attribute
 entity.edit.form.attributes.oidc.affiliationAttribute: Affiliation attribute
 entity.edit.form.attributes.oidc.entitlementAttribute: Entitlement attribute
 entity.edit.form.attributes.oidc.principleNameAttribute: Principle name attribute
@@ -598,6 +604,7 @@ entity.edit.form.attributes.saml20.displayNameAttribute: Display name attribute
 entity.edit.form.attributes.saml20.emailAddressAttribute: Email address attribute
 entity.edit.form.attributes.saml20.organizationAttribute: Organization attribute
 entity.edit.form.attributes.saml20.organizationTypeAttribute: Organization type attribute
+entity.edit.form.attributes.saml20.organizationUnitAttribute: Organization unit attribute
 entity.edit.form.attributes.saml20.affiliationAttribute: Affiliation attribute
 entity.edit.form.attributes.saml20.entitlementAttribute: Entitlement attribute
 entity.edit.form.attributes.saml20.principleNameAttribute: Principle name attribute
