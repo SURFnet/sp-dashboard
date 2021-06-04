@@ -459,7 +459,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     public function setEntityId($entityId)
     {
-        $this->entityId = strtolower($entityId);
+        $this->entityId = $entityId;
     }
 
     /**
@@ -491,11 +491,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     public function getRedirectUrls()
     {
-        if (!is_array($this->redirectUrls)) {
-            return [];
-        }
-
-        return array_values($this->redirectUrls);
+        return $this->redirectUrls;
     }
 
     /**
