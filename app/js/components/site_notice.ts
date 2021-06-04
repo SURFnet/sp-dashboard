@@ -9,7 +9,7 @@ import * as Cookies from 'js-cookie';
 $(document).on('click', '.site-notice .notice', () => {
   const siteNotice = $('.site-notice');
   const cookieString = siteNotice.data('cookiestring');
-  Cookies.set(cookieString, 'true', { expires: 30, secure: true, sameSite: 'strict' });
+  Cookies.set(cookieString, 'true', { expires: 730, secure: true, sameSite: 'strict' });
   siteNotice.hide('fast', () => {
     siteNotice.remove();
   });

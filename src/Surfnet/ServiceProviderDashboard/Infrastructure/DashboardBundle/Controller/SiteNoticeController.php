@@ -53,12 +53,11 @@ class SiteNoticeController extends Controller
         $cookieString = str_replace('.', '_', 'site_notice.closed.' . $this->noticeDate);
         $cookie = $request->cookies->get($cookieString);
         $hasBeenClosed = (bool) $cookie;
-        $tooLongAgo = strtotime($this->noticeDate) < strtotime('-30 days');
 
         return [
             'cookieString' => $cookieString,
             'date' => $this->noticeDate,
-            'hasBeenClosed' => $hasBeenClosed || $tooLongAgo,
+            'hasBeenClosed' => $hasBeenClosed,
         ];
     }
 }
