@@ -25,3 +25,7 @@ a {
   color: $blue;
   opacity: 1;
 }
+
+p + p {
+  margin-top: 1rem;
+}
