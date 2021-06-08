@@ -49,19 +49,20 @@ class LoadEntityService
     }
 
     /**
-     * @param int $dashboardId
-     * @param string $manageId
-     * @param Service $service
-     * @param string $sourceEnvironment
-     * @param string $environment
-     * @param bool $isClientReset
      * @return ManageEntity
      * @throws InvalidArgumentException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function load($dashboardId, $manageId, Service $service, $sourceEnvironment, $environment, $isClientReset = false)
-    {
+    public function load(
+        ?int $dashboardId,
+        string $manageId,
+        Service $service,
+        string $sourceEnvironment,
+        string $environment,
+        bool $isClientReset = false,
+        bool $isCopy = false
+    ) {
         $manageClient = $this->manageProductionClient;
         if ($sourceEnvironment == 'test') {
             $manageClient = $this->manageTestClient;
@@ -94,8 +95,9 @@ class LoadEntityService
         // Published production entities must be cloned, not copied
         $isProductionClone = $environment === Constants::ENVIRONMENT_PRODUCTION && $manageStagingState === 0;
         // Entities copied from test to prod should not have a manage id either
-        $isCopyToProduction = $environment === Constants::ENVIRONMENT_PRODUCTION && $sourceEnvironment === Constants::ENVIRONMENT_TEST  ;
-        if (($isProductionClone || $isCopyToProduction) && !$isClientReset) {
+        $isCopyToProduction =
+            $environment === Constants::ENVIRONMENT_PRODUCTION && $sourceEnvironment === Constants::ENVIRONMENT_TEST  ;
+        if (($isProductionClone || $isCopyToProduction || $isCopy) && !$isClientReset) {
             $manageEntity = $manageEntity->resetId();
             $manageEntity->setEnvironment($environment);
         }

@@ -259,7 +259,15 @@ class EntityCreateController extends Controller
 
         $service = $this->authorizationService->changeActiveService($serviceId);
 
-        $entity = $this->loadEntityService->load(null, $manageId, $service, $sourceEnvironment, $targetEnvironment);
+        $entity = $this->loadEntityService->load(
+            null,
+            $manageId,
+            $service,
+            $sourceEnvironment,
+            $targetEnvironment,
+            false,
+            true
+        );
         $entity->getAllowedIdentityProviders()->clear();
         $entity->setEnvironment($targetEnvironment);
 
