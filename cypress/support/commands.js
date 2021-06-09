@@ -24,12 +24,20 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('fillUsername', (username = 'John') => {
+Cypress.Commands.add('fillUsername', (username = 'Granny') => {
     cy.get('#username').type(username);
 });
 
-Cypress.Commands.add('fillPassword', (pass = 'Doe') => {
+Cypress.Commands.add('fillPassword', (pass = 'Weatherwax') => {
     cy.get('#password').type(pass);
+});
+
+Cypress.Commands.add('loginToService', (serviceID = 1) => {
+    cy.loginWithMemberRole().then(() => {
+        cy.wait(300).then(() => {
+            cy.selectService(serviceID);
+        });
+    });
 });
 
 Cypress.Commands.add('addMemberRole', (isMemberOf = 'eddy-wally') => {
@@ -56,8 +64,12 @@ Cypress.Commands.add('removeSFToolbar', () => {
     });
 })
 
-Cypress.Commands.add('login', (username = 'John', pass = 'Doe', submit = true) => {
-    cy.visit('https://spdashboard.vm.openconext.org');
+Cypress.Commands.add('selectService', (serviceId = 1) => {
+    cy.visit(`https://spdashboard.vm.openconext.org/service/${serviceId}`);
+});
+
+Cypress.Commands.add('login', (url = 'https://spdashboard.vm.openconext.org', username = 'Tiffany', pass = 'Aching', submit = true) => {
+    cy.visit(url);
     cy.fillUsername(username);
     cy.fillPassword(pass);
     if (submit) {
@@ -65,10 +77,14 @@ Cypress.Commands.add('login', (username = 'John', pass = 'Doe', submit = true) =
     }
 });
 
-Cypress.Commands.add('loginWithMemberRole', (username = 'John', pass = 'Doe', isMemberOf = 'eddy-wally') => {
+Cypress.Commands.add('loginWithMemberRole', (url = '', username = 'John', pass = 'Doe', isMemberOf = 'eddy-wally') => {
     cy.login(username, pass, false);
     cy.addMemberRole(isMemberOf);
     cy.submitLoginForms().then(() => {
         cy.removeSFToolbar();
     });
+});
+
+Cypress.Commands.add('loginToManage', (url = 'https://manage.vm.openconext.org', username = 'Terry', pass = 'Veterinari') => {
+    cy.login(url, username, pass);
 });
