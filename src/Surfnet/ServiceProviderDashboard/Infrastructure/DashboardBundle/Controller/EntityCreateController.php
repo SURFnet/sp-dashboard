@@ -28,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\CreateNewEntityType;
@@ -260,13 +259,10 @@ class EntityCreateController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
 
         $entity = $this->loadEntityService->load(
-            null,
             $manageId,
             $service,
             $sourceEnvironment,
-            $targetEnvironment,
-            false,
-            true
+            $targetEnvironment
         );
         $entity->getAllowedIdentityProviders()->clear();
         $entity->setEnvironment($targetEnvironment);

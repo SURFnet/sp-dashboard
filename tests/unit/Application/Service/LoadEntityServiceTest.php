@@ -74,12 +74,7 @@ class LoadEntityServiceTest extends MockeryTestCase
 
         $this->copyService = new LoadEntityService(
             $this->manageTestClient,
-            $this->manageProdClient,
-            $this->attributesMetadataRepository,
-            self::OIDC_PLAYGROUND_URL_TEST,
-            self::OIDC_PLAYGROUND_URL_PROD,
-            self::OIDCNG_PLAYGROUND_URL_TEST,
-            self::OIDCNG_PLAYGROUND_URL_PROD
+            $this->manageProdClient
         );
     }
 
@@ -93,7 +88,6 @@ class LoadEntityServiceTest extends MockeryTestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_TEST,
@@ -126,7 +120,6 @@ class LoadEntityServiceTest extends MockeryTestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_PRODUCTION,
@@ -212,7 +205,6 @@ JSON
             ));
 
         $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_TEST,
@@ -298,7 +290,6 @@ JSON
             ));
 
         $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_PRODUCTION,
@@ -314,7 +305,6 @@ JSON
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_TEST,
@@ -334,7 +324,6 @@ JSON
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_TEST,
@@ -349,7 +338,6 @@ JSON
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_PRODUCTION,
@@ -368,7 +356,6 @@ JSON
             ->andReturn($manageDto);
 
         $entity = $this->copyService->load(
-            null,
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_TEST,
@@ -389,7 +376,6 @@ JSON
             ->andReturn($manageDto);
         
         $entity = $this->copyService->load(
-            null,
             'manageid2',
             $this->service,
             Constants::ENVIRONMENT_TEST,

@@ -49,20 +49,16 @@ class LoadEntityService
     }
 
     /**
-     * @return ManageEntity
      * @throws InvalidArgumentException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function load(
-        ?int $dashboardId,
         string $manageId,
         Service $service,
         string $sourceEnvironment,
-        string $environment,
-        bool $isClientReset = false,
-        bool $isCopy = false
-    ) {
+        string $environment
+    ): ManageEntity {
         $manageClient = $this->manageProductionClient;
         if ($sourceEnvironment == 'test') {
             $manageClient = $this->manageTestClient;
@@ -77,7 +73,6 @@ class LoadEntityService
         }
 
         $manageTeamName = $manageEntity->getMetaData()->getCoin()->getServiceTeamId();
-        $manageStagingState = $this->getManageStagingState($manageEntity->getMetaData()->getCoin());
 
         if ($manageTeamName !== $service->getTeamName()) {
             throw new InvalidArgumentException(
@@ -91,46 +86,20 @@ class LoadEntityService
 
         $manageEntity->setEnvironment($sourceEnvironment);
         $manageEntity->setService($service);
+        $manageEntity = $manageEntity->resetId();
+        $manageEntity->setEnvironment($environment);
 
-        // Published production entities must be cloned, not copied
-        $isProductionClone = $environment === Constants::ENVIRONMENT_PRODUCTION && $manageStagingState === 0;
-        // Entities copied from test to prod should not have a manage id either
         $isCopyToProduction =
             $environment === Constants::ENVIRONMENT_PRODUCTION && $sourceEnvironment === Constants::ENVIRONMENT_TEST  ;
-        if (($isProductionClone || $isCopyToProduction || $isCopy) && !$isClientReset) {
-            $manageEntity = $manageEntity->resetId();
-            $manageEntity->setEnvironment($environment);
-        }
-
         $protocol = $manageEntity->getProtocol()->getProtocol();
-        if ($isCopyToProduction &&
-            ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER)
-        ) {
+        $isOidc = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
+        if ($isCopyToProduction && $isOidc) {
             $manageEntity->getOidcClient()->resetResourceServers();
             $manageEntity->getMetaData()->resetOidcNgEntitId();
         }
 
         // Return the entity
         return $manageEntity;
-    }
-
-    /**
-     * Determine the staging state
-     *
-     * The state is based on the presence of the coin:exclude_from_push attribute.
-     *
-     * 0 means this is a production entity.
-     * 1 means the entity is still in staging (access was requested).
-     *
-     * @param Coin $coin
-     * @return int
-     */
-    private function getManageStagingState(Coin $coin)
-    {
-        if ($coin->getExcludeFromPush() === 1) {
-            return 1;
-        }
-        return 0;
     }
 }
