@@ -7,7 +7,7 @@ context('Cypress.Commands', () => {
 
   // https://on.cypress.io/custom-commands
 
-  it('.add() - create a custom command', () => {
+  it.skip('.add() - create a custom command', () => {
     Cypress.Commands.add('console', {
       prevSubject: true,
     }, (subject, method) => {
@@ -40,7 +40,7 @@ context('Cypress.Cookies', () => {
   })
 
   // https://on.cypress.io/cookies
-  it('.debug() - enable or disable debugging', () => {
+  it.skip('.debug() - enable or disable debugging', () => {
     Cypress.Cookies.debug(true)
 
     // Cypress will now log in the console when
@@ -52,7 +52,7 @@ context('Cypress.Cookies', () => {
     cy.setCookie('fakeCookie', '123ABC')
   })
 
-  it('.preserveOnce() - preserve cookies by key', () => {
+  it.skip('.preserveOnce() - preserve cookies by key', () => {
     // normally cookies are reset after each test
     cy.getCookie('fakeCookie').should('not.be.ok')
 
@@ -62,7 +62,7 @@ context('Cypress.Cookies', () => {
     Cypress.Cookies.preserveOnce('lastCookie')
   })
 
-  it('.defaults() - set defaults for all cookies', () => {
+  it.skip('.defaults() - set defaults for all cookies', () => {
     // now any cookie with the name 'session_id' will
     // not be cleared before each new test runs
     Cypress.Cookies.defaults({
@@ -76,7 +76,7 @@ context('Cypress.arch', () => {
     cy.visit('https://example.cypress.io/cypress-api')
   })
 
-  it('Get CPU architecture name of underlying OS', () => {
+  it.skip('Get CPU architecture name of underlying OS', () => {
     // https://on.cypress.io/arch
     expect(Cypress.arch).to.exist
   })
@@ -87,7 +87,7 @@ context('Cypress.config()', () => {
     cy.visit('https://example.cypress.io/cypress-api')
   })
 
-  it('Get and set configuration options', () => {
+  it.skip('Get and set configuration options', () => {
     // https://on.cypress.io/config
     let myConfig = Cypress.config()
 
@@ -118,7 +118,7 @@ context('Cypress.dom', () => {
   })
 
   // https://on.cypress.io/dom
-  it('.isHidden() - determine if a DOM element is hidden', () => {
+  it.skip('.isHidden() - determine if a DOM element is hidden', () => {
     let hiddenP = Cypress.$('.dom-p p.hidden').get(0)
     let visibleP = Cypress.$('.dom-p p.visible').get(0)
 
@@ -136,7 +136,7 @@ context('Cypress.env()', () => {
   // We can set environment variables for highly dynamic values
 
   // https://on.cypress.io/environment-variables
-  it('Get environment variables', () => {
+  it.skip('Get environment variables', () => {
     // https://on.cypress.io/env
     // set multiple environment variables
     Cypress.env({
@@ -162,7 +162,7 @@ context('Cypress.log', () => {
     cy.visit('https://example.cypress.io/cypress-api')
   })
 
-  it('Control what is printed to the Command Log', () => {
+  it.skip('Control what is printed to the Command Log', () => {
     // https://on.cypress.io/cypress-log
   })
 })
@@ -172,7 +172,7 @@ context('Cypress.platform', () => {
     cy.visit('https://example.cypress.io/cypress-api')
   })
 
-  it('Get underlying OS name', () => {
+  it.skip('Get underlying OS name', () => {
     // https://on.cypress.io/platform
     expect(Cypress.platform).to.be.exist
   })
@@ -183,7 +183,7 @@ context('Cypress.version', () => {
     cy.visit('https://example.cypress.io/cypress-api')
   })
 
-  it('Get current version of Cypress being run', () => {
+  it.skip('Get current version of Cypress being run', () => {
     // https://on.cypress.io/version
     expect(Cypress.version).to.be.exist
   })
@@ -194,7 +194,7 @@ context('Cypress.spec', () => {
     cy.visit('https://example.cypress.io/cypress-api')
   })
 
-  it('Get current spec information', () => {
+  it.skip('Get current spec information', () => {
     // https://on.cypress.io/spec
     // wrap the object so we can inspect it easily by clicking in the command log
     cy.wrap(Cypress.spec).should('include.keys', ['name', 'relative', 'absolute'])

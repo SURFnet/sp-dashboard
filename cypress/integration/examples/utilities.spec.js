@@ -5,7 +5,7 @@ context('Utilities', () => {
     cy.visit('https://example.cypress.io/utilities')
   })
 
-  it('Cypress._ - call a lodash method', () => {
+  it.skip('Cypress._ - call a lodash method', () => {
     // https://on.cypress.io/_
     cy.request('https://jsonplaceholder.cypress.io/users')
       .then((response) => {
@@ -15,7 +15,7 @@ context('Utilities', () => {
       })
   })
 
-  it('Cypress.$ - call a jQuery method', () => {
+  it.skip('Cypress.$ - call a jQuery method', () => {
     // https://on.cypress.io/$
     let $li = Cypress.$('.utility-jquery li:first')
 
@@ -25,7 +25,7 @@ context('Utilities', () => {
       .should('have.class', 'active')
   })
 
-  it('Cypress.Blob - blob utilities and base64 string conversion', () => {
+  it.skip('Cypress.Blob - blob utilities and base64 string conversion', () => {
     // https://on.cypress.io/blob
     cy.get('.utility-blob').then(($div) => {
       // https://github.com/nolanlawson/blob-util#imgSrcToDataURL
@@ -33,7 +33,7 @@ context('Utilities', () => {
       return Cypress.Blob.imgSrcToDataURL('https://example.cypress.io/assets/img/javascript-logo.png', undefined, 'anonymous')
       .then((dataUrl) => {
         // create an <img> element and set its src to the dataUrl
-        let img = Cypress.$('<img />', { src: dataUrl })
+        let img = Cypress.$('<img alt="" />', { src: dataUrl })
 
         // need to explicitly return cy here since we are initially returning
         // the Cypress.Blob.imgSrcToDataURL promise to our test
@@ -46,7 +46,7 @@ context('Utilities', () => {
     })
   })
 
-  it('Cypress.minimatch - test out glob patterns against strings', () => {
+  it.skip('Cypress.minimatch - test out glob patterns against strings', () => {
     // https://on.cypress.io/minimatch
     let matching = Cypress.minimatch('/users/1/comments', '/users/*/comments', {
       matchBase: true,
@@ -76,7 +76,7 @@ context('Utilities', () => {
     expect(matching, 'comments').to.be.false
   })
 
-  it('Cypress.Promise - instantiate a bluebird promise', () => {
+  it.skip('Cypress.Promise - instantiate a bluebird promise', () => {
     // https://on.cypress.io/promise
     let waited = false
 
@@ -86,7 +86,7 @@ context('Utilities', () => {
     function waitOneSecond () {
       // return a promise that resolves after 1 second
       // @ts-ignore TS2351 (new Cypress.Promise)
-      return new Cypress.Promise((resolve, reject) => {
+      return new Cypress.Promise((resolve) => {
         setTimeout(() => {
           // set waited to true
           waited = true

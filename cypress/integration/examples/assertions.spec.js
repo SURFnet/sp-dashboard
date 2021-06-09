@@ -5,7 +5,7 @@ context('Assertions', () => {
     cy.visit('https://example.cypress.io/commands/assertions')
   })
 
-  describe('Implicit Assertions', () => {
+  describe.skip('Implicit Assertions', () => {
     it('.should() - make an assertion about the current subject', () => {
       // https://on.cypress.io/should
       cy.get('.assertion-table')
@@ -47,7 +47,7 @@ context('Assertions', () => {
     })
   })
 
-  describe('Explicit Assertions', () => {
+  describe.skip('Explicit Assertions', () => {
     // https://on.cypress.io/assertions
     it('expect - make an assertion about a specified subject', () => {
       // We can use Chai's BDD style assertions
