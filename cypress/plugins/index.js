@@ -3,9 +3,8 @@ const htmlvalidate = require('cypress-html-validate/dist/plugin');
 module.exports = (on, config) => {
     htmlvalidate.install(on, {
         "rules": {
-            "prefer-button": "off",
             "prefer-native-element": [ "error", {
-                "exclude": [ "button" ],
+                "exclude": [ "textbox" ],
             }],
             "require-sri": [ "error", {
                 "target": "crossorigin",
