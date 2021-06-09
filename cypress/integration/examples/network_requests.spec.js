@@ -7,7 +7,7 @@ context('Network Requests', () => {
 
   // Manage HTTP requests in your app
 
-  it('cy.request() - make an XHR request', () => {
+  it.skip('cy.request() - make an XHR request', () => {
     // https://on.cypress.io/request
     cy.request('https://jsonplaceholder.cypress.io/comments')
       .should((response) => {
@@ -20,7 +20,7 @@ context('Network Requests', () => {
       })
   })
 
-  it('cy.request() - verify response using BDD syntax', () => {
+  it.skip('cy.request() - verify response using BDD syntax', () => {
     cy.request('https://jsonplaceholder.cypress.io/comments')
     .then((response) => {
       // https://on.cypress.io/assertions
@@ -30,7 +30,7 @@ context('Network Requests', () => {
     })
   })
 
-  it('cy.request() with query parameters', () => {
+  it.skip('cy.request() with query parameters', () => {
     // will execute request
     // https://jsonplaceholder.cypress.io/comments?postId=1&id=3
     cy.request({
@@ -50,7 +50,7 @@ context('Network Requests', () => {
     })
   })
 
-  it('cy.request() - pass result to the second request', () => {
+  it.skip('cy.request() - pass result to the second request', () => {
     // first, let's find out the userId of the first user we have
     cy.request('https://jsonplaceholder.cypress.io/users?_limit=1')
       .its('body') // yields the response object
@@ -86,7 +86,7 @@ context('Network Requests', () => {
       })
   })
 
-  it('cy.request() - save response in the shared test context', () => {
+  it.skip('cy.request() - save response in the shared test context', () => {
     // https://on.cypress.io/variables-and-aliases
     cy.request('https://jsonplaceholder.cypress.io/users?_limit=1')
       .its('body').its('0') // yields the first element of the returned list
@@ -113,7 +113,7 @@ context('Network Requests', () => {
       })
   })
 
-  it('cy.intercept() - route responses to matching requests', () => {
+  it.skip('cy.intercept() - route responses to matching requests', () => {
     // https://on.cypress.io/intercept
 
     let message = 'whoa, this comment does not exist'

@@ -15,16 +15,16 @@ module.exports = (on, config) => {
 
     // debug a11y in ci
     on('task', {
-          log(message) {
-                console.log(message);
+        log(message) {
+            console.log(message);
 
-                return null;
-          },
-          table(message) {
-                console.table(message);
+            return null;
+        },
+        table(message) {
+            console.table(message);
 
-                return null;
-          }
+            return null;
+        }
       });
 
     return config;
