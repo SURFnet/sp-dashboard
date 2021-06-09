@@ -11,7 +11,10 @@
         <div class="flash hide undefined">
             <div class="message-container">
                 <p></p>
-                <a class="close"><i class="fa fa-remove"></i></a>
+                <a class="close">
+                    <i class="fa fa-remove"></i>
+                    <span class="sr-only">{{ 'global.button.close'|trans }}</span>
+                </a>
             </div>
         </div>
         <div class="header-container">
@@ -23,7 +26,7 @@
                     <li class="title">
                         <span>SP dashboard</span>
                     </li>
-                    <li class="profile" tabindex="1">
+                    <li class="profile">
                         {{ identity() }}
                     </li>
                     <li class="border-left">
