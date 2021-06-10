@@ -1,8 +1,8 @@
-import {terminalLog} from '../functions/terminalLog';
+import {terminalLog} from '../../functions/terminalLog';
 
-context('Consent verify a11y', () => {
+context('SPD verify a11y of service overview modals', () => {
     beforeEach(() => {
-        cy.loginWithMemberRole();
+        cy.loginToServiceWithModal();
     });
 
     it('contains no a11y problems on load', () => {
@@ -10,7 +10,7 @@ context('Consent verify a11y', () => {
         cy.checkA11y(null, null, terminalLog);
     });
 
-    it.only('contains no html errors', () => {
+    it('contains no html errors', () => {
         cy.wait(300).then(() => {
             cy.removeSFToolbar();
             cy.htmlvalidate();
