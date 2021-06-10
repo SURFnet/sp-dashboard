@@ -32,14 +32,6 @@ Cypress.Commands.add('fillPassword', (pass = 'Weatherwax') => {
     cy.get('#password').type(pass);
 });
 
-Cypress.Commands.add('loginToService', (serviceID = 1) => {
-    cy.loginWithMemberRole().then(() => {
-        cy.wait(300).then(() => {
-            cy.selectService(serviceID);
-        });
-    });
-});
-
 Cypress.Commands.add('addMemberRole', (isMemberOf = 'eddy-wally') => {
     cy.get('#add-attribute').select('urn:mace:dir:attribute-def:isMemberOf');
     cy.get('input[name="urn:mace:dir:attribute-def:isMemberOf"]').type(isMemberOf);
@@ -68,7 +60,7 @@ Cypress.Commands.add('selectService', (serviceId = 1) => {
     cy.visit(`https://spdashboard.vm.openconext.org/service/${serviceId}`);
 });
 
-Cypress.Commands.add('login', (url = 'https://spdashboard.vm.openconext.org', username = 'Tiffany', pass = 'Aching', submit = true) => {
+Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching', submit = true, url = 'https://spdashboard.vm.openconext.org') => {
     cy.visit(url);
     cy.fillUsername(username);
     cy.fillPassword(pass);
@@ -85,6 +77,27 @@ Cypress.Commands.add('loginWithMemberRole', (url = '', username = 'John', pass =
     });
 });
 
-Cypress.Commands.add('loginToManage', (url = 'https://manage.vm.openconext.org', username = 'Terry', pass = 'Veterinari') => {
+Cypress.Commands.add('loginToService', (serviceID = 1) => {
+    cy.loginWithMemberRole().then(() => {
+        cy.wait(300).then(() => {
+            cy.selectService(serviceID);
+        });
+    });
+});
+
+Cypress.Commands.add('loginToServiceWithModal', (serviceID = 1) => {
+    cy.loginWithMemberRole().then(() => {
+        cy.wait(300).then(() => {
+            cy.selectService(serviceID);
+            cy.contains('New production entity').first().click();
+        });
+    });
+});
+
+Cypress.Commands.add('loginToManage', (username = 'Terry', pass = 'Veterinari', url = 'https://manage.vm.openconext.org') => {
     cy.login(url, username, pass);
+});
+
+Cypress.Commands.add('editService', () => {
+
 });
