@@ -19,9 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use function in_array;
 
@@ -234,7 +234,7 @@ class EntityDetail
     /**
      * @var Attribute
      */
-    private $organizationUnitAttribute;
+    private $organizationUnitNameAttribute;
 
     /**
      * @var EntityActions
@@ -355,7 +355,7 @@ class EntityDetail
             $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganization');
         $entityDetail->organizationTypeAttribute =
             $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganizationType');
-        $entityDetail->organizationUnitAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:ou');
+        $entityDetail->organizationUnitNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:ou');
         $entityDetail->affiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonAffiliation');
         $entityDetail->entitlementAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonEntitlement');
         $entityDetail->principleNameAttribute =
@@ -498,123 +498,78 @@ class EntityDetail
         return $this->supportContact;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getGivenNameAttribute()
+    public function getGivenNameAttribute(): ?Attribute
     {
         return $this->givenNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getSurNameAttribute()
+    public function getSurNameAttribute(): ?Attribute
     {
         return $this->surNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getCommonNameAttribute()
+    public function getCommonNameAttribute(): ?Attribute
     {
         return $this->commonNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getDisplayNameAttribute()
+    public function getDisplayNameAttribute(): ?Attribute
     {
         return $this->displayNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getEmailAddressAttribute()
+    public function getEmailAddressAttribute(): ?Attribute
     {
         return $this->emailAddressAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationAttribute()
+    public function getOrganizationAttribute(): ?Attribute
     {
         return $this->organizationAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationTypeAttribute()
+    public function getOrganizationTypeAttribute(): ?Attribute
     {
         return $this->organizationTypeAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getAffiliationAttribute()
+    public function getAffiliationAttribute(): ?Attribute
     {
         return $this->affiliationAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getEntitlementAttribute()
+    public function getEntitlementAttribute(): ?Attribute
     {
         return $this->entitlementAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPrincipleNameAttribute()
+    public function getPrincipleNameAttribute(): ?Attribute
     {
         return $this->principleNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getUidAttribute()
+    public function getUidAttribute(): ?Attribute
     {
         return $this->uidAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPreferredLanguageAttribute()
+    public function getPreferredLanguageAttribute(): ?Attribute
     {
         return $this->preferredLanguageAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPersonalCodeAttribute()
+    public function getPersonalCodeAttribute(): ?Attribute
     {
         return $this->personalCodeAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getScopedAffiliationAttribute()
+    public function getScopedAffiliationAttribute(): ?Attribute
     {
         return $this->scopedAffiliationAttribute;
     }
 
 
-    /**
-     * @return Attribute
-     */
-    public function getEduPersonTargetedIDAttribute()
+    public function getEduPersonTargetedIDAttribute(): ?Attribute
     {
         return $this->eduPersonTargetedIDAttribute;
     }
@@ -736,9 +691,9 @@ class EntityDetail
         return $this->isPublicClient;
     }
 
-    public function getOrganizationUnitAttribute(): ?Attribute
+    public function getOrganizationUnitNameAttribute(): ?Attribute
     {
-        return $this->organizationUnitAttribute;
+        return $this->organizationUnitNameAttribute;
     }
 
     /**
