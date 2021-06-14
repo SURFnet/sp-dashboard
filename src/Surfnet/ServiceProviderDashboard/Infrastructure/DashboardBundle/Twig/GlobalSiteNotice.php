@@ -65,7 +65,7 @@ class GlobalSiteNotice extends Twig_Extension
 
     public function getGlobalSiteNotice(): string
     {
-        return $this->translator->trans('site_notice');
+        return $this->translator->trans('site_notice.html');
     }
 
     public function getAllowedHtmlForNotice(): string
