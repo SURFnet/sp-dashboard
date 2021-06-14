@@ -1,3 +1,21 @@
+## 3.3.0
+**Features**
+- add a global site notice so admins can alert users to changes / important news
+- add support for the organizational unit name attribute
+- ensure both test and production get their own oidc modal (rather than sharing one)
+- add a redirect when hitting the log out link
+
+**Bugfixes**
+- improve error message when creating SAML entities with an id that already exists
+- fix normal user redirect after deleting a published entity
+- ensure name is mandatory
+- hide edit for production entity on status removal requested
+- show the correct descriptions per language
+
+**Security**
+- disable trace and track methods
+- disable showing the Apache version in headers
+
 ## 3.2.1
 **Bugfix**
  - Prevent double JQuery installations #467 
