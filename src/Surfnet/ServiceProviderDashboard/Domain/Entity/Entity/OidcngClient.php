@@ -26,7 +26,6 @@ use function array_diff;
 use function array_filter;
 use function array_merge;
 use function is_null;
-use function strtolower;
 
 class OidcngClient implements OidcClientInterface
 {
@@ -66,9 +65,9 @@ class OidcngClient implements OidcClientInterface
 
     public static function fromApiResponse(array $data)
     {
-        $clientId = self::getLowercasedStringOrEmpty($data['data'], 'entityid');
+        $clientId = self::getStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
-        $redirectUris = self::getLowercasedArrayOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
+        $redirectUris = self::getArrayOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
 
         $grantType = isset($data['data']['metaDataFields']['grants'])
             ? $data['data']['metaDataFields']['grants'] : [];
@@ -131,27 +130,11 @@ class OidcngClient implements OidcClientInterface
     /**
      * @param array $data
      * @param $key
-     * @return string
-     */
-    private static function getLowercasedStringOrEmpty(array $data, $key)
-    {
-        return isset($data[$key]) ? strtolower($data[$key]) : '';
-    }
-
-    /**
-     * @param array $data
-     * @param $key
      * @return array
      */
-    private static function getLowercasedArrayOrEmpty(array $data, $key)
+    private static function getArrayOrEmpty(array $data, $key)
     {
-        $urls = [];
-        if (isset($data[$key])) {
-            foreach ($data[$key] as $url) {
-                $urls[] = strtolower($url);
-            }
-        }
-        return $urls;
+        return isset($data[$key]) ? $data[$key] : [];
     }
 
      /**
