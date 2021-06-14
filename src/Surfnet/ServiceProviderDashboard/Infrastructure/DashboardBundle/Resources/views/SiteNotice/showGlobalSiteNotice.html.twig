@@ -1,0 +1,10 @@
+{% if shouldDisplayGlobalSiteNotice() and not hasBeenClosed %}
+    {% set allowedHtml = getAllowedHtmlForNotice() %}
+    {% set text = getGlobalSiteNotice() %}
+    <div class="notification-critical site-notice" data-cookiestring={{ cookieString }}>
+        {{ text|striptags(allowedHtml|trans)|replace({'<a ': '<a target="_blank" rel="noopener noreferrer" '})|raw }}
+        <p>
+            <button class="button notice" type="button">{{ 'site_notice.close'|trans }}</button>
+        </p>
+    </div>
+{% endif %}

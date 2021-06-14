@@ -194,7 +194,7 @@ class OidcngEntityType extends AbstractType
                 'nameNl',
                 TextType::class,
                 [
-                    'required' => false,
+                    'required' => true,
                     'attr' => ['data-help' => 'entity.edit.information.nameNl'],
                 ]
             )
@@ -213,7 +213,7 @@ class OidcngEntityType extends AbstractType
                 'nameEn',
                 TextType::class,
                 [
-                    'required' => false,
+                    'required' => true,
                     'attr' => ['data-help' => 'entity.edit.information.nameEn'],
                 ]
             )
@@ -397,6 +397,16 @@ class OidcngEntityType extends AbstractType
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.oidc.organizationTypeAttribute'],
+                        ]
+                    )
+                    ->add(
+                        'organizationUnitAttribute',
+                        AttributeType::class,
+                        [
+                            'label' => 'entity.edit.form.attributes.saml20.organizationUnitAttribute',
+                            'by_reference' => false ,
+                            'required' => false,
+                            'attr' => ['data-help' => 'entity.edit.information.saml20.organizationUnitAttribute'],
                         ]
                     )
                     ->add(

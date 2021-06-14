@@ -46,11 +46,20 @@
       color: white;
     }
   }
+
+  &.red {
+    background-color: $red;
+    border: none;
+    color: $white;
+    text-transform: none;
+  }
+
   &.grey {
     background-color: $lighter-grey;
     color: white;
     border: none;
   }
+
   &.green {
     background-color: $green;
     color: white;
@@ -62,6 +71,13 @@
       margin:0;
       font-size: larger;
     }
+  }
+
+  &.notice {
+    background-color: $buttonGreen;
+    border: none;
+    box-shadow: 0 5px 5px $dark-green;
+    color: $white;
   }
 
   &.title {

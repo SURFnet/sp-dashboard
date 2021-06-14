@@ -83,12 +83,14 @@ class EntityActions
         return $this->environment;
     }
 
-    /**
-     * @return bool
-     */
-    public function allowEditAction()
+    public function allowEditAction(): bool
     {
-        if ($this->isPublishedToProduction() || $this->readOnly) {
+        $notEditable =
+            $this->isPublishedToProduction()
+            || $this->readOnly
+            || $this->status === Constants::STATE_REMOVAL_REQUESTED;
+
+        if ($notEditable) {
             return false;
         }
         return true;

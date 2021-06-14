@@ -19,9 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use function in_array;
 
@@ -30,6 +30,7 @@ use function in_array;
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class EntityDetail
 {
@@ -231,6 +232,11 @@ class EntityDetail
     private $organizationUrlEn;
 
     /**
+     * @var Attribute
+     */
+    private $organizationUnitNameAttribute;
+
+    /**
      * @var EntityActions
      */
     private $actions;
@@ -303,8 +309,8 @@ class EntityDetail
         }
         $entityDetail->nameNl = $entity->getMetaData()->getNameNl();
         $entityDetail->nameEn = $entity->getMetaData()->getNameEn();
-        $entityDetail->descriptionNl = $entity->getMetaData()->getDescriptionEn();
-        $entityDetail->descriptionEn = $entity->getMetaData()->getDescriptionNl();
+        $entityDetail->descriptionNl = $entity->getMetaData()->getDescriptionNl();
+        $entityDetail->descriptionEn = $entity->getMetaData()->getDescriptionEn();
         $entityDetail->applicationUrl = $entity->getMetaData()->getCoin()->getApplicationUrl();
         $entityDetail->eulaUrl = $entity->getMetaData()->getCoin()->getEula();
         $entityDetail->administrativeContact = $entity->getMetaData()->getContacts()->findAdministrativeContact();
@@ -349,18 +355,27 @@ class EntityDetail
             $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganization');
         $entityDetail->organizationTypeAttribute =
             $attributes->findByUrn('urn:mace:terena.org:attribute-def:schacHomeOrganizationType');
+        $entityDetail->organizationUnitNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:ou');
         $entityDetail->affiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonAffiliation');
         $entityDetail->entitlementAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonEntitlement');
-        $entityDetail->principleNameAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonPrincipalName');
-        $entityDetail->eduPersonTargetedIDAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonTargetedID');
+        $entityDetail->principleNameAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonPrincipalName');
+        $entityDetail->eduPersonTargetedIDAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonTargetedID');
         $entityDetail->uidAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:uid');
-        $entityDetail->preferredLanguageAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
-        $entityDetail->personalCodeAttribute = $attributes->findByUrn('urn:schac:attribute-def:schacPersonalUniqueCode');
-        $entityDetail->scopedAffiliationAttribute = $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
+        $entityDetail->preferredLanguageAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:preferredLanguage');
+        $entityDetail->personalCodeAttribute =
+            $attributes->findByUrn('urn:schac:attribute-def:schacPersonalUniqueCode');
+        $entityDetail->scopedAffiliationAttribute =
+            $attributes->findByUrn('urn:mace:dir:attribute-def:eduPersonScopedAffiliation');
     }
 
-    private static function getIsPlaygroundEnabled(ManageEntity $entity, string $playgroundTest, string $playgroundProd): bool
-    {
+    private static function getIsPlaygroundEnabled(
+        ManageEntity $entity,
+        string $playgroundTest,
+        string $playgroundProd
+    ): bool {
         $uris = $entity->getOidcClient()->getRedirectUris();
         $environment = $entity->getEnvironment();
         if (($environment === Constants::ENVIRONMENT_TEST && in_array($playgroundTest, $uris)) ||
@@ -483,123 +498,78 @@ class EntityDetail
         return $this->supportContact;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getGivenNameAttribute()
+    public function getGivenNameAttribute(): ?Attribute
     {
         return $this->givenNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getSurNameAttribute()
+    public function getSurNameAttribute(): ?Attribute
     {
         return $this->surNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getCommonNameAttribute()
+    public function getCommonNameAttribute(): ?Attribute
     {
         return $this->commonNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getDisplayNameAttribute()
+    public function getDisplayNameAttribute(): ?Attribute
     {
         return $this->displayNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getEmailAddressAttribute()
+    public function getEmailAddressAttribute(): ?Attribute
     {
         return $this->emailAddressAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationAttribute()
+    public function getOrganizationAttribute(): ?Attribute
     {
         return $this->organizationAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getOrganizationTypeAttribute()
+    public function getOrganizationTypeAttribute(): ?Attribute
     {
         return $this->organizationTypeAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getAffiliationAttribute()
+    public function getAffiliationAttribute(): ?Attribute
     {
         return $this->affiliationAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getEntitlementAttribute()
+    public function getEntitlementAttribute(): ?Attribute
     {
         return $this->entitlementAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPrincipleNameAttribute()
+    public function getPrincipleNameAttribute(): ?Attribute
     {
         return $this->principleNameAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getUidAttribute()
+    public function getUidAttribute(): ?Attribute
     {
         return $this->uidAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPreferredLanguageAttribute()
+    public function getPreferredLanguageAttribute(): ?Attribute
     {
         return $this->preferredLanguageAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getPersonalCodeAttribute()
+    public function getPersonalCodeAttribute(): ?Attribute
     {
         return $this->personalCodeAttribute;
     }
 
-    /**
-     * @return Attribute
-     */
-    public function getScopedAffiliationAttribute()
+    public function getScopedAffiliationAttribute(): ?Attribute
     {
         return $this->scopedAffiliationAttribute;
     }
 
 
-    /**
-     * @return Attribute
-     */
-    public function getEduPersonTargetedIDAttribute()
+    public function getEduPersonTargetedIDAttribute(): ?Attribute
     {
         return $this->eduPersonTargetedIDAttribute;
     }
@@ -721,11 +691,8 @@ class EntityDetail
         return $this->isPublicClient;
     }
 
-    /**
-     * @return ManageEntity[]|null
-     */
-    public function getResourceServers()
+    public function getOrganizationUnitNameAttribute(): ?Attribute
     {
-        return $this->resourceServers;
+        return $this->organizationUnitNameAttribute;
     }
 }

@@ -1,3 +1,5 @@
+site_notice.html: '<p>There is nothing wrong with your television set. <strong>Do not attempt to adjust the picture.</strong> We are controlling transmission. If we wish to make it louder, we will bring up the volume. If we wish to make it softer, we will tune it to a whisper. We will control the horizontal. We will control the vertical. We can roll the image, make it flutter. We can change the focus to a soft blur, or sharpen it to crystal clarity. <strong></p><p>For the next hour, sit quietly and we will control all that you see and hear.</strong> We repeat: There is nothing wrong with your television set. You are about to participate in a great adventure. You are about to experience the awe and mystery which reaches from the inner mind to... <a href="https://en.wikiquote.org/wiki/The_Outer_Limits_(1963_TV_series)">The Outer Limits</a>.</p>'
+site_notice.close: "Close notice"
 error.generic.title: "An error occurred"
 error.generic.text: "An unexpected error occurred. Please try again later."
 error.403.title: "Access denied"
@@ -116,6 +118,7 @@ entity:
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
         edu_person_targeted_id: Edu person targeted ID attribute
+        organization_unit_name: Organizational Unit Name
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
@@ -150,11 +153,8 @@ entity:
         prefered_language: Preferred language attribute
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
-
-  type:
-    oauth20:
-      ccc:
-        title:entity.list.add_to_test: New test entity
+        organization_unit_name: Organizational Unit Name
+entity.list.add_to_test: New test entity
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
@@ -177,7 +177,8 @@ entity.list.modal.oidc_confirmation:
   client_secret:
     label: Secret
   warning: This message will be displayed only once
-  info.html: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  info.production.html: <p>PRODUCTION Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  info.test.html: <p>TEST Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 entity.list.oidcng_connection.info.html: <p><strong>Select OIDC RP to connect this Resource Server to</strong></p><p><i class="fa fa-exclamation-triangle"></i> Only access_tokens from connected clients can be introspected by the resource server.</p>
 entity.edit.error.publish: "Unable to publish the entity, try again later"
 entity.edit.error.push: "Unable to publish the entity, try again later"
@@ -395,6 +396,7 @@ entity.edit.information.saml20.displayNameAttribute: Text should be set in web t
 entity.edit.information.saml20.emailAddressAttribute: Text should be set in web translations
 entity.edit.information.saml20.organizationAttribute: Text should be set in web translations
 entity.edit.information.saml20.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.saml20.organizationUnitAttribute: Text should be set in web translations
 entity.edit.information.saml20.affiliationAttribute: Text should be set in web translations
 entity.edit.information.saml20.entitlementAttribute: Text should be set in web translations
 entity.edit.information.saml20.principleNameAttribute: Text should be set in web translations
@@ -410,6 +412,7 @@ entity.edit.information.oidc.displayNameAttribute: Text should be set in web tra
 entity.edit.information.oidc.emailAddressAttribute: Text should be set in web translations
 entity.edit.information.oidc.organizationAttribute: Text should be set in web translations
 entity.edit.information.oidc.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.oidc.organizationUnitAttribute: Text should be set in web translations
 entity.edit.information.oidc.affiliationAttribute: Text should be set in web translations
 entity.edit.information.oidc.entitlementAttribute: Text should be set in web translations
 entity.edit.information.oidc.principleNameAttribute: Text should be set in web translations
@@ -425,6 +428,7 @@ entity.edit.information.oidcng.displayNameAttribute: Text should be set in web t
 entity.edit.information.oidcng.emailAddressAttribute: Text should be set in web translations
 entity.edit.information.oidcng.organizationAttribute: Text should be set in web translations
 entity.edit.information.oidcng.organizationTypeAttribute: Text should be set in web translations
+entity.edit.information.oidcng.organizationUnitAttribute: Text should be set in web translations
 entity.edit.information.oidcng.affiliationAttribute: Text should be set in web translations
 entity.edit.information.oidcng.entitlementAttribute: Text should be set in web translations
 entity.edit.information.oidcng.principleNameAttribute: Text should be set in web translations
@@ -585,6 +589,7 @@ entity.edit.form.attributes.oidc.displayNameAttribute: Display name attribute
 entity.edit.form.attributes.oidc.emailAddressAttribute: Email address attribute
 entity.edit.form.attributes.oidc.organizationAttribute: Organization attribute
 entity.edit.form.attributes.oidc.organizationTypeAttribute: Organization type attribute
+entity.edit.form.attributes.oidc.organizationUnitAttribute: Organizational Unit Name attribute
 entity.edit.form.attributes.oidc.affiliationAttribute: Affiliation attribute
 entity.edit.form.attributes.oidc.entitlementAttribute: Entitlement attribute
 entity.edit.form.attributes.oidc.principleNameAttribute: Principle name attribute
@@ -601,6 +606,7 @@ entity.edit.form.attributes.saml20.displayNameAttribute: Display name attribute
 entity.edit.form.attributes.saml20.emailAddressAttribute: Email address attribute
 entity.edit.form.attributes.saml20.organizationAttribute: Organization attribute
 entity.edit.form.attributes.saml20.organizationTypeAttribute: Organization type attribute
+entity.edit.form.attributes.saml20.organizationUnitAttribute: Organizational Unit Name attribute
 entity.edit.form.attributes.saml20.affiliationAttribute: Affiliation attribute
 entity.edit.form.attributes.saml20.entitlementAttribute: Entitlement attribute
 entity.edit.form.attributes.saml20.principleNameAttribute: Principle name attribute

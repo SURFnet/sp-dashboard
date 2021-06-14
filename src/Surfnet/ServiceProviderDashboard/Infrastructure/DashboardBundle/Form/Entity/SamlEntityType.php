@@ -165,7 +165,7 @@ class SamlEntityType extends AbstractType
                         'nameNl',
                         TextType::class,
                         [
-                            'required' => false,
+                            'required' => true,
                             'attr' => ['data-help' => 'entity.edit.information.nameNl'],
                         ]
                     )
@@ -184,7 +184,7 @@ class SamlEntityType extends AbstractType
                         'nameEn',
                         TextType::class,
                         [
-                            'required' => false,
+                            'required' => true,
                             'attr' => ['data-help' => 'entity.edit.information.nameEn'],
                         ]
                     )
@@ -324,6 +324,16 @@ class SamlEntityType extends AbstractType
                             'by_reference' => false,
                             'required' => false,
                             'attr' => ['data-help' => 'entity.edit.information.saml20.organizationTypeAttribute'],
+                        ]
+                    )
+                    ->add(
+                        'organizationUnitAttribute',
+                        AttributeType::class,
+                        [
+                            'label' => 'entity.edit.form.attributes.saml20.organizationUnitAttribute',
+                            'by_reference' => false ,
+                            'required' => false,
+                            'attr' => ['data-help' => 'entity.edit.information.saml20.organizationUnitAttribute'],
                         ]
                     )
                     ->add(

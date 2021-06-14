@@ -18,3 +18,10 @@ nelmio_security_csp:
     path:     /csp/report
     defaults: { _controller: nelmio_security.csp_reporter_controller:indexAction }
     methods:  [POST]
+
+logout:
+    path: /logout
+    defaults:
+        _controller: FrameworkBundle:Redirect:urlRedirect
+        path: '%logout_redirect_url%'
+        permanent: true

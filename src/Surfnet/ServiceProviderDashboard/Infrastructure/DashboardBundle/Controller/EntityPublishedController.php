@@ -85,6 +85,9 @@ class EntityPublishedController extends Controller
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 
-        return ['entity' => $viewObject];
+        return [
+            'entity' => $viewObject,
+            'environment' => $entity->getEnvironment(),
+        ];
     }
 }

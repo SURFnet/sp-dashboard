@@ -70,6 +70,16 @@
     ]
   },
   {
+    "id": "organizationUnit",
+    "getterName": "getOrganizationUnitAttribute",
+    "setterName": "setOrganizationUnitAttribute",
+    "friendlyName": "schacHomeOrganizationUnit",
+    "urns": [
+      "urn:mace:dir:attribute-def:ou",
+      "urn:oid:1.3.6.1.4.1.25178.1.2.10"
+    ]
+  },
+  {
     "id": "surName",
     "getterName": "getSurNameAttribute",
     "setterName": "setSurNameAttribute",

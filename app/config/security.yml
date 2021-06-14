@@ -35,13 +35,6 @@ security:
         saml_based:
             saml: true
             logout_on_user_change: true
-            logout:
-                path: /logout
-                target: "%logout_redirect_url%"
-                invalidate_session: true
-                csrf_token_generator: security.csrf.token_manager
-                csrf_parameter: 't'
-                csrf_token_id: 'dashboard_logout_token'
 
     access_control:
         - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
@@ -58,6 +51,7 @@ nelmio_security:
         log: true
         whitelist:
             - '%saml_remote_idp_host%'
+            - '%logout_redirect_url%'
     csp:
         report_logger_service: monolog.logger.security
         hosts: []
