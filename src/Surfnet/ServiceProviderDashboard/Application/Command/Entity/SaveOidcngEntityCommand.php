@@ -459,7 +459,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     public function setEntityId($entityId)
     {
-        $this->entityId = strtolower($entityId);
+        $this->entityId = $entityId;
     }
 
     /**
@@ -503,11 +503,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     public function setRedirectUrls($redirectUrls)
     {
-        $urls = []; // because numeric array keys can be sparse so a for-loop cannot be trusted
-        foreach ($redirectUrls as $url) {
-            $urls[] = strtolower($url);
-        }
-        $this->redirectUrls = $urls;
+        $this->redirectUrls = $redirectUrls;
     }
 
     /**

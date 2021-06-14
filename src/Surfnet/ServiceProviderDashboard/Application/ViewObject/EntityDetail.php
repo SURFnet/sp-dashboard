@@ -695,12 +695,4 @@ class EntityDetail
     {
         return $this->organizationUnitNameAttribute;
     }
-
-    /**
-     * @return ManageEntity[]|null
-     */
-    public function getResourceServers(): ?array
-    {
-        return $this->resourceServers;
-    }
 }
