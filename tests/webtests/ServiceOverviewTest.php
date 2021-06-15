@@ -49,10 +49,11 @@ class ServiceOverviewTest extends WebTestCase
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
         $h1 = $crawler->filter('.service-title');
         $this->assertContains('My services', $h1->first()->text());
-        $nodes = $crawler->filter('.service-status-container .service-status-title');
-        $serviceNode = $nodes->first();
+        $serviceNode = $crawler->filter('.service-status-title-actions-container')->first();
+        $h2 = $crawler->filter('.service-status-title');
 
-        $this->assertContains('SURFnet', trim($serviceNode->text()));
+        $this->assertContains('SURFnet', trim($h2->text()));
+        $this->assertContains('Privacy questions', trim($serviceNode->text()));
     }
 
     /**
@@ -76,9 +77,11 @@ class ServiceOverviewTest extends WebTestCase
 
         // The two nodes are sorted alphabetically.
         $serviceNode = $nodes->first();
+        $actionNode = $crawler->filter('.service-status-title-actions-container')->first();
         $service2 = $nodes->eq(1);
 
         $this->assertContains('Ibuildings B.V.', trim($serviceNode->text()));
+        $this->assertContains('Privacy questions', trim($actionNode->text()));
         $this->assertContains('SURFnet', trim($service2->text()));
     }
 
