@@ -67,11 +67,14 @@ class JsonGenerator implements GeneratorInterface
         ];
     }
 
-    public function generateForExistingEntity(ManageEntity $entity, string $workflowState): array
-    {
+    public function generateForExistingEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        string $updatedPart = ''
+    ): array {
         // the type for entities is always saml because manage is using saml internally
         $data = [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState, $updatedPart),
             'type' => 'saml20_sp',
             'id' => $entity->getId(),
         ];
@@ -108,28 +111,32 @@ class JsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @param string $workflowState
-     * @return array
-     */
-    private function generateDataForExistingEntity(ManageEntity $entity, $workflowState)
-    {
+    private function generateDataForExistingEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        string $updatedPart
+    ): array {
         $metadata = [
-            'arp' => $this->arpMetadataGenerator->build($entity),
             'entityid' => $entity->getMetaData()->getEntityId(),
-            'state' => $workflowState,
         ];
 
-        $metadata += $this->generateAclData($entity);
+        switch ($updatedPart) {
+            case 'ACL':
+                $metadata += $this->generateAclData($entity);
+                break;
 
-        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
-            $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
+            default:
+                $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+                $metadata['state'] = $workflowState;
+
+                $metadata += $this->flattenMetadataFields(
+                    $this->generateMetadataFields($entity)
+                );
+
+                if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
+                    $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
+                }
         }
-
-        $metadata += $this->flattenMetadataFields(
-            $this->generateMetadataFields($entity)
-        );
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();

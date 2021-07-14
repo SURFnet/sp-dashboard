@@ -58,9 +58,10 @@ class JsonGeneratorStrategy
      * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForExistingEntity(ManageEntity $entity, string $workflowState)
+    public function generateForExistingEntity(ManageEntity $entity, string $workflowState, string $updatedPart = '')
     {
-        return $this->getStrategy($entity->getProtocol()->getProtocol())->generateForExistingEntity($entity, $workflowState);
+        return $this->getStrategy($entity->getProtocol()->getProtocol())
+                    ->generateForExistingEntity($entity, $workflowState, $updatedPart);
     }
 
     /**

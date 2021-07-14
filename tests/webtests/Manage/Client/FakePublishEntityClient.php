@@ -39,7 +39,7 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
         $this->pushOk = false;
     }
 
-    public function publish(ManageEntity $entity)
+    public function publish(ManageEntity $entity, string $part = '')
     {
         $entityId = $entity->getMetaData()->getEntityId();
         if (!array_key_exists($entityId, $this->publishResponses)) {
