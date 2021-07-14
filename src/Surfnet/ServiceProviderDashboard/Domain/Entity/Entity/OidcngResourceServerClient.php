@@ -60,7 +60,7 @@ class OidcngResourceServerClient implements OidcClientInterface
         ?string $clientSecret,
         array $grants
     ) {
-        $this->clientId = $clientId;
+        $this->clientId = strtolower($clientId);
         $this->clientSecret = $clientSecret;
         $this->grants = $grants;
     }
