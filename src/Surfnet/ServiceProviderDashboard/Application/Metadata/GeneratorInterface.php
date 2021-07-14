@@ -34,6 +34,14 @@ interface GeneratorInterface
      * generateNew(), but only contains fields stored in SP-dashboard, and
      * never overwrites fields not managed by the dashboard (such as allowed
      * entities).
+     *
+     * The updatedPart parameter currently is only used when updating the ACL.
+     * It was introduced as part of fixing the bug described here: https://www.pivotaltracker.com/story/show/178461498.
+     * The idea is that it'll be used in the future for all updates.
      */
-    public function generateForExistingEntity(ManageEntity $entity, string $workflowState): array;
+    public function generateForExistingEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        string $updatedPart = ''
+    ): array;
 }

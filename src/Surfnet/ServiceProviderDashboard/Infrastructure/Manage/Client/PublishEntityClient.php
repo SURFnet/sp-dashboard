@@ -68,7 +68,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function publish(ManageEntity $entity)
+    public function publish(ManageEntity $entity, string $updatedPart = '')
     {
         try {
             if (empty($entity->getId())) {
@@ -85,7 +85,8 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getId()));
                 $data = json_encode($this->generator->generateForExistingEntity(
                     $entity,
-                    $this->manageConfig->getPublicationStatus()->getStatus()
+                    $this->manageConfig->getPublicationStatus()->getStatus(),
+                    $updatedPart
                 ));
 
                 $response = $this->client->put(
