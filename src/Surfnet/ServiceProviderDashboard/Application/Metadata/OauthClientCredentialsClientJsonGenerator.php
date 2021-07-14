@@ -61,15 +61,16 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         ];
     }
 
-    public function generateForExistingEntity(ManageEntity $entity, string $workflowState): array
-    {
-        $data = [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
+    public function generateForExistingEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        string $updatedPart = ''
+    ): array {
+        return [
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState, $updatedPart),
             'type' => 'oidc10_rp',
             'id' => $entity->getId(),
         ];
-
-        return $data;
     }
 
     private function generateDataForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -93,24 +94,28 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @param string $workflowState
-     * @return array
-     */
-    private function generateDataForExistingEntity(ManageEntity $entity, $workflowState)
-    {
+    private function generateDataForExistingEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        string $updatedPart
+    ): array {
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
-            'state' => $workflowState,
         ];
 
-        $metadata += $this->generateAclData($entity);
-        $metadata += $this->generateAllowedResourceServers($entity);
+        switch ($updatedPart) {
+            case 'ACL':
+                $metadata += $this->generateAclData($entity);
+                break;
 
-        $metadata += $this->flattenMetadataFields(
-            $this->generateMetadataFields($entity)
-        );
+            default:
+                $metadata['state'] = $workflowState;
+
+                $metadata += $this->generateAllowedResourceServers($entity);
+                $metadata += $this->flattenMetadataFields(
+                    $this->generateMetadataFields($entity)
+                );
+        }
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();

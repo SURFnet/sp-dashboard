@@ -71,7 +71,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         $allowedIdps = new AllowedIdentityProviders($idps, $command->isSelectAll());
         $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {
-            $this->publishClient->publish($entity);
+            $this->publishClient->publish($entity, 'ACL');
         } catch (PublishMetadataException $e) {
             $this->logger->error(
                 sprintf(
