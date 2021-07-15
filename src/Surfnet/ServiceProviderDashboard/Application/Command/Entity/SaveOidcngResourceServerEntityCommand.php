@@ -248,7 +248,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     public function setEntityId($entityId)
     {
-        $this->entityId = $entityId;
+        $this->entityId = strtolower($entityId);
     }
 
     /**
