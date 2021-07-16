@@ -1,0 +1,51 @@
+name: Run integration tests
+
+on:
+  pull_request:
+    branches: [ develop ]
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Start the docker images for Cypress testing
+        run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d
+
+      - name: Import the certificate on the Cypress docker machine
+        run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress sh /e2e/docker/conf/cypress_import_cert.sh
+
+      - name: Run composer
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/local/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
+        env:
+          SYMFONY_ENV: dev
+
+      - name: Run yarn
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/bin/yarn install
+        env:
+          SYMFONY_ENV: dev
+
+      - name: Get the database up and running
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm bin/console doctrine:migrations:migrate
+        env:
+          SYMFONY_ENV: dev
+
+      - name: Remove leftover files
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /bin/rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/
+
+      - name: Run cypress tests
+        run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run
+
+      - name: Run cypress tests
+        run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run
