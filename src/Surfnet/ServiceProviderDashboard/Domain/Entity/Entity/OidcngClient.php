@@ -148,7 +148,10 @@ class OidcngClient implements OidcClientInterface
         $urls = [];
         if (isset($data[$key])) {
             foreach ($data[$key] as $url) {
-                $urls[] = strtolower($url);
+                $protocolSlashes = strpos($url, '://');
+                $hostname = strpos($url, '/', $protocolSlashes + 3);
+                $lowercased = strtolower(substr($url, 0, $hostname));
+                $urls[] = $lowercased . substr($url, $hostname);
             }
         }
         return $urls;
