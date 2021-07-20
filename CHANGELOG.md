@@ -1,3 +1,9 @@
+## 3.3.1
+**Features**
+- Lowercase protocol & hostname in redirect url
+  **Bugfixes**
+- Only update acl fields on edit idp whitelist
+
 ## 3.3.0
 **Features**
 - add a global site notice so admins can alert users to changes / important news

@@ -24,7 +24,6 @@ use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use function in_array;
 
 /**
  * The OidcngResourceServerJsonGenerator generates oauth20-rs resource server entity json
@@ -63,10 +62,13 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         ];
     }
 
-    public function generateForExistingEntity(ManageEntity $entity, string $workflowState): array
-    {
+    public function generateForExistingEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        string $updatedPart = ''
+    ): array {
         return [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState, $updatedPart),
             'type' => 'oauth20_rs',
             'active' => true,
             'id' => $entity->getId(),
@@ -90,8 +92,11 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    private function generateDataForExistingEntity(ManageEntity $entity, $workflowState)
-    {
+    private function generateDataForExistingEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        string $updatedPart
+    ): array {
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'state' => $workflowState,

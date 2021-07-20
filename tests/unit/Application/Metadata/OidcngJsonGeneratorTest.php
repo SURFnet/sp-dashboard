@@ -176,9 +176,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'metaDataFields.isPublicClient' => true,
                         'revisionnote' => 'revisionnote',
                         'state' => 'testaccepted',
-                        'allowedEntities' => [],
                         'allowedResourceServers' => [],
-                        'allowedall' => true,
                         'metaDataFields.coin:institution_id' => 'service-institution-id',
                         'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                     ),
@@ -202,7 +200,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
+        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -226,7 +224,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
         $entity = $this->createManageEntity(true);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -250,7 +248,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
         $entity = $this->createManageEntity(false);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
@@ -277,7 +275,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'entity-id',
         ]);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -305,7 +303,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'entity-id2',
         ]);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -317,8 +315,8 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
     }
 
     private function createManageEntity(
-        ?bool $idpAllowAll = null,
-        ?array $idpWhitelist = null,
+        ?bool $idpAllowAll = true,
+        ?array $idpWhitelist = [],
         ?string $environment = null
     ): ManageEntity {
 
@@ -330,25 +328,13 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity->setComments('revisionnote');
         $entity = m::mock($entity);
 
-        if ($idpAllowAll !== null) {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
-                ->andReturn($idpAllowAll);
-        } else {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
-                ->andReturn(true);
-        }
+        $entity
+            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+            ->andReturn($idpAllowAll);
 
-        if ($idpWhitelist !== null) {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
-                ->andReturn($idpWhitelist);
-        } else {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
-                ->andReturn([]);
-        }
+        $entity
+            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+            ->andReturn($idpWhitelist);
 
         if ($environment !== null) {
             $entity

@@ -122,14 +122,12 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
+
         $metadata = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
         $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
         $this->assertArrayNotHasKey('type', $metadata);
-
-        $this->assertEquals(true, $metadata['allowedall']);
-        $this->assertEquals([], $metadata['allowedEntities']);
 
         $this->assertEquals('http://entityid', $metadata['entityid']);
         $this->assertEquals('http://metadata', $metadata['metadataurl']);
@@ -253,8 +251,6 @@ class JsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.certData' => 'certdata',
                     'state' => 'testaccepted',
                     'revisionnote' => 'revisionnote',
-                    'allowedEntities' => [],
-                    'allowedall' => true,
                     'metaDataFields.coin:institution_id' => 'service-institution-id',
                     'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
                     'metaDataFields.coin:exclude_from_push' => '0'
@@ -274,7 +270,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $entity = $this->createManageEntity();
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -292,7 +288,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $entity = $this->createManageEntity(true);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -310,7 +306,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $entity = $this->createManageEntity(false);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -329,7 +325,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $idpWhitelist = ['entity-id'];
         $entity = $this->createManageEntity(false, $idpWhitelist);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -391,7 +387,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $idpWhitelist = ['entity-id', 'entity-id2'];
         $entity = $this->createManageEntity(false, $idpWhitelist);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -407,7 +403,7 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $entity = $this->createManageEntity(null, null, null, true)->shouldIgnoreMissing();
+        $entity = $this->createManageEntity(true, [], null, true)->shouldIgnoreMissing();
 
         $entity
             ->shouldReceive('isExcludedFromPush')
@@ -464,8 +460,8 @@ class JsonGeneratorTest extends MockeryTestCase
     }
 
     private function createManageEntity(
-        ?bool $idpAllowAll = null,
-        ?array $idpWhitelist = null,
+        ?bool $idpAllowAll = true,
+        ?array $idpWhitelist = [],
         ?string $environment = null,
         bool $noCert = false
     ): ManageEntity {
@@ -481,25 +477,13 @@ class JsonGeneratorTest extends MockeryTestCase
         $entity->setComments('revisionnote');
         $entity = m::mock($entity);
 
-        if ($idpAllowAll !== null) {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
-                ->andReturn($idpAllowAll);
-        } else {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
-                ->andReturn(true);
-        }
+        $entity
+            ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
+            ->andReturn($idpAllowAll);
 
-        if ($idpWhitelist !== null) {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
-                ->andReturn($idpWhitelist);
-        } else {
-            $entity
-                ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
-                ->andReturn([]);
-        }
+        $entity
+            ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
+            ->andReturn($idpWhitelist);
 
         if ($environment !== null) {
             $entity
