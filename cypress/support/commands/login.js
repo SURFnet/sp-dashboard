@@ -6,7 +6,7 @@ Cypress.Commands.add('fillPassword', (pass = 'Weatherwax') => {
     cy.get('#password').type(pass);
 });
 
-Cypress.Commands.add('addMemberRole', (isMemberOf = 'eddy-wally') => {
+Cypress.Commands.add('addMemberRole', (isMemberOf = 'urn:collab:org:surf.nl') => {
     cy.get('#add-attribute').select('urn:mace:dir:attribute-def:isMemberOf');
     cy.get('input[name="urn:mace:dir:attribute-def:isMemberOf"]').type(isMemberOf);
 });
@@ -34,7 +34,7 @@ Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching', submit = t
     }
 });
 
-Cypress.Commands.add('loginWithMemberRole', (url = '', username = 'John', pass = 'Doe', isMemberOf = 'eddy-wally') => {
+Cypress.Commands.add('loginWithMemberRole', (url = '', username = 'John', pass = 'Doe', isMemberOf = 'urn:collab:org:surf.nl') => {
     cy.login(username, pass, false);
     cy.addMemberRole(isMemberOf);
     cy.submitLoginForms().then(() => {
