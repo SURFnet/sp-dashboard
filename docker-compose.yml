@@ -25,6 +25,7 @@ services:
           - manage.vm.openconext.org
           - teams.vm.openconext.org
           - spdashboard.vm.openconext.org
+          - mujina-idp.vm.openconext.org
     volumes:
       - spdashboard_mysql:/var/lib/mysql
       - spdashboard_mongo:/var/lib/mongo
