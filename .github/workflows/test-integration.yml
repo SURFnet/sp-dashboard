@@ -33,6 +33,12 @@ jobs:
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/bin/yarn install
       env:
         SYMFONY_ENV: dev
+    
+    - name: Run yarn
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/bin/yarn run encore production
+      env:
+        SYMFONY_ENV: dev
 
     - name: Get the database up and running
       run: |
@@ -47,6 +53,10 @@ jobs:
     - name: Make the log dir writable
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm chmod 777 /var/www/html/var/logs
+
+    - name: Wait until the spdashboard is accessable 
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T openconext sh /usr/local/sbin/spdup.sh
 
     - name: Run cypress tests
       run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run

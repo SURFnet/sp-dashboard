@@ -4,6 +4,7 @@ COPY ./conf/saml20_sp.json /tmp/saml20_sp.json
 COPY ./conf/engineblock.crt /etc/openconext/engineblock.crt
 COPY ./conf/engineblock.pem /etc/openconext/engineblock.pem
 COPY ./conf/start.sh /usr/local/sbin/start.sh
+COPY ./conf/spdup.sh /usr/local/sbin/spdup.sh
 CMD ["/usr/local/sbin/start.sh"]
 
 FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:latest AS spdphpfpm
