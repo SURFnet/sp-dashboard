@@ -403,10 +403,10 @@ class OidcngEntityType extends AbstractType
                         'organizationUnitAttribute',
                         AttributeType::class,
                         [
-                            'label' => 'entity.edit.form.attributes.saml20.organizationUnitAttribute',
+                            'label' => 'entity.edit.form.attributes.oidc.organizationUnitAttribute',
                             'by_reference' => false ,
                             'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.organizationUnitAttribute'],
+                            'attr' => ['data-help' => 'entity.edit.information.oidc.organizationUnitAttribute'],
                         ]
                     )
                     ->add(
