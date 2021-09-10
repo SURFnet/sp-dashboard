@@ -13,6 +13,7 @@
     "cypress": "^5.6.0",
     "cypress-axe": "^0.10.0",
     "cypress-html-validate": "^1.4.1",
+    "cypress-terminal-report": "^3.3.2",
     "extract-loader": "^3.0.0",
     "file-loader": "^2.0.0",
     "html-validate": "^5.0",
@@ -60,9 +61,9 @@
   },
   "scripts": {
     "build": "encore production",
-    "cy:open": "cypress open",
-    "cypress:open": "npx cypress open",
-    "cy:run": "cypress run --browser firefox --headless",
+    "cy:open": "cypress open --config chromeWebSecurity=false",
+    "cypress:open": "npx cypress open --config chromeWebSecurity=false",
+    "cy:run": "cypress run --browser chrome --headless --config chromeWebSecurity=false",
     "start": "webpack-dev-server",
     "tslint": "./node_modules/tslint/bin/tslint --project tsconfig.json",
     "watch": "encore dev --watch"
