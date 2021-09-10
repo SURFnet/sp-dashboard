@@ -1,5 +1,6 @@
 Cypress.Commands.add('loginToManage', (url = 'https://manage.vm.openconext.org') => {
     cy.visit(url);
+    cy.wait(300);
     cy.checkForManage();
 });
 
@@ -9,14 +10,20 @@ Cypress.Commands.add('loginToManageAndSelectTiffanyAching', (url = 'https://mana
     cy.get('.matched').contains('Tiffany Aching').click();
 });
 
-// ALERT: this can become an infinite loop.  Only use this function after trying to log in to manage.
-Cypress.Commands.add('checkForManage', () => {
+Cypress.Commands.add('checkForManage', (tries = 0) => {
     cy.get('body').then((body) => {
+        const isLoginPage = body.find('.login-form').length;
         const isManagePage = body.find('.search-input').length;
-        if (!isManagePage) {
+        if (isLoginPage) {
+            cy.fillUsername();
+            cy.fillPassword();
+            cy.get('.login-form').submit();
+        }
+
+        if (!isManagePage && tries < 20) {
             cy.checkForConsent();
-            cy.wait(100);
-            cy.checkForManage();
+            cy.wait(300);
+            cy.checkForManage(++tries);
         }
     });
 });
@@ -37,11 +44,15 @@ Cypress.Commands.add('addSurfCrmId', (note = 'add surf crm id because it\'s not 
     cy.get('#urn:mace:surf.nl:attribute-def:surf-crm-id').click();
     cy.focused().type(motivation);
     cy.addRevisionNote(note);
-    cy.clickSubmit();
+    cy.get('.actions .buttons .button.blue').then((button) => {
+        button.trigger('click');
+    });
 });
 
 Cypress.Commands.add('addRevisionNote', (note = 'a note') => {
-    cy.get('input[name="revisionnote"]').type(note);
+    cy.get('input[name="revisionnote"]').then((input) => {
+        input.val(note);
+    });
 });
 
 Cypress.Commands.add('checkRevisionNote', (note = 'ya always know just what ta say, don\'tcha?') => {

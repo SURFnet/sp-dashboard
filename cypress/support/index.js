@@ -6,6 +6,7 @@
 import './commands';
 import './commands/atttributes';
 import './commands/createEntity';
+import './commands/editEntity';
 import './commands/entityActions';
 import './commands/login';
 import './commands/manage';

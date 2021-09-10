@@ -23,7 +23,9 @@ Cypress.Commands.add('viewEntity', (environment = 'test', id = 'https://tiffany.
 
 Cypress.Commands.add('deleteEntity', (environment = 'test', id = 'https://tiffany.aching.do/id') => {
     cy.doEntityAction('Delete', environment, id);
-    cy.get('#dashboard_bundle_delete_entity_type_delete').click();
+    cy.get('#dashboard_bundle_delete_entity_type_delete').then((button) => {
+        button.trigger('click');
+    });
 });
 
 Cypress.Commands.add('editWhitelist', (id = 'https://tiffany.aching.do/id') => {

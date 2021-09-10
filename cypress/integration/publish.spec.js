@@ -1,8 +1,10 @@
 import {attributes, attributesTitles} from '../fixtures/variables';
 
-context('Consent verify a11y', () => {
+context('Publish functionality', () => {
     beforeEach(() => {
-        cy.loginToService();
+        cy.loginWithMemberRole('', 'John', 'Doe', 'eddy-wally');
+        cy.selectService(1);
+        cy.contains('New production entity').first().click();
     });
 
     // Elke keer als een productie entity wordt gepubliceerd, dient de coin:exclude_from_push aan te staan, uitgezonderd bij een secret reset voor een entity waar deze al uit staat.

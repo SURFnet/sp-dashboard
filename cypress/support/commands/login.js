@@ -16,9 +16,23 @@ Cypress.Commands.add('submitLoginForms', () => {
     cy.checkForConsent();
 });
 
+Cypress.Commands.add('checkForLoginComplete', (url) => {
+    cy.get('html').then(($html) => {
+        const li = $html.find('.navigation .first');
+
+        if (!li) {
+            cy.wait(400);
+            cy.checkForConsent();
+            cy.checkForLoginComplete(url);
+        } else {
+            cy.contains('Logout');
+        }
+    });
+});
+
 Cypress.Commands.add('checkForConsent', () => {
-    cy.get('body').then((body) => {
-        const isConsentPage = body.find('#accept').length;
+    cy.get('body').then(($body) => {
+        const isConsentPage = $body.find('.consent').length;
         if (isConsentPage) {
             cy.get('#accept').submit();
         }
@@ -31,6 +45,7 @@ Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching', submit = t
     cy.fillPassword(pass);
     if (submit) {
         cy.submitLoginForms();
+        cy.checkForLoginComplete(url);
     }
 });
 
@@ -38,23 +53,6 @@ Cypress.Commands.add('loginWithMemberRole', (url = '', username = 'John', pass =
     cy.login(username, pass, false);
     cy.addMemberRole(isMemberOf);
     cy.submitLoginForms().then(() => {
-        cy.removeSFToolbar();
-    });
-});
-
-Cypress.Commands.add('loginToService', (serviceID = 1) => {
-    cy.loginWithMemberRole().then(() => {
-        cy.wait(300).then(() => {
-            cy.selectService(serviceID);
-        });
-    });
-});
-
-Cypress.Commands.add('loginToServiceWithModal', (serviceID = 1) => {
-    cy.loginWithMemberRole().then(() => {
-        cy.wait(300).then(() => {
-            cy.selectService(serviceID);
-            cy.contains('New production entity').first().click();
-        });
+        cy.checkForLoginComplete(url);
     });
 });

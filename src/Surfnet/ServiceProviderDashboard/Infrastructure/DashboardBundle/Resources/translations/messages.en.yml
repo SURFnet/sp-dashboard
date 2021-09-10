@@ -496,6 +496,7 @@ service.overview.entitylist.name: Name
 service.overview.entitylist.entityId: Entity ID
 service.overview.entitylist.protocol: Protocol
 service.overview.entitylist.state: State
+service.overview.entitylist.actions: Actions
 service.overview.entitylist.empty: No entities found.
 service.overview.legend.success: Done
 service.overview.legend.in-progress: In progress
