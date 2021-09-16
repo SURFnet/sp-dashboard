@@ -83,6 +83,8 @@ front controller is used automatically, so you don't have to include `/app_dev.p
 
 `ant test` will run the full suite of tests and static analysis.
 
+Cypress tests only run locally (SAML & the CI aren't cooperating) for now.  Use `npm run cy:open` to run them.  Please ensure the accessibility tests succeed when making changes in the frontend.
+
 ### Xdebug
 Xdebug is configured when provisioning your development Vagrant box. The Vagrantfile sets the `develop_spd` 
 environment variable in Ansible. This will prevent Xdebug from being enabled in test and production releases.
