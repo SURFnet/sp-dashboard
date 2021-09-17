@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use RuntimeException;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use function file_get_contents;
 use function json_decode;
 use function sprintf;
@@ -39,8 +39,14 @@ class ClientResult implements ClientResultInterface
 
     private $teamName;
 
-    public function __construct(string $protocol, string $id, string $entityId, ?string $metadataUrl, string $name, ?string $teamName)
-    {
+    public function __construct(
+        string $protocol,
+        string $id,
+        string $entityId,
+        ?string $metadataUrl,
+        string $name,
+        ?string $teamName
+    ) {
         $this->id = $id;
         $this->protocol = $protocol;
         $this->entityId = $entityId;

@@ -23,7 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 

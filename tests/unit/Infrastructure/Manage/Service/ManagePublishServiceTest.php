@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Manage\Service;
+namespace Infrastructure\Manage\Service;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
 
 class ManagePublishServiceTest extends MockeryTestCase
@@ -31,17 +31,13 @@ class ManagePublishServiceTest extends MockeryTestCase
     /**
      * @var Mock&PublishEntityClient
      */
-    private $testClient;
-    /**
-     * @var Mock&PublishEntityClient
-     */
     private $productionClient;
 
     protected function setUp(): void
     {
-        $this->testClient = m::mock(PublishEntityClient::class);
+        $testClient = m::mock(PublishEntityClient::class);
         $this->productionClient = m::mock(PublishEntityClient::class);
-        $this->publishService = new ManagePublishService($this->testClient, $this->productionClient);
+        $this->publishService = new ManagePublishService($testClient, $this->productionClient);
     }
 
     public function test_calling_push_to_production()
@@ -57,7 +53,9 @@ class ManagePublishServiceTest extends MockeryTestCase
     public function test_unknown_environment()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Please set the publication mode to one of these environments (test, production)');
+        $this->expectExceptionMessage(
+            'Please set the publication mode to one of these environments (test, production)'
+        );
         $this->publishService->pushMetadata('ahkh-morpork');
     }
 }

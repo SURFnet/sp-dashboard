@@ -23,12 +23,12 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedT
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
 
 class DeletePublishedTestEntityCommandHandler implements CommandHandler
 {
     /**
-     * @var DeleteEntityRepository
+     * @var DeleteManageEntityRepository
      */
     private $deleteEntityRepository;
 
@@ -38,8 +38,8 @@ class DeletePublishedTestEntityCommandHandler implements CommandHandler
     private $logger;
 
     public function __construct(
-        DeleteEntityRepository $deleteEntityRepository,
-        LoggerInterface $logger
+        DeleteManageEntityRepository $deleteEntityRepository,
+        LoggerInterface              $logger
     ) {
         $this->deleteEntityRepository = $deleteEntityRepository;
         $this->logger = $logger;
@@ -67,7 +67,7 @@ class DeletePublishedTestEntityCommandHandler implements CommandHandler
             );
         }
 
-        if ($response !== DeleteEntityRepository::RESULT_SUCCESS) {
+        if ($response !== DeleteManageEntityRepository::RESULT_SUCCESS) {
             throw new EntityNotDeletedException('Deleting the entity yielded an non success response');
         }
     }

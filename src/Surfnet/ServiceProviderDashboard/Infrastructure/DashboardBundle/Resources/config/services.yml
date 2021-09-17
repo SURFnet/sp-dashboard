@@ -306,14 +306,14 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
             - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
             - '@surfnet.manage.configuration.test'
             - '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
 
     Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory:
         class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory
@@ -350,25 +350,30 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
             - '@surfnet.manage.client.publish_client.prod_environment'
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient:
+        arguments:
+            - '@surfnet.manage.http.guzzle.test_environment'
+            - '@logger'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
             - '@logger'
 
     surfnet.manage.client.delete_client.test_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
         arguments:
-        - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+        - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
         - '@logger'
 
     surfnet.manage.client.identity_provider_client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
             - '@surfnet.manage.configuration.test'
 
     surfnet.manage.client.delete_client.prod_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
         arguments:
         - '@surfnet.manage.http.http_client.prod_environment'
         - '@logger'
@@ -383,7 +388,7 @@ services:
             - "@surfnet.manage.configuration.test"
 
     surfnet.manage.http.http_client.prod_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient
         arguments:
            - '@surfnet.manage.http.guzzle.prod_environment'
            - '@logger'

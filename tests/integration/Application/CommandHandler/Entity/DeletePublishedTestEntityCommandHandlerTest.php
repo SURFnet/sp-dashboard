@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
+namespace Application\CommandHandler\Entity;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedT
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedTestEntityCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
 
 class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
 {
@@ -37,7 +37,7 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
     private $commandHandler;
 
     /**
-     * @var DeleteEntityRepository|Mock
+     * @var DeleteManageEntityRepository|Mock
      */
     private $repository;
 
@@ -48,7 +48,7 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = m::mock(DeleteEntityRepository::class);
+        $this->repository = m::mock(DeleteManageEntityRepository::class);
 
         $this->logger = m::mock(LoggerInterface::class);
 
@@ -65,7 +65,7 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
         $this->repository
             ->shouldReceive('delete')
             ->with('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_SAML)
-            ->andReturn(DeleteEntityRepository::RESULT_SUCCESS);
+            ->andReturn(DeleteManageEntityRepository::RESULT_SUCCESS);
 
         $this->logger
             ->shouldReceive('info');

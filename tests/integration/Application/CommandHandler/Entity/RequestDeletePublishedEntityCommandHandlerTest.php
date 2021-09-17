@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
+namespace Application\CommandHandler\Entity;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use JiraRestApi\Issue\Issue;
 use JiraRestApi\JiraException;
 use Mockery as m;
@@ -32,7 +33,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
@@ -43,7 +43,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
     private $ticketService;
 
     /**
-     * @var ManageQueryClient|Mock
+     * @var QueryClient|Mock
      */
     private $queryClient;
 
@@ -79,7 +79,8 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
         $this->jiraServiceFactory = m::mock(JiraServiceFactory::class);
         $this->issueRepository = m::mock(IssueRepository::class);
 
-        // As part of the integration test, the TicketService and IssueFieldFactory is not mocked but included in the test.
+        // As part of the integration test,
+        // the TicketService and IssueFieldFactory is not mocked but included in the test.
         $this->ticketService = new TicketService($this->issueRepository);
 
         $this->flashBag = m::mock(FlashBagInterface::class);

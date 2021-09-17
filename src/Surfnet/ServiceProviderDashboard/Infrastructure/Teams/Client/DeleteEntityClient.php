@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * Copyright 2021 SURFnet B.V.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client;
+
+use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteTeamsEntityRepository
+    as DeleteTeamsEntityRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\UnableToDeleteMembershipException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
+
+class DeleteEntityClient implements DeleteTeamsEntityRepositoryInterface
+{
+    /**
+     * @var HttpClient
+     */
+    private $client;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(HttpClient $client, LoggerInterface $logger)
+    {
+        $this->client = $client;
+        $this->logger = $logger;
+    }
+
+
+    /**
+     * Delete a team by the internal id
+     *
+     * When deleting the entity succeeded the success status is returned: 'success' in all other situations
+     * an exception is thrown of type UnableToDeleteEntityException.
+     *
+     * @throws UnableToDeleteEntityException
+     * @throws RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function deleteTeam(int $teamId): string
+    {
+        try {
+            $result = $this->client->delete(
+                sprintf('/api/spdashboard/teams/%d/', $teamId)
+            );
+
+            if ($result !== true) {
+                throw new UnableToDeleteEntityException(
+                    sprintf('Not allowed to delete entity with internal teams ID: "%d"', $teamId)
+                );
+            }
+
+            return self::RESULT_SUCCESS;
+        } catch (HttpException $e) {
+            throw new UnableToDeleteEntityException(
+                sprintf('Unable to delete entity with internal teams ID: "%s"', $teamId),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * Delete a membership by the internal id
+     *
+     * When deleting the membership succeeded the success status is returned: 'success' in all other situations
+     * an exception is thrown of type UnableToDeleteEntityException.
+     *
+     * @throws UnableToDeleteEntityException
+     * @throws RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function deleteMembership(int $memberId): string
+    {
+        try {
+            $result = $this->client->delete(
+                sprintf('/api/spdashboard/memberships/%d/', $memberId)
+            );
+
+            if ($result !== true) {
+                throw new UnableToDeleteMembershipException(
+                    sprintf('Not allowed to delete member with internal teams ID: "%d"', $memberId)
+                );
+            }
+
+            return self::RESULT_SUCCESS;
+        } catch (HttpException $e) {
+            throw new UnableToDeleteMembershipException(
+                sprintf('Unable to delete member with internal teams ID: "%s"', $memberId),
+                0,
+                $e
+            );
+        }
+    }
+}

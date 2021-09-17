@@ -18,14 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\UnexpectedResultException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\UnexpectedResultException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
 use function in_array;
 use function sprintf;
 
@@ -47,20 +47,20 @@ use function sprintf;
  *      }
  *  }]
  */
-class QueryClient implements QueryEntityRepository
+class QueryClient implements QueryManageRepository
 {
 
     private $protocolSupport = [Protocol::SAML20_SP, Protocol::OIDC10_RP, Protocol::OAUTH20_RS];
 
     /**
-     * @var HttpClient
+     * @var HttpClientInterface
      */
     private $client;
 
     /**
-     * @param HttpClient $client
+     * @param HttpClientInterface $client
      */
-    public function __construct(HttpClient $client)
+    public function __construct(HttpClientInterface $client)
     {
         $this->client = $client;
     }
@@ -90,6 +90,8 @@ class QueryClient implements QueryEntityRepository
                 $e
             );
         }
+
+        return null;
     }
 
     /**
@@ -309,7 +311,9 @@ class QueryClient implements QueryEntityRepository
             $resourceServers = [];
             $rs = isset($data['data']['allowedResourceServers']) ? $data['data']['allowedResourceServers'] : [];
             foreach ($rs as $resourceServer) {
-                $resourceServers[] = $this->findResourceServerByEntityId($resourceServer['name'], $data['data']['state']);
+                $resourceServers[] = $this->findResourceServerByEntityId(
+                    $resourceServer['name'], $data['data']['state']
+                );
             }
             $data['resourceServers'] = $resourceServers;
         }

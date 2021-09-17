@@ -20,10 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException as QueryServiceProviderExceptionAlias;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException as QueryServiceProviderExceptionAlias;
 
 class OidcngResourceServerOptionsFactory
 {
@@ -36,10 +35,10 @@ class OidcngResourceServerOptionsFactory
     private $productionPublicationState;
 
     public function __construct(
-        QueryEntityRepository $testEntityRepository,
-        QueryEntityRepository $productionRepository,
-        string $testPublicationState,
-        string $productionPublicationState
+        QueryManageRepository $testEntityRepository,
+        QueryManageRepository $productionRepository,
+        string                $testPublicationState,
+        string                $productionPublicationState
     ) {
         $this->testEntityRepository = $testEntityRepository;
         $this->productionRepository = $productionRepository;
@@ -57,7 +56,10 @@ class OidcngResourceServerOptionsFactory
         switch ($environment) {
             case Constants::ENVIRONMENT_TEST:
                 return $this->createChoicesFrom(
-                    $this->testEntityRepository->findOidcngResourceServersByTeamName($teamName, $this->testPublicationState)
+                    $this->testEntityRepository->findOidcngResourceServersByTeamName(
+                        $teamName,
+                        $this->testPublicationState
+                    )
                 );
 
             case Constants::ENVIRONMENT_PRODUCTION:

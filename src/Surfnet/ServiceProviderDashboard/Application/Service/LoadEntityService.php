@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -31,18 +31,18 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
 class LoadEntityService
 {
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     private $manageTestClient;
 
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     private $manageProductionClient;
 
     public function __construct(
-        QueryEntityRepository $manageTestClient,
-        QueryEntityRepository $manageProductionClient
+        QueryManageRepository $manageTestClient,
+        QueryManageRepository $manageProductionClient
     ) {
         $this->manageTestClient = $manageTestClient;
         $this->manageProductionClient = $manageProductionClient;

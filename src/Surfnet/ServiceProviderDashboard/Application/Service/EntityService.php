@@ -31,7 +31,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
 use function sprintf;
 
@@ -121,7 +121,11 @@ class EntityService implements EntityServiceInterface
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
                 $this->updateStatus($entity);
-                $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
+                $this->updateOrganizationNames(
+                    $entity,
+                    $service->getOrganizationNameEn(),
+                    $service->getOrganizationNameNl()
+                );
                 $issue = $this->findIssueBy($entity);
                 $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
                     $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
@@ -133,7 +137,11 @@ class EntityService implements EntityServiceInterface
                 $entity = $this->findAndverifyAccessAllowed($id, $manageTarget, $service);
                 $entity->setEnvironment($manageTarget);
                 $entity->setService($service);
-                $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
+                $this->updateOrganizationNames(
+                    $entity,
+                    $service->getOrganizationNameEn(),
+                    $service->getOrganizationNameNl()
+                );
                 return $entity;
             default:
                 throw new EntityNotFoundException(
@@ -162,9 +170,13 @@ class EntityService implements EntityServiceInterface
 
         // Allow actions on Resource Servers (viewing them outside of our team)
         if ($entity->getProtocol()->getProtocol() !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            $serviceFromEntity = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+            $serviceFromEntity = $this->serviceService->getServiceByTeamName(
+                $entity->getMetaData()->getCoin()->getServiceTeamId()
+            );
             if ($serviceFromEntity->getId() !== $service->getId()) {
-                throw new InvalidArgumentException('The service from the entity did not match the service passed to this method.');
+                throw new InvalidArgumentException(
+                    'The service from the entity did not match the service passed to this method.'
+                );
             }
         }
 

@@ -19,8 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service;
 
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException;
 
 class ManagePublishService
 {

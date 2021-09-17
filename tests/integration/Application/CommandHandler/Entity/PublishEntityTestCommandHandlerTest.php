@@ -16,8 +16,10 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\CommandHandler\Entity;
+namespace Application\CommandHandler\Entity;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
@@ -26,9 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTes
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityTestCommandHandlerTest extends MockeryTestCase

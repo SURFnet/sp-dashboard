@@ -25,10 +25,10 @@ use Doctrine\ORM\EntityManager;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -46,11 +46,11 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected $client;
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     protected $prodQueryClient;
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     protected $testQueryClient;
     /**
@@ -70,11 +70,11 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected $testPublicationClient;
     /**
-     * @var DeleteEntityRepository
+     * @var DeleteManageEntityRepository
      */
     protected $prodDeleteClient;
     /**
-     * @var DeleteEntityRepository
+     * @var DeleteManageEntityRepository
      */
     protected $testDeleteClient;
 
@@ -91,23 +91,43 @@ class WebTestCase extends SymfonyWebTestCase
         );
 
         $this->client->disableReboot();
-        $this->testQueryClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
-        $this->prodQueryClient = $this->client->getContainer()->get('surfnet.manage.client.query_client.prod_environment');
+        $this->testQueryClient = $this->client
+            ->getContainer()
+            ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
+        $this->prodQueryClient = $this->client
+            ->getContainer()
+            ->get('surfnet.manage.client.query_client.prod_environment');
         $this->prodIdPClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient');
-        $this->testIdPClient = $this->client->getContainer()->get('surfnet.manage.client.identity_provider_client.test_environment');
-        $this->prodPublicationClient = $this->client->getContainer()->get('surfnet.manage.client.publish_client.prod_environment');
+        $this->testIdPClient = $this->client
+            ->getContainer()
+            ->get('surfnet.manage.client.identity_provider_client.test_environment');
+        $this->prodPublicationClient = $this->client
+            ->getContainer()
+            ->get('surfnet.manage.client.publish_client.prod_environment');
         $this->testPublicationClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient');
-        $this->testDeleteClient = $this->client->getContainer()->get('surfnet.manage.client.delete_client.test_environment');
-        $this->prodDeleteClient = $this->client->getContainer()->get('surfnet.manage.client.delete_client.prod_environment');
+        $this->testDeleteClient = $this->client
+            ->getContainer()
+            ->get('surfnet.manage.client.delete_client.test_environment');
+        $this->prodDeleteClient = $this->client
+            ->getContainer()
+            ->get('surfnet.manage.client.delete_client.prod_environment');
     }
 
-    protected function registerManageEntity(string $env, string $protocol, string $id, string $name, string $entityId, ?string $metadataUrl = null, ?string $teamName = null)
-    {
+    protected function registerManageEntity(
+        string $env,
+        string $protocol,
+        string $id,
+        string $name,
+        string $entityId,
+        ?string $metadataUrl = null,
+        ?string $teamName = null
+    ) {
         switch ($protocol) {
             case "saml20_sp":
             case "oidc10_rp":
             case "oauth20_ccc":
-                $this->registerSp($env, $protocol, $id, $name, $entityId, $metadataUrl, $teamName);
+                $this->registerSp($env,
+                    $protocol, $id, $name, $entityId, $metadataUrl, $teamName);
                 break;
             case "saml20_idp":
                 $this->registerIdP($env, $protocol, $id, $name, $entityId);

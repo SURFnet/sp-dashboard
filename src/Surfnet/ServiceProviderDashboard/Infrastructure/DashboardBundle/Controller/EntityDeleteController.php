@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -86,13 +85,16 @@ class EntityDeleteController extends Controller
      * @param int $serviceId
      * @param string|null $manageId
      * @param string|null$environment
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
      * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      */
     public function deletePublishedAction(Request $request, $serviceId, $manageId, $environment)
     {
-        $this->denyAccessUnlessGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
+        $this->denyAccessUnlessGranted(
+            "MANAGE_ENTITY_ACCESS",
+            ['manageId' => $manageId, 'environment' => $environment]
+        );
 
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $nameEn = $entity->getMetaData()->getNameEn();
@@ -108,7 +110,8 @@ class EntityDeleteController extends Controller
                     $entity->getProtocol()->getProtocol()
                 );
                 if ($environment === 'test') {
-                    $command = $this->commandFactory->buildDeletePublishedTestEntityCommand($manageId, $entity->getProtocol()->getProtocol());
+                    $command = $this->commandFactory
+                        ->buildDeletePublishedTestEntityCommand($manageId, $entity->getProtocol()->getProtocol());
                 }
                 $this->commandBus->handle($command);
             }
@@ -146,13 +149,16 @@ class EntityDeleteController extends Controller
      * @param int $serviceId
      * @param string|null $manageId
      * @param string|null $environment
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
      * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      */
     public function deleteRequestAction(Request $request, $serviceId, $manageId, $environment)
     {
-        $this->denyAccessUnlessGranted("MANAGE_ENTITY_ACCESS", ['manageId' => $manageId, 'environment' => $environment]);
+        $this->denyAccessUnlessGranted(
+            "MANAGE_ENTITY_ACCESS",
+            ['manageId' => $manageId, 'environment' => $environment]
+        );
 
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $nameEn = $entity->getMetaData()->getNameEn();
