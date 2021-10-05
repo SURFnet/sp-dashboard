@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use Exception;
 use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -47,7 +48,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -153,8 +156,7 @@ class ServiceController extends Controller
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
      *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function createAction(Request $request)
     {
@@ -167,13 +169,16 @@ class ServiceController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
-            try {
-                $this->commandBus->handle($command);
-                return $this->redirectToRoute('service_overview');
-            } catch (InvalidArgumentException $e) {
-                $this->addFlash('error', $e->getMessage());
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
+
+                try {
+                    $this->commandBus->handle($command);
+                    return $this->redirectToRoute('service_overview');
+                } catch (Exception $e) {
+                    $this->addFlash('error', $e->getMessage());
+                }
             }
         }
 
@@ -190,7 +195,7 @@ class ServiceController extends Controller
      *
      * @param Request $request
      * @param int $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, $serviceId)
     {
@@ -252,7 +257,7 @@ class ServiceController extends Controller
      *
      * @param Request $request
      * @param $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function deleteAction(Request $request, $serviceId)
     {

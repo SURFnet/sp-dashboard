@@ -1,6 +1,7 @@
 'use strict';
 
 import './type_definitions.ts';
+import './components/add_service';
 import './components/form.ts';
 import './components/service_add_entity';
 import './components/service_switcher.js';

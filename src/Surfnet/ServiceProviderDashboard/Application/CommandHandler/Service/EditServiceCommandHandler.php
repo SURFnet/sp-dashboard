@@ -54,7 +54,6 @@ class EditServiceCommandHandler implements CommandHandler
 
         $service->setName($command->getName());
         $service->setGuid($command->getGuid());
-        $service->setTeamName($command->getTeamName());
         $service->setProductionEntitiesEnabled($command->isProductionEntitiesEnabled());
         $service->setPrivacyQuestionsEnabled($command->isPrivacyQuestionsEnabled());
         $service->setClientCredentialClientsEnabled($command->isClientCredentialClientsEnabled());
@@ -67,6 +66,9 @@ class EditServiceCommandHandler implements CommandHandler
         $service->setInstitutionId($command->getInstitutionId());
         $service->setOrganizationNameEn($command->getOrganizationNameEn());
         $service->setOrganizationNameNl($command->getOrganizationNameNl());
+
+        $service->setTeamName($command->getTeamName());
+        $service->setTeamManagerEmail($command->getTeamManagerEmail());
 
         $this->serviceRepository->isUnique($service);
 

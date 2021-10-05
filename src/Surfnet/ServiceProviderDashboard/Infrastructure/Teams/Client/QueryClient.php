@@ -18,9 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
 use function sprintf;
 
@@ -142,6 +144,8 @@ class QueryClient implements QueryTeamsRepository
 
     /**
      * @throws QueryServiceProviderException
+     * @throws GuzzleException
+     * @throws RuntimeException
      */
     public function findTeamByUrn(string $urn): ?array
     {
@@ -156,7 +160,5 @@ class QueryClient implements QueryTeamsRepository
                 $e
             );
         }
-
-        return null;
     }
 }

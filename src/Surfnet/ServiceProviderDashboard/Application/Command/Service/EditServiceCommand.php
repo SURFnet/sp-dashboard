@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,6 +41,7 @@ class EditServiceCommand implements Command
     /**
      * @var string
      * @Assert\NotBlank
+     * @SpDashboardAssert\UniqueTeamName
      */
     private $teamName;
 
@@ -48,6 +50,13 @@ class EditServiceCommand implements Command
      * @Assert\NotBlank
      */
     private $name;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     * @Assert\Email()
+     */
+    private $teamManagerEmail;
 
     /**
      * @var bool
@@ -377,5 +386,15 @@ class EditServiceCommand implements Command
     public function setClientCredentialClientsEnabled(bool $clientCredentialClientsEnabled): void
     {
         $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
+    }
+
+    public function getTeamManagerEmail(): ?string
+    {
+        return $this->teamManagerEmail;
+    }
+
+    public function setTeamManagerEmail(string $teamManagerEmail): void
+    {
+        $this->teamManagerEmail = $teamManagerEmail;
     }
 }

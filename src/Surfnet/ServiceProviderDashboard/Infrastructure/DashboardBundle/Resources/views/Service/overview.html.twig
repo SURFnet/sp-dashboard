@@ -59,6 +59,15 @@
                                     {{ 'service.overview.action.serviceDelete'|trans }}
                                 </a>
                             </li>
+                            <li class="service-status-title-action-item">
+                                <a
+                                    class="button admin title service-status-title-button"
+                                    href="{{ path('service_manage_team', {'serviceId': service.id}) }}"
+                                >
+                                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                                    {{ 'service.overview.action.serviceManageTeam'|trans }}
+                                </a>
+                            </li>
                         {% endif %}
                         {% if service.arePrivacyQuestionsEnabled %}
                             <li class="service-status-title-action-item">

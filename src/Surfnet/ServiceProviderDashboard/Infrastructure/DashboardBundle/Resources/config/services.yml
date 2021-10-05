@@ -241,6 +241,13 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: unique_entity_id }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueTeamNameValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
+            - '%team.prefix%'
+        tags:
+            - { name: validator.constraint_validator, alias: unique_team_name }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
         tags:
             - { name: validator.constraint_validator, alias: unique_redirect_urls }
@@ -359,6 +366,18 @@ services:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
             - '@logger'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
 
     surfnet.manage.client.delete_client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
