@@ -1,0 +1,18 @@
+<table class="teams__member-table production-entities">
+    {% include "@Dashboard/Teams/Table/caption.html.twig" %}
+    {% include "@Dashboard/Teams/Table/header.html.twig" %}
+    {% for user in users %}
+        {% if user.status == 'Invitation' %}
+            {% set isInvite = true %}
+        {% else %}
+            {% set isInvite = false %}
+        {% endif %}
+        <tr>
+            {% include "@Dashboard/Teams/Table/name.html.twig" %}
+            {% include "@Dashboard/Teams/Table/email.html.twig" %}
+            {% include "@Dashboard/Teams/Table/status.html.twig" %}
+            {% include "@Dashboard/Teams/Table/roleCell.html.twig" %}
+            {% include "@Dashboard/Teams/Table/actions.html.twig" %}
+        </tr>
+    {% endfor %}
+</table>

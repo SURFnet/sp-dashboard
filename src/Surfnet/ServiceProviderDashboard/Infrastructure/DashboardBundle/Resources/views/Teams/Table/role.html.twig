@@ -1,0 +1,36 @@
+{# in case of being called for the member overview table (not needed for the invite modal so we set it to '' in that case #}
+    {% if user is defined %}
+        {% set userRole = user.role|lower %}
+    {% else %}
+        {% set userRole = '' %}
+    {% endif %}
+{% set whitespaceBefore %}
+    &nbsp;
+{% endset %}
+{% set iconAfter %}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#xf0d7;
+{% endset %}
+
+<label {% if labelClass is defined %}class={{ labelClass }}{% endif %} for="role-select">{% if labelText is defined %}{{ labelText }}{% endif %}</label>
+<select id="role-select" class="teams__select">
+    <option class="fontawesome" data-icon="fa-star" value="admin" {% if userRole == 'admin' %}selected{% endif %}>
+        &#xf005;{{ whitespaceBefore }}
+        {{ 'teams.management.table.role.admin'|trans }}
+        &nbsp;&nbsp;&nbsp;{{ iconAfter }}
+    </option>
+    <option class="fontawesome" data-icon="fa-universal-access" value="owner" {% if userRole == 'owner' %}selected{% endif %}>
+        &#xf29a;{{ whitespaceBefore }}
+        {{ 'teams.management.table.role.owner'|trans }}
+        &nbsp;&nbsp;&nbsp;{{ iconAfter }}
+    </option>
+    <option class="fontawesome" data-icon="fa-black-tie" value="manager" {% if userRole == 'manager' %}selected{% endif %}>
+        &#xf27e;{{ whitespaceBefore }}
+        {{ 'teams.management.table.role.manager'|trans }}
+        {{ iconAfter }}
+    </option>
+    <option class="fontawesome" data-icon="fa-user" value="member" {% if userRole == 'member' %}selected{% endif %}>
+        &#xf007;{{ whitespaceBefore }}
+        {{ 'teams.management.table.role.member'|trans }}
+        &nbsp;{{ iconAfter }}
+    </option>
+</select>

@@ -1,0 +1,49 @@
+.teams__buttonWrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.teams__buttonIcon {
+  margin-top: 5px;
+}
+
+.teams__mail {
+  text-decoration: underline;
+}
+
+.teams__userStatus {
+  > .fa-clock-o {
+    color: $buttonGreen;
+  }
+}
+
+.teams__select {
+  all: initial;
+  background-color: $lightest-grey;
+  border: 1px solid $black;
+  border-radius: 6px;
+  font-family: 'FontAwesome', 'sans-serif';
+  padding: calculateRem(6px) .5rem calculateRem(6px) 1rem;
+  position: relative;
+  text-align: right;
+}
+
+.teams__saveButton {
+  display: inline-block;
+  margin-top: 2rem;
+}
+
+.teams__member-table {
+  td,
+  th {
+    font-size: .875rem;
+  }
+}
+
+.modal.teams__inviteMemberModal {
+  max-width: 75ch;
+}
+
+.teams__modalSelectLabel {
+  margin-bottom: .35rem;
+}

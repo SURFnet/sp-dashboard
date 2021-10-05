@@ -1,0 +1,23 @@
+<div class="blocker">
+    <aside class="modal teams__inviteMemberModal" role="dialog" id="invite-member-popup" data-for="invite-member">
+        <h3 class="modal__header">{{ 'team.management.invite.modal.title'|trans }}</h3>
+        <div class="modal-container">
+            <form class="card">
+                <div class="form__row">
+                    <label for="email">{{ "teams.management.invite.modal.email.label"|trans }}</label>
+                    <input type="text" name="email" id="email" />
+                </div>
+                <div class="form__row">
+                    {% include "@Dashboard/Teams/Table/role.html.twig" with {
+                        labelClass: "teams__modalSelectLabel",
+                        labelText: "teams.management.invite.modal.role.label"|trans
+                    }%}
+                </div>
+                <div class="button-row">
+                    <label class="button" rel="modal:close" for="invite-member">{{ 'team.management.invite.modal.cancel'|trans }}</label>
+                    <button class="button blue" type="submit">{{ 'team.management.invite.modal.submit'|trans }}</button>
+                </div>
+            </form>
+        </div>
+    </aside>
+</div>

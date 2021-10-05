@@ -73,6 +73,19 @@
     }
   }
 
+  &.darkGreen {
+    background-color: $buttonGreen;
+    color: white;
+    border: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    i {
+      color: white;
+      margin:0;
+      font-size: larger;
+    }
+  }
+
   &.notice {
     background-color: $buttonGreen;
     border: none;

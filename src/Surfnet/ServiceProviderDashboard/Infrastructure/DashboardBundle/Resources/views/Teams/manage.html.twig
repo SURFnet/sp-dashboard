@@ -1,0 +1,15 @@
+{% extends '::base.html.twig' %}
+
+{% block page_heading %}
+    {{ 'teams.management.title'|trans }}
+{% endblock %}
+
+{% block body %}
+
+{% include "@Dashboard/Teams/inviteButton.html.twig" %}
+{% include "@Dashboard/Teams/teamTable.html.twig" %}
+{% include "@Dashboard/Teams/inviteModal.html.twig" %}
+{% include "@Dashboard/Teams/saveButton.html.twig" %}
+
+{% endblock %}
+

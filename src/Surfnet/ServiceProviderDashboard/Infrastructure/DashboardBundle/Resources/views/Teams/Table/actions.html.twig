@@ -1,0 +1,22 @@
+<td class="actions">
+    <div tabindex="0">
+        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+        <i class="fa fa-caret-down" aria-hidden="true"></i>
+        <ul>
+            {% if isInvite %}
+                <li class="teams__actionItem">
+                    <a href="{{ path('team_resend_invite', {'serviceId': serviceId, 'invitationId': user.invitationId }) }}">
+                        <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                        {{ 'teams.management.table.actions.resend.invite'|trans }}
+                    </a>
+                </li>
+            {% endif %}
+            <li class="teams__actionItem">
+                <a href="{{ path('team_delete_member', {'serviceId': serviceId, 'memberId': user.id }) }}">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    {{ 'teams.management.table.actions.delete.membership'|trans }}
+                </a>
+            </li>
+        </ul>
+    </div>
+</td>

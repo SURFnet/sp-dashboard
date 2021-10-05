@@ -506,12 +506,16 @@ privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF 
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
 service.admin_overview.introduction.html: "Please use the service switcher to manage the entities of one of the services."
 service.create.title: Add new service
+service.create.description: "Members of this team have access to SP %Name% via the SP Dashboard (sp.surfconext.nl) and can add/manage their entities on the SURFconext platform."
+service.create.personalNote: "Team created by SP Dashboard"
+service.create.invitationMessage: "Please accept this invitation by logging in with your institutional account or eduID account (create one at eduID.nl)."
 service.edit.title: Edit service
 service.delete.title: "Delete service"
 service.delete.confirmation: "You are about to delete '%name%'. Are you sure?"
 service.delete.entity_list_text: "With this, you are also deleting the following entities:"
 service.form.general.title: General
 service.form.status.title: Service status
+service.form.teams.title: Teams
 service.form.label.organization_display_name_en: Organization display name English
 service.form.label.organization_name_nl: Organization name Dutch
 service.form.label.organization_name_en: Organization name English
@@ -543,6 +547,7 @@ service.overview.title: My services
 service.overview.action.privacyQuestions: Privacy questions
 service.overview.action.serviceEdit: Edit service
 service.overview.action.serviceDelete: Delete service
+service.overview.action.serviceManageTeam: Member management
 service.overview.graph.title: "%name% status summary"
 service.overview.privacy.notification.title: "Privacy questions status"
 service.overview.privacy.notification.message: "The privacy questions for this service provider have not been answered.  Please answer "
@@ -579,6 +584,29 @@ service.overview.progress.tooltip.privacy-questions.info.html: "Are the privacy 
 service.overview.progress.tooltip.production-connection.info.html: "Is a production connection active?"
 service.overview.progress.tooltip.production-connection.in-progress.html: "The deployment to the production environment is in progress"
 service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
+
+teams.management.title: User management
+team.management.invite: Invite
+team.management.invite.modal.title: Invite member
+team.management.invite.modal.cancel: Cancel
+team.management.invite.modal.submit: Invite members
+teams.management.invite.modal.label: Role within the team
+teams.management.invite.modal.email.label: Add members by email address
+teams.management.invite.modal.role.label: Role within the team
+teams.management.table.title: Member overview
+teams.management.table.name: NAME
+teams.management.table.email: EMAIL
+teams.management.table.status: STATUS
+teams.management.table.role: ROLE
+teams.management.table.role.member: Member
+teams.management.table.role.manager: Manager
+teams.management.table.role.owner: Owner
+teams.management.table.role.admin: Admin
+teams.management.table.actions: ACTIONS
+teams.management.table.actions.choose: Choose an action
+teams.management.table.actions.resend.invite: Resend invitation
+teams.management.table.actions.delete.invite: Delete invitation
+teams.management.table.actions.delete.membership: Delete membership
 
 mail.jira.publish_production_failed.subject: 'SP Dashboard: Jira issue creation failed'
 
