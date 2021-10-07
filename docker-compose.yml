@@ -12,6 +12,9 @@ services:
       engine-api.vm.openconext.org: 127.0.0.2
       engine.vm.openconext.org: 127.0.0.1
       manage.vm.openconext.org: 127.0.0.1
+      voot.vm.openconext.org: 127.0.0.1
+      connect.vm.openconext.org: 127.0.0.1
+      test.openconext.org: 127.0.0.1
     privileged: true
     networks:
       spdashboard:
