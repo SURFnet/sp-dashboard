@@ -10,4 +10,4 @@ services:
         public: false
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments: 
-          - '%env(DATABASE_URL)%'
+          - 'mysql://%database_user%:%database_password%@%database_host%/%database_name%?serverVersion=5.7'

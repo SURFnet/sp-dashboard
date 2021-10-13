@@ -38,8 +38,6 @@ services:
       - type: bind
         source: /dev/log
         target: /dev/log
-    environment:
-      - DATABASE_URL=mysql://spdrw:secret@db.vm.openconext.org:3306/spdashboard?serverVersion=5.7
     networks:
       spdashboard:
         aliases: 
