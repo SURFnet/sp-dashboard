@@ -8,3 +8,6 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments: 
+          - '%env(DATABASE_URL)%'
