@@ -325,12 +325,20 @@ services:
     Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory:
         class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory
 
-    # For details, see the DasboardExtension.
-    surfnet.manage.configuration.test:
-        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config
+    Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory
 
+    # For details, see the DashboardExtension.
+    surfnet.manage.configuration.test:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
+
+    # For details, see the DashboardExtension.
     surfnet.manage.configuration.production:
-        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
+
+    # For details, see the DashboardExtension.
+    surfnet.teams.configuration:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
 
     surfnet.manage.client.publish_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
@@ -400,11 +408,20 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory:
         public: false
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory:
+        public: false
+
     surfnet.manage.http.guzzle.test_environment:
         class: GuzzleHttp\Client
         factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\ManageClientFactory:createClient"
         arguments:
             - "@surfnet.manage.configuration.test"
+
+    surfnet.teams.http.guzzle:
+        class: GuzzleHttp\Client
+        factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\TeamsClientFactory:createClient"
+        arguments:
+            - "@surfnet.teams.configuration"
 
     surfnet.manage.http.http_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient
@@ -412,6 +429,13 @@ services:
            - '@surfnet.manage.http.guzzle.prod_environment'
            - '@logger'
            - 'production'
+
+    surfnet.teams.http.http_client:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient
+        arguments:
+           - '@surfnet.teams.http.guzzle'
+           - '@logger'
+           - ''
 
     surfnet.manage.http.guzzle.prod_environment:
         class: GuzzleHttp\Client

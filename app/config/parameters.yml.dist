@@ -54,6 +54,18 @@ parameters:
     manage_prod_password: secret
     manage_prod_publication_status: prodaccepted
 
+    ## Teams test instance
+    teams_test_host: 'https://teams.vm.openconext.org'
+    teams_test_username: spdashboard
+    teams_test_password: secret
+    teams_test_publication_status: testaccepted
+
+    ## Teams production instance
+    teams_prod_host: 'https://teams.vm.openconext.org'
+    teams_prod_username: sp-dashboard
+    teams_prod_password: secret
+    teams_prod_publication_status: prodaccepted
+
     # Mail default settings
     mail_from: support@surfconext.nl
     mail_receiver: support@surfconext.nl
