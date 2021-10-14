@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection;
 
-use Exception;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,7 +29,6 @@ class DashboardExtension extends Extension
 {
     /**
      * {@inheritdoc}
-     * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -55,7 +53,7 @@ class DashboardExtension extends Extension
             $this->parseManageConfiguration($environment, $manageConfig, $container);
         }
 
-        $this->parseTeamsConfiguration($config['teams'], $container);
+        $this->parseTeamsConfiguration('teams', $config['teams'], $container);
     }
 
     /**
@@ -82,7 +80,7 @@ class DashboardExtension extends Extension
     /**
      * Creates a config aggregate based on the configuration in config.yml for teams.
      */
-    public function parseTeamsConfiguration(array $config, ContainerBuilder $container)
+    public function parseTeamsConfiguration(string $apiName, array $config, ContainerBuilder $container)
     {
         $configuration = new Definition(Config::class);
         $configuration->setClass(Config::class);

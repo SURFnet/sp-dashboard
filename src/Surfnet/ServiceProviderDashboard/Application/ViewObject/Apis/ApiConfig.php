@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis;
 
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConnection;
-
 class ApiConfig
 {
     /**
@@ -37,24 +35,16 @@ class ApiConfig
      */
     private $publicationStatus;
 
-    /**
-     * @param string $environment
-     * @param ApiConnection $connection
-     * @param PublicationStatus $publicationStatus
-     */
     public function __construct(
-        ApiConnection     $connection,
-        PublicationStatus $publicationStatus
+        ApiConnection $connection,
+        PublicationStatus $publicationStatus = null,
+        string $environment = ''
     ) {
         $this->connection = $connection;
         $this->publicationStatus = $publicationStatus;
+        $this->environment = $environment;
     }
 
-    public function setEnvironment(string $environment): ApiConfig
-    {
-        $this->environment = $environment;
-        return $this;
-    }
 
     public function getEnvironment(): string
     {

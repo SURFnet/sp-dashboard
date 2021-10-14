@@ -20,12 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis;
 
 class ApiConfigFactory
 {
-    /**
-     * @param string $environment
-     * @param array $config
-     * @return ApiConfig
-     */
-    public static function fromConfig($environment, $config): ApiConfig
+    public static function fromConfig(array $config, string $environment = ''): ApiConfig
     {
         $connection = new ApiConnection(
             $config['connection']['host'],
@@ -33,11 +28,13 @@ class ApiConfigFactory
             $config['connection']['password']
         );
 
-        $publicationStatus = new PublicationStatus(
-            $config['publication_status']
-        );
+        $publicationStatus = null;
+        if (isset($config['publication_status'])) {
+            $publicationStatus = new PublicationStatus(
+                $config['publication_status']
+            );
+        }
 
-        $config = new ApiConfig($connection, $publicationStatus);
-        return $config->setEnvironment($environment);
+        return new ApiConfig($connection, $publicationStatus, $environment);
     }
 }

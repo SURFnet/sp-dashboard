@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundExcepti
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -66,12 +66,12 @@ class EntityService implements EntityServiceInterface
     private $logger;
 
     /**
-     * @var Config
+     * @var ApiConfig
      */
     private $testManageConfig;
 
     /**
-     * @var Config
+     * @var ApiConfig
      */
     private $prodManageConfig;
 
@@ -87,8 +87,8 @@ class EntityService implements EntityServiceInterface
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         TicketServiceInterface $ticketService,
         ServiceService $serviceService,
-        Config $testConfig,
-        Config $productionConfig,
+        ApiConfig $testConfig,
+        ApiConfig $productionConfig,
         RouterInterface $router,
         LoggerInterface $logger,
         string $removalStatus

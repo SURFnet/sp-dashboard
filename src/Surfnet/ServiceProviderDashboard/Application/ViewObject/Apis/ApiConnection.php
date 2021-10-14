@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis;
 
-use Webmozart\Assert\Assert;
-
 class ApiConnection
 {
     /**
@@ -37,17 +35,8 @@ class ApiConnection
      */
     private $password;
 
-    /**
-     * @param string $host
-     * @param string $username
-     * @param string $password
-     */
-    public function __construct($host, $username, $password)
+    public function __construct(string $host, string $username, string $password)
     {
-        Assert::stringNotEmpty($host, 'Please set the manage host in parameters.yml');
-        Assert::stringNotEmpty($username, 'Please set the manage username in parameters.yml');
-        Assert::stringNotEmpty($password, 'Please set the manage password in parameters.yml');
-
         $this->host = $host;
         $this->username = $username;
         $this->password = $password;

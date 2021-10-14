@@ -25,7 +25,7 @@ class ConfigFactory
      * @param array $config
      * @return Config
      */
-    public static function fromConfig($environment, $config)
+    public static function fromConfig($config, $environment)
     {
         $connection = new Connection(
             $config['connection']['host'],

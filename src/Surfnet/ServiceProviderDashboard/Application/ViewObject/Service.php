@@ -53,8 +53,8 @@ class Service
     private $router;
 
     public function __construct(
-        String $id,
-        String $name,
+        string $id,
+        string $name,
         bool $privacyQuestionsEnabled,
         EntityList $entityList,
         RouterInterface $router,
