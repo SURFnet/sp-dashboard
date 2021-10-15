@@ -142,9 +142,9 @@ dashboard:
             publication_status: "%manage_prod_publication_status%"
     teams:
         connection:
-            host: "%manage_prod_host%"
-            username: "%manage_prod_username%"
-            password: "%manage_prod_password%"
+            host: "%teams_host%"
+            username: "%teams_username%"
+            password: "%teams_password%"
 
 dashboard_saml:
     session_lifetimes:

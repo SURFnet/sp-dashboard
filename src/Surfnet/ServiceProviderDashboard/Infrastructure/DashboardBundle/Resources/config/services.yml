@@ -372,7 +372,7 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
         arguments:
-            - '@surfnet.manage.http.guzzle.test_environment'
+            - '@surfnet.teams.http.guzzle'
             - '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:

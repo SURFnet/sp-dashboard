@@ -30,7 +30,6 @@ class TeamsClientFactory
             'auth' => [
                 $configuration->getConnection()->getUsername(),
                 $configuration->getConnection()->getPassword(),
-                'basic',
             ],
         ];
 

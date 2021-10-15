@@ -53,7 +53,7 @@ class DashboardExtension extends Extension
             $this->parseManageConfiguration($environment, $manageConfig, $container);
         }
 
-        $this->parseTeamsConfiguration('teams', $config['teams'], $container);
+        $this->parseTeamsConfiguration($config['teams'], $container);
     }
 
     /**
@@ -80,7 +80,7 @@ class DashboardExtension extends Extension
     /**
      * Creates a config aggregate based on the configuration in config.yml for teams.
      */
-    public function parseTeamsConfiguration(string $apiName, array $config, ContainerBuilder $container)
+    public function parseTeamsConfiguration(array $config, ContainerBuilder $container)
     {
         $configuration = new Definition(Config::class);
         $configuration->setClass(Config::class);
