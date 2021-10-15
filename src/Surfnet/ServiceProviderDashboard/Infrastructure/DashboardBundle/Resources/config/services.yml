@@ -248,6 +248,13 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: unique_team_name }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ExistingTeamNameValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
+            - '%team.prefix%'
+        tags:
+            - { name: validator.constraint_validator, alias: existing_team_name }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
         tags:
             - { name: validator.constraint_validator, alias: unique_redirect_urls }

@@ -114,10 +114,6 @@ class EditServiceType extends AbstractType
                         'label' => 'Teams'
                     ]
                 )
-                ->add('teamManagerEmail', TextType::class, [
-                    'label' => 'Email address manager',
-                    'required' => true
-                ])
                 ->add('teamName', null, [
                     'label' => 'Team identifier',
                 ])
