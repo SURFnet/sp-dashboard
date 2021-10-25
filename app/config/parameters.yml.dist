@@ -93,4 +93,6 @@ parameters:
     global.site_notice.date: '11.05.2021'
     global.site_notice.allowed.tags: '<a><u><i><br><wbr><strong><em><blink><marquee><p><ul><ol><dl><li><dd><dt><div><span><blockquote><hr><h2></h2><h3><h4><h5><h6>'
 
-    team.prefix: 'urn:collab:group:vm.openconext.org:demo:openconext:org:'
+    # Teams urn prefix, see: https://www.pivotaltracker.com/story/show/179572218/comments/227653860
+    team.prefix.default_stem_name: 'urn:collab:group:vm.openconext.org:'
+    team.prefix.group_name_context: 'demo:openconext:org:'

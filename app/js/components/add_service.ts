@@ -7,8 +7,10 @@ $(() => {
     const name = document.getElementById('dashboard_bundle_service_type_general_name') as HTMLInputElement;
     const organizationEn = document.getElementById('dashboard_bundle_service_type_general_organizationNameEn') as HTMLInputElement;
     const setTeamName = () => {
-      const serviceName = name.value.replace(' ', '_');
-      const organizationName = organizationEn.value.replace(' ', '_');
+      // @ts-ignore
+      const serviceName = name.value.replaceAll(' ', '-');
+      // @ts-ignore
+      const organizationName = organizationEn.value.replaceAll(' ', '-');
       teamName.value = `spd_${organizationName}_${serviceName}`;
     };
 

@@ -26,6 +26,9 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
+        arguments:
+            $prefixPart1: '%team.prefix.default_stem_name%'
+            $prefixPart2: '%team.prefix.group_name_context%'
 
     surfnet.dashboard.command_handler.delete_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
@@ -244,14 +247,14 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueTeamNameValidator:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
-            - '%team.prefix%'
+            - '%team.prefix.group_name_context%'
         tags:
             - { name: validator.constraint_validator, alias: unique_team_name }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ExistingTeamNameValidator:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
-            - '%team.prefix%'
+            - '%team.prefix.group_name_context%'
         tags:
             - { name: validator.constraint_validator, alias: existing_team_name }
 
@@ -389,6 +392,7 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
+            - '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient:
         arguments:
