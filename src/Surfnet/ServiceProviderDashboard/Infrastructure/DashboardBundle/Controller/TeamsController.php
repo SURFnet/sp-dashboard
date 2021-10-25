@@ -29,11 +29,14 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -59,14 +62,26 @@ class TeamsController extends Controller
      * @var ServiceStatusService
      */
     private $serviceStatusService;
+
     /**
      * @var RouterInterface
      */
     private $router;
+
     /**
      * @var EntityService
      */
     private $entityService;
+
+    /**
+     * @var PublishEntityClient
+     */
+    private $publishEntityClient;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param CommandBus $commandBus
@@ -80,7 +95,9 @@ class TeamsController extends Controller
         ServiceService $serviceService,
         ServiceStatusService $serviceStatusService,
         RouterInterface $router,
-        EntityService $entityService
+        EntityService $entityService,
+        PublishEntityClient $publishEntityClient,
+        TranslatorInterface $translator
     ) {
         $this->commandBus = $commandBus;
         $this->authorizationService = $authorizationService;
@@ -88,6 +105,8 @@ class TeamsController extends Controller
         $this->serviceStatusService = $serviceStatusService;
         $this->router = $router;
         $this->entityService = $entityService;
+        $this->publishEntityClient = $publishEntityClient;
+        $this->translator = $translator;
     }
 
 
@@ -109,6 +128,7 @@ class TeamsController extends Controller
 
         return $this->render('DashboardBundle:Teams:manage.html.twig', [
             'serviceId' => $serviceId,
+            'teamId' => 2,
             'users' => [
                 [
                     'invitationId' => 1,
@@ -144,6 +164,35 @@ class TeamsController extends Controller
     }
 
     /**
+     * @Method({"POST"})
+     * @Route("/service/{serviceId}/sendInvite/{teamId}", name="team_send_invite")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     *
+     * @return RedirectResponse|Response
+     */
+    public function sendInviteAction(Request $request, int $serviceId, int $teamId)
+    {
+        $this->get('session')->getFlashBag()->clear();
+        $email = $request->get('email');
+        $role = $request->get('role');
+        $invite = [
+            'teamId' => $teamId,
+            'intendedRole' => $role,
+            'emails' => $this->createEmailsArray($email, $role),
+            'message' => $this->translator->trans('teams.create.invitationMessage'),
+            'language' => 'ENGLISH',
+        ];
+
+        try {
+            $this->publishEntityClient->inviteMember($invite);
+        } catch (SendInviteException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('service_manage_team', [ 'serviceId' => $serviceId ]);
+    }
+
+    /**
      * @Method({"GET"})
      * @Route("/service/{serviceId}/resendInvite/{invitationId}", name="team_resend_invite")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
@@ -165,5 +214,15 @@ class TeamsController extends Controller
      */
     public function deleteMemberAction(Request $request, int $serviceId, int $memberId) {
 
+    }
+
+    private function createEmailsArray(string $email, string $role): array
+    {
+        $emails = [];
+        foreach (explode(',', $email) as $mail) {
+            $emails[trim($mail)] = $role;
+        }
+
+        return $emails;
     }
 }

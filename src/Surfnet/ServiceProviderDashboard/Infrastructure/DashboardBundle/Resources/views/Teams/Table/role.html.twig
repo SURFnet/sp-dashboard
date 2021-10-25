@@ -1,9 +1,9 @@
 {# in case of being called for the member overview table (not needed for the invite modal so we set it to '' in that case #}
-    {% if user is defined %}
-        {% set userRole = user.role|lower %}
-    {% else %}
-        {% set userRole = '' %}
-    {% endif %}
+{% if user is defined %}
+    {% set userRole = user.role|lower %}
+{% else %}
+    {% set userRole = '' %}
+{% endif %}
 {% set whitespaceBefore %}
     &nbsp;
 {% endset %}
@@ -11,7 +11,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#xf0d7;
 {% endset %}
 
-<label {% if labelClass is defined %}class={{ labelClass }}{% endif %} for="role-select">{% if labelText is defined %}{{ labelText }}{% endif %}</label>
+<label for="role-select"{% if labelClass is defined %} class={{ labelClass }}{% endif %}>{% if labelText is defined %}{{ labelText }}{% endif %}</label>
 <select id="role-select" class="teams__select">
     <option class="fontawesome" data-icon="fa-star" value="admin" {% if userRole == 'admin' %}selected{% endif %}>
         &#xf005;{{ whitespaceBefore }}
