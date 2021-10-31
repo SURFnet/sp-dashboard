@@ -1,6 +1,6 @@
 <caption>{% spaceless %}
         <h2 class="service-status-entities-table-title">
-            {{ 'teams.management.table.title'|trans }}
+                {% if originalData is defined %}{{ originalData.name }} {% endif %}{{ 'teams.management.table.title'|trans }}
         </h2>
     {% endspaceless %}
 </caption>

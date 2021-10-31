@@ -593,7 +593,7 @@ team.management.invite.modal.submit: Invite members
 teams.management.invite.modal.label: Role within the team
 teams.management.invite.modal.email.label: Add members by email address
 teams.management.invite.modal.role.label: Role within the team
-teams.management.table.title: Member overview
+teams.management.table.title: user management
 teams.management.table.name: NAME
 teams.management.table.email: EMAIL
 teams.management.table.status: STATUS
