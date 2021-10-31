@@ -223,7 +223,11 @@ class HttpClient implements HttpClientInterface
                 throw $this->getResourceException($method, $statusCode);
             }
 
-            return $this->parseResponse($body, $method, $resource);
+            if (!empty($body)) {
+                return $this->parseResponse($body, $method, $resource);
+            }
+
+            return $response;
         }
 
         return $callBack($statusCode, $body, $method, $resource, $options['headers']);

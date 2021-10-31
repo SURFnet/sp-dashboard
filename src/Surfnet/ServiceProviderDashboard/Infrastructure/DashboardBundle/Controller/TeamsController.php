@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
@@ -133,8 +134,18 @@ class TeamsController extends Controller
      *
      * @return RedirectResponse|Response
      */
-    public function resendInviteAction(Request $request, int $serviceId, int $invitationId) {
+    public function resendInviteAction(int $serviceId, int $invitationId)
+    {
+        $this->get('session')->getFlashBag()->clear();
+        $message = $this->translator->trans('teams.create.invitationMessage');
 
+        try {
+            $this->publishEntityClient->resendInvitation($invitationId, $message);
+        } catch (ResendInviteException $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('service_manage_team', [ 'serviceId' => $serviceId ]);
     }
 
     /**

@@ -5,18 +5,22 @@
         <ul>
             {% if isInvite %}
                 <li class="teams__actionItem">
+                    {# note: the user.id here is actually the invite id due to the way the user array is constituted in the QueryClient #}
                     <a href="{{ path('team_resend_invite', {'serviceId': serviceId, 'invitationId': user.id }) }}">
                         <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                         {{ 'teams.management.table.actions.resend.invite'|trans }}
                     </a>
                 </li>
             {% endif %}
-            <li class="teams__actionItem">
-                <a href="{{ path('team_delete_member', {'serviceId': serviceId, 'memberId': user.id }) }}">
-                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    {{ 'teams.management.table.actions.delete.membership'|trans }}
-                </a>
-            </li>
+            {% if not isInvite %}
+                <li class="teams__actionItem">
+                    <a href="{{ path('team_delete_member', {'serviceId': serviceId, 'memberId': user.id }) }}">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        {{ 'teams.management.table.actions.delete.membership'|trans }}
+                    </a>
+                </li>
+                {# todo: add cancel invite in else clause if it is an invite #}
+            {% endif %}
         </ul>
     </div>
 </td>

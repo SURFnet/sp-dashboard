@@ -153,11 +153,11 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     {
         try {
             $response = $this->client->put(
-                '/api/spdashboard/invites',
                 json_encode([
                     "id" => $id,
                     "message" => $message,
                 ]),
+                '/api/spdashboard/invites',
                 ['Content-Type' => 'application/json']
             );
         } catch (HttpException|GuzzleException|RuntimeException $e) {
@@ -168,7 +168,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
             throw new ResendInviteException('Unable to resend the invite.', 0, $e);
         }
 
-        if ($response['status'] != "OK") {
+        if ($response->getReasonPhrase() !== "Created") {
             $this->logger->error(
                 'Teams could not resend the invite.',
                 (isset($response)) ? $response : []
