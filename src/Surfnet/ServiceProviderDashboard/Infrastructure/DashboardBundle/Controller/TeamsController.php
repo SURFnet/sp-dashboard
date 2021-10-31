@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2021 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,60 +18,27 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use League\Tactician\CommandBus;
-use Psr\Log\LoggerInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class TeamsController extends Controller
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
     /**
      * @var AuthorizationService
      */
     private $authorizationService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var ServiceStatusService
-     */
-    private $serviceStatusService;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
 
     /**
      * @var PublishEntityClient
@@ -79,88 +46,55 @@ class TeamsController extends Controller
     private $publishEntityClient;
 
     /**
+     * @var QueryClient
+     */
+    private $queryClient;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param CommandBus $commandBus
-     * @param AuthorizationService $authorizationService
-     * @param ServiceService $serviceService
-     * @param ServiceStatusService $serviceStatusService
+     * @var string
      */
+    private $defaultStemName;
+
     public function __construct(
-        CommandBus $commandBus,
         AuthorizationService $authorizationService,
-        ServiceService $serviceService,
-        ServiceStatusService $serviceStatusService,
-        RouterInterface $router,
-        EntityService $entityService,
         PublishEntityClient $publishEntityClient,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        QueryClient $queryClient,
+        string $defaultStemName
     ) {
-        $this->commandBus = $commandBus;
         $this->authorizationService = $authorizationService;
-        $this->serviceService = $serviceService;
-        $this->serviceStatusService = $serviceStatusService;
-        $this->router = $router;
-        $this->entityService = $entityService;
         $this->publishEntityClient = $publishEntityClient;
         $this->translator = $translator;
+        $this->queryClient = $queryClient;
+        $this->defaultStemName = $defaultStemName;
     }
-
 
     /**
      * @Method({"GET"})
      * @Route("/service/{serviceId}/manageTeam", name="service_manage_team")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
      *
      * @return RedirectResponse|Response
      */
     public function manageTeamAction(Request $request, int $serviceId)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
+        $sanitizedTeamName = str_replace($this->defaultStemName, '', $service->getTeamName());
 
-        $this->get('session')->getFlashBag()->clear();
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
+        try {
+            $teamInfo = $this->queryClient->findTeamByUrn($sanitizedTeamName);
+        } catch (Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
 
-        return $this->render('DashboardBundle:Teams:manage.html.twig', [
-            'serviceId' => $serviceId,
-            'teamId' => 2,
-            'users' => [
-                [
-                    'invitationId' => 1,
-                    'id' => 4,
-                    'name' => '',
-                    'email' => 'teun-fransen@hotmail.com',
-                    'status' => 'Invitation',
-                    'role' => 'Member',
-                ],
-                [
-                    'id' => 1,
-                    'name' => 'Henny Bekker',
-                    'email' => 'henny.bekker@surfnet.nl',
-                    'status' => 'March 1, 2011 2:41 PM',
-                    'role' => 'Owner',
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Pieter van der Meulen',
-                    'email' => 'pieter.vandermeulen@surfnet.nl',
-                    'status' => 'March 27, 2014 5:21 PM',
-                    'role' => 'Admin',
-                ],
-                [
-                    'id' => 3,
-                    'name' => 'Arnout Terpstra',
-                    'email' => 'arnout@digimasters.nl',
-                    'status' => 'February 7, 2018 3:38 PM',
-                    'role' => 'Manager',
-                ],
-            ]
-        ]);
+        $teamInfo['serviceId'] = $serviceId;
+
+        return $this->render('DashboardBundle:Teams:manage.html.twig', $teamInfo);
     }
 
     /**
@@ -196,7 +130,6 @@ class TeamsController extends Controller
      * @Method({"GET"})
      * @Route("/service/{serviceId}/resendInvite/{invitationId}", name="team_resend_invite")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
      *
      * @return RedirectResponse|Response
      */
@@ -208,7 +141,6 @@ class TeamsController extends Controller
      * @Method({"GET"})
      * @Route("/service/{serviceId}/delete/{memberId}", name="team_delete_member")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
      *
      * @return RedirectResponse|Response
      */

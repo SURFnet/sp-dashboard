@@ -602,6 +602,7 @@ teams.management.table.role.member: Member
 teams.management.table.role.manager: Manager
 teams.management.table.role.owner: Owner
 teams.management.table.role.admin: Admin
+teams.management.table.status.lastLogin: "Last login at: "
 teams.management.table.actions: ACTIONS
 teams.management.table.actions.choose: Choose an action
 teams.management.table.actions.resend.invite: Resend invitation

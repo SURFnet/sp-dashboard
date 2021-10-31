@@ -150,9 +150,16 @@ class QueryClient implements QueryTeamsRepository
     public function findTeamByUrn(string $urn): ?array
     {
         try {
-            return $this->client->read(
+            $result = $this->client->read(
                 sprintf('/api/spdashboard/teams/%s', $urn)
             );
+
+            if (!empty($result)) {
+                return $this->transformTeamForFrontend($result);
+            }
+
+            return null;
+
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
                 sprintf('Unable to find entity with urn: "%s"', $urn),
@@ -160,5 +167,16 @@ class QueryClient implements QueryTeamsRepository
                 $e
             );
         }
+    }
+
+    private function transformTeamForFrontend(array $result): array
+    {
+        $users = array_merge($result['memberships'], $result['invitations']);
+
+        return [
+            'teamId' => $result['id'],
+            'users' => $users,
+            'originalData' => $result,
+        ];
     }
 }

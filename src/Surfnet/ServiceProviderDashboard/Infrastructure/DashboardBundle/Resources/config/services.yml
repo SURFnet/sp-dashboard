@@ -380,6 +380,10 @@ services:
             - '@surfnet.manage.http.guzzle.test_environment'
             - '@logger'
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\TeamsController:
+        arguments:
+            $defaultStemName: '%team.prefix.default_stem_name%'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
         arguments:
             - '@surfnet.teams.http.guzzle'

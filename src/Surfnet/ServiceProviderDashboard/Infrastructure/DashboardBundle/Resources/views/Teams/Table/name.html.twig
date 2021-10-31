@@ -1,1 +1,1 @@
-<td>{{ user.name }}</td>
+<td>{% if user.name is defined %}{{ user.name }}{% endif %}</td>

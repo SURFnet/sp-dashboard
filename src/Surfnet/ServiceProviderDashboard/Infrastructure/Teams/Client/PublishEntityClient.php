@@ -122,8 +122,8 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     {
         try {
             $response = $this->client->post(
-                '/api/spdashboard/invites',
                 json_encode($inviteObject),
+                '/api/spdashboard/invites',
                 ['Content-Type' => 'application/json']
             );
         } catch (HttpException|GuzzleException|RuntimeException $e) {

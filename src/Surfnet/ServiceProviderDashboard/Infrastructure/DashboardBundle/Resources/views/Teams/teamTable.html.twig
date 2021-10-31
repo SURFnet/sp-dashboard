@@ -2,10 +2,10 @@
     {% include "@Dashboard/Teams/Table/caption.html.twig" %}
     {% include "@Dashboard/Teams/Table/header.html.twig" %}
     {% for user in users %}
-        {% if user.status == 'Invitation' %}
-            {% set isInvite = true %}
-        {% else %}
+        {% if user.person is defined %}
             {% set isInvite = false %}
+        {% else %}
+            {% set isInvite = true %}
         {% endif %}
         <tr>
             {% include "@Dashboard/Teams/Table/name.html.twig" %}

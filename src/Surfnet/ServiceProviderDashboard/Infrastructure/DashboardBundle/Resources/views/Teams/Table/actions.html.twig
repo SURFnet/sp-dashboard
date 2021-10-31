@@ -5,7 +5,7 @@
         <ul>
             {% if isInvite %}
                 <li class="teams__actionItem">
-                    <a href="{{ path('team_resend_invite', {'serviceId': serviceId, 'invitationId': user.invitationId }) }}">
+                    <a href="{{ path('team_resend_invite', {'serviceId': serviceId, 'invitationId': user.id }) }}">
                         <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                         {{ 'teams.management.table.actions.resend.invite'|trans }}
                     </a>

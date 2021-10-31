@@ -1,6 +1,9 @@
 <td class="teams__userStatus">
     {% if isInvite %}
         <i class="fa fa-clock-o darkGreen" aria-hidden="true"></i>
+        Invitation expires in {{ user.daysValid }} days.
+    {% elseif user.person is defined %}
+        {% set timestamp10 = (user.person.lastLoginDate / 1000)|round(0, 'floor') %}
+        {{ 'teams.management.table.status.lastLogin'|trans }}{{ timestamp10|date }}
     {% endif %}
-    {{ user.status }}
 </td>

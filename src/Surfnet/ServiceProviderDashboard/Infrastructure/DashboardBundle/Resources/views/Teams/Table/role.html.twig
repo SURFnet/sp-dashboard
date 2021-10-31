@@ -1,6 +1,8 @@
 {# in case of being called for the member overview table (not needed for the invite modal so we set it to '' in that case #}
-{% if user is defined %}
+{% if user.person is defined %}
     {% set userRole = user.role|lower %}
+{% elseif user.intendedRole is defined %}
+    {% set userRole = user.intendedRole|lower %}
 {% else %}
     {% set userRole = '' %}
 {% endif %}
