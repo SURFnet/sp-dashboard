@@ -586,6 +586,7 @@ service.overview.progress.tooltip.production-connection.in-progress.html: "The d
 service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
 
 teams.management.title: User management
+teams.management.notFound: Team not found.
 team.management.invite: Invite
 team.management.invite.modal.title: Invite member
 team.management.invite.modal.cancel: Cancel

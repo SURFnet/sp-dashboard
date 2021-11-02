@@ -6,10 +6,13 @@
 
 {% block body %}
 
-{% include "@Dashboard/Teams/inviteButton.html.twig" %}
-{% include "@Dashboard/Teams/teamTable.html.twig" %}
-{% include "@Dashboard/Teams/inviteModal.html.twig" %}
-{% include "@Dashboard/Teams/saveButton.html.twig" %}
-
+{% if users is defined %}
+    {% include "@Dashboard/Teams/inviteButton.html.twig" %}
+    {% include "@Dashboard/Teams/teamTable.html.twig" %}
+    {% include "@Dashboard/Teams/inviteModal.html.twig" %}
+    {% include "@Dashboard/Teams/saveButton.html.twig" %}
+{% else %}
+    <p>{{ 'teams.management.notFound'|trans }}</p>
+{% endif %}
 {% endblock %}
 
