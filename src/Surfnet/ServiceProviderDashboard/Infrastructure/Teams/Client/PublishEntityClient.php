@@ -88,11 +88,11 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     {
         try {
             $response = $this->client->put(
-                '/api/spdashboard/memberships',
                 json_encode([
                     "id" => $id,
-                    "role" => $role,
+                    "role" => strtoupper($role),
                 ]),
+                '/api/spdashboard/memberships',
                 ['Content-Type' => 'application/json']
             );
         } catch (HttpException|GuzzleException|RuntimeException $e) {

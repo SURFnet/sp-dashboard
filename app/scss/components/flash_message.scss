@@ -1,0 +1,46 @@
+.flashMessage {
+  align-items: center;
+  border-radius: 6px;
+  color: $white;
+  display: flex;
+  justify-content: space-between;
+  margin: .5rem 0;
+  padding: .4rem .5rem;
+
+  &.info {
+    background-color: $buttonGreen;
+    border: 2px solid $dark-green;
+  }
+
+  &.warning {
+    background-color: $orange;
+    border: 2px solid $red;
+    color: $black;
+    font-weight: normal;
+    margin-bottom: .5rem;
+  }
+
+  &.error {
+    background-color: $red;
+    border: 2px solid $criticalRed;
+  }
+
+  &__container {
+    margin: 1rem 0;
+  }
+
+  &__close {
+    background-color: inherit;
+    border: 2px solid $white;
+    border-radius: 4px;
+    box-shadow: 0 2px 0 0 $black;
+    color: inherit;
+    display: inline-block;
+    margin-left: auto;
+    padding: .25rem .5rem;
+
+    &:active {
+      box-shadow: 0 0 1px 0 $black inset;
+    }
+  }
+}

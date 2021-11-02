@@ -24,11 +24,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,7 +82,7 @@ class TeamsController extends Controller
      * @Route("/service/{serviceId}/manageTeam", name="service_manage_team")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      *
-     * @return RedirectResponse|Response
+     * @return Response
      */
     public function manageTeamAction(Request $request, int $serviceId)
     {
@@ -147,6 +149,28 @@ class TeamsController extends Controller
 
         return $this->redirectToRoute('service_manage_team', [ 'serviceId' => $serviceId ]);
     }
+
+    /**
+     * @Method({"GET"})
+     * @Route("/teams/changeRole/{memberId}/{newRole}", name="team_change_role")
+     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     *
+     * @return Response
+     */
+    public function changeRoleAction(int $memberId, string $newRole): Response
+    {
+        try {
+            $this->publishEntityClient->changeMembership($memberId, $newRole);
+            $response = new JsonResponse('ok');
+            $response->setStatusCode(200);
+        } catch (ChangeMembershipRoleException $e) {
+            $response = new JsonResponse($e->getMessage());
+            $response->setStatusCode(406);
+        }
+
+        return $response;
+    }
+
 
     /**
      * @Method({"GET"})

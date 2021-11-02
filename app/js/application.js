@@ -1,7 +1,9 @@
 'use strict';
 
 import './type_definitions.ts';
+import './components/addFlashMessage.ts';
 import './components/add_service.ts';
+import './components/change_member_role.ts';
 import './components/form.ts';
 import './components/invite_member.ts';
 import './components/service_add_entity';

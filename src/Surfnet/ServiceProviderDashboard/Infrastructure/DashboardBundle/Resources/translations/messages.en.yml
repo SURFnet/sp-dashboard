@@ -585,8 +585,10 @@ service.overview.progress.tooltip.production-connection.info.html: "Is a product
 service.overview.progress.tooltip.production-connection.in-progress.html: "The deployment to the production environment is in progress"
 service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
 
+teams.management.close: Close
 teams.management.title: User management
 teams.management.notFound: Team not found.
+teams.management.rol.changed: Role of <name> changed to <role>
 team.management.invite: Invite
 team.management.invite.modal.title: Invite member
 team.management.invite.modal.cancel: Cancel

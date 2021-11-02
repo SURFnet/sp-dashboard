@@ -22,10 +22,18 @@
   background-color: $lightest-grey;
   border: 1px solid $black;
   border-radius: 6px;
-  font-family: 'FontAwesome', 'sans-serif';
+  font-family: 'FontAwesome', sans-serif;
   padding: calculateRem(6px) .5rem calculateRem(6px) 1rem;
   position: relative;
   text-align: right;
+
+  &:disabled {
+    background-color: $lighter-grey;
+  }
+
+  &.loading {
+    display: initial;
+  }
 }
 
 .teams__saveButton {
@@ -46,4 +54,12 @@
 
 .teams__modalSelectLabel {
   margin-bottom: .35rem;
+}
+
+.loading {
+  display: none;
+}
+
+.teams__select.loading + .loading {
+  display: inline-block;
 }
