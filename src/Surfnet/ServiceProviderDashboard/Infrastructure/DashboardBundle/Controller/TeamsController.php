@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -26,7 +27,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\UnableToDeleteMembershipException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,6 +46,11 @@ class TeamsController extends Controller
      * @var AuthorizationService
      */
     private $authorizationService;
+
+    /**
+     * @var DeleteEntityClient
+     */
+    private $deleteEntityClient;
 
     /**
      * @var PublishEntityClient
@@ -65,15 +74,17 @@ class TeamsController extends Controller
 
     public function __construct(
         AuthorizationService $authorizationService,
+        DeleteEntityClient $deleteEntityClient,
         PublishEntityClient $publishEntityClient,
-        TranslatorInterface $translator,
         QueryClient $queryClient,
+        TranslatorInterface $translator,
         string $defaultStemName
     ) {
         $this->authorizationService = $authorizationService;
+        $this->deleteEntityClient = $deleteEntityClient;
         $this->publishEntityClient = $publishEntityClient;
-        $this->translator = $translator;
         $this->queryClient = $queryClient;
+        $this->translator = $translator;
         $this->defaultStemName = $defaultStemName;
     }
 
@@ -154,10 +165,8 @@ class TeamsController extends Controller
      * @Method({"GET"})
      * @Route("/teams/changeRole/{memberId}/{newRole}", name="team_change_role")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     *
-     * @return Response
      */
-    public function changeRoleAction(int $memberId, string $newRole): Response
+    public function changeRoleAction(int $memberId, string $newRole): JsonResponse
     {
         try {
             $this->publishEntityClient->changeMembership($memberId, $newRole);
@@ -171,16 +180,23 @@ class TeamsController extends Controller
         return $response;
     }
 
-
     /**
      * @Method({"GET"})
-     * @Route("/service/{serviceId}/delete/{memberId}", name="team_delete_member")
+     * @Route("/teams/delete/{memberId}", name="team_delete_member")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     *
-     * @return RedirectResponse|Response
      */
-    public function deleteMemberAction(Request $request, int $serviceId, int $memberId) {
+    public function deleteMemberAction(int $memberId): JsonResponse
+    {
+        try {
+            $this->deleteEntityClient->deleteMembership($memberId);
+            $response = new JsonResponse('ok');
+            $response->setStatusCode(200);
+        } catch (UnableToDeleteMembershipException|Exception|GuzzleException $e) {
+            $response = new JsonResponse($e->getMessage());
+            $response->setStatusCode(406);
+        }
 
+        return $response;
     }
 
     private function createEmailsArray(string $email, string $role): array

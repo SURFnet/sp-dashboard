@@ -588,7 +588,8 @@ service.overview.progress.tooltip.production-connection.success.html: "Thank you
 teams.management.close: Close
 teams.management.title: User management
 teams.management.notFound: Team not found.
-teams.management.rol.changed: Role of <name> changed to <role>
+teams.management.role.changed: Role of <name> changed to <role>
+teams.management.delete.member: Membership of <name> was deleted
 team.management.invite: Invite
 team.management.invite.modal.title: Invite member
 team.management.invite.modal.cancel: Cancel

@@ -1,5 +1,6 @@
-<td class="actions">
+<td class="actions teams__actions">
     <div tabindex="0">
+        <i class="fa fa-spinner fa-spin loading"></i>
         <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
         <i class="fa fa-caret-down" aria-hidden="true"></i>
         <ul>
@@ -14,12 +15,15 @@
             {% endif %}
             {% if not isInvite %}
                 <li class="teams__actionItem">
-                    <a href="{{ path('team_delete_member', {'serviceId': serviceId, 'memberId': user.id }) }}">
+                    <a
+                        class="teams__deleteMemberLink"
+                        data-name="{% if user.name is defined %}{{ user.name }}{% else %}{{ user.email }}{% endif %}"
+                        href="{{ path('team_delete_member', {'memberId': user.id }) }}"
+                    >
                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                         {{ 'teams.management.table.actions.delete.membership'|trans }}
                     </a>
                 </li>
-                {# todo: add cancel invite in else clause if it is an invite #}
             {% endif %}
         </ul>
     </div>
