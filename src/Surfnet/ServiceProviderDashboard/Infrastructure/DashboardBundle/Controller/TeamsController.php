@@ -203,7 +203,7 @@ class TeamsController extends Controller
     {
         $emails = [];
         foreach (explode(',', $email) as $mail) {
-            $emails[trim($mail)] = $role;
+            $emails[] = trim($mail);
         }
 
         return $emails;

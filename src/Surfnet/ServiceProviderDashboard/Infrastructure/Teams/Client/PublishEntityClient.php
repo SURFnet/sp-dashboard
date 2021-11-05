@@ -121,8 +121,11 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     public function inviteMember(array $inviteObject)
     {
         try {
+            // encode inviteObject to JSON, but replace the notation for the emails array from object to array.
+            $jsonInviteObject = $this->replaceEmailBrackets(json_encode($inviteObject));
+
             $response = $this->client->post(
-                json_encode($inviteObject),
+                $jsonInviteObject,
                 '/api/spdashboard/invites',
                 ['Content-Type' => 'application/json']
             );
@@ -134,7 +137,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
             throw new SendInviteException('Unable to send the invite.', 0, $e);
         }
 
-        if ($response['status'] != "OK") {
+        if ($response->getStatusCode() !== 201) {
             $this->logger->error(
                 'Teams could not send the invite.',
                 (isset($response)) ? $response : []
@@ -176,5 +179,16 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
             throw new ResendInviteException('Unable to resend the invite.');
         }
         return $response;
+    }
+
+    private function replaceEmailBrackets(string $json): string
+    {
+        $emailPart = substr($json, 1, -1);
+        $noCurlyOpeningBrackets = explode('{', $emailPart);
+        $noCurlyOpeningBrackets = implode('[', $noCurlyOpeningBrackets);
+        $noCurlyClosingBrackets = explode('}', $noCurlyOpeningBrackets);
+        $noCurlyClosingBrackets = implode(']', $noCurlyClosingBrackets);
+
+        return substr($json, 0, 1) . $noCurlyClosingBrackets . substr($json, -1, 1);
     }
 }
