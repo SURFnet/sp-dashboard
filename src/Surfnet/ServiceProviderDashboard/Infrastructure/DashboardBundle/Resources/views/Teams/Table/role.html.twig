@@ -17,7 +17,7 @@
 {% endif %}
 
 <label for="role-select"{% if labelClass is defined %} class={{ labelClass }}{% endif %}>{% if labelText is defined %}{{ labelText }}{% endif %}</label>
-<select id="role-select" class="teams__select"{% if url is defined %} data-url="{{ url }}"{% endif %}{% if isInvite is defined and isInvite %} {% endif %}>
+<select id="role-select" class="teams__select"{% if url is defined %} data-url="{{ url }}"{% endif %}{% if isInvite is defined and isInvite %} disabled {% endif %}>
     <option class="fontawesome" data-icon="fa-star" value="admin" {% if userRole == 'admin' %}selected{% endif %}>
         &#xf005;{{ whitespaceBefore }}
         {{ 'teams.management.table.role.admin'|trans }}
