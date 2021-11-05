@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 
 class DeleteServiceCommandHandler implements CommandHandler
 {
@@ -56,11 +57,17 @@ class DeleteServiceCommandHandler implements CommandHandler
      */
     private $logger;
 
+    /**
+     * @var DeleteEntityClient
+     */
+    private $deleteTeamClient;
+
     public function __construct(
         ServiceRepository $serviceRepository,
         EntityServiceInterface $entityService,
         DeleteCommandFactory $deleteCommandFactory,
         CommandBus $commandBus,
+        DeleteEntityClient $deleteTeamClient,
         LoggerInterface $logger
     ) {
         $this->serviceRepository = $serviceRepository;
@@ -68,6 +75,7 @@ class DeleteServiceCommandHandler implements CommandHandler
         $this->deleteCommandFactory = $deleteCommandFactory;
         $this->commandBus = $commandBus;
         $this->logger = $logger;
+        $this->deleteTeamClient = $deleteTeamClient;
     }
 
     /**
@@ -87,6 +95,12 @@ class DeleteServiceCommandHandler implements CommandHandler
             $this->logger->info(sprintf('Removing "%d" entities.', $nofEntities));
             // Invoke the correct entity delete command on the command bus
             $this->removeEntitiesFrom($entities, $command->getContact());
+        }
+
+        // Delete the team
+        $teamId = $command->getTeamId();
+        if (!empty($teamId)) {
+            $this->deleteTeamClient->deleteTeam($command->getTeamId());
         }
 
         // Finally delete the service

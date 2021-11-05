@@ -384,6 +384,10 @@ services:
         arguments:
             $defaultStemName: '%team.prefix.default_stem_name%'
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
+        arguments:
+            $defaultStemName: '%team.prefix.default_stem_name%'
+
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
         arguments:
             - '@surfnet.teams.http.guzzle'

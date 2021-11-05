@@ -46,6 +46,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -81,24 +82,31 @@ class ServiceController extends Controller
      * @var RouterInterface
      */
     private $router;
+
     /**
      * @var EntityService
      */
     private $entityService;
 
     /**
-     * @param CommandBus $commandBus
-     * @param AuthorizationService $authorizationService
-     * @param ServiceService $serviceService
-     * @param ServiceStatusService $serviceStatusService
+     * @var QueryClient
      */
+    private $queryClient;
+
+    /**
+     * @var string
+     */
+    private $defaultStemName;
+
     public function __construct(
         CommandBus $commandBus,
         AuthorizationService $authorizationService,
         ServiceService $serviceService,
         ServiceStatusService $serviceStatusService,
         RouterInterface $router,
-        EntityService $entityService
+        EntityService $entityService,
+        QueryClient $queryClient,
+        string $defaultStemName
     ) {
         $this->commandBus = $commandBus;
         $this->authorizationService = $authorizationService;
@@ -106,6 +114,8 @@ class ServiceController extends Controller
         $this->serviceStatusService = $serviceStatusService;
         $this->router = $router;
         $this->entityService = $entityService;
+        $this->queryClient = $queryClient;
+        $this->defaultStemName = $defaultStemName;
     }
 
     /**
@@ -270,9 +280,21 @@ class ServiceController extends Controller
             if ($form->getClickedButton()->getName() === 'delete') {
                 $service = $this->serviceService->getServiceById($serviceId);
 
+                // Get teaminfo for id
+                $sanitizedTeamName = str_replace($this->defaultStemName, '', $service->getTeamName());
+
+                try {
+                    $teamInfo = $this->queryClient->findTeamByUrn($sanitizedTeamName);
+                } catch (Exception $e) {
+                    $this->addFlash('error', $e->getMessage());
+                    return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
+                }
+
+                $teamId = $teamInfo['teamId'];
+
                 // Remove the service
                 $contact = $this->authorizationService->getContact();
-                $command = new DeleteServiceCommand($service->getId(), $contact);
+                $command = new DeleteServiceCommand($service->getId(), $contact, $teamId);
                 $this->commandBus->handle($command);
 
                 // Reset the service switcher (the currently active service was just removed)
