@@ -144,21 +144,21 @@ class TeamsController extends Controller
      * @Method({"GET"})
      * @Route("/service/{serviceId}/resendInvite/{invitationId}", name="team_resend_invite")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     *
-     * @return RedirectResponse|Response
      */
-    public function resendInviteAction(int $serviceId, int $invitationId)
+    public function resendInviteAction(int $serviceId, int $invitationId): JsonResponse
     {
-        $this->get('session')->getFlashBag()->clear();
         $message = $this->translator->trans('teams.create.invitationMessage');
 
         try {
             $this->publishEntityClient->resendInvitation($invitationId, $message);
+            $response = new JsonResponse('ok');
+            $response->setStatusCode(200);
         } catch (ResendInviteException $e) {
-            $this->addFlash('error', $e->getMessage());
+            $response = new JsonResponse($e->getMessage());
+            $response->setStatusCode(406);
         }
 
-        return $this->redirectToRoute('service_manage_team', [ 'serviceId' => $serviceId ]);
+        return $response;
     }
 
     /**

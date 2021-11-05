@@ -7,7 +7,11 @@
             {% if isInvite %}
                 <li class="teams__actionItem">
                     {# note: the user.id here is actually the invite id due to the way the user array is constituted in the QueryClient #}
-                    <a href="{{ path('team_resend_invite', {'serviceId': serviceId, 'invitationId': user.id }) }}">
+                    <a
+                        class="teams__resendInviteLink"
+                        data-email="{{ user.email }}"
+                        href="{{ path('team_resend_invite', {'serviceId': serviceId, 'invitationId': user.id }) }}"
+                    >
                         <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                         {{ 'teams.management.table.actions.resend.invite'|trans }}
                     </a>
