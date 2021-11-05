@@ -4,7 +4,7 @@
     {% set email = user.person.email %}
 {% endif %}
 <td>
-    <a class="teams__mail" href="mailto:{{ user.email }}">
-        {{ user.email }}
+    <a class="teams__mail" href="mailto:{{ email }}">
+        {{ email }}
     </a>
 </td>

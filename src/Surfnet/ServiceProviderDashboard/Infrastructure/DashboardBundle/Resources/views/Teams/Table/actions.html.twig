@@ -21,7 +21,7 @@
                 <li class="teams__actionItem">
                     <a
                         class="teams__deleteMemberLink"
-                        data-name="{% if user.name is defined %}{{ user.name }}{% else %}{{ user.email }}{% endif %}"
+                        data-name="{% if user.person is defined %}{{ user.person.name }}{% else %}{{ user.email }}{% endif %}"
                         href="{{ path('team_delete_member', {'memberId': user.id }) }}"
                     >
                         <i class="fa fa-trash-o" aria-hidden="true"></i>
