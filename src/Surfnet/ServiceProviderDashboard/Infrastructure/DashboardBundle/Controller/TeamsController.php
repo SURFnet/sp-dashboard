@@ -122,7 +122,7 @@ class TeamsController extends Controller
     {
         $this->get('session')->getFlashBag()->clear();
         $email = $request->get('email');
-        $role = $request->get('role');
+        $role = strtoupper($request->get('role'));
         $invite = [
             'teamId' => $teamId,
             'intendedRole' => $role,
