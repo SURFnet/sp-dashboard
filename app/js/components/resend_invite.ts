@@ -31,7 +31,6 @@ $(() => {
           const message = resentInviteText.replace('<email>', email);
           addFlashMessage(flashUl, message, 'info', closeText);
           td.classList.remove('loading');
-          td.parentElement?.remove();
         })
         .catch(error => {
           addFlashMessage(flashUl, error.message, 'error', closeText);
