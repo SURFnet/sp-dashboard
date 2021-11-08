@@ -103,7 +103,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
             throw new ChangeMembershipRoleException('Unable to change membership role', 0, $e);
         }
 
-        if ($response['status'] != "OK") {
+        if ($response->getStatusCode() !== 201) {
             $this->logger->error(
                 'Teams rejected the change to the membership role',
                 (isset($response)) ? $response : []
