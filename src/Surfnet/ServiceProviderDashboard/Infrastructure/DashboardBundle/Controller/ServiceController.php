@@ -49,6 +49,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -203,11 +204,9 @@ class ServiceController extends Controller
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      * @Template()
      *
-     * @param Request $request
-     * @param int $serviceId
      * @return RedirectResponse|Response
      */
-    public function editAction(Request $request, $serviceId)
+    public function editAction(Request $request, int $serviceId)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -236,13 +235,13 @@ class ServiceController extends Controller
         $form = $this->createForm(EditServiceType::class, $command);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // On delete, forward to the service delete confirmation page.
-            if ($this->isDeleteAction($form)) {
-                $logger->info('Forwarding to the delete confirmation page');
-                return $this->redirectToRoute('service_delete', ['serviceId' => $serviceId]);
-            }
+        // On delete, forward to the service delete confirmation page.
+        if ($this->isDeleteAction($form)) {
+            $logger->info('Forwarding to the delete confirmation page');
+            return $this->redirectToRoute('service_delete', ['serviceId' => $serviceId]);
+        }
 
+        if ($form->isSubmitted() && $form->isValid()) {
             $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
@@ -359,11 +358,7 @@ class ServiceController extends Controller
         ]);
     }
 
-    /**
-     * @param ServiceType $form
-     * @return bool
-     */
-    private function isDeleteAction(Form $form)
+    private function isDeleteAction(FormInterface $form): bool
     {
         return $this->assertUsedSubmitButton($form, 'delete');
     }
@@ -375,7 +370,7 @@ class ServiceController extends Controller
      * @param string $expectedButtonName
      * @return bool
      */
-    private function assertUsedSubmitButton(Form $form, $expectedButtonName)
+    private function assertUsedSubmitButton(FormInterface $form, $expectedButtonName)
     {
         $button = $form->getClickedButton();
 
