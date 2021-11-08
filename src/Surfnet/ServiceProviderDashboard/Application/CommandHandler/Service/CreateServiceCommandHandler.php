@@ -74,7 +74,7 @@ class CreateServiceCommandHandler implements CommandHandler
     public function handle(CreateServiceCommand $command)
     {
         $name = $command->getName();
-        $teamName = $command->getTeamName();
+        $teamName = strtolower($command->getTeamName());
         $fullTeamName = $this->prefixPart1 . $this->prefixPart2 . $teamName;
 
         /** create team **/

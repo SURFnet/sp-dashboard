@@ -11,7 +11,7 @@ $(() => {
       const serviceName = name.value.replaceAll(' ', '-').replaceAll("'", '').replaceAll('"', '');
       // @ts-ignore
       const organizationName = organizationEn.value.replaceAll(' ', '-').replaceAll("'", '').replaceAll('"', '');
-      teamName.value = `spd_${organizationName}_${serviceName}`;
+      teamName.value = `spd_${organizationName}_${serviceName}`.toLowerCase();
     };
 
     if (!!name && !!organizationEn) {
