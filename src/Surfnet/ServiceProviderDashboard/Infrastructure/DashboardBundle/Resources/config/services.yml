@@ -254,6 +254,7 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ExistingTeamNameValidator:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
+            - '%team.prefix.default_stem_name%'
             - '%team.prefix.group_name_context%'
         tags:
             - { name: validator.constraint_validator, alias: existing_team_name }

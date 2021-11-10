@@ -33,12 +33,18 @@ class ExistingTeamNameValidator extends ConstraintValidator
     /**
      * @var string
      */
-    private $urnPrefix;
+    private $defaultStemName;
 
-    public function __construct(QueryClient $queryService, string $urnPrefix)
+    /**
+     * @var string
+     */
+    private $groupName;
+
+    public function __construct(QueryClient $queryService, string $defaultStemName, string $groupName)
     {
         $this->queryService = $queryService;
-        $this->urnPrefix = $urnPrefix;
+        $this->defaultStemName = $defaultStemName;
+        $this->groupName = $groupName;
     }
 
     /**
@@ -47,8 +53,19 @@ class ExistingTeamNameValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        $teamName = $value;
         try {
-            $result = $this->queryService->findTeamByUrn($this->urnPrefix . $value);
+            $hasDefaultStemName = strpos($teamName, $this->defaultStemName);
+            if ($hasDefaultStemName !== false) {
+                $teamName = str_replace($this->defaultStemName, '', $teamName);
+            }
+
+            $hasGroupName = strpos($teamName, $this->groupName);
+            if ($hasGroupName === false) {
+                $teamName = $this->groupName . $teamName;
+            }
+
+            $result = $this->queryService->findTeamByUrn($teamName);
         } catch (Exception $e) {
             $this->context->addViolation('validator.team_name.registry_failure');
             return;
