@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -47,14 +47,14 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     private $logger;
 
     /**
-     * @var Config
+     * @var ApiConfig
      */
     private $manageConfig;
 
     public function __construct(
         HttpClientInterface $client,
         JsonGeneratorStrategy $generator,
-        Config $manageConfig,
+        ApiConfig $manageConfig,
         LoggerInterface $logger
     ) {
         $this->client = $client;
