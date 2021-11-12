@@ -171,12 +171,25 @@ class QueryClient implements QueryTeamsRepository
 
     private function transformTeamForFrontend(array $result): array
     {
-        $users = array_merge($result['memberships'], $result['invitations']);
+        //remove accepted invites
+        $invitations = $this->removeAcceptedInvites($result['invitations']);
+        $users = array_merge($result['memberships'], $invitations);
 
         return [
             'teamId' => $result['id'],
             'users' => $users,
             'originalData' => $result,
         ];
+    }
+
+    private function removeAcceptedInvites(array $invitations): array
+    {
+        foreach ($invitations as $key => $invite) {
+            if ($invite['accepted']) {
+                unset($invitations[$key]);
+            }
+        }
+
+        return $invitations;
     }
 }
