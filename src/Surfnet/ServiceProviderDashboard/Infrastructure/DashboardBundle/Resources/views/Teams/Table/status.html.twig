@@ -3,6 +3,7 @@
         <i class="fa fa-clock-o darkGreen" aria-hidden="true"></i>
         Invitation expires in {{ user.daysValid }} days.
     {% elseif user.person is defined %}
-        Member
+        {% set timestamp10 = (user.person.created / 1000)|round(0, 'floor') %}
+        {{ timestamp10|date }}
     {% endif %}
 </td>
