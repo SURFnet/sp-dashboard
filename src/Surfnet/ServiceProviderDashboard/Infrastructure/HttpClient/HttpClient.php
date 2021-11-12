@@ -32,6 +32,7 @@ use function strtolower;
 
 class HttpClient implements HttpClientInterface
 {
+    const TEST_API_NAME = 'testApi';
     const MODE_TEST = 'test';
 
     /**
@@ -60,7 +61,7 @@ class HttpClient implements HttpClientInterface
     public function __construct(
         ClientInterface $httpClient,
         LoggerInterface $logger,
-        string $apiName = 'testApi',
+        string $apiName = self::TEST_API_NAME,
         string $mode = self::MODE_TEST
     ) {
         $this->httpClient = $httpClient;
