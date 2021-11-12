@@ -6,10 +6,29 @@ Can be found at [this github page](https://github.com/OpenConext/OpenConext-Team
 
 ## 2. Ensure teams works
 
-1. open Manage and search for `teams.vm.openconext.org` in the tab `relying parties`
-2. ensure that `voot` has been coupled as a resource server & SAVE + PUSH if it wasn't yet
-3. go to scopes & add `groups`
-4. go to the resource server `voot` & add `groups` in the tab `metadata`
+In order to use this, you need to recreate some parts of your dev env:
+
+- Delete the mongo database:
+
+`docker volume rm sp-dashboard_spdashboard_mongo`
+
+- Pull the new image:
+
+`docker pull ghcr.io/openconext/openconext-deploy/openconext-core:feature_build_image_with_teams_included`
+
+- Rebuild the OpenConext container
+
+`docker-compose build openconext`
+
+- Start it, wait some time until everything is started. Then you need to fix a scope provisioning issue in OpenConext deploy:
+
+    - navigate to `https://manage.vm.openconext.org`
+    - Open the scopes tab, and add the scope "groups" (name and description don't matter)
+        - Move to the resource servers tab, and edit the resource server "voot.vm.openconext.org"
+    - Remove the "groups" scope. And save it
+    - Reopen it, and add it again (yes this is really how you get it up & running again)
+    - Click on PUSH
+    - You should now be able to open `https://teams.vm.openconext.org` (which in your /etc/hosts should point to 127.0.01)
 
 ## 3. Accessing the logs
 
