@@ -23,13 +23,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class ExistingTeamNameValidator extends ConstraintValidator
+class UrnFormattedTeamNameValidator extends ConstraintValidator
 {
-    /**
-     * @var QueryClient
-     */
-    private $queryService;
-
     /**
      * @var string
      */
@@ -40,9 +35,8 @@ class ExistingTeamNameValidator extends ConstraintValidator
      */
     private $groupName;
 
-    public function __construct(QueryClient $queryService, string $defaultStemName, string $groupName)
+    public function __construct(string $defaultStemName, string $groupName)
     {
-        $this->queryService = $queryService;
         $this->defaultStemName = $defaultStemName;
         $this->groupName = $groupName;
     }
@@ -54,28 +48,12 @@ class ExistingTeamNameValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         $teamName = $value;
-        try {
-            $hasDefaultStemName = strpos($teamName, $this->defaultStemName);
+        $hasDefaultStemName = strpos($teamName, $this->defaultStemName);
+        $hasGroupName = strpos($teamName, $this->groupName);
 
-            // we cannot use if($hasDefaultStemName) because strpos can return the int 0, meaning it occurs at index 0
-            if ($hasDefaultStemName !== false) {
-                $teamName = str_replace($this->defaultStemName, '', $teamName);
-            }
-
-            $hasGroupName = strpos($teamName, $this->groupName);
-            if ($hasGroupName === false) {
-                $teamName = $this->groupName . $teamName;
-            }
-
-            $result = $this->queryService->findTeamByUrn($teamName);
-        } catch (Exception $e) {
-            $this->context->addViolation('validator.team_name.registry_failure');
-            return;
-        }
-
-        // Prevent creating services with existing team name in Teams.
-        if (empty($result)) {
-            $this->context->addViolation('validator.team_name.does_not_exist');
+        // we cannot use if($hasDefaultStemName) because strpos can return the int 0, meaning it occurs at index 0
+        if ($hasDefaultStemName === false || $hasGroupName === false) {
+            $this->context->addViolation('validator.team_name.not_in_urn_format');
         }
     }
 }

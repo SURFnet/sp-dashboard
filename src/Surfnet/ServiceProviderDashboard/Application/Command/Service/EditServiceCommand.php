@@ -42,6 +42,7 @@ class EditServiceCommand implements Command
      * @var string
      * @Assert\NotBlank
      * @SpDashboardAssert\ExistingTeamName
+     * @SpDashboardAssert\UrnFormattedTeamName
      */
     private $teamName;
 

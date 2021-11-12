@@ -259,6 +259,13 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: existing_team_name }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UrnFormattedTeamNameValidator:
+        arguments:
+            - '%team.prefix.default_stem_name%'
+            - '%team.prefix.group_name_context%'
+        tags:
+            - { name: validator.constraint_validator, alias: urn_formatted_team_name }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
         tags:
             - { name: validator.constraint_validator, alias: unique_redirect_urls }
