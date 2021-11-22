@@ -25,7 +25,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\NullLogger;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient;

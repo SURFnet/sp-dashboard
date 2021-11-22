@@ -21,6 +21,7 @@ namespace Infrastructure\Manage\Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\NullLogger;
@@ -183,7 +184,7 @@ class QueryClientTest extends MockeryTestCase
     public function test_it_handles_failing_query_action()
     {
         $this->expectExceptionMessage("Unable to find entity with internal manage ID: \"xyz\"");
-        $this->expectException(\Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException::class);
+        $this->expectException(QueryServiceProviderException::class);
         $this->mockHandler->append(new Response(418));
         $this->client->findByManageId('xyz');
     }
