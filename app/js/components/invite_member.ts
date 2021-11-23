@@ -8,8 +8,9 @@ $(() => {
     document.addEventListener('change', (event) => {
       const target = event.target as HTMLSelectElement;
       if (!target.matches('#role-select')) return;
-
-      hiddenRole.value = select.value;
+      // tslint:disable-next-line:no-console
+      console.log(target.value);
+      hiddenRole.value = target.value;
     });
   }
 });

@@ -18,22 +18,22 @@
 
 <label for="role-select"{% if labelClass is defined %} class={{ labelClass }}{% endif %}>{% if labelText is defined %}{{ labelText }}{% endif %}</label>
 <select id="role-select" class="teams__select"{% if url is defined %} data-url="{{ url }}"{% endif %}{% if isInvite is defined and isInvite %} disabled {% endif %}>
-    <option class="fontawesome" data-icon="fa-star" value="admin" {% if userRole == 'admin' %}selected{% endif %}>
+    <option class="fontawesome" data-icon="fa-star" value="admin" {% if userRole == 'admin' %}selected="selected"{% endif %}>
         &#xf005;{{ whitespaceBefore }}
         {{ 'teams.management.table.role.admin'|trans }}
         &nbsp;&nbsp;&nbsp;{{ iconAfter }}
     </option>
-    <option class="fontawesome" data-icon="fa-universal-access" value="owner" {% if userRole == 'owner' %}selected{% endif %}>
+    <option class="fontawesome" data-icon="fa-universal-access" value="owner" {% if userRole == 'owner' %}selected="selected"{% endif %}>
         &#xf29a;{{ whitespaceBefore }}
         {{ 'teams.management.table.role.owner'|trans }}
         &nbsp;&nbsp;&nbsp;{{ iconAfter }}
     </option>
-    <option class="fontawesome" data-icon="fa-black-tie" value="manager" {% if userRole == 'manager' %}selected{% endif %}>
+    <option class="fontawesome" data-icon="fa-black-tie" value="manager" {% if userRole == 'manager' %}selected="selected"{% endif %}>
         &#xf27e;{{ whitespaceBefore }}
         {{ 'teams.management.table.role.manager'|trans }}
         {{ iconAfter }}
     </option>
-    <option class="fontawesome" data-icon="fa-user" value="member" {% if userRole == 'member' %}selected{% endif %}>
+    <option class="fontawesome" data-icon="fa-user" value="member" {% if userRole == 'member' %}selected="selected"{% endif %}>
         &#xf007;{{ whitespaceBefore }}
         {{ 'teams.management.table.role.member'|trans }}
         &nbsp;{{ iconAfter }}
