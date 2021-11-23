@@ -14,7 +14,7 @@ $(() => {
          * We do not allow diacritics (letters with a special modifier, like é, è or ô for example)
          */
         // @ts-ignore
-        return nameToNormalize.normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^\W\u00a0\u0020\-]/gu, '').replace(/[\u00a0\u0020]/gu, '-');
+        return nameToNormalize.normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[ ]/gu, '-').replace(/[^\w\-]/gu, '');
       };
       const serviceName = normalizeName(name.value);
       const organizationName = normalizeName(organizationEn.value);
