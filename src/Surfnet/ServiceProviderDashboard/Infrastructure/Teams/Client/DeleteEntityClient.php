@@ -93,10 +93,10 @@ class DeleteEntityClient implements DeleteTeamsEntityRepositoryInterface
     {
         try {
             $result = $this->client->delete(
-                sprintf('/api/spdashboard/memberships/%d/', $memberId)
+                sprintf('/api/spdashboard/memberships/%d', $memberId)
             );
 
-            if ($result !== true) {
+            if ($result->getStatusCode() !== 201) {
                 throw new UnableToDeleteMembershipException(
                     sprintf('Not allowed to delete member with internal teams ID: "%d"', $memberId)
                 );

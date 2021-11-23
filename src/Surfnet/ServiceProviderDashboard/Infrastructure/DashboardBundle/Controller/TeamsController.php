@@ -94,8 +94,9 @@ class TeamsController extends Controller
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      *
      * @return Response
+     * @throws GuzzleException
      */
-    public function manageTeamAction(Request $request, int $serviceId)
+    public function manageTeamAction(int $serviceId)
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $sanitizedTeamName = str_replace($this->defaultStemName, '', $service->getTeamName());
@@ -126,7 +127,7 @@ class TeamsController extends Controller
         $invite = [
             'teamId' => $teamId,
             'intendedRole' => $role,
-            'emails' => $this->createEmailsArray($email, $role),
+            'emails' => $this->createEmailsArray($email),
             'message' => $this->translator->trans('teams.create.invitationMessage'),
             'language' => 'ENGLISH',
         ];
@@ -189,7 +190,7 @@ class TeamsController extends Controller
     {
         try {
             $this->deleteEntityClient->deleteMembership($memberId);
-            $response = new JsonResponse('ok');
+            $response = new JsonResponse('success');
             $response->setStatusCode(200);
         } catch (UnableToDeleteMembershipException|Exception|GuzzleException $e) {
             $response = new JsonResponse($e->getMessage());
@@ -199,7 +200,7 @@ class TeamsController extends Controller
         return $response;
     }
 
-    private function createEmailsArray(string $email, string $role): array
+    private function createEmailsArray(string $email): array
     {
         $emails = [];
         foreach (explode(',', $email) as $mail) {
