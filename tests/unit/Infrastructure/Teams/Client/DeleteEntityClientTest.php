@@ -60,23 +60,17 @@ class DeleteEntityClientTest extends MockeryTestCase
 
     public function test_it_can_delete_a_team()
     {
-        // When the queried entityId is found
-        $this->mockHandler
-            ->append(
-                new Response(200, [], file_get_contents(__DIR__ . '/fixture/delete_response_success.json'))
-            );
+        $this->mockHandler->append(new Response(201, [], ''));
         $response = $this->client->deleteTeam(1);
-        $this->assertEquals(DeleteManageEntityRepository::RESULT_SUCCESS, $response);
+
+        $this->assertEquals('success', $response);
     }
 
     public function test_it_can_delete_a_member()
     {
-        // When the queried entityId is found
-        $this->mockHandler
-            ->append(
-                new Response(200, [], file_get_contents(__DIR__ . '/fixture/delete_response_success.json'))
-            );
+        $this->mockHandler->append(new Response(201, [], ''));
         $response = $this->client->deleteMembership(1);
-        $this->assertEquals(DeleteManageEntityRepository::RESULT_SUCCESS, $response);
+
+        $this->assertEquals('success', $response);
     }
 }
