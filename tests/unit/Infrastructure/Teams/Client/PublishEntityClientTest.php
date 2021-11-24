@@ -26,8 +26,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient;
 
 class PublishEntityClientTest extends MockeryTestCase
@@ -77,22 +75,21 @@ class PublishEntityClientTest extends MockeryTestCase
             "invitationMessage" => "Please..",
             "language" => "DUTCH"
         ];
-        $this->mockHandler->append(new Response(201, [], json_encode($team)));
 
         $json = file_get_contents(__DIR__ . '/fixture/team.json');
+        $this->mockHandler->append(new Response(201, [], $json));
+        $this->logger->shouldReceive('info');
 
         $response = $this->client->createTeam($team);
-        $this->assertEquals($json, $response['data']);
+        $this->assertEquals(json_decode($json, true), $response);
     }
 
     public function test_it_can_change_membership()
     {
-        $this->mockHandler->append(new Response(201, [], '{"status":"OK"}'));
-
-        $json = file_get_contents(__DIR__ . '/fixture/team.json');
-
+        $this->mockHandler->append(new Response(201, [], ''));
         $response = $this->client->changeMembership(1, 'OWNER');
-        $this->assertEquals('OK', $response['status']);
+
+        $this->assertEquals(201, $response->getStatusCode());
     }
 
     public function test_it_can_invite_a_member()
@@ -107,17 +104,17 @@ class PublishEntityClientTest extends MockeryTestCase
             "message" => "Please join",
             "language" => "ENGLISH"
         ];
-        $this->mockHandler->append(new Response(201, [], '{"status":"OK"}'));
-
+        $this->mockHandler->append(new Response(201, [], ''));
         $response = $this->client->inviteMember($invite);
-        $this->assertEquals('OK', $response['status']);
+
+        $this->assertEquals(201, $response->getStatusCode());
     }
 
     public function test_it_can_resend_an_invitation()
     {
-        $this->mockHandler->append(new Response(201, [], '{"status":"OK"}'));
-
+        $this->mockHandler->append(new Response(201, [], ''));
         $response = $this->client->resendInvitation(1, "Joske is nen koolmarchant");
-        $this->assertEquals('OK', $response['status']);
+
+        $this->assertEquals(201, $response->getStatusCode());
     }
 }
