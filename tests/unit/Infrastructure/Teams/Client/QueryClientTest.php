@@ -53,14 +53,11 @@ class QueryClientTest extends MockeryTestCase
 
     public function test_it_can_find_a_team_by_urn()
     {
-        // When the queried entityId is found
-        $this->mockHandler
-            ->append(
-                new Response(200, [], file_get_contents(__DIR__ . '/fixture/team.json'))
-            );
         $json = file_get_contents(__DIR__ . '/fixture/team.json');
+        $this->mockHandler->append(new Response(201, [], $json));
+        $teamInfo = json_decode(file_get_contents(__DIR__ . '/fixture/query_response.json'), true);
 
-        $teamInfo = $this->client->findTeamByUrn('demo:openconext:org:champions');
-        $this->assertEquals($json, $teamInfo);
+        $response = $this->client->findTeamByUrn('demo:openconext:org:champions');
+        $this->assertEquals($teamInfo, $response);
     }
 }
