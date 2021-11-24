@@ -3,12 +3,12 @@
         <i class="fa fa-clock-o darkGreen" aria-hidden="true"></i>
         Invitation expires in {{ user.daysValid }} days.
     {% elseif user.person is defined %}
-        {% set stringTimestamp = '' ~ user.person.created %}
+        {% set stringTimestamp = '' ~ user.created %}
         {% if stringTimestamp|length > 10 %}
             {# if the format is a 13-digit timestamp the datefunction really doesn't handle it well.  See: https://stackoverflow.com/questions/12003673/how-can-i-display-a-formatted-date-from-a-unix-timestamp-in-twig #}
-            {% set timestamp10 = (user.person.created / 1000)|round(0, 'floor') %}
+            {% set timestamp10 = (user.created / 1000)|round(0, 'floor') %}
         {% else %}
-            {% set timestamp10 = user.person.created %}
+            {% set timestamp10 = user.created %}
         {% endif %}
         {{ timestamp10|date }}
     {% endif %}
