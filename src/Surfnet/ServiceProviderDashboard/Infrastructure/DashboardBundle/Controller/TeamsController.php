@@ -27,7 +27,6 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\UnableToDeleteMembershipException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
@@ -93,10 +92,9 @@ class TeamsController extends Controller
      * @Route("/service/{serviceId}/manageTeam", name="service_manage_team")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
      *
-     * @return Response
      * @throws GuzzleException
      */
-    public function manageTeamAction(int $serviceId)
+    public function manageTeamAction(int $serviceId): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $sanitizedTeamName = str_replace($this->defaultStemName, '', $service->getTeamName());

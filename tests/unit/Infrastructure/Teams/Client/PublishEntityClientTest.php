@@ -1,6 +1,7 @@
 <?php
 
-/** Copyright 2021 SURFnet B.V.
+/**
+ * Copyright 2021 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,10 @@ namespace Infrastructure\Teams\Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\CreateTeamsException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -61,7 +66,10 @@ class PublishEntityClientTest extends MockeryTestCase
         );
     }
 
-    public function test_it_can_create_a_team()
+    /**
+     * @throws CreateTeamsException
+     */
+    public function testItCanCreateATeam()
     {
         $team = [
             "name" => "Champions ",
@@ -84,7 +92,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->assertEquals(json_decode($json, true), $response);
     }
 
-    public function test_it_can_change_membership()
+    /**
+     * @throws ChangeMembershipRoleException
+     */
+    public function testItCanChangeMembership()
     {
         $this->mockHandler->append(new Response(201, [], ''));
         $response = $this->client->changeMembership(1, 'OWNER');
@@ -92,7 +103,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
-    public function test_it_can_invite_a_member()
+    /**
+     * @throws SendInviteException
+     */
+    public function testItCanInviteAMember()
     {
         $invite = [
             "teamId" => 2,
@@ -110,7 +124,10 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
-    public function test_it_can_resend_an_invitation()
+    /**
+     * @throws ResendInviteException
+     */
+    public function testItCanResendAnInvitation()
     {
         $this->mockHandler->append(new Response(201, [], ''));
         $response = $this->client->resendInvitation(1, "Joske is nen koolmarchant");
