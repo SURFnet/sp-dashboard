@@ -159,7 +159,6 @@ class QueryClient implements QueryTeamsRepository
             }
 
             return null;
-
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
                 sprintf('Unable to find entity with urn: "%s"', $urn),

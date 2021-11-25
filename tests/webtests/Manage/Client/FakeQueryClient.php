@@ -38,10 +38,10 @@ class FakeQueryClient implements QueryManageRepository
         ?string $metadataUrl,
         string $name,
         ?string $teamName = null
-    )
-    {
+    ) {
         $this->entities[$id] = new ClientResult($protocol, $id, $entityId, $metadataUrl, $name, $teamName);
     }
+
     public function registerEntityRaw(string $json)
     {
         // Yank the id from the json metadata
@@ -76,7 +76,8 @@ class FakeQueryClient implements QueryManageRepository
         $searchResults = [];
         foreach ($this->entities as $entity) {
             $result = $entity->getEntityResult();
-            if (isset($result['data']['metaDataFields']['coin:service_team_id']) && $result['data']['metaDataFields']['coin:service_team_id'] === $teamName) {
+            if (isset($result['data']['metaDataFields']['coin:service_team_id'])
+                && $result['data']['metaDataFields']['coin:service_team_id'] === $teamName) {
                 $searchResults[] = ManageEntity::fromApiResponse($result);
             }
         }

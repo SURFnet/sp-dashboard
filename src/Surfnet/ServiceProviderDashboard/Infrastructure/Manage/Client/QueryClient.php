@@ -312,7 +312,8 @@ class QueryClient implements QueryManageRepository
             $rs = isset($data['data']['allowedResourceServers']) ? $data['data']['allowedResourceServers'] : [];
             foreach ($rs as $resourceServer) {
                 $resourceServers[] = $this->findResourceServerByEntityId(
-                    $resourceServer['name'], $data['data']['state']
+                    $resourceServer['name'],
+                    $data['data']['state']
                 );
             }
             $data['resourceServers'] = $resourceServers;
