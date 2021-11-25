@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Infrastructure\Manage\Client;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Service;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;

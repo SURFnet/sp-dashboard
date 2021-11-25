@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Infrastructure\Teams\Client;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Service;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -30,7 +30,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityCli
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient;
 use function file_get_contents;
 
-class DeleteEntityClientTest extends MockeryTestCase
+class TeamsDeleteEntityClientTest extends MockeryTestCase
 {
     /**
      * @var DeleteEntityClient

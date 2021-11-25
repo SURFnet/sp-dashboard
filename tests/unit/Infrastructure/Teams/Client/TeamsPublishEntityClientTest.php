@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Infrastructure\Teams\Client;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Service;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -33,7 +33,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient;
 
-class PublishEntityClientTest extends MockeryTestCase
+class TeamsPublishEntityClientTest extends MockeryTestCase
 {
     /**
      * @var PublishEntityClient

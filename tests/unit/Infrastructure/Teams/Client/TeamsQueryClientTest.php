@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Infrastructure\Teams\Client;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Service;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use function file_get_contents;
 
-class QueryClientTest extends MockeryTestCase
+class TeamsQueryClientTest extends MockeryTestCase
 {
     /**
      * @var QueryClient
