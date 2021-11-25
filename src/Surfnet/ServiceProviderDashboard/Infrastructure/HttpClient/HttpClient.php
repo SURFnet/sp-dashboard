@@ -104,6 +104,11 @@ class HttpClient implements HttpClientInterface
                 ($headers['Content-Type'] === 'application/json')) {
                 return $this->parseResponse($body, $method, $resource);
             }
+
+            if ((isset($headers['Content-Type'])) &&
+                ($headers['Content-Type'] === 'application/xml')) {
+                return $body;
+            }
         });
     }
 
