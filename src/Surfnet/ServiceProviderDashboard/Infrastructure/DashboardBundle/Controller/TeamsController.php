@@ -19,16 +19,13 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ChangeMembershipRoleException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\UnableToDeleteMembershipException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
@@ -94,8 +91,6 @@ class TeamsController extends Controller
      * @Method({"GET"})
      * @Route("/service/{serviceId}/manageTeam", name="service_manage_team")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     *
-     * @throws GuzzleException
      */
     public function manageTeamAction(int $serviceId): Response
     {
@@ -174,7 +169,7 @@ class TeamsController extends Controller
             $this->publishEntityClient->changeMembership($memberId, $newRole);
             $response = new JsonResponse('ok');
             $response->setStatusCode(200);
-        } catch (ChangeMembershipRoleException $e) {
+        } catch (Exception $e) {
             $response = new JsonResponse($e->getMessage());
             $response->setStatusCode(406);
         }
@@ -193,7 +188,7 @@ class TeamsController extends Controller
             $this->deleteEntityClient->deleteMembership($memberId);
             $response = new JsonResponse('success');
             $response->setStatusCode(200);
-        } catch (UnableToDeleteMembershipException|Exception|GuzzleException $e) {
+        } catch (Exception $e) {
             $response = new JsonResponse($e->getMessage());
             $response->setStatusCode(406);
         }
