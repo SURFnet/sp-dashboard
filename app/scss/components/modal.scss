@@ -2,6 +2,7 @@
 
 .blocker {
   background-color: rgba(95,95,95,.7);
+  display: none;
 }
 .modal {
   background-color: #f5f5f5;
@@ -50,4 +51,35 @@
     color: $orange;
     margin-right: 0.5em;
   }
+}
+
+.modal__switch {
+  display: none;
+}
+
+.modal__switch:checked ~ .blocker {
+  display: block;
+}
+
+.modal__switch:checked ~ .blocker > .modal {
+  display: inline-block;
+}
+
+.modal .button-row {
+  display: flex;
+  justify-content: flex-end;
+
+  .button {
+    height: 2.5rem;
+    line-height: normal;
+  }
+}
+
+.modal__header {
+  background-color: $blue;
+  color: $white;
+  font-size: $h1Font;
+  font-weight: 700;
+  padding: 2.5rem 2rem 2rem;
+  text-transform: uppercase;
 }

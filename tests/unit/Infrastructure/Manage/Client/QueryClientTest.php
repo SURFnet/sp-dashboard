@@ -21,10 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\NullLogger;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient;
 use function file_get_contents;
 
 class QueryClientTest extends MockeryTestCase
@@ -44,7 +45,7 @@ class QueryClientTest extends MockeryTestCase
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);
         $this->client = new QueryClient(
-            new HttpClient(
+            new ManageClient(
                 $guzzle,
                 new NullLogger()
             )
@@ -164,7 +165,11 @@ class QueryClientTest extends MockeryTestCase
     public function test_it_can_query_non_existent_data()
     {
         // When the queried entityId does not exist, an empty array is returned
-        $this->mockHandler->append(new Response(200, [], '[]'), new Response(200, [], '[]'), new Response(200, [], '[]'));
+        $this->mockHandler->append(
+            new Response(200, [], '[]'),
+            new Response(200, [], '[]'),
+            new Response(200, [], '[]')
+        );
         $response = $this->client->findByManageId('does-not-exists');
         $this->assertEmpty($response);
     }
@@ -179,7 +184,7 @@ class QueryClientTest extends MockeryTestCase
     public function test_it_handles_failing_query_action()
     {
         $this->expectExceptionMessage("Unable to find entity with internal manage ID: \"xyz\"");
-        $this->expectException(\Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException::class);
+        $this->expectException(QueryServiceProviderException::class);
         $this->mockHandler->append(new Response(418));
         $this->client->findByManageId('xyz');
     }

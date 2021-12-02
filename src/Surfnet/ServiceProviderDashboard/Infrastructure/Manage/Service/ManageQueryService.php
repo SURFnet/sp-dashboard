@@ -19,25 +19,25 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 
 class ManageQueryService
 {
     private $validEnvironments = ['test', 'production'];
 
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     private $testQueryClient;
 
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     private $productionQueryClient;
 
-    public function __construct(QueryEntityRepository $test, QueryEntityRepository $production)
+    public function __construct(QueryManageRepository $test, QueryManageRepository $production)
     {
         $this->testQueryClient = $test;
         $this->productionQueryClient = $production;

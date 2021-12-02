@@ -23,7 +23,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
@@ -36,7 +36,7 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
     private $ticketService;
 
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     private $queryClient;
 
@@ -66,11 +66,11 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
     private $issueType;
 
     public function __construct(
-        QueryEntityRepository $manageProductionQueryClient,
-        string $issueType,
-        TicketService $ticketService,
-        FlashBagInterface $flashBag,
-        LoggerInterface $logger
+        QueryManageRepository $manageProductionQueryClient,
+        string                $issueType,
+        TicketService         $ticketService,
+        FlashBagInterface     $flashBag,
+        LoggerInterface       $logger
     ) {
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in parameters.yml');
         $this->queryClient = $manageProductionQueryClient;

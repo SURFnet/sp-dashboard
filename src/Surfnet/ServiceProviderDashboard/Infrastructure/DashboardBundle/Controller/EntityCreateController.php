@@ -155,7 +155,7 @@ class EntityCreateController extends Controller
      * @param null|string $targetEnvironment
      * @param null|string $type
      *
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|Response|array
      *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -236,17 +236,15 @@ class EntityCreateController extends Controller
      * @Security("has_role('ROLE_USER')")
      * @Template("@Dashboard/EntityEdit/edit.html.twig")
      *
-     * @param Request $request
-     *
      * @param int $serviceId
      * @param null|string $manageId set from the entity_copy route
      * @param null|string $targetEnvironment set from the entity_copy route
      * @param null|string $sourceEnvironment indicates where the copy command originated from
      *
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|Response|array
      *
      * @throws InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)

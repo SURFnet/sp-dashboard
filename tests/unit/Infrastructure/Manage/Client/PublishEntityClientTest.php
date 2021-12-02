@@ -27,13 +27,13 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException
+    as PushMetadataExceptionAlias;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException as PushMetadataExceptionAlias;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient;
 
 class PublishEntityClientTest extends MockeryTestCase
 {
@@ -74,7 +74,7 @@ class PublishEntityClientTest extends MockeryTestCase
         $this->manageConfig = m::mock(Config::class);
 
         $this->client = new PublishEntityClient(
-            new HttpClient(
+            new ManageClient(
                 $guzzle,
                 new NullLogger()
             ),

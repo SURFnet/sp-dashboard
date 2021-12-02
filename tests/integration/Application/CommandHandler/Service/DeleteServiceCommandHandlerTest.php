@@ -33,6 +33,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 
 class DeleteServiceCommandHandlerTest extends MockeryTestCase
 {
@@ -51,6 +52,12 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     /** @var CommandBus|MockInterface */
     private $commandBus;
 
+    /**
+     * @var DeleteEntityClient
+     */
+    private $deleteEntityClient;
+
+
     /** @var LoggerInterface|MockInterface */
     private $logger;
 
@@ -60,6 +67,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $this->entityService = m::mock(EntityServiceInterface::class);
         $this->deleteCommandFactory = m::mock(DeleteCommandFactory::class);
         $this->commandBus = m::mock(CommandBus::class);
+        $this->deleteEntityClient = m::mock(DeleteEntityClient::class);
         $this->logger = m::mock(LoggerInterface::class);
 
         $this->commandHandler = new DeleteServiceCommandHandler(
@@ -67,6 +75,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
             $this->entityService,
             $this->deleteCommandFactory,
             $this->commandBus,
+            $this->deleteEntityClient,
             $this->logger
         );
     }
@@ -74,7 +83,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     /**
      * @group CommandHandler
      */
-    public function test_it_delete_a_service_with_entities()
+    public function testItDeleteAServiceWithEntities()
     {
         $serviceId = 1;
         $service = m::mock(Service::class);
@@ -93,7 +102,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
         $entity2->shouldReceive('setContact')->with($contact);
 
         $entityList = [$entity1, $entity2];
-        $command = new DeleteServiceCommand($serviceId, $contact);
+        $command = new DeleteServiceCommand($serviceId, $contact, null);
 
         $this->repository
             ->shouldReceive('findById')
@@ -144,7 +153,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     /**
      * @group CommandHandler
      */
-    public function test_it_delete_a_service_without_entities()
+    public function testItDeleteAServiceWithoutEntities()
     {
         $serviceId = 1;
         $service = m::mock(Service::class);
@@ -152,7 +161,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
 
         $entityList = [];
 
-        $command = new DeleteServiceCommand($serviceId, $contact);
+        $command = new DeleteServiceCommand($serviceId, $contact, null);
 
         $this->repository
             ->shouldReceive('findById')
@@ -184,10 +193,57 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     }
 
     /**
+     * @group CommandHandler
+     */
+    public function testItDeletesAServiceAndTeam()
+    {
+        $serviceId = 1;
+        $service = m::mock(Service::class);
+        $contact = m::mock(Contact::class);
+
+        $entityList = [];
+
+        $command = new DeleteServiceCommand($serviceId, $contact, 1);
+
+        $this->repository
+            ->shouldReceive('findById')
+            ->with($serviceId)
+            ->andReturn($service)
+            ->once();
+
+        $service
+            ->shouldReceive('getName')
+            ->andReturn('Test SP')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->times();
+
+        $this->entityService
+            ->shouldReceive('getEntitiesForService')
+            ->with($service)
+            ->andReturn($entityList)
+            ->once();
+
+        $this->repository
+            ->shouldReceive('delete')
+            ->with($service)
+            ->once();
+
+        $this->deleteEntityClient
+            ->shouldReceive('deleteTeam')
+            ->with(1)
+            ->once();
+
+        $this->commandHandler->handle($command);
+    }
+
+    /**
      * Building the Delete commands for the entities fails on the first command.
      * The second is still executed.
      */
-    public function test_unable_to_build_commands_with_factory()
+    public function testUnableToBuildCommandsWithFactory()
     {
         $serviceId = 1;
         $service = m::mock(Service::class);
@@ -222,7 +278,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
 
         $entityList = [$entity1, $entity2];
 
-        $command = new DeleteServiceCommand($serviceId, $contact);
+        $command = new DeleteServiceCommand($serviceId, $contact, null);
 
         $this->repository
             ->shouldReceive('findById')

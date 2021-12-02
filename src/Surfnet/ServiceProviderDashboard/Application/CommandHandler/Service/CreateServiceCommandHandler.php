@@ -20,9 +20,11 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\CreateTeamsException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CreateServiceCommandHandler implements CommandHandler
 {
@@ -32,23 +34,58 @@ class CreateServiceCommandHandler implements CommandHandler
     private $serviceRepository;
 
     /**
-     * @param ServiceRepository $serviceRepository
+     * @var PublishEntityClient
      */
-    public function __construct(ServiceRepository $serviceRepository)
-    {
+    private $publishEntityClient;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var string
+     */
+    private $prefixPart1;
+
+    /**
+     * @var string
+     */
+    private $prefixPart2;
+
+    public function __construct(
+        ServiceRepository $serviceRepository,
+        PublishEntityClient $publishEntityClient,
+        TranslatorInterface $translator,
+        string $prefixPart1,
+        string $prefixPart2
+    ) {
         $this->serviceRepository = $serviceRepository;
+        $this->publishEntityClient = $publishEntityClient;
+        $this->translator = $translator;
+        $this->prefixPart1 = $prefixPart1;
+        $this->prefixPart2 = $prefixPart2;
     }
 
     /**
      * @param CreateServiceCommand $command
-     * @throws InvalidArgumentException
+     * @throws CreateTeamsException
      */
     public function handle(CreateServiceCommand $command)
     {
+        $name = $command->getName();
+        $teamName = strtolower($command->getTeamName());
+        $fullTeamName = $this->prefixPart1 . $this->prefixPart2 . $teamName;
+
+        /** create team **/
+        $team = $this->createTeamData($name, $teamName, $command->getTeamManagerEmail());
+        $this->publishEntityClient->createTeam($team);
+
+        /** create service **/
         $service = new Service();
-        $service->setName($command->getName());
+        $service->setName($name);
         $service->setGuid($command->getGuid());
-        $service->setTeamName($command->getTeamName());
+        $service->setTeamName($fullTeamName);
         $service->setProductionEntitiesEnabled($command->isProductionEntitiesEnabled());
         $service->setPrivacyQuestionsEnabled($command->isPrivacyQuestionsEnabled());
         $service->setClientCredentialClientsEnabled($command->isClientCredentialClientsEnabled());
@@ -59,9 +96,35 @@ class CreateServiceCommandHandler implements CommandHandler
         $service->setInstitutionId($command->getInstitutionId());
         $service->setOrganizationNameEn($command->getOrganizationNameEn());
         $service->setOrganizationNameNl($command->getOrganizationNameNl());
-
         $this->serviceRepository->isUnique($service);
-
         $this->serviceRepository->save($service);
+    }
+
+    private function createTeamData(string $name, string $teamName, string $email): array
+    {
+        $emails = $this->createEmailsArray($email);
+
+        return [
+            'name' => $teamName,
+            'description' => $this->translator->trans('teams.create.description', [
+                '%teamName%' => $name
+            ]),
+            'personalNote' => $this->translator->trans('teams.create.personalNote'),
+            'viewable' => false,
+            'emails' => $emails,
+            'roleOfCurrentUser' => 'MANAGER',
+            'invitationMessage' => $this->translator->trans('teams.create.invitationMessage'),
+            'language' => 'ENGLISH',
+        ];
+    }
+
+    private function createEmailsArray(string $email): array
+    {
+        $emails = [];
+        foreach (explode(',', $email) as $mail) {
+            $emails[trim($mail)] = 'MANAGER';
+        }
+
+        return $emails;
     }
 }

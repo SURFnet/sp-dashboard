@@ -19,20 +19,20 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PushMetadataException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository
+    as PublishEntityRepositoryInterface;
 
 class PublishEntityClient implements PublishEntityRepositoryInterface
 {
     /**
-     * @var HttpClient
+     * @var HttpClientInterface
      */
     private $client;
 
@@ -47,14 +47,14 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     private $logger;
 
     /**
-     * @var Config
+     * @var ApiConfig
      */
     private $manageConfig;
 
     public function __construct(
-        HttpClient $client,
+        HttpClientInterface $client,
         JsonGeneratorStrategy $generator,
-        Config $manageConfig,
+        ApiConfig $manageConfig,
         LoggerInterface $logger
     ) {
         $this->client = $client;

@@ -34,25 +34,30 @@ class DeleteServiceCommand implements Command
      */
     private $contact;
 
-    public function __construct($id, Contact $contact)
+    /**
+     * @var int
+     */
+    private $teamId;
+
+    public function __construct(int $id, Contact $contact, ?int $teamId)
     {
         $this->id = $id;
         $this->contact = $contact;
+        $this->teamId = $teamId;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getContact()
+    public function getContact(): Contact
     {
         return $this->contact;
+    }
+
+    public function getTeamId(): ?int
+    {
+        return $this->teamId;
     }
 }

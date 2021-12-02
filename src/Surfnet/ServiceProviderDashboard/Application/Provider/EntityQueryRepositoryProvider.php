@@ -20,30 +20,30 @@ namespace Surfnet\ServiceProviderDashboard\Application\Provider;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 
 class EntityQueryRepositoryProvider
 {
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     private $manageTestQueryClient;
 
     /**
-     * @var QueryEntityRepository
+     * @var QueryManageRepository
      */
     private $manageProductionQueryClient;
 
 
     public function __construct(
-        QueryEntityRepository $manageTestQueryClient,
-        QueryEntityRepository $manageProductionQueryClient
+        QueryManageRepository $manageTestQueryClient,
+        QueryManageRepository $manageProductionQueryClient
     ) {
         $this->manageTestQueryClient = $manageTestQueryClient;
         $this->manageProductionQueryClient = $manageProductionQueryClient;
     }
 
-    public function fromEnvironment(string $environment): QueryEntityRepository
+    public function fromEnvironment(string $environment): QueryManageRepository
     {
         switch ($environment) {
             case Constants::ENVIRONMENT_TEST:
@@ -55,12 +55,12 @@ class EntityQueryRepositoryProvider
         }
     }
 
-    public function getManageTestQueryClient(): QueryEntityRepository
+    public function getManageTestQueryClient(): QueryManageRepository
     {
         return $this->manageTestQueryClient;
     }
 
-    public function getManageProductionQueryClient(): QueryEntityRepository
+    public function getManageProductionQueryClient(): QueryManageRepository
     {
         return $this->manageProductionQueryClient;
     }

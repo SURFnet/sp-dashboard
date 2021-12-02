@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
@@ -29,16 +30,15 @@ use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\RuntimeException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient;
 use function file_get_contents;
 
 class DeleteEntityClientTest extends MockeryTestCase
 {
     /**
-     * @var DeleteEntityClient
+     * @var DeleteManageEntityClient
      */
     private $client;
 
@@ -66,8 +66,8 @@ class DeleteEntityClientTest extends MockeryTestCase
 
         $this->logger = m::mock(LoggerInterface::class);
 
-        $this->client = new DeleteEntityClient(
-            new HttpClient(
+        $this->client = new DeleteManageEntityClient(
+            new ManageClient(
                 $guzzle,
                 new NullLogger()
             ),
@@ -83,7 +83,7 @@ class DeleteEntityClientTest extends MockeryTestCase
                 new Response(200, [], file_get_contents(__DIR__ . '/fixture/delete_response_success.json'))
             );
         $response = $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', Constants::TYPE_SAML);
-        $this->assertEquals(DeleteEntityRepository::RESULT_SUCCESS, $response);
+        $this->assertEquals(DeleteManageEntityRepository::RESULT_SUCCESS, $response);
     }
 
     public function test_it_can_handle_error_response()
@@ -104,7 +104,9 @@ class DeleteEntityClientTest extends MockeryTestCase
     public function test_it_maps_enitty_types_correctly($invalidType)
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(sprintf('The protocol "%s" can not be mapped to a manage entity type', $invalidType));
+        $this->expectExceptionMessage(
+            sprintf('The protocol "%s" can not be mapped to a manage entity type', $invalidType)
+        );
         $this->client->delete('db2e5c63-3c54-4962-bf4a-d6ced1e9cf33', $invalidType);
     }
 

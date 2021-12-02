@@ -19,17 +19,107 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EditServiceType extends ServiceType
+class EditServiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
-        $builder->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
+        $builder
+            ->add(
+                $builder->create(
+                    'general',
+                    FormType::class,
+                    [
+                        'inherit_data' => true,
+                        'label' => 'General information'
+                    ]
+                )
+                    ->add('name')
+                    ->add(
+                        'organizationNameNl',
+                        TextType::class,
+                        [
+                            'required' => true,
+                            'label' => 'service.form.label.organization_name_nl',
+                        ]
+                    )
+                    ->add(
+                        'organizationNameEn',
+                        TextType::class,
+                        [
+                            'required' => true,
+                            'label' => 'service.form.label.organization_name_en',
+                        ]
+                    )
+                    ->add(
+                        'institutionId',
+                        TextType::class,
+                        [
+                            'required' => false,
+                            'label' => 'service.form.label.institution_id',
+                            'attr' => ['class' => 'institution-id-container']
+                        ]
+                    )
+                    ->add(
+                        'productionEntitiesEnabled',
+                        CheckboxType::class,
+                        [
+                            'required' => false,
+                        ]
+                    )
+                    ->add(
+                        'privacyQuestionsEnabled',
+                        CheckboxType::class,
+                        [
+                            'required' => false,
+                            'attr' => ['class' => 'privacy-questions-toggle'],
+                        ]
+                    )
+                    ->add(
+                        'clientCredentialClientsEnabled',
+                        CheckboxType::class,
+                        [
+                            'required' => false,
+                        ]
+                    )
+                    ->add('guid', TextType::class, ['label' => 'CRM ID'])
+            )
+            ->add(
+                $builder->create(
+                    'serviceStatus',
+                    FormType::class,
+                    [
+                        'inherit_data' => true,
+                        'label' => 'Status indicators'
+                    ]
+                )
+                    ->add('serviceType', ServiceTypeType::class)
+                    ->add('intakeStatus', IntakeStatusType::class)
+                    ->add('contractSigned', ContractSignedType::class)
+                    ->add('surfconextRepresentativeApproved', RepresentativeApprovedType::class)
+            )
+            ->add(
+                $builder->create(
+                    'teams',
+                    FormType::class,
+                    [
+                        'inherit_data' => true,
+                        'label' => 'Teams'
+                    ]
+                )
+                ->add('teamName', null, [
+                    'label' => 'Team identifier',
+                ])
+            )
+        ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
+        ->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

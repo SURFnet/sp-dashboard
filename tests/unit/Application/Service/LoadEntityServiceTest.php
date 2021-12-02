@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
+namespace Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -27,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient as ManageClient;
 
 class LoadEntityServiceTest extends MockeryTestCase
 {
@@ -432,11 +432,16 @@ JSON
                             "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
                             "scopes": ["openid"],
                             "secret": "$2a$10$ErGAt73kBcyDI9iPLy0URe5nJrfI84zgSVvyCTGlDyRdXnEzzJS9f",
-                            "redirectUrls": ["https:\/\/prod.dev.playground.openconext.nl\/redirect1", "https:\/\/test.dev.playground.openconext.nl"],
+                            "redirectUrls": 
+                                [
+                                    "https:\/\/prod.dev.playground.openconext.nl\/redirect1",
+                                     "https:\/\/test.dev.playground.openconext.nl"
+                                ],
                             "grants": ["authorization_code"],
                             "accessTokenValidity": 4140,
                             "isPublicClient": true,
-                            "logo:0:url": "https:\/\/spdashboard.dev.support.openconext.nl\/images\/openconext-logo.png",
+                            "logo:0:url": 
+                                "https:\/\/spdashboard.dev.support.openconext.nl\/images\/openconext-logo.png",
                             "logo:0:width": 322,
                             "logo:0:height": 100,
                             "coin:exclude_from_push": true

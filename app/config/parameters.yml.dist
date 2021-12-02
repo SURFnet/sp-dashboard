@@ -54,6 +54,11 @@ parameters:
     manage_prod_password: secret
     manage_prod_publication_status: prodaccepted
 
+    ## Teams test instance
+    teams_host: 'https://teams.vm.openconext.org'
+    teams_username: spdashboard
+    teams_password: secret
+
     # Mail default settings
     mail_from: support@surfconext.nl
     mail_receiver: support@surfconext.nl
@@ -87,3 +92,7 @@ parameters:
     global.site_notice.show: false
     global.site_notice.date: '11.05.2021'
     global.site_notice.allowed.tags: '<a><u><i><br><wbr><strong><em><blink><marquee><p><ul><ol><dl><li><dd><dt><div><span><blockquote><hr><h2></h2><h3><h4><h5><h6>'
+
+    # Teams urn prefix, see: https://www.pivotaltracker.com/story/show/179572218/comments/227653860
+    team.prefix.default_stem_name: 'urn:collab:group:vm.openconext.org:'
+    team.prefix.group_name_context: 'demo:openconext:org:'

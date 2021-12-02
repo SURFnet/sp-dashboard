@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Servic
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -44,7 +44,7 @@ class AuthorizationService
     private $tokenStorage;
 
     /**
-     * @var Config[]
+     * @var ApiConfig[]
      */
     private $manageConfig;
 
@@ -52,8 +52,8 @@ class AuthorizationService
         ServiceService $serviceService,
         Session $session,
         TokenStorageInterface $tokenStorage,
-        Config $manageTestConfig,
-        Config $manageProdConfig
+        ApiConfig $manageTestConfig,
+        ApiConfig $manageProdConfig
     ) {
         $this->serviceService = $serviceService;
         $this->session = $session;

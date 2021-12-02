@@ -20,21 +20,28 @@ namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use function array_key_exists;
 use function json_decode;
 
-class FakeQueryClient implements QueryEntityRepository
+class FakeQueryClient implements QueryManageRepository
 {
     /**
      * @var ClientResult[]
      */
     private $entities = [];
 
-    public function registerEntity(string $protocol, string $id, string $entityId, ?string $metadataUrl, string $name, ?string $teamName = null)
-    {
+    public function registerEntity(
+        string $protocol,
+        string $id,
+        string $entityId,
+        ?string $metadataUrl,
+        string $name,
+        ?string $teamName = null
+    ) {
         $this->entities[$id] = new ClientResult($protocol, $id, $entityId, $metadataUrl, $name, $teamName);
     }
+
     public function registerEntityRaw(string $json)
     {
         // Yank the id from the json metadata
@@ -69,7 +76,8 @@ class FakeQueryClient implements QueryEntityRepository
         $searchResults = [];
         foreach ($this->entities as $entity) {
             $result = $entity->getEntityResult();
-            if (isset($result['data']['metaDataFields']['coin:service_team_id']) && $result['data']['metaDataFields']['coin:service_team_id'] === $teamName) {
+            if (isset($result['data']['metaDataFields']['coin:service_team_id'])
+                && $result['data']['metaDataFields']['coin:service_team_id'] === $teamName) {
                 $searchResults[] = ManageEntity::fromApiResponse($result);
             }
         }

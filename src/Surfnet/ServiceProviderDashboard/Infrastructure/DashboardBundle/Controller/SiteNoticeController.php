@@ -45,7 +45,6 @@ class SiteNoticeController extends Controller
      * session and in cookies.
      *
      * @Method("GET")
-     * @Security("has_role('ROLE_USER')")
      * @Template()
      */
     public function showGlobalSiteNoticeAction(Request $request)

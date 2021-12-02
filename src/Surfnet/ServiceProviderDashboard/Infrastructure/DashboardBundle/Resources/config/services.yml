@@ -26,6 +26,9 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
+        arguments:
+            $prefixPart1: '%team.prefix.default_stem_name%'
+            $prefixPart2: '%team.prefix.group_name_context%'
 
     surfnet.dashboard.command_handler.delete_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
@@ -241,6 +244,28 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: unique_entity_id }
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueTeamNameValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
+            - '%team.prefix.group_name_context%'
+        tags:
+            - { name: validator.constraint_validator, alias: unique_team_name }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ExistingTeamNameValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
+            - '%team.prefix.default_stem_name%'
+            - '%team.prefix.group_name_context%'
+        tags:
+            - { name: validator.constraint_validator, alias: existing_team_name }
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UrnFormattedTeamNameValidator:
+        arguments:
+            - '%team.prefix.default_stem_name%'
+            - '%team.prefix.group_name_context%'
+        tags:
+            - { name: validator.constraint_validator, alias: urn_formatted_team_name }
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueRedirectUrlsValidator:
         tags:
             - { name: validator.constraint_validator, alias: unique_redirect_urls }
@@ -306,24 +331,32 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
             - '@Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy'
             - '@surfnet.manage.configuration.test'
             - '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
 
     Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory:
         class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory
 
-    # For details, see the DasboardExtension.
-    surfnet.manage.configuration.test:
-        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config
+    Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory
 
+    # For details, see the DashboardExtension.
+    surfnet.manage.configuration.test:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
+
+    # For details, see the DashboardExtension.
     surfnet.manage.configuration.production:
-        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
+
+    # For details, see the DashboardExtension.
+    surfnet.teams.configuration:
+        class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig
 
     surfnet.manage.client.publish_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient
@@ -350,30 +383,59 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
             - '@surfnet.manage.client.publish_client.prod_environment'
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient:
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient:
         arguments:
             - '@surfnet.manage.http.guzzle.test_environment'
             - '@logger'
 
-    surfnet.manage.client.delete_client.test_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\TeamsController:
         arguments:
-        - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            $defaultStemName: '%team.prefix.default_stem_name%'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
+        arguments:
+            $defaultStemName: '%team.prefix.default_stem_name%'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
+        arguments:
+            - '@surfnet.teams.http.guzzle'
+            - '@logger'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
+            - '@logger'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient'
+
+    surfnet.manage.client.delete_client.test_environment:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
+        arguments:
+        - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
         - '@logger'
 
     surfnet.manage.client.identity_provider_client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient
         arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
             - '@surfnet.manage.configuration.test'
 
     surfnet.manage.client.delete_client.prod_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteEntityClient
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
         arguments:
         - '@surfnet.manage.http.http_client.prod_environment'
         - '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory:
+        public: false
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory:
         public: false
 
     surfnet.manage.http.guzzle.test_environment:
@@ -382,12 +444,25 @@ services:
         arguments:
             - "@surfnet.manage.configuration.test"
 
+    surfnet.teams.http.guzzle:
+        class: GuzzleHttp\Client
+        factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\TeamsClientFactory:createClient"
+        arguments:
+            - "@surfnet.teams.configuration"
+
     surfnet.manage.http.http_client.prod_environment:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient
         arguments:
            - '@surfnet.manage.http.guzzle.prod_environment'
            - '@logger'
            - 'production'
+
+    surfnet.teams.http.http_client:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient
+        arguments:
+           - '@surfnet.teams.http.guzzle'
+           - '@logger'
+           - ''
 
     surfnet.manage.http.guzzle.prod_environment:
         class: GuzzleHttp\Client

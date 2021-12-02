@@ -51,7 +51,7 @@ interface EntityServiceInterface
      * @return ManageEntity|null
      *
      * @throws InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryServiceProviderException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      */
     public function getManageEntityById($manageId, $env = 'test');
 }
