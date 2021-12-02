@@ -18,8 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DependencyInjection;
 
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Environment;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -53,6 +52,8 @@ class DashboardExtension extends Extension
         foreach ($config['manage'] as $environment => $manageConfig) {
             $this->parseManageConfiguration($environment, $manageConfig, $container);
         }
+
+        $this->parseTeamsConfiguration($config['teams'], $container);
     }
 
     /**
@@ -70,8 +71,23 @@ class DashboardExtension extends Extension
     {
         $manageConfiguration = new Definition(Config::class);
         $manageConfiguration->setClass(Config::class);
-        $manageConfiguration->setFactory('Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory::fromConfig');
-        $manageConfiguration->setArguments([$environment, $config]);
+        $manageConfiguration
+            ->setFactory('Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory::fromConfig');
+        $manageConfiguration->setArguments([$config, $environment]);
         $container->setDefinition('surfnet.manage.configuration.' . $environment, $manageConfiguration);
+    }
+
+    /**
+     * Creates a config aggregate based on the configuration in config.yml for teams.
+     */
+    public function parseTeamsConfiguration(array $config, ContainerBuilder $container)
+    {
+        $configuration = new Definition(Config::class);
+        $configuration->setClass(Config::class);
+        $configuration->setFactory(
+            'Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory::fromConfig'
+        );
+        $container->setDefinition('surfnet.teams.configuration', $configuration);
+        $configuration->setArguments([$config]);
     }
 }

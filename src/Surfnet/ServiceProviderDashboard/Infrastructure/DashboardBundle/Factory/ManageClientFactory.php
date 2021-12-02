@@ -19,15 +19,11 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory;
 
 use GuzzleHttp\Client;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 
 class ManageClientFactory
 {
-    /**
-     * @param Config $configuration
-     * @return Client
-     */
-    public static function createClient(Config $configuration)
+    public static function createClient(ApiConfig $configuration): Client
     {
         $arguments = [
             'base_uri' => $configuration->getConnection()->getHost(),

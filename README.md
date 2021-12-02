@@ -3,7 +3,7 @@
          align="right" />
 </a>
 
-[![Build status](https://img.shields.io/travis/SURFnet/sp-dashboard.svg)](https://travis-ci.org/SURFnet/sp-dashboard)
+[![Build status](https://img.shields.io/travis/SURFnet/sp-dashboard.svg)](https://travis-ci.com/SURFnet/sp-dashboard)
 [![License](https://img.shields.io/github/license/SURFnet/sp-dashboard.svg)](https://github.com/SURFnet/sp-dashboard/blob/master/LICENSE.txt)
 
 # Service Provider Dashboard

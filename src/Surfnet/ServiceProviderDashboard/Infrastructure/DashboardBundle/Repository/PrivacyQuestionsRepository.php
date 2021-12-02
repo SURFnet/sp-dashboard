@@ -21,7 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Reposi
 use Doctrine\ORM\EntityRepository as DoctrineEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository as PrivacyQuestionsRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository
+    as PrivacyQuestionsRepositoryInterface;
 
 class PrivacyQuestionsRepository extends DoctrineEntityRepository implements PrivacyQuestionsRepositoryInterface
 {

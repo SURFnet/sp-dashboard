@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\PublishMetadataException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UpdateEntityAclCommandHandler implements CommandHandler
@@ -62,7 +62,10 @@ class UpdateEntityAclCommandHandler implements CommandHandler
      */
     public function handle(UpdateEntityAclCommand $command)
     {
-        $this->logger->info(sprintf('Publishing entity "%s" to Manage in test environment to update ACL', $command->getManageEntity()->getId()));
+        $this->logger->info(sprintf(
+            'Publishing entity "%s" to Manage in test environment to update ACL',
+            $command->getManageEntity()->getId()
+        ));
 
         $entity = $command->getManageEntity();
         $idps = array_map(function (IdentityProvider $idp) {

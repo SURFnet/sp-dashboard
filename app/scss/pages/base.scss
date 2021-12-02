@@ -23,12 +23,17 @@
     @import "../excludes/forms.scss";
     padding: 25px;
 
+    &--second {
+      border-top: unset;
+      margin-top: -3rem;
+      padding-top: 0;
+    }
+
     section.form-divider {
       border-bottom: 1px solid $lighter-grey;
       padding-bottom: 25px;
       margin-bottom: 25px;
     }
-
 
     .attributes > div.form-row > p.parsley-errors {
       margin-bottom: .5em;

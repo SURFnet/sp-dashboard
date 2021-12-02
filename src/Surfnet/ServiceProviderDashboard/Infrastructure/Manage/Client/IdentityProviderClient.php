@@ -18,13 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryIdentityProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryIdentityProviderException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProviderFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 /**
  * The IdentityProviderClient can be used to perform queries on the Manage

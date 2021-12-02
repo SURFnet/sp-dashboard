@@ -2,11 +2,11 @@ name: Build docker container for the SP Dashboard
 
 on:
   pull_request:
-    branches: [ develop ]
   release:
     types: [ published ]
   push: 
     branches: [ develop ]
+  workflow_dispatch:
 
 jobs:
   build:

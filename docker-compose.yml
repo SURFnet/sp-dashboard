@@ -12,12 +12,17 @@ services:
       engine-api.vm.openconext.org: 127.0.0.2
       engine.vm.openconext.org: 127.0.0.1
       manage.vm.openconext.org: 127.0.0.1
+      voot.vm.openconext.org: 127.0.0.1
+      connect.vm.openconext.org: 127.0.0.1
+      test.openconext.org: 127.0.0.1
+      teams.vm.openconext.org: 127.0.0.1
     privileged: true
     networks:
       spdashboard:
         aliases:
           - db.vm.openconext.org
           - manage.vm.openconext.org
+          - teams.vm.openconext.org
     volumes:
       - spdashboard_mysql:/var/lib/mysql
       - spdashboard_mongo:/var/lib/mongo

@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use RuntimeException;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use function file_get_contents;
 use function json_decode;
 use function sprintf;

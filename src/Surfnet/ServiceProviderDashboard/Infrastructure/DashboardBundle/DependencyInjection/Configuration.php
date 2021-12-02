@@ -59,6 +59,19 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('publication_status')->end()
                     ->end()
                 ->end()
+            ->end()
+            ->arrayNode('teams')
+                ->info('The teams configuration root')
+                ->isRequired()
+                    ->children()
+                    ->arrayNode('connection')
+                    ->children()
+                    ->scalarNode('host')->end()
+                    ->scalarNode('username')->end()
+                    ->scalarNode('password')->end()
+                    ->end()
+                    ->end()
+                    ->end()
             ->end();
     }
 }

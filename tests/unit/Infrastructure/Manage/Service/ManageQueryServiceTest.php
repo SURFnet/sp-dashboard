@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\Manage\Service;
+namespace Infrastructure\Manage\Service;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManageQueryService;
 
 class ManageQueryServiceTest extends MockeryTestCase

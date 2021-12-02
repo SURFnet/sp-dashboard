@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Form\Entity;
+namespace Infrastructure\DashboardBundle\Form\Entity;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 
 class OidcngResourceServerOptionsFactoryTest extends MockeryTestCase
 {

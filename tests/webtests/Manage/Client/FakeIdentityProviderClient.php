@@ -18,13 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Exception\QueryIdentityProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProviderFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\Exception\HttpException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Http\HttpClient;
 
 class FakeIdentityProviderClient implements IdentityProviderRepository
 {

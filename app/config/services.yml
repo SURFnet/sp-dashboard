@@ -8,3 +8,6 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments: 
+          - 'mysql://%database_user%:%database_password%@%database_host%/%database_name%?serverVersion=5.7'

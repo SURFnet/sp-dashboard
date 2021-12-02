@@ -21,11 +21,14 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Command
 use Hamcrest\Core\IsEqual;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\Mock;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CreateServiceCommandHandlerTest extends MockeryTestCase
 {
@@ -36,10 +39,29 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
     /** @var ServiceRepository|m\MockInterface */
     private $repository;
 
+    /**
+     * @var PublishEntityClient
+     */
+    private $publishEntityClient;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function setUp()
     {
         $this->repository = m::mock(ServiceRepository::class);
-        $this->commandHandler = new CreateServiceCommandHandler($this->repository);
+        $this->publishEntityClient = m::mock(PublishEntityClient::class);
+        $this->translator = m::mock(TranslatorInterface::class);
+
+        $this->commandHandler = new CreateServiceCommandHandler(
+            $this->repository,
+            $this->publishEntityClient,
+            $this->translator,
+            'voor',
+            'voegsel'
+        );
     }
 
     /**
@@ -47,6 +69,12 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_can_process_a_create_service_command()
     {
+        $this->translator
+            ->shouldReceive('trans');
+        $this->publishEntityClient
+            ->shouldReceive('createTeam')
+            -> andReturn([]);
+
         $service = new Service();
         $service->setName('Foobar');
         $service->setTeamName('team-foobar');
@@ -64,6 +92,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command = new CreateServiceCommand();
         $command->setName($service->getName());
         $command->setTeamName($service->getTeamName());
+        $command->setTeamManagerEmail('tiffany@aching.do');
         $command->setGuid($service->getGuid());
         $command->setPrivacyQuestionsEnabled($service->isPrivacyQuestionsEnabled());
         $command->setProductionEntitiesEnabled($service->isProductionEntitiesEnabled());
@@ -74,10 +103,10 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
         $command->setSurfconextRepresentativeApproved($service->getSurfconextRepresentativeApproved());
         $command->setContractSigned($service->getContractSigned());
         $command->setInstitutionId($service->getInstitutionId());
+        $service->setTeamName('voorvoegselteam-foobar');
 
         $this->repository->shouldReceive('save')->with(IsEqual::equalTo($service))->once();
         $this->repository->shouldReceive('isUnique')->andReturn(true)->once();
-
         $this->commandHandler->handle($command);
     }
 
@@ -86,11 +115,18 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_rejects_non_unique_create_service_command()
     {
+        $this->translator
+            ->shouldReceive('trans');
+        $this->publishEntityClient
+            ->shouldReceive('createTeam')
+            -> andReturn([]);
+
         $this->expectExceptionMessage("This teamname is taken by: HZ with Guid: 30dd879c-ee2f-11db-8314-0800200c9a66");
         $this->expectException(InvalidArgumentException::class);
         $command = new CreateServiceCommand();
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
+        $command->setTeamManagerEmail('tiffany@aching.do');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
         $command->setProductionEntitiesEnabled(true);
         $command->setPrivacyQuestionsEnabled(false);

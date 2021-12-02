@@ -1,0 +1,10 @@
+{% if isInvite %}
+    {% set email = user.email %}
+{% elseif user.person is defined %}
+    {% set email = user.person.email %}
+{% endif %}
+<td>
+    <a class="teams__mail" href="mailto:{{ email }}">
+        {{ email }}
+    </a>
+</td>
