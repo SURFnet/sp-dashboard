@@ -1,7 +1,19 @@
+## 4.0.0
+**Features**
+- integrate team management in the SPD
+
+**Bugfixes**
+- show correct translations for oidc attributes
+
+**Development**
+- move CI to github actions
+- add teams to the docker container
+
 ## 3.3.1
 **Features**
 - Lowercase protocol & hostname in redirect url
-  **Bugfixes**
+
+**Bugfixes**
 - Only update acl fields on edit idp whitelist
 
 ## 3.3.0
