@@ -40,6 +40,8 @@ services:
       - type: bind
         source: /dev/log
         target: /dev/log
+    environment:
+      - PHPFPM_PORT=9000
     networks:
       spdashboard:
         aliases: 
