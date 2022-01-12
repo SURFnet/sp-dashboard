@@ -2,7 +2,10 @@
 
 .blocker {
   background-color: rgba(95,95,95,.7);
-  display: none;
+
+  &--teams {
+    display: none;
+  }
 }
 .modal {
   background-color: #f5f5f5;
