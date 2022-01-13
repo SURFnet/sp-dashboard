@@ -1,3 +1,10 @@
+## 4.0.1
+**Bugfixes**
+- fix broken modals after oidc creation & client secret reset
+
+**Development**
+- use the prebuilt openconext containers
+
 ## 4.0.0
 **Features**
 - integrate team management in the SPD
