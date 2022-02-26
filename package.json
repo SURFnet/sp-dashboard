@@ -41,7 +41,7 @@
     "parsleyjs": "^2.8.1",
     "select2": "^4.0.3",
     "tippy.js": "^2.0.2",
-    "url-parse": "^1.4.7"
+    "url-parse": "^1.5.8"
   },
   "resolutions": {
     "jquery": "3.5.1",
