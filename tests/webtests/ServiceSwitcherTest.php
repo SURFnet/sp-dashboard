@@ -92,8 +92,8 @@ class ServiceSwitcherTest extends WebTestCase
         $this->assertCount(3, $options, 'Expecting 2 services in service switcher (excluding empty option)');
 
         $this->assertEquals('', $options->eq(0)->text());
-        $this->assertEquals('Ibuildings B.V.', $options->eq(1)->text());
-        $this->assertEquals('SURFnet', $options->eq(2)->text());
+        $this->assertEquals('Ibuildings B.V. [ibuildings.nl]', $options->eq(1)->text());
+        $this->assertEquals('SURFnet [surf.nl]', $options->eq(2)->text());
     }
 
     public function test_switcher_remembers_selected_services()
@@ -120,6 +120,6 @@ class ServiceSwitcherTest extends WebTestCase
 
         $selectedService = $crawler->filter('select#service-switcher option:selected')->first();
 
-        $this->assertEquals('SURFnet', $selectedService->text(), "Service 'SURFnet' should be selected");
+        $this->assertEquals('SURFnet [surf.nl]', $selectedService->text(), "Service 'SURFnet' should be selected");
     }
 }
