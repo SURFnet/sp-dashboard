@@ -40,9 +40,11 @@ class ServiceCreateTest extends WebTestCase
                     'guid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
-                    'teamName' => 'team-a',
                     'organizationNameNl' => 'team-a',
                     'organizationNameEn' => 'team-a',
+                ],
+                'teams' => [
+                    'teamManagerEmail' => 'loeki@example.org',
                 ]
             ]
         ];
@@ -70,9 +72,11 @@ class ServiceCreateTest extends WebTestCase
                     'guid' => '',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
-                    'teamName' => 'team-a',
                     'organizationNameNl' => 'team-a',
                     'organizationNameEn' => 'team-a',
+                ],
+                'teams' => [
+                    'teamManagerEmail' => 'loeki@example.org',
                 ]
             ]
         ];
@@ -105,9 +109,11 @@ class ServiceCreateTest extends WebTestCase
                     'guid' => '1234abcd-146e-e711-80e8-005056956c1e',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
-                    'teamName' => 'team-a',
                     'organizationNameNl' => 'team-a',
                     'organizationNameEn' => 'team-a',
+                ],
+                'teams' => [
+                    'teamManagerEmail' => 'loeki@example.org',
                 ]
             ]
         ];
@@ -135,10 +141,12 @@ class ServiceCreateTest extends WebTestCase
                 'general' => [
                     'guid' => Uuid::uuid4(),
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'name' => 'The A Team',
-                    'teamName' => 'urn:collab:org:surf.nl',
-                    'organizationNameNl' => 'team-a',
-                    'organizationNameEn' => 'team-a',
+                    'name' => 'SURFnet',
+                    'organizationNameNl' => 'SURFnet',
+                    'organizationNameEn' => 'SURFnet',
+                ],
+                'teams' => [
+                    'teamManagerEmail' => 'loeki@example.org',
                 ]
             ]
         ];
@@ -151,10 +159,10 @@ class ServiceCreateTest extends WebTestCase
 
         $crawler = $this->client->submit($form, $formData);
 
-        $nodes = $crawler->filter('.page-container .message.error');
+        $nodes = $crawler->filter('.page-container li.error');
 
         $this->assertEquals(
-            'The teamname of the service should be unique. This teamname is taken by: "SURFnet"',
+            'Team name has already been registered.',
             trim($nodes->first()->text())
         );
     }
@@ -169,9 +177,11 @@ class ServiceCreateTest extends WebTestCase
                     'guid' => 'b9aaa8c4-3376-4e9d-b828-afa38cf29986',
                     'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
                     'name' => 'The A Team',
-                    'teamName' => 'team-a',
                     'organizationNameNl' => 'team-a',
                     'organizationNameEn' => 'team-a',
+                ],
+                'teams' => [
+                    'teamManagerEmail' => 'loeki@example.org',
                 ]
             ]
         ];

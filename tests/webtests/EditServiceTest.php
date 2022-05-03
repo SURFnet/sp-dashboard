@@ -37,9 +37,11 @@ class EditServiceTest extends WebTestCase
                 'general' => [
                     'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',
                     'name' => 'The A Team',
-                    'teamName' => 'team-a',
                     'organizationNameNl' => 'team-a',
                     'organizationNameEn' => 'team-a',
+                ],
+                'teams' => [
+                    'teamName' => 'team-a',
                 ]
             ]
         ];
@@ -52,7 +54,7 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        $service = $this->getServiceRepository()->findAll()[0];
+        $service = $this->getServiceRepository()->findByName('The A Team');
 
         $this->assertEquals('f1af6b9e-2546-4593-a57f-6ca34d2561e9', $service->getGuid());
         $this->assertEquals('The A Team', $service->getName());
