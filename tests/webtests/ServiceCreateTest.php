@@ -28,6 +28,7 @@ class ServiceCreateTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', 'data');
     }
 
     public function test_it_validates_the_form()
@@ -45,7 +46,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team loeki the lion',
+                    'teamName' => 'team-loeki-the-lion',
                 ]
             ]
         ];
@@ -78,7 +79,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team loeki the lion',
+                    'teamName' => 'team-loeki-the-lion',
                 ]
             ]
         ];
@@ -116,7 +117,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team loeki the lion',
+                    'teamName' => 'team-loeki-the-lion',
                 ]
             ]
         ];
@@ -150,7 +151,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'SURFnet',
+                    'teamName' => 'surf.nl',
                 ]
             ]
         ];
@@ -186,7 +187,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team loeki the lion',
+                    'teamName' => 'team-loeki-the-lion',
                 ]
             ]
         ];

@@ -28,7 +28,7 @@ class WebTestFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $service = $this->createService('SURFnet', 'urn:collab:org:surf.nl');
+        $service = $this->createService('SURFnet', 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl');
         $service->setProductionEntitiesEnabled(false);
         $manager->persist($service);
 

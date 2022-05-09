@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
 use function sprintf;
 
 /**
@@ -133,11 +133,11 @@ use function sprintf;
 class QueryClient implements QueryTeamsRepository
 {
     /**
-     * @var HttpClient
+     * @var HttpClientInterface
      */
     private $client;
 
-    public function __construct(HttpClient $client)
+    public function __construct(HttpClientInterface $client)
     {
         $this->client = $client;
     }

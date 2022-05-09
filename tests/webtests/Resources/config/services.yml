@@ -57,6 +57,13 @@ services:
     surfnet.manage.client.delete_client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteManageEntityClient
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishTeamClient
+
+
     # These services are overloaded for functional tests and have been made public to prevent:
     #
     # > The "logger" service is private, getting it from the container is

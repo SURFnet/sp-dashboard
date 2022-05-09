@@ -38,6 +38,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Service;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\ServiceList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\ResetServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Service\SelectServiceCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\CreateServiceType;
@@ -46,9 +47,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,7 +89,7 @@ class ServiceController extends Controller
     private $entityService;
 
     /**
-     * @var QueryClient
+     * @var QueryTeamsRepository
      */
     private $queryClient;
 
@@ -106,7 +105,7 @@ class ServiceController extends Controller
         ServiceStatusService $serviceStatusService,
         RouterInterface $router,
         EntityService $entityService,
-        QueryClient $queryClient,
+        QueryTeamsRepository $queryClient,
         string $defaultStemName
     ) {
         $this->commandBus = $commandBus;

@@ -19,14 +19,14 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class ExistingTeamNameValidator extends ConstraintValidator
 {
     /**
-     * @var QueryClient
+     * @var QueryTeamsRepository
      */
     private $queryService;
 
@@ -40,7 +40,7 @@ class ExistingTeamNameValidator extends ConstraintValidator
      */
     private $groupName;
 
-    public function __construct(QueryClient $queryService, string $defaultStemName, string $groupName)
+    public function __construct(QueryTeamsRepository $queryService, string $defaultStemName, string $groupName)
     {
         $this->queryService = $queryService;
         $this->defaultStemName = $defaultStemName;

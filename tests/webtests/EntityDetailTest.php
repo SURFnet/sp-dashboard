@@ -37,7 +37,7 @@ class EntityDetailTest extends WebTestCase
             'SP3',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
         $this->switchToService('SURFnet');
@@ -69,7 +69,7 @@ class EntityDetailTest extends WebTestCase
             'SP3',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
         $this->loadFixtures();
