@@ -170,6 +170,7 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
                 return;
             }
 
+            // Store the login timestamp in the session
             $this->authenticatedSession->logAuthenticationMoment();
             $this->tokenStorage->setToken($authToken);
 
@@ -178,7 +179,11 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
 
             $event->setResponse(new RedirectResponse($this->authenticatedSession->getCurrentRequestUri()));
 
-            $logger->notice('Authentication succeeded, redirecting to original location');
+            $user = $authToken->getUser();
+            $logger->notice(
+                'Authentication succeeded, redirecting to original location',
+                ['user' => $user->getContact()->getNameId(), 'displayName' => (string)$user]
+            );
 
             return;
         }

@@ -120,6 +120,11 @@ class Contact
         return $this->displayName;
     }
 
+    public function getNameId(): string
+    {
+        return $this->nameId;
+    }
+
     /**
      * @param Service $service
      *
