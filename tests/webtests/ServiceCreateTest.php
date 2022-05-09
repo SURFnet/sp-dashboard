@@ -45,6 +45,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
+                    'teamName' => 'team loeki the lion',
                 ]
             ]
         ];
@@ -77,6 +78,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
+                    'teamName' => 'team loeki the lion',
                 ]
             ]
         ];
@@ -114,6 +116,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
+                    'teamName' => 'team loeki the lion',
                 ]
             ]
         ];
@@ -147,6 +150,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
+                    'teamName' => 'SURFnet',
                 ]
             ]
         ];
@@ -182,6 +186,7 @@ class ServiceCreateTest extends WebTestCase
                 ],
                 'teams' => [
                     'teamManagerEmail' => 'loeki@example.org',
+                    'teamName' => 'team loeki the lion',
                 ]
             ]
         ];

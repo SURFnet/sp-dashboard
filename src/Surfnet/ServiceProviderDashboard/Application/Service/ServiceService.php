@@ -38,7 +38,7 @@ class ServiceService
     /**
      * Retrieve names of all services.
      *
-     * Format: [ '<service id>' => '<service display name>' ]
+     * Format: [ '<service id>' => '<service display name> [<msp service team id>]' ]
      * @return array
      */
     public function getServiceNamesById()
@@ -46,7 +46,12 @@ class ServiceService
         $options = [];
 
         foreach ($this->services->findAll() as $service) {
-            $options[$service->getId()] = $service->getName();
+            $teamNameParts = explode(':', $service->getTeamName());
+            $options[$service->getId()] = sprintf(
+                "%s [%s]",
+                $service->getName(),
+                end($teamNameParts)
+            );
         }
 
         asort($options);
