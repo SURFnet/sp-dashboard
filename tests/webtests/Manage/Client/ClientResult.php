@@ -57,7 +57,7 @@ class ClientResult implements ClientResultInterface
         $this->name = $name;
         $this->teamName = $teamName;
         if ($teamName === null) {
-            $this->teamName = 'urn:collab:org:surf.nl';
+            $this->teamName = 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl';
         }
     }
 

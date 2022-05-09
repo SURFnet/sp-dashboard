@@ -29,11 +29,13 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityReposit
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Debug\Debug;
@@ -78,6 +80,9 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected $testDeleteClient;
 
+    /** @var QueryTeamsRepository&FakeTeamsQueryClient */
+    protected $teamsQueryClient;
+
     public function setUp()
     {
         // Disable notices, strict and deprecated warnings. Many Symfony 3.4 deprecation warnings are still to be fixed.
@@ -111,6 +116,9 @@ class WebTestCase extends SymfonyWebTestCase
         $this->prodDeleteClient = $this->client
             ->getContainer()
             ->get('surfnet.manage.client.delete_client.prod_environment');
+        $this->teamsQueryClient = $this->client
+            ->getContainer()
+            ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient');
     }
 
     protected function registerManageEntity(

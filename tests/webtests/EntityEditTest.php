@@ -34,7 +34,7 @@ class EntityEditTest extends WebTestCase
             'SP1',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
         $this->registerManageEntity(
             'test',

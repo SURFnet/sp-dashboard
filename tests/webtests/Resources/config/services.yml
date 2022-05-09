@@ -52,10 +52,17 @@ services:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishEntityClient
 
     surfnet.manage.client.delete_client.prod_environment:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteEntityClient
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteManageEntityClient
 
     surfnet.manage.client.delete_client.test_environment:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteEntityClient
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteManageEntityClient
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishTeamClient
+
 
     # These services are overloaded for functional tests and have been made public to prevent:
     #

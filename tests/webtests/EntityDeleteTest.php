@@ -45,7 +45,7 @@ class EntityDeleteTest extends WebTestCase
             'SP1',
             'SP1',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
         $this->testDeleteClient->registerDeleteRequest('a8e7cffd-0409-45c7-a37a-000000000000');
@@ -77,7 +77,7 @@ class EntityDeleteTest extends WebTestCase
             'SP1',
             'SP1',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
         $this->prodDeleteClient->registerDeleteRequest('a8e7cffd-0409-45c7-a37a-000000000000');
@@ -113,7 +113,7 @@ class EntityDeleteTest extends WebTestCase
             'SP1',
             'SP1',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
         $crawler = $this->client->request('GET', "/entity/delete/request/1/a8e7cffd-0409-45c7-a37a-000000000000");

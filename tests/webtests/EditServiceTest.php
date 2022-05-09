@@ -25,6 +25,9 @@ class EditServiceTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:team-a', 'data');
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', 'data');
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:ibuildings.nl', 'data');
     }
 
     public function test_can_edit_existing_service()
@@ -37,9 +40,11 @@ class EditServiceTest extends WebTestCase
                 'general' => [
                     'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',
                     'name' => 'The A Team',
-                    'teamName' => 'team-a',
                     'organizationNameNl' => 'team-a',
                     'organizationNameEn' => 'team-a',
+                ],
+                'teams' => [
+                    'teamName' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:team-a',
                 ]
             ]
         ];
@@ -52,11 +57,11 @@ class EditServiceTest extends WebTestCase
 
         $this->client->submit($form, $formData);
 
-        $service = $this->getServiceRepository()->findAll()[0];
+        $service = $this->getServiceRepository()->findByName('The A Team');
 
         $this->assertEquals('f1af6b9e-2546-4593-a57f-6ca34d2561e9', $service->getGuid());
         $this->assertEquals('The A Team', $service->getName());
-        $this->assertEquals('team-a', $service->getTeamName());
+        $this->assertEquals('urn:collab:group:vm.openconext.org:demo:openconext:org:team-a', $service->getTeamName());
     }
 
     /**
@@ -77,6 +82,9 @@ class EditServiceTest extends WebTestCase
             'dashboard_bundle_edit_service_type' => [
                 'general' => [
                     'privacyQuestionsEnabled' => false,
+                ],
+                'teams' => [
+                    'teamName' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl',
                 ]
             ]
         ];
@@ -92,7 +100,6 @@ class EditServiceTest extends WebTestCase
         $this->logIn('ROLE_USER', [$surfNet]);
 
         $this->client->request('GET', '/service/1/privacy');
-
         $this->assertEquals(
             404,
             $this->client->getResponse()->getStatusCode(),
@@ -108,6 +115,9 @@ class EditServiceTest extends WebTestCase
             'dashboard_bundle_edit_service_type' => [
                 'general' => [
                     'privacyQuestionsEnabled' => true,
+                ],
+                'teams' => [
+                    'teamName' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl',
                 ]
             ]
         ];
