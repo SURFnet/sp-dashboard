@@ -41,11 +41,14 @@ From the cli of your host: `docker-compose exec openconext tail -50  /var/log/te
 The docker container does not contain a functioning email service, and so sending an invite / creating a team does not actually send a mail.
 
 Therefore: to test with an actual member, you need to do the following:
-1. open the openconext docker cli
-2. go to mysql (`mysql` on the cli)
-3. select a uiid for one of the invited people: 
-   1. `use teams;`
-   2. `select invitation_uiid from invitations where id = ;` => fill in the id
-4. accept the invite by going to the following url: `https://teams.vm.openconext.org/invitation/accept/$uiid_of_the_invite` where you replace the last bit with the uiid found in the previous step.
+1. Find the invitation_uiid of the user you want to accept `docker-compose exec openconext mysql -e "select * from invitations \G" teams`
+When accepting a new invite a new private window needs to be opened, otherwise the following error will show: "You are already a member of this Team."
+2. Accept the invite by going to the following url: `https://teams.vm.openconext.org/invitation/accept/"invitation_uiid"` where you replace the text between the "" with the invitation_uiid found in the previous step.
 
-If you use the cli to connect to docker: `docker-compose exec openconext mysql -e 'use teams; select invitation_uiid from invitations where id = ;'` & so on.
+Once this has been done you can make the team public so adding new members will be easier.
+This can be done with the next steps:
+1. Make sure that the user has the Owner role in `spdashboard.vm.openconext.org`.
+2. In `https://teams.vm.openconext.org/my-teams` open the team and enable the PUBLIC TEAM and PUBLIC LINK boxes.
+3. In a new private browser this link can be used to join with a new login session.
+
+Subsequent team members can now join by using the public link within a new private browser.
