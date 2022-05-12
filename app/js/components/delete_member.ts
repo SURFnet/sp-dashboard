@@ -11,7 +11,7 @@ $(() => {
       if (!target.matches('.teams__deleteMemberLink')) return;
       event.preventDefault();
 
-      const td = document.querySelector('.teams__actions') as HTMLTableDataCellElement;
+      const td = target.closest('td') as HTMLTableDataCellElement;
       td.classList.add('loading');
 
       const url = target.getAttribute('href') || '';
