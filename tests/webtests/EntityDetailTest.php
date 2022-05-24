@@ -83,6 +83,29 @@ class EntityDetailTest extends WebTestCase
         $this->assertAttributeDetailEquals(1, 'Email address attribute', 'No motivation set');
     }
 
+    public function test_if_attribute_has_expected_number_of_elements()
+    {
+        $this->registerManageEntity(
+            'production',
+            'saml20_sp',
+            '9729d851-cfdd-4283-a8f1-a29ba5036261',
+            'SP3',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+        );
+
+        $this->loadFixtures();
+        $this->logIn('ROLE_ADMINISTRATOR');
+
+        $this->switchToService('SURFnet');
+
+        $this->client->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
+        $this->assertNumberOfAttributeElementsEquals(0, 2);
+        $this->assertNumberOfAttributeElementsEquals(1, 2);
+    }
+
+
     private function assertListContains($position, $expectedLabel, array $expectedValues)
     {
         $rows = $this->client->getCrawler()->filter('div.detail');
@@ -171,6 +194,18 @@ class EntityDetailTest extends WebTestCase
             $expectedValue,
             $attributeValue,
             sprintf('Expected attribute value "%s" at the row on position %d', $expectedValue, $position)
+        );
+    }
+
+    private function assertNumberOfAttributeElementsEquals($position, $expectedNumberOfElements)
+    {
+        $rows = $this->client->getCrawler()->filter('div.detail.attribute');
+        $row = $rows->eq($position);
+        $numberOfRowElements = $row->children()->count();
+        $this->assertEquals(
+            $row->children()->count(),
+            $expectedNumberOfElements,
+            sprintf('The actual number of elements (%d) in the div.detail.attribute row does not match the expected %d', $numberOfRowElements, $expectedNumberOfElements)
         );
     }
 }
