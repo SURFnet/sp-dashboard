@@ -68,3 +68,10 @@
 .teams__actions.loading .loading {
   display: inline-block;
 }
+
+.hide-dropdown{
+  opacity: 60%;
+  display: inline-block;
+  pointer-events: none;
+  width: 100%;
+}

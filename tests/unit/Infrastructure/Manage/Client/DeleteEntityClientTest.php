@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -116,5 +117,34 @@ class DeleteEntityClientTest extends MockeryTestCase
         yield ['oicd_ccc'];
         yield ['oauth_ccc'];
         yield ['i-dont-exist'];
+    }
+
+    /**
+     * @dataProvider provideExpectedProtocolMappings
+     */
+    public function test_it_maps_enitty_types_correctly_with_existing_protocols($inputProtocol, $expectedProtocol)
+    {
+        $client = m::mock(HttpClientInterface::class);
+        $this->client = new DeleteManageEntityClient(
+            $client,
+            $this->logger
+        );
+
+        $manageEntityId = 'db2e5c63-3c54-4962-bf4a-d6ced1e9cf33';
+        $client
+            ->shouldReceive('delete')
+            ->with(sprintf('/manage/api/internal/metadata/%s/%s', $expectedProtocol, $manageEntityId))
+            ->once()
+            ->andReturn(true);
+
+        $this->client->delete($manageEntityId, $inputProtocol);
+    }
+
+    public function provideExpectedProtocolMappings()
+    {
+        yield ['oauth20_rs', 'oauth20_rs'];
+        yield ['oidcng', 'oidc10_rp'];
+        yield ['oauth20_ccc', 'oidc10_rp'];
+        yield ['saml20', 'saml20_sp'];
     }
 }

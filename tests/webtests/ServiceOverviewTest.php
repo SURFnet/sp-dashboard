@@ -100,7 +100,7 @@ class ServiceOverviewTest extends WebTestCase
             'SP1',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
         $this->registerManageEntity(
             'test',
@@ -109,7 +109,7 @@ class ServiceOverviewTest extends WebTestCase
             'SP2',
             'https://sp2-entityid.example.com',
             'https://sp2-entityid.example.com/metadata',
-            'urn:collab:org:surf.nl'
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
         $this->logIn('ROLE_USER', [$surfNetService, $ibuildingsService]);

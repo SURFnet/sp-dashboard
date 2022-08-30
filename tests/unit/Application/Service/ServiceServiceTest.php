@@ -46,24 +46,30 @@ class ServiceServiceTest extends MockeryTestCase
                     ->shouldReceive('getId')
                     ->andReturn('c')->getMock()
                     ->shouldReceive('getName')
-                    ->andReturn('C')->getMock(),
+                    ->andReturn('C')->getMock()
+                    ->shouldReceive('getTeamName')
+                    ->andReturn('urn:example:1')->getMock(),
                 m::mock(Service::class)
                     ->shouldReceive('getId')
                     ->andReturn('a')->getMock()
                     ->shouldReceive('getName')
-                    ->andReturn('A')->getMock(),
+                    ->andReturn('A')->getMock()
+                    ->shouldReceive('getTeamName')
+                    ->andReturn('urn:example:2')->getMock(),
                 m::mock(Service::class)
                     ->shouldReceive('getId')
                     ->andReturn('b')->getMock()
                     ->shouldReceive('getName')
-                    ->andReturn('B')->getMock(),
+                    ->andReturn('B')->getMock()
+                    ->shouldReceive('getTeamName')
+                    ->andReturn('urn:example:3')->getMock(),
             ]);
 
         $this->assertEquals(
             [
-                'a' => 'A',
-                'b' => 'B',
-                'c' => 'C',
+                'a' => 'A [2]',
+                'b' => 'B [3]',
+                'c' => 'C [1]',
             ],
             $this->service->getServiceNamesById()
         );

@@ -1,9 +1,17 @@
+## 4.1.0
+**New features**
+- Add the teamId to the service switcher #501
+- Log authenticated user #495
+
+**Bugfixes**
+- Team select lists styling was broken #503
+- Correct faulty protocol mapping on oauth2 resource server and add a test #505
+- Jira ticket status was not updated correctly for 'request for deletion' entities #513
+- Small bugfixes: #502 #504 #506
+
 ## 4.0.1
 **Bugfixes**
 - fix broken modals after oidc creation & client secret reset
-
-**Development**
-- use the prebuilt openconext containers
 
 ## 4.0.0
 **Features**

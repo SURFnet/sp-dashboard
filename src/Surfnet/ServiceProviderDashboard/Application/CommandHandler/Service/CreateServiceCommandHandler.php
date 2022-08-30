@@ -21,9 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\CreateTeamsException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CreateServiceCommandHandler implements CommandHandler
@@ -34,7 +34,7 @@ class CreateServiceCommandHandler implements CommandHandler
     private $serviceRepository;
 
     /**
-     * @var PublishEntityClient
+     * @var PublishTeamsRepository
      */
     private $publishEntityClient;
 
@@ -55,7 +55,7 @@ class CreateServiceCommandHandler implements CommandHandler
 
     public function __construct(
         ServiceRepository $serviceRepository,
-        PublishEntityClient $publishEntityClient,
+        PublishTeamsRepository $publishEntityClient,
         TranslatorInterface $translator,
         string $prefixPart1,
         string $prefixPart2

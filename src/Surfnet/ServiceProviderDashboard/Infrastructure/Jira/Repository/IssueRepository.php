@@ -94,7 +94,7 @@ class IssueRepository implements TicketServiceInterface
         $issueService = $this->jiraFactory->buildIssueService();
         // Search all CTX: spd-delete-production-entity issues
         $issues = $issueService->search(
-            sprintf('project = %s AND issuetype = %s', $this->projectKey, $this->issueType)
+            sprintf('project = %s AND resolution = Unresolved AND issuetype = %s', $this->projectKey, $this->issueType)
         );
         $collection = [];
         foreach ($issues->issues as $issue) {
@@ -112,7 +112,7 @@ class IssueRepository implements TicketServiceInterface
         // Search CTX: spd-delete-production-entity issues with manage id as provided in the $manageId parameter
         $issues = $issueService->search(
             sprintf(
-                'project = %s AND issuetype = %s AND "%s" ~ %s',
+                'project = %s AND resolution = Unresolved AND issuetype = %s AND "%s" ~ %s',
                 $this->projectKey,
                 $this->issueType,
                 $this->manageIdFieldLabel,

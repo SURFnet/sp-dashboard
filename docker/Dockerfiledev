@@ -9,7 +9,6 @@ CMD ["/usr/local/sbin/start.sh"]
 FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:latest AS spdphpfpm
 WORKDIR /var/www/html/
 COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
-COPY ./conf/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN /usr/sbin/update-ca-certificates && \
     rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ 
 

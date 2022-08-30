@@ -4,39 +4,57 @@
 {% elseif user.intendedRole is defined %}
     {% set userRole = user.intendedRole|lower %}
 {% else %}
-    {% set userRole = '' %}
+    {% set userRole = 'member' %}
 {% endif %}
-{% set whitespaceBefore %}
-    &nbsp;
-{% endset %}
-{% set iconAfter %}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#xf0d7;
-{% endset %}
 {% if user is defined %}
     {% set url = path('team_change_role', {'memberId': user.id, 'newRole': 'stand-in' }) %}
 {% endif %}
 
-<label for="role-select"{% if labelClass is defined %} class={{ labelClass }}{% endif %}>{% if labelText is defined %}{{ labelText }}{% endif %}</label>
-<select id="role-select" class="teams__select"{% if url is defined %} data-url="{{ url }}"{% endif %}{% if isInvite is defined and isInvite %} disabled {% endif %}>
-    <option class="fontawesome" data-icon="fa-star" value="admin" {% if userRole == 'admin' %}selected="selected"{% endif %}>
-        &#xf005;{{ whitespaceBefore }}
-        {{ 'teams.management.table.role.admin'|trans }}
-        &nbsp;&nbsp;&nbsp;{{ iconAfter }}
-    </option>
-    <option class="fontawesome" data-icon="fa-universal-access" value="owner" {% if userRole == 'owner' %}selected="selected"{% endif %}>
-        &#xf29a;{{ whitespaceBefore }}
-        {{ 'teams.management.table.role.owner'|trans }}
-        &nbsp;&nbsp;&nbsp;{{ iconAfter }}
-    </option>
-    <option class="fontawesome" data-icon="fa-black-tie" value="manager" {% if userRole == 'manager' %}selected="selected"{% endif %}>
-        &#xf27e;{{ whitespaceBefore }}
-        {{ 'teams.management.table.role.manager'|trans }}
-        {{ iconAfter }}
-    </option>
-    <option class="fontawesome" data-icon="fa-user" value="member" {% if userRole == 'member' %}selected="selected"{% endif %}>
-        &#xf007;{{ whitespaceBefore }}
-        {{ 'teams.management.table.role.member'|trans }}
-        &nbsp;{{ iconAfter }}
-    </option>
-</select>
+<div class="no-margin-bottom" tabindex="0" {% if url is defined %} data-url="{{ url }}"{% endif %}>
+            <span class="pull-left role__admin {% if userRole != 'admin' %}hidden{% endif %}">
+                <i class="fa fa-star fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.admin'|trans }}
+            </span>
+            <span class="pull-left role__owner {% if userRole != 'owner' %}hidden{% endif %}">
+                <i class="fa fa-universal-access fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.owner'|trans }}
+            </span>
+            <span class="pull-left role__manager {% if userRole != 'manager' %}hidden{% endif %}">
+                <i class="fa fa-black-tie fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.manager'|trans }}
+            </span>
+            <span class="pull-left role__member {% if userRole != 'member' %}hidden{% endif %}">
+                <i class="fa fa-user fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.member'|trans }}
+            </span>
+    <i class="fa fa-spinner fa-spin loading"></i>
+    <i class="fa fa-caret-down" aria-hidden="true"></i>
+    <ul tabindex="0">
+        <li class="teams__actionItem">
+            <a href="#" class="teams__changeMemberRole" data-role="admin">
+                <i class="fa fa-star fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.admin'|trans }}
+            </a>
+        </li>
+        <li class="teams__actionItem">
+            <a href="#" class="teams__changeMemberRole" data-role="owner">
+                <i class="fa fa-universal-access fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.owner'|trans }}
+            </a>
+        </li>
+        <li class="teams__actionItem">
+            <a href="#" class="teams__changeMemberRole" data-role="manager">
+                <i class="fa fa-black-tie fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.manager'|trans }}
+            </a>
+        </li>
+
+        <li class="teams__actionItem">
+            <a href="#" class="teams__changeMemberRole" data-role="member">
+                <i class="fa fa-user fa-fw" aria-hidden="true"></i>
+                {{ 'teams.management.table.role.member'|trans }}
+            </a>
+        </li>
+    </ul>
+</div>
 <div class="loading fa fa-spinner fa-spin"></div>

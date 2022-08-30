@@ -15,11 +15,11 @@ div.add-entity-actions {
   }
 }
 
-td.actions {
+td.actions td.roles {
   text-align: right;
 }
 
-div.actions, td.actions > div[tabindex="0"] {
+div.actions, td.actions > div[tabindex="0"], div.roles, td.roles > div[tabindex='0']{
   border-width: 1px;
   border-color: $lighter-grey;
   border-radius: 2px;
