@@ -19,11 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use stdClass;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use function array_diff;
-use function array_intersect;
 use function array_keys;
 
 /**
@@ -94,18 +92,6 @@ class ArpGenerator implements MetadataGenerator
                     'motivation' => $attribute->getMotivation()
                 ];
             }
-        }
-
-        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
-            // The user cannot configure EPTI @ ARP settings but the value is used internally.
-            $attributes['urn:mace:dir:attribute-def:eduPersonTargetedID'] = [
-                [
-                    'source' => 'idp',
-                    'value' => '*',
-                    'motivation' => 'OIDC requires EduPersonTargetedID by default',
-                ]
-            ];
         }
     }
 }

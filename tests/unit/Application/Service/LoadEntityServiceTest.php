@@ -403,16 +403,6 @@ JSON
                         "name": "another-resource-server.com"
                     }],
                     "data": {
-                        "arp": {
-                            "attributes": {
-                                "urn:mace:dir:attribute-def:eduPersonTargetedID": [{
-                                    "source": "idp",
-                                    "value": "*",
-                                    "motivation": "OIDC requires EduPersonTargetedID by default"
-                                }]
-                            },
-                            "enabled": true
-                        },
                         "type": "oidc10-rp",
                         "entityid": "playground.openconext.nl",
                         "active": true,
