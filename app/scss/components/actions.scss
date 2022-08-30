@@ -93,9 +93,5 @@ div.actions, td.actions > div[tabindex="0"], div.roles, td.roles > div[tabindex=
   &:hover ul, ul:hover, &:focus ul, &:focus-within ul {
     display: block;
   }
-
-  & ul, ul:active {
-    display: none;
-  }
 }
 /* stylelint-enable */
