@@ -1,4 +1,4 @@
-<td>
+<td class="roles {% if isInvite %}hide-dropdown{% endif %}" >
     {% include "@Dashboard/Teams/Table/role.html.twig" with {
         labelClass: "sr-only",
         labelText: "teams.management.table.role"|trans

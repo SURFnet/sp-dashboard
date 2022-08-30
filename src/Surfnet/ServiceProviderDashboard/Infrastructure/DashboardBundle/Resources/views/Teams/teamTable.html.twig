@@ -11,7 +11,7 @@
             {% include "@Dashboard/Teams/Table/name.html.twig" %}
             {% include "@Dashboard/Teams/Table/email.html.twig" %}
             {% include "@Dashboard/Teams/Table/status.html.twig" %}
-            {% include "@Dashboard/Teams/Table/roleCell.html.twig" %}
+            {% include "@Dashboard/Teams/Table/roleCell.html.twig" with {isInvite:isInvite}%}
             {% include "@Dashboard/Teams/Table/actions.html.twig" %}
         </tr>
     {% endfor %}
