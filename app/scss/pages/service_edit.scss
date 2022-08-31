@@ -21,8 +21,7 @@ form {
       border: 1px solid $lighter-grey;
       border-radius: $br;
       width: 100%;
-
-      // Checkbox element wrapper
+      /* Checkbox element wrapper */
       .form-row {
         background-color: $light-blue;
         clear: none;
@@ -30,7 +29,7 @@ form {
         margin-bottom: 0;
         width: 40px;
 
-        // Input element wrapper
+        /* Input element wrapper */
         & + .form-row {
           background-color: white;
           width: calc(100% - 40px);
@@ -124,8 +123,8 @@ form {
     }
   }
 
+  /* Header: "Administrative contact", "..." */
   .fieldset.contact .form-row {
-    // Header: "Administrative contact", "..."
     & > label {
       border-bottom: 3px solid $lighter-grey;
       color: $dark-grey;
