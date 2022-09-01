@@ -61,4 +61,40 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertSame('support@surfconext.nl', $contact->getEmail());
         $this->assertSame('', $contact->getPhone());
     }
+
+    public function test_diff_saml()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_contacts_response_1.json'), true));
+        $entity2 = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_contacts_response_2.json'), true));
+
+        $diff = $entity->diff($entity2);
+        $diffResults = $diff->getDiff();
+        $this->assertCount(4, $diffResults);
+        $this->assertEquals('https://monitorstand.example.com', $diffResults['entityid']);
+        $this->assertEquals('https://engine.surfconext.com/authentication/metadata', $diffResults['metadataurl']);
+        $this->assertEquals('John Doe', $diffResults['metaDataFields.contacts:0:givenName']);
+        $this->assertIsArray($diffResults['arp']['attributes']);
+        $this->assertCount(2, $diffResults['arp']['attributes']);
+        $this->assertEquals('Mumbo-jumbo', $diffResults['arp']['attributes']['urn:mace:dir:attribute-def:displayName']['motivation']);
+        $this->assertEquals('sab', $diffResults['arp']['attributes']['urn:mace:dir:attribute-def:uid']['source']);
+    }
+
+    public function test_diff_oidc()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oidc_1.json'), true));
+        $entity2 = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oidc_2.json'), true));
+
+        $diff = $entity->diff($entity2);
+        $diffResults = $diff->getDiff();
+        $this->assertCount(5, $diffResults);
+        $this->assertEquals('Teams client credentials client for VOOT and FOOT access', $diffResults['metadataFields.name:en']);
+        $this->assertIsArray($diffResults['allowedEntities']);
+        $this->assertCount(1, $diffResults['allowedEntities']);
+        $this->assertIsArray($diffResults['arp']['attributes']);
+        $this->assertCount(1, $diffResults['arp']['attributes']);
+        $this->assertIsArray($diffResults['metaDataFields.grants']);
+        $this->assertCount(1, $diffResults['metaDataFields.grants']);
+        $this->assertIsArray($diffResults['metaDataFields.redirectUrls']);
+        $this->assertCount(1, $diffResults['metaDataFields.redirectUrls']);
+    }
 }

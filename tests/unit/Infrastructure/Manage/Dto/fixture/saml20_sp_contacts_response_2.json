@@ -1,0 +1,54 @@
+{
+  "id": "411f8e0f-87a6-4ea7-8194-66b3e77f97d5",
+  "version": 0,
+  "type": "saml20_sp",
+  "revision": {
+    "number": 0,
+    "created": 1543851541.752,
+    "parentId": null,
+    "updatedBy": "sp-dashboard",
+    "terminated": null
+  },
+  "data": {
+    "entityid": "https:\/\/monitorstand.example.com",
+    "metadataurl": "https:\/\/engine.surfconext.com\/authentication\/metadata",
+    "active": true,
+    "allowedEntities": [],
+    "allowedall": true,
+    "state": "testaccepted",
+    "type": "saml20-sp",
+    "metaDataFields": {
+      "contacts:0:contactType": "invalid",
+      "contacts:0:givenName": "SURFconext",
+      "contacts:0:surName": "Helpdesk",
+      "contacts:0:emailAddress": "help@surfconext.nl",
+      "contacts:1:givenName": "SURFconext",
+      "contacts:1:surName": "Administrative Contact",
+      "contacts:1:emailAddress": "support@surfconext.nl",
+      "contacts:2:contactType": "technical",
+      "contacts:2:givenName": "John Doe",
+      "contacts:2:surName": "Technical Support",
+      "contacts:2:emailAddress": "support@surfconext.nl"
+    },
+    "arp": {
+      "attributes": {
+        "urn:mace:dir:attribute-def:displayName": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "Mumbo-jumbo"
+          }
+        ],
+        "urn:mace:dir:attribute-def:uid": [
+          {
+            "source": "sab",
+            "value": "*",
+            "motivation": "fd fads fdasafd s fdasfda s dfas dfa"
+          }
+        ]
+      },
+      "enabled": true
+    },
+    "eid": 31
+  }
+}
