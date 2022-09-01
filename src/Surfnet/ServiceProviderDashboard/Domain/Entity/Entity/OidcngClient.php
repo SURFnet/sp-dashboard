@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
@@ -28,7 +29,7 @@ use function array_merge;
 use function is_null;
 use function strtolower;
 
-class OidcngClient implements OidcClientInterface
+class OidcngClient implements Comparable, OidcClientInterface
 {
     const FORM_MANAGED_GRANTS = [
         'entity.edit.label.authorization_code' => Constants::GRANT_TYPE_AUTHORIZATION_CODE,
@@ -229,6 +230,18 @@ class OidcngClient implements OidcClientInterface
         $this->accessTokenValidity = is_null($client->getAccessTokenValidity()) ? null : $client->getAccessTokenValidity();
         $this->mergeGrants($client->getGrants());
         $this->mergeResourceServers($client->getResourceServers(), $homeTeam);
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'metaDataFields.accessTokenValidity' => $this->getAccessTokenValidity(),
+            'metaDataFields.grants' => $this->getGrants(),
+            'metaDataFields.isPublicClient' => $this->isPublicClient(),
+            'metaDataFields.redirectUrls' => $this->getRedirectUris(),
+            'metaDataFields.secret' => $this->getClientSecret(),
+            'entityid' => $this->getClientId(),
+        ];
     }
 
     /**

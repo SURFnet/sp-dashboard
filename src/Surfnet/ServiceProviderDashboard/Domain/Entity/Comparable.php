@@ -18,17 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
-use function array_diff;
-
-class EntityDiff
+interface Comparable
 {
-    public function __construct($data, $compareTo)
-    {
-        $this->diff = array_diff($data, $compareTo);
-    }
-
-    public function getDiff(): array
-    {
-        return $this->diff;
-    }
+    /**
+     * Serialize the entity to an array
+     *
+     * This, for the purpose of comparing two ManageEntities with one another.
+     * Giving us an easy means to compare differences between versions of an
+     * Entity. Which is usefull when writing an update of an Entity back to
+     * Manage.
+     *
+     * Keys should match the keys found in Manage (for easy transfer back to
+     * Manage later down the line).
+     */
+    public function asArray(): array;
 }

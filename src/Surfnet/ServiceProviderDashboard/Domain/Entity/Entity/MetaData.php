@@ -19,9 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Webmozart\Assert\Assert;
 
-class MetaData
+class MetaData implements Comparable
 {
     /**
      * Supports 1 ACS location, the first entry is used that is passed from Manage
@@ -231,5 +232,27 @@ class MetaData
         $this->contacts->merge($metaData->getContacts());
         $this->organization->merge($metaData->getOrganization());
         $this->logo->merge($metaData->getLogo());
+    }
+
+    public function asArray(): array
+    {
+        $data = [
+            'entityid' => $this->getEntityId(),
+            'metadataurl' => $this->getMetaDataUrl(),
+            'metaDataFields.AssertionConsumerService:0:Location' => $this->getAcsLocation(),
+            'metaDataFields.NameIDFormat' => $this->getNameIdFormat(),
+            'metaDataFields.certData' => $this->getCertData(),
+            'metaDataFields.description:nl' => $this->getDescriptionNl(),
+            'metaDataFields.description:en' => $this->getDescriptionEn(),
+            'metaDataFields.name:nl' => $this->getNameNl(),
+            'metaDataFields.name:en' => $this->getNameEn(),
+
+        ];
+        $data += $this->coin->asArray();
+        $data += $this->contacts->asArray();
+        $data += $this->logo->asArray();
+        $data += $this->organization->asArray();
+
+        return $data;
     }
 }

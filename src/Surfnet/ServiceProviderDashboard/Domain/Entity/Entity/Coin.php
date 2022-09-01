@@ -18,10 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Webmozart\Assert\Assert;
 use function is_null;
 
-class Coin
+class Coin implements Comparable
 {
     private $signatureMethod;
     private $serviceTeamId;
@@ -128,5 +129,18 @@ class Coin
         $this->applicationUrl = is_null($coin->getApplicationUrl()) ? null : $coin->getApplicationUrl();
         $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'metaDataFields.coin:application_url' => $this->getApplicationUrl(),
+            'metaDataFields.coin:eula' => $this->getEula(),
+            'metaDataFields.coin:exclude_from_push' => $this->getExcludeFromPush(),
+            'metaDataFields.coin:oidc_client' => $this->getOidcClient(),
+            'metaDataFields.coin:original_metadata_url' => $this->getOriginalMetadataUrl(),
+//            'metaDataFields.coin:service_team_id' => $this->getServiceTeamId(),
+//            'metaDataFields.coin:signature_method' => $this->getSignatureMethod(),
+        ];
     }
 }

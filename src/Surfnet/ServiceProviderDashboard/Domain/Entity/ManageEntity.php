@@ -33,6 +33,7 @@ use function in_array;
  * TODO: All factory logic should be offloaded to Application or Infra layers where the
  * entity is used in a specific context. This particularly applies for the factory
  * methods found in the 'Entity/Entity' namespace.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ManageEntity
 {
@@ -326,5 +327,26 @@ class ManageEntity
         return $protocol === Constants::TYPE_OPENID_CONNECT_TNG
             || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
             || $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
+    }
+
+    public function diff(ManageEntity $compareTo): EntityDiff
+    {
+        $data = $this->asArray();
+        $otherData = $compareTo->asArray();
+        return new EntityDiff($otherData, $data);
+    }
+
+    public function asArray(): array
+    {
+        $data = [];
+        $data['id'] = $this->id;
+        $data['revisionnote'] = $this->getComments();
+        $data['environment'] = $this->environment;
+        $data = $this->metaData->asArray();
+        if ($this->hasOicdClient()) {
+            $data += $this->oidcClient->asArray();
+        }
+        $data += $this->protocol->asArray();
+        return $data;
     }
 }
