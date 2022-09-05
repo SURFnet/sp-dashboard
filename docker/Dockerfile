@@ -3,9 +3,12 @@ COPY . /var/www/html/
 WORKDIR /var/www/html/
 ENV SYMFONY_ENV=prod
 RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev && \
-    composer run-script symfony-scripts && \
-    bin/console assets:install && \
-    yarn install && \
+    composer run-script symfony-scripts
+
+FROM node:14 AS js-build
+COPY . /var/www/html/
+WORKDIR /var/www/html/
+RUN yarn install && \
     yarn run encore production
 
 FROM ghcr.io/openconext/openconext-containers/openconext-httpd:latest AS httpd-build

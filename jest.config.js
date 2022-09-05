@@ -33,7 +33,7 @@ module.exports = {
     testRegex: ".*\\.test\\.(ts|tsx|js|jsx)$",
     globals: {
         "ts-jest": {
-            tsConfig: "tsconfig.json",
+            tsconfig: "tsconfig.json",
             diagnostics: {
                 ignoreCodes: [151001]
             },

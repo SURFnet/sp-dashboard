@@ -12,10 +12,7 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
     .enableTypeScriptLoader()
-    .enableSassLoader((options) => {
-        // https://github.com/sass/node-sass#options.
-        options.includePaths = ['./node_modules'];
-    })
+    .enableSassLoader()
     .disableSingleRuntimeChunk()
     .configureBabel(() => {}, {
         useBuiltIns: 'entry',

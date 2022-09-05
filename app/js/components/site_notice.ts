@@ -1,7 +1,7 @@
 'use strict';
 
 import * as $ from 'jquery';
-import * as Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 /**
  * Set cookie when closing the site notice to prevent it opening again

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { loadEntityAclForm } from "./entity_acl_form";
 import * as $ from "jquery";
 

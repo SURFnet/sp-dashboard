@@ -1,6 +1,6 @@
 @import '../base/mixins';
-// Spinning Icons
-// --------------------------
+/* Spinning Icons */
+/* -------------------------- */
 
 .#{$fa-css-prefix}-spin {
   @include motion {
