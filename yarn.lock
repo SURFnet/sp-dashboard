@@ -1496,10 +1496,10 @@
   dependencies:
     "@types/sizzle" "*"
 
-"@types/js-cookie@^2.2.6":
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/@types/js-cookie/-/js-cookie-2.2.7.tgz#226a9e31680835a6188e887f3988e60c04d3f6a3"
-  integrity sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==
+"@types/js-cookie@^3.0":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/js-cookie/-/js-cookie-3.0.2.tgz#451eaeece64c6bdac8b2dde0caab23b085899e0d"
+  integrity sha512-6+0ekgfusHftJNYpihfkMu8BWdeHs9EOJuGcSofErjstGPfPGEu9yTu4t460lTzzAMl2cM5zngQJqPMHbbnvYA==
 
 "@types/json-schema@*", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
   version "7.0.11"
@@ -2927,7 +2927,7 @@ character-parser@^2.2.0:
   dependencies:
     is-regex "^1.0.3"
 
-chart.js@^2.7.3:
+chart.js@^2.7:
   version "2.9.4"
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.9.4.tgz#0827f9563faffb2dc5c06562f8eb10337d5b9684"
   integrity sha512-B07aAzxcrikjAPyV+01j7BmOpxtQETxTSlQ26BEYJ+3iUkbNKaOJ/nDbT6JjyqYxseM0ON12COHYdU2cTIjC7A==
@@ -2950,10 +2950,10 @@ chartjs-color@^2.1.0:
     chartjs-color-string "^0.6.0"
     color-convert "^1.9.3"
 
-chartjs-plugin-datalabels@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-0.4.0.tgz#97ed2b3dd2f2b8f0b6ca084e450c8da567faea75"
-  integrity sha512-nC755jEZFl45KtUPEGMrH+f3/F/u8RbRS328yP+puca7/DBgkCA/n99DovFbsSc6/FgYmn/Z3+/MUQFl77qv8w==
+chartjs-plugin-datalabels@^0.7:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-0.7.0.tgz#f72e44edb2db45ef68913e9320bcc50398a205e6"
+  integrity sha512-PKVUX14nYhH0wcdCpgOoC39Gbzvn6cZ7O9n+bwc02yKD9FTnJ7/TSrBcfebmolFZp1Rcicr9xbT0a5HUbigS7g==
 
 "chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.3:
   version "3.5.3"
@@ -5356,20 +5356,15 @@ jquery.mousewheel@^3.1.9:
   resolved "https://registry.yarnpkg.com/jquery.mousewheel/-/jquery.mousewheel-3.1.9.tgz#b1e162f1df8aaf6c24fbf923d3d6c58c52d9553e"
   integrity sha512-n4tdvQAzKBYl5KIPil3za4yDmhodXZQu968k8J63kvxy77kg+HApIejpuE+S3Ko9d7P5UIFH6fMdghzWupqVVw==
 
-jquery@3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
-  integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
-
-jquery@>=1.8.0, jquery@>=3.5.1:
+jquery@>=1.8.0, jquery@>=3.5.1, jquery@^3.6:
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.1.tgz#fab0408f8b45fc19f956205773b62b292c147a16"
   integrity sha512-opJeO4nCucVnsjiXOE+/PcCgYw9Gwpvs/a6B1LL/lQhwWwpbVEVYDZ1FokFr8PRc7ghYlrFPuyHuiiDNTQxmcw==
 
-js-cookie@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
-  integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
+js-cookie@^3.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
+  integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
 
 js-stringify@^1.0.2:
   version "1.0.2"
@@ -7171,10 +7166,10 @@ sass-loader@^13.0:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
-sass@^1.43.4:
-  version "1.54.7"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.54.7.tgz#a93fb1690472b161fab8f4ab34a66a0f3000c478"
-  integrity sha512-3q7MQz7sCpVG6TLhUfZwGOcd2/sm2ghYN2JEdRjNiW04ILdvahdo9GuAs+bxsxZ3hDCKv+wUT5w0iFWGU0CxlA==
+sass@^1.43:
+  version "1.54.8"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.54.8.tgz#4adef0dd86ea2b1e4074f551eeda4fc5f812a996"
+  integrity sha512-ib4JhLRRgbg6QVy6bsv5uJxnJMTS2soVcCp9Y88Extyy13A8vV0G1fAwujOzmNkFQbR3LvedudAMbtuNRPbQww==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -7234,7 +7229,7 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==
 
-select2@^4.0.3:
+select2@^4.0:
   version "4.0.13"
   resolved "https://registry.yarnpkg.com/select2/-/select2-4.0.13.tgz#0dbe377df3f96167c4c1626033e924372d8ef44d"
   integrity sha512-1JeB87s6oN/TDxQQYCvS5EFoQyvV6eYMZZ0AeA4tdFDYWN3BAGZ8npr17UBFddU0lgAt3H0yjX3X6/ekOj1yjw==
