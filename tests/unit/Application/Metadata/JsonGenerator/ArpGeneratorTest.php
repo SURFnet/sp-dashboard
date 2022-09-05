@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonG
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use stdClass;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
@@ -85,7 +86,7 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->assertEquals('/^foobar(.*)$/i', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['value']);
     }
 
-    public function test_adds_epti_for_oidcng_entities()
+    public function test_does_not_add_epti_for_oidcng_entities()
     {
         $entity = $this->getManageEntity(Constants::TYPE_OPENID_CONNECT_TNG, false);
 
@@ -94,8 +95,8 @@ class ArpGeneratorTest extends MockeryTestCase
 
         $metadata = $factory->build($entity);
 
-        $this->assertCount(1, $metadata['attributes']);
-        $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonTargetedID']);
+        // When no attributes are present, a stdClass is set as metadata attributes (for json encoding purposes)
+        $this->assertEquals(new stdClass(), $metadata['attributes']);
     }
 
     private function getManageEntity(string $protocol = 'sanl20', $registerAttributes = true)
