@@ -8,8 +8,6 @@
     "@types/jest": "^28",
     "compass-mixins": "^0.12.10",
     "css-loader": "^6.7",
-    "extract-loader": "^3.0.0",
-    "file-loader": "^2.0.0",
     "import-glob-loader": "^1.1.0",
     "jest": "^28",
     "jest-canvas-mock": "^2.4",
