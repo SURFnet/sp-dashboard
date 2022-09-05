@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { loadServiceForm } from "./service_form";
 import * as $ from "jquery";
 

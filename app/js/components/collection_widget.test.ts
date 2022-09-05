@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { loadEntityOidcForm } from "./collection_widget";
 
 import * as $ from "jquery";
