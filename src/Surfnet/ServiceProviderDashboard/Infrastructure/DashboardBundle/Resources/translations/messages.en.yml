@@ -504,6 +504,7 @@ privacy.information.snDpaWhyNot: What items of the SURF model Data Processing Ag
 privacy.information.surfmarketDpaAgreement: Did you agree a Data Processing Agreement with SURFmarket?
 privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF Data Processing Agreement?
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
+privacy.edit.flash.success: Your changes were saved!
 service.admin_overview.introduction.html: "Please use the service switcher to manage the entities of one of the services."
 service.create.title: Add new service
 service.create.description: "Members of this team have access to SP %Name% via the SP Dashboard (sp.surfconext.nl) and can add/manage their entities on the SURFconext platform."
