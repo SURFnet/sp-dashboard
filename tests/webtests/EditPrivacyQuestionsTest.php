@@ -104,5 +104,10 @@ class EditPrivacyQuestionsTest extends WebTestCase
             '2018-12-31',
             $crawler->filter('#dashboard_bundle_privacy_questions_type_certificationValidTo')->attr('value')
         );
+
+        $this->assertContains(
+            'Your changes were saved!',
+            $crawler->filter('div.flashMessage.info')->text()
+        );
     }
 }

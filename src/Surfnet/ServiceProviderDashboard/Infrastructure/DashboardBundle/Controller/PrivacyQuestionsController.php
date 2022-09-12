@@ -132,6 +132,7 @@ class PrivacyQuestionsController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commandBus->handle($command);
+            $this->addFlash('notice', 'privacy.edit.flash.success');
             return $this->redirectToRoute('privacy_questions', ['serviceId' => $serviceId]);
         }
 
