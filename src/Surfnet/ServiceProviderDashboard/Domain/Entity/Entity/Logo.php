@@ -73,8 +73,6 @@ class Logo implements Comparable
     public function asArray(): array
     {
         return [
-//            'metaDataFields.logo:0:height' => $this->getHeight(),
-//            'metaDataFields.logo:0:width' => $this->getWidth(),
             'metaDataFields.logo:0:url' => $this->getUrl(),
         ];
     }
