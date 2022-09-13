@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 /**
@@ -69,16 +70,16 @@ class JsonGenerator implements GeneratorInterface
 
     public function generateForExistingEntity(
         ManageEntity $entity,
+        EntityDiff $differences,
         string $workflowState,
         string $updatedPart = ''
     ): array {
         // the type for entities is always saml because manage is using saml internally
         $data = [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState, $updatedPart),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $differences, $workflowState, $updatedPart),
             'type' => 'saml20_sp',
             'id' => $entity->getId(),
         ];
-
 
         return $data;
     }
@@ -113,65 +114,42 @@ class JsonGenerator implements GeneratorInterface
 
     private function generateDataForExistingEntity(
         ManageEntity $entity,
+        EntityDiff $differences,
         string $workflowState,
         string $updatedPart
     ): array {
         $metadata = [
             'entityid' => $entity->getMetaData()->getEntityId(),
         ];
-
         switch ($updatedPart) {
             case 'ACL':
                 $metadata += $this->generateAclData($entity);
-                break;
+                return $metadata;
 
             default:
-                $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
-                $metadata['state'] = $workflowState;
-
-                $metadata += $this->flattenMetadataFields(
-                    $this->generateMetadataFields($entity)
-                );
-
+                $metadata += $differences->getDiff();
                 if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
                     $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
                 }
+                // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
+                $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+                $metadata['state'] = $workflowState;
+                if ($entity->hasComments()) {
+                    $metadata['revisionnote'] = $entity->getComments();
+                }
+
+                // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
+                // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0
+                // by one of the administrators. If the entity was included for push, we make sure it is not overridden.
+                if ($entity->isProduction()) {
+                    $metadata['metaDataFields.coin:exclude_from_push'] = '1';
+                }
+                if ($entity->isManageEntity() && !$entity->isExcludedFromPush()) {
+                    $metadata['metaDataFields.coin:exclude_from_push'] = '0';
+                }
+
+                return $metadata;
         }
-
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
-
-        return $metadata;
-    }
-
-    /**
-     * Convert a list fields to a flat array expected by the merge-write API.
-     *
-     * Manage always returns metadata fields like this:
-     *
-     *     [ metaDataFields => [ description:en => ..., description:nl => ..., ...] ]
-     *
-     * But when using the merge-write API, sending a 'metaDataFields' property
-     * will overwrite all existing metadata fields. To prevent this, we only
-     * send the metadata fields we actually want to update by using the flat
-     * format:
-     *
-     *     [ metaDataFields.description:en => ..., metaDataFields.description:nl => ..., ...] ]
-     *
-     *
-     * @param array $fields
-     * @return array
-     */
-    private function flattenMetadataFields(array $fields)
-    {
-        $flatFields = [];
-
-        foreach ($fields as $name => $value) {
-            $flatFields['metaDataFields.' . $name] = $value;
-        }
-
-        return $flatFields;
     }
 
     private function generateMetadataFields(ManageEntity $entity)
