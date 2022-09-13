@@ -85,7 +85,6 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
         arguments:
             $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
-
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
 
@@ -93,6 +92,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
         arguments:
             - '@surfnet.manage.client.publish_client.prod_environment'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@session.flash_bag'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'

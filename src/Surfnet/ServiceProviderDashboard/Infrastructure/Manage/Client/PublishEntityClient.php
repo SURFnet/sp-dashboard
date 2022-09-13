@@ -68,10 +68,10 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function publish(ManageEntity $entity, string $updatedPart = '')
+    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $updatedPart = '')
     {
         try {
-            if (empty($entity->getId())) {
+            if (!$entity->isManageEntity()) {
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getId()));
 
                 $response = $this->client->post(
@@ -82,9 +82,12 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                     '/manage/api/internal/metadata'
                 );
             } else {
+                $diff = $pristineEntity->diff($entity);
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getId()));
+
                 $data = json_encode($this->generator->generateForExistingEntity(
                     $entity,
+                    $diff,
                     $this->manageConfig->getPublicationStatus()->getStatus(),
                     $updatedPart
                 ));

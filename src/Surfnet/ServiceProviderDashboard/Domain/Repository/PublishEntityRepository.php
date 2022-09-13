@@ -28,7 +28,7 @@ interface PublishEntityRepository
      *
      * @return mixed
      */
-    public function publish(ManageEntity $entity, string $part = '');
+    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = '');
 
     /**
      * Push the metadata from Manage to Engineblock
