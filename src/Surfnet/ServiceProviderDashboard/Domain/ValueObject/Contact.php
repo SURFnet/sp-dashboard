@@ -168,4 +168,14 @@ class Contact
     {
         return !(empty($this->firstName) && empty($this->lastName) && empty($this->email) && empty($this->phone));
     }
+
+    public function isSet()
+    {
+        $isNull = $this->email === null &&
+        $this->firstName === null &&
+        $this->lastName === null &&
+        $this->phone === null;
+
+        return !$isNull;
+    }
 }
