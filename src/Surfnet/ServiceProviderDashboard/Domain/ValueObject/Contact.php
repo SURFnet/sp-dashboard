@@ -157,12 +157,15 @@ class Contact
         return $result;
     }
 
-    public function isContactSet()
+    /**
+     * Tests if any of the attributes of the contact are set
+     *
+     * If one of the fields is filled this method will return `true`, if none are initialized `false` is returned.
+     *
+     * As a suggestion for future improvement: create a NullContact VO that is instantiated instead of an empty Contact.
+     */
+    public function isContactSet(): bool
     {
-        if (empty($this->firstName) && empty($this->lastName) && empty($this->email) && empty($this->phone)) {
-            return false;
-        }
-
-        return true;
+        return !(empty($this->firstName) && empty($this->lastName) && empty($this->email) && empty($this->phone));
     }
 }
