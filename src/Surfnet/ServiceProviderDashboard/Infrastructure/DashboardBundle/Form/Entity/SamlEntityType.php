@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCo
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -99,14 +100,24 @@ class SamlEntityType extends AbstractType
                         ]
                     )
                     ->add(
-                        'acsLocation',
-                        TextType::class,
+                        'acsLocations',
+                        CollectionType::class,
                         [
+                            'error_bubbling' => false,
+                            'prototype' => true,
+                            'allow_add' => true,
+                            'allow_delete' => true,
                             'required' => false,
+                            'entry_type' => TextType::class,
+                            'entry_options' => [
+                                'attr' => [
+                                    'data-parsley-redirecturis_set' => 'true',
+                                    'data-parsley-redirecturis_valid' => 'true',
+                                    'data-parsley-urlstrict' => null,
+                                ],
+                            ],
                             'attr' => [
                                 'data-help' => 'entity.edit.information.acsLocation',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
                             ],
                         ]
                     )

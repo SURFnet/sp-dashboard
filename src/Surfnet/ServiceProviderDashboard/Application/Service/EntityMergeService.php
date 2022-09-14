@@ -80,7 +80,7 @@ class EntityMergeService
         $metaData = new MetaData(
             $command->getEntityId(),
             $command->getMetadataUrl(),
-            $command->getAcsLocation(),
+            $command->getAcsLocations(),
             $command->getNameIdFormat(),
             $command->getCertificate(),
             $command->getDescriptionEn(),

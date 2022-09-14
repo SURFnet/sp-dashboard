@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 /**
@@ -197,19 +198,12 @@ class JsonGenerator implements GeneratorInterface
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        /*
-         * The binding of the ACS URL is always POST.
-         *
-         * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
-         * imports the POST ACS URL. Other formats are not supported by manage or
-         * the dashboard.
-         */
-        $metadata['AssertionConsumerService:0:Binding'] = Constants::BINDING_HTTP_POST;
-        $metadata['AssertionConsumerService:0:Location'] = $entity->getMetaData()->getAcsLocation();
+        AcsLocationHelper::addAcsLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata);
+        AcsLocationHelper::addEmptyAscLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata);
+
         $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
         $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
         $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
-
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0

@@ -49,7 +49,7 @@ class EntityDetailTest extends WebTestCase
         $this->assertContains("Entity details", $pageTitle->text());
 
         $this->assertDetailEquals(0, 'Metadata URL', 'https://sp1-entityid.example.com/metadata');
-        $this->assertDetailEquals(1, 'ACS location', 'https://sp1-entityid.example.com/acs');
+        $this->assertDetailsAscLocationEquals(1, 'ACS location', 'https://sp1-entityid.example.com/acs');
         $this->assertDetailEquals(2, 'Entity ID', 'https://sp1-entityid.example.com');
         $this->assertDetailEquals(8, 'Name EN', 'SP3 Name English');
         $this->assertDetailEquals(10, 'First name', 'givenname', true);
@@ -173,6 +173,23 @@ class EntityDetailTest extends WebTestCase
             $expectedValue,
             $valueSpan,
             sprintf('Expected span "%s" at the row on position %d', $expectedValue, $position)
+        );
+    }
+
+    private function assertDetailsAscLocationEquals($position, $expectedLabel, $expectedValue, $hasTooltip = true)
+    {
+        $rows = $this->client->getCrawler()->filter('div.detail');
+        $row = $rows->eq($position);
+        $label = $row->filter('label')->text();
+        $ul = $row->filter('ul');
+        $li = $row->filter('li');
+        $this->assertCount(1, $ul);
+        $this->assertCount(1, $li);
+
+        $this->assertEquals(
+            $expectedLabel,
+            $label,
+            sprintf('Expected label "%s" at the row on position %d', $expectedLabel, $position)
         );
     }
 

@@ -24,9 +24,9 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 class Metadata
 {
     /**
-     * @var string
+     * @var array
      */
-    public $acsLocation;
+    public $acsLocations = [];
 
     /**
      * @var string
@@ -127,6 +127,11 @@ class Metadata
      * @var Attribute
      */
     public $organizationTypeAttribute;
+
+    /**
+     * @var Attribute
+     */
+    public $organizationUnitAttribute;
 
     /**
      * @var Attribute

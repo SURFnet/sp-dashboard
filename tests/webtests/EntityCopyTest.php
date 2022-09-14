@@ -67,7 +67,7 @@ class EntityCopyTest extends WebTestCase
 
         $this->assertEquals(
             'https://engine.dev.support.surfconext.nl/authentication/sp/consume-assertion',
-            $form->get('dashboard_bundle_entity_type[metadata][acsLocation]')->getValue()
+            $form->get('dashboard_bundle_entity_type[metadata][acsLocations][0]')->getValue()
         );
 
         $this->assertEquals(

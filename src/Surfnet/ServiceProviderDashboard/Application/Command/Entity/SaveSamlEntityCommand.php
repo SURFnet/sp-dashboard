@@ -87,15 +87,20 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     private $pastedMetadata;
 
     /**
-     * @var string
+     * @var array
      *
-     * @Assert\NotBlank()
-     * @Assert\Url(
-     *      protocols={"https"},
-     *      message = "url.notSecure"
+     * @Assert\All({
+     *      @Assert\NotBlank(),
+     *      @Assert\Url(
+     *          protocols={"https"},
+     *          message = "url.notSecure"
+     *      )
+     * })
+     * @Assert\Count(
+     *     max = 10
      * )
      */
-    private $acsLocation;
+    private $acsLocations;
 
     /**
      * @var string
@@ -458,20 +463,21 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @return string
+     * @param $acsLocations
      */
-    public function getAcsLocation(): ?string
+    public function setAcsLocations($acsLocations)
     {
-        return $this->acsLocation;
+        $this->acsLocations = $acsLocations;
     }
 
     /**
-     * @param string $acsLocation
+     * @return array
      */
-    public function setAcsLocation($acsLocation)
+    public function getAcsLocations(): ?array
     {
-        $this->acsLocation = $acsLocation;
+        return $this->acsLocations;
     }
+
 
     public function getEntityId(): ?string
     {

@@ -316,7 +316,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
                     'nameEn' => 'The A Team',
                     'nameNl' => 'The A Team',
                     'metadataUrl' => 'https://metadata-url',
-                    'acsLocation' => 'https://acs-location',
+                    'acsLocations' => [],
                     'entityId' => 'https://entity-id',
                     'certificate' => file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'),
                     'logoUrl' => 'https://logo-url',
