@@ -131,11 +131,6 @@ class Metadata
     /**
      * @var Attribute
      */
-    public $organizationUnitAttribute;
-
-    /**
-     * @var Attribute
-     */
     public $affiliationAttribute;
 
     /**

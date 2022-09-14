@@ -175,6 +175,14 @@ class JsonGenerator implements GeneratorInterface
         return $flatFields;
     }
 
+    private function generateAscLocations(ManageEntity $entity, array &$metadata)
+    {
+        AcsLocationHelper::addAcsLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata);
+        if ($entity->isManageEntity()) {
+            AcsLocationHelper::addEmptyAscLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata);
+        }
+    }
+
     private function generateMetadataFields(ManageEntity $entity)
     {
         $metadata = array_merge(
@@ -198,8 +206,7 @@ class JsonGenerator implements GeneratorInterface
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        AcsLocationHelper::addAcsLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata);
-        AcsLocationHelper::addEmptyAscLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata);
+        $this->generateAscLocations($entity, $metadata);
 
         $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
         $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';

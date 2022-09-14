@@ -95,7 +95,7 @@ class MetaData
         }
 
         if (count($acsLocations) > self::MAX_ACS_LOCATIONS) {
-            throw new Exception('Maximum acs locations exceeded. Maximum 10 asc location are supported');
+            throw new Exception('Maximum acs locations exceeded. Maximum '.self::MAX_ACS_LOCATIONS.' acs location are supported');
         }
 
         $contactList = ContactList::fromApiResponse($metaDataFields);

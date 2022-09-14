@@ -97,7 +97,8 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      *      )
      * })
      * @Assert\Count(
-     *     max = 10
+     *     max = 10,
+     *     maxMessage = "{{ limit }} ASC locations or less are allowed"
      * )
      */
     private $acsLocations;

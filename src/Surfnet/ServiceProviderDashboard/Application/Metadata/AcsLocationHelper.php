@@ -25,11 +25,8 @@ class AcsLocationHelper
 {
     /**
      * Remove empty and null elements from an array.
-     *
-     * @param $array
-     * @return array
      */
-    public static function cleanArray(&$array)
+    private static function cleanArray(array $array):?array
     {
         return array_values(array_filter($array));
     }
@@ -40,14 +37,11 @@ class AcsLocationHelper
      * imports the POST ACS URLs. Other formats are not supported by manage or
      * the dashboard.
      *
-     * @param $acsLocations
-     * @param $metadata
-     * @return void
      */
-    public static function addAcsLocationsToMetaData($acsLocations, &$metadata)
+    public static function addAcsLocationsToMetaData(array $acsLocations, array &$metadata)
     {
-        $ascLocations = array_values(array_filter($acsLocations));
-        foreach ($ascLocations as $index => $acsLocation) {
+        $locations = self::cleanArray($acsLocations);
+        foreach ($locations as $index => $acsLocation) {
             $metadata['AssertionConsumerService:' . $index . ':Binding'] = Constants::BINDING_HTTP_POST;
             $metadata['AssertionConsumerService:' . $index . ':Location'] = $acsLocation;
         }
@@ -55,14 +49,10 @@ class AcsLocationHelper
 
     /**
      * Add empty remaining locations so Manage can delete them
-     *
-     * @param $acsLocations
-     * @param $metadata
-     * @return void
      */
-    public static function addEmptyAscLocationsToMetaData($acsLocations, &$metadata)
+    public static function addEmptyAscLocationsToMetaData(array $acsLocations, array &$metadata)
     {
-        $index = count(array_values(array_filter($acsLocations)));
+        $index = count(self::cleanArray($acsLocations));
         while ($index < MetaData::MAX_ACS_LOCATIONS) {
             $metadata['AssertionConsumerService:' . $index . ':Binding'] = null;
             $metadata['AssertionConsumerService:' . $index . ':Location'] = null;

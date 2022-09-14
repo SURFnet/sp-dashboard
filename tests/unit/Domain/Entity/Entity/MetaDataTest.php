@@ -53,7 +53,7 @@ class MetaDataTest extends TestCase
     public function test_it_exceeds_max_asc_locations()
     {
         $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/response_json_exceeds_max_acs_locations.json'), true);
-        $this->expectExceptionMessage('Maximum acs locations exceeded. Maximum 10 asc location are supported');
+        $this->expectExceptionMessage('Maximum acs locations exceeded. Maximum '.MetaData::MAX_ACS_LOCATIONS.' acs location are supported');
         MetaData::fromApiResponse($data);
     }
 
