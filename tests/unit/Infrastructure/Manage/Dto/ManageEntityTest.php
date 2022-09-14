@@ -69,14 +69,12 @@ class ManageEntityTest extends MockeryTestCase
 
         $diff = $entity->diff($entity2);
         $diffResults = $diff->getDiff();
-        $this->assertCount(4, $diffResults);
+        $this->assertCount(3, $diffResults);
         $this->assertEquals('https://monitorstand.example.com', $diffResults['entityid']);
         $this->assertEquals('https://engine.surfconext.com/authentication/metadata', $diffResults['metadataurl']);
-        $this->assertEquals('John Doe', $diffResults['metaDataFields.contacts:0:givenName']);
-        $this->assertIsArray($diffResults['arp']['attributes']);
-        $this->assertCount(2, $diffResults['arp']['attributes']);
-        $this->assertEquals('Mumbo-jumbo', $diffResults['arp']['attributes']['urn:mace:dir:attribute-def:displayName']['motivation']);
-        $this->assertEquals('sab', $diffResults['arp']['attributes']['urn:mace:dir:attribute-def:uid']['source']);
+        $this->assertEquals('John Doe', $diffResults['metaDataFields.contacts:1:givenName']);
+        // The ARP is generated in the 'provide everything' fashion, and is not part of the diff.
+        $this->assertArrayNotHasKey('arp', $diffResults);
     }
 
     public function test_diff_oidc()
@@ -86,15 +84,18 @@ class ManageEntityTest extends MockeryTestCase
 
         $diff = $entity->diff($entity2);
         $diffResults = $diff->getDiff();
-        $this->assertCount(5, $diffResults);
-        $this->assertEquals('Teams client credentials client for VOOT and FOOT access', $diffResults['metadataFields.name:en']);
-        $this->assertIsArray($diffResults['allowedEntities']);
-        $this->assertCount(1, $diffResults['allowedEntities']);
-        $this->assertIsArray($diffResults['arp']['attributes']);
-        $this->assertCount(1, $diffResults['arp']['attributes']);
+        $this->assertCount(3, $diffResults);
+        // Allowed entities are not part of the diff. We generate them in the JSON generator
+        $this->assertArrayNotHasKey('allowedEntities', $diffResults);
+        // ARP is not part of the diff. We generate them in the JSON generator
+        $this->assertArrayNotHasKey('arp', $diffResults);
+        $this->assertArrayHasKey('metaDataFields.name:en', $diffResults);
+        $this->assertEquals('Teams client credentials client for VOOT and FOOT access', $diffResults['metaDataFields.name:en']);
         $this->assertIsArray($diffResults['metaDataFields.grants']);
         $this->assertCount(1, $diffResults['metaDataFields.grants']);
         $this->assertIsArray($diffResults['metaDataFields.redirectUrls']);
-        $this->assertCount(1, $diffResults['metaDataFields.redirectUrls']);
+        // Even though only one item is changed, both items are part of the diff as the redirect URLS are set in a
+        // 'provide everything' manner.
+        $this->assertCount(2, $diffResults['metaDataFields.redirectUrls']);
     }
 }

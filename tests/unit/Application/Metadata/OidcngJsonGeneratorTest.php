@@ -75,50 +75,34 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('build')
             ->andReturn(['arp' => 'arp']);
 
-        $data = $generator->generateForNewEntity($this->createManageEntity(), 'testaccepted');
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
         $this->assertEquals(
             [
-                'data' => [
+                'type' => 'oidc10_rp',
+                'id' => 'manageId',
+                'pathUpdates' => [
                     'arp' => ['arp' => 'arp'],
-                    'type' => 'oidc10-rp',
                     'state' => 'testaccepted',
                     'entityid' => 'entityid',
-                    'active' => true,
-                    'allowedEntities' => [],
                     'allowedResourceServers' => [],
-                    'allowedall' => true,
-                    'metaDataFields' => [
-                        'accessTokenValidity' => 3600,
-                        'description:en' => 'description en',
-                        'description:nl' => 'description nl',
-                        'grants' => [
-                            'authorization_code',
-                            'refresh_token',
-                        ],
-                        'isPublicClient' => true,
-                        'name:en' => 'name en',
-                        'name:nl' => 'name nl',
-                        'NameIDFormat' => 'nameidformat',
-                        'contacts:0:contactType' => 'support',
-                        'contacts:0:givenName' => 'givenname',
-                        'contacts:0:surName' => 'surname',
-                        'contacts:0:emailAddress' => 'emailaddress',
-                        'contacts:0:telephoneNumber' => 'telephonenumber',
-                        'OrganizationName:en' => 'orgen',
-                        'OrganizationName:nl' => 'orgnl',
-                        'privacy' => 'privacy',
-                        'redirectUrls' => [
-                            'uri1',
-                            'uri2',
-                            'uri3',
-                        ],
-                        'secret' => 'test',
-                        'coin:institution_id' => 'service-institution-id',
-                        'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
+                    'metaDataFields.contacts:2:givenName' => 'John',
+                    'metaDataFields.contacts:2:surName' => 'Doe',
+                    'metaDataFields.OrganizationName:nl' => 'Drop Supplies',
+                    'metaDataFields.OrganizationDisplayName:en' => 'Drop Supplies',
+                    'metaDataFields.grants' => [
+                        0 => 'authorization_code',
+                        1 => 'refresh_token'
+                    ],
+                    'metaDataFields.redirectUrls' => [
+                        0 => 'uri1',
+                        1 => 'uri2',
+                        2 => 'uri3',
                     ],
                     'revisionnote' => 'revisionnote',
                 ],
-                'type' => 'oidc10_rp',
             ],
             $data
         );
@@ -138,7 +122,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.prod.playground.example.com'
         );
 
-        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
 
         $this->assertEquals(
             array(
@@ -149,36 +136,24 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                                 'arp' => 'arp',
                             ),
                         'entityid' => 'entityid',
-                        'metaDataFields.accessTokenValidity' => 3600,
-                        'metaDataFields.NameIDFormat' => 'nameidformat',
-                        'metaDataFields.description:en' => 'description en',
-                        'metaDataFields.description:nl' => 'description nl',
-                        'metaDataFields.name:en' => 'name en',
-                        'metaDataFields.name:nl' => 'name nl',
-                        'metaDataFields.contacts:0:contactType' => 'support',
-                        'metaDataFields.contacts:0:givenName' => 'givenname',
-                        'metaDataFields.contacts:0:surName' => 'surname',
-                        'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
-                        'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
-                        'metaDataFields.OrganizationName:en' => 'orgen',
-                        'metaDataFields.OrganizationName:nl' => 'orgnl',
-                        'metaDataFields.privacy' => 'privacy',
-                        'metaDataFields.secret' => 'test',
-                        'metaDataFields.redirectUrls' => [
-                            'uri1',
-                            'uri2',
-                            'uri3',
-                        ],
+                        'metaDataFields.contacts:2:givenName' => 'John',
+                        'metaDataFields.contacts:2:surName' => 'Doe',
+                        'metaDataFields.OrganizationName:nl' => 'Drop Supplies',
+                        'metaDataFields.OrganizationDisplayName:en' => 'Drop Supplies',
                         'metaDataFields.grants' => [
-                            'authorization_code',
-                            'refresh_token',
+                            0 => 'authorization_code',
+                            1 => 'refresh_token'
                         ],
-                        'metaDataFields.isPublicClient' => true,
-                        'revisionnote' => 'revisionnote',
+                        'metaDataFields.redirectUrls' => [
+                            0 => 'uri1',
+                            1 => 'uri2',
+                            2 => 'uri3',
+                        ],
                         'state' => 'testaccepted',
-                        'allowedResourceServers' => [],
-                        'metaDataFields.coin:institution_id' => 'service-institution-id',
-                        'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
+                        'allowedResourceServers' => [
+
+                        ],
+                        'revisionnote' => 'revisionnote',
                     ),
                 'type' => 'oidc10_rp',
                 'id' => 'manageId',
@@ -199,8 +174,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'http://oidc.test.playground.example.com',
             'http://oidc.prod.playground.example.com'
         );
-
-        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted', 'ACL');
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -223,8 +200,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         );
 
         $entity = $this->createManageEntity(true);
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -247,8 +226,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         );
 
         $entity = $this->createManageEntity(false);
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
@@ -274,8 +255,9 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity = $this->createManageEntity(false, [
             'entity-id',
         ]);
-
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -302,8 +284,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             'entity-id',
             'entity-id2',
         ]);
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -341,6 +325,18 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                 ->shouldReceive('getEnvironment')
                 ->andReturn($environment);
         }
+        return $entity;
+    }
+
+    private function createChangedManageEntity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oidc10_rp_response_changed.json'), true));
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
+        $entity->setComments('revisionnote');
+        $entity = m::mock($entity);
         return $entity;
     }
 }
