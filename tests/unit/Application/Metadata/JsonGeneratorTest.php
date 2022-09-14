@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use function file_get_contents;
@@ -154,7 +154,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $data = $generator->generateForNewEntity($this->createManageEntity(), 'prodaccepted');
 
-        $this->assertEquals(array (
+        $expected = array (
             'data' =>
                 array (
                     'arp' =>
@@ -197,7 +197,10 @@ class JsonGeneratorTest extends MockeryTestCase
                     'revisionnote' => 'revisionnote',
                 ),
             'type' => 'saml20_sp',
-        ), $data);
+        );
+
+        $this->addEmptyAscLocations(1, '', $expected['data']['metaDataFields']);
+        $this->assertEquals($expected, $data);
     }
 
     public function test_it_can_build_saml_data_for_existing_entities()
@@ -214,7 +217,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
 
-        $this->assertEquals(array (
+        $expected = array (
             'pathUpdates' =>
                 array (
                     'arp' => array ('arp' => 'arp'),
@@ -225,11 +228,18 @@ class JsonGeneratorTest extends MockeryTestCase
                     'state' => 'testaccepted',
                     'revisionnote' => 'revisionnote',
                     'metaDataFields.contacts:2:givenName' => 'John Doe',
-                    'metaDataFields.coin:exclude_from_push' => '0'
+                    'metaDataFields.coin:exclude_from_push' => '0',
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
-        ), $data);
+        );
+
+        $this->addEmptyAscLocations(1, 'metaDataFields.', $expected['pathUpdates']);
+
+        $expected['pathUpdates']['metaDataFields.AssertionConsumerService:0:Binding'] = Constants::BINDING_HTTP_POST;
+        $expected['pathUpdates']['metaDataFields.AssertionConsumerService:0:Location'] = 'http://acs';
+
+        $this->assertEquals($expected, $data);
     }
 
     public function test_it_can_build_acl_whitelist_for_existing_entities_default_allow_all()
@@ -403,7 +413,7 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $data = $generator->generateForNewEntity($entity, 'prodaccepted');
 
-        $this->assertEquals(array (
+        $expected = array (
             'data' =>
                 array (
                     'arp' =>
@@ -444,7 +454,9 @@ class JsonGeneratorTest extends MockeryTestCase
                     'revisionnote' => 'revisionnote',
                 ),
             'type' => 'saml20_sp',
-        ), $data);
+        );
+        $this->addEmptyAscLocations(1, '', $expected['data']['metaDataFields']);
+        $this->assertEquals($expected, $data);
     }
 
     private function createManageEntity(
@@ -479,6 +491,17 @@ class JsonGeneratorTest extends MockeryTestCase
                 ->andReturn($environment);
         }
         return $entity;
+    }
+
+    /**
+     * Fill empty asc locations to the maximum number
+     */
+    private function addEmptyAscLocations(int $from, string $prefix, array &$metadata)
+    {
+        for ($index = $from; $index < MetaData::MAX_ACS_LOCATIONS; $index++) {
+            $metadata[sprintf('%sAssertionConsumerService:%d:Binding', $prefix, $index)] = null;
+            $metadata[sprintf('%sAssertionConsumerService:%d:Location', $prefix, $index)] = null;
+        }
     }
 
     private function createChangedManageEntity(): ManageEntity

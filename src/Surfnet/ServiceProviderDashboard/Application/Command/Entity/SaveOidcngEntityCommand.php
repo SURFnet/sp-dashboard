@@ -971,7 +971,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return $this->getSubjectType();
     }
 
-    public function getAcsLocation(): ?string
+    public function getAcsLocations(): ?array
     {
         return null;
     }

@@ -52,9 +52,9 @@ class EntityDetail
     private $metadataUrl;
 
     /**
-     * @var string
+     * @var array
      */
-    private $acsLocation;
+    private $acsLocations = [];
 
     /**
      * @var string
@@ -301,7 +301,7 @@ class EntityDetail
         }
 
         $entityDetail->metadataUrl = $entity->getMetaData()->getMetaDataUrl();
-        $entityDetail->acsLocation = $entity->getMetaData()->getAcsLocation();
+        $entityDetail->acsLocations = $entity->getMetaData()->getAcsLocations();
         $entityDetail->entityId = $entity->getMetaData()->getEntityId();
         $entityDetail->certificate = $entity->getMetaData()->getCertData();
         if ($entity->getMetaData()->getLogo()) {
@@ -395,11 +395,11 @@ class EntityDetail
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getAcsLocation()
+    public function getAcsLocations()
     {
-        return $this->acsLocation;
+        return $this->acsLocations;
     }
 
     /**

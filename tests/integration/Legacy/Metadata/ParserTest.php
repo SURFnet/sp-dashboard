@@ -57,7 +57,11 @@ class ParserTest extends MockeryTestCase
 
         $this->assertInstanceOf(Metadata::class, $metadata);
 
-        $this->assertEquals($metadata->acsLocation, 'https://domain.org/saml/sp/saml2-post/default-sp');
+        $this->assertCount(3, $metadata->acsLocations);
+        $this->assertEquals($metadata->acsLocations[0], 'https://domain.org/saml/sp/saml2-post/default-sp');
+        $this->assertEquals($metadata->acsLocations[1], 'https://domain.org/saml/sp/saml2-post/default-sp-1');
+        $this->assertEquals($metadata->acsLocations[2], 'https://domain.org/saml/sp/saml2-post/default-sp-2');
+
         $this->assertEquals($metadata->entityId, 'https://domain.org/saml/metadata');
 
         $this->assertEquals($metadata->logoUrl, 'LOGO');

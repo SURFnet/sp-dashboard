@@ -36,7 +36,7 @@ interface SaveEntityCommandInterface extends Command
 
     public function getEntityId(): ?string;
     public function getMetadataUrl(): ?string;
-    public function getAcsLocation(): ?string;
+    public function getAcsLocations(): ?array;
     public function getNameIdFormat(): ?string;
     public function getDescriptionEn(): ?string;
     public function getDescriptionNl(): ?string;

@@ -18,7 +18,7 @@
         <div class="wysiwyg">{{ ('entity.detail.metadata.' ~ type ~ '.html')|trans|wysiwyg }}</div>
 
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.metadata_url'|trans, value: entity.metadataUrl, informationPopup: 'entity.edit.information.metadataUrl'} %}
-        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.acs_location'|trans, value: entity.acsLocation, informationPopup: 'entity.edit.information.acsLocation'} %}
+        {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.acs_location'|trans, value: entity.acsLocations, informationPopup: 'entity.edit.information.acsLocation'} %}
 
         {% if entity.protocol == "saml20" %}
             {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.entity_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.entityId'} %}
