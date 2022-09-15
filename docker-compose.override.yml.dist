@@ -1,0 +1,15 @@
+services:
+  php-fpm:
+    volumes:
+      - .:/var/www/html/
+      - ./docker/conf/override/xdebug.override.ini:/usr/local/etc/php/conf.d/15-docker-php-ext-xdebug.ini
+  openconext:
+    volumes:
+      - spdashboard_mysql:/var/lib/mysql
+      - spdashboard_mongo:/var/lib/mongo
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    cap_add:
+      - SYS_ADMIN
+    tmpfs: /run
+    environment:
+      - container=docker
