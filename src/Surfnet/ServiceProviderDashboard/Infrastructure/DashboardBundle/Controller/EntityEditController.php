@@ -70,11 +70,6 @@ class EntityEditController extends Controller
                 'You are not allowed to view an Entity from another Service'
             );
         }
-        if ($entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to edit a published production entity'
-            );
-        }
 
         $entity->setService($service);
 

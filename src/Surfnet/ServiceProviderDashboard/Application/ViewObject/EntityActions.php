@@ -86,8 +86,7 @@ class EntityActions
     public function allowEditAction(): bool
     {
         $notEditable =
-            $this->isPublishedToProduction()
-            || $this->readOnly
+            $this->readOnly
             || $this->status === Constants::STATE_REMOVAL_REQUESTED;
 
         if ($notEditable) {
