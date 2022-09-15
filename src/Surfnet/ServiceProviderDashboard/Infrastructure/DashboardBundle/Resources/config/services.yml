@@ -88,6 +88,13 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
 
+    Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EntityChangeRequestCommandHandler:
+        arguments:
+            $repository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient'
+            $issueType: 'TODO create configurable parameter'
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand }
+
     surfnet.dashboard.command_handler.publish_production_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
         arguments:
@@ -456,6 +463,11 @@ services:
            - '@surfnet.manage.http.guzzle.prod_environment'
            - '@logger'
            - 'production'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient:
+        arguments:
+            $client: '@surfnet.manage.http.http_client.prod_environment'
+            $manageConfig: '@surfnet.manage.configuration.production'
 
     surfnet.teams.http.http_client:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient

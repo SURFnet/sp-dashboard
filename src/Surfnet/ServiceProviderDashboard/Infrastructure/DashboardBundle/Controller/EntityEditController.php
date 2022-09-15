@@ -92,9 +92,10 @@ class EntityEditController extends Controller
         if ($form->isSubmitted()) {
             try {
                 if ($this->isPublishAction($form)) {
+                    $isProductionEntityEdit = $entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION;
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity($entity, $command, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $flashBag);
 
                         if ($response instanceof Response) {
                             $flashBag->add('info', 'entity.edit.metadata.flash.success');

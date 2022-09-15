@@ -64,6 +64,20 @@ class EntityPublishedController extends Controller
     }
 
     /**
+     * @Method("GET")
+     * @Route("/entity/change-request", name="entity_change_request")
+     * @Security("has_role('ROLE_USER')")
+     * @Template()
+     */
+    public function changeRequestAction()
+    {
+        /** @var ManageEntity $entity */
+        $entity = $this->get('session')->get('published.entity.clone');
+        $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
+        return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig', $parameters);
+    }
+
+    /**
      * Show the confirmation popup for an OpenID connect entity
      *
      * In this popup the client id and the secret are displayed (once)
