@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use function file_get_contents;
@@ -459,6 +460,27 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals($expected, $data);
     }
 
+    public function test_it_builds_an_entity_change_request()
+    {
+        $generator = new JsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
+
+        $this->assertIsArray($data);
+        $this->assertEquals('manageId', $data['metaDataId']);
+        $this->assertEquals('saml20_sp', $data['type']);
+        $this->assertIsArray($data['pathUpdates']);
+        $this->assertCount(3, $data['pathUpdates']);
+    }
+
     private function createManageEntity(
         ?bool $idpAllowAll = true,
         ?array $idpWhitelist = [],
@@ -506,7 +528,6 @@ class JsonGeneratorTest extends MockeryTestCase
 
     private function createChangedManageEntity(): ManageEntity
     {
-
         $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_response_changed.json'), true));
         $service = new Service();
         $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');

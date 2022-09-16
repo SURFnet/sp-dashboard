@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -131,6 +132,27 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $data
         );
     }
+
+    public function test_it_builds_an_entity_change_request()
+    {
+        $generator = new OidcngResourceServerJsonGenerator(
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
+
+        $this->assertIsArray($data);
+        $this->assertEquals('manageId', $data['metaDataId']);
+        $this->assertEquals('oauth20_rs', $data['type']);
+        $this->assertIsArray($data['pathUpdates']);
+        $this->assertCount(4, $data['pathUpdates']);
+    }
+
     private function createManageEntity(
         ?bool $idpAllowAll = null,
         ?array $idpWhitelist = null,
@@ -170,6 +192,18 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                 ->shouldReceive('getEnvironment')
                 ->andReturn($environment);
         }
+        return $entity;
+    }
+
+    private function createChangedManageEntity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oauth20_rs_response_changed.json'), true));
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
+        $entity->setComments('revisionnote');
+        $entity = m::mock($entity);
         return $entity;
     }
 }

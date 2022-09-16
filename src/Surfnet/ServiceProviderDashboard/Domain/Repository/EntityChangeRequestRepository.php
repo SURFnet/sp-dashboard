@@ -19,11 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
 interface EntityChangeRequestRepository
 {
     /**
      * Open an entity change request in manage
      */
-    public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity): array;
+    public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity, Contact $contact): array;
 }

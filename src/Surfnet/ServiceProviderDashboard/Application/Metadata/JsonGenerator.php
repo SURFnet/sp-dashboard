@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -82,6 +83,26 @@ class JsonGenerator implements GeneratorInterface
         ];
 
         return $data;
+    }
+
+    public function generateEntityChangeRequest(
+        ManageEntity $entity,
+        EntityDiff $differences,
+        ContactEntity $contact
+    ): array {
+        $payload = [
+            'metaDataId' => $entity->getId(),
+            'type' => 'saml20_sp',
+            'pathUpdates' => $this->generateForChangeRequest($entity, $differences),
+            'auditData' => [
+                'user' => $contact->getEmailAddress()
+            ],
+        ];
+
+        if ($entity->hasComments()) {
+            $payload['note'] = $entity->getComments();
+        }
+        return $payload;
     }
 
     /**
@@ -154,6 +175,15 @@ class JsonGenerator implements GeneratorInterface
 
                 return $metadata;
         }
+    }
+
+    private function generateForChangeRequest(ManageEntity $entity, EntityDiff $differences)
+    {
+        $metadata = $differences->getDiff();
+        // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
+//        $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+
+        return $metadata;
     }
 
     private function generateAcsLocations(ManageEntity $entity, array &$metadata, $addPrefix = false)

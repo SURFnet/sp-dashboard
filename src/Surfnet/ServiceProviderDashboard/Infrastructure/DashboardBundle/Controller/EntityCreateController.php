@@ -194,7 +194,7 @@ class EntityCreateController extends Controller
                 if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity(null, $command, $flashBag);
+                        $response = $this->publishEntity(null, $command, false, $flashBag);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
@@ -284,7 +284,7 @@ class EntityCreateController extends Controller
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
                         $entity = $entity->resetId();
-                        $response = $this->publishEntity($entity, $command, $flashBag);
+                        $response = $this->publishEntity($entity, $command, false, $flashBag);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
