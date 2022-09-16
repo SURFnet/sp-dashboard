@@ -185,6 +185,7 @@ class ServiceController extends Controller
 
                 try {
                     $this->commandBus->handle($command);
+                    $this->get('session')->getFlashBag()->add('info', 'service.create.flash.success');
                     return $this->redirectToRoute('service_overview');
                 } catch (Exception $e) {
                     $this->addFlash('error', $e->getMessage());
@@ -244,6 +245,7 @@ class ServiceController extends Controller
             $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
+                $this->get('session')->getFlashBag()->add('info', 'service.edit.flash.success');
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
@@ -298,6 +300,8 @@ class ServiceController extends Controller
                 // Reset the service switcher (the currently active service was just removed)
                 $resetCommand = new ResetServiceCommand();
                 $this->commandBus->handle($resetCommand);
+
+                $this->get('session')->getFlashBag()->add('info', 'service.delete.flash.success');
             }
 
             return $this->redirectToRoute('service_overview');

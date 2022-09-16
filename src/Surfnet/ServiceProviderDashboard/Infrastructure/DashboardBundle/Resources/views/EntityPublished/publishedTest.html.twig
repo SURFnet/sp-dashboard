@@ -1,8 +1,19 @@
 {% extends '::base.html.twig' %}
 
-{% block page_heading %}{{ 'entity.published_test.title'|trans }}{%endblock%}
-{% block body %}
 
-    {{ 'entity.published_test.text.html'|trans({'%entityName%': entityName})|wysiwyg }}
+{% block body_container %}
 
-{% endblock %}
+    {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
+
+    {% block page_heading %}
+
+        {{ 'entity.published_test.title'|trans }}
+
+    {%endblock%}
+
+    {% block body %}
+
+        {{ 'entity.published_test.text.html'|trans({'%entityName%': entityName})|wysiwyg }}
+
+    {% endblock %}
+{%endblock%}

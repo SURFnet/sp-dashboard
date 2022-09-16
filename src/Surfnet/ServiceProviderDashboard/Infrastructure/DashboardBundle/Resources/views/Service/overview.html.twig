@@ -1,20 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block body_container %}
-    {% set flashes = app.session.flashbag.all %}
-    {% if flashes is not empty %}
-        <div class="card messages">
-            {% for type, messages in flashes %}
-                {% for message in messages %}
-                    {% if type == 'wysiwyg' %}
-                        <div class="message {{ type }}">{{ message|trans|wysiwyg }}</div>
-                    {% else %}
-                        <div class="message {{ type }}">{{ message|trans }}</div>
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-        </div>
-    {%  endif %}
+    {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
 
     <h1 id="main" class="service-title">
         {% spaceless %}
