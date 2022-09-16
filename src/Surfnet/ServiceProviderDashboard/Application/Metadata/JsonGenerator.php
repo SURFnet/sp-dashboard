@@ -179,6 +179,15 @@ class JsonGenerator implements GeneratorInterface
     private function generateForChangeRequest(ManageEntity $entity, EntityDiff $differences)
     {
         $metadata = $differences->getDiff();
+        // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
+//        $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+
+        return $metadata;
+    }
+
+    private function generateForChangeRequest(ManageEntity $entity, EntityDiff $differences)
+    {
+        $metadata = $differences->getDiff();
         return $this->generateArp($metadata, $entity);
     }
 

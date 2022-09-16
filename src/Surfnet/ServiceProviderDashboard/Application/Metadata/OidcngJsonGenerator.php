@@ -394,7 +394,6 @@ class OidcngJsonGenerator implements GeneratorInterface
         }
     }
 
-
     private function generateArp(array $metadata, ManageEntity $entity): array
     {
         // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
