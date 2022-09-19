@@ -115,7 +115,7 @@ class EntityDeleteController extends Controller
                 }
                 $this->commandBus->handle($command);
 
-                $this->get('session')->getFlashBag()->add('info', 'entity.delete.flash.message');
+                $this->addFlash('info', 'entity.delete.flash.success');
             }
             $service = $this->authorizationService->changeActiveService($serviceId);
             if ($this->isGranted('ROLE_ADMINISTRATOR')) {

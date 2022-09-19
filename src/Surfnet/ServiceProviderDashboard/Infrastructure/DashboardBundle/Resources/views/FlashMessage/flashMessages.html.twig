@@ -1,6 +1,6 @@
 {% set flashes = app.session.flashbag.all %}
 {% if flashes is not empty %}
-    <div>
+    <div class="card">
         {% for type, messages in flashes %}
             {% for message in messages %}
                 {% if type == 'wysiwyg' %}

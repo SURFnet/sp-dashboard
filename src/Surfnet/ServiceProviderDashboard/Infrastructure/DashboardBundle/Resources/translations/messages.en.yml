@@ -16,7 +16,7 @@ entity.delete.request.ticket.description: "h2. Details
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
-entity.delete.flash.message: "Your entity is deleted."
+entity.delete.flash.success: "Your entity is deleted."
 unknownDisplayName: "Unknown"
 
 entity:

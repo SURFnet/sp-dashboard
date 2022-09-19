@@ -5,11 +5,7 @@
 
     {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
 
-    {% block page_heading %}
-
-        {{ 'entity.published_test.title'|trans }}
-
-    {%endblock%}
+    <h1>{% block page_heading %}{{ 'entity.published_test.title'|trans }}{%endblock%}</h1>
 
     {% block body %}
 
