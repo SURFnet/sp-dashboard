@@ -87,11 +87,12 @@ class ManageEntityTest extends MockeryTestCase
 
         $diff = $entity->diff($entity2);
         $diffResults = $diff->getDiff();
-        $this->assertCount(3, $diffResults);
+        $this->assertCount(4, $diffResults);
         // Allowed entities are not part of the diff. We generate them in the JSON generator
         $this->assertArrayNotHasKey('allowedEntities', $diffResults);
-        // ARP is not part of the diff. We generate them in the JSON generator
-        $this->assertArrayNotHasKey('arp', $diffResults);
+        // ARP is part of the diff as an indicator of arp changes. We still generate
+        // the arp in the JSON generator
+        $this->assertArrayHasKey('arp', $diffResults);
         $this->assertArrayHasKey('metaDataFields.name:en', $diffResults);
         $this->assertEquals('Teams client credentials client for VOOT and FOOT access', $diffResults['metaDataFields.name:en']);
         $this->assertIsArray($diffResults['metaDataFields.grants']);

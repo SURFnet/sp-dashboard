@@ -99,10 +99,10 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
     }
 
     public function generateEntityChangeRequest(
-        ManageEntity  $entity,
-        EntityDiff    $differences,
-        ContactEntity $contact)
-    : array {
+        ManageEntity $entity,
+        EntityDiff $differences,
+        ContactEntity $contact
+    ): array {
         $payload = [
             'metaDataId' => $entity->getId(),
             'type' => 'oidc10_rp',

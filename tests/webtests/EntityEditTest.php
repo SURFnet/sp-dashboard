@@ -37,6 +37,15 @@ class EntityEditTest extends WebTestCase
             'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
         $this->registerManageEntity(
+            'production',
+            'saml20_sp',
+            '9628d851-abd1-2283-a8f1-a29ba5036174',
+            'SURF SP2',
+            'https://sp2-surf.com',
+            'https://sp2-surf.com/metadata',
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+        );
+        $this->registerManageEntity(
             'test',
             'saml20_sp',
             '7398d851-abd1-2283-a8f1-a29ba5036174',
@@ -45,6 +54,7 @@ class EntityEditTest extends WebTestCase
             'https://sp1-ibuildings.com/metadata',
             'urn:collab:org:ibuildings.nl'
         );
+
         $this->manageId = '9729d851-cfdd-4283-a8f1-a29ba5036261';
 
         $this->logIn('ROLE_ADMINISTRATOR');
@@ -222,6 +232,77 @@ class EntityEditTest extends WebTestCase
             "EntityDescriptor': The attribute 'entityID' is required but missing.",
             $missingMessage->text(),
             'Expected an XML parse error.'
+        );
+    }
+
+    public function test_it_allows_publication_change_requests()
+    {
+        $crawler = $this->client->request('GET', "/entity/edit/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+        $this->client->submit($form, $this->buildValidFormData());
+        self::assertEquals(302, $this->client->getResponse()->getStatusCode());
+        $crawler = $this->client->followRedirect();
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $message = $crawler->filter('.card p')->first();
+        $this->assertEquals(
+            'As you where editing a production entity, we have taken your changes under review.',
+            trim($message->text())
+        );
+    }
+
+    private function buildValidFormData()
+    {
+        return array (
+            'dashboard_bundle_entity_type[publishButton]' => '',
+            'dashboard_bundle_entity_type[metadata][importUrl]' => 'https://engine.surfconext.nl/authentication/sp/metadata',
+            'dashboard_bundle_entity_type[metadata][pastedMetadata]' => '',
+            'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://sp2-surf.com/metadata',
+            'dashboard_bundle_entity_type[metadata][acsLocations]' => [],
+            'dashboard_bundle_entity_type[metadata][entityId]' => 'https://sp2-surf.com',
+            'dashboard_bundle_entity_type[metadata][certificate]' => file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'),
+            'dashboard_bundle_entity_type[metadata][logoUrl]' => 'https://sp2-surf.com/images/logo.png',
+            'dashboard_bundle_entity_type[metadata][nameNl]' => 'De Nederlandse naam voor dit entity',
+            'dashboard_bundle_entity_type[metadata][descriptionNl]' => 'SURF SP2 Description Dutch',
+            'dashboard_bundle_entity_type[metadata][nameEn]' => 'SURF SP2 Name English',
+            'dashboard_bundle_entity_type[metadata][descriptionEn]' => 'SURF SP2 Description English',
+            'dashboard_bundle_entity_type[metadata][applicationUrl]' => '',
+            'dashboard_bundle_entity_type[metadata][eulaUrl]' => '',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'Jane',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][email]' => 'janedoe@example.com',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][phone]' => '',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][firstName]' => 'Joe',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][email]' => 'JoeDoe@example.com',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][phone]' => '',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][firstName]' => 'givenname',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][lastName]' => 'surname',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][email]' => 'foobar@example.com',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][phone]' => 'telephonenumber',
+            'dashboard_bundle_entity_type[attributes][givenNameAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][surNameAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][commonNameAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][displayNameAttribute][requested]' => '1',
+            'dashboard_bundle_entity_type[attributes][displayNameAttribute][motivation]' => 'Test Attribute 1',
+            'dashboard_bundle_entity_type[attributes][emailAddressAttribute][requested]' => '1',
+            'dashboard_bundle_entity_type[attributes][emailAddressAttribute][motivation]' => 'I shall require thyne mail address to send thee messages',
+            'dashboard_bundle_entity_type[attributes][organizationAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][organizationTypeAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][organizationUnitAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][affiliationAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][entitlementAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][principleNameAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][uidAttribute][requested]' => '1',
+            'dashboard_bundle_entity_type[attributes][uidAttribute][motivation]' => 'Test Attribute 2',
+            'dashboard_bundle_entity_type[attributes][preferredLanguageAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][personalCodeAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][scopedAffiliationAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[attributes][eduPersonTargetedIDAttribute][motivation]' => '',
+            'dashboard_bundle_entity_type[comments][comments]' => 'I need a new name NL',
+            'dashboard_bundle_entity_type[status]' => 'published',
+            'dashboard_bundle_entity_type[manageId]' => '9628d851-abd1-2283-a8f1-a29ba5036174',
         );
     }
 }

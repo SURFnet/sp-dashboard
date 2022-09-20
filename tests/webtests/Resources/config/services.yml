@@ -42,6 +42,9 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeIdentityProviderClient
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient:
+        class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeEntityChangeRequestClient
+
     surfnet.manage.client.identity_provider_client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeIdentityProviderClient
 

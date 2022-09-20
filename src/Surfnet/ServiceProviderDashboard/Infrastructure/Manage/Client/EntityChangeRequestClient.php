@@ -77,7 +77,5 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         }
 
         return $response;
-
     }
-
 }

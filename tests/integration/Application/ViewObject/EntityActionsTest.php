@@ -141,7 +141,7 @@ class EntityActionsTest extends TestCase
             Constants::TYPE_OPENID_CONNECT_TNG,
             false
         );
-        $this->assertFalse($publishedToProd->allowEditAction());
+        $this->assertTrue($publishedToProd->allowEditAction());
         $shouldBeEditable = new EntityActions(
             'manage-id',
             1,
