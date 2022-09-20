@@ -139,8 +139,6 @@ class Coin implements Comparable
             'metaDataFields.coin:exclude_from_push' => $this->getExcludeFromPush(),
             'metaDataFields.coin:oidc_client' => $this->getOidcClient(),
             'metaDataFields.coin:original_metadata_url' => $this->getOriginalMetadataUrl(),
-//            'metaDataFields.coin:service_team_id' => $this->getServiceTeamId(),
-//            'metaDataFields.coin:signature_method' => $this->getSignatureMethod(),
         ];
     }
 }
