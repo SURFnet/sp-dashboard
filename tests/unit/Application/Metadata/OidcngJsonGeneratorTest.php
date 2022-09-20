@@ -86,7 +86,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                 'type' => 'oidc10_rp',
                 'id' => 'manageId',
                 'pathUpdates' => [
-                    'arp' => ['arp' => 'arp'],
                     'state' => 'testaccepted',
                     'entityid' => 'entityid',
                     'allowedResourceServers' => [],
@@ -133,10 +132,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             array(
                 'pathUpdates' =>
                     array(
-                        'arp' =>
-                            array(
-                                'arp' => 'arp',
-                            ),
                         'entityid' => 'entityid',
                         'metaDataFields.contacts:2:givenName' => 'John',
                         'metaDataFields.contacts:2:surName' => 'Doe',

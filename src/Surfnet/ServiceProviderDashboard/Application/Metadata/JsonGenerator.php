@@ -156,8 +156,7 @@ class JsonGenerator implements GeneratorInterface
                 if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
                     $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
                 }
-                // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
-                $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+                $metadata = $this->generateArp($metadata, $entity);
                 $metadata['state'] = $workflowState;
                 if ($entity->hasComments()) {
                     $metadata['revisionnote'] = $entity->getComments();
@@ -180,10 +179,7 @@ class JsonGenerator implements GeneratorInterface
     private function generateForChangeRequest(ManageEntity $entity, EntityDiff $differences)
     {
         $metadata = $differences->getDiff();
-        // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
-//        $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
-
-        return $metadata;
+        return $this->generateArp($metadata, $entity);
     }
 
     private function generateAcsLocations(ManageEntity $entity, array &$metadata, $addPrefix = false)
@@ -410,5 +406,17 @@ class JsonGenerator implements GeneratorInterface
             'allowedEntities' => $providers,
             'allowedall' => false,
         ];
+    }
+
+    private function generateArp(array $metadata, ManageEntity $entity): array
+    {
+        // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
+        // but we use the diffed arp to check if any changes where made to the ARP (if not, we do
+        // not send the arp
+        if (!empty($metadata['arp'])) {
+            unset($metadata['arp']);
+            $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+        }
+        return $metadata;
     }
 }

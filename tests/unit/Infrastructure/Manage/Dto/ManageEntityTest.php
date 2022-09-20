@@ -69,12 +69,15 @@ class ManageEntityTest extends MockeryTestCase
 
         $diff = $entity->diff($entity2);
         $diffResults = $diff->getDiff();
-        $this->assertCount(3, $diffResults);
+        $this->assertCount(4, $diffResults);
         $this->assertEquals('https://monitorstand.example.com', $diffResults['entityid']);
         $this->assertEquals('https://engine.surfconext.com/authentication/metadata', $diffResults['metadataurl']);
         $this->assertEquals('John Doe', $diffResults['metaDataFields.contacts:1:givenName']);
-        // The ARP is generated in the 'provide everything' fashion, and is not part of the diff.
-        $this->assertArrayNotHasKey('arp', $diffResults);
+        // The ARP is generated in the 'provide everything' fashion the diff will assist us in the JSON generator
+        // on whether or not the arp should be part of the payload.
+        $this->assertArrayHasKey('arp', $diffResults);
+        // Bothe attributes changed
+        $this->assertCount(2, $diffResults['arp']['attributes']);
     }
 
     public function test_diff_oidc()

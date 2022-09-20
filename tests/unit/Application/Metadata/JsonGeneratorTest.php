@@ -470,6 +470,18 @@ class JsonGeneratorTest extends MockeryTestCase
         $entity = $this->createManageEntity();
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
+
+        // Do some preliminary diff result assertions
+        // The diff should indicate the arp changed. One item was removed,
+        // another was changed and the third was added
+        $arpAttributes = $diff->getDiff()['arp']['attributes'];
+        // New has all three attribute fields
+        $this->assertCount(3, $arpAttributes['urn:mace:dir:attribute-def:mail'][0]);
+        // Changed attribute only has the changed field
+        $this->assertCount(1, $arpAttributes['urn:mace:dir:attribute-def:displayName'][0]);
+        // The removed attribute has a null value
+        $this->assertNull($arpAttributes['urn:mace:dir:attribute-def:uid']);
+
         $contact = m::mock(Contact::class);
         $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
         $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
@@ -478,7 +490,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('manageId', $data['metaDataId']);
         $this->assertEquals('saml20_sp', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
-        $this->assertCount(3, $data['pathUpdates']);
+        $this->assertCount(4, $data['pathUpdates']);
     }
 
     private function createManageEntity(

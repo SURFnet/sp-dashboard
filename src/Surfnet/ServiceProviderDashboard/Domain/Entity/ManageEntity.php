@@ -343,6 +343,7 @@ class ManageEntity
         $data['revisionnote'] = $this->getComments();
         $data['environment'] = $this->environment;
         $data = $this->metaData->asArray();
+        $data += $this->attributes->asArray();
         if ($this->hasOicdClient()) {
             $data += $this->oidcClient->asArray();
         }

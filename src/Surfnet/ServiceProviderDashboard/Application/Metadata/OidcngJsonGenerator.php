@@ -92,7 +92,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $payload = [
             'metaDataId' => $entity->getId(),
             'type' => 'oidc10_rp',
-            'pathUpdates' => $this->generateForChangeRequest($differences),
+            'pathUpdates' => $this->generateForChangeRequest($differences, $entity),
             'auditData' => [
                 'user' => $contact->getEmailAddress()
             ],
@@ -142,7 +142,7 @@ class OidcngJsonGenerator implements GeneratorInterface
 
             default:
                 $metadata += $differences->getDiff();
-                $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+                $metadata = $this->generateArp($metadata, $entity);
                 $metadata['state'] = $workflowState;
 
                 $metadata += $this->generateAllowedResourceServers($entity);
@@ -394,8 +394,22 @@ class OidcngJsonGenerator implements GeneratorInterface
         }
     }
 
-    private function generateForChangeRequest(EntityDiff $differences): array
+
+    private function generateArp(array $metadata, ManageEntity $entity): array
     {
-        return $differences->getDiff();
+        // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
+        // but we use the diffed arp to check if any changes where made to the ARP (if not, we do
+        // not send the arp
+        if (!empty($metadata['arp'])) {
+            unset($metadata['arp']);
+            $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+        }
+        return $metadata;
+    }
+
+    private function generateForChangeRequest(EntityDiff $differences, ManageEntity $entity): array
+    {
+        $metadata = $differences->getDiff();
+        return $this->generateArp($metadata, $entity);
     }
 }
