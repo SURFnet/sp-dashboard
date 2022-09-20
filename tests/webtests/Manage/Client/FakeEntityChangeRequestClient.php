@@ -28,4 +28,17 @@ class FakeEntityChangeRequestClient implements EntityChangeRequestRepository
     {
         return ['id' => 'the-entity-id-uuid'];
     }
+
+    public function getChangeRequest(string $id): array
+    {
+        $changeRequests = [];
+
+        switch ($id) {
+            case '9729d851-cfdd-4283-a8f1-a29ba5036261':
+                $changeRequests[] = json_decode(file_get_contents(
+                    __DIR__ . '/../../fixtures/change-request/manage-change-request-with-note.json'
+                ), true, 512);
+        }
+        return $changeRequests;
+    }
 }

@@ -1,0 +1,8 @@
+{% if action.allowChangeRequestAction %}
+<li>
+    <a href="{{ path('entity_published_change_request', {manageId: action.id, environment: action.environment, serviceId: action.serviceId}) }}">
+        <i class="fa fa-eye" aria-hidden="true"></i>
+        {{ 'entity.list.action.change.request'|trans }}
+    </a>
+</li>
+{% endif %}

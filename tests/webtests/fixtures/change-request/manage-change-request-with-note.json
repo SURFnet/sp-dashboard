@@ -1,0 +1,22 @@
+{
+  "id" : "620f904ab451045ee60eda74",
+  "metaDataId" : "1",
+  "type" : "saml20_sp",
+  "pathUpdates" : {
+    "metaDataFields.description:en" : "New description",
+    "metaDataFields.coin:application_url" : "https://nice"
+  },
+  "auditData" : {
+    "user" : "jdoe",
+    "userName" : "sp-portal",
+    "apiUser" : true
+  },
+  "note": "Optional note describing the reason for this change",
+  "created" : "2022-09-21T13:32:46.032Z",
+  "metaDataSummary" : {
+    "organizationName" : "Organization name en",
+    "name" : "OpenConext Valid SP",
+    "entityid" : "Duis ad do",
+    "state" : "testaccepted"
+  }
+}

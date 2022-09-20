@@ -78,4 +78,13 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
 
         return $response;
     }
+
+    public function getChangeRequest(string $id): array
+    {
+        $this->logger->info(sprintf('Get outstanding change requests from manage for entity "%s"', $id));
+
+        return $this->client->read(
+            '/manage/api/internal/change-requests/saml20_sp/' . $id
+        );
+    }
 }
