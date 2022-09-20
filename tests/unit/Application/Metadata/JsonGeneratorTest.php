@@ -493,27 +493,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertCount(4, $data['pathUpdates']);
     }
 
-    public function test_it_builds_an_entity_change_request()
-    {
-        $generator = new JsonGenerator(
-            $this->arpMetadataGenerator,
-            $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator
-        );
-        $entity = $this->createManageEntity();
-        $changedEntity = $this->createChangedManageEntity();
-        $diff = $entity->diff($changedEntity);
-        $contact = m::mock(Contact::class);
-        $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
-        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
-
-        $this->assertIsArray($data);
-        $this->assertEquals('manageId', $data['metaDataId']);
-        $this->assertEquals('saml20_sp', $data['type']);
-        $this->assertIsArray($data['pathUpdates']);
-        $this->assertCount(4, $data['pathUpdates']);
-    }
-
     private function createManageEntity(
         ?bool $idpAllowAll = true,
         ?array $idpWhitelist = [],

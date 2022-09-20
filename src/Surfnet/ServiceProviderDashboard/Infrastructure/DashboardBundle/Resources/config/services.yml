@@ -327,6 +327,10 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
 
+    Surfnet\ServiceProviderDashboard\Application\Service\ChangeRequestService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient'
+
     Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService:
         arguments:
             - '@surfnet.manage.client.identity_provider_client.test_environment'

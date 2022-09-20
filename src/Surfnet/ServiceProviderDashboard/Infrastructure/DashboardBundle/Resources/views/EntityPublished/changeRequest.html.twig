@@ -1,0 +1,34 @@
+{% extends '::base.html.twig' %}
+
+{% block page_heading %}{{ 'entity.change_request.title'|trans }}{%endblock%}
+{% block body %}
+
+    {% if changeRequests.count() %}
+        {{ 'entity.change_request.text.html'|trans|wysiwyg }}
+    {% else %}
+        {{ 'entity.change_request.none.text.html'|trans|wysiwyg }}
+    {% endif %}
+
+    {%  for changeRequest in changeRequests.getChangeRequests() %}
+
+        <h2>{{ changeRequest.created|date }}</h2>
+
+        {% if changeRequest.note is not null %}
+            <h2>{{ changeRequest.note }}</h2>
+        {% endif %}
+
+        <table>
+            <tr>
+                <th>{{ 'entity.change_request.value'|trans }}</th>
+                <th>{{ 'entity.change_request.data'|trans }}</th>
+            </tr>
+                {% for index, pathUpdate in changeRequest.pathUpdates %}
+                <tr>
+                        <td>{{ index }}</td>
+                        <td>{{ pathUpdate }}</td>
+                </tr>
+                {%  endfor %}
+
+        </table>
+    {% endfor %}
+{% endblock %}
