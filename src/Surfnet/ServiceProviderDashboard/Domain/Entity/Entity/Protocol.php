@@ -18,10 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Webmozart\Assert\Assert;
 
-class Protocol
+class Protocol implements Comparable
 {
     const SAML20_SP = 'saml20_sp';
 
@@ -68,5 +69,12 @@ class Protocol
     public function merge(Protocol $protocol)
     {
         $this->protocol = is_null($protocol->getProtocol()) ? null : $protocol->getProtocol();
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'type' => $this->getProtocol(),
+        ];
     }
 }

@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use function file_get_contents;
@@ -122,8 +123,11 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $metadata = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
+        $metadata = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
         $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
@@ -134,26 +138,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('revisionnote', $metadata['revisionnote']);
         $this->assertEquals(['arp' => 'arp'], $metadata['arp']);
 
-        $this->assertEquals('http://www.w3.org/2001/04/xmldsig-more#rsa-sha256', $metadata['metaDataFields.coin:signature_method']);
-        $this->assertEquals('privacy', $metadata['metaDataFields.privacy']);
-        $this->assertEquals('sp', $metadata['metaDataFields.sp']);
-        $this->assertEquals('http://acs', $metadata['metaDataFields.AssertionConsumerService:0:Location']);
-        $this->assertEquals(Constants::BINDING_HTTP_POST, $metadata['metaDataFields.AssertionConsumerService:0:Binding']);
-        $this->assertEquals('nameidformat', $metadata['metaDataFields.NameIDFormat']);
-        $this->assertEquals('name en', $metadata['metaDataFields.name:en']);
-        $this->assertEquals('name nl', $metadata['metaDataFields.name:nl']);
-        $this->assertEquals('description en', $metadata['metaDataFields.description:en']);
-        $this->assertEquals('description nl', $metadata['metaDataFields.description:nl']);
-        $this->assertEquals('certdata', $metadata['metaDataFields.certData']);
 
-        $this->assertEquals('orgen', $metadata['metaDataFields.OrganizationName:en']);
-        $this->assertEquals('orgnl', $metadata['metaDataFields.OrganizationName:nl']);
-
-        $this->assertEquals('support', $metadata['metaDataFields.contacts:0:contactType']);
-        $this->assertEquals('givenname', $metadata['metaDataFields.contacts:0:givenName']);
-        $this->assertEquals('surname', $metadata['metaDataFields.contacts:0:surName']);
-        $this->assertEquals('emailaddress', $metadata['metaDataFields.contacts:0:emailAddress']);
-        $this->assertEquals('telephonenumber', $metadata['metaDataFields.contacts:0:telephoneNumber']);
+        $this->assertEquals('Test Entity EN', $metadata['metaDataFields.name:en']);
+        $this->assertEquals('Test Entity NL', $metadata['metaDataFields.name:nl']);
+        $this->assertEquals('John Doe', $metadata['metaDataFields.contacts:2:givenName']);
     }
 
     public function test_it_can_build_saml_entity_data_for_new_entities()
@@ -220,39 +208,23 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
 
         $this->assertEquals(array (
             'pathUpdates' =>
                 array (
-                    'arp' =>
-                        array (
-                            'arp' => 'arp',
-                        ),
+                    'arp' => array ('arp' => 'arp'),
                     'entityid' => 'http://entityid',
                     'metadataurl' => 'http://metadata',
-                    'metaDataFields.description:en' => 'description en',
-                    'metaDataFields.description:nl' => 'description nl',
-                    'metaDataFields.name:en' => 'name en',
-                    'metaDataFields.name:nl' => 'name nl',
-                    'metaDataFields.contacts:0:contactType' => 'support',
-                    'metaDataFields.contacts:0:givenName' => 'givenname',
-                    'metaDataFields.contacts:0:surName' => 'surname',
-                    'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
-                    'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
-                    'metaDataFields.OrganizationName:en' => 'orgen',
-                    'metaDataFields.OrganizationName:nl' => 'orgnl',
-                    'metaDataFields.privacy' => 'privacy',
-                    'metaDataFields.sp' => 'sp',
-                    'metaDataFields.AssertionConsumerService:0:Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-                    'metaDataFields.AssertionConsumerService:0:Location' => 'http://acs',
-                    'metaDataFields.NameIDFormat' => 'nameidformat',
-                    'metaDataFields.coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
-                    'metaDataFields.certData' => 'certdata',
+                    'metaDataFields.name:en' => 'Test Entity EN',
+                    'metaDataFields.name:nl' => 'Test Entity NL',
                     'state' => 'testaccepted',
                     'revisionnote' => 'revisionnote',
-                    'metaDataFields.coin:institution_id' => 'service-institution-id',
-                    'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
+                    'metaDataFields.contacts:2:givenName' => 'John Doe',
                     'metaDataFields.coin:exclude_from_push' => '0'
                 ),
             'type' => 'saml20_sp',
@@ -269,8 +241,10 @@ class JsonGeneratorTest extends MockeryTestCase
         );
 
         $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -287,8 +261,10 @@ class JsonGeneratorTest extends MockeryTestCase
         );
 
         $entity = $this->createManageEntity(true);
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -305,8 +281,10 @@ class JsonGeneratorTest extends MockeryTestCase
         );
 
         $entity = $this->createManageEntity(false);
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -324,8 +302,10 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $idpWhitelist = ['entity-id'];
         $entity = $this->createManageEntity(false, $idpWhitelist);
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -342,6 +322,9 @@ class JsonGeneratorTest extends MockeryTestCase
         );
 
         $entity = $this->createManageEntity(null, null, null, 'production');
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+
         $entity
             ->shouldReceive('isExcludedFromPush')
             ->andReturn(true);
@@ -350,7 +333,7 @@ class JsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('isProduction')
             ->andReturn(true);
 
-        $data = $generator->generateForExistingEntity($entity, 'prodaccepted');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'prodaccepted');
 
         $this->assertEquals('1', $data['pathUpdates']['metaDataFields.coin:exclude_from_push']);
     }
@@ -363,6 +346,9 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
         $entity = $this->createManageEntity(null, null, null, 'production');
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+
         $entity
             ->shouldReceive('isExcludedFromPush')
             ->andReturn(false);
@@ -371,7 +357,7 @@ class JsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('isProduction')
             ->andReturn(true);
 
-        $data = $generator->generateForExistingEntity($entity, 'prodaccepted');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'prodaccepted');
 
         $this->assertEquals('0', $data['pathUpdates']['metaDataFields.coin:exclude_from_push']);
     }
@@ -386,8 +372,10 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $idpWhitelist = ['entity-id', 'entity-id2'];
         $entity = $this->createManageEntity(false, $idpWhitelist);
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -490,6 +478,19 @@ class JsonGeneratorTest extends MockeryTestCase
                 ->shouldReceive('getEnvironment')
                 ->andReturn($environment);
         }
+        return $entity;
+    }
+
+    private function createChangedManageEntity(): ManageEntity
+    {
+
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_response_changed.json'), true));
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
+        $entity->setComments('revisionnote');
+        $entity = m::mock($entity);
         return $entity;
     }
 }

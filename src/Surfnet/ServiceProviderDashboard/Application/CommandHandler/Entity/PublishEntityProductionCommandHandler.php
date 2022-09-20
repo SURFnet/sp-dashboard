@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -84,16 +85,13 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $descriptionTranslationKey;
 
     /**
-     * @param PublishEntityRepository $publishClient
-     * @param TicketService $ticketService
-     * @param FlashBagInterface $flashBag
-     * @param MailMessageFactory $mailFactory
-     * @param Mailer $mailer
-     * @param LoggerInterface $logger
-     * @param string $issueType
+     * @var EntityServiceInterface
      */
+    private $entityService;
+
     public function __construct(
         PublishEntityRepository $publishClient,
+        EntityServiceInterface $entityService,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
         MailMessageFactory $mailFactory,
@@ -103,6 +101,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     ) {
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_publication_request" in parameters.yml');
         $this->publishClient = $publishClient;
+        $this->entityService = $entityService;
         $this->ticketService = $ticketService;
         $this->mailFactory = $mailFactory;
         $this->mailer = $mailer;
@@ -121,13 +120,16 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      *  - In addition to a test publish; the coin:exclude_from_push attribute is passed with value 1
      *  - A jira ticket is created to inform the service desk of the pending publication request
      *
-     * @param PublishProductionCommandInterface $command
-     *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function handle(PublishProductionCommandInterface $command)
     {
         $entity = $command->getManageEntity();
+        $pristineEntity = null;
+        if ($entity->isManageEntity()) {
+            // The entity as it is now known in Manage
+            $pristineEntity = $this->entityService->getManageEntityById($entity->getId(), $entity->getEnvironment());
+        }
         try {
             $this->logger->info(
                 sprintf(
@@ -135,7 +137,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     $entity->getMetaData()->getNameEn()
                 )
             );
-            $publishResponse = $this->publishClient->publish($entity);
+            $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
             if (array_key_exists('id', $publishResponse)) {
                 // Set entity status to published
                 $entity->setStatus(Constants::STATE_PUBLISHED);

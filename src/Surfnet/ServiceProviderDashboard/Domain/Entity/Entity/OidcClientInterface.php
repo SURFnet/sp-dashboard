@@ -63,4 +63,6 @@ interface OidcClientInterface
      * outside of the team the entity is associated with.
      */
     public function merge(OidcClientInterface $client, string $homeTeam): void;
+
+    public function asArray();
 }

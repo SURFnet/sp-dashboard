@@ -1,0 +1,46 @@
+{
+  "id": "411f8e0f-87a6-4ea7-8194-66b3e77f97d6",
+  "version": 0,
+  "type": "oidc10_rp",
+  "revision": {
+    "number": 0,
+    "created": 1543851541.752,
+    "parentId": null,
+    "updatedBy": "sp-dashboard",
+    "terminated": null
+  },
+  "data": {
+    "allowedEntities": [
+      {
+        "name": "http://mock-idp"
+      }
+    ],
+    "allowedResourceServers": [
+      {
+        "name": "voot.vm.openconext.org"
+      }
+    ],
+    "allowedall": false,
+    "arp": {
+      "attributes": {},
+      "enabled": true
+    },
+    "entityid": "teams.vm.openconext.org",
+    "metaDataFields": {
+      "OrganizationName:en": "OpenConext",
+      "description:en": "OAuth client to access VOOT for group information",
+      "grants": [
+        "client_credentials",
+        "implicit"
+      ],
+      "name:en": "Teams client credentials client for VOOT access",
+      "redirectUrls": [
+        "https://foobar.com",
+        "https://www.google.com"
+      ],
+      "secret": "$2a$10$dHNcZXXuAOZcqei9y8i5W.lJUERx4XKYYpZkNT8FfaLAc6DwUZNgW"
+    },
+    "state": "prodaccepted",
+    "type": "oidc10-rp"
+  }
+}

@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Entity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 interface GeneratorInterface
@@ -41,6 +43,7 @@ interface GeneratorInterface
      */
     public function generateForExistingEntity(
         ManageEntity $entity,
+        EntityDiff $differences,
         string $workflowState,
         string $updatedPart = ''
     ): array;

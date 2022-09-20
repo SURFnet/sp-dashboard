@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException
@@ -94,7 +95,9 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('http://test');
-
+        $entity
+            ->shouldReceive('isManageEntity')
+            ->andReturnFalse();
         $entity
             ->shouldReceive('getId')
             ->andReturn(null);
@@ -111,7 +114,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForNewEntity')
             ->andReturn($json);
 
-        $response = $this->client->publish($entity);
+        $response = $this->client->publish($entity, $entity);
         $this->assertEquals('1', $response['id']);
     }
 
@@ -125,10 +128,13 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('http://test');
-
+        $entity
+            ->shouldReceive('isManageEntity')
+            ->andReturnTrue();
         $entity
             ->shouldReceive('getId')
             ->andReturn('25055635-8c2c-4f54-95a6-68891a554e95');
+        $entity->shouldReceive('diff');
 
         $this->manageConfig
             ->shouldReceive('getPublicationStatus->getStatus')
@@ -142,7 +148,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForExistingEntity')
             ->andReturn($json);
 
-        $response = $this->client->publish($entity);
+        $response = $this->client->publish($entity, $entity);
         $this->assertEquals('1', $response['id']);
     }
 
@@ -159,6 +165,11 @@ class PublishEntityClientTest extends MockeryTestCase
         $entity
             ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('http://test');
+        $entity
+            ->shouldReceive('isManageEntity')
+            ->andReturnFalse();
+        $entity
+            ->shouldReceive('diff')->andReturn(m::mock(EntityDiff::class));
         $entity
             ->shouldReceive('getMetadataUrl')
             ->andReturn('https://fobar.example.com');
@@ -181,7 +192,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForNewEntity')
             ->andReturn($json);
 
-        $this->client->publish($entity);
+        $this->client->publish($entity, $entity);
     }
 
     public function test_it_can_push_to_engineblock()

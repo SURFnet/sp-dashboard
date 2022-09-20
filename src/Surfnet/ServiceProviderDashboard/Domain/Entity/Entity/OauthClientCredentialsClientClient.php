@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
@@ -26,7 +27,7 @@ use function array_filter;
 use function array_merge;
 use function is_null;
 
-class OauthClientCredentialsClientClient implements OidcClientInterface
+class OauthClientCredentialsClientClient implements Comparable, OidcClientInterface
 {
     /**
      * @var string
@@ -163,5 +164,14 @@ class OauthClientCredentialsClientClient implements OidcClientInterface
         // The combination of the manage specific entityIds and the ones configured on the form is the
         // desired combination.
         $this->resourceServers = array_merge($clientResourceServers, $manageRsEntityIds);
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'metaDataFields.accessTokenValidity' => $this->getAccessTokenValidity(),
+            'metaDataFields.secret' => $this->getClientSecret(),
+            'entityid' => $this->getClientId(),
+        ];
     }
 }

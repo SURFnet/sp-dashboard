@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use function file_get_contents;
@@ -109,30 +110,18 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
+        $diff = m::mock(EntityDiff::class);
+        $diff->shouldReceive('getDiff')
+            ->andReturn(['metaDataFields.name:en' => 'A new hope']);
+        $data = $generator->generateForExistingEntity($this->createManageEntity(), $diff, 'testaccepted');
 
         $this->assertEquals(
             array(
                 'pathUpdates' =>
                     array(
                         'entityid' => 'entityid',
-                        'metaDataFields.NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-                        'metaDataFields.description:en' => 'description en',
-                        'metaDataFields.description:nl' => 'description nl',
-                        'metaDataFields.name:en' => 'name en',
-                        'metaDataFields.name:nl' => 'name nl',
-                        'metaDataFields.contacts:0:contactType' => 'support',
-                        'metaDataFields.contacts:0:givenName' => 'givenname',
-                        'metaDataFields.contacts:0:surName' => 'surname',
-                        'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
-                        'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
-                        'metaDataFields.OrganizationName:en' => 'orgen',
-                        'metaDataFields.OrganizationName:nl' => 'orgnl',
-                        'metaDataFields.secret' => 'test',
+                        'metaDataFields.name:en' => 'A new hope',
                         'state' => 'testaccepted',
-                        'metaDataFields.privacy' => 'privacy',
-                        'metaDataFields.coin:institution_id' => 'service-institution-id',
-                        'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
                         'revisionnote' => 'revisionnote'
                     ),
                 'type' => 'oauth20_rs',

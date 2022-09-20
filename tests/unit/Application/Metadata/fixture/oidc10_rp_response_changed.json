@@ -1,0 +1,72 @@
+{
+  "id": "manageId",
+  "version": 1,
+  "type": "oidc10_rp",
+  "revision": {
+    "number": 1,
+    "created": 1570441986.983,
+    "parentId": null,
+    "updatedBy": "urn:collab:person:example.com:admin",
+    "terminated": null
+  },
+  "data": {
+    "entityid": "entityid",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "arp": {
+      "enabled": true,
+      "attributes": {
+        "urn:mace:dir:attribute-def:displayName": [
+          {
+            "value": "*",
+            "source": "idp",
+            "motivation": ""
+          }
+        ],
+        "urn:mace:dir:attribute-def:uid": [
+          {
+            "value": "*",
+            "source": "idp",
+            "motivation": ""
+          }
+        ]
+      }
+    },
+    "metaDataFields": {
+      "name:en": "name en",
+      "secret": "test",
+      "redirectUrls": [
+        "uri1",
+        "uri2",
+        "uri3"
+      ],
+      "grants": [
+        "authorization_code",
+        "refresh_token"
+      ],
+      "NameIDFormat": "nameidformat",
+      "isResourceServer": false,
+      "contacts:0:emailAddress": "emailaddress",
+      "contacts:0:contactType": "support",
+      "name:nl": "name nl",
+      "description:en": "description en",
+      "coin:service_team_id": "team-UU",
+      "description:nl": "description nl",
+      "contacts:0:givenName": "John",
+      "contacts:0:surName": "Doe",
+      "contacts:0:telephoneNumber": "telephonenumber",
+      "OrganizationName:en": "orgen",
+      "OrganizationDisplayName:en": "Drop Supplies",
+      "OrganizationURL:en": "http://orgen",
+      "OrganizationName:nl": "Drop Supplies",
+      "OrganizationDisplayName:nl": "orgdisnl",
+      "OrganizationURL:nl": "http://orgnl",
+      "isPublicClient": true
+    },
+    "allowedEntities": [],
+    "allowedResourceServers": [],
+    "type": "oidc10-rp",
+    "revisionnote": "Some revision note",
+    "eid": 57
+  }
+}

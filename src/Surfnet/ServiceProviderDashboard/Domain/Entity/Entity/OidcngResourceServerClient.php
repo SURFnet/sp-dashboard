@@ -18,11 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use Webmozart\Assert\Assert;
 use function is_null;
 
-class OidcngResourceServerClient implements OidcClientInterface
+class OidcngResourceServerClient implements Comparable, OidcClientInterface
 {
     /**
      * @var string
@@ -133,5 +134,14 @@ class OidcngResourceServerClient implements OidcClientInterface
         $this->clientId = is_null($client->getClientId()) ? null : $client->getClientId();
         $this->clientSecret = is_null($client->getClientSecret()) ? null : $client->getClientSecret();
         $this->grants = is_null($client->getGrants()) ? null : $client->getGrants();
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'metaDataFields.grants' => $this->getGrants(),
+            'metaDataFields.secret' => $this->getClientSecret(),
+            'entityid' => $this->getClientId(),
+        ];
     }
 }

@@ -192,13 +192,13 @@ class EntityMergeService
     private function buildContactListFromCommand(SaveEntityCommandInterface $command): ContactList
     {
         $contactList = new ContactList();
-        if ($command->getTechnicalContact()) {
+        if ($command->getTechnicalContact() && $command->getTechnicalContact()->isContactSet()) {
             $contactList->add(Contact::fromContact($command->getTechnicalContact(), 'technical'));
         }
-        if ($command->getAdministrativeContact()) {
+        if ($command->getAdministrativeContact() && $command->getAdministrativeContact()->isContactSet()) {
             $contactList->add(Contact::fromContact($command->getAdministrativeContact(), 'administrative'));
         }
-        if ($command->getSupportContact()) {
+        if ($command->getSupportContact() && $command->getSupportContact()->isContactSet()) {
             $contactList->add(Contact::fromContact($command->getSupportContact(), 'support'));
         }
         return $contactList;

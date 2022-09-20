@@ -18,12 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
-class ContactList
+use Exception;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
+use function array_flip;
+use function array_key_exists;
+
+class ContactList implements Comparable
 {
+    // Contacts are indexed on an integer index that is set to the contact type
+    // This allows us to reference the contact information in Manage without issue
     private static $supportedContactTypes = [
-        'technical',
-        'administrative',
-        'support',
+        0 => 'administrative',
+        1 => 'technical',
+        2 => 'support',
     ];
 
     private $contacts = [];
@@ -52,7 +59,7 @@ class ContactList
 
     public function add(Contact $contact)
     {
-        $this->contacts[$contact->getType()] = $contact;
+        $this->contacts[$this->getIndexByType($contact->getType())] = $contact;
     }
 
     /**
@@ -60,8 +67,9 @@ class ContactList
      */
     public function findTechnicalContact()
     {
-        if (isset($this->contacts['technical'])) {
-            return $this->contacts['technical'];
+        $index = $this->getIndexByType('technical');
+        if (isset($this->contacts[$index])) {
+            return $this->contacts[$index];
         }
         return null;
     }
@@ -71,8 +79,9 @@ class ContactList
      */
     public function findAdministrativeContact()
     {
-        if (isset($this->contacts['administrative'])) {
-            return $this->contacts['administrative'];
+        $index = $this->getIndexByType('administrative');
+        if (isset($this->contacts[$index])) {
+            return $this->contacts[$index];
         }
         return null;
     }
@@ -82,8 +91,9 @@ class ContactList
      */
     public function findSupportContact()
     {
-        if (isset($this->contacts['support'])) {
-            return $this->contacts['support'];
+        $index = $this->getIndexByType('support');
+        if (isset($this->contacts[$index])) {
+            return $this->contacts[$index];
         }
         return null;
     }
@@ -110,5 +120,27 @@ class ContactList
                 $this->add($administrative);
             }
         }
+    }
+
+    public function asArray(): array
+    {
+        $data = [];
+        foreach ($this->contacts as $index => $contact) {
+            $data[sprintf('metaDataFields.contacts:%d:contactType', $index)] = $contact->getType();
+            $data[sprintf('metaDataFields.contacts:%d:givenName', $index)] = $contact->getGivenName();
+            $data[sprintf('metaDataFields.contacts:%d:surName', $index)] = $contact->getSurName();
+            $data[sprintf('metaDataFields.contacts:%d:emailAddress', $index)] = $contact->getEmail();
+            $data[sprintf('metaDataFields.contacts:%d:telephoneNumber', $index)] = $contact->getPhone();
+        }
+        return $data;
+    }
+
+    private function getIndexByType(string $type)
+    {
+        $types = array_flip(self::$supportedContactTypes);
+        if (!array_key_exists($type, $types)) {
+            throw new Exception(sprintf('This contact person type (%s) is not supported', $type));
+        }
+        return $types[$type];
     }
 }
