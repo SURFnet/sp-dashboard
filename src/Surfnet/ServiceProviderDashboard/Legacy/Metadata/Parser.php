@@ -177,7 +177,7 @@ class Parser implements ParserInterface
             $acs = $acs->attributes();
 
             if ((string)$acs['Binding'] === self::BINDING_HTTP_POST) {
-                $metadata->acsLocation = (string)$acs['Location'];
+                $metadata->acsLocations[] = (string)$acs['Location'];
             }
 
             if ((int)$acs['index'] > 9) {

@@ -451,7 +451,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return null;
     }
 
-    public function getAcsLocation(): ?string
+    public function getAcsLocations(): ?array
     {
         return null;
     }

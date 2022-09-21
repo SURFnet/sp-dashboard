@@ -128,6 +128,10 @@ class JsonGenerator implements GeneratorInterface
 
             default:
                 $metadata += $differences->getDiff();
+                // We generate empty acs locations to ensure we clean up all existing acs locations in manage
+                // this way we don't end up with stray acs locations that should have been deleted.
+                // See: MetaDataTest::test_it_adds_empty_acs_locations
+                $this->generateAcsLocations($entity, $metadata, true);
                 if ($entity->getProtocol()->getProtocol() === Constants::TYPE_SAML) {
                     $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
                 }
@@ -149,6 +153,18 @@ class JsonGenerator implements GeneratorInterface
                 }
 
                 return $metadata;
+        }
+    }
+
+    private function generateAcsLocations(ManageEntity $entity, array &$metadata, $addPrefix = false)
+    {
+        AcsLocationHelper::addAcsLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata, $addPrefix);
+        if ($entity->isManageEntity()) {
+            AcsLocationHelper::addEmptyAcsLocationsToMetaData(
+                $entity->getMetaData()->getAcsLocations(),
+                $metadata,
+                $addPrefix
+            );
         }
     }
 
@@ -175,19 +191,11 @@ class JsonGenerator implements GeneratorInterface
             $metadata['coin:institution_guid'] = $service->getGuid();
         }
 
-        /*
-         * The binding of the ACS URL is always POST.
-         *
-         * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
-         * imports the POST ACS URL. Other formats are not supported by manage or
-         * the dashboard.
-         */
-        $metadata['AssertionConsumerService:0:Binding'] = Constants::BINDING_HTTP_POST;
-        $metadata['AssertionConsumerService:0:Location'] = $entity->getMetaData()->getAcsLocation();
+        $this->generateAcsLocations($entity, $metadata);
+
         $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
         $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
         $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
-
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0

@@ -91,7 +91,7 @@ class LoadMetadataCommandHandler implements CommandHandler
     private function mapTextFields(SaveSamlEntityCommand $command, $metadata)
     {
         $map = [
-            'acsLocation' => ['getAcsLocation', 'setAcsLocation'],
+            'acsLocations' => ['getAcsLocations', 'setAcsLocations'],
             'entityId' => ['getEntityId', 'setEntityId'],
             'logoUrl' => ['getLogoUrl', 'setLogoUrl'],
             'nameNl' => ['getNameNl', 'setNameNl'],
