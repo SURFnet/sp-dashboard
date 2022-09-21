@@ -135,7 +135,7 @@ class EntityDeleteTest extends WebTestCase
 
         $crawler = $this->client->followRedirect();
 
-        $flashMessage = $crawler->filter('div.message.error');
+        $flashMessage = $crawler->filter('div.flashMessage.error');
 
         $this->assertEquals(
             'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.',

@@ -16,7 +16,7 @@ entity.delete.request.ticket.description: "h2. Details
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
-
+entity.delete.flash.success: "Your entity is deleted."
 unknownDisplayName: "Unknown"
 
 entity:
@@ -312,6 +312,7 @@ entity.edit.metadata.oidcng.title: Metadata
 entity.edit.metadata.oauth20_rs.title: Metadata
 entity.edit.metadata.oauth20_ccc.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
+entity.edit.metadata.flash.success: "Your changes were saved!"
 entity.edit.contact_information.title: Contact information
 entity.edit.contact_information.html: "
 <p>Every service connected to SURFconext requires various types of contact details. Depending on the nature of the issue we will consult the following contact:</p>
@@ -510,10 +511,13 @@ service.create.title: Add new service
 service.create.description: "Members of this team have access to SP %Name% via the SP Dashboard (sp.surfconext.nl) and can add/manage their entities on the SURFconext platform."
 service.create.personalNote: "Team created by SP Dashboard"
 service.create.invitationMessage: "Please accept this invitation by logging in with your institutional account or eduID account (create one at eduID.nl)."
+service.create.flash.success: "Your service was added successfully."
 service.edit.title: Edit service
+service.edit.flash.success: "Your changes were saved!"
 service.delete.title: "Delete service"
 service.delete.confirmation: "You are about to delete '%name%'. Are you sure?"
 service.delete.entity_list_text: "With this, you are also deleting the following entities:"
+service.delete.flash.success: "Your service was deleted."
 service.form.general.title: General
 service.form.status.title: Service status
 service.form.teams.title: Teams
