@@ -91,7 +91,7 @@ services:
     Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EntityChangeRequestCommandHandler:
         arguments:
             $repository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient'
-            $issueType: 'TODO create configurable parameter'
+            $issueType: '%jira_issue_type_entity_change_request%'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand }
 

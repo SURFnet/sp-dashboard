@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
@@ -109,8 +110,8 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         $this->flashBag = $flashBag;
         $this->logger = $logger;
         $this->issueType = $issueType;
-        $this->summaryTranslationKey = 'entity.publish.change_request.ticket.summary';
-        $this->descriptionTranslationKey = 'entity.publish.change_request.ticket.description';
+        $this->summaryTranslationKey = 'entity.change_request.ticket.summary';
+        $this->descriptionTranslationKey = 'entity.change_request.ticket.description';
     }
 
     /**
@@ -134,25 +135,11 @@ class EntityChangeRequestCommandHandler implements CommandHandler
 
             $response = $this->repository->openChangeRequest($entity, $pristineEntity, $command->getApplicant());
             if (array_key_exists('id', $response)) {
-                // Set entity status to published
-                $entity->setStatus(Constants::STATE_PUBLISHED);
-                $entity->setId($response['id']);
-
-                $this->logger->info(
-                    sprintf(
-                        'Updating status of "%s" to published',
-                        $entity->getMetaData()->getNameEn()
-                    )
-                );
-
-                // No need to create a Jira ticket when resetting the client secret
-                if ($command instanceof PublishEntityProductionCommand) {
-                    $this->createJiraTicket($entity, $command);
-                }
+                $this->createJiraTicket($entity, $command);
             } else {
                 $this->logger->error(
                     sprintf(
-                        'Publishing to Manage failed for: "%s". Message: "%s"',
+                        'Creating an entity change request in Manage failed for: "%s". Message: "%s"',
                         $entity->getMetaData()->getNameEn(),
                         'Manage did not return an id. See the context for more details.'
                     ),
@@ -183,7 +170,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         }
     }
 
-    private function createJiraTicket(ManageEntity $entity, PublishEntityProductionCommand $command)
+    private function createJiraTicket(ManageEntity $entity, PublishProductionCommandInterface $command)
     {
         $ticket = Ticket::fromManageResponse(
             $entity,

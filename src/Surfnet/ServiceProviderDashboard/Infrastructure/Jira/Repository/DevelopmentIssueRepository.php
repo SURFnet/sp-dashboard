@@ -18,11 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository;
 
+use JiraRestApi\JiraException;
+use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use function array_key_exists;
 
 class DevelopmentIssueRepository implements TicketServiceInterface
 {
@@ -35,6 +36,10 @@ class DevelopmentIssueRepository implements TicketServiceInterface
      * @var Issue[]|null $data
      */
     private $data;
+    /**
+     * @var bool
+     */
+    private $failIssueCreation = false;
 
     /**
      * @param string $filePath
@@ -42,6 +47,11 @@ class DevelopmentIssueRepository implements TicketServiceInterface
     public function __construct($filePath)
     {
         $this->filePath = $filePath;
+    }
+
+    public function shouldFailCreateIssue()
+    {
+        $this->failIssueCreation = true;
     }
 
     public function findByManageIds(array $manageIds)
@@ -79,6 +89,9 @@ class DevelopmentIssueRepository implements TicketServiceInterface
 
     public function createIssueFrom(Ticket $ticket)
     {
+        if ($this->failIssueCreation) {
+            throw new JiraException('Unable to write the Jira issue (failure was requested by calling shouldFailCreateIssue)');
+        }
         $this->loadData();
         $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), Issue::STATUS_OPEN);
         $this->data[$ticket->getManageId()] = $issue;
