@@ -20,26 +20,19 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
+use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class EntityChangeRequestCommandHandler implements CommandHandler
 {
     /**
@@ -67,14 +60,9 @@ class EntityChangeRequestCommandHandler implements CommandHandler
     private $issueType;
 
     /**
-     * @var MailMessageFactory
+     * @var MailService
      */
-    private $mailFactory;
-
-    /**
-     * @var Mailer
-     */
-    private $mailer;
+    private $mailService;
 
     /**
      * @var string
@@ -96,8 +84,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         EntityServiceInterface $entityService,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
-        MailMessageFactory $mailFactory,
-        Mailer $mailer,
+        MailService $mailService,
         LoggerInterface $logger,
         string $issueType
     ) {
@@ -105,8 +92,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         $this->repository = $repository;
         $this->entityService = $entityService;
         $this->ticketService = $ticketService;
-        $this->mailFactory = $mailFactory;
-        $this->mailer = $mailer;
+        $this->mailService = $mailService;
         $this->flashBag = $flashBag;
         $this->logger = $logger;
         $this->issueType = $issueType;
@@ -161,8 +147,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
 
             // Inform the service desk of the unavailability of Jira
-            $message = $this->mailFactory->buildJiraIssueFailedMessage($e, $entity);
-            $this->mailer->send($message);
+            $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
             $this->flashBag->add('error', 'entity.edit.error.publish');
