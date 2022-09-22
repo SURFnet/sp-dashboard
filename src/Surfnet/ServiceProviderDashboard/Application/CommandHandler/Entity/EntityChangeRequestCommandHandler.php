@@ -28,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -122,7 +121,13 @@ class EntityChangeRequestCommandHandler implements CommandHandler
 
             $response = $this->repository->openChangeRequest($entity, $pristineEntity, $command->getApplicant());
             if (array_key_exists('id', $response)) {
-                $this->createJiraTicket($entity, $command);
+                $this->ticketService->createJiraTicket(
+                    $entity,
+                    $command,
+                    $this->issueType,
+                    $this->summaryTranslationKey,
+                    $this->descriptionTranslationKey
+                );
             } else {
                 $this->logger->error(
                     sprintf(
@@ -154,33 +159,5 @@ class EntityChangeRequestCommandHandler implements CommandHandler
             $this->flashBag->add('error', 'entity.edit.error.publish');
             return;
         }
-    }
-
-    private function createJiraTicket(ManageEntity $entity, PublishProductionCommandInterface $command)
-    {
-        $ticket = Ticket::fromManageResponse(
-            $entity,
-            $command->getApplicant(),
-            $this->issueType,
-            $this->summaryTranslationKey,
-            $this->descriptionTranslationKey
-        );
-
-        $this->logger->info(
-            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getMetaData()->getNameEn())
-        );
-        $issue = null;
-        if ($entity->getId()) {
-            // Before creating an issue, test if we didn't previously create this ticket (users can apply changes to
-            // requested published entities).
-            $issue = $this->ticketService->findByManageIdAndIssueType($entity->getId(), $this->issueType);
-        }
-        if (is_null($issue)) {
-            $issue = $this->ticketService->createIssueFrom($ticket);
-            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
-            return $issue;
-        }
-        $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->getKey()));
-        return $issue;
     }
 }

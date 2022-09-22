@@ -29,7 +29,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -142,7 +141,13 @@ class PublishEntityProductionCommandHandler implements CommandHandler
 
                 // No need to create a Jira ticket when resetting the client secret
                 if ($command instanceof PublishEntityProductionCommand) {
-                    $this->createJiraTicket($entity, $command);
+                    $this->ticketService->createJiraTicket(
+                        $entity,
+                        $command,
+                        $this->issueType,
+                        $this->summaryTranslationKey,
+                        $this->descriptionTranslationKey
+                    );
                 }
             } else {
                 $this->logger->error(
@@ -170,7 +175,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->flashBag->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
-
             $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
@@ -185,33 +189,5 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         return $isNewEntity
             &&
             $entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
-    }
-
-    private function createJiraTicket(ManageEntity $entity, PublishEntityProductionCommand $command)
-    {
-        $ticket = Ticket::fromManageResponse(
-            $entity,
-            $command->getApplicant(),
-            $this->issueType,
-            $this->summaryTranslationKey,
-            $this->descriptionTranslationKey
-        );
-
-        $this->logger->info(
-            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getMetaData()->getNameEn())
-        );
-        $issue = null;
-        if ($entity->getId()) {
-            // Before creating an issue, test if we didn't previously create this ticket (users can apply changes to
-            // requested published entities).
-            $issue = $this->ticketService->findByManageIdAndIssueType($entity->getId(), $this->issueType);
-        }
-        if (is_null($issue)) {
-            $issue = $this->ticketService->createIssueFrom($ticket);
-            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
-            return $issue;
-        }
-        $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->getKey()));
-        return $issue;
     }
 }

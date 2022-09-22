@@ -20,7 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository;
 
 use JiraRestApi\JiraException;
 use RuntimeException;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
@@ -64,6 +66,16 @@ class DevelopmentIssueRepository implements TicketServiceInterface
             }
         }
         return new IssueCollection($result);
+    }
+
+    public function createJiraTicket(
+        ManageEntity $entity,
+        PublishProductionCommandInterface $command,
+        string $issueType,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey
+    ): Issue {
+        return new Issue('KEY-27', 'fake-type', Issue::STATUS_OPEN);
     }
 
     public function findByManageId($manageId)
