@@ -32,7 +32,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Webmozart\Assert\Assert;
 
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
@@ -89,7 +88,9 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         LoggerInterface $logger,
         string $issueType
     ) {
-        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_publication_request" in parameters.yml');
+        if (empty($issueType)) {
+            throw new Exception('Please set "jira_issue_type_publication_request" in parameters.yml');
+        }
         $this->publishClient = $publishClient;
         $this->entityService = $entityService;
         $this->ticketService = $ticketService;
