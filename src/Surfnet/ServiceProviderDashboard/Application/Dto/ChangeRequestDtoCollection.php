@@ -18,6 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
+use Webmozart\Assert\Assert;
+use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDtoComparer;
+
 class ChangeRequestDtoCollection
 {
     /**
@@ -27,19 +30,17 @@ class ChangeRequestDtoCollection
 
     public function __construct(array $changeRequests)
     {
+        Assert::isArray($changeRequests);
+        Assert::isNonEmptyList($changeRequests, 'No change requests available');
+
         foreach ($changeRequests as $id => $changeRequest) {
             $this->changeRequests[$id] = ChangeRequestDto::fromChangeRequest($changeRequest);
         }
-        array_multisort($this->changeRequests, SORT_ASC, SORT_REGULAR);
+        usort($this->changeRequests, [ChangeRequestDtoComparer::class, 'compareCreatedDescending']);
     }
 
     public function getChangeRequests(): array
     {
         return $this->changeRequests;
-    }
-
-    public function count(): int
-    {
-        return count($this->changeRequests);
     }
 }

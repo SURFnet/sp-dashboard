@@ -18,9 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\ValueObject;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDto;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidDateTimeException;
+use Webmozart\Assert\InvalidArgumentException;
 
 class ChangeRequestDtoTest extends TestCase
 {
@@ -50,14 +51,14 @@ class ChangeRequestDtoTest extends TestCase
         $changes = [
             'id' => 1,
             'note' => 'a cracked note',
-            'created' => '20220-31-12 15:00:00',
+            'created' => 'not a datetime',
             'pathUpdates' => [
                 'metaDataFields.description:nl' => 'description nl',
                 'metaDataFields.description:en' => 'description en'
             ]
         ];
 
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidDateTimeException::class);
         ChangeRequestDto::fromChangeRequest($changes);
     }
 
@@ -75,5 +76,47 @@ class ChangeRequestDtoTest extends TestCase
         $changeRequest = ChangeRequestDto::fromChangeRequest($changes);
         $this->assertEquals(null, $changeRequest->getNote());
     }
-}
 
+    public function test_it_allows_a_missing_note()
+    {
+        $changes = [
+            'id' => 1,
+            'created' => '2022-09-21 15:00:00',
+            'pathUpdates' => [
+                'metaDataFields.description:nl' => 'description nl',
+                'metaDataFields.description:en' => 'description en'
+            ]
+        ];
+        $changeRequest = ChangeRequestDto::fromChangeRequest($changes);
+        $this->assertEquals('', $changeRequest->getNote());
+    }
+
+    public function test_it_handles_invalid_input()
+    {
+        $changes = [];
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No id specified');
+        ChangeRequestDto::fromChangeRequest($changes);
+    }
+
+    public function test_it_throws_exception_on_missing_create_date_time()
+    {
+        $changes = [
+            'id' => 1,
+        ];
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No create datetime specified');
+        ChangeRequestDto::fromChangeRequest($changes);
+    }
+
+    public function test_it_throws_exception_on_missing_path_updates()
+    {
+        $changes = [
+            'id' => 1,
+            'created' => '2022-09-21 15:00:00',
+        ];
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No pathUpdates specified');
+        ChangeRequestDto::fromChangeRequest($changes);
+    }
+}
