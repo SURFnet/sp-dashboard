@@ -19,6 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
 use DateTime;
+use Exception;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidDateTimeException;
+use Webmozart\Assert\Assert;
 
 class ChangeRequestDto
 {
@@ -39,7 +42,7 @@ class ChangeRequestDto
 
     private $pathUpdates = [];
 
-    private function __construct(string $id, ?string $note, DateTime $created, array $pathUpdates)
+    private function __construct(string $id, string $note, DateTime $created, array $pathUpdates)
     {
         $this->id = $id;
         $this->note = $note;
@@ -47,12 +50,26 @@ class ChangeRequestDto
         $this->pathUpdates = $pathUpdates;
     }
 
+    /**
+     * @throws InvalidDateTimeException
+     */
     public static function fromChangeRequest(array $changeRequest): ?ChangeRequestDto
     {
-        $created = new DateTime($changeRequest['created']);
+        Assert::isArray($changeRequest);
+        Assert::keyExists($changeRequest, 'id', 'No id specified');
+        Assert::keyExists($changeRequest, 'created', 'No create datetime specified');
+        Assert::keyExists($changeRequest, 'pathUpdates', 'No pathUpdates specified');
+        Assert::isNonEmptyMap($changeRequest['pathUpdates'], 'No pathUpdates available');
+
+        try {
+            $created = new DateTime($changeRequest['created']);
+        } catch (Exception $e) {
+            throw new InvalidDateTimeException();
+        }
+        $note = $changeRequest['note'] ?? '';
 
         return new self($changeRequest['id'],
-            $changeRequest['note'],
+            $note,
             $created,
             $changeRequest['pathUpdates']);
     }

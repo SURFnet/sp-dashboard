@@ -3,7 +3,7 @@
 {% block page_heading %}{{ 'entity.change_request.title'|trans }}{%endblock%}
 {% block body %}
 
-    {% if changeRequests.count() %}
+    {% if changeRequests.getChangeRequests()|length %}
         {{ 'entity.change_request.text.html'|trans|wysiwyg }}
     {% else %}
         {{ 'entity.change_request.none.text.html'|trans|wysiwyg }}
@@ -14,7 +14,7 @@
         <h2>{{ changeRequest.created|date }}</h2>
 
         {% if changeRequest.note is not null %}
-            <h2>{{ changeRequest.note }}</h2>
+            <p>{{ changeRequest.note }}</p>
         {% endif %}
 
         <table>

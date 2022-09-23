@@ -20,7 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ChangeRequestService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,7 +42,17 @@ class EntityChangeRequestController extends Controller
         string $manageId,
         string $environment
     ): Response {
-    
+        $entity = $this->entityService->getManageEntityById($manageId, $environment);
+        $entityServiceId = $entity->getService()->getId();
+        // Verify the Entity Service Id is one of the logged in users services
+        $this->authorizationService->assertServiceIdAllowed($entityServiceId);
+        // Don't trust the url provided service id, check it against the Service Id associated with the entity
+        if ($entityServiceId !== $serviceId) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to view an Entity from another Service'
+            );
+        }
+
         $changeRequests = $service->findById($manageId);
 
         return $this->render(
