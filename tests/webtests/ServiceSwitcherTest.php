@@ -122,4 +122,27 @@ class ServiceSwitcherTest extends WebTestCase
 
         $this->assertEquals('SURFnet [surf.nl]', $selectedService->text(), "Service 'SURFnet' should be selected");
     }
+
+    public function test_switcher_has_no_selected_option_when_overview_is_selected()
+    {
+        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->loadFixtures();
+
+        $crawler = $this->client->request('GET', '/service/create');
+        $form = $crawler->filter('.service-switcher form')
+            ->form();
+
+        $form['service_switcher[selected_service_id]']->select(
+            $this->getServiceRepository()->findByName('SURFnet')->getId()
+        );
+
+        $this->client->submit($form);
+
+        $this->client->followRedirect();
+
+        $crawler = $this->client->request('GET', '/');
+        $selectedService = $crawler->filter('select#service-switcher option:selected')->first();
+
+        $this->assertCount(0, $selectedService);
+    }
 }
