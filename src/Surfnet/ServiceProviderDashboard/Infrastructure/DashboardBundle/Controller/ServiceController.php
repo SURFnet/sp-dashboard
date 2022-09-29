@@ -128,6 +128,7 @@ class ServiceController extends Controller
     {
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
         $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
+        $this->authorizationService->resetService();
 
         if (empty($services)) {
             return $this->redirectToRoute('service_add');
