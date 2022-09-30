@@ -54,7 +54,7 @@
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.3.10",
         "symfony/symfony": "3.4.*",
-        "twig/twig": "^1.34.4",
+        "twig/twig": "^2.15.3",
         "xemlock/htmlpurifier-html5": "^0.1.10"
     },
     "require-dev": {
