@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
@@ -59,4 +61,12 @@ interface TicketServiceInterface
      * @param string $issueKey
      */
     public function delete($issueKey);
+
+    public function createJiraTicket(
+        ManageEntity $entity,
+        PublishProductionCommandInterface $command,
+        string $issueType,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey
+    ): Issue;
 }

@@ -20,25 +20,17 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
+use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Webmozart\Assert\Assert;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class EntityChangeRequestCommandHandler implements CommandHandler
 {
     /**
@@ -66,14 +58,9 @@ class EntityChangeRequestCommandHandler implements CommandHandler
     private $issueType;
 
     /**
-     * @var MailMessageFactory
+     * @var MailService
      */
-    private $mailFactory;
-
-    /**
-     * @var Mailer
-     */
-    private $mailer;
+    private $mailService;
 
     /**
      * @var string
@@ -95,22 +82,22 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         EntityServiceInterface $entityService,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
-        MailMessageFactory $mailFactory,
-        Mailer $mailer,
+        MailService $mailService,
         LoggerInterface $logger,
         string $issueType
     ) {
-        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type_entity_change_request" in parameters.yml');
+        if (empty($issueType)) {
+            throw new Exception('Please set "jira_issue_type_entity_change_request" in parameters.yml');
+        }
         $this->repository = $repository;
         $this->entityService = $entityService;
         $this->ticketService = $ticketService;
-        $this->mailFactory = $mailFactory;
-        $this->mailer = $mailer;
+        $this->mailService = $mailService;
         $this->flashBag = $flashBag;
         $this->logger = $logger;
         $this->issueType = $issueType;
-        $this->summaryTranslationKey = 'entity.publish.change_request.ticket.summary';
-        $this->descriptionTranslationKey = 'entity.publish.change_request.ticket.description';
+        $this->summaryTranslationKey = 'entity.change_request.ticket.summary';
+        $this->descriptionTranslationKey = 'entity.change_request.ticket.description';
     }
 
     /**
@@ -134,25 +121,17 @@ class EntityChangeRequestCommandHandler implements CommandHandler
 
             $response = $this->repository->openChangeRequest($entity, $pristineEntity, $command->getApplicant());
             if (array_key_exists('id', $response)) {
-                // Set entity status to published
-                $entity->setStatus(Constants::STATE_PUBLISHED);
-                $entity->setId($response['id']);
-
-                $this->logger->info(
-                    sprintf(
-                        'Updating status of "%s" to published',
-                        $entity->getMetaData()->getNameEn()
-                    )
+                $this->ticketService->createJiraTicket(
+                    $entity,
+                    $command,
+                    $this->issueType,
+                    $this->summaryTranslationKey,
+                    $this->descriptionTranslationKey
                 );
-
-                // No need to create a Jira ticket when resetting the client secret
-                if ($command instanceof PublishEntityProductionCommand) {
-                    $this->createJiraTicket($entity, $command);
-                }
             } else {
                 $this->logger->error(
                     sprintf(
-                        'Publishing to Manage failed for: "%s". Message: "%s"',
+                        'Creating an entity change request in Manage failed for: "%s". Message: "%s"',
                         $entity->getMetaData()->getNameEn(),
                         'Manage did not return an id. See the context for more details.'
                     ),
@@ -174,40 +153,11 @@ class EntityChangeRequestCommandHandler implements CommandHandler
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
 
             // Inform the service desk of the unavailability of Jira
-            $message = $this->mailFactory->buildJiraIssueFailedMessage($e, $entity);
-            $this->mailer->send($message);
+            $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
             $this->flashBag->add('error', 'entity.edit.error.publish');
             return;
         }
-    }
-
-    private function createJiraTicket(ManageEntity $entity, PublishEntityProductionCommand $command)
-    {
-        $ticket = Ticket::fromManageResponse(
-            $entity,
-            $command->getApplicant(),
-            $this->issueType,
-            $this->summaryTranslationKey,
-            $this->descriptionTranslationKey
-        );
-
-        $this->logger->info(
-            sprintf('Creating a %s Jira issue for "%s".', $this->issueType, $entity->getMetaData()->getNameEn())
-        );
-        $issue = null;
-        if ($entity->getId()) {
-            // Before creating an issue, test if we didn't previously create this ticket (users can apply changes to
-            // requested published entities).
-            $issue = $this->ticketService->findByManageIdAndIssueType($entity->getId(), $this->issueType);
-        }
-        if (is_null($issue)) {
-            $issue = $this->ticketService->createIssueFrom($ticket);
-            $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
-            return $issue;
-        }
-        $this->logger->info(sprintf('Found existing Jira issue with key: %s', $issue->getKey()));
-        return $issue;
     }
 }
