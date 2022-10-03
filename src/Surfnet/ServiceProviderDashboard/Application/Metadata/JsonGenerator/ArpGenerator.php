@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use stdClass;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use function array_diff;
 use function array_keys;
 
@@ -30,24 +30,25 @@ use function array_keys;
 class ArpGenerator implements MetadataGenerator
 {
     /**
-     * @var AttributesMetadataRepository
+     * @var AttributeRepository
      */
-    private $repository;
+    private $attributeRepository;
 
-    public function __construct(AttributesMetadataRepository $repository)
+    public function __construct(AttributeRepository $repository)
     {
-        $this->repository = $repository;
+        $this->attributeRepository = $repository;
     }
 
     public function build(ManageEntity $entity): array
     {
         $attributes = [];
         $entityAttributes = $entity->getAttributes();
-        foreach ($this->repository->findAll() as $definition) {
-            $urn = reset($definition->urns);
-            $attrributeList = $entityAttributes->findAllByUrn($urn);
+        foreach ($this->attributeRepository->findAll() as $definition) {
+            $urns = $definition->getUrns();
+            $urn = reset($urns);
+            $attributeList = $entityAttributes->findAllByUrn($urn);
             // Only add the attributes with a motivation
-            foreach ($attrributeList as $attribute) {
+            foreach ($attributeList as $attribute) {
                 if (!$attribute || !$attribute->hasMotivation()) {
                     continue;
                 }
@@ -79,7 +80,7 @@ class ArpGenerator implements MetadataGenerator
 
     private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
     {
-        $spDashboardTracked = $this->repository->findAllAttributeUrns();
+        $spDashboardTracked = $this->attributeRepository->findAllNameSpaceIdentifiers();
         $originalAttributes = $entity->getAttributes()->getOriginalAttributes();
         $nonTrackedUrns = array_diff(array_keys($originalAttributes), $spDashboardTracked);
 

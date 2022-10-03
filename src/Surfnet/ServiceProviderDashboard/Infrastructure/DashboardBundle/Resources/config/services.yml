@@ -204,7 +204,7 @@ services:
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
-            - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
             - '%kernel.root_dir%/Resources'
             - '@logger'
 
@@ -217,6 +217,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
         arguments:  ['%kernel.root_dir%/Resources']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
+        arguments:  ['%kernel.root_dir%/Resources/metadata']
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
         factory: ['@doctrine', 'getRepository']
@@ -307,6 +310,7 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService:
         arguments:
+            $attributeRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
             $oidcPlaygroundUriTest: '%playground_uri_test%'
             $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
@@ -325,6 +329,10 @@ services:
             - '@router'
             - '@logger'
             - '%jira_issue_type%'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:

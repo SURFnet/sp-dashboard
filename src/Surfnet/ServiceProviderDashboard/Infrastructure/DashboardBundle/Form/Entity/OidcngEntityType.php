@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
@@ -41,6 +42,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class OidcngEntityType extends AbstractType
 {
     /**
+     * @var AttributeServiceInterface
+     */
+    private $attributeService;
+
+    /**
      * @var OidcngResourceServerOptionsFactory
      */
     private $oidcngResourceServerOptionsFactory;
@@ -59,6 +65,8 @@ class OidcngEntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->attributeService = $options['attribute_service'];
+
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
 
         $metadata
@@ -325,160 +333,7 @@ class OidcngEntityType extends AbstractType
                     )
             )
             ->add(
-                $builder->create('attributes', FormType::class, [
-                    'inherit_data' => true,
-                    'attr' => ['class' => 'attributes']
-                ])
-                    ->add(
-                        'givenNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.givenNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.givenNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'surNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.surNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.surNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'commonNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.commonNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.commonNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'displayNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.displayNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.displayNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'emailAddressAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.emailAddressAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.emailAddressAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.organizationAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.organizationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationTypeAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.organizationTypeAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.organizationTypeAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationUnitAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.organizationUnitAttribute',
-                            'by_reference' => false ,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.organizationUnitAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'affiliationAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.affiliationAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.affiliationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'entitlementAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.entitlementAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.entitlementAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'principleNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.principleNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.principleNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'uidAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.uidAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.uidAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'preferredLanguageAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.preferredLanguageAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.preferredLanguageAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'personalCodeAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.personalCodeAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.personalCodeAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'scopedAffiliationAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.oidc.scopedAffiliationAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.oidc.scopedAffiliationAttribute'],
-                        ]
-                    )
+                $this->buildAttributeTypes($builder)
             )
             ->add(
                 $builder->create('comments', FormType::class, ['inherit_data' => true])
@@ -503,10 +358,36 @@ class OidcngEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
+    private function buildAttributeTypes(FormBuilderInterface $builder): FormBuilderInterface
+    {
+        $container = $builder->create('attributes', FormType::class, [
+            'inherit_data' => true,
+            'attr' => ['class' => 'attributes']
+        ]);
+
+        foreach ($this->attributeService->getAttributes() as $attribute) {
+            $name  = $attribute->getName();
+            $container
+                ->add(
+                    $name,
+                    AttributeType::class,
+                    [
+                        'label' => 'entity.edit.form.attributes.oidc.'. $name,
+                        'by_reference' => false,
+                        'required' => false,
+                        'attr' => ['data-help' => 'entity.edit.information.oidc.' . $name],
+                    ]
+                );
+        }
+
+        return $container;
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => SaveOidcngEntityCommand::class
+            'data_class' => SaveOidcngEntityCommand::class,
+            'attribute_service' => AttributeServiceInterface::class,
         ));
     }
 
