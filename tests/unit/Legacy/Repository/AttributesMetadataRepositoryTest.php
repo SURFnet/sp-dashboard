@@ -40,7 +40,7 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
         $expectedAttributes = [
           "displayName",
           "affiliation",
-          "scopedaffiliation",
+          "scopedAffiliation",
           "emailAddress",
           "commonName",
           "organization",
@@ -111,21 +111,21 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
     public function test_it_has_all_metadata_attribute_urns()
     {
         $expectedAttributes = [
-            'urn:mace:dir:attribute-def:displayName',
-            'urn:mace:dir:attribute-def:eduPersonAffiliation',
-            'urn:mace:dir:attribute-def:eduPersonScopedAffiliation',
-            'urn:mace:dir:attribute-def:mail',
+            'urn:mace:dir:attribute-def:givenName',
+            'urn:mace:dir:attribute-def:sn',
             'urn:mace:dir:attribute-def:cn',
+            'urn:mace:dir:attribute-def:displayName',
+            'urn:mace:dir:attribute-def:mail',
             'urn:mace:terena.org:attribute-def:schacHomeOrganization',
             'urn:mace:terena.org:attribute-def:schacHomeOrganizationType',
-            "urn:mace:dir:attribute-def:ou",
-            'urn:mace:dir:attribute-def:sn',
-            'urn:mace:dir:attribute-def:givenName',
+            'urn:mace:dir:attribute-def:ou',
+            'urn:mace:dir:attribute-def:eduPersonAffiliation',
             'urn:mace:dir:attribute-def:eduPersonEntitlement',
-            'urn:mace:dir:attribute-def:uid',
             'urn:mace:dir:attribute-def:eduPersonPrincipalName',
+            'urn:mace:dir:attribute-def:uid',
             'urn:mace:dir:attribute-def:preferredLanguage',
             'urn:schac:attribute-def:schacPersonalUniqueCode',
+            'urn:mace:dir:attribute-def:eduPersonScopedAffiliation',
             'urn:mace:dir:attribute-def:eduPersonTargetedID',
         ];
 

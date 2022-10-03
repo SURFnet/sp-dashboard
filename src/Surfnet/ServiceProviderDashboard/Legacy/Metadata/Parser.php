@@ -24,10 +24,10 @@ use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\CertificateParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 
 class Parser implements ParserInterface
@@ -53,9 +53,9 @@ class Parser implements ParserInterface
     private $certParser;
 
     /**
-     * @var AttributesMetadataRepository
+     * @var AttributeRepository
      */
-    private $attributesMetadataRepository;
+    private $attributeRepository;
 
     /**
      * @var string
@@ -67,22 +67,14 @@ class Parser implements ParserInterface
      */
     private $logger;
 
-    /**
-     * Constructor
-     *
-     * @param CertificateParserInterface $certParser
-     * @param AttributesMetadataRepository $attributesMetadataRepository
-     * @param string $schemaLocation
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         CertificateParserInterface $certParser,
-        AttributesMetadataRepository $attributesMetadataRepository,
-        $schemaLocation,
+        AttributesRepository $attributeRepository,
+        string $schemaLocation,
         LoggerInterface $logger
     ) {
         $this->certParser = $certParser;
-        $this->attributesMetadataRepository = $attributesMetadataRepository;
+        $this->attributeRepository = $attributeRepository;
         $this->schemaLocation = $schemaLocation;
         $this->logger = $logger;
     }
@@ -340,9 +332,9 @@ class Parser implements ParserInterface
 
             $attributes = $attribute->attributes();
 
-            foreach ($this->attributesMetadataRepository->findAll() as $attributeMetadata) {
-                if (in_array($attributes['Name'], $attributeMetadata->urns)) {
-                    $metadata->{$attributeMetadata->id.'Attribute'} = $attr;
+            foreach ($this->attributeRepository->findAll() as $attribute) {
+                if (in_array($attributes['Name'], $attribute->getUrns())) {
+                    $metadata->{$attribute->getName()} = $attr;
                 }
             }
         }

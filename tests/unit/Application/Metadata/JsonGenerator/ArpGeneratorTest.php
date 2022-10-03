@@ -25,10 +25,19 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 
 class ArpGeneratorTest extends MockeryTestCase
 {
+    /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    public function setUp()
+    {
+        $this->attributeRepository = new AttributeRepository(__DIR__ . '/../../../../../app/Resources/metadata');
+    }
     public function test_it_can_build_arp_metadata()
     {
         $entity = m::mock(ManageEntity::class)->makePartial();
@@ -50,9 +59,7 @@ class ArpGeneratorTest extends MockeryTestCase
         $entity->shouldReceive('getAttributes->getOriginalAttributes')->andReturn([]);
         $entity->shouldReceive('getAttributes->findAllByUrn')->andReturn([]);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
-
-        $factory = new ArpGenerator($metadataRepository);
+        $factory = new ArpGenerator($this->attributeRepository);
 
         $metadata = $factory->build($entity);
 
@@ -64,9 +71,7 @@ class ArpGeneratorTest extends MockeryTestCase
 
     public function test_does_not_override_existing_manage_attributes_and_sources()
     {
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
-
-        $factory = new ArpGenerator($metadataRepository);
+        $factory = new ArpGenerator($this->attributeRepository);
         $manageEntity = $this->getManageEntity();
         $metadata = $factory->build($manageEntity);
 
@@ -90,8 +95,7 @@ class ArpGeneratorTest extends MockeryTestCase
     {
         $entity = $this->getManageEntity(Constants::TYPE_OPENID_CONNECT_TNG, false);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
-        $factory = new ArpGenerator($metadataRepository);
+        $factory = new ArpGenerator($this->attributeRepository);
 
         $metadata = $factory->build($entity);
 

@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientC
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
@@ -36,9 +37,9 @@ use function reset;
 class SaveCommandFactory implements SaveCommandFactoryInterface
 {
     /**
-     * @var AttributesMetadataRepository
+     * @var AttributeServiceInterface
      */
-    private $attributeRepository;
+    private $attributeService;
 
     /**
      * @var string
@@ -51,11 +52,11 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
     private $playGroundUriTest;
 
     public function __construct(
-        AttributesMetadataRepository $attributeRepository,
+        AttributeServiceInterface $attributeService,
         string $oidcPlaygroundUriTest,
         string $oidcPlaygroundUriProd
     ) {
-        $this->attributeRepository = $attributeRepository;
+        $this->attributeService = $attributeService;
         $this->playGroundUriTest = $oidcPlaygroundUriTest;
         $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
@@ -233,9 +234,9 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
     private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList)
     {
-        foreach ($this->attributeRepository->findAll() as $attributeDefinition) {
-            $urn = reset($attributeDefinition->urns);
-            $manageAttribute = $attributeList->findByUrn($urn);
+        foreach ($this->attributeService->getAttributes() as $attributeDefinition) {
+            $urn = $attributeDefinition->getUrns();
+            $manageAttribute = $attributeList->findByUrn(reset($urn));
             if (!$manageAttribute) {
                 continue;
             }
@@ -243,9 +244,8 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
             $attribute = new Attribute();
             $attribute->setRequested(true);
             $attribute->setMotivation($manageAttribute->getMotivation());
-
-            $setter = $attributeDefinition->setterName;
-            $command->{$setter}($attribute);
+            $attributeName  = $attributeDefinition->getName();
+            $command->setAttribute($attributeName, $attribute);
         }
     }
 

@@ -37,9 +37,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Organization;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\NullSecret;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use function in_array;
 
 /**
@@ -48,7 +48,7 @@ use function in_array;
 class EntityMergeService
 {
     /**
-     * @var AttributesMetadataRepository
+     * @var AttributeRepository
      */
     private $attributeRepository;
 
@@ -63,11 +63,11 @@ class EntityMergeService
     private $playGroundUriProd;
 
     public function __construct(
-        AttributesMetadataRepository $repository,
+        AttributeRepository $attributeRepository,
         string $oidcPlaygroundUriTest,
         string $oidcPlaygroundUriProd
     ) {
-        $this->attributeRepository = $repository;
+        $this->attributeRepository = $attributeRepository;
         $this->playGroundUriTest = $oidcPlaygroundUriTest;
         $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
@@ -178,11 +178,12 @@ class EntityMergeService
         }
 
         foreach ($this->attributeRepository->findAll() as $definition) {
-            $getterName = $definition->getterName;
+            $attributeName = $definition->getName();
 
-            if ($command->$getterName()) {
-                $commandAttribute = $command->$getterName();
-                $urn = reset($definition->urns);
+            if ($command->getAttribute($attributeName)) {
+                $commandAttribute = $command->getAttribute($attributeName);
+                $urns = $definition->getUrns();
+                $urn = reset($urns);
                 $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
             }
         }
