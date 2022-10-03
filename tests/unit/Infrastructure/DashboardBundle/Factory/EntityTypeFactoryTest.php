@@ -23,6 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
@@ -66,7 +67,8 @@ class EntityTypeFactoryTest extends MockeryTestCase
         $this->saveCommandFactory = m::mock(SaveCommandFactoryInterface::class);
         $this->service = m::mock(Service::class);
         $this->form = m::mock(FormType::class);
-        $this->factory = new EntityTypeFactory($this->formFactory, $this->saveCommandFactory);
+        $this->attributeService = m::mock(AttributeServiceInterface::class);
+        $this->factory = new EntityTypeFactory($this->formFactory, $this->saveCommandFactory, $this->attributeService);
     }
 
     public function test_build_create_new_saml_form()
@@ -85,6 +87,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
+                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -116,6 +119,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
+                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -147,6 +151,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
+                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -178,6 +183,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
+                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -209,6 +215,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
+                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
