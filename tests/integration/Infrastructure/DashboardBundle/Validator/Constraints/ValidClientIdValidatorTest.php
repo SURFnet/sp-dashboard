@@ -63,6 +63,9 @@ class ValidClientIdValidatorTest extends ConstraintValidatorTestCase
         );
     }
 
+    /**
+     * @dataProvider provideClientIdWithPort
+     */
     public function test_invalid_client_id_url()
     {
         $constraint = new ValidClientId();
@@ -75,5 +78,36 @@ class ValidClientIdValidatorTest extends ConstraintValidatorTestCase
             $violations->get(0)->getMessageTemplate(),
             'Expected certain violation but dit not receive it.'
         );
+    }
+
+    /**
+     * @dataProvider provideClientIdWithPort
+     */
+    public function test_invalid_client_id_containing_a_port()
+    {
+        $constraint = new ValidClientId();
+        $this->validator->validate('https://sub.domain.org:8080', $constraint);
+
+        $violations = $this->context->getViolations();
+        $this->assertCount(1, $violations);
+        $this->assertEquals(
+            'validator.client_id.no_colon',
+            $violations->get(0)->getMessageTemplate(),
+            'Colons (:) are not allowed in clientId\'s. Please remove it.'
+        );
+    }
+
+    public function provideInvalidClients()
+    {
+        yield ['q$:\₪.3%$'];
+        yield ['https://sub.domain.org:illegal'];
+        yield ['https://sub.domain.org:----'];
+    }
+
+    public function provideClientIdWithPort()
+    {
+        yield ['https://sub.domain.org:8080'];
+        yield ['https://sub.domain.org:8080/page'];
+        yield ['https://sub.domain.org:8080/page=123'];
     }
 }

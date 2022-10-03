@@ -41,7 +41,10 @@ class ValidClientIdValidator extends ConstraintValidator
         $parser = new Parser($pslManager->getList());
 
         try {
-            $parser->parseUrl($value);
+            $url = $parser->parseUrl($value);
+            if (isset($url->toArray()['port'])) {
+                $this->context->addViolation('validator.client_id.no_colon');
+            }
         } catch (Exception $e) {
             $this->context->addViolation('validator.client_id.invalid_url');
             return;
