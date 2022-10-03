@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -76,6 +77,27 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             'active' => true,
             'id' => $entity->getId(),
         ];
+    }
+
+    public function generateEntityChangeRequest(
+        ManageEntity $entity,
+        EntityDiff $differences,
+        ContactEntity $contact
+    ): array {
+        $payload = [
+            'metaDataId' => $entity->getId(),
+            'type' => 'oauth20_rs',
+            'pathUpdates' => $this->generateForChangeRequest($differences),
+            'auditData' => [
+                'user' => $contact->getEmailAddress()
+            ],
+        ];
+
+        if ($entity->hasComments()) {
+            $payload['note'] = $entity->getComments();
+        }
+        return $payload;
+        return $differences->getDiff();
     }
 
     private function generateDataForNewEntity(ManageEntity $entity, $workflowState)
@@ -262,5 +284,10 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPushSet()) {
             unset($metadata[$fieldName]);
         }
+    }
+
+    private function generateForChangeRequest(EntityDiff $differences): array
+    {
+        return $differences->getDiff();
     }
 }

@@ -22,7 +22,7 @@ class EntityDiff
 {
     private $diff;
 
-    public function __construct($data, $compareTo)
+    public function __construct(array $data, array $compareTo)
     {
         $this->diff = $this->arrayRecursiveDiff($data, $compareTo);
     }

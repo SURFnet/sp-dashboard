@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,23 @@ namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class PublishEntityProductionCommandHandler implements CommandHandler
+class EntityChangeRequestCommandHandler implements CommandHandler
 {
     /**
-     * @var PublishEntityRepository
+     * @var EntityChangeRequestRepository
      */
-    private $publishClient;
+    private $repository;
     /**
      * @var TicketService
      */
@@ -79,89 +78,66 @@ class PublishEntityProductionCommandHandler implements CommandHandler
     private $entityService;
 
     public function __construct(
-        PublishEntityRepository $publishClient,
+        EntityChangeRequestRepository $repository,
         EntityServiceInterface $entityService,
         TicketService $ticketService,
         FlashBagInterface $flashBag,
-        MailService $mailer,
+        MailService $mailService,
         LoggerInterface $logger,
         string $issueType
     ) {
         if (empty($issueType)) {
-            throw new Exception('Please set "jira_issue_type_publication_request" in parameters.yml');
+            throw new Exception('Please set "jira_issue_type_entity_change_request" in parameters.yml');
         }
-        $this->publishClient = $publishClient;
+        $this->repository = $repository;
         $this->entityService = $entityService;
         $this->ticketService = $ticketService;
-        $this->mailService = $mailer;
+        $this->mailService = $mailService;
         $this->flashBag = $flashBag;
         $this->logger = $logger;
         $this->issueType = $issueType;
-        $this->summaryTranslationKey = 'entity.publish.request.ticket.summary';
-        $this->descriptionTranslationKey = 'entity.publish.request.ticket.description';
+        $this->summaryTranslationKey = 'entity.change_request.ticket.summary';
+        $this->descriptionTranslationKey = 'entity.change_request.ticket.description';
     }
 
     /**
-     * Publishes the entity to production
-     *
-     * Some remarks:
-     *  - The production manage connection is used to publish to production
-     *  - In addition to a test publish; the coin:exclude_from_push attribute is passed with value 1
-     *  - A jira ticket is created to inform the service desk of the pending publication request
-     *
+     * Creates an entity change request in Manage
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function handle(PublishProductionCommandInterface $command)
     {
         $entity = $command->getManageEntity();
-        $pristineEntity = null;
-        if ($entity->isManageEntity()) {
-            // The entity as it is now known in Manage
-            $pristineEntity = $this->entityService->getManageEntityById($entity->getId(), $entity->getEnvironment());
+        if (!$entity->isManageEntity()) {
+            throw new EntityNotFoundException('Unable to request changes to a unkown entity in Manage');
         }
+        $pristineEntity = $this->entityService->getManageEntityById($entity->getId(), $entity->getEnvironment());
         try {
             $this->logger->info(
                 sprintf(
-                    'Publishing entity "%s" to Manage in production environment',
+                    'Requesting changes in production environment for entity: "%s"',
                     $entity->getMetaData()->getNameEn()
                 )
             );
-            $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
-            if (array_key_exists('id', $publishResponse)) {
-                // Set entity status to published
-                $entity->setStatus(Constants::STATE_PUBLISHED);
-                $entity->setId($publishResponse['id']);
 
-                $this->logger->info(
-                    sprintf(
-                        'Updating status of "%s" to published',
-                        $entity->getMetaData()->getNameEn()
-                    )
+            $response = $this->repository->openChangeRequest($entity, $pristineEntity, $command->getApplicant());
+            if (array_key_exists('id', $response)) {
+                $this->ticketService->createJiraTicket(
+                    $entity,
+                    $command,
+                    $this->issueType,
+                    $this->summaryTranslationKey,
+                    $this->descriptionTranslationKey
                 );
-
-                // No need to create a Jira ticket when resetting the client secret
-                if ($command instanceof PublishEntityProductionCommand) {
-                    $this->ticketService->createJiraTicket(
-                        $entity,
-                        $command,
-                        $this->issueType,
-                        $this->summaryTranslationKey,
-                        $this->descriptionTranslationKey
-                    );
-                }
             } else {
                 $this->logger->error(
                     sprintf(
-                        'Publishing to Manage failed for: "%s". Message: "%s"',
+                        'Creating an entity change request in Manage failed for: "%s". Message: "%s"',
                         $entity->getMetaData()->getNameEn(),
                         'Manage did not return an id. See the context for more details.'
                     ),
-                    [$publishResponse]
+                    [$response]
                 );
                 $this->flashBag->add('error', 'entity.edit.error.publish');
-            }
-            if ($this->isNewResourceServer($entity)) {
-                $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
             }
             return;
         } catch (PublishMetadataException $e) {
@@ -175,19 +151,13 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             $this->flashBag->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
+
+            // Inform the service desk of the unavailability of Jira
             $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
             $this->flashBag->add('error', 'entity.edit.error.publish');
             return;
         }
-    }
-
-    private function isNewResourceServer(ManageEntity $entity)
-    {
-        $isNewEntity = empty($entity->getId());
-        return $isNewEntity
-            &&
-            $entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 }

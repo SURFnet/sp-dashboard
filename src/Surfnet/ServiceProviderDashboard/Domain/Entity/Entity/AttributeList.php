@@ -18,10 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
-use function array_key_exists;
-use function reset;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 
-class AttributeList
+class AttributeList implements Comparable
 {
     /**
      * @var Attribute[]
@@ -136,5 +135,28 @@ class AttributeList
                 $this->add($attribute);
             }
         }
+    }
+
+    public function asArray(): array
+    {
+        $attributes = [];
+        foreach ($this->attributes as $attribute) {
+            $attribute = reset($attribute);
+            $urn = $attribute->getName();
+            $attributes[$urn][] = [
+                'source' => $attribute->getSource(),
+                'value' => $attribute->getValue(),
+                'motivation' => $attribute->getMotivation(),
+            ];
+        }
+        if (!empty($attributes)) {
+            return [
+                'arp' => [
+                    'attributes' => $attributes,
+                    'enabled' => true,
+                ],
+            ];
+        }
+        return [];
     }
 }

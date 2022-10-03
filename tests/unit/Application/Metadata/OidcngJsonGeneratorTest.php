@@ -20,10 +20,12 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use function file_get_contents;
@@ -84,7 +86,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                 'type' => 'oidc10_rp',
                 'id' => 'manageId',
                 'pathUpdates' => [
-                    'arp' => ['arp' => 'arp'],
                     'state' => 'testaccepted',
                     'entityid' => 'entityid',
                     'allowedResourceServers' => [],
@@ -131,10 +132,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             array(
                 'pathUpdates' =>
                     array(
-                        'arp' =>
-                            array(
-                                'arp' => 'arp',
-                            ),
                         'entityid' => 'entityid',
                         'metaDataFields.contacts:2:givenName' => 'John',
                         'metaDataFields.contacts:2:surName' => 'Doe',
@@ -296,6 +293,29 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
             [['name' => 'entity-id'], ['name' => 'entity-id2'],],
             $data['pathUpdates']['allowedEntities']
         );
+    }
+
+    public function test_it_builds_an_entity_change_request()
+    {
+        $generator = new OidcngJsonGenerator(
+            $this->arpMetadataGenerator,
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator,
+            'http://oidc.test.playground.example.com',
+            'http://oidc.prod.playground.example.com'
+        );
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
+
+        $this->assertIsArray($data);
+        $this->assertEquals('manageId', $data['metaDataId']);
+        $this->assertEquals('oidc10_rp', $data['type']);
+        $this->assertIsArray($data['pathUpdates']);
+        $this->assertCount(6, $data['pathUpdates']);
     }
 
     private function createManageEntity(

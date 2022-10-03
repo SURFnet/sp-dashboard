@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -83,6 +84,26 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
     }
 
+    public function generateEntityChangeRequest(
+        ManageEntity $entity,
+        EntityDiff $differences,
+        ContactEntity $contact
+    ): array {
+        $payload = [
+            'metaDataId' => $entity->getId(),
+            'type' => 'oidc10_rp',
+            'pathUpdates' => $this->generateForChangeRequest($differences, $entity),
+            'auditData' => [
+                'user' => $contact->getEmailAddress()
+            ],
+        ];
+
+        if ($entity->hasComments()) {
+            $payload['note'] = $entity->getComments();
+        }
+        return $payload;
+    }
+
     private function generateDataForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         // the type for entities is always oidc10-rp because manage is using saml internally
@@ -121,7 +142,7 @@ class OidcngJsonGenerator implements GeneratorInterface
 
             default:
                 $metadata += $differences->getDiff();
-                $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+                $metadata = $this->generateArp($metadata, $entity);
                 $metadata['state'] = $workflowState;
 
                 $metadata += $this->generateAllowedResourceServers($entity);
@@ -371,5 +392,24 @@ class OidcngJsonGenerator implements GeneratorInterface
         if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPushSet()) {
             unset($metadata[$fieldName]);
         }
+    }
+
+
+    private function generateArp(array $metadata, ManageEntity $entity): array
+    {
+        // Arp is to be sent in its entirety as it does not support the MERGE WRITE feature
+        // but we use the diffed arp to check if any changes where made to the ARP (if not, we do
+        // not send the arp
+        if (!empty($metadata['arp'])) {
+            unset($metadata['arp']);
+            $metadata['arp'] = $this->arpMetadataGenerator->build($entity);
+        }
+        return $metadata;
+    }
+
+    private function generateForChangeRequest(EntityDiff $differences, ManageEntity $entity): array
+    {
+        $metadata = $differences->getDiff();
+        return $this->generateArp($metadata, $entity);
     }
 }

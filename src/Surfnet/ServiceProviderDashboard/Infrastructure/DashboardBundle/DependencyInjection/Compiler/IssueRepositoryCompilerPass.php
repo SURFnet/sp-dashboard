@@ -48,13 +48,6 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
 
         $isTestModeEnabled = (bool) $container->getParameter(self::ENABLE_TEST_MODE_FEATURE_FLAG);
 
-        $kernelEnv = $container->getParameter('kernel.environment');
-
-        // Web tests, ironically for now do not utilize the test stand-in.
-        if ($kernelEnv === 'test' && $isTestModeEnabled) {
-            $isTestModeEnabled = false;
-        }
-
         if ($isTestModeEnabled) {
             $this->configureServiceInTestMode($container);
         } else {

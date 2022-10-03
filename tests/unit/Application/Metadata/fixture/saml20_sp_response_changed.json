@@ -19,11 +19,11 @@
             "motivation": "Lorem ipsum dolor sit"
           }
         ],
-        "urn:mace:dir:attribute-def:uid": [
+        "urn:mace:dir:attribute-def:mail": [
           {
-            "source": "idp",
+            "source": "sab",
             "value": "*",
-            "motivation": "fd fads fdasafd s fdasfda s dfas dfa"
+            "motivation": "Ave Imperator, morituri te salutant"
           }
         ]
       },
