@@ -43,5 +43,6 @@ RUN chown -R www-data /var/www/html/var/cache && \
 
 COPY ./docker/conf/zz-docker.conf /usr/local/etc/php-fpm.d
 COPY ./docker/conf/10-docker-opcache-openconext.conf /usr/local/etc/php/conf.d/
+COPY ./docker/conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
 
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
