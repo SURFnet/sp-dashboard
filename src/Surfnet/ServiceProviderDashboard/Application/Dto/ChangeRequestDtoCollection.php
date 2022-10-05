@@ -31,7 +31,6 @@ class ChangeRequestDtoCollection
     public function __construct(array $changeRequests)
     {
         Assert::isArray($changeRequests);
-        Assert::isNonEmptyList($changeRequests, 'No change requests available');
 
         foreach ($changeRequests as $id => $changeRequest) {
             $this->changeRequests[$id] = ChangeRequestDto::fromChangeRequest($changeRequest);

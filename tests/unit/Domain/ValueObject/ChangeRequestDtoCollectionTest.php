@@ -85,16 +85,5 @@ class ChangeRequestDtoCollectionTest extends TestCase
         $this->assertEquals('2022-09-21 17:00:00', ($collection->getChangeRequests()[0])->getCreated()->format('Y-m-d H:i:s'));
         $this->assertEquals('2022-09-21 16:00:00', ($collection->getChangeRequests()[1])->getCreated()->format('Y-m-d H:i:s'));
         $this->assertEquals('2022-09-21 15:00:00', ($collection->getChangeRequests()[2])->getCreated()->format('Y-m-d H:i:s'));
-        $this->assertEquals(3, ($collection->getChangeRequests()[0])->getId());
-        $this->assertEquals(1, ($collection->getChangeRequests()[1])->getId());
-        $this->assertEquals(2, ($collection->getChangeRequests()[2])->getId());
-    }
-
-    public function test_it_handles_empty_changes()
-    {
-        $changes = [];
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('No change requests available');
-        new ChangeRequestDtoCollection($changes);
     }
 }
