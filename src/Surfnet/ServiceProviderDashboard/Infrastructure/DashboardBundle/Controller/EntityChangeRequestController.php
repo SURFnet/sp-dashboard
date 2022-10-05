@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ChangeRequestService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,9 +56,24 @@ class EntityChangeRequestController extends Controller
 
         $changeRequests = $service->findById($manageId);
 
+        $actions = new EntityActions(
+            $manageId,
+            $entity->getService()->getId(),
+            $entity->getStatus(),
+            $entity->getEnvironment(),
+            $entity->getProtocol()->getProtocol(),
+            true
+        );
+
         return $this->render(
             '@Dashboard/EntityPublished/changeRequest.html.twig',
-            ['changeRequests' => $changeRequests]
+            [
+                'changeRequests' => $changeRequests,
+                'entity' => $entity,
+                'serviceId' => $serviceId,
+                'actions' => $actions,
+                'isAdmin' => $this->authorizationService->isAdministrator(),
+            ]
         );
     }
 }

@@ -3,6 +3,11 @@
 {% block page_heading %}{{ 'entity.change_request.title'|trans }}{%endblock%}
 {% block body %}
 
+
+    <div class="fieldset card action">
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: actions, isAdmin: isAdmin} %}
+    </div>
+
     {% if changeRequests.getChangeRequests()|length %}
         {{ 'entity.change_request.text.html'|trans|wysiwyg }}
     {% else %}
