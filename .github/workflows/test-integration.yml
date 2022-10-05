@@ -34,7 +34,7 @@ jobs:
       env:
         SYMFONY_ENV: dev
     
-    - name: Run yarn
+    - name: Create front end dependencies (yarn encore prodcution)
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/bin/yarn run encore production
       env:
