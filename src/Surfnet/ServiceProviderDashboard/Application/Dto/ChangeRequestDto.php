@@ -29,11 +29,6 @@ class ChangeRequestDto
     /**
      * @var string
      */
-    private $id;
-
-    /**
-     * @var string
-     */
     private $note;
 
     /**
@@ -43,9 +38,8 @@ class ChangeRequestDto
 
     private $pathUpdates = [];
 
-    private function __construct(string $id, string $note, DateTime $created, array $pathUpdates)
+    private function __construct(string $note, DateTime $created, array $pathUpdates)
     {
-        $this->id = $id;
         $this->note = $note;
         $this->created = $created;
         $this->pathUpdates = $pathUpdates;
@@ -57,7 +51,6 @@ class ChangeRequestDto
     public static function fromChangeRequest(array $changeRequest): ?ChangeRequestDto
     {
         Assert::isArray($changeRequest);
-        Assert::keyExists($changeRequest, 'id', 'No id specified');
         Assert::keyExists($changeRequest, 'created', 'No create datetime specified');
         Assert::keyExists($changeRequest, 'pathUpdates', 'No pathUpdates specified');
         Assert::isNonEmptyMap($changeRequest['pathUpdates'], 'No pathUpdates available');
@@ -71,10 +64,7 @@ class ChangeRequestDto
 
         self::flattenArp($changeRequest);
 
-        return new self($changeRequest['id'],
-            $note,
-            $created,
-            $changeRequest['pathUpdates']);
+        return new self($note, $created, $changeRequest['pathUpdates']);
     }
 
     private static function flattenArp(&$changeRequest)
@@ -89,11 +79,6 @@ class ChangeRequestDto
             }
             unset($changeRequest['pathUpdates']['arp']);
         }
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
     }
 
     public function getNote(): ?string

@@ -39,7 +39,6 @@ class ChangeRequestDtoTest extends TestCase
 
         $changeRequest = ChangeRequestDto::fromChangeRequest($changes);
 
-        $this->assertEquals(1, $changeRequest->getId());
         $this->assertEquals('a cracked note', $changeRequest->getNote());
         $this->assertEquals('2022-09-21 15:00:00', $changeRequest->getCreated()->format('Y-m-d H:i:s'));
         $this->assertIsArray($changeRequest->getPathUpdates());
@@ -91,19 +90,9 @@ class ChangeRequestDtoTest extends TestCase
         $this->assertEquals('', $changeRequest->getNote());
     }
 
-    public function test_it_handles_invalid_input()
-    {
-        $changes = [];
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('No id specified');
-        ChangeRequestDto::fromChangeRequest($changes);
-    }
-
     public function test_it_throws_exception_on_missing_create_date_time()
     {
-        $changes = [
-            'id' => 1,
-        ];
+        $changes = [];
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('No create datetime specified');
         ChangeRequestDto::fromChangeRequest($changes);
