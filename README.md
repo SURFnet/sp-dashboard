@@ -83,7 +83,14 @@ front controller is used automatically, so you don't have to include `/app_dev.p
 
 `ant test` will run the full suite of tests and static analysis.
 
-Cypress tests only run locally (SAML & the CI aren't cooperating) for now.  Use `npm run cy:open` to run them.  Please ensure the accessibility tests succeed when making changes in the frontend.
+Cypress tests only run locally for now.  Use `npm run cy:open` to run them.  Please ensure the accessibility tests succeed when making changes in the frontend.
+
+Some remarks: 
+
+1. The Sp Dashboard sp should be configured with `coin:no_consent_required` = 1. Not having this option set will result in a failing authentication sequence.
+2. The Cypress tests should run in your dev environment. No fixture is provided yet to run the tests against.
+3. Running tests in PROD mode is encouraged (this disengages the web debug toolbar) saving false positives in a11y and html validation errors
+4. A service with ID = 2 should be present, it should have the add production entities option set.
 
 ### Xdebug
 Xdebug is configured when provisioning your development Vagrant box. The Vagrantfile sets the `develop_spd` 

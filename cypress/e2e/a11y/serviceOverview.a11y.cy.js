@@ -1,8 +1,9 @@
 import {terminalLog} from '../../functions/terminalLog';
 
-context('SPD verify a11y of dashboard', () => {
+context('SPD verify a11y of service overview', () => {
     beforeEach(() => {
-        cy.loginWithMemberRole('', 'John', 'Doe', 'eddy-wally');
+        cy.login();
+        cy.selectService(2);
     });
 
     it('contains no a11y problems on load', () => {

@@ -2,7 +2,7 @@ import {attributes, attributesTitles} from '../fixtures/variables';
 
 context('Publish functionality', () => {
     beforeEach(() => {
-        cy.loginWithMemberRole('', 'John', 'Doe', 'eddy-wally');
+        cy.login();
         cy.selectService(1);
         cy.contains('New production entity').first().click();
     });

@@ -14,8 +14,6 @@ import './commands/manage';
 import 'cypress-axe';
 import 'cypress-html-validate/dist/commands';
 
-require('cypress-terminal-report/src/installLogsCollector')();
-
 Cypress.on('uncaught:exception', (err, runnable) => {
     // we expect a parsley library error with message 'parsley'
     // and don't want to fail the test so we return false

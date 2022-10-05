@@ -2,7 +2,7 @@ import {attributes} from '../fixtures/variables';
 
 context('Edit another service', () => {
     before(() => {
-        cy.loginWithMemberRole('', 'John', 'Doe', 'eddy-wally');
+        cy.login();
         cy.selectService(1);
         cy.contains('New production entity').first().click();
         cy.createEntity(attributes);

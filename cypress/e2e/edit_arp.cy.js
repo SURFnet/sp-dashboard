@@ -2,10 +2,10 @@ import {attributes} from '../fixtures/variables';
 
 context('Edit ARP', () => {
   before(() => {
-    cy.loginWithMemberRole('', 'John', 'Doe', 'eddy-wally');
-    cy.selectService(1);
+    cy.login();
+    cy.selectService(2);
     cy.contains('New production entity').first().click();
-    cy.createEntity(attributes);
+    // cy.createEntity(attributes);
   });
 
   // Als ik een entity (oidcng en saml) ga wijzigen, en er staan onbekende attributen in de ARP in Manage, dan moeten deze blijven staan als ik op publish klik
@@ -13,7 +13,7 @@ context('Edit ARP', () => {
     cy.loginToManageAndSelectTiffanyAching();
     cy.goToArpTab();
     cy.addSurfCrmId();
-    cy.visit('https://spdashboard.vm.openconext.org/service/1');
+    cy.visit('https://spdashboard.vm.openconext.org/service/2');
     cy.editEntity();
     cy.addPersonalCodeAttribute();
     cy.addComment('testing editing an attribute');

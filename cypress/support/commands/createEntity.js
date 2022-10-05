@@ -3,7 +3,8 @@ Cypress.Commands.add('addMetadataUrl', (url = '') => {
 });
 
 Cypress.Commands.add('addAcsLocation', (location = 'https://oidc.dev.support.surfconext.nl/saml/SSO') => {
-    cy.get('#dashboard_bundle_entity_type_metadata_acsLocation').type(location);
+    cy.get('#dashboard_bundle_entity_type_metadata_acsLocations').type(location);
+    cy.get('#dashboard_bundle_entity_type_metadata_acsLocations .add_collection_entry').click();
 });
 
 Cypress.Commands.add('addEntityId', (id = 'https://tiffany.aching.do/id') => {
@@ -111,7 +112,7 @@ Cypress.Commands.add('fillInCreateSamlForm', (attributes = [], entityId = '') =>
 
 Cypress.Commands.add('verifyCreation', () => {
     cy.viewEntity();
-    cy.checkCorrectTextValue('ACS location', 'https://oidc.dev.support.surfconext.nl/saml/SSO');
+    cy.checkContainsValue('ACS location', 'https://oidc.dev.support.surfconext.nl/saml/SSO');
     cy.checkCorrectTextValue('Entity ID', 'https://tiffany.aching.do/id');
     cy.checkCorrectTextValue('Logo URL', 'https://generative-placeholders.glitch.me/image?width=600&height=300');
     cy.checkCorrectTextValue('Name NL', 'Tiffany Aching');
@@ -136,7 +137,7 @@ Cypress.Commands.add('openCreateEntityModal', (environment = 'test', serviceID =
 });
 
 Cypress.Commands.add('createEntity', (attributes = [], environment = 'test', entityId = '') => {
-    cy.openCreateEntityModal(environment);
+    cy.openCreateEntityModal(environment, 2);
     cy.fillInCreateSamlForm(attributes, entityId);
     cy.clickPublishButton();
 });

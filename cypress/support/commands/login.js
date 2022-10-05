@@ -1,10 +1,4 @@
-Cypress.Commands.add('fillUsername', (username = 'Granny') => {
-    cy.get('#username').type(username);
-});
 
-Cypress.Commands.add('fillPassword', (pass = 'Weatherwax') => {
-    cy.get('#password').type(pass);
-});
 
 Cypress.Commands.add('addMemberRole', (isMemberOf = 'urn:collab:org:surf.nl') => {
     cy.get('#add-attribute').select('urn:mace:dir:attribute-def:isMemberOf');
@@ -39,19 +33,15 @@ Cypress.Commands.add('checkForConsent', () => {
     });
 });
 
-Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching', submit = true, url = 'https://spdashboard.vm.openconext.org') => {
+Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching') => {
+    cy.origin('https://mujina-idp.vm.openconext.org', {args: {username, pass}}, ({username, pass}) => {
+        cy.visit('/login');
+        cy.get('#username').type(username);
+        cy.get('#password').type(pass);
+        cy.get('.login-form').submit();
+    });
+    const url = 'https://spdashboard.vm.openconext.org';
     cy.visit(url);
-    cy.fillUsername(username);
-    cy.fillPassword(pass);
-    if (submit) {
-        cy.submitLoginForms();
-        cy.checkForLoginComplete(url);
-    }
-});
-
-Cypress.Commands.add('loginWithMemberRole', (url = '', username = 'John', pass = 'Doe', isMemberOf = 'urn:collab:org:surf.nl') => {
-    cy.login(username, pass, false);
-    cy.addMemberRole(isMemberOf);
     cy.submitLoginForms().then(() => {
         cy.checkForLoginComplete(url);
     });

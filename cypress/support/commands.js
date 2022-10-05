@@ -44,6 +44,10 @@ Cypress.Commands.add('checkCorrectTextValue', (label, value) => {
     cy.contains(label).next().should('have.text', value);
 });
 
+Cypress.Commands.add('checkContainsValue', (label, value) => {
+    cy.contains(label).next().should('contain.text', value);
+});
+
 Cypress.Commands.add('checkContact', (contact, firstName, lastName, email, phone = '') => {
     cy.contains(contact)
       .next().contains('First name').next().should('have.text', firstName);

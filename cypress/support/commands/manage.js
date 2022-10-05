@@ -41,7 +41,7 @@ Cypress.Commands.add('goToMetadataTab', () => {
 });
 
 Cypress.Commands.add('addSurfCrmId', (note = 'add surf crm id because it\'s not supported', motivation = 'we wants it') => {
-    cy.get('#urn:mace:surf.nl:attribute-def:surf-crm-id').click();
+    cy.get('label[for="urn:mace:surf.nl:attribute-def:surf-crm-id"]').click();
     cy.focused().type(motivation);
     cy.addRevisionNote(note);
     cy.get('.actions .buttons .button.blue').then((button) => {

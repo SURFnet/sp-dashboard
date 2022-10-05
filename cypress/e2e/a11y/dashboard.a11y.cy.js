@@ -1,13 +1,13 @@
 import {terminalLog} from '../../functions/terminalLog';
 
-context('SPD verify a11y of service overview modals', () => {
+context('SPD verify a11y of dashboard', () => {
     beforeEach(() => {
-        cy.loginWithMemberRole('', 'John', 'Doe', 'eddy-wally');
-        cy.selectService(1);
-        cy.contains('New production entity').first().click();
+        cy.login();
+        cy.visit('https://spdashboard.vm.openconext.org');
     });
 
     it('contains no a11y problems on load', () => {
+        cy.removeSFToolbar();
         cy.injectAxe();
         cy.checkA11y(null, null, terminalLog);
     });
