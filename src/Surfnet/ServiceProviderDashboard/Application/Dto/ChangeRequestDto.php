@@ -22,6 +22,7 @@ use DateTime;
 use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidDateTimeException;
 use Webmozart\Assert\Assert;
+use function array_key_exists;
 
 class ChangeRequestDto
 {
@@ -68,10 +69,26 @@ class ChangeRequestDto
         }
         $note = $changeRequest['note'] ?? '';
 
+        self::flattenArp($changeRequest);
+
         return new self($changeRequest['id'],
             $note,
             $created,
             $changeRequest['pathUpdates']);
+    }
+
+    private static function flattenArp(&$changeRequest)
+    {
+        if (array_key_exists('arp', $changeRequest['pathUpdates'])) {
+            $arp = $changeRequest['pathUpdates']['arp'];
+            if (array_key_exists('attributes', $arp) && !empty($arp['attributes'])) {
+                foreach ($arp['attributes'] as $urn => $attribute) {
+                    // Include ARP entries in the pathupdates, not in pathUpdates/arp
+                    $changeRequest['pathUpdates'][$urn] = $attribute[0]['motivation'];
+                }
+            }
+            unset($changeRequest['pathUpdates']['arp']);
+        }
     }
 
     public function getId(): string

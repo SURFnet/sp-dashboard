@@ -119,4 +119,54 @@ class ChangeRequestDtoTest extends TestCase
         $this->expectExceptionMessage('No pathUpdates specified');
         ChangeRequestDto::fromChangeRequest($changes);
     }
+
+    public function test_it_flattens_arp_values()
+    {
+        $changes = [
+            'id' => 1,
+            'created' => '2022-09-21 15:00:00',
+            'pathUpdates' => [
+                'metaDataFields.description:nl' => 'description nl',
+                'metaDataFields.description:en' => 'description en',
+                'arp' => array (
+                    'attributes' =>
+                        array (
+                            'urn:mace:dir:attribute-def:eduPersonScopedAffiliation' =>
+                                array (
+                                    0 =>
+                                        array (
+                                            'source' => 'idp',
+                                            'value' => '*',
+                                            'motivation' => 'Test',
+                                        ),
+                                ),
+                            'urn:mace:dir:attribute-def:mail' =>
+                                array (
+                                    0 =>
+                                        array (
+                                            'source' => 'idp',
+                                            'value' => '*',
+                                            'motivation' => 'Handy attribute to contact our customer, but why? We do not know',
+                                        ),
+                                ),
+                            'urn:mace:dir:attribute-def:cn' =>
+                                array (
+                                    0 =>
+                                        array (
+                                            'source' => 'idp',
+                                            'value' => '*',
+                                            'motivation' => 'Test',
+                                        ),
+                                ),
+                        ),
+                    'enabled' => true,
+                )
+            ]
+        ];
+        $changeRequest = ChangeRequestDto::fromChangeRequest($changes);
+        $this->assertCount(5, $changeRequest->getPathUpdates());
+        $this->assertArrayHasKey('urn:mace:dir:attribute-def:eduPersonScopedAffiliation', $changeRequest->getPathUpdates());
+        $this->assertArrayHasKey('urn:mace:dir:attribute-def:mail', $changeRequest->getPathUpdates());
+        $this->assertArrayHasKey('urn:mace:dir:attribute-def:cn', $changeRequest->getPathUpdates());
+    }
 }

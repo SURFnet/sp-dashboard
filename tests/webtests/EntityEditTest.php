@@ -250,7 +250,9 @@ class EntityEditTest extends WebTestCase
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $date = $crawler->filter('h2')->first();
-        $this->assertEquals('September 21, 2022 13:32', $date->text());
+        // Note the timezone difference here compared to the time found in the fixture.
+        // The times in the fixture (in manage) are UTC. We are on Europe/Amsterdam (+2)
+        $this->assertEquals('September 21, 2022 15:32', $date->text());
         $note = $crawler->filter('p')->last();
         $this->assertEquals('Optional note describing the reason for this change', $note->text());
         $value = $crawler->filter('td')->first();
