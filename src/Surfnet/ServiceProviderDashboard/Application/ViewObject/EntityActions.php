@@ -169,7 +169,7 @@ class EntityActions
 
     public function allowChangeRequestAction(): bool
     {
-        if ($this->readOnly) {
+        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION) {
             return false;
         }
         return $this->status == Constants::STATE_PUBLISHED;
