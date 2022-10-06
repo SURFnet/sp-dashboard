@@ -49,6 +49,9 @@ class CreatePrivacyQuestionsTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/service/1/privacy');
 
+        $formRows = $crawler->filter('div.form-row');
+        $this->assertCount(14, $formRows);
+
         $form = $crawler
             ->selectButton('Save')
             ->form();
@@ -68,23 +71,11 @@ class CreatePrivacyQuestionsTest extends WebTestCase
         $this->assertTrue($this->client->getResponse() instanceof RedirectResponse);
 
         $crawler = $this->client->followRedirect();
-
-        $formRows = $crawler->filter('div.form-row');
-        $this->assertCount(14, $formRows);
-
-        $this->assertEquals(
-            'Some data will be accessed',
-            $crawler->filter('#dashboard_bundle_privacy_questions_type_accessData')->text()
-        );
-
-        $this->assertEquals(
-            'The Netherlands',
-            $crawler->filter('#dashboard_bundle_privacy_questions_type_country')->text()
-        );
-
-        $this->assertEquals(
-            '2018-12-31',
-            $crawler->filter('#dashboard_bundle_privacy_questions_type_certificationValidTo')->attr('value')
+        // We are now on the service overview page
+        $this->assertEquals('/', $this->client->getRequest()->getRequestUri());
+        $this->assertContains(
+            'Your changes were saved!',
+            $crawler->filter('div.flashMessage.info')->text()
         );
     }
 }
