@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
-class Form
+class AttributeForm
 {
     public $languages = [];
 
@@ -28,11 +28,11 @@ class Form
         array $languages
     ) {
         foreach ($languages as $language => $values) {
-            $this->languages[$language] = language::fromLanguage($values);
+            $this->languages[$language] = AttributeFormLanguage::fromLanguage($values);
         }
     }
 
-    public static function fromForm(array $languages): ?Form
+    public static function fromForm(array $languages): ?AttributeForm
     {
         return new self(
             $languages

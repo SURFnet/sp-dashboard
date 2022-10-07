@@ -27,13 +27,20 @@ class Attribute
      */
     public $id;
 
+    /**
+     * @var AttributeForm
+     */
+    public $form;
+
     public $urns = [];
 
     private function __construct(
         string $id,
+        array $form,
         array $urns
     ) {
         $this->id = $id;
+        $this->form = AttributeForm::fromForm($form);
         $this->urns = $urns;
     }
 
@@ -41,6 +48,7 @@ class Attribute
     {
         return new self(
             $attribute['id'],
+            $attribute['form'],
             $attribute['urns']
         );
     }
