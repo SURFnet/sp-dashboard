@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -30,6 +29,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -38,9 +38,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SamlEntityType extends AbstractType
 {
     /**
-     * @var AttributeServiceInterface
+     * @var AttributeTypeFactory
      */
-    private $attributeService;
+    private $attributeTypeFactory;
+
+    public function __construct(AttributeTypeFactory $attributeTypeFactory)
+    {
+        $this->attributeTypeFactory = $attributeTypeFactory;
+    }
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -51,7 +56,11 @@ class SamlEntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->attributeService = $options['attribute_service'];
+        $attributesContainer = $builder->create('attributes', FormType::class, [
+            'inherit_data' => true,
+            'attr' => ['class' => 'attributes']
+        ]);
+        $this->buildAttributeTypes($attributesContainer);
 
         $builder
             // The first button in a form defines the default behaviour when
@@ -152,7 +161,7 @@ class SamlEntityType extends AbstractType
                                 'entity.edit.label.persistent' => Constants::NAME_ID_FORMAT_PERSISTENT,
                             ],
                             'attr' => [
-                                'class' => 'nameidformat-container',
+                                'class' => 'nameidformat-attributesContainer',
                                 'data-help' => 'entity.edit.information.nameIdFormat',
                             ],
                         ]
@@ -270,9 +279,7 @@ class SamlEntityType extends AbstractType
                         ]
                     )
             )
-            ->add(
-                $this->buildAttributeTypes($builder)
-            )
+            ->add($attributesContainer)
             ->add(
                 $builder->create('comments', FormType::class, ['inherit_data' => true])
                     ->add(
@@ -300,7 +307,6 @@ class SamlEntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => SaveSamlEntityCommand::class,
-            'attribute_service' => AttributeServiceInterface::class
         ));
     }
 
@@ -309,28 +315,8 @@ class SamlEntityType extends AbstractType
         return 'dashboard_bundle_entity_type';
     }
 
-    private function buildAttributeTypes(FormBuilderInterface $builder): FormBuilderInterface
+    private function buildAttributeTypes(FormBuilderInterface $container): FormBuilderInterface
     {
-        $container = $builder->create('attributes', FormType::class, [
-            'inherit_data' => true,
-            'attr' => ['class' => 'attributes']
-        ]);
-
-        foreach ($this->attributeService->getAttributes() as $attribute) {
-            $name  = $attribute->getName();
-            $container
-                ->add(
-                    $name,
-                    AttributeType::class,
-                    [
-                        'label' => 'entity.edit.form.attributes.saml20.'. $name,
-                        'by_reference' => false,
-                        'required' => false,
-                        'attr' => ['data-help' => 'entity.edit.information.saml20.' . $name],
-                    ]
-                );
-        }
-
-        return $container;
+        return $this->attributeTypeFactory->build($container);
     }
 }
