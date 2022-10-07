@@ -18,9 +18,9 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Dto;
 
 use PHPUnit\Framework\TestCase;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Form;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeForm;
 
-class FormTest extends TestCase
+class AttributeFormTest extends TestCase
 {
     public function test_it_is_created()
     {
@@ -34,7 +34,7 @@ class FormTest extends TestCase
                      'info' => 'Omschrijving is hier geplaatst'
                  ]
          ];
-         $form = Form::fromForm($form);
+         $form = AttributeForm::fromForm($form);
 
          $this->assertIsArray($form->languages);
          $this->assertCount(2, $form->languages);

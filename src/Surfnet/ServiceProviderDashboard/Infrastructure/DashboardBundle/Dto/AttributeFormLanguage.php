@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
-class Language
+class AttributeFormLanguage
 {
     public $label;
 
@@ -34,7 +34,7 @@ class Language
         $this->info = $info;
     }
 
-    public static function fromLanguage(array $language): ?Language
+    public static function fromLanguage(array $language): ?AttributeFormLanguage
     {
         return new self(
             $language['label'],
