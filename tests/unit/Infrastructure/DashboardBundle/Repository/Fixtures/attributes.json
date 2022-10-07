@@ -1,59 +1,77 @@
 [
   {
-    "id": "displayName",
-    "getterName": "getDisplayNameAttribute",
-    "setterName": "setDisplayNameAttribute",
-    "friendlyName": "displayName",
+    "id": "givenName",
+    "form" : {
+      "en": {
+        "label": "Given name attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
-      "urn:mace:dir:attribute-def:displayName",
-      "urn:oid:2.16.840.1.113730.3.1.241"
+      "urn:mace:dir:attribute-def:givenName",
+      "urn:oid:2.5.4.42"
     ]
   },
   {
-    "id": "affiliation",
-    "getterName": "getAffiliationAttribute",
-    "setterName": "setAffiliationAttribute",
-    "friendlyName": "eduPersonAffiliation",
+    "id": "surName",
+    "form" : {
+      "en": {
+        "label": "Sur name attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
-      "urn:mace:dir:attribute-def:eduPersonAffiliation",
-      "urn:oid:1.3.6.1.4.1.5923.1.1.1.1"
-    ]
-  },
-  {
-    "id": "scopedaffiliation",
-    "getterName": "getScopedAffiliationAttribute",
-    "setterName": "setScopedAffiliationAttribute",
-    "friendlyName": "eduPersonScopedAffiliation",
-    "urns": [
-      "urn:mace:dir:attribute-def:eduPersonScopedAffiliation",
-      "urn:oid:1.3.6.1.4.1.5923.1.1.1.9"
-    ]
-  },
-  {
-    "id": "emailAddress",
-    "getterName": "getEmailAddressAttribute",
-    "setterName": "setEmailAddressAttribute",
-    "friendlyName": "mail",
-    "urns": [
-      "urn:mace:dir:attribute-def:mail",
-      "urn:oid:0.9.2342.19200300.100.1.3"
+      "urn:mace:dir:attribute-def:sn",
+      "urn:oid:2.5.4.4"
     ]
   },
   {
     "id": "commonName",
-    "getterName": "getCommonNameAttribute",
-    "setterName": "setCommonNameAttribute",
-    "friendlyName": "cn",
+    "form" : {
+      "en": {
+        "label": "Common name attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:mace:dir:attribute-def:cn",
       "urn:oid:2.5.4.3"
     ]
   },
   {
+    "id": "displayName",
+    "form" : {
+      "en": {
+        "label": "Display name attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:displayName",
+      "urn:oid:2.16.840.1.113730.3.1.241"
+    ]
+  },
+  {
+    "id": "emailAddress",
+    "form" : {
+      "en": {
+        "label": "Email address attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:mail",
+      "urn:oid:0.9.2342.19200300.100.1.3"
+    ]
+  },
+  {
     "id": "organization",
-    "getterName": "getOrganizationAttribute",
-    "setterName": "setOrganizationAttribute",
-    "friendlyName": "schacHomeOrganization",
+    "form" : {
+      "en": {
+        "label": "Organization attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:mace:terena.org:attribute-def:schacHomeOrganization",
       "urn:oid:1.3.6.1.4.1.25178.1.2.9"
@@ -61,9 +79,12 @@
   },
   {
     "id": "organizationType",
-    "getterName": "getOrganizationTypeAttribute",
-    "setterName": "setOrganizationTypeAttribute",
-    "friendlyName": "schacHomeOrganizationType",
+    "form" : {
+      "en": {
+        "label": "Organization  type attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:mace:terena.org:attribute-def:schacHomeOrganizationType",
       "urn:oid:1.3.6.1.4.1.25178.1.2.10"
@@ -71,69 +92,77 @@
   },
   {
     "id": "organizationUnit",
-    "getterName": "getOrganizationUnitAttribute",
-    "setterName": "setOrganizationUnitAttribute",
-    "friendlyName": "schacHomeOrganizationUnit",
+    "form" : {
+      "en": {
+        "label": "Organization unit attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:mace:dir:attribute-def:ou",
       "urn:oid:1.3.6.1.4.1.25178.1.2.10"
     ]
   },
   {
-    "id": "surName",
-    "getterName": "getSurNameAttribute",
-    "setterName": "setSurNameAttribute",
-    "friendlyName": "sn",
+    "id": "affiliation",
+    "form" : {
+      "en": {
+        "label": "Affiliation attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
-      "urn:mace:dir:attribute-def:sn",
-      "urn:oid:2.5.4.4"
-    ]
-  },
-  {
-    "id": "givenName",
-    "getterName": "getGivenNameAttribute",
-    "setterName": "setGivenNameAttribute",
-    "friendlyName": "givenName",
-    "urns": [
-      "urn:mace:dir:attribute-def:givenName",
-      "urn:oid:2.5.4.42"
+      "urn:mace:dir:attribute-def:eduPersonAffiliation",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.1"
     ]
   },
   {
     "id": "entitlement",
-    "getterName": "getEntitlementAttribute",
-    "setterName": "setEntitlementAttribute",
-    "friendlyName": "eduPersonEntitlement",
+    "form" : {
+      "en": {
+        "label": "Entitlement attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:mace:dir:attribute-def:eduPersonEntitlement",
       "urn:oid:1.3.6.1.4.1.5923.1.1.1.7"
     ]
   },
   {
-    "id": "uid",
-    "getterName": "getUidAttribute",
-    "setterName": "setUidAttribute",
-    "friendlyName": "uid",
-    "urns": [
-      "urn:mace:dir:attribute-def:uid",
-      "urn:oid:0.9.2342.19200300.100.1.1"
-    ]
-  },
-  {
     "id": "principleName",
-    "getterName": "getPrincipleNameAttribute",
-    "setterName": "setPrincipleNameAttribute",
-    "friendlyName": "eduPersonPrincipalName",
+    "form" : {
+      "en": {
+        "label": "Principle name attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:mace:dir:attribute-def:eduPersonPrincipalName",
       "urn:oid:1.3.6.1.4.1.5923.1.1.1.6"
     ]
   },
   {
+    "id": "uid",
+    "form" : {
+      "en": {
+        "label": "Uid attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:uid",
+      "urn:oid:0.9.2342.19200300.100.1.1"
+    ]
+  },
+  {
     "id": "preferredLanguage",
-    "getterName": "getPreferredLanguageAttribute",
-    "setterName": "setPreferredLanguageAttribute",
-    "friendlyName": "preferredLanguage",
+    "form" : {
+      "en": {
+        "label": "Preferred language attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:mace:dir:attribute-def:preferredLanguage",
       "urn:oid:2.16.840.1.113730.3.1.39"
@@ -141,12 +170,41 @@
   },
   {
     "id": "personalCode",
-    "getterName": "getPersonalCodeAttribute",
-    "setterName": "setPersonalCodeAttribute",
-    "friendlyName": "schacPersonalUniqueCode",
+    "form" : {
+      "en": {
+        "label": "Personal code attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
     "urns": [
       "urn:schac:attribute-def:schacPersonalUniqueCode",
       "urn:oid:1.3.6.1.4.1.1466.155.121.1.15"
+    ]
+  },
+  {
+    "id": "scopedaffiliation",
+    "form" : {
+      "en": {
+        "label": "Scoped affiliation attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonScopedAffiliation",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.9"
+    ]
+  },
+  {
+    "id": "eduPersonTargetedID",
+    "form" : {
+      "en": {
+        "label": "Edu person targeted ID attribute",
+        "info": "Text should be set in web translations"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonTargetedID",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.10"
     ]
   }
 ]

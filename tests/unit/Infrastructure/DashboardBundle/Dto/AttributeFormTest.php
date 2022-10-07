@@ -18,32 +18,25 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Dto;
 
 use PHPUnit\Framework\TestCase;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Form;
 
-class AttributeTest extends TestCase
+class FormTest extends TestCase
 {
     public function test_it_is_created()
     {
-        $attribute =   [
-            'id' => 'emailAddress',
-            'form' => [
+         $form = [
                 'en' => [
                     'label' => 'emailAddressAttribute',
                     'info' => 'Description is placed here'
-                ]
-            ],
-            'urns' => [
-                'urn:mace:dir:attribute-def:mail',
-                'urn:oid:0.9.2342.19200300.100.1.3'
-                ]
-        ];
-        $attributeDto = Attribute::fromAttribute($attribute);
+                    ],
+                 'nl' => [
+                     'label' => 'emailAttribute',
+                     'info' => 'Omschrijving is hier geplaatst'
+                 ]
+         ];
+         $form = Form::fromForm($form);
 
-        $this->assertEquals('emailAddress', $attributeDto->id);
-        $this->assertIsArray($attributeDto->urns);
-        $this->assertIsObject($attributeDto->form);
-        $this->assertCount(2, $attributeDto->urns);
-        $this->assertEquals('urn:mace:dir:attribute-def:mail', $attributeDto->urns[0]);
-        $this->assertEquals('urn:oid:0.9.2342.19200300.100.1.3', $attributeDto->urns[1]);
+         $this->assertIsArray($form->languages);
+         $this->assertCount(2, $form->languages);
     }
 }
