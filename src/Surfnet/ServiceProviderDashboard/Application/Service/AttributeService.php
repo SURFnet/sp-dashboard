@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 
 class AttributeService implements AttributeServiceInterface
@@ -30,19 +30,56 @@ class AttributeService implements AttributeServiceInterface
 
     private $attributes = [];
 
-    public function __construct(AttributeRepository $attributeRepository)
+    /**
+     * @var string
+     */
+    private $language;
+
+    public function __construct(AttributeRepository $attributeRepository, $language)
     {
         $this->attributeRepository = $attributeRepository;
-        $this->load();
-    }
-
-    public function load(): void
-    {
-        $this->attributes = $this->attributeRepository->findAll();
+        $this->language = $language;
     }
 
     public function getAttributes(): array
     {
+        if (empty($this->attributes)) {
+            $attributes = $this->attributeRepository->findAll();
+
+            foreach ($attributes as $value) {
+                $this->attributes[$value->id] = Attribute::fromAttribute($value, $value->form->languages[$this->language]);
+            }
+        }
         return $this->attributes;
+    }
+
+    public function getNameById(string $id): string
+    {
+        foreach ($this->getAttributes() as $attribute => $value) {
+            if ($id === $attribute) {
+                return $value->getName();
+            }
+        }
+        return $id;
+    }
+
+    public function getLabelById(string $id): string
+    {
+        foreach ($this->getAttributes() as $attribute => $value) {
+            if ($id === $attribute) {
+                return $value->getLabel();
+            }
+        }
+        return $id;
+    }
+
+    public function getInfoById(string $id): string
+    {
+        foreach ($this->getAttributes() as $attribute => $value) {
+            if ($id === $attribute) {
+                return $value->getInfo();
+            }
+        }
+        return $id;
     }
 }
