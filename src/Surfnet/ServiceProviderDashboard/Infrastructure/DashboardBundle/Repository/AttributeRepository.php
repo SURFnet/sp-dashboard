@@ -34,10 +34,7 @@ class AttributeRepository implements AttributeRepositoryInterface
 
     private function load(): array
     {
-        return json_decode(
-            file_get_contents($this->attributesFileLocation),
-            true
-        );
+        return json_decode(file_get_contents($this->attributesFileLocation), true);
     }
 
     private function getAttributes(): array
@@ -53,5 +50,14 @@ class AttributeRepository implements AttributeRepositoryInterface
     public function findAll(): array
     {
         return $this->getAttributes();
+    }
+
+    public function findAllNameSpaceIdentifiers(): array
+    {
+        $nameSpaceIdentifiers = [];
+        foreach ($this->getAttributes() as $attribute) {
+            $nameSpaceIdentifiers[] = $attribute->urns[0];
+        }
+        return $nameSpaceIdentifiers;
     }
 }
