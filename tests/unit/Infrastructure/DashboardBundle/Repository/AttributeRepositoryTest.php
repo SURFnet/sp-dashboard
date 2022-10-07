@@ -27,7 +27,7 @@ class AttributeRepositoryTest extends TestCase
         $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
         $results = $attributeRepository->findAll();
         $this->assertIsArray($results);
-        $this->assertCount(15, $results);
+        $this->assertCount(16, $results);
     }
 
     public function test_it_loads_empty_attributes()
@@ -55,6 +55,7 @@ class AttributeRepositoryTest extends TestCase
             "principleName",
             "preferredLanguage",
             "personalCode",
+            "eduPersonTargetedID",
         ];
         $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
         $attributes = $attributeRepository->findAll();
