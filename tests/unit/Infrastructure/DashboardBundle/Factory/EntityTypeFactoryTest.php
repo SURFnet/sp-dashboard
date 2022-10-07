@@ -87,7 +87,6 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
-                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -119,7 +118,6 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
-                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -151,7 +149,6 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
-                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -183,7 +180,6 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
-                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))
@@ -215,7 +211,6 @@ class EntityTypeFactoryTest extends MockeryTestCase
                         0 => 'Default',
                         1 => 'production',
                     ],
-                    'attribute_service' => $this->attributeService,
                 ], $options);
                 return true;
             }))

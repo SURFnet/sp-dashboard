@@ -42,18 +42,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class OidcngEntityType extends AbstractType
 {
     /**
-     * @var AttributeServiceInterface
+     * @var AttributeTypeFactory
      */
-    private $attributeService;
+    private $attributeTypeFactory;
 
     /**
      * @var OidcngResourceServerOptionsFactory
      */
     private $oidcngResourceServerOptionsFactory;
 
-    public function __construct(OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory)
-    {
+    public function __construct(
+        OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory,
+        AttributeTypeFactory $attributeTypeFactory
+    ) {
         $this->oidcngResourceServerOptionsFactory = $oidcngResourceServerOptionsFactory;
+        $this->attributeTypeFactory = $attributeTypeFactory;
     }
 
     /**
@@ -65,7 +68,11 @@ class OidcngEntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->attributeService = $options['attribute_service'];
+        $attributesContainer = $builder->create('attributes', FormType::class, [
+            'inherit_data' => true,
+            'attr' => ['class' => 'attributes']
+        ]);
+        $this->buildAttributeTypes($attributesContainer);
 
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
 
@@ -332,9 +339,7 @@ class OidcngEntityType extends AbstractType
                         ]
                     )
             )
-            ->add(
-                $this->buildAttributeTypes($builder)
-            )
+            ->add($attributesContainer)
             ->add(
                 $builder->create('comments', FormType::class, ['inherit_data' => true])
                     ->add(
@@ -358,36 +363,16 @@ class OidcngEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    private function buildAttributeTypes(FormBuilderInterface $builder): FormBuilderInterface
+
+    private function buildAttributeTypes(FormBuilderInterface $container): FormBuilderInterface
     {
-        $container = $builder->create('attributes', FormType::class, [
-            'inherit_data' => true,
-            'attr' => ['class' => 'attributes']
-        ]);
-
-        foreach ($this->attributeService->getAttributes() as $attribute) {
-            $name  = $attribute->getName();
-            $container
-                ->add(
-                    $name,
-                    AttributeType::class,
-                    [
-                        'label' => 'entity.edit.form.attributes.oidc.'. $name,
-                        'by_reference' => false,
-                        'required' => false,
-                        'attr' => ['data-help' => 'entity.edit.information.oidc.' . $name],
-                    ]
-                );
-        }
-
-        return $container;
+        return $this->attributeTypeFactory->build($container);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => SaveOidcngEntityCommand::class,
-            'attribute_service' => AttributeServiceInterface::class,
         ));
     }
 

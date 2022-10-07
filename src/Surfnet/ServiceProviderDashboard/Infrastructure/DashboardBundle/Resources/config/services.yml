@@ -204,7 +204,7 @@ services:
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
             - '%kernel.root_dir%/Resources'
             - '@logger'
 
@@ -219,7 +219,7 @@ services:
         arguments:  ['%kernel.root_dir%/Resources']
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
-        arguments:  ['%kernel.root_dir%/Resources/metadata']
+        arguments:  ['%kernel.root_dir%/config/attributes.json']
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
         factory: ['@doctrine', 'getRepository']
@@ -310,7 +310,7 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService:
         arguments:
-            $attributeRepository: '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+            $attributeService: '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
             $oidcPlaygroundUriTest: '%playground_uri_test%'
             $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
@@ -333,6 +333,7 @@ services:
     Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+            - '%locale%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
@@ -536,7 +537,16 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeTypeFactory'
         tags: ['form.type']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeTypeFactory'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeTypeFactory:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OauthClientCredentialEntityType:
         arguments:

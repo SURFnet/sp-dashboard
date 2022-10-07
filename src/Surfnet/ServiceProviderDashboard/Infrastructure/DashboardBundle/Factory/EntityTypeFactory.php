@@ -134,12 +134,7 @@ class EntityTypeFactory
     {
         $options = [];
         if ($environment === Constants::ENVIRONMENT_PRODUCTION) {
-            $options = ['validation_groups' => ['Default', 'production'],
-                'attribute_service' => $this->attributeService
-            ];
-        }
-        if ($environment === Constants::ENVIRONMENT_TEST) {
-            $options['attribute_service'] = $this->attributeService;
+            $options = ['validation_groups' => ['Default', 'production']];
         }
         return $options;
     }
