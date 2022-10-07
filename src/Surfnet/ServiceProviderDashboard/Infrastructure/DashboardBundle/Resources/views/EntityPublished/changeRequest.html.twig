@@ -24,10 +24,10 @@
                 <p>{{ changeRequest.note }}</p>
             {% endif %}
 
-            <table>
+            <table  class="change-request-overview">
                 <tr>
                     <th>{{ 'entity.change_request.value'|trans }}</th>
-                    <th class="table--th-data-width">{{ 'entity.change_request.data'|trans }}</th>
+                    <th>{{ 'entity.change_request.data'|trans }}</th>
                 </tr>
                     {% for index, pathUpdate in changeRequest.pathUpdates %}
                     <tr>
