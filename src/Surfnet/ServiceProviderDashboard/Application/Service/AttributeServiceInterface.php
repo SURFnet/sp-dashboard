@@ -18,11 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-
 interface AttributeServiceInterface
 {
-    public function load(): void;
-
     public function getAttributes(): array;
+
+    public function getNameById(string $id): string;
+
+    public function getLabelById(string $id): string;
+
+    public function getInfoById(string $id): string;
 }
