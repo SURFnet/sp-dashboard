@@ -257,6 +257,18 @@ class MetaData implements Comparable
         return $acsLocations;
     }
 
+    private function asArrayAcsLocations(): array
+    {
+        $data = [];
+        foreach ($this->getAcsLocations() ?? [] as $index => $location) {
+            $locationIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Location', $index);
+            $bindingIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Binding', $index);
+            $data[$locationIdentifier] = $location;
+            $data[$bindingIdentifier] = Constants::BINDING_HTTP_POST;
+        }
+        return $data;
+    }
+
     public function asArray(): array
     {
         $data = [
@@ -270,15 +282,7 @@ class MetaData implements Comparable
             'metaDataFields.name:en' => $this->getNameEn(),
         ];
 
-        if ($this->getAcsLocations()) {
-            foreach ($this->getAcsLocations() as $index => $location) {
-                $locationIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Location', $index);
-                $bindingIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Binding', $index);
-                $data[$locationIdentifier] = $location;
-                $data[$bindingIdentifier] = Constants::BINDING_HTTP_POST;
-            }
-        }
-
+        $data += $this->asArrayAcsLocations();
         $data += $this->coin->asArray();
         $data += $this->contacts->asArray();
         $data += $this->logo->asArray();

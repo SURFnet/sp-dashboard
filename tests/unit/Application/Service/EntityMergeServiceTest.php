@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
-use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -36,14 +36,15 @@ class EntityMergeServiceTest extends TestCase
 
     protected function setUp()
     {
-        $attributeRepository = new AttributeRepository(__DIR__ . '/../../../../app/Resources/metadata');
-        $this->service = new EntityMergeService($attributeRepository, 'test', 'prod');
+        $attributeRepository = new AttributeRepository(__DIR__ . '/../../../../app/config/attributes.json');
+        $attributeService = new AttributeService($attributeRepository, 'en');
+        $this->service = new EntityMergeService($attributeService, 'test', 'prod');
         parent::setUp();
     }
 
     public function test_can_create_service()
     {
-        $service = new EntityMergeService(m::mock(AttributeRepository::class), 'test', 'prod');
+        $service = new EntityMergeService(m::mock(AttributeService::class), 'test', 'prod');
         self::assertInstanceOf(EntityMergeService::class, $service);
     }
 
