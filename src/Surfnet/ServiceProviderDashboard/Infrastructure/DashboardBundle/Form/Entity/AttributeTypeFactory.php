@@ -36,7 +36,7 @@ class AttributeTypeFactory
 
     public function build(FormBuilderInterface $container): FormBuilderInterface
     {
-        foreach ($this->attributeService->getAttributes() as $attribute) {
+        foreach ($this->attributeService->getAttributeTypeAttributes() as $attribute) {
             $name  = $attribute->getName();
             $container
                 ->add(
