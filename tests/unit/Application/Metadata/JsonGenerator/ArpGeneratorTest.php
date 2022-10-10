@@ -36,7 +36,7 @@ class ArpGeneratorTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->attributeRepository = new AttributeRepository(__DIR__ . '/../../../../../app/Resources/metadata');
+        $this->attributeRepository = new AttributeRepository(__DIR__ . '/../../../../../app/config/attributes.json');
     }
     public function test_it_can_build_arp_metadata()
     {
