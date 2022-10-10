@@ -24,10 +24,10 @@ use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\CertificateParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 
 class Parser implements ParserInterface
@@ -53,9 +53,9 @@ class Parser implements ParserInterface
     private $certParser;
 
     /**
-     * @var AttributeRepository
+     * @var AttributeService
      */
-    private $attributeRepository;
+    private $attributeService;
 
     /**
      * @var string
@@ -69,12 +69,12 @@ class Parser implements ParserInterface
 
     public function __construct(
         CertificateParserInterface $certParser,
-        AttributesRepository $attributeRepository,
+        AttributeService $attributeService,
         string $schemaLocation,
         LoggerInterface $logger
     ) {
         $this->certParser = $certParser;
-        $this->attributeRepository = $attributeRepository;
+        $this->attributeService = $attributeService;
         $this->schemaLocation = $schemaLocation;
         $this->logger = $logger;
     }
@@ -325,14 +325,14 @@ class Parser implements ParserInterface
      */
     private function parseAttributes($descriptor, Metadata $metadata)
     {
-        foreach ($descriptor->AttributeConsumingService->RequestedAttribute as $attribute) {
+        foreach ($descriptor->AttributeConsumingService->RequestedAttribute as $requestedAttribute) {
             $attr = new Attribute();
             $attr->setRequested(true);
             $attr->setMotivation('');
 
-            $attributes = $attribute->attributes();
+            $attributes = $requestedAttribute->attributes();
 
-            foreach ($this->attributeRepository->findAll() as $attribute) {
+            foreach ($this->attributeService->getAttributeTypeAttributes() as $attribute) {
                 if (in_array($attributes['Name'], $attribute->getUrns())) {
                     $metadata->{$attribute->getName()} = $attr;
                 }

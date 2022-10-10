@@ -18,9 +18,9 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Dto;
 
 use PHPUnit\Framework\TestCase;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeFormLanguage;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeTypeInformation;
 
-class AttributeFormLanguageTest extends TestCase
+class AttributeTypeInformationTest extends TestCase
 {
     public function test_it_is_created()
     {
@@ -28,7 +28,7 @@ class AttributeFormLanguageTest extends TestCase
                 'label' => 'emailAddressAttribute',
                 'info' => 'Description is placed here'
         ];
-        $language = AttributeFormLanguage::fromLanguage($en);
+        $language = AttributeTypeInformation::fromLanguage($en, 'en');
 
         $this->assertEquals('emailAddressAttribute', $language->label);
         $this->assertEquals('Description is placed here', $language->info);
