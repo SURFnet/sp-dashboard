@@ -234,7 +234,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
     private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList)
     {
-        foreach ($this->attributeService->getAttributes() as $attributeDefinition) {
+        foreach ($this->attributeService->getAttributeTypeAttributes() as $attributeDefinition) {
             $urn = $attributeDefinition->getUrns();
             $manageAttribute = $attributeList->findByUrn(reset($urn));
             if (!$manageAttribute) {
