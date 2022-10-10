@@ -39,7 +39,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\NullSecret;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use function in_array;
 
 /**
@@ -48,9 +47,9 @@ use function in_array;
 class EntityMergeService
 {
     /**
-     * @var AttributeRepository
+     * @var AttributeServiceInterface
      */
-    private $attributeRepository;
+    private $attributeService;
 
     /**
      * @var string
@@ -63,11 +62,11 @@ class EntityMergeService
     private $playGroundUriProd;
 
     public function __construct(
-        AttributeRepository $attributeRepository,
+        AttributeServiceInterface $attributeService,
         string $oidcPlaygroundUriTest,
         string $oidcPlaygroundUriProd
     ) {
-        $this->attributeRepository = $attributeRepository;
+        $this->attributeService = $attributeService;
         $this->playGroundUriTest = $oidcPlaygroundUriTest;
         $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
@@ -177,7 +176,7 @@ class EntityMergeService
             return $attributeList;
         }
 
-        foreach ($this->attributeRepository->findAll() as $definition) {
+        foreach ($this->attributeService->getAttributeTypeAttributes() as $definition) {
             $attributeName = $definition->getName();
 
             if ($command->getAttribute($attributeName)) {
