@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -231,12 +232,41 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     {
     }
 
+    /**
+     * @Assert\Callback()
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        foreach ($this->attributes as $name => $attribute) {
+            if (isset($attribute) && !($attribute instanceof Attribute)) {
+                $context->buildViolation(sprintf('entity.edit.attribute.invalid', $name))
+                    ->atPath('attribute')
+                    ->addViolation();
+            }
+        }
+    }
+
+    /**
+     * The magic getters and setters are consulted by the Oidcng form builder.
+     * Another option would be to implement a dataMapper on the
+     * form or attribute container, but this might lead to needless complexity.
+     */
     public function __set(string $property, ?Attribute $value)
+    {
+        $this->setAttribute($property, $value);
+    }
+
+    public function __get(string $property): ?Attribute
+    {
+        return $this->getAttribute($property);
+    }
+
+    public function setAttribute(string $property, ?Attribute $value)
     {
         $this->attributes[$property] = $value;
     }
 
-    public function __get(string $property): ?Attribute
+    public function getAttribute(string $property): ?Attribute
     {
         if (array_key_exists($property, $this->attributes)) {
             return $this->attributes[$property];
@@ -244,15 +274,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return null;
     }
 
-    public function setAttribute(string $property, ?Attribute $value)
-    {
-        $this->__set($property, $value);
-    }
-
-    public function getAttribute(string $property): ?Attribute
-    {
-        return $this->__get($property);
-    }
     /**
      * @param Service $service
      * @param bool $isCopy
