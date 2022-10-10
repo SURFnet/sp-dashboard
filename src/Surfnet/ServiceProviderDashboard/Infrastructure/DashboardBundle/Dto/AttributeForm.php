@@ -28,7 +28,7 @@ class AttributeForm
         array $languages
     ) {
         foreach ($languages as $language => $values) {
-            $this->languages[$language] = AttributeFormLanguage::fromLanguage($values);
+            $this->languages[$language] = AttributeTypeInformation::fromLanguage($values, $language);
         }
     }
 
