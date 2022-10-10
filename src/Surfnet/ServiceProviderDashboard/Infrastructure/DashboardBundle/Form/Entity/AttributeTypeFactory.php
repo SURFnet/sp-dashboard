@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -20,7 +22,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use \Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormTypeInterface;
 
 class AttributeTypeFactory
 {
