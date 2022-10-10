@@ -20,11 +20,5 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 interface AttributeServiceInterface
 {
-    public function getAttributes(): array;
-
-    public function getNameById(string $id): string;
-
-    public function getLabelById(string $id): string;
-
-    public function getInfoById(string $id): string;
+    public function getAttributeTypeAttributes(): array;
 }
