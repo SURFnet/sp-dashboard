@@ -44,7 +44,7 @@ class ArpGenerator implements MetadataGenerator
         $attributes = [];
         $entityAttributes = $entity->getAttributes();
         foreach ($this->attributeRepository->findAll() as $definition) {
-            $urns = $definition->getUrns();
+            $urns = $definition->urns;
             $urn = reset($urns);
             $attributeList = $entityAttributes->findAllByUrn($urn);
             // Only add the attributes with a motivation
@@ -80,8 +80,8 @@ class ArpGenerator implements MetadataGenerator
 
     private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
     {
-        $spDashboardTracked = $this->attributeRepository->findAllNameSpaceIdentifiers();
         $originalAttributes = $entity->getAttributes()->getOriginalAttributes();
+        $spDashboardTracked = $this->attributeRepository->findAllNameSpaceIdentifiers();
         $nonTrackedUrns = array_diff(array_keys($originalAttributes), $spDashboardTracked);
 
         foreach ($nonTrackedUrns as $urn) {
