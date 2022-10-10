@@ -41,7 +41,7 @@ class AttributeService implements AttributeServiceInterface
         $this->language = $language;
     }
 
-    public function getAttributes(): array
+    public function getAttributeTypeAttributes(): array
     {
         if (empty($this->attributes)) {
             $attributes = $this->attributeRepository->findAll();
@@ -51,35 +51,5 @@ class AttributeService implements AttributeServiceInterface
             }
         }
         return $this->attributes;
-    }
-
-    public function getNameById(string $id): string
-    {
-        foreach ($this->getAttributes() as $attribute => $value) {
-            if ($id === $attribute) {
-                return $value->getName();
-            }
-        }
-        return $id;
-    }
-
-    public function getLabelById(string $id): string
-    {
-        foreach ($this->getAttributes() as $attribute => $value) {
-            if ($id === $attribute) {
-                return $value->getLabel();
-            }
-        }
-        return $id;
-    }
-
-    public function getInfoById(string $id): string
-    {
-        foreach ($this->getAttributes() as $attribute => $value) {
-            if ($id === $attribute) {
-                return $value->getInfo();
-            }
-        }
-        return $id;
     }
 }
