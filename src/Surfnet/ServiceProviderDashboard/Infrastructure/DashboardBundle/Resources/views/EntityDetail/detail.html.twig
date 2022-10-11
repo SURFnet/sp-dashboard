@@ -78,24 +78,9 @@
         <h2>{{ ('entity.detail.attribute.' ~ type ~ '.title')|trans }}</h2>
         <div class="wysiwyg">{{ ('entity.detail.attribute.' ~ type ~ '.html')|trans|wysiwyg }}</div>
 
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.given_name')|trans, value: entity.givenNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.givenNameAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.surname')|trans, value: entity.surNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.surNameAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.common_name')|trans, value: entity.commonNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.commonNameAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.display_name')|trans, value: entity.displayNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.displayNameAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.email_address')|trans, value: entity.emailAddressAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.emailAddressAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.organization')|trans, value: entity.organizationAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.organizationAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.organization_type')|trans, value: entity.organizationTypeAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.organizationTypeAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.organization_unit_name')|trans, value: entity.organizationUnitNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.organizationUnitAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.affiliation')|trans, value: entity.affiliationAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.affiliationAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.entitlement')|trans, value: entity.entitlementAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.entitlementAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.principle_name')|trans, value: entity.principleNameAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.principleNameAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.uid')|trans, value: entity.uidAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.uidAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.prefered_language')|trans, value: entity.preferredLanguageAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.preferredLanguageAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.personal_code')|trans, value: entity.personalCodeAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.personalCodeAttribute'} %}
-        {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.scoped_affiliation')|trans, value: entity.scopedAffiliationAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.scopedAffiliationAttribute'} %}
-        {% if entity.protocol == "saml20" %}
-            {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: ('entity.detail.attribute.' ~ type ~ '.edu_person_targeted_id')|trans, value: entity.eduPersonTargetedIDAttribute, informationPopup: 'entity.edit.information.' ~ type ~ '.eduPersonTargetedIDAttribute'} %}
-        {% endif %}
+        {% for attribute in entity.attributes %}
+            {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: attribute.label, value: attribute.value, informationPopup: attribute.informationPopup} %}
+        {% endfor %}
     </div>
 
     {% endif %}
