@@ -310,7 +310,6 @@ services:
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService:
         arguments:
-            $attributeService: '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
             $oidcPlaygroundUriTest: '%playground_uri_test%'
             $oidcPlaygroundUriProd: '%playground_uri_prod%'
 
