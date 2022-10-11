@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -24,19 +27,21 @@ class AttributeFormTest extends TestCase
 {
     public function test_it_is_created()
     {
-         $form = [
+        $form = [
+            'translations' => [
                 'en' => [
                     'label' => 'emailAddressAttribute',
                     'info' => 'Description is placed here'
-                    ],
-                 'nl' => [
-                     'label' => 'emailAttribute',
-                     'info' => 'Omschrijving is hier geplaatst'
-                 ]
-         ];
-         $form = AttributeForm::fromForm($form);
+                ],
+                'nl' => [
+                    'label' => 'emailAttribute',
+                    'info' => 'Omschrijving is hier geplaatst'
+                ]
+            ]
+        ];
+        $form = AttributeForm::fromForm($form);
 
-         $this->assertIsArray($form->languages);
-         $this->assertCount(2, $form->languages);
+        $this->assertIsArray($form->languages);
+        $this->assertCount(2, $form->languages);
     }
 }
