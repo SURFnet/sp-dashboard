@@ -18,13 +18,12 @@ declare(strict_types=1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeInterface;
-
-interface AttributeRepositoryInterface
+/**
+ * Marker interface for Attributes
+ * This allows for adding a NullAttribute
+ */
+interface AttributeInterface
 {
-    public function findAll(): array;
-
-    public function findOneByName(string $name): AttributeInterface;
 }

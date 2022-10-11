@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
 
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\NullAttribute;
 
 class AttributeRepository implements AttributeRepositoryInterface
 {
@@ -50,5 +52,25 @@ class AttributeRepository implements AttributeRepositoryInterface
     public function findAll(): array
     {
         return $this->getAttributes();
+    }
+
+    public function findOneByName(string $name): AttributeInterface
+    {
+        $attributes = $this->findAll();
+        foreach ($attributes as $attribute) {
+            if ($attribute->urns[0] === $name) {
+                return $attribute;
+            }
+        }
+        return new NullAttribute();
+    }
+
+    public function findAllNameSpaceIdentifiers(): array
+    {
+        $nameSpaceIdentifiers = [];
+        foreach ($this->getAttributes() as $attribute) {
+            $nameSpaceIdentifiers[] = $attribute->urns[0];
+        }
+        return $nameSpaceIdentifiers;
     }
 }

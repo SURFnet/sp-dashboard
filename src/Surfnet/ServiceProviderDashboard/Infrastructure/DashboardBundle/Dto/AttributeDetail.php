@@ -20,44 +20,23 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
-class Attribute implements AttributeInterface
+class AttributeDetail
 {
-    /**
-     * @var string
-     */
-    public $id;
+    public $languages = [];
 
-    /**
-     * @var AttributeForm
-     */
-    public $form;
-
-    /**
-     * @var AttributeDetail
-     */
-    public $detail;
-
-    public $urns = [];
-
-    private function __construct(
-        string $id,
-        array $form,
-        array $detail,
-        array $urns
-    ) {
-        $this->id = $id;
-        $this->form = AttributeForm::fromForm($form);
-        $this->detail = AttributeDetail::from($detail);
-        $this->urns = $urns;
+    private function __construct(array $languages)
+    {
+        $this->languages = $languages;
     }
 
-    public static function fromAttribute(array $attribute): ?Attribute
+    public static function from(array $languages): AttributeDetail
     {
+        $output = [];
+        foreach ($languages as $language => $values) {
+            $output[$language] = AttributeDetailLanguage::from($values);
+        }
         return new self(
-            $attribute['id'],
-            $attribute['form'],
-            $attribute['detail'],
-            $attribute['urns']
+            $output
         );
     }
 }
