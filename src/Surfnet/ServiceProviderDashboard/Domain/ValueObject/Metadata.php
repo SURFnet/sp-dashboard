@@ -20,6 +20,9 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class Metadata
 {
     /**
