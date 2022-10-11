@@ -70,6 +70,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\LoadMetadataCommandHandler
         public: true
         arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService'
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher'
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser'
         tags:
@@ -333,6 +334,10 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
             - '%locale%'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
