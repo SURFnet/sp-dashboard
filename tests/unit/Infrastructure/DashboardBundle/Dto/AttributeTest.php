@@ -34,6 +34,12 @@ class AttributeTest extends TestCase
                     ]
                 ]
             ],
+            'detail' => [
+                'en' => [
+                    'label' => 'emailAddressAttribute',
+                    'info' => 'Description is placed here'
+                ]
+            ],
             'urns' => [
                 'urn:mace:dir:attribute-def:mail',
                 'urn:oid:0.9.2342.19200300.100.1.3'
