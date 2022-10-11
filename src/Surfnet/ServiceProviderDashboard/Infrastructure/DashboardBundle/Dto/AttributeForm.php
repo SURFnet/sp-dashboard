@@ -20,22 +20,28 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
+use function array_key_exists;
+
 class AttributeForm
 {
     public $languages = [];
 
-    private function __construct(
-        array $languages
-    ) {
+    public $excludeFrom = [];
+
+    private function __construct(array $languages, array $excludeFrom)
+    {
         foreach ($languages as $language => $values) {
             $this->languages[$language] = AttributeTypeInformation::fromLanguage($values, $language);
         }
+        $this->excludeFrom = $excludeFrom;
     }
 
-    public static function fromForm(array $languages): ?AttributeForm
+    public static function fromForm(array $form): ?AttributeForm
     {
-        return new self(
-            $languages
-        );
+        $excludeFrom = [];
+        if (array_key_exists('excludeOnEntityType', $form)) {
+            $excludeFrom = $form['excludeOnEntityType'];
+        }
+        return new self($form['translations'], $excludeFrom);
     }
 }
