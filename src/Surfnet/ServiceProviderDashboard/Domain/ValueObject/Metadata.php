@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -18,9 +20,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-/**
- * @SuppressWarnings(PHPMD.TooManyFields)
- */
 class Metadata
 {
     /**
@@ -93,80 +92,7 @@ class Metadata
      */
     public $technicalContact;
 
-    /**
-     * @var Attribute
-     */
-    public $givenNameAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $surNameAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $commonNameAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $displayNameAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $emailAddressAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $organizationAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $organizationTypeAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $affiliationAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $entitlementAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $principleNameAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $uidAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $preferredLanguageAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $personalCodeAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $scopedAffiliationAttribute;
-
-    /**
-     * @var Attribute
-     */
-    public $eduPersonTargetedIDAttribute;
+    public $attributes = [];
 
     /**
      * @var string
@@ -197,4 +123,17 @@ class Metadata
      * @var string
      */
     public $organizationUrlNl;
+
+    public function setAttribute(string $property, Attribute $value)
+    {
+        $this->attributes[$property] = $value;
+    }
+
+    public function getAttribute(string $property): Attribute
+    {
+        if (array_key_exists($property, $this->attributes)) {
+            return $this->attributes[$property];
+        }
+        return new Attribute();
+    }
 }
