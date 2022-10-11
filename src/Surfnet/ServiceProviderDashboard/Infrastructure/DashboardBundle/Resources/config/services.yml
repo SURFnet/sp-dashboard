@@ -7,16 +7,6 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityDetailController:
-        arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityAclController:
-        arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
-
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\:
         resource: '../../Security/Voter'
         tags: ['security.voter']
@@ -563,6 +553,11 @@ services:
             - '@surfnet.manage.client.query_client.prod_environment'
             - '%manage_test_publication_status%'
             - '%manage_prod_publication_status%'
+
+    Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory:
+        arguments:
+            $playGroundUriProd: '%playground_uri_prod%'
+            $playGroundUriTest: '%playground_uri_test%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\GlobalSiteNotice:
         tags: [ twig.extension ]

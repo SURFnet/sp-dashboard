@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
+use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,25 +38,20 @@ class EntityDetailController extends Controller
      * @var AuthorizationService
      */
     private $authorizationService;
+
     /**
-     * @var string
+     * @var EntityDetailFactory
      */
-    private $playGroundUriTest;
-    /**
-     * @var string
-     */
-    private $playGroundUriProd;
+    private $entityDetailFactory;
 
     public function __construct(
         EntityServiceInterface $entityService,
         AuthorizationService $authorizationService,
-        string $oidcPlaygroundUriTest,
-        string $oidcPlaygroundUriProd
+        EntityDetailFactory $entityDetailFactory
     ) {
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
-        $this->playGroundUriTest = $oidcPlaygroundUriTest;
-        $this->playGroundUriProd = $oidcPlaygroundUriProd;
+        $this->entityDetailFactory = $entityDetailFactory;
     }
 
     /**
@@ -76,7 +71,7 @@ class EntityDetailController extends Controller
         if ($entity->getMetaData()->getCoin()->getServiceTeamId() !== $team) {
             $entity->setIsReadOnly();
         }
-        $viewObject = EntityDetail::fromEntity($entity, $this->playGroundUriTest, $this->playGroundUriProd);
+        $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
         return [
             'entity' => $viewObject,
