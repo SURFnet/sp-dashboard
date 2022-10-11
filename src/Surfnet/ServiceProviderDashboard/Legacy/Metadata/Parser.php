@@ -334,7 +334,7 @@ class Parser implements ParserInterface
 
             foreach ($this->attributeService->getAttributeTypeAttributes() as $attribute) {
                 if (in_array($attributes['Name'], $attribute->getUrns())) {
-                    $metadata->{$attribute->getName()} = $attr;
+                    $metadata->setAttribute($attribute->getName(), $attr);
                 }
             }
         }
