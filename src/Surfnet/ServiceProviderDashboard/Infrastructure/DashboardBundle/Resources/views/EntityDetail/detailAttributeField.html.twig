@@ -1,16 +1,14 @@
-{% if value and value.motivation is not null %}
 <h3 class="attribute-title">{{ label }}</h3>
 <div class="detail attribute">
     {% if informationPopup is defined %}
-        <span data-tippy-content="{{ informationPopup|trans }}" class="help-button">
+        <span data-tippy-content="{{ informationPopup }}" class="help-button">
             <i class="fa fa-question-circle"></i>
         </span>
     {% endif %}
 
-    {% if value.motivation is not empty %}
-    <span>{{ value.motivation }}</span>
+    {% if value is not empty %}
+    <span>{{ value }}</span>
     {% else %}
     <span>{{ 'entity.detail.attribute.no_motivation_set'|trans }}</span>
     {% endif %}
 </div>
-{% endif %}
