@@ -17,7 +17,9 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute as AttributeDto;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeFormLanguage;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeTypeInformation;
 
 class Attribute
 {
@@ -60,14 +62,14 @@ class Attribute
     }
 
     public static function fromAttribute(
-        \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute $attribute,
-        AttributeFormLanguage $language
+        AttributeDto $attribute,
+        AttributeTypeInformation $information
     ): Attribute {
 
         return new self(
             $attribute->id,
-            $language->label,
-            $language->info,
+            $information->label,
+            $information->info,
             $attribute->id . ATTRIBUTE::ATTRIBUTE_NAME_SUFFIX,
             $attribute->urns
         );
