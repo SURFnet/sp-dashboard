@@ -34,13 +34,15 @@ class AttributeTypeFactory
         $this->attributeService = $attributeService;
     }
 
-    public function build(FormBuilderInterface $container): FormBuilderInterface
+    public function build(FormBuilderInterface $container, string $protocol): FormBuilderInterface
     {
         foreach ($this->attributeService->getAttributeTypeAttributes() as $attribute) {
-            $name  = $attribute->getName();
+            if ($attribute->isExcluded($protocol)) {
+                continue;
+            }
             $container
                 ->add(
-                    $name,
+                    $attribute->getName(),
                     AttributeType::class,
                     [
                         'label' => $attribute->getLabel(),

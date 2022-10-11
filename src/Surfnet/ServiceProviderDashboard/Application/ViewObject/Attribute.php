@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute as AttributeDto;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeFormLanguage;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeTypeInformation;
+use function in_array;
 
 class Attribute
 {
@@ -47,18 +48,22 @@ class Attribute
 
     private $urns = [];
 
+    private $excludeFrom = [];
+
     public function __construct(
         string $id,
         string $label,
         string $info,
         string $name,
-        array $urns
+        array $urns,
+        array $excludeFrom
     ) {
         $this->id = $id;
         $this->label = $label;
         $this->info = $info;
         $this->name = $name;
         $this->urns = $urns;
+        $this->excludeFrom = $excludeFrom;
     }
 
     public static function fromAttribute(
@@ -71,7 +76,8 @@ class Attribute
             $information->label,
             $information->info,
             $attribute->id . ATTRIBUTE::ATTRIBUTE_NAME_SUFFIX,
-            $attribute->urns
+            $attribute->urns,
+            $attribute->form->excludeFrom
         );
     }
 
@@ -98,5 +104,10 @@ class Attribute
     public function getUrns(): array
     {
         return $this->urns;
+    }
+
+    public function isExcluded(string $protocol): bool
+    {
+        return in_array($protocol, $this->excludeFrom);
     }
 }
