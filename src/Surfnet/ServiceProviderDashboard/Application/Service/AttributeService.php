@@ -20,9 +20,13 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetailAttribute;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute as AttributeDto;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepositoryInterface;
 
 class AttributeService implements AttributeServiceInterface
 {
@@ -38,7 +42,7 @@ class AttributeService implements AttributeServiceInterface
      */
     private $language;
 
-    public function __construct(AttributeRepository $attributeRepository, $language)
+    public function __construct(AttributeRepositoryInterface $attributeRepository, $language)
     {
         $this->attributeRepository = $attributeRepository;
         $this->language = $language;
@@ -83,5 +87,21 @@ class AttributeService implements AttributeServiceInterface
             $urns[] = $attribute->getUrns()[0];
         }
         return $urns;
+    }
+
+    public function createEntityDetailAttributes(AttributeList $manageAttributes): array
+    {
+        $attributes = [];
+        foreach ($manageAttributes->getAttributes() as $attribute) {
+            $attributeDto = $this->attributeRepository->findOneByName($attribute[0]->getName());
+            if ($attributeDto instanceof AttributeDto) {
+                $viewObject = new EntityDetailAttribute();
+                $viewObject->value = $attribute[0]->getMotivation();
+                $viewObject->informationPopup = $attributeDto->detail->languages[$this->language]->info;
+                $viewObject->label = $attributeDto->detail->languages[$this->language]->label;
+                $attributes[] = $viewObject;
+            }
+        }
+        return $attributes;
     }
 }
