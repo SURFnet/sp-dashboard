@@ -18,7 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
+
 interface AttributeServiceInterface
 {
+    /**
+     * @return Attribute[]
+     */
     public function getAttributeTypeAttributes(): array;
 }

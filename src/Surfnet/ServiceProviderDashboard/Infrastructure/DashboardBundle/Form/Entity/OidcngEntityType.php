@@ -366,7 +366,7 @@ class OidcngEntityType extends AbstractType
 
     private function buildAttributeTypes(FormBuilderInterface $container): FormBuilderInterface
     {
-        return $this->attributeTypeFactory->build($container);
+        return $this->attributeTypeFactory->build($container, Constants::TYPE_OPENID_CONNECT_TNG);
     }
 
     public function configureOptions(OptionsResolver $resolver)
