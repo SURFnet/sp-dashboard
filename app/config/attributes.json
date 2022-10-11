@@ -2,9 +2,11 @@
   {
     "id": "givenName",
     "form" : {
-      "en": {
-        "label": "Given name attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Given name attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -15,9 +17,11 @@
   {
     "id": "surName",
     "form" : {
-      "en": {
-        "label": "Sur name attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Sur name attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -28,9 +32,11 @@
   {
     "id": "commonName",
     "form" : {
-      "en": {
-        "label": "Common name attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Common name attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -41,9 +47,11 @@
   {
     "id": "displayName",
     "form" : {
-      "en": {
-        "label": "Display name attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Display name attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -54,9 +62,11 @@
   {
     "id": "emailAddress",
     "form" : {
-      "en": {
-        "label": "Email address attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Email address attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -67,9 +77,11 @@
   {
     "id": "organization",
     "form" : {
-      "en": {
-        "label": "Organization attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Organization attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -80,9 +92,11 @@
   {
     "id": "organizationType",
     "form" : {
-      "en": {
-        "label": "Organization  type attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Organization  type attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -93,9 +107,11 @@
   {
     "id": "organizationUnit",
     "form" : {
-      "en": {
-        "label": "Organization unit attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Organization unit attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -106,9 +122,11 @@
   {
     "id": "affiliation",
     "form" : {
-      "en": {
-        "label": "Affiliation attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Affiliation attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -119,9 +137,11 @@
   {
     "id": "entitlement",
     "form" : {
-      "en": {
-        "label": "Entitlement attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Entitlement attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -132,9 +152,11 @@
   {
     "id": "principleName",
     "form" : {
-      "en": {
-        "label": "Principle name attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Principle name attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -145,9 +167,11 @@
   {
     "id": "uid",
     "form" : {
-      "en": {
-        "label": "Uid attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Uid attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -158,9 +182,11 @@
   {
     "id": "preferredLanguage",
     "form" : {
-      "en": {
-        "label": "Preferred language attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Preferred language attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -171,9 +197,11 @@
   {
     "id": "personalCode",
     "form" : {
-      "en": {
-        "label": "Personal code attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Personal code attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -184,9 +212,11 @@
   {
     "id": "scopedaffiliation",
     "form" : {
-      "en": {
-        "label": "Scoped affiliation attribute",
-        "info": "Text should be set in web translations"
+      "translations" : {
+        "en": {
+          "label": "Scoped affiliation attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
@@ -197,9 +227,14 @@
   {
     "id": "eduPersonTargetedID",
     "form" : {
-      "en": {
-        "label": "Edu person targeted ID attribute",
-        "info": "Text should be set in web translations"
+      "excludeOnEntityType": [
+        "oidcng"
+      ],
+      "translations" : {
+        "en": {
+          "label": "Edu person targeted ID attribute",
+          "info": "Text should be set in web translations"
+        }
       }
     },
     "urns": [
