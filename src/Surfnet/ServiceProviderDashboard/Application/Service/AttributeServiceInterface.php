@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 
 interface AttributeServiceInterface
 {
@@ -34,4 +35,6 @@ interface AttributeServiceInterface
     public function getEntityMergeAttributes(): array;
 
     public function getUrns(): array;
+
+    public function createEntityDetailAttributes(AttributeList $manageAttributes): array;
 }
