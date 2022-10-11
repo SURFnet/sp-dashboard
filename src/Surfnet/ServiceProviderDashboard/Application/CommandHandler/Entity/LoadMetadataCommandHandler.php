@@ -118,9 +118,7 @@ class LoadMetadataCommandHandler implements CommandHandler
         $attributeNames = $this->attributeNameService->getAttributeTypeNames();
 
         foreach ($attributeNames as $attributeName) {
-            if (property_exists($metadata, $attributeName)) {
-                $command->setAttribute($attributeName, $metadata->$attributeName);
-            }
+            $command->setAttribute($attributeName, $metadata->getAttribute($attributeName));
         }
     }
 
