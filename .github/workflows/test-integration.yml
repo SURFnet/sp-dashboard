@@ -30,13 +30,13 @@ jobs:
     
     - name: Run yarn
       run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/bin/yarn install
+        docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn install
       env:
         SYMFONY_ENV: dev
     
     - name: Create front end dependencies (yarn encore prodcution)
       run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/bin/yarn run encore production
+        docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn run encore production
       env:
         SYMFONY_ENV: dev
 
