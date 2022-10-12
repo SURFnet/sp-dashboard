@@ -362,6 +362,8 @@ entity.edit.attributes.oauth20_rs.html: "
 <p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
 "
 entity.edit.attribute.invalid: The provided attribute % is invalid
+entity.change_requested.title: Your change request has been submitted for review
+entity.change_requested.text.html: "<p>As you where editing a production entity, we have taken your changes under review.</p>"
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
 entity.edit.oidcngResourceServers.title: Select the OIDC Resource Servers(s) that belong to this Client
