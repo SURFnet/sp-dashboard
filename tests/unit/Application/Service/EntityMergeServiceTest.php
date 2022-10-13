@@ -36,7 +36,7 @@ class EntityMergeServiceTest extends TestCase
 
     protected function setUp()
     {
-        $attributeRepository = new AttributeRepository(__DIR__ . '/../../../../app/config/attributes.json');
+        $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
         $attributeService = new AttributeService($attributeRepository, 'en');
         $this->service = new EntityMergeService($attributeService, 'test', 'prod');
         parent::setUp();
