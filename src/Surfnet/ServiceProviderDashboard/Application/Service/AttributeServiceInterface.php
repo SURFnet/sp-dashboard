@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 
 interface AttributeServiceInterface
@@ -26,4 +27,11 @@ interface AttributeServiceInterface
      * @return Attribute[]
      */
     public function getAttributeTypeAttributes(): array;
+
+    /**
+     * @return EntityMergeAttribute[]
+     */
+    public function getEntityMergeAttributes(): array;
+
+    public function getUrns(): array;
 }
