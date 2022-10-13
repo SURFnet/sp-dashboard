@@ -102,13 +102,17 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@session.flash_bag'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\MailService'
             - '@logger'
             - '%jira_issue_type_publication_request%'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
+
+    Surfnet\ServiceProviderDashboard\Application\Service\MailService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer'
 
     surfnet.dashboard.command_handler.push_metadata:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
