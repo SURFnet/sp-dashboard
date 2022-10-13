@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameServiceInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\AttributeNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
 
 class LoadMetadataCommandHandler implements CommandHandler
@@ -118,7 +119,11 @@ class LoadMetadataCommandHandler implements CommandHandler
         $attributeNames = $this->attributeNameService->getAttributeTypeNames();
 
         foreach ($attributeNames as $attributeName) {
-            $command->setAttribute($attributeName, $metadata->getAttribute($attributeName));
+            try {
+                $command->setAttribute($attributeName, $metadata->getAttribute($attributeName));
+            } catch (AttributeNotFoundException $ignored) {
+                // just continue, apparently attribute is not available at the metadata
+            }
         }
     }
 
