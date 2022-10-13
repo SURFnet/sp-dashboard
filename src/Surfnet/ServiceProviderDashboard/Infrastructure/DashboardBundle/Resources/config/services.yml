@@ -500,6 +500,7 @@ services:
         arguments:
             - '%jira_issue_entityid_fieldname%'
             - '%jira_issue_manageid_fieldname%'
+            - '%jira_issue_reporter_fieldname%'
             - '%jira_issue_priority%'
             - '%jira_issue_project_key%'
 
