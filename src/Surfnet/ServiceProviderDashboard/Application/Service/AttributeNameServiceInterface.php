@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -18,20 +20,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
-
-interface AttributeServiceInterface
+interface AttributeNameServiceInterface
 {
-    /**
-     * @return Attribute[]
-     */
-    public function getAttributeTypeAttributes(): array;
+    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
-    /**
-     * @return EntityMergeAttribute[]
-     */
-    public function getEntityMergeAttributes(): array;
-
-    public function getUrns(): array;
+    public function getAttributeTypeNames(): array;
 }

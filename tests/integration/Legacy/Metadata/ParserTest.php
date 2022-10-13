@@ -22,9 +22,10 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser;
-use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class ParserTest extends MockeryTestCase
 {
@@ -43,9 +44,10 @@ class ParserTest extends MockeryTestCase
         $this->logger = m::mock(LoggerInterface::class);
 
         $rootDir = __DIR__.'/../../../../app/Resources/';
+        $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
         $this->parser = new Parser(
             new CertificateParser(),
-            new AttributesMetadataRepository($rootDir),
+            new AttributeService($attributeRepository, 'en'),
             $rootDir,
             $this->logger
         );

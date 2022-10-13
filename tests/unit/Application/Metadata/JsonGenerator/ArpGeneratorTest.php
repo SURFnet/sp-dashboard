@@ -22,6 +22,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use stdClass;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -34,9 +35,15 @@ class ArpGeneratorTest extends MockeryTestCase
      */
     private $attributeRepository;
 
+    /**
+     * @return AttributeService
+     */
+    private $attributeService;
+
     public function setUp()
     {
-        $this->attributeRepository = new AttributeRepository(__DIR__ . '/../../../../../app/Resources/metadata');
+        $this->attributeRepository = new AttributeRepository(__DIR__ . '/../fixture/attributes.json');
+        $this->attributeService = new AttributeService($this->attributeRepository, 'en');
     }
     public function test_it_can_build_arp_metadata()
     {
@@ -59,7 +66,7 @@ class ArpGeneratorTest extends MockeryTestCase
         $entity->shouldReceive('getAttributes->getOriginalAttributes')->andReturn([]);
         $entity->shouldReceive('getAttributes->findAllByUrn')->andReturn([]);
 
-        $factory = new ArpGenerator($this->attributeRepository);
+        $factory = new ArpGenerator($this->attributeService);
 
         $metadata = $factory->build($entity);
 
@@ -71,7 +78,7 @@ class ArpGeneratorTest extends MockeryTestCase
 
     public function test_does_not_override_existing_manage_attributes_and_sources()
     {
-        $factory = new ArpGenerator($this->attributeRepository);
+        $factory = new ArpGenerator($this->attributeService);
         $manageEntity = $this->getManageEntity();
         $metadata = $factory->build($manageEntity);
 
@@ -95,7 +102,7 @@ class ArpGeneratorTest extends MockeryTestCase
     {
         $entity = $this->getManageEntity(Constants::TYPE_OPENID_CONNECT_TNG, false);
 
-        $factory = new ArpGenerator($this->attributeRepository);
+        $factory = new ArpGenerator($this->attributeService);
 
         $metadata = $factory->build($entity);
 

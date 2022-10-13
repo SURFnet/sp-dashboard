@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use stdClass;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use function array_diff;
@@ -30,22 +31,20 @@ use function array_keys;
 class ArpGenerator implements MetadataGenerator
 {
     /**
-     * @var AttributeRepository
+     * @var AttributeServiceInterface
      */
-    private $attributeRepository;
+    private $attributeService;
 
-    public function __construct(AttributeRepository $repository)
+    public function __construct(AttributeServiceInterface $attributeService)
     {
-        $this->attributeRepository = $repository;
+        $this->attributeService = $attributeService;
     }
 
     public function build(ManageEntity $entity): array
     {
         $attributes = [];
         $entityAttributes = $entity->getAttributes();
-        foreach ($this->attributeRepository->findAll() as $definition) {
-            $urns = $definition->getUrns();
-            $urn = reset($urns);
+        foreach ($this->attributeService->getUrns() as $urn) {
             $attributeList = $entityAttributes->findAllByUrn($urn);
             // Only add the attributes with a motivation
             foreach ($attributeList as $attribute) {
@@ -80,8 +79,8 @@ class ArpGenerator implements MetadataGenerator
 
     private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
     {
-        $spDashboardTracked = $this->attributeRepository->findAllNameSpaceIdentifiers();
         $originalAttributes = $entity->getAttributes()->getOriginalAttributes();
+        $spDashboardTracked = $this->attributeService->getUrns();
         $nonTrackedUrns = array_diff(array_keys($originalAttributes), $spDashboardTracked);
 
         foreach ($nonTrackedUrns as $urn) {

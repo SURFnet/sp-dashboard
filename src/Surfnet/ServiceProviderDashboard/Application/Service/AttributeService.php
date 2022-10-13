@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -19,6 +21,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 
 class AttributeService implements AttributeServiceInterface
@@ -47,9 +50,38 @@ class AttributeService implements AttributeServiceInterface
             $attributes = $this->attributeRepository->findAll();
 
             foreach ($attributes as $value) {
-                $this->attributes[$value->id] = Attribute::fromAttribute($value, $value->form->languages[$this->language]);
+                $this->attributes[$value->id] = Attribute::fromAttribute(
+                    $value,
+                    $value->form->languages[$this->language]
+                );
             }
         }
         return $this->attributes;
+    }
+
+    /**
+     * @return EntityMergeAttribute[]
+     */
+    public function getEntityMergeAttributes(): array
+    {
+        $entityMergeAttributes = [];
+        $attributes = $this->getAttributeTypeAttributes();
+        foreach ($attributes as $attribute) {
+            $entityMergeAttributes[] = EntityMergeAttribute::fromAttribute(
+                $attribute->getName(),
+                $attribute->getUrns()[0]
+            );
+        }
+        return $entityMergeAttributes;
+    }
+
+    public function getUrns(): array
+    {
+        $urns = [];
+        $attributes = $this->getAttributeTypeAttributes();
+        foreach ($attributes as $attribute) {
+            $urns[] = $attribute->getUrns()[0];
+        }
+        return $urns;
     }
 }
