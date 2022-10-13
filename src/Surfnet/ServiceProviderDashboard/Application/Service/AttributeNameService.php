@@ -41,7 +41,7 @@ class AttributeNameService implements AttributeNameServiceInterface
 
         $attributeNames = [];
         foreach ($attributes ?? [] as $attribute) {
-            $attributeNames[] = $attribute->id . Constants::ATTRIBUTE_NAME_SUFFIX;
+            $attributeNames[] = $attribute->id . AttributeNameServiceInterface::ATTRIBUTE_NAME_SUFFIX;
         }
         return $attributeNames;
     }
