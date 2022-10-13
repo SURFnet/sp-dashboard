@@ -46,8 +46,6 @@ class Constants
 
     const OIDC_SECRET_LENGTH = 20;
 
-    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
-
     public static function getValidNameIdFormats()
     {
         return [
