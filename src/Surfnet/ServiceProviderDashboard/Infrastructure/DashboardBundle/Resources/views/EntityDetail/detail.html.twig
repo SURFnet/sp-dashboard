@@ -79,7 +79,9 @@
         <div class="wysiwyg">{{ ('entity.detail.attribute.' ~ type ~ '.html')|trans|wysiwyg }}</div>
 
         {% for attribute in entity.attributes %}
-            {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: attribute.label, value: attribute.value, informationPopup: attribute.informationPopup} %}
+            {% if not attribute.isExcludedForProtocol(entity.protocol) %}
+                {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: attribute.label, value: attribute.value, informationPopup: attribute.informationPopup} %}
+            {% endif %}
         {% endfor %}
     </div>
 
