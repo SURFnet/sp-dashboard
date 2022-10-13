@@ -99,6 +99,7 @@ class AttributeService implements AttributeServiceInterface
                 $viewObject->value = $attribute[0]->getMotivation();
                 $viewObject->informationPopup = $attributeDto->detail->languages[$this->language]->info;
                 $viewObject->label = $attributeDto->detail->languages[$this->language]->label;
+                $viewObject->excludedFor = $attributeDto->form->excludeFrom;
                 $attributes[] = $viewObject;
             }
         }

@@ -26,4 +26,18 @@ class EntityDetailAttribute
     public $value;
 
     public $informationPopup;
+
+    /**
+     * Marks if the attribute is excluded for one of the entity protocol
+     * types For example. The EduPersonTargettedId is not displayed on the
+     * Oidcng entities.
+     *
+     * @var string[]
+     */
+    public $excludedFor = [];
+
+    public function isExcludedForProtocol(string $protocol): bool
+    {
+        return in_array($protocol, $this->excludedFor);
+    }
 }
