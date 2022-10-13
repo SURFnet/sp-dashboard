@@ -44,7 +44,7 @@ class ParserTest extends MockeryTestCase
         $this->logger = m::mock(LoggerInterface::class);
 
         $rootDir = __DIR__.'/../../../../app/Resources/';
-        $attributeRepository = new AttributeRepository(__DIR__ . '/../../../../app/config/attributes.json');
+        $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
         $this->parser = new Parser(
             new CertificateParser(),
             new AttributeService($attributeRepository, 'en'),
