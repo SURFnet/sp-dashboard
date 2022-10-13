@@ -51,13 +51,4 @@ class AttributeRepository implements AttributeRepositoryInterface
     {
         return $this->getAttributes();
     }
-
-    public function findAllNameSpaceIdentifiers(): array
-    {
-        $nameSpaceIdentifiers = [];
-        foreach ($this->getAttributes() as $attribute) {
-            $nameSpaceIdentifiers[] = $attribute->urns[0];
-        }
-        return $nameSpaceIdentifiers;
-    }
 }

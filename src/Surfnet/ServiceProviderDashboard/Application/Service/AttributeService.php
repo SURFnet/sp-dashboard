@@ -74,4 +74,14 @@ class AttributeService implements AttributeServiceInterface
         }
         return $entityMergeAttributes;
     }
+
+    public function getUrns(): array
+    {
+        $urns = [];
+        $attributes = $this->getAttributeTypeAttributes();
+        foreach ($attributes as $attribute) {
+            $urns[] = $attribute->getUrns()[0];
+        }
+        return $urns;
+    }
 }
