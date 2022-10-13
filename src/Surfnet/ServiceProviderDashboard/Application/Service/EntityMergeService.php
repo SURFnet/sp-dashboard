@@ -124,14 +124,14 @@ class EntityMergeService
                 $command->getAccessTokenValidity(),
                 $command->getOidcngResourceServers()
             );
-        } else if ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+        } elseif ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
             /** @var SaveOidcngResourceServerEntityCommand  $command */
             $oidcClient = new OidcngResourceServerClient(
                 $command->getClientId(),
                 $secret->getSecret(),
                 []
             );
-        } else if ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+        } elseif ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
             /** @var SaveOauthClientCredentialClientCommand $command */
             $oidcClient = new OauthClientCredentialsClientClient(
                 $command->getClientId(),
@@ -176,14 +176,15 @@ class EntityMergeService
             return $attributeList;
         }
 
-        foreach ($this->attributeService->getAttributeTypeAttributes() as $definition) {
-            $attributeName = $definition->getName();
-
-            if ($command->getAttribute($attributeName)) {
-                $commandAttribute = $command->getAttribute($attributeName);
-                $urns = $definition->getUrns();
-                $urn = reset($urns);
-                $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
+        foreach ($this->attributeService->getEntityMergeAttributes() as $entityMergeAttribute) {
+            if ($command->getAttribute($entityMergeAttribute->getName())) {
+                $commandAttribute = $command->getAttribute($entityMergeAttribute->getName());
+                $attributeList->add(new Attribute(
+                    $entityMergeAttribute->getUrn(),
+                    '',
+                    'idp',
+                    $commandAttribute->getMotivation()
+                ));
             }
         }
         return $attributeList;
