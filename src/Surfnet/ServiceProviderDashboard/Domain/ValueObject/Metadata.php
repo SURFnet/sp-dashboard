@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use Surfnet\ServiceProviderDashboard\Domain\Exception\AttributeNotFoundException;
+
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
@@ -132,11 +134,14 @@ class Metadata
         $this->attributes[$property] = $value;
     }
 
+    /**
+     * @throws AttributeNotFoundException
+     */
     public function getAttribute(string $property): Attribute
     {
         if (array_key_exists($property, $this->attributes)) {
             return $this->attributes[$property];
         }
-        return new Attribute();
+        throw new AttributeNotFoundException(sprintf('Invalid attribute \'%s\' requested', $property));
     }
 }
