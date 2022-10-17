@@ -90,7 +90,7 @@ class IssueFieldFactory
             ->setSummary($this->translateSummary($ticket))
             ->setIssueType($ticket->getIssueType())
             ->setPriorityName($this->priority)
-            ->addCustomField($this->reporterFieldName, sprintf('%s, (%s)', $ticket->getApplicantName(), $ticket->getApplicantEmail()))
+            ->addCustomField($this->reporterFieldName, $ticket->getApplicantEmail())
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
             ->addCustomField($this->manageIdFieldName, $ticket->getManageId())
         ;

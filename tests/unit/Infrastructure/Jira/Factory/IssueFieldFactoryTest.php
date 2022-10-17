@@ -87,7 +87,7 @@ class IssueFieldFactoryTest extends TestCase
         $this->assertEquals('Description', $issueField->description);
         // The custom field is used for saving the entity id.
         $this->assertEquals('https://example.com', $issueField->customFields['customfield_10107']);
-        $this->assertEquals('John Doe, (john@example.com)', $issueField->customFields['customfield_99999']);
+        $this->assertEquals('john@example.com', $issueField->customFields['customfield_99999']);
         $this->assertEquals('arbitrary-issue-type', $ticket->getIssueType());
         $this->assertEquals('Critical', $issueField->priority->name);
     }
