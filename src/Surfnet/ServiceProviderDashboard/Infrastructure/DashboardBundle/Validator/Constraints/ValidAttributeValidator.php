@@ -55,7 +55,7 @@ class ValidAttributeValidator extends ConstraintValidator
             }
 
             // We only want existing attributes
-            if (!$this->attributeService->isAttributeName($name)) {
+            if (!$this->attributeService->isKnownAttribute($name)) {
                 $this->buildAttributeViolation($constraint->messageNotExists, $name);
             }
 

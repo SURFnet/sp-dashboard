@@ -86,6 +86,15 @@ class AttributeServiceTest extends TestCase
         $this->assertInstanceOf(EntityDetailAttribute::class, $attributes[0]);
     }
 
+    public function test_an_attribute_is_known_to_us()
+    {
+        $this->repository
+            ->shouldReceive('findAll')
+            ->andReturn([AttributeDto::fromAttribute($this->getDtoData())]);
+        self::assertTrue($this->service->isKnownAttribute('emailAddressAttribute'));
+        self::assertFalse($this->service->isKnownAttribute('loremIpsumAttribute'));
+    }
+
     private function getDtoData()
     {
         return [

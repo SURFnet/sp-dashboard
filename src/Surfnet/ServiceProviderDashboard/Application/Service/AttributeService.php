@@ -106,7 +106,7 @@ class AttributeService implements AttributeServiceInterface
         return $attributes;
     }
 
-    public function isAttributeName(string $name): bool
+    public function isKnownAttribute(string $name): bool
     {
         $attributes = $this->getAttributeTypeAttributes();
         foreach ($attributes ?? [] as $attribute) {
