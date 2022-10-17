@@ -6,5 +6,5 @@ until $(curl -k --output /dev/null --silent --head --fail https://manage.vm.open
 done
 
 echo QUIT | openssl s_client -connect manage.vm.openconext.org:443  | sed -ne '/BEGIN CERT/,/END CERT/p' > /usr/share/ca-certificates/openconext.pem
-echo /usr/share/ca-certificates/openconext.pem >> /etc/ca-certificates.conf
+echo openconext.pem >> /etc/ca-certificates.conf
 update-ca-certificates
