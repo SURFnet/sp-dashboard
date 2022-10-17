@@ -103,57 +103,12 @@ entity:
       saml20:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        given_name: Given name
-        surname: Surname
-        common_name: Common name attribute
-        display_name: Display name attribute
-        email_address: Email address attribute
-        organization: Organization attribute
-        organization_type: Organization type attribute
-        affiliation: Affiliation attribute
-        entitlement: Entitlement attribute
-        principle_name: Principle name attribute
-        uid: Uid attribute
-        prefered_language: Preferred language attribute
-        personal_code: Personal code attribute
-        scoped_affiliation: Scoped affiliation attribute
-        edu_person_targeted_id: Edu person targeted ID attribute
-        organization_unit_name: Organizational Unit Name
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        given_name: Given name
-        surname: Surname
-        common_name: Common name attribute
-        display_name: Display name attribute
-        email_address: Email address attribute
-        organization: Organization attribute
-        organization_type: Organization type attribute
-        affiliation: Affiliation attribute
-        entitlement: Entitlement attribute
-        principle_name: Principle name attribute
-        uid: Uid attribute
-        prefered_language: Preferred language attribute
-        personal_code: Personal code attribute
-        scoped_affiliation: Scoped affiliation attribute
       oidcng:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        given_name: Given name
-        surname: Surname
-        common_name: Common name attribute
-        display_name: Display name attribute
-        email_address: Email address attribute
-        organization: Organization attribute
-        organization_type: Organization type attribute
-        affiliation: Affiliation attribute
-        entitlement: Entitlement attribute
-        principle_name: Principle name attribute
-        uid: Uid attribute
-        prefered_language: Preferred language attribute
-        personal_code: Personal code attribute
-        scoped_affiliation: Scoped affiliation attribute
-        organization_unit_name: Organizational Unit Name
 entity.list.add_to_test: New test entity
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
@@ -393,53 +348,6 @@ entity.edit.information.administrativeContact: Text should be set in web transla
 entity.edit.information.supportContact: Text should be set in web translations
 entity.edit.information.oidcngResourceServers: Text should be set in web translations
 entity.edit.information.technicalContact: Text should be set in web translations
-entity.edit.information.saml20.givenNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.surNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.commonNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.displayNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.emailAddressAttribute: Text should be set in web translations
-entity.edit.information.saml20.organizationAttribute: Text should be set in web translations
-entity.edit.information.saml20.organizationTypeAttribute: Text should be set in web translations
-entity.edit.information.saml20.organizationUnitAttribute: Text should be set in web translations
-entity.edit.information.saml20.affiliationAttribute: Text should be set in web translations
-entity.edit.information.saml20.entitlementAttribute: Text should be set in web translations
-entity.edit.information.saml20.principleNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.uidAttribute: Text should be set in web translations
-entity.edit.information.saml20.preferredLanguageAttribute: Text should be set in web translations
-entity.edit.information.saml20.personalCodeAttribute: Text should be set in web translations
-entity.edit.information.saml20.scopedAffiliationAttribute: Text should be set in web translations
-entity.edit.information.saml20.eduPersonTargetedIDAttribute: Text should be set in web translations
-entity.edit.information.oidc.givenNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.surNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.commonNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.displayNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.emailAddressAttribute: Text should be set in web translations
-entity.edit.information.oidc.organizationAttribute: Text should be set in web translations
-entity.edit.information.oidc.organizationTypeAttribute: Text should be set in web translations
-entity.edit.information.oidc.organizationUnitAttribute: Text should be set in web translations
-entity.edit.information.oidc.affiliationAttribute: Text should be set in web translations
-entity.edit.information.oidc.entitlementAttribute: Text should be set in web translations
-entity.edit.information.oidc.principleNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.uidAttribute: Text should be set in web translations
-entity.edit.information.oidc.preferredLanguageAttribute: Text should be set in web translations
-entity.edit.information.oidc.personalCodeAttribute: Text should be set in web translations
-entity.edit.information.oidc.scopedAffiliationAttribute: Text should be set in web translations
-entity.edit.information.oidc.eduPersonTargetedIDAttribute: Text should be set in web translations
-entity.edit.information.oidcng.givenNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.surNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.commonNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.displayNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.emailAddressAttribute: Text should be set in web translations
-entity.edit.information.oidcng.organizationAttribute: Text should be set in web translations
-entity.edit.information.oidcng.organizationTypeAttribute: Text should be set in web translations
-entity.edit.information.oidcng.organizationUnitAttribute: Text should be set in web translations
-entity.edit.information.oidcng.affiliationAttribute: Text should be set in web translations
-entity.edit.information.oidcng.entitlementAttribute: Text should be set in web translations
-entity.edit.information.oidcng.principleNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.uidAttribute: Text should be set in web translations
-entity.edit.information.oidcng.preferredLanguageAttribute: Text should be set in web translations
-entity.edit.information.oidcng.personalCodeAttribute: Text should be set in web translations
-entity.edit.information.oidcng.scopedAffiliationAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
 entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.information.subjectType: Text should be set in web translations
@@ -633,40 +541,6 @@ teams.create.personalNote: Team created by SP Dashboard.
 teams.create.invitationMessage: Please accept this invitation by logging in with your institutional account or eduID account (create one at eduID.nl).
 
 mail.jira.publish_production_failed.subject: 'SP Dashboard: Jira issue creation failed'
-
-entity.edit.form.attributes.oidc.givenNameAttribute: Given name attribute
-entity.edit.form.attributes.oidc.surNameAttribute: Sur name attribute
-entity.edit.form.attributes.oidc.commonNameAttribute: Common name attribute
-entity.edit.form.attributes.oidc.displayNameAttribute: Display name attribute
-entity.edit.form.attributes.oidc.emailAddressAttribute: Email address attribute
-entity.edit.form.attributes.oidc.organizationAttribute: Organization attribute
-entity.edit.form.attributes.oidc.organizationTypeAttribute: Organization type attribute
-entity.edit.form.attributes.oidc.organizationUnitAttribute: Organizational Unit Name attribute
-entity.edit.form.attributes.oidc.affiliationAttribute: Affiliation attribute
-entity.edit.form.attributes.oidc.entitlementAttribute: Entitlement attribute
-entity.edit.form.attributes.oidc.principleNameAttribute: Principle name attribute
-entity.edit.form.attributes.oidc.uidAttribute: Uid attribute
-entity.edit.form.attributes.oidc.preferredLanguageAttribute: Preferred language attribute
-entity.edit.form.attributes.oidc.personalCodeAttribute: Personal code attribute
-entity.edit.form.attributes.oidc.scopedAffiliationAttribute: Scoped affiliation attribute
-entity.edit.form.attributes.oidc.eduPersonTargetedIDAttribute: Edu person targeted ID attribute
-
-entity.edit.form.attributes.saml20.givenNameAttribute: Given name attribute
-entity.edit.form.attributes.saml20.surNameAttribute: Sur name attribute
-entity.edit.form.attributes.saml20.commonNameAttribute: Common name attribute
-entity.edit.form.attributes.saml20.displayNameAttribute: Display name attribute
-entity.edit.form.attributes.saml20.emailAddressAttribute: Email address attribute
-entity.edit.form.attributes.saml20.organizationAttribute: Organization attribute
-entity.edit.form.attributes.saml20.organizationTypeAttribute: Organization type attribute
-entity.edit.form.attributes.saml20.organizationUnitAttribute: Organizational Unit Name attribute
-entity.edit.form.attributes.saml20.affiliationAttribute: Affiliation attribute
-entity.edit.form.attributes.saml20.entitlementAttribute: Entitlement attribute
-entity.edit.form.attributes.saml20.principleNameAttribute: Principle name attribute
-entity.edit.form.attributes.saml20.uidAttribute: Uid attribute
-entity.edit.form.attributes.saml20.preferredLanguageAttribute: Preferred language attribute
-entity.edit.form.attributes.saml20.personalCodeAttribute: Personal code attribute
-entity.edit.form.attributes.saml20.scopedAffiliationAttribute: Scoped affiliation attribute
-entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute: Edu person targeted ID attribute
 
 entity.actions.modal.oidc_client_reset.title: Confirmation
 entity.actions.modal.oidc_client_reset.warning: This action cannot be undone
