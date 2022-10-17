@@ -27,9 +27,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class ValidAttribute extends Constraint
 {
-    public $messageNotValid = 'validator.attribute.not_valid';
+    public $messageAttributeNotFound = 'validator.attribute.not_found';
 
-    public $messageNotExists = 'validator.attribute.not_exists';
+    public $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set';
 
     /**
      * @return string

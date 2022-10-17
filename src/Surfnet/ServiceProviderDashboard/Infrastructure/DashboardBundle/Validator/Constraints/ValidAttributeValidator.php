@@ -56,17 +56,12 @@ class ValidAttributeValidator extends ConstraintValidator
 
             // We only want existing attributes
             if (!$this->attributeService->isKnownAttribute($name)) {
-                $this->buildAttributeViolation($constraint->messageNotExists, $name);
+                $this->buildAttributeViolation($constraint->messageAttributeNotFound, $name);
             }
 
             // When an attribute is requested, we also need a motivation.
             if ($attribute->isRequested() && empty($attribute->getMotivation())) {
-                $this->buildAttributeViolation($constraint->messageNotValid, $name);
-            }
-
-            // We don't want a non-requested attribute with a motivation. This would clutter Manage
-            if (!$attribute->isRequested() && !empty($attribute->getMotivation())) {
-                $this->buildAttributeViolation($constraint->messageNotValid, $name);
+                $this->buildAttributeViolation($constraint->messageAttributeMotivationNotSet, $name);
             }
         }
     }
