@@ -12,3 +12,4 @@
 10. [Release guide](release.md)
 11. [Generators](generator.md)
 12. [Teams](teams.md)
+13. [Attributes release policy](arp-attribute-configuration.md)
