@@ -91,9 +91,11 @@ class AttributeServiceTest extends TestCase
         return [
             'id' => 'emailAddress',
             'form' => [
-                'en' => [
-                    'label' => 'emailAddressAttribute',
-                    'info' => 'Description is placed here'
+                'translations' => [
+                    'en' => [
+                        'label' => 'emailAddressAttribute',
+                        'info' => 'Description is placed here'
+                    ]
                 ]
             ],
             'detail' => [
