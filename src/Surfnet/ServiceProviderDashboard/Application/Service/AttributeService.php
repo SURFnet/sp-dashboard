@@ -53,7 +53,7 @@ class AttributeService implements AttributeServiceInterface
         if (empty($this->attributes)) {
             $attributes = $this->attributeRepository->findAll();
 
-            foreach ($attributes as $value) {
+            foreach ($attributes ?? [] as $value) {
                 $this->attributes[$value->id] = Attribute::fromAttribute(
                     $value,
                     $value->form->languages[$this->language]
@@ -70,7 +70,7 @@ class AttributeService implements AttributeServiceInterface
     {
         $entityMergeAttributes = [];
         $attributes = $this->getAttributeTypeAttributes();
-        foreach ($attributes as $attribute) {
+        foreach ($attributes ?? [] as $attribute) {
             $entityMergeAttributes[] = EntityMergeAttribute::fromAttribute(
                 $attribute->getName(),
                 $attribute->getUrns()[0]
@@ -83,7 +83,7 @@ class AttributeService implements AttributeServiceInterface
     {
         $urns = [];
         $attributes = $this->getAttributeTypeAttributes();
-        foreach ($attributes as $attribute) {
+        foreach ($attributes ?? [] as $attribute) {
             $urns[] = $attribute->getUrns()[0];
         }
         return $urns;
@@ -104,5 +104,16 @@ class AttributeService implements AttributeServiceInterface
             }
         }
         return $attributes;
+    }
+
+    public function isAttributeName(string $name): bool
+    {
+        $attributes = $this->getAttributeTypeAttributes();
+        foreach ($attributes ?? [] as $attribute) {
+            if ($name === $attribute->getName()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

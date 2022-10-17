@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,34 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Infrastructure\DashboardBundle\Validator\Constraints;
+namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Validator\Constraints;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttribute;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator;
+use Surfnet\ServiceProviderDashboard\Application\Validator\Constraints\ValidAttribute;
+use Surfnet\ServiceProviderDashboard\Application\Validator\Constraints\ValidAttributeValidator;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator()
+    /**
+     * @var AttributeServiceInterface|mock
+     */
+    private $attributeService;
+
+    protected function createValidator(): ValidAttributeValidator
     {
-        return new ValidAttributeValidator();
+        $attributeRepository = new AttributeRepository(__DIR__ . '/../fixture/attributes.json');
+        $this->attributeService = new AttributeService($attributeRepository, 'en');
+        return new ValidAttributeValidator($this->attributeService);
     }
 
     public function test_success()
     {
         $constraint = new ValidAttribute();
-        $this->validator->validate($this->buildContact(true, 'I really need this!'), $constraint);
+        $this->validator->validate($this->buildAttributes(true, 'I really need this!'), $constraint);
 
         $this->assertNoViolation();
     }
@@ -41,7 +51,7 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_success_not_requested()
     {
         $constraint = new ValidAttribute();
-        $this->validator->validate($this->buildContact(false, null), $constraint);
+        $this->validator->validate($this->buildAttributes(false, null), $constraint);
 
         $this->assertNoViolation();
     }
@@ -49,7 +59,7 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_not_requested_with_motivation()
     {
         $constraint = new ValidAttribute();
-        $this->validator->validate($this->buildContact(false, 'I really need this!'), $constraint);
+        $this->validator->validate($this->buildAttributes(false, 'I really need this!'), $constraint);
 
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
@@ -60,7 +70,7 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_attribute()
     {
         $constraint = new ValidAttribute();
-        $this->validator->validate($this->buildContact(true, ''), $constraint);
+        $this->validator->validate($this->buildAttributes(true, ''), $constraint);
 
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
@@ -71,7 +81,7 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_attribute_null_motivation()
     {
         $constraint = new ValidAttribute();
-        $this->validator->validate($this->buildContact(true, null), $constraint);
+        $this->validator->validate($this->buildAttributes(true, null), $constraint);
 
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
@@ -79,18 +89,18 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
         $this->assertEquals('validator.attribute.not_valid', $violation->getMessageTemplate());
     }
 
-    /**
-     * @param bool $requested
-     * @param string $motivation
-     * @return Attribute
-     */
-    private function buildContact($requested, $motivation)
-    {
-        $contact = new Attribute();
-        $contact
+    private function buildAttributes(
+        bool $requested,
+        string $motivation
+    ): array {
+    
+        $attributes = [];
+
+        $attributes['emailAddressAttribute'] = new Attribute();
+        $attributes['emailAddressAttribute']
             ->setRequested($requested)
             ->setMotivation($motivation);
 
-        return $contact;
+        return $attributes;
     }
 }
