@@ -18,10 +18,9 @@ declare(strict_types=1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Validator;
+namespace Surfnet\ServiceProviderDashboard\Application\Validator\Constraints;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -37,25 +36,38 @@ class ValidAttributeValidator extends ConstraintValidator
         $this->attributeService = $attributeService;
     }
 
+    private function buildAttributeViolation(string $placeholder, string $attributeName): void
+    {
+        $this->context->buildViolation(sprintf($placeholder, $attributeName))
+            ->atPath('attribute')
+            ->addViolation();
+    }
+
     /**
      * @param array $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint)
     {
-        foreach ($value as $name => $attribute) {
-            if (isset($attribute) && !($attribute instanceof Attribute)) {
-                $this->buildInvalidAttributeViolation($name);
-            } elseif (!$this->attributeService->isAttributeName($name)) {
-                $this->buildInvalidAttributeViolation($name);
+        foreach ($value ?? [] as $name => $attribute) {
+            if (!isset($attribute)) {
+                continue;
+            }
+
+            // We only want existing attributes
+            if (!$this->attributeService->isAttributeName($name)) {
+                $this->buildAttributeViolation($constraint->messageNotExists, $name);
+            }
+
+            // When an attribute is requested, we also need a motivation.
+            if ($attribute->isRequested() && empty($attribute->getMotivation())) {
+                $this->buildAttributeViolation($constraint->messageNotValid, $name);
+            }
+
+            // We don't want a non-requested attribute with a motivation. This would clutter Manage
+            if (!$attribute->isRequested() && !empty($attribute->getMotivation())) {
+                $this->buildAttributeViolation($constraint->messageNotValid, $name);
             }
         }
-    }
-
-    private function buildInvalidAttributeViolation($name): void
-    {
-        $this->context->buildViolation(sprintf('entity.edit.attribute.invalid', $name))
-            ->atPath('attribute')
-            ->addViolation();
     }
 }
