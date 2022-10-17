@@ -37,4 +37,6 @@ interface AttributeServiceInterface
     public function getUrns(): array;
 
     public function createEntityDetailAttributes(AttributeList $manageAttributes): array;
+
+    public function isAttributeName(string $name): bool;
 }
