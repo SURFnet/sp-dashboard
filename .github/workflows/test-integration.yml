@@ -50,13 +50,22 @@ jobs:
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /bin/rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ 
 
-    - name: Make the log dir writable
+    - name: Make the log and cache dir writable
       run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm chmod 777 /var/www/html/var/logs
+        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm chmod 777 /var/www/html/var/{logs,cache}
+
+    - name: Copy parameters.yml.dist to parameters.yml
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm cp /var/www/html/app/config/parameters.yml.dist /var/www/html/app/config/parameters.yml
 
     - name: Wait until the spdashboard is accessable 
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T openconext sh /usr/local/sbin/spdup.sh
+    
+    - name: check the docker logs
+      run: | 
+        docker-compose -f docker-compose.yml -f docker-compose-ci.yml logs php-fpm
 
     - name: Run cypress tests
       run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run --config chromeWebSecurity=false
+    
