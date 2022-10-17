@@ -40,9 +40,7 @@ services:
       target: spdphpfpm
     volumes:
       - .:/var/www/html/
-      - type: bind
-        source: /dev/log
-        target: /dev/log
+      - ./docker/conf/logging.yml:/var/www/html/app/config/logging.yml
     environment:
       - PHPFPM_PORT=9000
     networks:
