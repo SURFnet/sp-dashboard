@@ -17,14 +17,27 @@ declare(strict_types=1);
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
-
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeInterface;
-
-interface AttributeRepositoryInterface
+class EntityDetailAttribute
 {
-    public function findAll(): array;
+    public $label;
 
-    public function findOneByName(string $name): AttributeInterface;
+    public $value;
+
+    public $informationPopup;
+
+    /**
+     * Marks if the attribute is excluded for one of the entity protocol
+     * types For example. The EduPersonTargettedId is not displayed on the
+     * Oidcng entities.
+     *
+     * @var string[]
+     */
+    public $excludedFor = [];
+
+    public function isExcludedForProtocol(string $protocol): bool
+    {
+        return in_array($protocol, $this->excludedFor);
+    }
 }

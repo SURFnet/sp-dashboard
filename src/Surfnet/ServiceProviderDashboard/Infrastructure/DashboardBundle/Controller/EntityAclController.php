@@ -24,9 +24,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
+use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetail;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -55,30 +55,25 @@ class EntityAclController extends Controller
      * @var EntityAclService
      */
     private $entityAclService;
+
     /**
-     * @var string
+     * @var EntityDetailFactory
      */
-    private $playGroundUriTest;
-    /**
-     * @var string
-     */
-    private $playGroundUriProd;
+    private $entityDetailFactory;
 
     public function __construct(
         CommandBus $commandBus,
         EntityService $entityService,
         AuthorizationService $authorizationService,
         EntityAclService $entityAclService,
-        string $oidcPlaygroundUriTest,
-        string $oidcPlaygroundUriProd
+        EntityDetailFactory $entityDetailFactory
     ) {
 
         $this->commandBus = $commandBus;
         $this->entityService = $entityService;
         $this->authorizationService = $authorizationService;
         $this->entityAclService = $entityAclService;
-        $this->playGroundUriTest = $oidcPlaygroundUriTest;
-        $this->playGroundUriProd = $oidcPlaygroundUriProd;
+        $this->entityDetailFactory = $entityDetailFactory;
     }
 
     /**
@@ -107,7 +102,8 @@ class EntityAclController extends Controller
             $this->commandBus->handle($command);
             $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
         }
-        $viewObject = EntityDetail::fromEntity($entity, $this->playGroundUriTest, $this->playGroundUriProd);
+
+        $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
         return [
             'form' => $form->createView(),
