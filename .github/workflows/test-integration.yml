@@ -34,7 +34,7 @@ jobs:
       env:
         SYMFONY_ENV: dev
     
-    - name: Create front end dependencies (yarn encore prodcution)
+    - name: Create front end dependencies (yarn encore production)
       run: |
         docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn run encore production
       env:
