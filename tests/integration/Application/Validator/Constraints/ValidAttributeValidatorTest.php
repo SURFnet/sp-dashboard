@@ -23,7 +23,6 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator;
-use Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Validator\Constraints\mock;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
@@ -75,21 +74,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
-    public function test_invalid_not_requested_attribute_with_motivation()
-    {
-        $constraint = new ValidAttribute();
-        $this->validator->validate($this->buildAttributes(
-            'emailAddressAttribute',
-            false,
-            'I really need this!'
-        ), $constraint);
-
-        $violations = $this->context->getViolations();
-        $violation = $violations->get(0);
-
-        $this->assertEquals('validator.attribute.not_valid', $violation->getMessageTemplate());
-    }
-
     public function test_invalid_requested_attribute_with_empty_motivation()
     {
         $constraint = new ValidAttribute();
@@ -102,7 +86,7 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
 
-        $this->assertEquals('validator.attribute.not_valid', $violation->getMessageTemplate());
+        $this->assertEquals('validator.attribute.motivation_not_set', $violation->getMessageTemplate());
     }
 
     public function test_invalid_requested_attribute_with_null_motivation()
@@ -117,7 +101,7 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
 
-        $this->assertEquals('validator.attribute.not_valid', $violation->getMessageTemplate());
+        $this->assertEquals('validator.attribute.motivation_not_set', $violation->getMessageTemplate());
     }
 
     public function test_invalid_non_existing_attribute()
@@ -132,7 +116,30 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
         $violations = $this->context->getViolations();
         $violation = $violations->get(0);
 
-        $this->assertEquals('validator.attribute.not_exists', $violation->getMessageTemplate());
+        $this->assertEquals('validator.attribute.not_found', $violation->getMessageTemplate());
+    }
+
+    public function test_success_multiple_requested_attributes()
+    {
+        $constraint = new ValidAttribute();
+        $this->validator->validate($this->buildMultipleAttributes(
+            ['emailAddressAttribute', 'eduPersonTargetedIDAttribute', 'surNameAttribute',]
+        ), $constraint);
+        $this->assertNoViolation();
+    }
+
+    private function buildMultipleAttributes(array $names): array
+    {
+        $attributes = [];
+        foreach ($names as $name) {
+            $requested = true;
+            $motivation = 'Motivation';
+            $attributes[$name] = new Attribute();
+            $attributes[$name]
+                ->setRequested($requested)
+                ->setMotivation($motivation);
+        }
+        return $attributes;
     }
 
     private function buildAttributes(
