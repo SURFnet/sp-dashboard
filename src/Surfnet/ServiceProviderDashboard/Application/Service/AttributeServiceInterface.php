@@ -38,5 +38,5 @@ interface AttributeServiceInterface
 
     public function createEntityDetailAttributes(AttributeList $manageAttributes): array;
 
-    public function isAttributeName(string $name): bool;
+    public function isKnownAttribute(string $name): bool;
 }
