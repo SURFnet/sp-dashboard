@@ -24,7 +24,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
-use Surfnet\ServiceProviderDashboard\Application\Validator\Constraints as ApplicationAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -196,7 +195,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     private $supportContact;
 
     /**
-     * @ApplicationAssert\ValidAttribute()
+     * @SpDashboardAssert\ValidAttribute()
      */
     private $attributes = [];
 

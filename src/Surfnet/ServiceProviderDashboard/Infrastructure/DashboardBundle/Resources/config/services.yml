@@ -325,7 +325,7 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
 
-    Surfnet\ServiceProviderDashboard\Application\Validator\Constraints\ValidAttributeValidator:
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
         tags:

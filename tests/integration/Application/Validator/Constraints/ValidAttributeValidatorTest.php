@@ -19,10 +19,10 @@
 namespace integration\Application\Validator\Constraints;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
-use Surfnet\ServiceProviderDashboard\Application\Validator\Constraints\ValidAttributeValidator;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
-use Surfnet\ServiceProviderDashboard\Application\Validator\Constraints\ValidAttribute;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttribute;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator;
 use Surfnet\ServiceProviderDashboard\Tests\Integration\Application\Validator\Constraints\mock;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
