@@ -235,6 +235,32 @@ class EntityEditTest extends WebTestCase
         );
     }
 
+    public function test_it_renders_the_change_request_form()
+    {
+        $crawler = $this->client->request('GET', "/entity/change-request/test/{$this->manageId}/1");
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $title = $crawler->filter('.page-container h1');
+        $this->assertEquals('Change request overview', $title->text());
+    }
+
+    public function test_it_renders_the_change_request()
+    {
+        $crawler = $this->client->request('GET', "/entity/change-request/test/{$this->manageId}/1");
+        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $date = $crawler->filter('h2')->first();
+        // Note the timezone difference here compared to the time found in the fixture.
+        // The times in the fixture (in manage) are UTC. We are on Europe/Amsterdam (+2)
+        $this->assertEquals('September 21, 2022 15:32', $date->text());
+        $note = $crawler->filter('p')->last();
+        $this->assertEquals('Optional note describing the reason for this change', $note->text());
+        $value = $crawler->filter('td')->first();
+        $this->assertEquals('metaDataFields.description:en', $value->text());
+        $data = $crawler->filter('td')->last();
+        $this->assertEquals('https://nice', $data->text());
+    }
+
     public function test_it_allows_publication_change_requests()
     {
         $crawler = $this->client->request('GET', "/entity/edit/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");

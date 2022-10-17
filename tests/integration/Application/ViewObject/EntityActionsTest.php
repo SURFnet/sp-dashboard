@@ -161,4 +161,32 @@ class EntityActionsTest extends TestCase
         );
         $this->assertTrue($shouldBeEditable2->allowEditAction());
     }
+
+    public function test_change_request_action_is_allowed()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::TYPE_SAML,
+            false
+        );
+
+        $this->assertTrue($actions->allowChangeRequestAction());
+    }
+
+    public function test_change_request_action_is_not_allowed()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            false
+        );
+
+        $this->assertFalse($actions->allowChangeRequestAction());
+    }
 }

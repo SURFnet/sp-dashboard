@@ -167,6 +167,15 @@ class EntityActions
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
 
+    public function allowChangeRequestAction(): bool
+    {
+        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION) {
+            return false;
+        }
+        return $this->status == Constants::STATE_PUBLISHED;
+    }
+
+
     public function isPublishedToProduction()
     {
         return $this->status == Constants::STATE_PUBLISHED && $this->environment == Constants::ENVIRONMENT_PRODUCTION;

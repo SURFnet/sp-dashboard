@@ -16,20 +16,11 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDtoCollection;
 
-interface EntityChangeRequestRepository
+interface ChangeRequestServiceInterface
 {
-    /**
-     * Open an entity change request in manage
-     */
-    public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity, Contact $contact): array;
-
-    /**
-     * Get outstanding change request from manage
-     */
-    public function getChangeRequest(string $id): array;
+    public function findById(string $id): ChangeRequestDtoCollection;
 }

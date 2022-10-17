@@ -16,20 +16,14 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use DateTime;
 
-interface EntityChangeRequestRepository
+class ChangeRequestDtoComparer
 {
-    /**
-     * Open an entity change request in manage
-     */
-    public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity, Contact $contact): array;
-
-    /**
-     * Get outstanding change request from manage
-     */
-    public function getChangeRequest(string $id): array;
+    public static function compareCreatedDescending(ChangeRequestDto $a, ChangeRequestDto $b): int
+    {
+        return $b->getCreated()->getTimestamp() <=> $a->getCreated()->getTimestamp();
+    }
 }
