@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\AttributeNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -38,9 +39,7 @@ class ValidAttributeValidator extends ConstraintValidator
 
     private function buildAttributeViolation(string $placeholder, string $attributeName): void
     {
-        $this->context->buildViolation(sprintf($placeholder, $attributeName))
-            ->atPath('attribute')
-            ->addViolation();
+        $this->context->addViolation($placeholder, ['%attributeName%' => $attributeName]);
     }
 
     /**
@@ -55,13 +54,15 @@ class ValidAttributeValidator extends ConstraintValidator
             }
 
             // We only want existing attributes
-            if (!$this->attributeService->isKnownAttribute($name)) {
+            try {
+                $attributeName = $this->attributeService->getAttributeFriendlyName($name);
+            } catch (AttributeNotFoundException $e) {
                 $this->buildAttributeViolation($constraint->messageAttributeNotFound, $name);
             }
 
             // When an attribute is requested, we also need a motivation.
             if ($attribute->isRequested() && empty($attribute->getMotivation())) {
-                $this->buildAttributeViolation($constraint->messageAttributeMotivationNotSet, $name);
+                $this->buildAttributeViolation($constraint->messageAttributeMotivationNotSet, $attributeName);
             }
         }
     }
