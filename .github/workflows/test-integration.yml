@@ -68,4 +68,5 @@ jobs:
 
     - name: Run cypress tests
       run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run --config chromeWebSecurity=false
+      continue-on-error: true
     
