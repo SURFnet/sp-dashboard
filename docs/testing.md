@@ -22,6 +22,7 @@ test code as well as production code;
  - PHP Mess Detector checks a number of metrics, and if they exceed a certain treshold the build will fail;
  - PHP CodeSniffer ensures that the code adheres to the chosen coding standard (PSR-2);
  - PHP Copy-Paste Detector ensures that there is no substantial duplication within the source code.
+ - A JSON schema validator ensures that the JSON-schema is valid and validates the JSON-data against the JSON-schema.
  
 If any of those tools fails, the build will fail and the issue has to be resolved before a pull request can be merged.
 
