@@ -56,7 +56,9 @@ The available options are: 'saml20' (sp), 'oidcng' (rp), 'oauth20_rs', 'oauth20_
 
 #### `translations`
 An object of translatable form related ui 'components'. The array of translations are keyed on the language it represents.
-The language is to be configured in i18n country codes. At this point we only support English: `en`.
+The language is to be configured in i18n country codes. At this point we only support English: `en`. To support other languages 
+it is sufficient to extend the "patternProperties" for both the form and detail within the attributes.scheme.json. 
+E.g. to extend with Dutch (nl) the following is sufficient: "^en|nl$"
 
 The object in turn is built up out of two properties
 
