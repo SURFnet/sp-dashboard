@@ -98,7 +98,9 @@ class EntityEditController extends Controller
                         $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $flashBag);
 
                         if ($response instanceof Response) {
-                            $flashBag->add('info', 'entity.edit.metadata.flash.success');
+                            if ($environment !== Constants::ENVIRONMENT_PRODUCTION) {
+                                $flashBag->add('info', 'entity.edit.metadata.flash.success');
+                            }
                             return $response;
                         }
                     } else {
