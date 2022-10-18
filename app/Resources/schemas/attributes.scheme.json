@@ -1,8 +1,7 @@
 {
 	"definitions": {},
 	"$schema": "http://json-schema.org/draft-07/schema#", 
-	"$id": "https://example.com/object1665996754.json", 
-	"title": "Root", 
+	"title": "Root",
 	"type": "array",
 	"default": [],
 	"items":{
@@ -24,7 +23,7 @@
 				"examples": [
 					"givenName"
 				],
-				"pattern": "^.*$"
+				"pattern": "^[a-z][a-zA-Z]*$"
 			},
 			"form": {
 				"$id": "#root/items/form", 
@@ -36,7 +35,7 @@
 				"properties": {
 					"excludeOnEntityType": {
 						"$id": "#root/items/form/excludeOnEntityType",
-						"title": "Excludeonentitytype",
+						"title": "Exclude on entity type",
 						"type": "array",
 						"default": [],
 						"items":{
@@ -49,11 +48,7 @@
 								"oidcng",
 								"oauth20_rs",
 								"oauth20_ccc"
-							],
-							"examples": [
-								"oidcng"
-							],
-							"pattern": "^.*$"
+							]
 						}
 					},
 					"translations": {
@@ -64,7 +59,7 @@
 							"en"
 						],
 						"patternProperties": {
-							"^en|xy$": {
+							"^en$": {
 								"$id": "#root/items/form/translations/en",
 								"title": "En",
 								"type": "object",
@@ -80,18 +75,13 @@
 										"default": "",
 										"examples": [
 											"Given name attribute"
-										],
-										"pattern": "^.*$"
+										]
 									},
 									"info": {
 										"$id": "#root/items/form/translations/en/info",
 										"title": "Info",
 										"type": "string",
-										"default": "",
-										"examples": [
-											"Text should be set in web translations"
-										],
-										"pattern": "^.*$"
+										"default": ""
 									}
 								}
 							}
@@ -125,18 +115,13 @@
 								"default": "",
 								"examples": [
 									"Given name attribute"
-								],
-								"pattern": "^.*$"
+								]
 							},
 							"info": {
 								"$id": "#root/items/detail/en/info", 
 								"title": "Info", 
 								"type": "string",
-								"default": "",
-								"examples": [
-									"Text should be set in web translations"
-								],
-								"pattern": "^.*$"
+								"default": ""
 							}
 						}
 					}
@@ -156,11 +141,9 @@
 					"default": "",
 					"examples": [
 						"urn:mace:dir:attribute-def:givenName"
-					],
-					"pattern": "^.*$"
+					]
 				}
 			}
 		}
 	}
-
 }
