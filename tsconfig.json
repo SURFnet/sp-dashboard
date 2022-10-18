@@ -23,7 +23,7 @@
     "sourceMap": true,
     "module": "es6",
     "target": "es5",
-    "types": ["jest", "node"],
+    "types": ["jest", "cypress", "node"],
     "lib": [
       "dom",
       "es5",

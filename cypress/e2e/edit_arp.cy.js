@@ -1,11 +1,7 @@
-import {attributes} from '../fixtures/variables';
-
 context('Edit ARP', () => {
   before(() => {
     cy.login();
     cy.selectService(2);
-    cy.contains('New production entity').first().click();
-    // cy.createEntity(attributes);
   });
 
   // Als ik een entity (oidcng en saml) ga wijzigen, en er staan onbekende attributen in de ARP in Manage, dan moeten deze blijven staan als ik op publish klik

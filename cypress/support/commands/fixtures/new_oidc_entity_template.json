@@ -1,0 +1,62 @@
+{
+  "data": {
+    "arp": {
+      "attributes": {
+        "urn:mace:dir:attribute-def:cn": [{
+          "source": "idp",
+          "value": "*",
+          "motivation": "Foobar"
+        }],
+        "urn:mace:dir:attribute-def:sn": [{
+          "source": "idp",
+          "value": "*",
+          "motivation": "Foobar"
+        }]
+      },
+      "enabled": true
+    },
+    "type": "{{typeDashConverted}}",
+    "entityid": "{{entityId}}",
+    "active": true,
+    "state": "{{environment}}",
+    "metaDataFields": {
+      "description:en": "{{name}} description",
+      "description:nl": "{{name}} description",
+      "name:en": "{{name}}",
+      "name:nl": "{{name}}",
+      "contacts:0:contactType": "support",
+      "contacts:0:givenName": "Rincewind",
+      "contacts:0:surName": "Wizard",
+      "contacts:0:emailAddress": "rincewind@uu.am",
+      "contacts:1:contactType": "administrative",
+      "contacts:1:givenName": "Moist",
+      "contacts:1:surName": "von Lipwig",
+      "contacts:1:emailAddress": "moist@postoffice.am",
+      "contacts:2:contactType": "technical",
+      "contacts:2:givenName": "Ponder",
+      "contacts:2:surName": "Stibbons",
+      "contacts:2:emailAddress": "ponder@uu.am",
+      "OrganizationName:en": "tests",
+      "OrganizationName:nl": "test",
+      "coin:service_team_id": "{{team}}",
+      "coin:application_url": "https:\/\/foobar.example.com\/home",
+      "coin:eula": "https:\/\/foobar.example.com\/eula",
+      "coin:institution_guid": "52c6c919-e5b1-4aa3-b73e-b516e22219e8",
+      "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+      "coin:exclude_from_push": "1",
+      "secret": "RetoywD16SyxI4wuwcyh",
+      "redirectUrls": ["https:\/\/foobar.example.com\/redirect", "https:\/\/foobar.example.com\/redirect2"],
+      "grants": ["authorization_code"],
+      "accessTokenValidity": 3900,
+      "isPublicClient": true,
+      "logo:0:url": "https:\/\/engine.surfconext.nl\/images\/logo.png",
+      "logo:0:width": "322",
+      "logo:0:height": "100"
+    },
+    "allowedEntities": [],
+    "allowedall": true,
+    "allowedResourceServers": [],
+    "revisionnote": "Revision note"
+  },
+  "type": "{{type}}"
+}

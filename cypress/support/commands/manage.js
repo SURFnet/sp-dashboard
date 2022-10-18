@@ -1,3 +1,99 @@
+function stringTemplateParser(expression, valueObj) {
+    const templateMatcher = /{{\s?([^{}\s]*)\s?}}/g;
+    let text = expression.replace(templateMatcher, (substring, value, index) => {
+        value = valueObj[value];
+        return value;
+    });
+    return text
+}
+
+Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environment = 	'testaccepted', type = 'oidc10_rp') => {
+    const typeDashConverted = type.replace('_', '-');
+    let metadataTemplate = require('./fixtures/new_oidc_entity_template.json');
+    if (attributes) {
+        let arp = JSON.parse('{"arp": {"attributes": {},"enabled": true}}');
+        let arpAttributes = [];
+        for (const [urn, motivation] of Object.entries(attributes)) {
+            let attributeObject = {
+                urn: [{
+                    "source": "idp",
+                    "value": "*",
+                    "motivation": motivation
+                }]
+            }
+            arpAttributes.push(attributeObject);
+        }
+        arp.attributes = arpAttributes;
+    }
+    const templateVariables = {
+        name: name,
+        entityId: entityId,
+        environment: environment,
+        team: team,
+        type: type,
+        typeDashConverted: typeDashConverted,
+        attributes: attributes,
+    };
+    metadataTemplate = stringTemplateParser(JSON.stringify(metadataTemplate), templateVariables);
+
+    fetch('https://manage.vm.openconext.org/manage/api/internal/metadata', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
+        },
+        body: metadataTemplate
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
+Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
+
+
+    let searchUri = 'https://manage.vm.openconext.org/manage/api/internal/search/${type}'
+
+    fetch(searchUri, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
+        },
+        body:
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    let deleteUri = 'https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}';
+    fetch(deleteUri, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+});
+
 Cypress.Commands.add('loginToManage', (url = 'https://manage.vm.openconext.org') => {
     cy.visit(url);
     cy.wait(300);

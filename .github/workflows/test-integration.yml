@@ -27,13 +27,13 @@ jobs:
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/local/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
       env:
         SYMFONY_ENV: dev
-    
+
     - name: Run yarn
       run: |
         docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn install
       env:
         SYMFONY_ENV: dev
-    
+
     - name: Create front end dependencies (yarn encore production)
       run: |
         docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn run encore production
@@ -62,11 +62,11 @@ jobs:
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T openconext sh /usr/local/sbin/spdup.sh
     
-    - name: check the docker logs
+    - name: Disable Symfony debug mode
       run: | 
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml logs php-fpm
+        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm sed -i s/\'dev\',\ true/\'dev\',\ false/g /var/www/html/web/app_dev.php
 
     - name: Run cypress tests
-      run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run --config chromeWebSecurity=false
+      run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run --browser chrome
       continue-on-error: true
     

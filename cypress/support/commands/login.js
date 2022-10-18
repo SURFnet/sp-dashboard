@@ -41,8 +41,9 @@ Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching') => {
         cy.get('.login-form').submit();
     });
     const url = 'https://spdashboard.vm.openconext.org';
-    cy.visit(url);
-    cy.submitLoginForms().then(() => {
-        cy.checkForLoginComplete(url);
+    cy.wait(400);
+    cy.visit({
+        url: url,
+        failOnStatusCode: false
     });
 });
