@@ -1,0 +1,166 @@
+{
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"$id": "https://example.com/object1665996754.json", 
+	"title": "Root", 
+	"type": "array",
+	"default": [],
+	"items":{
+		"$id": "#root/items", 
+		"title": "Items", 
+		"type": "object",
+		"required": [
+			"id",
+			"form",
+			"detail",
+			"urns"
+		],
+		"properties": {
+			"id": {
+				"$id": "#root/items/id", 
+				"title": "Id", 
+				"type": "string",
+				"default": "",
+				"examples": [
+					"givenName"
+				],
+				"pattern": "^.*$"
+			},
+			"form": {
+				"$id": "#root/items/form", 
+				"title": "Form", 
+				"type": "object",
+				"required": [
+					"translations"
+				],
+				"properties": {
+					"excludeOnEntityType": {
+						"$id": "#root/items/form/excludeOnEntityType",
+						"title": "Excludeonentitytype",
+						"type": "array",
+						"default": [],
+						"items":{
+							"$id": "#root/items/form/excludeOnEntityType/items",
+							"title": "Items",
+							"type": "string",
+							"default": "",
+							"enum": [
+								"saml20",
+								"oidcng",
+								"oauth20_rs",
+								"oauth20_ccc"
+							],
+							"examples": [
+								"oidcng"
+							],
+							"pattern": "^.*$"
+						}
+					},
+					"translations": {
+						"$id": "#root/items/form/translations",
+						"title": "Translations",
+						"type": "object",
+						"required": [
+							"en"
+						],
+						"patternProperties": {
+							"^en|xy$": {
+								"$id": "#root/items/form/translations/en",
+								"title": "En",
+								"type": "object",
+								"required": [
+									"label",
+									"info"
+								],
+								"properties": {
+									"label": {
+										"$id": "#root/items/form/translations/en/label",
+										"title": "Label",
+										"type": "string",
+										"default": "",
+										"examples": [
+											"Given name attribute"
+										],
+										"pattern": "^.*$"
+									},
+									"info": {
+										"$id": "#root/items/form/translations/en/info",
+										"title": "Info",
+										"type": "string",
+										"default": "",
+										"examples": [
+											"Text should be set in web translations"
+										],
+										"pattern": "^.*$"
+									}
+								}
+							}
+						},
+						"additionalProperties": false
+					}
+				}
+			}
+,
+			"detail": {
+				"$id": "#root/items/detail", 
+				"title": "Detail", 
+				"type": "object",
+				"required": [
+					"en"
+				],
+				"patternProperties": {
+					"^en$": {
+						"$id": "#root/items/detail/en", 
+						"title": "En", 
+						"type": "object",
+						"required": [
+							"label",
+							"info"
+						],
+						"properties": {
+							"label": {
+								"$id": "#root/items/detail/en/label", 
+								"title": "Label", 
+								"type": "string",
+								"default": "",
+								"examples": [
+									"Given name attribute"
+								],
+								"pattern": "^.*$"
+							},
+							"info": {
+								"$id": "#root/items/detail/en/info", 
+								"title": "Info", 
+								"type": "string",
+								"default": "",
+								"examples": [
+									"Text should be set in web translations"
+								],
+								"pattern": "^.*$"
+							}
+						}
+					}
+				},
+				"additionalProperties": false
+			}
+,
+			"urns": {
+				"$id": "#root/items/urns", 
+				"title": "Urns", 
+				"type": "array",
+				"default": [],
+				"items":{
+					"$id": "#root/items/urns/items", 
+					"title": "Items", 
+					"type": "string",
+					"default": "",
+					"examples": [
+						"urn:mace:dir:attribute-def:givenName"
+					],
+					"pattern": "^.*$"
+				}
+			}
+		}
+	}
+
+}
