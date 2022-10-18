@@ -18,6 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeType;
+
 class EntityEditTest extends WebTestCase
 {
     private $manageId;
@@ -280,7 +283,13 @@ class EntityEditTest extends WebTestCase
 
     private function buildValidFormData()
     {
-        return array (
+        /**
+         *  The attributes of the form are being built dynamically now, so fetch those attribute names from the
+         *  attribute service and built the form data.
+         */
+        $attributes = $this->getAttributeTypes();
+
+        $result = [
             'dashboard_bundle_entity_type[publishButton]' => '',
             'dashboard_bundle_entity_type[metadata][importUrl]' => 'https://engine.surfconext.nl/authentication/sp/metadata',
             'dashboard_bundle_entity_type[metadata][pastedMetadata]' => '',
@@ -307,28 +316,29 @@ class EntityEditTest extends WebTestCase
             'dashboard_bundle_entity_type[contactInformation][supportContact][lastName]' => 'surname',
             'dashboard_bundle_entity_type[contactInformation][supportContact][email]' => 'foobar@example.com',
             'dashboard_bundle_entity_type[contactInformation][supportContact][phone]' => 'telephonenumber',
-            'dashboard_bundle_entity_type[attributes][givenNameAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][surNameAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][commonNameAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][displayNameAttribute][requested]' => '1',
-            'dashboard_bundle_entity_type[attributes][displayNameAttribute][motivation]' => 'Test Attribute 1',
-            'dashboard_bundle_entity_type[attributes][emailAddressAttribute][requested]' => '1',
-            'dashboard_bundle_entity_type[attributes][emailAddressAttribute][motivation]' => 'I shall require thyne mail address to send thee messages',
-            'dashboard_bundle_entity_type[attributes][organizationAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][organizationTypeAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][organizationUnitAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][affiliationAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][entitlementAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][principleNameAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][uidAttribute][requested]' => '1',
-            'dashboard_bundle_entity_type[attributes][uidAttribute][motivation]' => 'Test Attribute 2',
-            'dashboard_bundle_entity_type[attributes][preferredLanguageAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][personalCodeAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][scopedAffiliationAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[attributes][eduPersonTargetedIDAttribute][motivation]' => '',
-            'dashboard_bundle_entity_type[comments][comments]' => 'I need a new name NL',
+            'dashboard_bundle_entity_type[comments][comments]' => 'I need a new name NL'
+        ];
+
+        foreach ($attributes as $attribute) {
+            $entry = sprintf('dashboard_bundle_entity_type[attributes][%s][motivation]', $attribute->getName());
+            $result[$entry] = 'some data here!';
+        }
+
+        $result += [
             'dashboard_bundle_entity_type[status]' => 'published',
             'dashboard_bundle_entity_type[manageId]' => '9628d851-abd1-2283-a8f1-a29ba5036174',
-        );
+        ];
+
+        return $result;
+    }
+
+    /**
+     * @return AttributeType[]
+     */
+    protected function getAttributeTypes(): array
+    {
+        $service = $this->client->getContainer()->get(AttributeService::class);
+
+        return $service->getAttributeTypeAttributes();
     }
 }

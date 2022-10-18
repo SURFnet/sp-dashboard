@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -342,12 +344,24 @@ class EntitySamlCreateSamlTest extends WebTestCase
                     ],
                 ],
                 'attributes' => [
-                    'givenNameAttribute' => [
+                    $this->getOneAttribute()->getName() => [
                         'requested' => true,
                         'motivation' => 'We really need it!',
                     ],
                 ],
             ],
         ];
+    }
+
+    /**
+     *  The attributes of the form are being built dynamically now, so fetch those attribute names from the
+     *  attribute service and built the form data. Return exactly one attribyteType.
+     */
+    protected function getOneAttribute(): Attribute
+    {
+        $service = $this->client->getContainer()->get(AttributeService::class);
+        $attribute = $service->getAttributeTypeAttributes();
+
+        return reset($attribute);
     }
 }
