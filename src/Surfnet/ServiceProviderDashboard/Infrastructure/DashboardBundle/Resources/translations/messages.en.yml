@@ -378,7 +378,6 @@ entity.publish.request.ticket.description: "h2. Details
 
 entity.change_request.ticket.summary: "Request for changes for %entity_name%"
 entity.change_request.ticket.description: "h2. Details
-
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."

@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -204,7 +203,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     private $supportContact;
 
+    /**
+     * @SpDashboardAssert\ValidAttribute()
+     */
     private $attributes = [];
+
     /**
      * @var string
      */
@@ -233,20 +236,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @Assert\Callback()
-     */
-    public function validate(ExecutionContextInterface $context, $payload)
-    {
-        foreach ($this->attributes as $name => $attribute) {
-            if (isset($attribute) && !($attribute instanceof Attribute)) {
-                $context->buildViolation(sprintf('entity.edit.attribute.invalid', $name))
-                    ->atPath('attribute')
-                    ->addViolation();
-            }
-        }
-    }
-
-    /**
      * The magic getters and setters are consulted by the Oidcng form builder.
      * Another option would be to implement a dataMapper on the
      * form or attribute container, but this might lead to needless complexity.
@@ -266,6 +255,10 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->attributes[$property] = $value;
     }
 
+    /**
+     * The reason why a null value is returned (iso throwing an exception) is because the property accessor of
+     * symfony, calling the magic getter, cannot handle exceptions.
+     */
     public function getAttribute(string $property): ?Attribute
     {
         if (array_key_exists($property, $this->attributes)) {

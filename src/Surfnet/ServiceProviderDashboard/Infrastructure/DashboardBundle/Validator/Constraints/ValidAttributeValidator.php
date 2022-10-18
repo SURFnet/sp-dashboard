@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,30 +20,50 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Application\Exception\AttributeNotFoundException;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class ValidAttributeValidator extends ConstraintValidator
 {
     /**
-     * @param Attribute    $value
+     * @var AttributeServiceInterface
+     */
+    private $attributeService;
+
+    public function __construct(AttributeServiceInterface $attributeService)
+    {
+        $this->attributeService = $attributeService;
+    }
+
+    private function buildAttributeViolation(string $placeholder, string $attributeName): void
+    {
+        $this->context->addViolation($placeholder, ['%attributeName%' => $attributeName]);
+    }
+
+    /**
+     * @param array $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint)
     {
-        if (empty($value)) {
-            return;
-        }
+        foreach ($value ?? [] as $name => $attribute) {
+            if (!isset($attribute)) {
+                continue;
+            }
 
-        // When an attribute is requested, we also need a motivation.
-        if ($value->isRequested() && empty($value->getMotivation())) {
-            $this->context->addViolation($constraint->message);
-        }
+            // We only want existing attributes
+            try {
+                $attributeName = $this->attributeService->getAttributeFriendlyName($name);
+            } catch (AttributeNotFoundException $e) {
+                $this->buildAttributeViolation($constraint->messageAttributeNotFound, $name);
+            }
 
-        // We don't want a non requested attribute with a motivation. This would clutter Manage
-        if (!$value->isRequested() && !empty($value->getMotivation())) {
-            $this->context->addViolation($constraint->message);
+            // When an attribute is requested, we also need a motivation.
+            if ($attribute->isRequested() && empty($attribute->getMotivation())) {
+                $this->buildAttributeViolation($constraint->messageAttributeMotivationNotSet, $attributeName);
+            }
         }
     }
 }

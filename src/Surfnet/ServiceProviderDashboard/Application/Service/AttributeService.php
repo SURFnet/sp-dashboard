@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\AttributeNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetailAttribute;
@@ -53,7 +54,7 @@ class AttributeService implements AttributeServiceInterface
         if (empty($this->attributes)) {
             $attributes = $this->attributeRepository->findAll();
 
-            foreach ($attributes as $value) {
+            foreach ($attributes ?? [] as $value) {
                 $this->attributes[$value->id] = Attribute::fromAttribute(
                     $value,
                     $value->form->languages[$this->language]
@@ -70,7 +71,7 @@ class AttributeService implements AttributeServiceInterface
     {
         $entityMergeAttributes = [];
         $attributes = $this->getAttributeTypeAttributes();
-        foreach ($attributes as $attribute) {
+        foreach ($attributes ?? [] as $attribute) {
             $entityMergeAttributes[] = EntityMergeAttribute::fromAttribute(
                 $attribute->getName(),
                 $attribute->getUrns()[0]
@@ -83,7 +84,7 @@ class AttributeService implements AttributeServiceInterface
     {
         $urns = [];
         $attributes = $this->getAttributeTypeAttributes();
-        foreach ($attributes as $attribute) {
+        foreach ($attributes ?? [] as $attribute) {
             $urns[] = $attribute->getUrns()[0];
         }
         return $urns;
@@ -104,5 +105,16 @@ class AttributeService implements AttributeServiceInterface
             }
         }
         return $attributes;
+    }
+
+    public function getAttributeFriendlyName(string $identifier): string
+    {
+        $attributes = $this->getAttributeTypeAttributes();
+        foreach ($attributes ?? [] as $attribute) {
+            if ($identifier === $attribute->getName()) {
+                return $attribute->getLabel();
+            }
+        }
+        throw new AttributeNotFoundException(sprintf('Unable to find attribute with identifier: %s', $identifier));
     }
 }

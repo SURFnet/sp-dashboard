@@ -291,10 +291,6 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper:
         arguments:  ['@logger']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator:
-        tags:
-            - { name: validator.constraint_validator, alias: attribute }
-
     Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
         arguments:
             - '@surfnet.dashboard.repository.issue'
@@ -328,6 +324,12 @@ services:
     Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+        tags:
+            - { name: validator.constraint_validator, alias: valid_attribute }
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
