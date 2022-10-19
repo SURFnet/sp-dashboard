@@ -49,7 +49,10 @@ class EntityDiff
                     $recursiveDiff = $this->arrayRecursiveDiff($value, $originalData[$key]);
                     // Redirect urls should not be diffed, the complete list should be provided
                     // Grants should not be diffed, the complete list should be provided
-                    if ($key === 'metaDataFields.redirectUrls' || $key === 'metaDataFields.grants') {
+                    // But only when the values changed between the two different versions
+                    if (count($recursiveDiff) > 0 &&
+                        ($key === 'metaDataFields.redirectUrls' || $key === 'metaDataFields.grants')
+                    ) {
                         $recursiveDiff = $value;
                     }
 
