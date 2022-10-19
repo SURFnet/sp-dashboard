@@ -20,10 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ChangeRequestService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,6 +33,7 @@ class EntityChangeRequestController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/entity/change-request/{environment}/{manageId}/{serviceId}", name="entity_published_change_request")
+     * @throws \Exception
      */
     public function changeRequestAction(
         Request $request,
@@ -54,7 +53,7 @@ class EntityChangeRequestController extends Controller
             );
         }
 
-        $changeRequests = $service->findById($manageId);
+        $changeRequests = $service->findByIdAndProtocol($manageId, $entity->getProtocol());
 
         $actions = new EntityActions(
             $manageId,

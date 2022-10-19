@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -79,12 +80,12 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         return $response;
     }
 
-    public function getChangeRequest(string $id): array
+    public function getChangeRequest(string $id, Protocol $protocol): array
     {
         $this->logger->info(sprintf('Get outstanding change requests from manage for entity "%s"', $id));
 
         return $this->client->read(
-            '/manage/api/internal/change-requests/saml20_sp/' . $id
+            '/manage/api/internal/change-requests/' . $protocol->getManagedProtocol() . '/' . $id
         );
     }
 }

@@ -19,8 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDtoCollection;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 
 interface ChangeRequestServiceInterface
 {
-    public function findById(string $id): ChangeRequestDtoCollection;
+    public function findByIdAndProtocol(string $id, Protocol $protocol): ChangeRequestDtoCollection;
 }

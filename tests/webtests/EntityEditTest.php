@@ -258,7 +258,7 @@ class EntityEditTest extends WebTestCase
         $value = $crawler->filter('td')->first();
         $this->assertEquals('metaDataFields.description:en', $value->text());
         $data = $crawler->filter('td')->last();
-        $this->assertEquals('https://nice', $data->text());
+        $this->assertEquals('https://nice', trim($data->text()));
     }
 
     public function test_it_allows_publication_change_requests()

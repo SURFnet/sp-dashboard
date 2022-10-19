@@ -77,4 +77,9 @@ class Protocol implements Comparable
             'type' => $this->getProtocol(),
         ];
     }
+
+    public function getManagedProtocol(): string
+    {
+        return array_search($this->protocol, self::$protocolMapping);
+    }
 }

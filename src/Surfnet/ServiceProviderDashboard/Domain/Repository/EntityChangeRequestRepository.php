@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
@@ -31,5 +32,5 @@ interface EntityChangeRequestRepository
     /**
      * Get outstanding change request from manage
      */
-    public function getChangeRequest(string $id): array;
+    public function getChangeRequest(string $id, Protocol $protocol): array;
 }
