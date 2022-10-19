@@ -32,7 +32,17 @@
                     {% for index, pathUpdate in changeRequest.pathUpdates %}
                     <tr>
                             <td>{{ index }}</td>
-                            <td>{{ pathUpdate }}</td>
+                            <td>
+                            {% if pathUpdate is iterable %}
+                                <ul>
+                                    {%  for name, value in pathUpdate %}
+                                        <li>{{ name }}: {{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                {{ pathUpdate }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {%  endfor %}
 
