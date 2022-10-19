@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\Entity\Entity;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 
@@ -37,6 +38,22 @@ class ProtocolTest extends TestCase
         }
     }
 
+    /**
+     * @dataProvider provideProtocolManagedTestData
+     */
+    public function test_it_accepts_the_managed_protocol(Protocol $protocol, string $expectedProtocol)
+    {
+        self::assertEquals($expectedProtocol, $protocol->getManagedProtocol());
+    }
+
+    public function test_it_throws_exception_on_invalid_managed_protocol()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The protocol \'fantasy\' is not supported');
+        $protocol = new Protocol('fantasy');
+        $protocol->getManagedProtocol();
+    }
+    
     public function provideProtocolTestData()
     {
         yield [
@@ -48,6 +65,26 @@ class ProtocolTest extends TestCase
             new Protocol('saml20'),
             new Protocol(null),
             new Protocol(null),
+        ];
+    }
+
+    public function provideProtocolManagedTestData()
+    {
+        yield [
+            new Protocol('saml20'),
+            'saml20_sp'
+        ];
+        yield [
+            new Protocol('oidcng'),
+            'oidc10_rp',
+        ];
+        yield [
+            new Protocol('oauth20_rs'),
+            'oauth20_rs',
+        ];
+        yield [
+            new Protocol('oauth20_ccc'),
+            'oidc10_rp',
         ];
     }
 }
