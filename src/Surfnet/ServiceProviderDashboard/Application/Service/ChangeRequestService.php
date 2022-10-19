@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDtoCollection;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
@@ -36,11 +37,18 @@ class ChangeRequestService implements ChangeRequestServiceInterface
     }
 
     /**
-     * @throws \Exception
+     * @param string $id
+     * @param Protocol $protocol
+     * @return ChangeRequestDtoCollection|Exception
      */
     public function findByIdAndProtocol(string $id, Protocol $protocol): ChangeRequestDtoCollection
     {
-        $values = $this->repository->getChangeRequest($id, $protocol);
+        $values = [];
+        try {
+            $values = $this->repository->getChangeRequest($id, $protocol);
+        } catch (Exception $exception) {
+            throwException($exception);
+        }
         return new ChangeRequestDtoCollection($values);
     }
 }

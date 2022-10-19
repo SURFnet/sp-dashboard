@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Webmozart\Assert\Assert;
@@ -78,8 +79,21 @@ class Protocol implements Comparable
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getManagedProtocol(): string
     {
-        return array_search($this->protocol, self::$protocolMapping);
+        /**
+         * An exception to the rule on 'oauth20_ccc'
+         */
+        if ($this->protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+            return self::OIDC10_RP;
+        }
+
+        if (in_array($this->protocol, self::$protocolMapping)) {
+            return array_search($this->protocol, self::$protocolMapping);
+        }
+        throw new Exception(sprintf('The protocol \'%s\' is not supported', $this->protocol));
     }
 }
