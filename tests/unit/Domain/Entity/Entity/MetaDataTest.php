@@ -183,6 +183,30 @@ class MetaDataTest extends TestCase
         }
     }
 
+    /**
+     * Bug fix reproduction test
+     *
+     * Bug report: the ACS locations did not seem be updated when creating a Manage Change Request
+     * Issue description: The actual acs location was not set with the acs uri. But with the manage fieldname for that
+     *                    acs location. `assertionConsumerService:0:Location` instead of
+     *                    `https://example.com/acs-location`. That resulted in a diff that did not actually result in
+     *                    any changes.
+     * Solution: Set the uri on the acs location metadata fields.
+     *
+     * See: https://www.pivotaltracker.com/story/show/182411730/comments/233831779
+     */
+    public function test_acs_locations_are_formed_correctly_as_array()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response.json'), true);
+        $metadata = MetaData::fromApiResponse($data);
+        $arrayData = $metadata->asArray();
+
+        // The array representation of the metadata should show the acs location fields as found in the Manage json.
+        self::assertEquals($data["data"]["metaDataFields"]["AssertionConsumerService:0:Location"], $arrayData["metaDataFields.AssertionConsumerService:0:Location"]);
+        self::assertEquals($data["data"]["metaDataFields"]["AssertionConsumerService:1:Location"], $arrayData["metaDataFields.AssertionConsumerService:1:Location"]);
+        self::assertEquals($data["data"]["metaDataFields"]["AssertionConsumerService:2:Location"], $arrayData["metaDataFields.AssertionConsumerService:2:Location"]);
+    }
+
     public function provideMetaDataTestData()
     {
         yield [
