@@ -71,6 +71,52 @@ class EntityDiffTest extends MockeryTestCase
         $this->assertSame([1 => 'is for duck'], $diff['d']);
     }
 
+
+    public function test_grants_and_redirect_urls_are_handled_their_own_special_way()
+    {
+        // No change should result in the redirectUrls not showing up
+        $data = ['metaDataFields.redirectUrls' => ['https://uri1.example.com']];
+        $compareTo = ['metaDataFields.redirectUrls' => ['https://uri1.example.com']];
+        $diff = (new EntityDiff($data, $compareTo))->getDiff();
+        $this->assertEmpty($diff);
+
+        // We added an url, both redirectUrls should show up
+        $data = ['metaDataFields.redirectUrls' => ['https://uri1.example.com', 'https://uri2.example.com']];
+        $compareTo = ['metaDataFields.redirectUrls' => ['https://uri1.example.com']];
+        $diff = (new EntityDiff($data, $compareTo))->getDiff();
+        $this->assertCount(2, $diff['metaDataFields.redirectUrls']);
+
+        // We removed an url, one redirectUrls should show up
+        $data = ['metaDataFields.redirectUrls' => ['https://uri1.example.com']];
+        $compareTo = ['metaDataFields.redirectUrls' => ['https://uri1.example.com', 'https://uri2.example.com']];
+        $diff = (new EntityDiff($data, $compareTo))->getDiff();
+        $this->assertCount(1, $diff['metaDataFields.redirectUrls']);
+
+        // No change should result in the grants not showing up
+        $data = ['metaDataFields.grants' => ['implicit']];
+        $compareTo = ['metaDataFields.grants' => ['implicit']];
+        $diff = (new EntityDiff($data, $compareTo))->getDiff();
+        $this->assertEmpty($diff);
+
+        // Changed from implicit to authz_code not showing up
+        $data = ['metaDataFields.grants' => ['implicit']];
+        $compareTo = ['metaDataFields.grants' => ['authorization_code']];
+        $diff = (new EntityDiff($data, $compareTo))->getDiff();
+        $this->assertCount(1, $diff['metaDataFields.grants']);
+
+        // We added an url, both grants should show up
+        $data = ['metaDataFields.grants' => ['implicit', 'authorization_code']];
+        $compareTo = ['metaDataFields.grants' => ['implicit']];
+        $diff = (new EntityDiff($data, $compareTo))->getDiff();
+        $this->assertCount(2, $diff['metaDataFields.grants']);
+
+        // We removed an url, one grants should show up
+        $data = ['metaDataFields.grants' => ['implicit']];
+        $compareTo = ['metaDataFields.grants' => ['implicit', 'authorization_code']];
+        $diff = (new EntityDiff($data, $compareTo))->getDiff();
+        $this->assertCount(1, $diff['metaDataFields.grants']);
+    }
+
     public function test_a_bit_of_everything()
     {
         $data = [
