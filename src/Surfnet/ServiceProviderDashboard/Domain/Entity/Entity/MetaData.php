@@ -272,10 +272,10 @@ class MetaData implements Comparable
 
         if ($this->getAcsLocations()) {
             foreach ($this->getAcsLocations() as $index => $location) {
-                $location = sprintf('metaDataFields.AssertionConsumerService:%d:Location', $index);
-                $binding = sprintf('metaDataFields.AssertionConsumerService:%d:Binding', $index);
-                $data[$location] = $location;
-                $data[$binding] = Constants::BINDING_HTTP_POST;
+                $locationIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Location', $index);
+                $bindingIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Binding', $index);
+                $data[$locationIdentifier] = $location;
+                $data[$bindingIdentifier] = Constants::BINDING_HTTP_POST;
             }
         }
 
