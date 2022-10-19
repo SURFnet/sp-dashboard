@@ -53,7 +53,6 @@ class ServiceOverviewTest extends WebTestCase
         $serviceNode = $nodes->first();
 
         $this->assertContains('SURFnet', trim($serviceNode->text()));
-        $this->assertContains('Privacy questions', trim($serviceNode->text()));
     }
 
     /**
@@ -80,7 +79,6 @@ class ServiceOverviewTest extends WebTestCase
         $service2 = $nodes->eq(1);
 
         $this->assertContains('Ibuildings B.V.', trim($serviceNode->text()));
-        $this->assertContains('Privacy questions', trim($serviceNode->text()));
         $this->assertContains('SURFnet', trim($service2->text()));
     }
 
