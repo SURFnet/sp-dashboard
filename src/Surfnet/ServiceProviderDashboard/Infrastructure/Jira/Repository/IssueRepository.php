@@ -134,7 +134,7 @@ class IssueRepository implements TicketServiceInterface
         // Search CTX: "$issueType" issues with manage id as provided in the $manageId parameter
         $issues = $issueService->search(
             sprintf(
-                'project = %s AND issuetype = %s AND "%s" ~ %s',
+                'project = %s AND issuetype = %s AND resolution = Unresolved AND "%s" ~ %s',
                 $this->projectKey,
                 $issueType,
                 $this->manageIdFieldLabel,
