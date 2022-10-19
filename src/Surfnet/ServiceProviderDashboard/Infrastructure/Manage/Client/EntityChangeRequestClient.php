@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
@@ -80,12 +81,15 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         return $response;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getChangeRequest(string $id, Protocol $protocol): array
     {
         $this->logger->info(sprintf('Get outstanding change requests from manage for entity "%s"', $id));
 
         return $this->client->read(
-            '/manage/api/internal/change-requests/' . $protocol->getManagedProtocol() . '/' . $id
+            sprintf('/manage/api/internal/change-requests/%s/%s', $protocol->getManagedProtocol(), $id)
         );
     }
 }

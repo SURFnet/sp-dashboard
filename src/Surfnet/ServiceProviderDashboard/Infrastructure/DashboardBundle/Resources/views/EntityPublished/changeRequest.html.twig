@@ -35,8 +35,8 @@
                             <td>
                             {% if pathUpdate is iterable %}
                                 <ul>
-                                    {%  for name, value in pathUpdate %}
-                                        <li>{{ name }}: {{ value }}</li>
+                                    {%  for value in pathUpdate %}
+                                        <li>{{ value }}</li>
                                     {% endfor %}
                                 </ul>
                             {% else %}
