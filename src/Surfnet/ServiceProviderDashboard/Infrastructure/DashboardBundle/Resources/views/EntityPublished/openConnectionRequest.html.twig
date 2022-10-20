@@ -1,0 +1,34 @@
+{% extends '::base.html.twig' %}
+
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'entity.open_connection_request.title'|trans }}{%endblock%}</h1>
+
+    <div class="fieldset card action">
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: actions, isAdmin: isAdmin} %}
+    </div>
+
+    {%  for request, idPs in connectionRequests %}
+        <h2>{{ request }}</h2>
+        <table class="connection-request-overview">
+            <tr>
+                <th>{{ 'entity.open_connection_request.idp'|trans }}</th>
+                <th>{{ 'entity.open_connection_request.contact'|trans }}</th>
+            </tr>
+            {% for idP in idPs %}
+                <tr>
+                    <td>{{ idP.idp }}</td>
+                    <td>
+                        {% if idP.contact is iterable %}
+                            {%  for index, value in idP.contact %}
+                                {%  if index > 0 %}
+                                    {{ ' ' }}
+                                {% endif %}
+                                {{ value }}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {%  endfor %}
+        </table>
+    {% endfor %}
+{% endblock %}
