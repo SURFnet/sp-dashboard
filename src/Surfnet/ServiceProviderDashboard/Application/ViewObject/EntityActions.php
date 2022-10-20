@@ -55,8 +55,15 @@ class EntityActions
      */
     private $readOnly;
 
-    public function __construct(string $id, int $serviceId, string $status, string $environment, string $protocol, bool $isReadOnly)
-    {
+    public function __construct(
+        string $id,
+        int $serviceId,
+        string $status,
+        string $environment,
+        string $protocol,
+        bool $isReadOnly
+    ) {
+    
         $this->id = $id;
         $this->serviceId = $serviceId;
         $this->status = $status;
@@ -163,7 +170,8 @@ class EntityActions
         $meetsProtocolRequirement = $protocol == Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol == Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
             $protocol == Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
-        $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED || $status == Constants::STATE_PUBLICATION_REQUESTED);
+        $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED ||
+            $status == Constants::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
 
@@ -175,6 +183,17 @@ class EntityActions
         return $this->status == Constants::STATE_PUBLISHED;
     }
 
+    public function allowOpenConnectionRequestAction(): bool
+    {
+        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION) {
+            return false;
+        }
+        $protocol = $this->protocol;
+        $meetsProtocolRequirement = $protocol == Constants::TYPE_SAML ||
+            $protocol == Constants::TYPE_OPENID_CONNECT_TNG;
+
+        return $meetsProtocolRequirement && $this->status == Constants::STATE_PUBLISHED;
+    }
 
     public function isPublishedToProduction()
     {

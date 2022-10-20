@@ -189,4 +189,60 @@ class EntityActionsTest extends TestCase
 
         $this->assertFalse($actions->allowChangeRequestAction());
     }
+
+    public function test_open_connection_request_action_is_allowed()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::TYPE_SAML,
+            false
+        );
+
+        $this->assertTrue($actions->allowOpenConnectionRequestAction());
+    }
+
+    public function test_open_connection_request_action_is_not_allowed_for_test_env()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            false
+        );
+
+        $this->assertFalse($actions->allowOpenConnectionRequestAction());
+    }
+
+    public function test_open_connection_request_action_is_not_allowed_for_oauth_ccc()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT,
+            false
+        );
+
+        $this->assertFalse($actions->allowOpenConnectionRequestAction());
+    }
+
+    public function test_open_connection_request_action_is_not_allowed_for_oauth_rs()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
+            false
+        );
+
+        $this->assertFalse($actions->allowOpenConnectionRequestAction());
+    }
 }

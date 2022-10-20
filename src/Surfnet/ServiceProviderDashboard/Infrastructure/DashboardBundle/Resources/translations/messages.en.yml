@@ -154,7 +154,11 @@ entity:
         personal_code: Personal code attribute
         scoped_affiliation: Scoped affiliation attribute
         organization_unit_name: Organizational Unit Name
-entity.list.add_to_test: New test entity
+
+  list:
+    action:
+      open:
+        connection:
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
 entity.list.entity_id: Entity ID
@@ -171,6 +175,7 @@ entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
 entity.list.action.reset_secret: Reset client secret
 entity.list.action.change.request: Change Request
+entity.list.action.open.connection.request: Show open connection requests
 entity.list.modal.oidc_confirmation:
   title: Confirmation
   client_id:
@@ -369,6 +374,9 @@ entity.change_request.value: Value
 entity.change_request.data: Data
 entity.change_request.text.html: "<p>All outstanding change requests</p>"
 entity.change_request.none.text.html: "<p>No outstanding change requests</p>"
+entity.open_connection_request.title: Open connection requests
+entity.open_connection_request.idp: IdP
+entity.open_connection_request.contact: Contact
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
 entity.edit.oidcngResourceServers.title: Select the OIDC Resource Servers(s) that belong to this Client
