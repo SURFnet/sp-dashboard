@@ -1,0 +1,8 @@
+{% if action.allowOpenConnectionRequestAction %}
+    <li>
+        <a href="{{ path('entity_published_open_connection_request', {manageId: action.id, environment: action.environment, serviceId: action.serviceId}) }}">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            {{ 'entity.list.action.open.connection.request'|trans }}
+        </a>
+    </li>
+{% endif %}
