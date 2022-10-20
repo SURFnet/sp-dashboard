@@ -16,12 +16,10 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Service;
+namespace Surfnet\ServiceProviderDashboard\Domain\Exception;
 
-use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDtoCollection;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Exception;
 
-interface ChangeRequestServiceInterface
+class ProtocolNotFoundException extends Exception
 {
-    public function findByIdAndProtocol(string $id, Protocol $protocol): ChangeRequestDtoCollection;
 }

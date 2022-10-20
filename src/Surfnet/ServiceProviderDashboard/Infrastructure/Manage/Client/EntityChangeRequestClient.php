@@ -20,8 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -44,20 +44,13 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
      */
     private $logger;
 
-    /**
-     * @var ApiConfig
-     */
-    private $manageConfig;
-
     public function __construct(
         HttpClientInterface $client,
         JsonGeneratorStrategy $generator,
-        ApiConfig $manageConfig,
         LoggerInterface $logger
     ) {
         $this->client = $client;
         $this->generator = $generator;
-        $this->manageConfig = $manageConfig;
         $this->logger = $logger;
     }
 
@@ -79,12 +72,12 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         return $response;
     }
 
-    public function getChangeRequest(string $id): array
+    public function getChangeRequest(string $id, Protocol $protocol): array
     {
         $this->logger->info(sprintf('Get outstanding change requests from manage for entity "%s"', $id));
 
         return $this->client->read(
-            '/manage/api/internal/change-requests/saml20_sp/' . $id
+            sprintf('/manage/api/internal/change-requests/%s/%s', $protocol->getManagedProtocol(), $id)
         );
     }
 }

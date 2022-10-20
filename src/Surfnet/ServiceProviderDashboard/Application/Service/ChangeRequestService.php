@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -19,6 +21,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDtoCollection;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 
 class ChangeRequestService implements ChangeRequestServiceInterface
@@ -34,12 +37,9 @@ class ChangeRequestService implements ChangeRequestServiceInterface
         $this->repository = $repository;
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function findById(string $id): ChangeRequestDtoCollection
+    public function findByIdAndProtocol(string $id, Protocol $protocol): ChangeRequestDtoCollection
     {
-        $values = $this->repository->getChangeRequest($id);
+        $values = $this->repository->getChangeRequest($id, $protocol);
         return new ChangeRequestDtoCollection($values);
     }
 }
