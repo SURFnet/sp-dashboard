@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\ProtocolNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
@@ -81,9 +82,6 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         return $response;
     }
 
-    /**
-     * @throws Exception
-     */
     public function getChangeRequest(string $id, Protocol $protocol): array
     {
         $this->logger->info(sprintf('Get outstanding change requests from manage for entity "%s"', $id));

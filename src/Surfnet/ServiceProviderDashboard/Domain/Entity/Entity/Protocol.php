@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\ProtocolNotFoundException;
 use Webmozart\Assert\Assert;
 
 class Protocol implements Comparable
@@ -94,6 +95,7 @@ class Protocol implements Comparable
         if (in_array($this->protocol, self::$protocolMapping)) {
             return array_search($this->protocol, self::$protocolMapping);
         }
-        throw new Exception(sprintf('The protocol \'%s\' is not supported', $this->protocol));
+
+        throw new ProtocolNotFoundException(sprintf('The protocol \'%s\' is not supported', $this->protocol));
     }
 }
