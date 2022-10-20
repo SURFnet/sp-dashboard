@@ -335,6 +335,10 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient'
 
+    Surfnet\ServiceProviderDashboard\Application\Service\ConnectionRequestService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\EntityConnectionRequestClient'
+
     Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService:
         arguments:
             - '@surfnet.manage.client.identity_provider_client.test_environment'
@@ -476,6 +480,11 @@ services:
         arguments:
             $client: '@surfnet.manage.http.http_client.prod_environment'
             $manageConfig: '@surfnet.manage.configuration.production'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\EntityConnectionRequestClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
+            - '@logger'
 
     surfnet.teams.http.http_client:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient
