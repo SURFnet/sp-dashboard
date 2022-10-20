@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\ProtocolNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterface;
