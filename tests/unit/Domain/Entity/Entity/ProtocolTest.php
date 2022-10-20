@@ -18,9 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\Entity\Entity;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\ProtocolNotFoundException;
 
 class ProtocolTest extends TestCase
 {
@@ -48,7 +48,7 @@ class ProtocolTest extends TestCase
 
     public function test_it_throws_exception_on_invalid_managed_protocol()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ProtocolNotFoundException::class);
         $this->expectExceptionMessage('The protocol \'fantasy\' is not supported');
         $protocol = new Protocol('fantasy');
         $protocol->getManagedProtocol();

@@ -18,10 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 
-use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -46,20 +44,13 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
      */
     private $logger;
 
-    /**
-     * @var ApiConfig
-     */
-    private $manageConfig;
-
     public function __construct(
         HttpClientInterface $client,
         JsonGeneratorStrategy $generator,
-        ApiConfig $manageConfig,
         LoggerInterface $logger
     ) {
         $this->client = $client;
         $this->generator = $generator;
-        $this->manageConfig = $manageConfig;
         $this->logger = $logger;
     }
 
@@ -81,9 +72,6 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         return $response;
     }
 
-    /**
-     * @throws Exception
-     */
     public function getChangeRequest(string $id, Protocol $protocol): array
     {
         $this->logger->info(sprintf('Get outstanding change requests from manage for entity "%s"', $id));

@@ -33,7 +33,6 @@ class EntityChangeRequestController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/entity/change-request/{environment}/{manageId}/{serviceId}", name="entity_published_change_request")
-     * @throws \Exception
      */
     public function changeRequestAction(
         Request $request,
