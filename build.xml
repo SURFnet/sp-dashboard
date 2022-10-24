@@ -67,6 +67,15 @@
             <arg path="tests" />
         </exec>
 
+        <echo message="${line.separator}attribute-scheme-validation"/>
+        <exec executable="node_modules/.bin/ajv" failonerror="true">
+            <arg line="compile -s app/Resources/schemas/attributes.scheme.json" />
+        </exec>
+
+        <echo message="${line.separator}attribute-data-validation"/>
+        <exec executable="node_modules/.bin/ajv" failonerror="true">
+            <arg line="validate -s app/Resources/schemas/attributes.scheme.json -d app/config/attributes.json" />
+        </exec>
 
         <echo message="${line.separator}phpcpd:" />
         <exec executable="vendor/bin/phpcpd" failonerror="false">

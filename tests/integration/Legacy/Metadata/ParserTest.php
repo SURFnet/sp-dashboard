@@ -22,9 +22,10 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser;
-use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class ParserTest extends MockeryTestCase
 {
@@ -43,9 +44,10 @@ class ParserTest extends MockeryTestCase
         $this->logger = m::mock(LoggerInterface::class);
 
         $rootDir = __DIR__.'/../../../../app/Resources/';
+        $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
         $this->parser = new Parser(
             new CertificateParser(),
-            new AttributesMetadataRepository($rootDir),
+            new AttributeService($attributeRepository, 'en'),
             $rootDir,
             $this->logger
         );
@@ -138,19 +140,19 @@ oLtcUeUILPXB
 CER
         );
 
-        $this->assertTrue($metadata->emailAddressAttribute->isRequested());
-        $this->assertTrue($metadata->displayNameAttribute->isRequested());
-        $this->assertTrue($metadata->affiliationAttribute->isRequested());
-        $this->assertTrue($metadata->commonNameAttribute->isRequested());
-        $this->assertTrue($metadata->entitlementAttribute->isRequested());
-        $this->assertTrue($metadata->givenNameAttribute->isRequested());
-        $this->assertTrue($metadata->organizationAttribute->isRequested());
-        $this->assertTrue($metadata->organizationTypeAttribute->isRequested());
-        $this->assertTrue($metadata->principleNameAttribute->isRequested());
-        $this->assertTrue($metadata->surNameAttribute->isRequested());
-        $this->assertTrue($metadata->uidAttribute->isRequested());
-        $this->assertTrue($metadata->preferredLanguageAttribute->isRequested());
-        $this->assertTrue($metadata->personalCodeAttribute->isRequested());
+        $this->assertTrue($metadata->getAttribute('emailAddressAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('displayNameAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('affiliationAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('commonNameAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('entitlementAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('givenNameAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('organizationAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('organizationTypeAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('principleNameAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('surNameAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('uidAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('preferredLanguageAttribute')->isRequested());
+        $this->assertTrue($metadata->getAttribute('personalCodeAttribute')->isRequested());
     }
 
     /**

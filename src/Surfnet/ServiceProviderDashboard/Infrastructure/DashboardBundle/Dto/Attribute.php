@@ -20,20 +20,34 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
-class Attribute
+class Attribute implements AttributeInterface
 {
     /**
      * @var string
      */
     public $id;
 
+    /**
+     * @var AttributeForm
+     */
+    public $form;
+
+    /**
+     * @var AttributeDetail
+     */
+    public $detail;
+
     public $urns = [];
 
     private function __construct(
         string $id,
+        array $form,
+        array $detail,
         array $urns
     ) {
         $this->id = $id;
+        $this->form = AttributeForm::fromForm($form);
+        $this->detail = AttributeDetail::from($detail);
         $this->urns = $urns;
     }
 
@@ -41,6 +55,8 @@ class Attribute
     {
         return new self(
             $attribute['id'],
+            $attribute['form'],
+            $attribute['detail'],
             $attribute['urns']
         );
     }

@@ -68,9 +68,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
 
         $this->arpMetadataGenerator
@@ -93,15 +91,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.contacts:2:surName' => 'Doe',
                     'metaDataFields.OrganizationName:nl' => 'Drop Supplies',
                     'metaDataFields.OrganizationDisplayName:en' => 'Drop Supplies',
-                    'metaDataFields.grants' => [
-                        0 => 'authorization_code',
-                        1 => 'refresh_token'
-                    ],
-                    'metaDataFields.redirectUrls' => [
-                        0 => 'uri1',
-                        1 => 'uri2',
-                        2 => 'uri3',
-                    ],
                     'revisionnote' => 'revisionnote',
                 ],
             ],
@@ -118,9 +107,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
 
         $entity = $this->createManageEntity();
@@ -137,15 +124,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'metaDataFields.contacts:2:surName' => 'Doe',
                         'metaDataFields.OrganizationName:nl' => 'Drop Supplies',
                         'metaDataFields.OrganizationDisplayName:en' => 'Drop Supplies',
-                        'metaDataFields.grants' => [
-                            0 => 'authorization_code',
-                            1 => 'refresh_token'
-                        ],
-                        'metaDataFields.redirectUrls' => [
-                            0 => 'uri1',
-                            1 => 'uri2',
-                            2 => 'uri3',
-                        ],
                         'state' => 'testaccepted',
                         'allowedResourceServers' => [
 
@@ -167,9 +145,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
         $entity = $this->createManageEntity();
         $changedEntity = $this->createChangedManageEntity();
@@ -191,9 +167,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
 
         $entity = $this->createManageEntity(true);
@@ -217,9 +191,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
 
         $entity = $this->createManageEntity(false);
@@ -244,9 +216,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
 
         $entity = $this->createManageEntity(false, [
@@ -272,9 +242,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
 
         $entity = $this->createManageEntity(false, [
@@ -300,9 +268,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $generator = new OidcngJsonGenerator(
             $this->arpMetadataGenerator,
             $this->privacyQuestionsMetadataGenerator,
-            $this->spDashboardMetadataGenerator,
-            'http://oidc.test.playground.example.com',
-            'http://oidc.prod.playground.example.com'
+            $this->spDashboardMetadataGenerator
         );
         $entity = $this->createManageEntity();
         $changedEntity = $this->createChangedManageEntity();
@@ -315,7 +281,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('manageId', $data['metaDataId']);
         $this->assertEquals('oidc10_rp', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
-        $this->assertCount(6, $data['pathUpdates']);
+        $this->assertCount(4, $data['pathUpdates']);
     }
 
     private function createManageEntity(

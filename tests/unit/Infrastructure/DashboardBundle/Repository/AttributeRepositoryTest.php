@@ -18,6 +18,8 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Repository;
 
 use PHPUnit\Framework\TestCase;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\NullAttribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 
 class AttributeRepositoryTest extends TestCase
@@ -27,7 +29,7 @@ class AttributeRepositoryTest extends TestCase
         $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
         $results = $attributeRepository->findAll();
         $this->assertIsArray($results);
-        $this->assertCount(15, $results);
+        $this->assertCount(16, $results);
     }
 
     public function test_it_loads_empty_attributes()
@@ -35,6 +37,20 @@ class AttributeRepositoryTest extends TestCase
         $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes-empty.json');
         $results = $attributeRepository->findAll();
         $this->assertEmpty($results);
+    }
+
+    public function test_it_can_find_attribute_by_urn()
+    {
+        $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
+        $result = $attributeRepository->findOneByName('urn:mace:dir:attribute-def:eduPersonTargetedID');
+        $this->assertInstanceOf(Attribute::class, $result);
+    }
+
+    public function test_it_returns_null_object_when_attribute_by_urn_yields_no_result()
+    {
+        $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
+        $result = $attributeRepository->findOneByName('urn:mace:dir:attribute-def:eduPersonTargetedIdentification');
+        $this->assertInstanceOf(NullAttribute::class, $result);
     }
 
     public function test_it_has_all_attributes()
@@ -55,6 +71,7 @@ class AttributeRepositoryTest extends TestCase
             "principleName",
             "preferredLanguage",
             "personalCode",
+            "eduPersonTargetedID",
         ];
         $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
         $attributes = $attributeRepository->findAll();

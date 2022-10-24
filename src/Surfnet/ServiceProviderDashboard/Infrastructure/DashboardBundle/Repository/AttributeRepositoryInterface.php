@@ -20,7 +20,11 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\AttributeInterface;
+
 interface AttributeRepositoryInterface
 {
     public function findAll(): array;
+
+    public function findOneByName(string $name): AttributeInterface;
 }

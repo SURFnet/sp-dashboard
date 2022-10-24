@@ -24,10 +24,17 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameServiceInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\AttributeNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
 
 class LoadMetadataCommandHandler implements CommandHandler
 {
+    /**
+     * @var AttributeNameServiceInterface
+     */
+    private $attributeNameService;
+
     /**
      * @var FetcherInterface
      */
@@ -43,9 +50,11 @@ class LoadMetadataCommandHandler implements CommandHandler
      * @param ParserInterface $parser
      */
     public function __construct(
+        AttributeNameServiceInterface $attributeNameService,
         FetcherInterface $metadataFetcher,
         ParserInterface $parser
     ) {
+        $this->attributeNameService = $attributeNameService;
         $this->metadataFetcher = $metadataFetcher;
         $this->metadataParser = $parser;
     }
@@ -107,26 +116,15 @@ class LoadMetadataCommandHandler implements CommandHandler
 
     private function mapAttributes(SaveSamlEntityCommand $command, Metadata $metadata)
     {
-        $map = [
-            'emailAddressAttribute' => ['getEmailAddressAttribute', 'setEmailAddressAttribute'],
-            'displayNameAttribute' => ['getDisplayNameAttribute', 'setDisplayNameAttribute'],
-            'affiliationAttribute' => ['getAffiliationAttribute', 'setAffiliationAttribute'],
-            'givenNameAttribute' => ['getGivenNameAttribute', 'setGivenNameAttribute'],
-            'surNameAttribute' => ['getSurNameAttribute', 'setSurNameAttribute'],
-            'commonNameAttribute' => ['getCommonNameAttribute', 'setCommonNameAttribute'],
-            'entitlementAttribute' => ['getEntitlementAttribute', 'setEntitlementAttribute'],
-            'organizationAttribute' => ['getOrganizationAttribute', 'setOrganizationAttribute'],
-            'organizationTypeAttribute' => ['getOrganizationTypeAttribute', 'setOrganizationTypeAttribute'],
-            'organizationUnitAttribute' => ['getOrganizationUnitAttribute', 'setOrganizationUnitAttribute'],
-            'principleNameAttribute' => ['getPrincipleNameAttribute', 'setPrincipleNameAttribute'],
-            'uidAttribute' => ['getUidAttribute', 'setUidAttribute'],
-            'preferredLanguageAttribute' => ['getPreferredLanguageAttribute', 'setPreferredLanguageAttribute'],
-            'personalCodeAttribute' => ['getPersonalCodeAttribute', 'setPersonalCodeAttribute'],
-            'eduPersonTargetedIDAttribute' => ['getEduPersonTargetedIDAttribute', 'setEduPersonTargetedIDAttribute'],
-            'scopedAffiliationAttribute' => ['getScopedAffiliationAttribute', 'setScopedAffiliationAttribute'],
-        ];
+        $attributeNames = $this->attributeNameService->getAttributeTypeNames();
 
-        $this->map($map, $command, $metadata);
+        foreach ($attributeNames as $attributeName) {
+            try {
+                $command->setAttribute($attributeName, $metadata->getAttribute($attributeName));
+            } catch (AttributeNotFoundException $ignored) {
+                // just continue, apparently attribute is not available at the metadata
+            }
+        }
     }
 
     private function mapContacts(SaveSamlEntityCommand $command, Metadata $metadata)

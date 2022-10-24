@@ -7,16 +7,6 @@ services:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityDetailController:
-        arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\EntityAclController:
-        arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
-
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\:
         resource: '../../Security/Voter'
         tags: ['security.voter']
@@ -70,6 +60,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\LoadMetadataCommandHandler
         public: true
         arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService'
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher'
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser'
         tags:
@@ -204,7 +195,7 @@ services:
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
-            - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
             - '%kernel.root_dir%/Resources'
             - '@logger'
 
@@ -217,6 +208,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
         arguments:  ['%kernel.root_dir%/Resources']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
+        arguments:  ['%kernel.root_dir%/config/attributes.json']
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
         factory: ['@doctrine', 'getRepository']
@@ -297,10 +291,6 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper:
         arguments:  ['@logger']
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator:
-        tags:
-            - { name: validator.constraint_validator, alias: attribute }
-
     Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
         arguments:
             - '@surfnet.dashboard.repository.issue'
@@ -325,6 +315,21 @@ services:
             - '@router'
             - '@logger'
             - '%jira_issue_type%'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+            - '%locale%'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttributeValidator:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+        tags:
+            - { name: validator.constraint_validator, alias: valid_attribute }
 
     Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService:
         arguments:
@@ -527,7 +532,16 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeTypeFactory'
         tags: ['form.type']
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeTypeFactory'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeTypeFactory:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OauthClientCredentialEntityType:
         arguments:
@@ -540,6 +554,11 @@ services:
             - '@surfnet.manage.client.query_client.prod_environment'
             - '%manage_test_publication_status%'
             - '%manage_prod_publication_status%'
+
+    Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory:
+        arguments:
+            $playGroundUriProd: '%playground_uri_prod%'
+            $playGroundUriTest: '%playground_uri_test%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\GlobalSiteNotice:
         tags: [ twig.extension ]

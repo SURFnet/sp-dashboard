@@ -204,132 +204,9 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $supportContact;
 
     /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
+     * @SpDashboardAssert\ValidAttribute()
      */
-    private $givenNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $surNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $commonNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $displayNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $emailAddressAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $organizationAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $organizationTypeAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $organizationUnitAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $affiliationAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $entitlementAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $principleNameAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $uidAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $preferredLanguageAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $personalCodeAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $scopedAffiliationAttribute;
-
-    /**
-     * @var Attribute
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute")
-     * @SpDashboardAssert\ValidAttribute
-     */
-    private $eduPersonTargetedIDAttribute;
+    private $attributes = [];
 
     /**
      * @var string
@@ -356,6 +233,38 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     public function __construct()
     {
+    }
+
+    /**
+     * The magic getters and setters are consulted by the Oidcng form builder.
+     * Another option would be to implement a dataMapper on the
+     * form or attribute container, but this might lead to needless complexity.
+     */
+    public function __set(string $property, ?Attribute $value)
+    {
+        $this->setAttribute($property, $value);
+    }
+
+    public function __get(string $property): ?Attribute
+    {
+        return $this->getAttribute($property);
+    }
+
+    public function setAttribute(string $property, ?Attribute $value)
+    {
+        $this->attributes[$property] = $value;
+    }
+
+    /**
+     * The reason why a null value is returned (iso throwing an exception) is because the property accessor of
+     * symfony, calling the magic getter, cannot handle exceptions.
+     */
+    public function getAttribute(string $property): ?Attribute
+    {
+        if (array_key_exists($property, $this->attributes)) {
+            return $this->attributes[$property];
+        }
+        return null;
     }
 
     /**
@@ -643,156 +552,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setSupportContact($supportContact)
     {
         $this->supportContact = $supportContact;
-    }
-
-    public function getGivenNameAttribute(): ?Attribute
-    {
-        return $this->givenNameAttribute;
-    }
-
-    public function setGivenNameAttribute(?Attribute $givenNameAttribute)
-    {
-        $this->givenNameAttribute = $givenNameAttribute;
-    }
-
-    public function getSurNameAttribute(): ?Attribute
-    {
-        return $this->surNameAttribute;
-    }
-
-    public function setSurNameAttribute(?Attribute $surNameAttribute)
-    {
-        $this->surNameAttribute = $surNameAttribute;
-    }
-
-    public function getCommonNameAttribute(): ?Attribute
-    {
-        return $this->commonNameAttribute;
-    }
-
-    public function setCommonNameAttribute(?Attribute $commonNameAttribute)
-    {
-        $this->commonNameAttribute = $commonNameAttribute;
-    }
-
-    public function getDisplayNameAttribute(): ?Attribute
-    {
-        return $this->displayNameAttribute;
-    }
-
-    public function setDisplayNameAttribute(?Attribute $displayNameAttribute)
-    {
-        $this->displayNameAttribute = $displayNameAttribute;
-    }
-
-    public function getEmailAddressAttribute(): ?Attribute
-    {
-        return $this->emailAddressAttribute;
-    }
-
-    public function setEmailAddressAttribute(?Attribute $emailAddressAttribute)
-    {
-        $this->emailAddressAttribute = $emailAddressAttribute;
-    }
-
-    public function setEduPersonTargetedIDAttribute(?Attribute $eduPersonTargetedIDAttribute)
-    {
-        $this->eduPersonTargetedIDAttribute = $eduPersonTargetedIDAttribute;
-    }
-
-    public function getOrganizationAttribute(): ?Attribute
-    {
-        return $this->organizationAttribute;
-    }
-
-    public function setOrganizationAttribute(?Attribute $organizationAttribute)
-    {
-        $this->organizationAttribute = $organizationAttribute;
-    }
-
-    public function getOrganizationTypeAttribute(): ?Attribute
-    {
-        return $this->organizationTypeAttribute;
-    }
-
-    public function setOrganizationTypeAttribute(?Attribute $organizationTypeAttribute)
-    {
-        $this->organizationTypeAttribute = $organizationTypeAttribute;
-    }
-
-    public function getAffiliationAttribute(): ?Attribute
-    {
-        return $this->affiliationAttribute;
-    }
-
-    public function setAffiliationAttribute(?Attribute $affiliationAttribute)
-    {
-        $this->affiliationAttribute = $affiliationAttribute;
-    }
-
-    public function getEntitlementAttribute(): ?Attribute
-    {
-        return $this->entitlementAttribute;
-    }
-
-    public function setEntitlementAttribute(?Attribute $entitlementAttribute)
-    {
-        $this->entitlementAttribute = $entitlementAttribute;
-    }
-
-    public function getPrincipleNameAttribute(): ?Attribute
-    {
-        return $this->principleNameAttribute;
-    }
-
-    public function setPrincipleNameAttribute(?Attribute $principleNameAttribute)
-    {
-        $this->principleNameAttribute = $principleNameAttribute;
-    }
-
-    public function getUidAttribute(): ?Attribute
-    {
-        return $this->uidAttribute;
-    }
-
-    public function setUidAttribute(?Attribute $uidAttribute)
-    {
-        $this->uidAttribute = $uidAttribute;
-    }
-
-    public function getPreferredLanguageAttribute(): ?Attribute
-    {
-        return $this->preferredLanguageAttribute;
-    }
-
-    public function setPreferredLanguageAttribute(?Attribute $preferredLanguageAttribute)
-    {
-        $this->preferredLanguageAttribute = $preferredLanguageAttribute;
-    }
-
-    public function getPersonalCodeAttribute(): ?Attribute
-    {
-        return $this->personalCodeAttribute;
-    }
-
-    public function setPersonalCodeAttribute(?Attribute $personalCodeAttribute)
-    {
-        $this->personalCodeAttribute = $personalCodeAttribute;
-    }
-
-    public function getScopedAffiliationAttribute(): ?Attribute
-    {
-        return $this->scopedAffiliationAttribute;
-    }
-
-    public function setScopedAffiliationAttribute(?Attribute $scopedAffiliationAttribute)
-    {
-        $this->scopedAffiliationAttribute = $scopedAffiliationAttribute;
-    }
-
-    public function getEduPersonTargetedIDAttribute(): ?Attribute
-    {
-        return $this->eduPersonTargetedIDAttribute;
     }
 
     /**

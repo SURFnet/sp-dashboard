@@ -37,7 +37,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Organization;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\NullSecret;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
 use function in_array;
@@ -48,9 +47,9 @@ use function in_array;
 class EntityMergeService
 {
     /**
-     * @var AttributesMetadataRepository
+     * @var AttributeServiceInterface
      */
-    private $attributeRepository;
+    private $attributeService;
 
     /**
      * @var string
@@ -63,11 +62,11 @@ class EntityMergeService
     private $playGroundUriProd;
 
     public function __construct(
-        AttributesMetadataRepository $repository,
+        AttributeServiceInterface $attributeService,
         string $oidcPlaygroundUriTest,
         string $oidcPlaygroundUriProd
     ) {
-        $this->attributeRepository = $repository;
+        $this->attributeService = $attributeService;
         $this->playGroundUriTest = $oidcPlaygroundUriTest;
         $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
@@ -125,14 +124,14 @@ class EntityMergeService
                 $command->getAccessTokenValidity(),
                 $command->getOidcngResourceServers()
             );
-        } else if ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+        } elseif ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
             /** @var SaveOidcngResourceServerEntityCommand  $command */
             $oidcClient = new OidcngResourceServerClient(
                 $command->getClientId(),
                 $secret->getSecret(),
                 []
             );
-        } else if ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+        } elseif ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
             /** @var SaveOauthClientCredentialClientCommand $command */
             $oidcClient = new OauthClientCredentialsClientClient(
                 $command->getClientId(),
@@ -177,13 +176,15 @@ class EntityMergeService
             return $attributeList;
         }
 
-        foreach ($this->attributeRepository->findAll() as $definition) {
-            $getterName = $definition->getterName;
-
-            if ($command->$getterName()) {
-                $commandAttribute = $command->$getterName();
-                $urn = reset($definition->urns);
-                $attributeList->add(new Attribute($urn, '', 'idp', $commandAttribute->getMotivation()));
+        foreach ($this->attributeService->getEntityMergeAttributes() as $entityMergeAttribute) {
+            if ($command->getAttribute($entityMergeAttribute->getName())) {
+                $commandAttribute = $command->getAttribute($entityMergeAttribute->getName());
+                $attributeList->add(new Attribute(
+                    $entityMergeAttribute->getUrn(),
+                    '',
+                    'idp',
+                    $commandAttribute->getMotivation()
+                ));
             }
         }
         return $attributeList;
