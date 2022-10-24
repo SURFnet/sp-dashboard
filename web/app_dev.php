@@ -12,7 +12,7 @@ use Symfony\Component\Debug\Debug;
 $loader = require __DIR__.'/../app/autoload.php';
 Debug::enable();
 
-$kernel = new AppKernel('dev', true);
+$kernel = new AppKernel('dev', false);
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

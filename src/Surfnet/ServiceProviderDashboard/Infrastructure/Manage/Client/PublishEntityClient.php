@@ -73,7 +73,6 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         try {
             if (!$entity->isManageEntity()) {
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getId()));
-
                 $response = $this->client->post(
                     json_encode($this->generator->generateForNewEntity(
                         $entity,

@@ -13,7 +13,7 @@
     margin-bottom: 0;
   }
 
-  fieldset.add-entity-fieldset {
+  div.add-entity-fieldset {
     div:not(.add-entity-field) {
       margin-bottom: 0;
     }
@@ -51,6 +51,10 @@
   justify-content: space-between;
   min-width: 130px;
 
+  &:not(.a):not(.b):not(.c):not(.d) {
+    font-size: $normalFont;
+    margin-top: 0;
+  }
   .title {
     font-weight: 700;
   }
@@ -70,11 +74,11 @@
   }
 }
 
-.entity-type form fieldset.add-entity-fieldset .add-entity-field label.add-entity-label {
+.entity-type form div.add-entity-fieldset .add-entity-field label.add-entity-label {
   color: $black;
 }
 
-form.add-entity fieldset.add-entity-fieldset .add-entity-field .add-entity-radio:disabled + .add-entity-label {
+form.add-entity div.add-entity-fieldset .add-entity-field .add-entity-radio:disabled + .add-entity-label {
   cursor: not-allowed;
   filter: grayscale(100%);
   opacity: .6;
