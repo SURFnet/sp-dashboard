@@ -1,0 +1,31 @@
+.connection-request-wrapper {
+  .collection-list {
+    margin-bottom: 1rem;
+  }
+  .read-only-view {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    line-height: 1.2rem;
+    margin-bottom: 0;
+    label {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .item {
+      line-height: 1.2rem;
+      width: 33.33%;
+    }
+  }
+  .error-message {
+    background-color: $criticalRed;
+    padding: 0.5rem;
+    border: 1px solid $red;
+    border-radius: 3px;
+    color: $black;
+  }
+  .button-small {
+    padding: 5px 10px;
+    top: 1.5rem;
+  }
+}

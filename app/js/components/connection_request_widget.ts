@@ -6,6 +6,8 @@ class CollectionWidget {
   private $input: JQuery;
   private prototype: string;
   private index: number =  0;
+  private errorMessageSelector: string;
+  private errorMessage: string;
 
   /**
    * @param $collectionWidget The collection widget
@@ -17,6 +19,8 @@ class CollectionWidget {
     this.$collectionList = this.$collectionWidget.find('ul.collection-list');
     this.prototype = this.$collectionWidget.data('prototype');
     this.$input = $(this.prototype);
+    this.errorMessageSelector = '.error-message';
+    this.errorMessage = '<div class="error-message">This institution is already requested to be connected.</div>';
   }
 
   /**
@@ -33,7 +37,7 @@ class CollectionWidget {
    * - add button
    */
   private initCollectionWidget() {
-    const $collectionContainer = $('<div class="collection-entry"></div>');
+    const $collectionContainer = $('<div class="collection-entry base-form"></div>');
     const $addEntryButton = $('<button type="button" class="button-small blue add_collection_entry"><i class="fa fa-plus"></i></button>');
 
     const $input = this.$input;
@@ -64,11 +68,15 @@ class CollectionWidget {
     const newElement = this.createNewCollectionEntry();
     if (!this.isUnique(newElement)) {
       this.$input.parent().addClass('error');
+      if ($(this.errorMessageSelector).length === 0) {
+        this.$input.parent().prepend(this.errorMessage);
+      }
       return;
     }
 
     this.$input.val('');
     this.$input.parent().removeClass('error');
+    $(this.errorMessageSelector).remove();
 
     const collectionEntry = $('<li class="collection-entry"></li>');
     const $removeEntryButton = $('<button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button>');
@@ -94,14 +102,32 @@ class CollectionWidget {
 
   /**
    * Create new collection entry with unique name
+   *
+   * The input fields are hidden, and their value (and label values) are used to create a
+   * more compact read-only view. Some exotic mix and match logic was required to create
+   * the more compact read-only view.
    */
   private createNewCollectionEntry(): JQuery<HTMLElement> {
-    const input = this.prototype.replace(/__name__/g, this.index.toString());
-    const $input = $(input);
-    $input.val(this.$input.val() as string);
-    $input.prop('readonly', true);
-
-    return $input;
+    const inputFields = this.prototype.replace(/__name__/g, this.index.toString());
+    const $inputContainer = $(inputFields);
+    const $fields = $inputContainer.find('input');
+    const $outputElement = $('<div class="read-only-view">');
+    // The value[Label|Input]Elements are used to match the input text with the new
+    // element that is added to the read-only list of connection requests.
+    const $valueLabelElements = this.$input.find('label:not(error)');
+    const $valueInputElements = this.$input.find('input');
+    $fields.each((_index: number, el: HTMLElement) => {
+      const $fieldValue = $valueInputElements.eq(_index).val();
+      const $label = $valueLabelElements.eq(_index).text();
+      const $el = $(el);
+      $el.val($fieldValue as string);
+      // The input fields should be in the output element, but they are hidden for the eye candy factor
+      $el.hide();
+      $outputElement.append(`<div class="item"><label>${$label}</label>${$fieldValue}</div>`);
+      $outputElement.append($el);
+      $outputElement.append('</div>');
+    });
+    return $outputElement;
   }
 
   /**
@@ -155,11 +181,18 @@ class CollectionWidget {
     $form.on('submit', handleBeforeSubmit);
   }
 
+  /**
+   * Verify the institution value of the entry is unique.
+   */
   private isUnique(newElement: JQuery<HTMLElement>): boolean {
     let isUnique = true;
-    this.$collectionList.find('li').toArray().forEach((value) => {
-      const existingValue = $(value).find('input').val();
-      if (existingValue === newElement.val()) {
+    const newInstitutionValue = newElement.find('input').first().val();
+
+    this.$collectionList.find('li').each((_index: number, el: HTMLElement) => {
+      const $el = $(el);
+      const existingValue = $el.find('input').first().val();
+
+      if (existingValue === newInstitutionValue) {
         isUnique = false;
       }
     });
@@ -168,9 +201,10 @@ class CollectionWidget {
   }
 }
 
-export function loadEntityOidcForm() {
+export function load() {
+
   // Exclude the ConnectionRequest collection widget from being loaded
-  const $widgets = $('form .collection-widget:not(#connection_request_container_connectionRequests)');
+  const $widgets = $('form #connection_request_container_connectionRequests');
   if ($widgets.length > 0) {
 
     $widgets.each((_index: number, el: HTMLElement) => {
@@ -180,4 +214,4 @@ export function loadEntityOidcForm() {
   }
 }
 
-$(document).ready(loadEntityOidcForm);
+$(document).ready(load);
