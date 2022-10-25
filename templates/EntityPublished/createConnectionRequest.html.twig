@@ -21,12 +21,14 @@
         <div class="wysiwyg">{{ 'entity.create_connection_request.introduction.html'|trans|wysiwyg }}</div>
     </div>
 
-    <div class="fieldset card">
-        {{ form(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
-    </div>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
 
-    <div class="button-wrapper">
-        {{ form_end(form) }}
+    <div class="fieldset card connection-request-wrapper">
+        {{ form_widget(form.connectionRequests) }}
+
+        <div class="button-wrapper">
+            {{ form_end(form) }}
+        </div>
     </div>
 
 {% endblock %}
