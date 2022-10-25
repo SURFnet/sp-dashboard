@@ -18,13 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\Connection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,6 +34,7 @@ class ConnectionRequestType extends AbstractType
             TextType::class,
             [
                 'required' => true,
+                'attr' => ['class' => 'add-form-input']
             ]
         );
 
@@ -46,6 +43,7 @@ class ConnectionRequestType extends AbstractType
             TextType::class,
             [
                 'required' => false,
+                'attr' => ['class' => 'add-form-input']
             ]
         );
 
@@ -54,6 +52,7 @@ class ConnectionRequestType extends AbstractType
             EmailType::class,
             [
                 'required' => true,
+                'attr' => ['class' => 'add-form-input']
             ]
         );
     }

@@ -175,6 +175,17 @@ class EntityActions
         return $this->status == Constants::STATE_PUBLISHED;
     }
 
+    public function allowCreateConnectionRequestAction(): bool
+    {
+        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION) {
+            return false;
+        }
+        $protocol = $this->protocol;
+        $meetsProtocolRequirement = $protocol == Constants::TYPE_SAML ||
+            $protocol == Constants::TYPE_OPENID_CONNECT_TNG;
+
+        return $meetsProtocolRequirement && $this->status == Constants::STATE_PUBLISHED;
+    }
 
     public function isPublishedToProduction()
     {
