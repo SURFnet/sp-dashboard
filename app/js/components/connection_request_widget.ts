@@ -108,7 +108,6 @@ class CollectionWidget {
     const element = $(el.target);
 
     element.closest('.collection-entry').remove();
-    console.log(this.$collectionList.find('tr'))
     if (this.$collectionList.find('tr').length === 1) {
       this.$collectionList.hide();
     }
