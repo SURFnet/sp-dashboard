@@ -8,7 +8,7 @@
     <div class="wysiwyg">{{ infoString|trans|wysiwyg }}</div>
 
     <div class="row oidc-confirmation">
-        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.list.modal.oidc_confirmation.client_secret.label'|trans, value: entity.clientSecret} %}
+        {% include '@Dashboard/EntityDetail/detailMonospacedTextField.html.twig' with {label: 'entity.list.modal.oidc_confirmation.client_secret.label'|trans, value: entity.clientSecret } %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.list.modal.oidc_confirmation.client_id.label'|trans, value: entity.entityId} %}
 
         <div class="button-row">
