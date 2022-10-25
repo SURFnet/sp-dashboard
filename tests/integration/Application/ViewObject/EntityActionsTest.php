@@ -190,7 +190,7 @@ class EntityActionsTest extends TestCase
         $this->assertFalse($actions->allowChangeRequestAction());
     }
 
-    public function test_open_connection_request_action_is_allowed()
+    public function test_create_connection_request_action_is_allowed()
     {
         $actions = new EntityActions(
             'manage-id',
@@ -201,10 +201,10 @@ class EntityActionsTest extends TestCase
             false
         );
 
-        $this->assertTrue($actions->allowOpenConnectionRequestAction());
+        $this->assertTrue($actions->allowCreateConnectionRequestAction());
     }
 
-    public function test_open_connection_request_action_is_not_allowed_for_test_env()
+    public function test_create_connection_request_action_is_not_allowed_for_test_env()
     {
         $actions = new EntityActions(
             'manage-id',
@@ -215,10 +215,10 @@ class EntityActionsTest extends TestCase
             false
         );
 
-        $this->assertFalse($actions->allowOpenConnectionRequestAction());
+        $this->assertFalse($actions->allowCreateConnectionRequestAction());
     }
 
-    public function test_open_connection_request_action_is_not_allowed_for_oauth_ccc()
+    public function test_create_connection_request_action_is_not_allowed_for_oauth_ccc()
     {
         $actions = new EntityActions(
             'manage-id',
@@ -229,10 +229,10 @@ class EntityActionsTest extends TestCase
             false
         );
 
-        $this->assertFalse($actions->allowOpenConnectionRequestAction());
+        $this->assertFalse($actions->allowCreateConnectionRequestAction());
     }
 
-    public function test_open_connection_request_action_is_not_allowed_for_oauth_rs()
+    public function test_create_connection_request_action_is_not_allowed_for_oauth_rs()
     {
         $actions = new EntityActions(
             'manage-id',
@@ -243,6 +243,6 @@ class EntityActionsTest extends TestCase
             false
         );
 
-        $this->assertFalse($actions->allowOpenConnectionRequestAction());
+        $this->assertFalse($actions->allowCreateConnectionRequestAction());
     }
 }
