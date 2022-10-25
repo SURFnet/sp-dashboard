@@ -31,31 +31,31 @@ class ConnectionRequestContainerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder
             ->add(
                 'connectionRequests',
                 CollectionType::class,
                 [
                     'prototype' => true,
+                    'label' => false,
+                    'attr' => ['class' => 'connection-request-container'],
                     'allow_add' => true,
                     'allow_delete' => true,
                     'entry_type' => ConnectionRequestType::class,
-                    'attr' => [
-                        'class' => 'card',
-                    ],
+                    'entry_options' => [
+                        'attr' => ['class' => 'connection-request']
+                    ]
                 ]
-            );
-
-        $builder
+            )
             ->add('send', SubmitType::class, ['label' => 'Send', 'attr' => ['class' => 'button']])
-            ->add('cancel', SubmitType::class, ['label'=> 'Cancel', 'attr' => ['class' => 'button']]);
+            ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => CreateConnectionRequestCommand::class
+            'data_class' => CreateConnectionRequestCommand::class,
+            'expanded' => true,
         ));
     }
 
