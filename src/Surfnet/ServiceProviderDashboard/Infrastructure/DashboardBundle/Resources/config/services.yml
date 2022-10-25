@@ -72,12 +72,18 @@ services:
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand }
 
-  surfnet.dashboard.command_handler.publish_test_entity:
-    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
-    arguments:
-      $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
-    tags:
-      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
+  surfnet.dashboard.command_handler.connection_request:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateConnectionRequestCommandHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand }
+
+    surfnet.dashboard.command_handler.publish_test_entity:
+        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
+        arguments:
+            $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
 
   Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EntityChangeRequestCommandHandler:
     arguments:
