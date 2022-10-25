@@ -1,0 +1,32 @@
+{% form_theme form 'form/fields.html.twig' %}
+
+{% extends '::base.html.twig' %}
+
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'entity.create_connection_request.title'|trans }}{%endblock%}</h1>
+
+    <div class="fieldset card">
+        {% for message in app.flashes('error') %}
+            <div class="message error">
+                {{ message|trans }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('notice') %}
+            <div class="flashMessage info">
+                {{ message|trans }}
+            </div>
+        {% endfor %}
+
+        <div class="wysiwyg">{{ 'entity.create_connection_request.introduction.html'|trans|wysiwyg }}</div>
+    </div>
+
+    <div class="fieldset card">
+        {{ form(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
+    </div>
+
+    <div class="button-wrapper">
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
