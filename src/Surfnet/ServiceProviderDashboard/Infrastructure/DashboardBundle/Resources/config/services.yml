@@ -346,10 +346,6 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient'
 
-    Surfnet\ServiceProviderDashboard\Application\Service\ConnectionRequestService:
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\EntityConnectionRequestClient'
-
     Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService:
         arguments:
             - '@surfnet.manage.client.identity_provider_client.test_environment'
