@@ -28,7 +28,7 @@ before_script:
   - composer install --no-interaction
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
-  - nvm install --lts
+  - nvm install 16
   - yarn install
   - yarn encore production
 
