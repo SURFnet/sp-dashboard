@@ -1,0 +1,49 @@
+{
+  "data": {
+    "allowedall" : true,
+    "arp": {
+      "attributes": {
+        "urn:mace:dir:attribute-def:cn": [{
+          "source": "idp",
+          "value": "*",
+          "motivation": "Foobar"
+        }],
+        "urn:mace:dir:attribute-def:sn": [{
+          "source": "idp",
+          "value": "*",
+          "motivation": "Foobar"
+        }]
+      },
+      "enabled": true
+    },
+    "type": "saml20-sp",
+    "entityid": "{{entityId}}",
+    "metaDataFields": {
+      "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+      "AssertionConsumerService:0:Location": "https://test.vm.openconext.org/acs",
+      "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+      "OrganizationName:en": "{{name}}",
+      "coin:signature_method": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
+      "description:en": "{{name}} description",
+      "description:nl": "{{name}} description",
+      "name:en": "{{name}}",
+      "name:nl": "{{name}}",
+      "coin:service_team_id": "{{team}}",
+      "contacts:0:contactType": "support",
+      "contacts:0:givenName": "Rincewind",
+      "contacts:0:surName": "Wizard",
+      "contacts:0:emailAddress": "rincewind@uu.am",
+      "contacts:1:contactType": "administrative",
+      "contacts:1:givenName": "Moist",
+      "contacts:1:surName": "von Lipwig",
+      "contacts:1:emailAddress": "moist@postoffice.am",
+      "contacts:2:contactType": "technical",
+      "contacts:2:givenName": "Ponder",
+      "contacts:2:surName": "Stibbons",
+      "contacts:2:emailAddress": "ponder@uu.am"
+    },
+    "metadataurl": "https://test.openconext.org/metadata",
+    "state": "{{environment}}"
+  },
+  "type": "saml20_sp"
+}

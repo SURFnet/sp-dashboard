@@ -15,7 +15,7 @@
       },
       "enabled": true
     },
-    "type": "{{typeDashConverted}}",
+    "type": "oidc10_rp",
     "entityid": "{{entityId}}",
     "active": true,
     "state": "{{environment}}",
@@ -43,7 +43,7 @@
       "coin:eula": "https:\/\/foobar.example.com\/eula",
       "coin:institution_guid": "52c6c919-e5b1-4aa3-b73e-b516e22219e8",
       "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
-      "coin:exclude_from_push": "1",
+      "coin:exclude_from_push": "{{excludeFromPush}}",
       "secret": "RetoywD16SyxI4wuwcyh",
       "redirectUrls": ["https:\/\/foobar.example.com\/redirect", "https:\/\/foobar.example.com\/redirect2"],
       "grants": ["authorization_code"],
@@ -58,5 +58,5 @@
     "allowedResourceServers": [],
     "revisionnote": "Revision note"
   },
-  "type": "{{type}}"
+  "type": "oidc10-rp"
 }
