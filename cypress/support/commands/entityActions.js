@@ -20,13 +20,19 @@ Cypress.Commands.add('viewEntity', (environment = 'test', id = 'https://tiffany.
     cy.doEntityAction('View', environment, id);
 });
 
-Cypress.Commands.add('deleteEntity', (environment = 'test', id = 'https://tiffany.aching.do/id') => {
-    cy.doEntityAction('Delete', environment, id);
-    cy.get('#dashboard_bundle_delete_entity_type_delete').then((button) => {
-        button.trigger('click');
-    });
-});
-
 Cypress.Commands.add('editWhitelist', (id = 'https://tiffany.aching.do/id') => {
     cy.doEntityAction('Edit IdP whitelist', 'test', id);
+});
+
+Cypress.Commands.add('openConnectionRequest', (id) => {
+    cy.doEntityAction('Create connection request', 'production', id);
+});
+Cypress.Commands.add('fillConnectionRequestForm', () => {
+    cy.get('#connection_request_container_connectionRequests___name___institution')
+        .type('Harderwijk University');
+    cy.get('#connection_request_container_connectionRequests___name___name')
+        .type('Johny Walker');
+    cy.get('#connection_request_container_connectionRequests___name___email')
+        .type('jay-dob@harderwijk.nl');
+    cy.get('.add_collection_entry').click();
 });

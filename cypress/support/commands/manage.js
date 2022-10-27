@@ -7,9 +7,22 @@ function stringTemplateParser(expression, valueObj) {
     return text
 }
 
-Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environment = 	'testaccepted', type = 'oidc10_rp') => {
-    const typeDashConverted = type.replace('_', '-');
-    let metadataTemplate = require('./fixtures/new_oidc_entity_template.json');
+Cypress.Commands.add('createEntity',
+    (
+        entityId,
+        team,
+        name,
+        attributes,
+        environment = 'testaccepted',
+        excludeFromPush = 1,
+        type = 'oidc10_rp'
+    ) => {
+    let metadataTemplate;
+    if (type === 'oidc10_rp') {
+        metadataTemplate = require('./fixtures/new_oidc_entity_template.json');
+    } else {
+        metadataTemplate = require('./fixtures/new_saml_entity_template.json');
+    }
     if (attributes) {
         let arp = JSON.parse('{"arp": {"attributes": {},"enabled": true}}');
         let arpAttributes = [];
@@ -30,9 +43,8 @@ Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environm
         entityId: entityId,
         environment: environment,
         team: team,
-        type: type,
-        typeDashConverted: typeDashConverted,
         attributes: attributes,
+        excludeFromPush: excludeFromPush
     };
     metadataTemplate = stringTemplateParser(JSON.stringify(metadataTemplate), templateVariables);
 
@@ -76,7 +88,8 @@ Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
             console.log(error);
         });
 
-    let deleteUri = 'https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}';
+Cypress.Commands.add('deleteEntity', (entityId, type) => {
+    let deleteUri = `https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}`;
     fetch(deleteUri, {
         method: 'DELETE',
         headers: {
@@ -92,6 +105,32 @@ Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
         .catch(error => {
             console.log(error);
         });
+});
+
+Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
+
+    // const protocols = ['saml20_sp', 'oidc10_rp', 'oauth20_rs'];
+    //
+    // let searchUri = 'https://manage.vm.openconext.org/manage/api/internal/search/${type}'
+    //
+    // fetch(searchUri, {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json',
+    //         'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
+    //     },
+    //     body
+    // })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         console.log(data);
+    //     })
+    //     .catch(error => {
+    //         console.log(error);
+    //     });
+    //
+   //cy.deleteEntity();
 });
 
 Cypress.Commands.add('loginToManage', (url = 'https://manage.vm.openconext.org') => {
