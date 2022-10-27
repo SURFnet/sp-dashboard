@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
 
 interface CreateConnectionRequestCommandInterface extends Command
@@ -29,4 +31,8 @@ interface CreateConnectionRequestCommandInterface extends Command
      * @return ConnectionRequest[]
      */
     public function getConnectionRequests(): array;
+
+    public function getManageEntity(): ManageEntity;
+
+    public function getApplicant(): Contact;
 }

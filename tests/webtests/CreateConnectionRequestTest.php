@@ -48,7 +48,7 @@ class CreateConnectionRequestTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create-connection-request/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
+        $crawler = $this->client->request('GET', "/entity/create-connection-request-from-overview/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
         $form = $crawler->filter('.page-container')
             ->selectButton('Send')
             ->form();

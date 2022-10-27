@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
 
 class CreateConnectionRequestCommand implements CreateConnectionRequestCommandInterface
@@ -30,6 +32,22 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
     private $connectionRequests = [];
 
     /**
+     * @var ManageEntity
+     */
+    private $manageEntity;
+
+    /**
+     * @var Contact
+     */
+    private $applicant;
+
+    public function __construct(ManageEntity $manageEntity, Contact $applicant)
+    {
+        $this->manageEntity = $manageEntity;
+        $this->applicant = $applicant;
+    }
+
+    /**
      * @return ConnectionRequest[]
      */
     public function getConnectionRequests(): array
@@ -37,10 +55,18 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
         return $this->connectionRequests;
     }
 
-    public function setConnectionRequests(array $connectionRequests): CreateConnectionRequestCommandInterface
+    public function setConnectionRequests(array $connectionRequests): void
     {
         $this->connectionRequests = $connectionRequests;
+    }
 
-        return $this;
+    public function getManageEntity(): ManageEntity
+    {
+        return $this->manageEntity;
+    }
+
+    public function getApplicant(): Contact
+    {
+        return $this->applicant;
     }
 }
