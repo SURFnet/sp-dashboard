@@ -35,6 +35,14 @@ interface TicketServiceInterface
     public function createIssueFrom(Ticket $ticket);
 
     /**
+     * Create a Jira issue from a connection request
+     *
+     * @param Ticket $ticket
+     * @return Issue|object
+     */
+    public function createIssueFromConnectionRequest(Ticket $ticket);
+
+    /**
      * Query Jira for issues that have a manageId that matches the provided array of manage id's.
      *
      * @param array $manageIds

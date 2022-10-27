@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 
 class DevelopmentIssueRepository implements TicketServiceInterface
 {
@@ -99,7 +100,19 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function createIssueFrom(Ticket $ticket)
+    public function createIssueFrom(Ticket $ticket): Issue
+    {
+        if ($this->failIssueCreation) {
+            throw new JiraException('Unable to write the Jira issue (failure was requested by calling shouldFailCreateIssue)');
+        }
+        $this->loadData();
+        $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), Issue::STATUS_OPEN);
+        $this->data[$ticket->getManageId()] = $issue;
+        $this->storeData();
+        return $issue;
+    }
+
+    public function createIssueFromConnectionRequest(Ticket $ticket): Issue
     {
         if ($this->failIssueCreation) {
             throw new JiraException('Unable to write the Jira issue (failure was requested by calling shouldFailCreateIssue)');

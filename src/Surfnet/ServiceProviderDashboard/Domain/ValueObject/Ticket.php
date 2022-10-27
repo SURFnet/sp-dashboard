@@ -22,6 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
  * See https://bugs.php.net/bug.php?id=66773
  */
 
+use phpDocumentor\Reflection\Types\ArrayKey;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -43,6 +44,8 @@ class Ticket
     private $applicantEmail;
     /** @var string */
     private $issueType;
+    /** @var array */
+    private $connectionRequests;
 
     public function __construct(
         string $entityId,
@@ -86,6 +89,32 @@ class Ticket
         );
     }
 
+    public static function fromConnectionRequests(
+        ManageEntity $entity,
+        Applicant $applicant,
+        array $connectionRequests,
+        string $issueType,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey
+    ): Ticket {
+        $entityId = $entity->getMetaData()->getEntityId();
+        $nameEn = $entity->getMetaData()->getNameEn();
+
+        $ticket = new self(
+            $entityId,
+            $entity->getId(),
+            $nameEn,
+            $summaryTranslationKey,
+            $descriptionTranslationKey,
+            $applicant->getDisplayName(),
+            $applicant->getEmailAddress(),
+            $issueType);
+
+        $ticket->connectionRequests = $connectionRequests;
+
+        return $ticket;
+    }
+
     public function getEntityId(): string
     {
         return $this->entityId;
@@ -124,5 +153,13 @@ class Ticket
     public function getDescriptionTranslationKey(): string
     {
         return $this->descriptionTranslationKey;
+    }
+
+    /**
+     * @return ConnectionRequest[]
+     */
+    public function getConnectionRequests(): array
+    {
+        return $this->connectionRequests;
     }
 }

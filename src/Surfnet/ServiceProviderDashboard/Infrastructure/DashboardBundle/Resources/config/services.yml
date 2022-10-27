@@ -72,9 +72,10 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand }
 
-    surfnet.dashboard.command_handler.connection_request:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateConnectionRequestCommandHandler
-        public: true
+    Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateConnectionRequestCommandHandler:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
+            - '%jira_issue_type_idp_invite%'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand }
 
