@@ -19,10 +19,11 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PublishEntityTestCommand implements Command
+class PublishEntityTestCommand implements PublishProductionCommandInterface, Command
 {
     /**
      * @var ManageEntity
@@ -32,6 +33,11 @@ class PublishEntityTestCommand implements Command
      */
     private $manageEntity;
 
+    /**
+     * @var Contact
+     */
+    private $applicant;
+
     public function __construct(ManageEntity $entity)
     {
         $this->manageEntity = $entity;
@@ -40,5 +46,10 @@ class PublishEntityTestCommand implements Command
     public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;
+    }
+
+    public function getApplicant(): Contact
+    {
+        return $this->applicant;
     }
 }
