@@ -51,20 +51,18 @@ class EntityCreateConnectionRequestController extends Controller
      * @Route("/entity/create-connection-request/{environment}/{manageId}/{serviceId}", name="entity_published_create_connection_request")
      * @throws \Exception
      */
-    public function changeRequestAction(
+    public function connectionRequestFromEntityAction(
         Request $request,
         int $serviceId,
         string $manageId,
         string $environment
     ): Response {
-
         $this->validateServiceIsAllowed($serviceId, $manageId, $environment);
-
         $command = new CreateConnectionRequestCommand();
         $form = $this->createForm(ConnectionRequestContainerType::class, $command);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && !$this->isCancelAction($form) && $form->isValid()) {
             $this->commandBus->handle($command);
             $this->addFlash('info', 'entity.create_connection_request.edit.flash.success');
             // Simply return to entity list, no entity was saved
