@@ -65,12 +65,20 @@ class CollectionWidget {
    */
   private addCollectionEntry() {
 
+    const connectionRequestform = $('form[name="connection_request_container"]');
+    // @ts-ignore
+    $(connectionRequestform).parsley().validate();
+    // @ts-ignore
+    const formIsValid = $(connectionRequestform).parsley().isValid();
+
     const newElement = this.createNewCollectionEntry();
-    if (!this.isUnique(newElement)) {
+    const isUnique = this.isUnique(newElement);
+    if (!isUnique || !formIsValid) {
       this.$input.parent().addClass('error');
-      if ($(this.errorMessageSelector).length === 0) {
+      if (!isUnique && $(this.errorMessageSelector).length === 0) {
         this.$input.parent().prepend(this.errorMessage);
       }
+
       return;
     }
 

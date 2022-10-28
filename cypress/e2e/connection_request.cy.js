@@ -77,6 +77,22 @@ context('Connection request e2e tests', () => {
         .should('contain.text', 'This value should be a valid email.');
   });
 
+  it('also performs parsley validation checks on the institution and email fields', () => {
+    cy.openConnectionRequest('https://connection-request.openconext.org');
+
+    // Clicking the plus button without filling any items resutls in 2 parsley errors
+    cy.get('.add_collection_entry').click();
+    cy.get('.parsley-required').should('have.length', 2);
+
+    // After filling the institution name, clicking + results in an error on the email field
+    cy.get('#connection_request_container_connectionRequests___name___institution')
+        .type('Hogeschool Zeeland');
+
+    cy.get('.add_collection_entry').click();
+    cy.get('.parsley-required').should('have.length', 1);
+    cy.get('#connection_request_container_connectionRequests___name___email').should('have.focus');
+  })
+
   after(() => {
     cy.deleteEntity('https://connection-request.openconext.org', 'saml20_sp');
   });

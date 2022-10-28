@@ -106,6 +106,17 @@ if (form.length) {
     });
 }
 
+$(function() {
+    const connectionRequestform = $('form[name="connection_request_container"]');
+    if (connectionRequestform.length) {
+        // When clicking cancel
+        $('#connection_request_container_cancel').click(function(){
+            $(connectionRequestform).parsley().destroy();
+            $(connectionRequestform).submit();
+        });
+    }
+});
+
 // Add a stricter url validator, fields validated with urlstrict are
 // allowed to be empty, or a URL with protocol.
 window.Parsley.addValidator('urlstrict', function (value, requirement) {
