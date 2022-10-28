@@ -95,4 +95,7 @@ context('Connection request e2e tests', () => {
     cy.get('#connection_request_container_connectionRequests___name___email').should('have.focus');
   });
 
+  after(() => {
+    cy.deleteEntity('https://connection-request.openconext.org', 'saml20_sp');
+  });
 });
