@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -62,19 +63,30 @@ class EntityCreateConnectionRequestController extends Controller
         $form = $this->createForm(ConnectionRequestContainerType::class, $command);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && !$this->isCancelAction($form) && $form->isValid()) {
-            $this->commandBus->handle($command);
-            $this->addFlash('info', 'entity.create_connection_request.edit.flash.success');
-            // Simply return to entity list, no entity was saved
-            if ($this->isGranted('ROLE_ADMINISTRATOR')) {
-                return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
+        if ($form->isSubmitted()) {
+            if ($this->isCancelAction($form)) {
+                return $this->returnToOverview($serviceId);
             }
-            return $this->redirectToRoute('service_overview');
+
+            if ($form->isValid()) {
+                $this->commandBus->handle($command);
+                $this->addFlash('info', 'entity.create_connection_request.edit.flash.success');
+                return $this->returnToOverview($serviceId);
+            }
         }
 
         return $this->render(
             '@Dashboard/EntityPublished/createConnectionRequest.html.twig',
             ['form' => $form->createView()]
         );
+    }
+
+    private function returnToOverview(int $serviceId): RedirectResponse
+    {
+        // Simply return to entity list, no entity was saved
+        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+            return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
+        }
+        return $this->redirectToRoute('service_overview');
     }
 }
