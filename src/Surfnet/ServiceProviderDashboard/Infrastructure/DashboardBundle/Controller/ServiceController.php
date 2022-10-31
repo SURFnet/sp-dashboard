@@ -98,6 +98,11 @@ class ServiceController extends Controller
      */
     private $defaultStemName;
 
+    /**
+     * @param LoggerInterface $logger
+     */
+    private $logger;
+
     public function __construct(
         CommandBus $commandBus,
         AuthorizationService $authorizationService,
@@ -106,6 +111,7 @@ class ServiceController extends Controller
         RouterInterface $router,
         EntityService $entityService,
         QueryTeamsRepository $queryClient,
+        LoggerInterface $logger,
         string $defaultStemName
     ) {
         $this->commandBus = $commandBus;
@@ -116,6 +122,7 @@ class ServiceController extends Controller
         $this->entityService = $entityService;
         $this->queryClient = $queryClient;
         $this->defaultStemName = $defaultStemName;
+        $this->logger = $logger;
     }
 
     /**
@@ -172,8 +179,6 @@ class ServiceController extends Controller
     public function createAction(Request $request)
     {
         $this->get('session')->getFlashBag()->clear();
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
         $command = new CreateServiceCommand();
 
         $form = $this->createForm(CreateServiceType::class, $command);
@@ -182,7 +187,7 @@ class ServiceController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
+                $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
 
                 try {
                     $this->commandBus->handle($command);

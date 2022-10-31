@@ -40,7 +40,7 @@
 - name: Delete config
   file: path={{spdashboard_data_dir}}/current/app/{{ item }} state=absent
   with_items: 
-     - config/parameters.yml
+     - config/parameters.yaml
 
 - name: Delete cache, log and sessions
   file: path={{spdashboard_data_dir}}/current/var/{{ item }} state=absent
@@ -57,7 +57,7 @@
      - cache
 
 - name: Install config file
-  template: src=parameters.yml.j2 dest={{ spdashboard_data_dir}}/current/app/config/parameters.yml
+  template: src=parameters.yaml.j2 dest={{ spdashboard_data_dir}}/current/app/config/parameters.yaml
 
 - name: Clear the cache
   command: php72 bin/console cache:clear --env=prod

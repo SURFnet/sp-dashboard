@@ -88,7 +88,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         string $issueType
     ) {
         if (empty($issueType)) {
-            throw new Exception('Please set "jira_issue_type_publication_request" in parameters.yml');
+            throw new Exception('Please set "jira_issue_type_publication_request" in .env');
         }
         $this->publishClient = $publishClient;
         $this->entityService = $entityService;

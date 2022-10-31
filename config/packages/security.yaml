@@ -1,0 +1,85 @@
+security:
+
+    role_hierarchy:
+        ROLE_ADMINISTRATOR: ROLE_USER
+
+    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        dashboard:
+            id: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Service\IdentityService
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+            logout_on_user_change: true
+
+        login_firewall:
+            pattern:    ^/saml/metadata
+            anonymous:  ~
+            logout_on_user_change: true
+
+        published_metadata:
+            pattern:    ^/entity/metadata/*
+            anonymous:  ~
+            logout_on_user_change: true
+
+        monitor:
+            pattern: ^/(info|health)$
+            security: false
+            logout_on_user_change: true
+
+        saml_based:
+            saml: true
+            logout_on_user_change: true
+
+    access_control:
+        - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/entity/metadata, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/translations, roles: ROLE_ADMINISTRATOR, requires_channel: https }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
+
+nelmio_security:
+    clickjacking:
+        paths:
+            '^/.*': DENY
+    external_redirects:
+        abort: true
+        log: true
+        allow_list:
+            - '%env(saml_remote_idp_host)%'
+            - '%env(logout_redirect_url)%'
+    csp:
+        report_logger_service: monolog.logger.security
+        hosts: []
+        content_types: []
+        enforce:
+            level1_fallback: false
+            browser_adaptive:
+                enabled: false
+            report-uri: "%env(router_request_context_base_url)%/csp/report"
+            default-src:
+                - 'self'
+            object-src:
+                - 'none'
+            style-src:
+                - 'self'
+            script-src:
+                - 'self'
+            font-src:
+                - 'self'
+            img-src:
+                - 'self'
+                - 'data:'
+            block-all-mixed-content: true # defaults to false, blocks HTTP content over HTTPS transport
+            upgrade-insecure-requests: true # defaults to false, upgrades HTTP requests to HTTPS transport
+    content_type:
+        nosniff: true
+    xss_protection:
+        enabled: true
+        mode_block: true
+    forced_ssl:
+        enabled: true
+        hsts_max_age: 31536000 # 365 days
+        hsts_subdomains: true

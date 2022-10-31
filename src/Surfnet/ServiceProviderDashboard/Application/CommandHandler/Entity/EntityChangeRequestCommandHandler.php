@@ -87,7 +87,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         string $issueType
     ) {
         if (empty($issueType)) {
-            throw new Exception('Please set "jira_issue_type_entity_change_request" in parameters.yml');
+            throw new Exception('Please set "jira_issue_type_entity_change_request" in .env');
         }
         $this->repository = $repository;
         $this->entityService = $entityService;

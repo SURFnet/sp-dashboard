@@ -45,10 +45,9 @@ class Configuration implements ConfigurationInterface
     private function appendSessionConfiguration(NodeBuilder $childNodes)
     {
         $childNodes
-            ->arrayNode('administrator_teams')
+            ->scalarNode('administrator_teams')
                 ->info('All users in these teams get the administrator role')
                 ->isRequired()
-                ->scalarPrototype()->end()
             ->end()
             ->arrayNode('session_lifetimes')
                 ->isRequired()

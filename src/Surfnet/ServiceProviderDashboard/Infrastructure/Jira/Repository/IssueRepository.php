@@ -76,11 +76,11 @@ class IssueRepository implements TicketServiceInterface
         $manageIdFieldName,
         $manageIdFieldLabel
     ) {
-        Assert::stringNotEmpty($projectKey, 'Please set "jira_issue_project_key" in parameters.yml');
-        Assert::stringNotEmpty($manageIdFieldName, 'Please set "jira_issue_manageid_fieldname" in parameters.yml');
+        Assert::stringNotEmpty($projectKey, 'Please set "jira_issue_project_key" in .env');
+        Assert::stringNotEmpty($manageIdFieldName, 'Please set "jira_issue_manageid_fieldname" in .env');
         Assert::stringNotEmpty(
             $manageIdFieldLabel,
-            'Please set "jira_issue_manageid_field_label" in parameters.yml'
+            'Please set "jira_issue_manageid_field_label" in .env'
         );
 
         $this->jiraFactory = $jiraFactory;

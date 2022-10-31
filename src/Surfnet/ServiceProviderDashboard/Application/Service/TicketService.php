@@ -38,9 +38,6 @@ class TicketService implements TicketServiceInterface
      */
     private $logger;
 
-    /**
-     * @param TicketServiceInterface $repository
-     */
     public function __construct(TicketServiceInterface $repository, LoggerInterface $logger)
     {
         $this->issueRepository = $repository;
