@@ -1,0 +1,6 @@
+framework:
+    test: true
+    session:
+        storage_id: surfnet.dashboard.session.storage.mock_file
+    profiler:
+        collect: false

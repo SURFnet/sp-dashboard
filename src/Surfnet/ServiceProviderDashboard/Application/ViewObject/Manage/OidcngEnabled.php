@@ -35,7 +35,7 @@ class OidcngEnabled
      */
     public function __construct($enabled = '')
     {
-        Assert::boolean($enabled, 'Please set the oidcng enabled config value in parameters.yml');
+        Assert::boolean($enabled, 'Please set the oidcng enabled config value in .env');
 
         $this->enabled = $enabled;
     }

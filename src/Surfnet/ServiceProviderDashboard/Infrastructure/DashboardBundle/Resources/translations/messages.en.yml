@@ -404,11 +404,6 @@ entity.connection_request.ticket.institution: "Institution: %institution_name% C
 
 "
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
-entity.published_production_and_sent_connection_request.text.html: "Thanks for publishing \"%entityName%\" to our production environment and and connection request(s) to the service desk."
-entity.sending_connection_request.text.html: "Thanks for sending the connection request(s) to the service desk."
-entity.sent_connection_request.title: "Successfully sent the connection request(s) to the service desk"
-entity.published_production_and_sent_connection_request.title: "Successfully published the entity to production and sent connection request(s) to the service desk"
-
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
 entity.published_test.title: "Successfully published the entity to test"

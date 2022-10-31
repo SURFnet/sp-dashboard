@@ -65,14 +65,14 @@ class IssueFieldFactory
     ) {
         Assert::stringNotEmpty(
             $entityIdFieldName,
-            'The entity id field name may not be empty, configure in parameters.yml'
+            'The entity id field name may not be empty, configure in .env'
         );
         Assert::stringNotEmpty(
             $manageIdFieldName,
-            'The manage id field name may not be empty, configure in parameters.yml'
+            'The manage id field name may not be empty, configure in .env'
         );
-        Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in parameters.yml');
-        Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in parameters.yml');
+        Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in .env');
+        Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in .env');
 
         $this->entityIdFieldName = $entityIdFieldName;
         $this->manageIdFieldName = $manageIdFieldName;

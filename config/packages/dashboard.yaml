@@ -1,0 +1,19 @@
+dashboard:
+  manage:
+    test:
+      connection:
+        host: "%env(manage_test_host)%"
+        username: "%env(manage_test_username)%"
+        password: "%env(manage_test_password)%"
+      publication_status: "%env(manage_test_publication_status)%"
+    production:
+      connection:
+        host: "%env(manage_prod_host)%"
+        username: "%env(manage_prod_username)%"
+        password: "%env(manage_prod_password)%"
+      publication_status: "%env(manage_prod_publication_status)%"
+  teams:
+    connection:
+      host: "%env(teams_host)%"
+      username: "%env(teams_username)%"
+      password: "%env(teams_password)%"

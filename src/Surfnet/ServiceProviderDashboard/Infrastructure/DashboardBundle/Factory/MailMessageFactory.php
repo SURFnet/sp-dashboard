@@ -28,7 +28,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * The mail message factory builds mail messages. These messages are set with a translatable title and their message
  * is based on a twig template.
  *
- * The sender and receiver can be configured in the parameters.yml
+ * The sender and receiver can be configured in the .env
  */
 class MailMessageFactory
 {

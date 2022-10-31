@@ -32,6 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -54,7 +55,7 @@ class EntityTypeFactory
     private $attributeService;
 
     public function __construct(
-        FormFactory $formFactory,
+        FormFactoryInterface $formFactory,
         SaveCommandFactoryInterface $saveCommandFactory,
         AttributeServiceInterface $attributeService
     ) {

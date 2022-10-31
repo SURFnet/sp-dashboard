@@ -38,6 +38,9 @@ class EntityDetailFactory
      */
     private $playGroundUriProd;
 
+    /**
+     * @var AttributeServiceInterface
+     */
     private $attributeService;
 
     public function __construct(

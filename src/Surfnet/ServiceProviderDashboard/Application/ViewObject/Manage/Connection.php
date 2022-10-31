@@ -44,9 +44,9 @@ class Connection
      */
     public function __construct($host, $username, $password)
     {
-        Assert::stringNotEmpty($host, 'Please set the manage host in parameters.yml');
-        Assert::stringNotEmpty($username, 'Please set the manage username in parameters.yml');
-        Assert::stringNotEmpty($password, 'Please set the manage password in parameters.yml');
+        Assert::stringNotEmpty($host, 'Please set the manage host in .env');
+        Assert::stringNotEmpty($username, 'Please set the manage username in .env');
+        Assert::stringNotEmpty($password, 'Please set the manage password in .env');
 
         $this->host = $host;
         $this->username = $username;

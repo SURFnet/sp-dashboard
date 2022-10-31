@@ -17,8 +17,8 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand }
         arguments:
-            $prefixPart1: '%team.prefix.default_stem_name%'
-            $prefixPart2: '%team.prefix.group_name_context%'
+            $prefixPart1: '%env(team_prefix_default_stem_name)%'
+            $prefixPart2: '%env(team_prefix_group_name_context)%'
 
     surfnet.dashboard.command_handler.delete_service:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
@@ -46,7 +46,7 @@ services:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\RequestDeletePublishedEntityCommandHandler
         arguments:
             - '@surfnet.manage.client.query_client.prod_environment'
-            - '%jira_issue_type%'
+            - '%jira_issue_type'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand }
 
@@ -89,7 +89,7 @@ services:
     Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EntityChangeRequestCommandHandler:
         arguments:
             $repository: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient'
-            $issueType: '%jira_issue_type_entity_change_request%'
+            $issueType: '%env(jira_issue_type_entity_change_request)%'
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand }
 
@@ -102,7 +102,7 @@ services:
             - '@session.flash_bag'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\MailService'
             - '@logger'
-            - '%jira_issue_type_publication_request%'
+            - '%env(jira_issue_type_publication_request)%'
         public: true
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
@@ -155,9 +155,9 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory:
         arguments:
-            - '%mail_from%'
-            - '%mail_receiver%'
-            - '%mail_no_reply%'
+            - '%env(mail_from)%'
+            - '%env(mail_receiver)%'
+            - '%env(mail_no_reply)%'
             - '@translator'
             - '@templating'
 
@@ -173,7 +173,7 @@ services:
         class: GuzzleHttp\Client
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
-        arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%metadata_url_timeout%']
+        arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%env(metadata_url_timeout)%']
 
 
     Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy:
@@ -230,6 +230,9 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
         arguments:
+            $serviceService: '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
+            $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+            $tokenStorage: '@security.token_storage'
             $manageTestConfig: "@surfnet.manage.configuration.test"
             $manageProdConfig: "@surfnet.manage.configuration.production"
 
@@ -259,22 +262,22 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UniqueTeamNameValidator:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
-            - '%team.prefix.group_name_context%'
+            - '%env(team_prefix_group_name_context)%'
         tags:
             - { name: validator.constraint_validator, alias: unique_team_name }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ExistingTeamNameValidator:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
-            - '%team.prefix.default_stem_name%'
-            - '%team.prefix.group_name_context%'
+            - '%env(team_prefix_default_stem_name)%'
+            - '%env(team_prefix_group_name_context)%'
         tags:
             - { name: validator.constraint_validator, alias: existing_team_name }
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\UrnFormattedTeamNameValidator:
         arguments:
-            - '%team.prefix.default_stem_name%'
-            - '%team.prefix.group_name_context%'
+            - '%env(team_prefix_default_stem_name)%'
+            - '%env(team_prefix_group_name_context)%'
         tags:
             - { name: validator.constraint_validator, alias: urn_formatted_team_name }
 
@@ -298,16 +301,24 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper:
         arguments:  ['@logger']
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory'
+            - '%env(jira_issue_project_key)%'
+            - '%env(jira_issue_type)%'
+            - '%env(jira_issue_manageid_fieldname)%'
+            - '%env(jira_issue_manageid_field_label)%'
+
     Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
         arguments:
-            - '@surfnet.dashboard.repository.issue'
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository'
+            - '@logger'
 
     Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService:
         arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
-
-    surfnet.dashboard.repository.issue:
+            $oidcPlaygroundUriTest: '%env(playground_uri_test)%'
+            $oidcPlaygroundUriProd: '%env(playground_uri_prod)%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\ServiceService:
         class: Surfnet\ServiceProviderDashboard\Application\Service\ServiceService
@@ -322,12 +333,12 @@ services:
             - '@surfnet.manage.configuration.production'
             - '@router'
             - '@logger'
-            - '%jira_issue_type%'
+            - '%env(jira_issue_type)%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
-            - '%locale%'
+            - '%env(locale)%'
 
     Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService:
         arguments:
@@ -418,11 +429,12 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\TeamsController:
         arguments:
-            $defaultStemName: '%team.prefix.default_stem_name%'
+            $defaultStemName: '%env(team_prefix_default_stem_name)%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\ServiceController:
         arguments:
-            $defaultStemName: '%team.prefix.default_stem_name%'
+            $defaultStemName: '%env(team_prefix_default_stem_name)%'
+            $logger: '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient:
         arguments:
@@ -510,26 +522,26 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactory
         arguments:
-            $oidcPlaygroundUriTest: '%playground_uri_test%'
-            $oidcPlaygroundUriProd: '%playground_uri_prod%'
+            $oidcPlaygroundUriTest: '%env(playground_uri_test)%'
+            $oidcPlaygroundUriProd: '%env(playground_uri_prod)%'
 
     Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory:
         arguments:
-            - '%jira_issue_type%'
+            - '%env(jira_issue_type)%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory:
         arguments:
-            - '%jira_issue_entityid_fieldname%'
-            - '%jira_issue_manageid_fieldname%'
-            - '%jira_issue_reporter_fieldname%'
-            - '%jira_issue_priority%'
-            - '%jira_issue_project_key%'
+            - '%env(jira_issue_entityid_fieldname)%'
+            - '%env(jira_issue_manageid_fieldname)%'
+            - '%env(jira_issue_reporter_fieldname)%'
+            - '%env(jira_issue_priority)%'
+            - '%env(jira_issue_project_key)%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory:
         arguments:
-            - '%jira_host%'
-            - '%jira_username%'
-            - '%jira_password%'
+            - '%env(jira_host)%'
+            - '%env(jira_username)%'
+            - '%env(jira_password)%'
             - '@logger'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclListType:
@@ -565,21 +577,63 @@ services:
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient'
             - '@surfnet.manage.client.query_client.prod_environment'
-            - '%manage_test_publication_status%'
-            - '%manage_prod_publication_status%'
+            - '%env(manage_test_publication_status)%'
+            - '%env(manage_prod_publication_status)%'
 
     Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory:
         arguments:
-            $playGroundUriProd: '%playground_uri_prod%'
-            $playGroundUriTest: '%playground_uri_test%'
+           - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+           - '%env(playground_uri_test)%'
+           - '%env(playground_uri_prod)%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\GlobalSiteNotice:
         tags: [ twig.extension ]
         arguments:
-            - "%global.site_notice.show%"
-            - "%global.site_notice.allowed.tags%"
+            - "%env(global_site_notice_show)%"
+            - "%env(global_site_notice_allowed_tags)%"
             - "@translator"
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\SiteNoticeController:
         arguments:
-            - "%global.site_notice.date%"
+            - "%env(global_site_notice_date)%"
+
+    Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface:
+        '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\PublishTeamsRepository:
+        '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient'
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository:
+        '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository:
+        '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface:
+        '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository:
+        '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient'
+
+    Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository:
+        '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository'
+
+    Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory:
+        $saveCommandFactory: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface'
+        $attributeService:  '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory:
+
+    Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator:
+        - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+
+    Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator:
+        - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+
+    Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator:
+        - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
