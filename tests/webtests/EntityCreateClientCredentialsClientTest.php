@@ -110,11 +110,11 @@ class EntityCreateClientCredentialsClientTest extends WebTestCase
 
         $confirmation = $crawler->filter('.oidc-confirmation');
         $label = $confirmation->filter('label')->text();
-        $span = $confirmation->filter('span')->text();
+        $secret = $confirmation->filter('pre')->text();
 
         // A secret should be displayed
         $this->assertEquals('Secret', $label);
-        $this->assertSame(20, strlen($span));
+        $this->assertSame(20, strlen($secret));
     }
 
     public function test_it_stays_on_create_action_when_publish_failed()

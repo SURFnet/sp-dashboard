@@ -110,11 +110,11 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
 
         $confirmation = $crawler->filter('.oidc-confirmation');
         $label = $confirmation->filter('label')->text();
-        $span = $confirmation->filter('span')->text();
+        $secret = $confirmation->filter('pre')->text();
 
         // A secret should be displayed
         $this->assertEquals('Secret', $label);
-        $this->assertSame(20, strlen($span));
+        $this->assertSame(20, strlen($secret));
 
         // When a new entity is published, a flash message should be displayed
         $flashMessage = $crawler->filter('.flashMessage.wysiwyg')->text();
