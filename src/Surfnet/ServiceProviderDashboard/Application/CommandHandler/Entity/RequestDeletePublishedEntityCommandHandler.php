@@ -72,7 +72,7 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
         FlashBagInterface     $flashBag,
         LoggerInterface       $logger
     ) {
-        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in parameters.yml');
+        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in .env');
         $this->queryClient = $manageProductionQueryClient;
         $this->ticketService = $ticketService;
         $this->flashBag = $flashBag;

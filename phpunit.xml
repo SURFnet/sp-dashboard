@@ -11,8 +11,18 @@
 
     <php>
         <ini name="error_reporting" value="-1" />
+        <ini name="memory_limit" value="512M"></ini>
         <server name="KERNEL_CLASS" value="AppKernel" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="25" />
+
+        <!-- ###+ doctrine/doctrine-bundle ### -->
+        <!-- Format described at https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url -->
+        <!-- IMPORTANT: You MUST configure your server version, either here or in config/packages/doctrine.yaml -->
+        <!--  -->
+        <!-- DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db" -->
+        <!-- DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/db_name?serverVersion=8" -->
+        <env name="DATABASE_URL" value="postgresql://app:!ChangeMe!@127.0.0.1:5432/db_name?serverVersion=14&amp;charset=utf8"/>
+        <!-- ###- doctrine/doctrine-bundle ### -->
     </php>
 
     <testsuites>

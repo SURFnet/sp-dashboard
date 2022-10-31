@@ -1,6 +1,5 @@
 /.vagrant/
 /ansible/*.retry
-/app/config/parameters.yml
 docker-compose.override.yml
 app/js/coverage
 /build/
@@ -21,3 +20,24 @@ app/js/coverage
 /node_modules
 /web/build
 /web/coverage
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###

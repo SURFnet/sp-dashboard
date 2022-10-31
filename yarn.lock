@@ -6962,6 +6962,10 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
+phpunit-bridge@symfony/phpunit-bridge:
+  version "0.0.0"
+  resolved "https://codeload.github.com/symfony/phpunit-bridge/tar.gz/07cf788ac9ae83b59d46599bb5098c3add88c68b"
+
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"

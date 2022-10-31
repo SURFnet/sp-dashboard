@@ -1,0 +1,9 @@
+lexik_translation:
+  fallback_locale: [en] # (required) default locale(s) to use
+  managed_locales: [en] # (required) locales that the bundle has to manage
+  grid_input_type: textarea
+  grid_toggle_similar: true
+  resources_registration:
+    type: all
+    managed_locales_only: true
+  base_layout: "::Translation/layout.html.twig"

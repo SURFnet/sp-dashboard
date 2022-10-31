@@ -390,12 +390,6 @@ entity.change_request.ticket.description: "h2. Details
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
 
-entity.change_request.ticket.summary: "Request for changes for %entity_name%"
-entity.change_request.ticket.description: "h2. Details
-*Applicant name*: %applicant_name%
-*Applicant email*: %applicant_email%.
-*Entity name (en)*: %entity_name%."
-
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."

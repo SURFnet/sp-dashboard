@@ -54,7 +54,7 @@ jobs:
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm chmod 777 /var/www/html/var/{logs,cache}
 
-    - name: Copy parameters.yml.dist to parameters.yml
+    - name: Copy parameters.yaml.dist to parameters.yaml
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm cp /var/www/html/app/config/parameters.yml.dist /var/www/html/app/config/parameters.yml
 

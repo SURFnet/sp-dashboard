@@ -32,7 +32,7 @@ class PublicationStatus
      */
     public function __construct($status = '')
     {
-        Assert::stringNotEmpty($status, 'Please set the publication status in parameters.yml');
+        Assert::stringNotEmpty($status, 'Please set the publication status in .env');
 
         $this->status = $status;
     }
