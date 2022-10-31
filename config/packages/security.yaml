@@ -53,7 +53,7 @@ nelmio_security:
             level1_fallback: false
             browser_adaptive:
                 enabled: false
-            report-uri: "%router.request_context.base_url%/csp/report"
+            report-uri: "%env(router_request_context_base_url)%/csp/report"
             default-src:
                 - 'self'
             object-src:

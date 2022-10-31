@@ -59,10 +59,6 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} chmod 777 /var/www/html/var/{logs,cache}
 
-      - name: Copy parameters.yml.dist to parameters.yml
-        run: |
-          ${DOCKER_COMPOSE_PHP_FPM} cp /var/www/html/app/config/parameters.yml.dist /var/www/html/app/config/parameters.yml
-
       - name: Wait until the spdashboard is accessable
         run: |
           ${DOCKER_COMPOSE_OPENCONEXT} sh /usr/local/sbin/spdup.sh
