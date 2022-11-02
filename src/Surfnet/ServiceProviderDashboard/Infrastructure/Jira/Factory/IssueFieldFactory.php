@@ -126,11 +126,18 @@ class IssueFieldFactory
     private function translateConnectionRequestDescriptions(Ticket $ticket): string
     {
         $translation = '';
+        $translationKey = 'entity.connection_request.ticket.applicant';
+        $translation .= $this->translator->trans($translationKey, [
+            '%applicant_name%' => $ticket->getApplicantName(),
+            '%applicant_email%' =>  $ticket->getApplicantEmail(),
+            '%entity_name%' => $ticket->getEntityName()]);
+
+        $translationKey = 'entity.connection_request.ticket.institution.header';
+        $translation .= $this->translator->trans($translationKey, []);
+
+        $translationKey = 'entity.connection_request.ticket.institution.body';
         foreach ($ticket->getConnectionRequests() ?? [] as $connectionRequest) {
-            $translation .= $this->translator->trans($ticket->getDescriptionTranslationKey(), [
-                '%applicant_name%' => $ticket->getApplicantName(),
-                '%applicant_email%' =>  $ticket->getApplicantEmail(),
-                '%entity_name%' => $ticket->getEntityName(),
+            $translation .= $this->translator->trans($translationKey, [
                 '%institution_name%' => $connectionRequest->institution,
                 '%contact_name%' => $connectionRequest->name,
                 '%contact_email%' => $connectionRequest->email

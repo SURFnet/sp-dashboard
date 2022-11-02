@@ -394,15 +394,14 @@ entity.change_request.ticket.description: "h2. Details
 *Entity name (en)*: %entity_name%."
 
 entity.connection_request.ticket.summary: "Connection request for %entity_name%"
-entity.connection_request.ticket.description: "h2. Details
+entity.connection_request.ticket.applicant: "h2. Details
 
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
-*Entity name (en)*: %entity_name%.
-  
-*Institution name*: %institution_name%
-*Contact name*: %contact_name%.
-*Contact email*: %contact_email%."
+*Entity name (en)*: %entity_name%."
+
+entity.connection_request.ticket.institution.header: "||Institution||Name||Email||"
+entity.connection_request.ticket.institution.body: "|%institution_name%|%contact_name%|%contact_email%|"
 
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
 entity.published_production.title: "Successfully published the entity to production"
