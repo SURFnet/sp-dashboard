@@ -90,11 +90,11 @@ class IssueFieldFactoryTest extends SymfonyWebTestCase
         $connectionRequests[] = $connectionRequest2;
 
         $factory = new IssueFieldFactory(
-            'customfield_13018',
-            'customfield_13401',
-            'customfield_99999',
-            'Critical',
-            'SPD',
+            'anything',
+            'anything',
+            'anything',
+            'anything',
+            'anything',
             $this->translator
         );
 
