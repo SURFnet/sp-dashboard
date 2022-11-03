@@ -54,23 +54,16 @@ class IssueFieldFactoryTest extends SymfonyWebTestCase
             ->get('translator');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_it_translates_the_connection_request_ticket()
     {
         $connectionRequests = [];
 
-        $manageEntity = m::mock(ManageEntity::class);
-        $manageEntity
-            ->shouldReceive('getId')
-            ->andReturn('b05664d5-1ba3-483b-8d4f-1a6c03b48bc4');
-
-        $manageEntity
-            ->shouldReceive('getMetaData->getNameEn')
-            ->andReturn('Test Entity Name');
-
-        $manageEntity
-            ->shouldReceive('getMetaData->getEntityId')
-            ->andReturn('https://app.example.com/');
-
+        $manageEntity = $this->getManageEntity();
 
         $applicant = m::mock(Applicant::class);
         $applicant->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
@@ -109,6 +102,60 @@ class IssueFieldFactoryTest extends SymfonyWebTestCase
 
         $issueField = $factory->fromConnectionRequestTicket($ticket);
 
-        $this->assertEquals("h2. Details\n*Applicant name*: john doe *Applicant email*: j.doe@example.com. *Entity name (en)*: Test Entity Name.||Institution||Name||Email|||Institution-1|Contact person 1|cp1@example.com||Institution-2|Contact person 2|cp2@example.com|", $issueField->description);
+        $this->assertEquals("h2. Details\n*Applicant name*: john doe *Applicant email*: j.doe@example.com. *Entity name (en)*: Test Entity Name.Institution: Institution-1 Contact name: Contact person 1 Contact email: cp1@example.comInstitution: Institution-2 Contact name: Contact person 2 Contact email: cp2@example.com", $issueField->description);
+    }
+
+    public function test_it_translates_empty_connection_request_ticket()
+    {
+        $connectionRequests = [];
+
+        $manageEntity = $this->getManageEntity();
+
+        $applicant = m::mock(Applicant::class);
+        $applicant->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $applicant->shouldReceive('getDisplayName')->andReturn('john doe');
+
+        $factory = new IssueFieldFactory(
+            'anything',
+            'anything',
+            'anything',
+            'anything',
+            'anything',
+            $this->translator
+        );
+
+        $ticket = Ticket::fromConnectionRequests(
+            $manageEntity,
+            $applicant,
+            $connectionRequests,
+            'SPD-IdP-invite',
+            'entity.connection_request.ticket.summary',
+            'entity.connection_request.ticket.description'
+        );
+
+        $issueField = $factory->fromConnectionRequestTicket($ticket);
+
+        $this->assertEquals("h2. Details\n*Applicant name*: john doe *Applicant email*: j.doe@example.com. *Entity name (en)*: Test Entity Name.", $issueField->description);
+    }
+
+    /**
+     * @return m\LegacyMockInterface|m\MockInterface|ManageEntity|ManageEntity&m\LegacyMockInterface|ManageEntity&m\MockInterface
+     */
+    private function getManageEntity(): ManageEntity
+    {
+        $manageEntity = m::mock(ManageEntity::class)->makePartial();
+        $manageEntity
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn('b05664d5-1ba3-483b-8d4f-1a6c03b48bc4');
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
+            ->andReturn('Test Entity Name');
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getEntityId')
+            ->andReturn('https://app.example.com/');
+        return $manageEntity;
     }
 }

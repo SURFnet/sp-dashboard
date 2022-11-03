@@ -400,9 +400,7 @@ entity.connection_request.ticket.applicant: "h2. Details
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
 
-entity.connection_request.ticket.institution.header: "||Institution||Name||Email||"
-entity.connection_request.ticket.institution.body: "|%institution_name%|%contact_name%|%contact_email%|"
-
+entity.connection_request.ticket.institution: "Institution: %institution_name% Contact name: %contact_name% Contact email: %contact_email%"
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."

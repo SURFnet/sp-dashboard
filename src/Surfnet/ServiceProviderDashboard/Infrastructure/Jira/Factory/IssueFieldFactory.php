@@ -132,10 +132,7 @@ class IssueFieldFactory
             '%applicant_email%' =>  $ticket->getApplicantEmail(),
             '%entity_name%' => $ticket->getEntityName()]);
 
-        $translationKey = 'entity.connection_request.ticket.institution.header';
-        $translation .= $this->translator->trans($translationKey, []);
-
-        $translationKey = 'entity.connection_request.ticket.institution.body';
+        $translationKey = 'entity.connection_request.ticket.institution';
         foreach ($ticket->getConnectionRequests() ?? [] as $connectionRequest) {
             $translation .= $this->translator->trans($translationKey, [
                 '%institution_name%' => $connectionRequest->institution,
