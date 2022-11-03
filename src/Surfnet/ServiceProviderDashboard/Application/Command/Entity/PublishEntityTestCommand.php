@@ -33,11 +33,6 @@ class PublishEntityTestCommand implements Command
      */
     private $manageEntity;
 
-    /**
-     * @var Contact
-     */
-    private $applicant;
-
     public function __construct(ManageEntity $entity)
     {
         $this->manageEntity = $entity;
@@ -46,10 +41,5 @@ class PublishEntityTestCommand implements Command
     public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;
-    }
-
-    public function getApplicant(): Contact
-    {
-        return $this->applicant;
     }
 }

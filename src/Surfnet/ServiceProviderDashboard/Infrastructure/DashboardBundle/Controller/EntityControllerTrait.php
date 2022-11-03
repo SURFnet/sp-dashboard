@@ -164,9 +164,13 @@ trait EntityControllerTrait
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
             // page we will be redirecting to in a moment.
             $this->get('session')->set('published.entity.clone', clone $entity);
+
+            if ($publishEntityCommand instanceof PublishEntityTestCommand) {
+                return $this->redirectToRoute('entity_published_test');
+            }
+
             $destination = $this->findDestinationForRedirectToCreateConnectionRequest($publishEntityCommand);
             $parameters = $this->findParametersForRedirectToCreateConnectionRequest($publishEntityCommand);
-
             return $this->redirectToRoute($destination, $parameters);
         }
     }
@@ -233,8 +237,6 @@ trait EntityControllerTrait
     ): string {
     
         switch (true) {
-            case $publishEntityCommand instanceof PublishEntityTestCommand:
-                return 'entity_published_test';
             case $publishEntityCommand instanceof EntityChangeRequestCommand:
                 return 'entity_change_request';
             case $publishEntityCommand instanceof PublishEntityProductionCommand:
