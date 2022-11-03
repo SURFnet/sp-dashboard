@@ -22,7 +22,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
  * See https://bugs.php.net/bug.php?id=66773
  */
 
-use phpDocumentor\Reflection\Types\ArrayKey;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as Applicant;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 

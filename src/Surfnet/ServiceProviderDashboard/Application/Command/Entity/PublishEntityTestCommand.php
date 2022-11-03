@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PublishEntityTestCommand implements PublishProductionCommandInterface, Command
+class PublishEntityTestCommand implements Command
 {
     /**
      * @var ManageEntity
