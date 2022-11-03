@@ -102,7 +102,7 @@ class IssueFieldFactoryTest extends SymfonyWebTestCase
 
         $issueField = $factory->fromConnectionRequestTicket($ticket);
 
-        $this->assertEquals("h2. Details\n*Applicant name*: john doe *Applicant email*: j.doe@example.com. *Entity name (en)*: Test Entity Name.Institution: Institution-1 Contact name: Contact person 1 Contact email: cp1@example.comInstitution: Institution-2 Contact name: Contact person 2 Contact email: cp2@example.com", $issueField->description);
+        $this->assertEquals("h2. Details\n*Applicant name*: john doe *Applicant email*: j.doe@example.com. *Entity name (en)*: Test Entity Name.\nInstitution: Institution-1 Contact name: Contact person 1 Contact email: cp1@example.com\nInstitution: Institution-2 Contact name: Contact person 2 Contact email: cp2@example.com\n", $issueField->description);
     }
 
     public function test_it_translates_empty_connection_request_ticket()
@@ -135,7 +135,7 @@ class IssueFieldFactoryTest extends SymfonyWebTestCase
 
         $issueField = $factory->fromConnectionRequestTicket($ticket);
 
-        $this->assertEquals("h2. Details\n*Applicant name*: john doe *Applicant email*: j.doe@example.com. *Entity name (en)*: Test Entity Name.", $issueField->description);
+        $this->assertEquals("h2. Details\n*Applicant name*: john doe *Applicant email*: j.doe@example.com. *Entity name (en)*: Test Entity Name.\n", $issueField->description);
     }
 
     /**
