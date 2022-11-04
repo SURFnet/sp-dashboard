@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -58,7 +59,11 @@ class EntityCreateConnectionRequestController extends Controller
         string $environment
     ): Response {
         $this->validateServiceIsAllowed($serviceId, $manageId, $environment);
-        $command = new CreateConnectionRequestCommand();
+
+        $manageEntity = $this->entityService->getManageEntityById($manageId, $environment);
+        $applicant = $this->authorizationService->getContact();
+        $command = new CreateConnectionRequestCommand($manageEntity, $applicant);
+
         $form = $this->createForm(ConnectionRequestContainerType::class, $command);
         $form->handleRequest($request);
 

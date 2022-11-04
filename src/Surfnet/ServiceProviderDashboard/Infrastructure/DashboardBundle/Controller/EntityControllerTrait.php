@@ -241,7 +241,7 @@ trait EntityControllerTrait
                 return 'entity_change_request';
             case $publishEntityCommand instanceof PublishEntityProductionCommand:
                 if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
-                    return 'entity_published_create_connection_request_from_entity';
+                    return 'entity_published_create_connection_request';
                 }
                 return 'entity_published_production';
             default:

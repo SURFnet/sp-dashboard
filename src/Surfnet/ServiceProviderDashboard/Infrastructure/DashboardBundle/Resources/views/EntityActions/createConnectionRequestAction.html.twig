@@ -1,6 +1,6 @@
 {% if action.allowCreateConnectionRequestAction %}
     <li>
-        <a href="{{ path('entity_published_create_connection_request_from_overview', {manageId: action.id, environment: action.environment, serviceId: action.serviceId}) }}">
+        <a href="{{ path('entity_published_create_connection_request', {manageId: action.id, environment: action.environment, serviceId: action.serviceId}) }}">
             <i class="fa fa-plus" aria-hidden="true"></i>
             {{ 'entity.list.action.create.connection.request'|trans }}
         </a>
