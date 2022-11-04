@@ -322,8 +322,8 @@ entity.edit.attribute.invalid: The provided attribute % is invalid
 entity.change_requested.title: Your change request has been submitted for review
 entity.change_requested.text.html: "<p>As you where editing a production entity, we have taken your changes under review.</p>"
 entity.change_request.title: Change request overview
-entity.change_request.value: Value
-entity.change_request.data: Data
+entity.change_request.value: Field
+entity.change_request.data: New value
 entity.change_request.text.html: "<p>All outstanding change requests</p>"
 entity.change_request.none.text.html: "<p>No outstanding change requests</p>"
 entity.edit.comments.title: Comments
