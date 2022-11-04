@@ -49,7 +49,13 @@ class ConnectionRequestContainerType extends AbstractType
                 ]
             )
             ->add('send', SubmitType::class, ['label' => 'Send', 'attr' => ['class' => 'button']])
-            ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
+            ->add('cancel', SubmitType::class, [
+                'label' => 'Cancel',
+                'attr' => [
+                    'class' => 'button',
+                    'formnovalidate' => 'formnovalidate'
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -82,7 +82,7 @@ class CollectionWidget {
       return;
     }
 
-    this.$input.val('');
+    this.clearFields();
     this.$input.parent().removeClass('error');
     $(this.errorMessageSelector).remove();
 
@@ -96,6 +96,15 @@ class CollectionWidget {
     this.$collectionList.append(collectionEntry);
 
     this.index += 1;
+  }
+
+  private clearFields() {
+    const $inputContainer = $(this.prototype.replace(/__name__/g, this.index.toString()));
+    const $valueInputElements = this.$input.find('input');
+    const $fields = $inputContainer.find('input');
+    $fields.each((_index: number) => {
+      $valueInputElements.eq(_index).val('');
+    });
   }
 
   /**
