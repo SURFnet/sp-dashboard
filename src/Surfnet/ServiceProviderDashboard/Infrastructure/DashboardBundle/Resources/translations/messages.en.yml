@@ -326,7 +326,6 @@ entity.change_request.value: Value
 entity.change_request.data: Data
 entity.change_request.text.html: "<p>All outstanding change requests</p>"
 entity.change_request.none.text.html: "<p>No outstanding change requests</p>"
-entity.create_connection_request.edit.flash.success: Your connection requests were successfully sent
 entity.create_connection_request.title: Create connection request
 entity.create_connection_request.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 entity.edit.comments.title: Comments
@@ -405,6 +404,11 @@ entity.connection_request.ticket.institution: "Institution: %institution_name% C
 
 "
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
+entity.published_production_and_connection_request.text.html: "Thanks for publishing \"%entityName%\" and connection request(s) our production environment."
+entity.published_connection_request.text.html: "Thanks for publishing the connection request(s) to our production environment."
+entity.published_connection_request.title: "Successfully published the connection request(s) to production"
+entity.published_production_and_connection_request.title: "Successfully published the entity and connection request(s) to production"
+
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
 entity.published_test.title: "Successfully published the entity to test"
