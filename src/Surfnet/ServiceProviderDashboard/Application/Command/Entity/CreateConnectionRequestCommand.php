@@ -20,6 +20,8 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use Exception;
+use Surfnet\ServiceProviderDashboard\Application\Exception\ConnectionRequestNotUniqueException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
@@ -55,8 +57,14 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
         return $this->connectionRequests;
     }
 
+    /**
+     * @throws Exception
+     */
     public function setConnectionRequests(array $connectionRequests): void
     {
+        if (count($connectionRequests) !== count(array_unique($connectionRequests))) {
+            throw new ConnectionRequestNotUniqueException('Connection request should be unique');
+        }
         $this->connectionRequests = $connectionRequests;
     }
 
