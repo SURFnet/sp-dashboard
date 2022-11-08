@@ -39,6 +39,7 @@ class CollectionWidget {
   private initCollectionWidget() {
     const $collectionContainer = $('<div class="collection-entry base-form"></div>');
     const $addEntryButton = $('<button type="button" class="button-small blue add_collection_entry"><i class="fa fa-plus"></i></button>');
+    const $sendButton = $('<button type="submit" id="connection_request_container_send" name="connection_request_container[send]" class="button">Send</button>');
 
     const $input = this.$input;
     $input.removeAttr('name');
@@ -58,6 +59,7 @@ class CollectionWidget {
     this.registerAddClickHandler($addEntryButton);
     this.registerBeforeSubmitHandler($addEntryButton);
     this.registerPreventFormSubmitHandler($input);
+    this.registerSendHandler($sendButton);
   }
 
   /**
@@ -104,6 +106,17 @@ class CollectionWidget {
     const $fields = $inputContainer.find('input');
     $fields.each((_index: number) => {
       $valueInputElements.eq(_index).val('');
+    });
+  }
+
+  private deleteFields() {
+    const $inputContainer = $(this.prototype.replace(/__name__/g, this.index.toString()));
+    const $valueInputElements = this.$input.find('input');
+    const $valueLabelElements = this.$input.find('label:not(error)');
+    const $fields = $inputContainer.find('input');
+    $fields.each((_index: number) => {
+      $valueInputElements.eq(_index).remove('');
+      $valueLabelElements.eq(_index).remove('');
     });
   }
 
@@ -196,6 +209,15 @@ class CollectionWidget {
     };
     const $form = this.$collectionWidget.closest('form');
     $form.on('submit', handleBeforeSubmit);
+  }
+
+  private registerSendHandler($sendButton: JQuery<HTMLElement>) {
+    const handleSubmit = () => {
+      this.deleteFields();
+      $sendButton.click();
+    };
+    const $form = this.$collectionWidget.closest('form');
+    $form.on('submit', handleSubmit);
   }
 
   /**
