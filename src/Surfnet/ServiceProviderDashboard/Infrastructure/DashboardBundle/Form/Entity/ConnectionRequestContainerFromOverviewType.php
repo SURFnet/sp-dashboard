@@ -28,7 +28,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ConnectionRequestContainerType extends AbstractType
+class ConnectionRequestContainerFromOverviewType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -50,7 +50,7 @@ class ConnectionRequestContainerType extends AbstractType
             )
             ->add('send', SubmitType::class, ['label' => 'Send', 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, [
-                'label' => 'Skip',
+                'label' => 'Cancel',
                 'attr' => [
                     'class' => 'button'
                 ]
