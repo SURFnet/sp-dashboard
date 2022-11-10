@@ -175,7 +175,8 @@ class EntityActions
         $meetsProtocolRequirement = $protocol == Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol == Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
             $protocol == Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
-        $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED || $status == Constants::STATE_PUBLICATION_REQUESTED);
+        $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED ||
+            $status == Constants::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
 

@@ -156,6 +156,14 @@ class IssueRepository implements TicketServiceInterface
         return new Issue($issue->key, $ticket->getIssueType(), Issue::STATUS_OPEN);
     }
 
+    public function createIssueFromConnectionRequest(Ticket $ticket): Issue
+    {
+        $issueField = $this->issueFactory->fromConnectionRequestTicket($ticket);
+        $issueService = $this->jiraFactory->buildIssueService();
+        $issue = $issueService->create($issueField);
+        return new Issue($issue->key, $ticket->getIssueType(), Issue::STATUS_OPEN);
+    }
+
     public function delete($issueKey)
     {
         $issueService = $this->jiraFactory->buildIssueService();

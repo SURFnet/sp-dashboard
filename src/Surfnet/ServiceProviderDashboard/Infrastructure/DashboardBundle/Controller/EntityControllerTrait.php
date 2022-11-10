@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -33,6 +34,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
@@ -137,6 +139,7 @@ trait EntityControllerTrait
 
     /**
      * @return RedirectResponse|Form
+     * @throws InvalidArgumentException
      */
     private function publishEntity(
         ?ManageEntity $entity,
@@ -144,31 +147,10 @@ trait EntityControllerTrait
         bool $isEntityChangeRequest,
         FlashBagInterface $flashBag
     ) {
-        // Merge the save command data into the ManageEntity
-        $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
-
-        switch (true) {
-            case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
-                $publishEntityCommand = new PublishEntityTestCommand($entity);
-                $destination = 'entity_published_test';
-                break;
-            case $isEntityChangeRequest:
-                $applicant = $this->authorizationService->getContact();
-                $publishEntityCommand = new EntityChangeRequestCommand($entity, $applicant);
-                $destination = 'entity_change_request';
-                break;
-            case $entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION:
-                $applicant = $this->authorizationService->getContact();
-                $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
-                $destination = 'entity_published_production';
-                break;
-            default:
-                throw new InvalidArgumentException(
-                    sprintf('The environment with value "%s" is not supported.', $entity->getEnvironment())
-                );
-        }
-
         try {
+            // Merge the save command data into the ManageEntity
+            $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
+            $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isEntityChangeRequest);
             $this->commandBus->handle($publishEntityCommand);
         } catch (Exception $e) {
             $flashBag->add('error', 'entity.edit.error.publish');
@@ -183,7 +165,89 @@ trait EntityControllerTrait
             // page we will be redirecting to in a moment.
             $this->get('session')->set('published.entity.clone', clone $entity);
 
-            return $this->redirectToRoute($destination);
+            if ($publishEntityCommand instanceof PublishEntityTestCommand) {
+                return $this->redirectToRoute('entity_published_test');
+            }
+
+            $destination = $this->findDestinationForRedirectToCreateConnectionRequest($publishEntityCommand);
+            $parameters = $this->findParametersForRedirectToCreateConnectionRequest($publishEntityCommand);
+            return $this->redirectToRoute($destination, $parameters);
+        }
+    }
+
+    private function createPublishEntityCommandFromEntity(?ManageEntity $entity, bool $isEntityChangeRequest)
+    {
+        switch (true) {
+            case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
+                $publishEntityCommand = new PublishEntityTestCommand($entity);
+                break;
+            case $isEntityChangeRequest:
+                $applicant = $this->authorizationService->getContact();
+                $publishEntityCommand = new EntityChangeRequestCommand($entity, $applicant);
+                break;
+            case $entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION:
+                $applicant = $this->authorizationService->getContact();
+                $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
+                break;
+            default:
+                throw new InvalidArgumentException(
+                    sprintf('The environment with value "%s" is not supported.', $entity->getEnvironment())
+                );
+        }
+
+        return $publishEntityCommand;
+    }
+
+    private function allowToRedirectToCreateConnectionRequest(
+        PublishProductionCommandInterface $publishEntityCommand
+    ): bool {
+        if (!($publishEntityCommand instanceof PublishEntityProductionCommand)) {
+            return false;
+        }
+        $manageEntity = $publishEntityCommand->getManageEntity();
+
+        $entityActions = new EntityActions(
+            $manageEntity->getId(),
+            $manageEntity->getService()->getId(),
+            $manageEntity->getStatus(),
+            $manageEntity->getEnvironment(),
+            $manageEntity->getProtocol()->getProtocol(),
+            false
+        );
+
+        return $entityActions->allowCreateConnectionRequestAction();
+    }
+
+    private function findParametersForRedirectToCreateConnectionRequest(
+        PublishProductionCommandInterface $publishEntityCommand
+    ): array {
+        if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
+            $manageEntity = $publishEntityCommand->getManageEntity();
+            return [
+                'serviceId' => $manageEntity->getService()->getId(),
+                'manageId' => $manageEntity->getId(),
+                'environment' => $manageEntity->getEnvironment(),
+            ];
+        }
+        return [];
+    }
+
+    private function findDestinationForRedirectToCreateConnectionRequest(
+        PublishProductionCommandInterface $publishEntityCommand
+    ): string {
+    
+        switch (true) {
+            case $publishEntityCommand instanceof EntityChangeRequestCommand:
+                return 'entity_change_request';
+            case $publishEntityCommand instanceof PublishEntityProductionCommand:
+                if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
+                    return 'entity_published_create_connection_request';
+                }
+                return 'entity_published_production';
+            default:
+                throw new InvalidArgumentException(
+                    sprintf('The environment with value "%s" is not supported.', $publishEntityCommand->getManageEntity()->getEnvironment())
+                );
         }
     }
 

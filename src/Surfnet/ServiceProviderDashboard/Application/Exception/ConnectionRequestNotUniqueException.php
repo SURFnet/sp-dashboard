@@ -18,21 +18,10 @@ declare(strict_types=1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
+namespace Surfnet\ServiceProviderDashboard\Application\Exception;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Command;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
+use Exception;
 
-interface CreateConnectionRequestCommandInterface extends Command
+class ConnectionRequestNotUniqueException extends Exception
 {
-    /**
-     * @return ConnectionRequest[]
-     */
-    public function getConnectionRequests(): array;
-
-    public function getManageEntity(): ManageEntity;
-
-    public function getApplicant(): Contact;
 }

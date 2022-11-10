@@ -1,6 +1,5 @@
 site_notice.html: '<p>There is nothing wrong with your television set. <strong>Do not attempt to adjust the picture.</strong> We are controlling transmission. If we wish to make it louder, we will bring up the volume. If we wish to make it softer, we will tune it to a whisper. We will control the horizontal. We will control the vertical. We can roll the image, make it flutter. We can change the focus to a soft blur, or sharpen it to crystal clarity. <strong></p><p>For the next hour, sit quietly and we will control all that you see and hear.</strong> We repeat: There is nothing wrong with your television set. You are about to participate in a great adventure. You are about to experience the awe and mystery which reaches from the inner mind to... <a href="https://en.wikiquote.org/wiki/The_Outer_Limits_(1963_TV_series)">The Outer Limits</a>.</p>'
 site_notice.close: "Close notice"
-global.button.close: "Close"
 error.generic.title: "An error occurred"
 error.generic.text: "An unexpected error occurred. Please try again later."
 error.403.title: "Access denied"
@@ -327,7 +326,6 @@ entity.change_request.value: Value
 entity.change_request.data: Data
 entity.change_request.text.html: "<p>All outstanding change requests</p>"
 entity.change_request.none.text.html: "<p>No outstanding change requests</p>"
-entity.create_connection_request.edit.flash.success: Your connection request were successfully sent
 entity.create_connection_request.title: Create connection request
 entity.create_connection_request.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 entity.edit.comments.title: Comments
@@ -393,7 +391,24 @@ entity.change_request.ticket.description: "h2. Details
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
-ntity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
+
+entity.connection_request.ticket.summary: "Connection request for %entity_name%"
+entity.connection_request.ticket.applicant: "h2. Details
+
+*Applicant name*: %applicant_name%
+*Applicant email*: %applicant_email%.
+*Entity name (en)*: %entity_name%.
+
+"
+entity.connection_request.ticket.institution: "Institution: %institution_name% Contact name: %contact_name% Contact email: %contact_email%
+
+"
+entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
+entity.published_production_and_connection_request.text.html: "Thanks for publishing \"%entityName%\" and connection request(s) our production environment."
+entity.published_connection_request.text.html: "Thanks for publishing the connection request(s) to our production environment."
+entity.published_connection_request.title: "Successfully published the connection request(s) to production"
+entity.published_production_and_connection_request.title: "Successfully published the entity and connection request(s) to production"
+
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
 entity.published_test.title: "Successfully published the entity to test"
