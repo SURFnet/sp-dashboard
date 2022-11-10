@@ -20,6 +20,10 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
+use Exception;
+use Surfnet\ServiceProviderDashboard\Application\Exception\ConnectionRequestNotUniqueException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
 
 class CreateConnectionRequestCommand implements CreateConnectionRequestCommandInterface
@@ -30,6 +34,22 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
     private $connectionRequests = [];
 
     /**
+     * @var ManageEntity
+     */
+    private $manageEntity;
+
+    /**
+     * @var Contact
+     */
+    private $applicant;
+
+    public function __construct(ManageEntity $manageEntity, Contact $applicant)
+    {
+        $this->manageEntity = $manageEntity;
+        $this->applicant = $applicant;
+    }
+
+    /**
      * @return ConnectionRequest[]
      */
     public function getConnectionRequests(): array
@@ -37,10 +57,35 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
         return $this->connectionRequests;
     }
 
-    public function setConnectionRequests(array $connectionRequests): CreateConnectionRequestCommandInterface
+    /**
+     * @throws ConnectionRequestNotUniqueException
+     */
+    public function setConnectionRequests(array $connectionRequests): void
     {
+        if (count($connectionRequests) !== count($this->getUniqueConnectionRequests($connectionRequests))) {
+            throw new ConnectionRequestNotUniqueException('Connection request should be unique');
+        }
         $this->connectionRequests = $connectionRequests;
+    }
 
-        return $this;
+    public function getManageEntity(): ManageEntity
+    {
+        return $this->manageEntity;
+    }
+
+    public function getApplicant(): Contact
+    {
+        return $this->applicant;
+    }
+
+    private function getUniqueConnectionRequests(array $connectionRequests): array
+    {
+        $result = [];
+        foreach ($connectionRequests as $key => $connectionRequest) {
+            if (!in_array($connectionRequest->institution, $result, true)) {
+                $result[$key] = $connectionRequests;
+            }
+        }
+        return $result;
     }
 }
