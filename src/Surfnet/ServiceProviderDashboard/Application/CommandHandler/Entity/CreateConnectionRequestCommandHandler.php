@@ -20,38 +20,47 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
-use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 
 class CreateConnectionRequestCommandHandler implements CommandHandler
 {
     /**
-     * @var LoggerInterface
+     * @var TicketService
      */
-    private $logger;
+    private $ticketService;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * @var string
+     */
+    private $issueType;
+
+    /**
+     * @var string
+     */
+    private $summaryTranslationKey;
+
+    /**
+     * @var string
+     */
+    private $summaryTranslationDescription;
+
+    public function __construct(TicketService $ticketService, string $issueType)
     {
-        $this->logger = $logger;
+        $this->ticketService = $ticketService;
+        $this->issueType = $issueType;
+        $this->summaryTranslationKey = 'entity.connection_request.ticket.summary';
+        $this->summaryTranslationDescription = 'entity.connection_request.ticket.description';
     }
 
     public function handle(CreateConnectionRequestCommand $command)
     {
-//        foreach ($command->getConnectionRequests() ?? [] as $connectionRequest) {
-//            $institution = $connectionRequest->institution;
-//            $name = $connectionRequest->name;
-//            $email = $connectionRequest->email;
-
-            // TODO: create Jira tickets...
-
-//            $this->ticketService->createJiraTicket(
-//                $entity,
-//                $command,
-//                $this->issueType,
-//                $this->summaryTranslationKey,
-//                $this->descriptionTranslationKey
-//            );
-//        }
+        $this->ticketService->createJiraTicketForConnectionRequests(
+            $command,
+            $this->issueType,
+            $this->summaryTranslationKey,
+            $this->summaryTranslationDescription
+        );
     }
 }
