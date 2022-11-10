@@ -48,7 +48,10 @@ class ConnectionRequestContainerFromOverviewType extends AbstractType
                     ]
                 ]
             )
-            ->add('send', SubmitType::class, ['label' => 'Send', 'attr' => ['class' => 'button']])
+            ->add('send', SubmitType::class, [
+                'label' => 'Send',
+                'disabled' => true,
+                'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, [
                 'label' => 'Cancel',
                 'attr' => [
@@ -61,6 +64,7 @@ class ConnectionRequestContainerFromOverviewType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => CreateConnectionRequestCommand::class,
+            'validation_groups' => false,
             'expanded' => true,
         ));
     }

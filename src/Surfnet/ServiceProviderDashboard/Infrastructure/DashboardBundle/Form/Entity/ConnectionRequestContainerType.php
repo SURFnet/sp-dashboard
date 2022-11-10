@@ -48,7 +48,10 @@ class ConnectionRequestContainerType extends AbstractType
                     ]
                 ]
             )
-            ->add('send', SubmitType::class, ['label' => 'Send', 'attr' => ['class' => 'button']])
+            ->add('send', SubmitType::class, [
+                'label' => 'Send',
+                'disabled' => true,
+                'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, [
                 'label' => 'Skip',
                 'attr' => [
