@@ -8,6 +8,8 @@ class CollectionWidget {
   private index: number =  0;
   private errorMessageSelector: string;
   private errorMessage: string;
+  private $sendButton: JQuery;
+  private $connectionRequestForm: JQuery;
 
   /**
    * @param $collectionWidget The collection widget
@@ -19,6 +21,8 @@ class CollectionWidget {
     this.$collectionList = this.$collectionWidget.find('ul.collection-list');
     this.prototype = this.$collectionWidget.data('prototype');
     this.$input = $(this.prototype);
+    this.$sendButton = $('button[id="connection_request_container_send"]');
+    this.$connectionRequestForm = $('form[name="connection_request_container"]');
     this.errorMessageSelector = '.error-message';
     this.errorMessage = '<div class="error-message">This institution is already requested to be connected.</div>';
   }
@@ -39,7 +43,6 @@ class CollectionWidget {
   private initCollectionWidget() {
     const $collectionContainer = $('<div class="collection-entry base-form"></div>');
     const $addEntryButton = $('<button type="button" class="button-small blue add_collection_entry"><i class="fa fa-plus"></i></button>');
-    const $sendButton = $('<button type="submit" id="connection_request_container_send" name="connection_request_container[send]" class="button">Send</button>');
 
     const $input = this.$input;
     $input.removeAttr('name');
@@ -48,7 +51,7 @@ class CollectionWidget {
     $collectionContainer.append(this.$input);
     $collectionContainer.append($addEntryButton);
 
-    this.$collectionWidget.append($collectionContainer);
+    this.$collectionWidget.prepend($collectionContainer);
 
     this.index = this.$collectionList.find('.collection-entry').length;
 
@@ -59,23 +62,17 @@ class CollectionWidget {
     this.registerAddClickHandler($addEntryButton);
     this.registerBeforeSubmitHandler($addEntryButton);
     this.registerPreventFormSubmitHandler($input);
-    this.registerSendHandler($sendButton);
+    this.registerSendHandler(this.$sendButton);
   }
 
   /**
    * Add new collection entry with new id
    */
   private addCollectionEntry() {
-
-    const connectionRequestform = $('form[name="connection_request_container"]');
-    // @ts-ignore
-    $(connectionRequestform).parsley().validate();
-    // @ts-ignore
-    const formIsValid = $(connectionRequestform).parsley().isValid();
-
     const newElement = this.createNewCollectionEntry();
     const isUnique = this.isUnique(newElement);
-    if (!isUnique || !formIsValid) {
+
+    if (!isUnique || !this.hasValidInputs()) {
       this.$input.parent().addClass('error');
       if (!isUnique && $(this.errorMessageSelector).length === 0) {
         this.$input.parent().prepend(this.errorMessage);
@@ -84,7 +81,7 @@ class CollectionWidget {
       return;
     }
 
-    this.clearFields();
+    this.clearInputs();
     this.$input.parent().removeClass('error');
     $(this.errorMessageSelector).remove();
 
@@ -98,26 +95,6 @@ class CollectionWidget {
     this.$collectionList.append(collectionEntry);
 
     this.index += 1;
-  }
-
-  private clearFields() {
-    const $inputContainer = $(this.prototype.replace(/__name__/g, this.index.toString()));
-    const $valueInputElements = this.$input.find('input');
-    const $fields = $inputContainer.find('input');
-    $fields.each((_index: number) => {
-      $valueInputElements.eq(_index).val('');
-    });
-  }
-
-  private deleteFields() {
-    const $inputContainer = $(this.prototype.replace(/__name__/g, this.index.toString()));
-    const $valueInputElements = this.$input.find('input');
-    const $valueLabelElements = this.$input.find('label:not(error)');
-    const $fields = $inputContainer.find('input');
-    $fields.each((_index: number) => {
-      $valueInputElements.eq(_index).remove('');
-      $valueLabelElements.eq(_index).remove('');
-    });
   }
 
   /**
@@ -141,7 +118,7 @@ class CollectionWidget {
     const inputFields = this.prototype.replace(/__name__/g, this.index.toString());
     const $inputContainer = $(inputFields);
     const $fields = $inputContainer.find('input');
-    const $outputElement = $('<div class="read-only-view">');
+    const $outputElement = $('<div class="read-only-view fieldset line connection-request-wrapper">');
     // The value[Label|Input]Elements are used to match the input text with the new
     // element that is added to the read-only list of connection requests.
     const $valueLabelElements = this.$input.find('label:not(error)');
@@ -167,6 +144,9 @@ class CollectionWidget {
   private registerRemoveClickHandler($removeEntryButton: JQuery<HTMLElement>) {
     const handleRemoveClick = (el: JQuery.TriggeredEvent) => {
       this.removeCollectionEntry(el);
+      if (this.$collectionList.find('.collection-entry').length === 0) {
+        this.disableButton(this.$sendButton);
+      }
     };
     $removeEntryButton.on('click', handleRemoveClick);
   }
@@ -177,6 +157,7 @@ class CollectionWidget {
    */
   private registerAddClickHandler($addEntryButton: JQuery<HTMLElement>) {
     const handleAddClick = () => {
+      this.enableButton(this.$sendButton);
       this.addCollectionEntry();
     };
     $addEntryButton.on('click', handleAddClick);
@@ -213,13 +194,47 @@ class CollectionWidget {
 
   private registerSendHandler($sendButton: JQuery<HTMLElement>) {
     const handleSubmit = () => {
-      this.deleteFields();
+      this.disableInputs();
+      if (this.hasConnectionRequests()) {
+        this.disableParsleyValidation();
+      }
       $sendButton.click();
     };
     const $form = this.$collectionWidget.closest('form');
     $form.on('submit', handleSubmit);
   }
 
+  private enableButton($button: JQuery<HTMLElement>) {
+    $button.prop('disabled', false);
+  }
+
+  private disableButton($button: JQuery<HTMLElement>) {
+    $button.prop('disabled', true);
+  }
+
+  private clearInputs() {
+    this.$input.find('input').val('');
+  }
+
+  private disableInputs() {
+    this.$input.find('input').prop('disabled', true);
+  }
+
+  private hasValidInputs() {
+    // @ts-ignore
+    $(this.$connectionRequestForm).parsley().validate();
+    // @ts-ignore
+    return $(this.$connectionRequestForm).parsley().isValid();
+  }
+
+  private disableParsleyValidation() {
+    // @ts-ignore
+    $(this.$connectionRequestForm).parsley().disable();
+  }
+
+  private hasConnectionRequests() {
+    return this.$collectionList.find('.collection-entry').length > 0;
+  }
   /**
    * Verify the institution value of the entry is unique.
    */
