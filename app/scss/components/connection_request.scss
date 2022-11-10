@@ -43,6 +43,22 @@
     background-color: $light-grey;
     cursor: not-allowed;
   }
+
+  button[type="submit"]:disabled  {
+    border: 1px solid darken($medium-grey, 5%);
+    background-color: $light-grey;
+    cursor: not-allowed;
+  }
+}
+
+.line {
+  border-top: 2px solid #00829b;
+  padding-top: 5px;
+}
+
+.connection-request {
+  display: flex;
+  gap: 1.0rem;
 }
 
 .line {
