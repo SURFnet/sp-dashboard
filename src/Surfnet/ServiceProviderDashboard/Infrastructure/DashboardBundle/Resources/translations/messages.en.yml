@@ -127,6 +127,7 @@ entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
 entity.list.action.reset_secret: Reset client secret
 entity.list.action.change.request: Change Request
+entity.list.action.create.connection.request: Create connection request
 entity.list.modal.oidc_confirmation:
   title: Confirmation
   client_id:
@@ -405,6 +406,11 @@ entity.connection_request.ticket.institution: "Institution: %institution_name% C
 
 "
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
+entity.published_production_and_connection_request.text.html: "Thanks for publishing \"%entityName%\" and connection request(s) our production environment."
+entity.published_connection_request.text.html: "Thanks for publishing the connection request(s) to our production environment."
+entity.published_connection_request.title: "Successfully published the connection request(s) to production"
+entity.published_production_and_connection_request.title: "Successfully published the entity and connection request(s) to production"
+
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
 entity.published_test.title: "Successfully published the entity to test"
