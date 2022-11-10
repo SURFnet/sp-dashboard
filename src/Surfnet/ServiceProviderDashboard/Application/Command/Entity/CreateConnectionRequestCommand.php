@@ -58,11 +58,11 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
     }
 
     /**
-     * @throws Exception
+     * @throws ConnectionRequestNotUniqueException
      */
     public function setConnectionRequests(array $connectionRequests): void
     {
-        if (count($connectionRequests) !== count(array_unique($connectionRequests))) {
+        if (count($connectionRequests) !== count($this->getUniqueConnectionRequests($connectionRequests))) {
             throw new ConnectionRequestNotUniqueException('Connection request should be unique');
         }
         $this->connectionRequests = $connectionRequests;
@@ -76,5 +76,16 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
     public function getApplicant(): Contact
     {
         return $this->applicant;
+    }
+
+    private function getUniqueConnectionRequests(array $connectionRequests): array
+    {
+        $result = [];
+        foreach ($connectionRequests as $key => $connectionRequest) {
+            if (!in_array($connectionRequest->institution, $result, true)) {
+                $result[$key] = $connectionRequests;
+            }
+        }
+        return $result;
     }
 }
