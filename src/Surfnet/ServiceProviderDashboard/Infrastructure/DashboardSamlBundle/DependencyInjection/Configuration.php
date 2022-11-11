@@ -46,7 +46,7 @@ class Configuration implements ConfigurationInterface
     {
         $childNodes
             ->scalarNode('administrator_teams')
-                ->info('All users in these teams get the administrator role')
+                ->info('All users in these teams get the administrator role. Teams is a string containing roles seperated by comma\'s')
                 ->isRequired()
             ->end()
             ->arrayNode('session_lifetimes')

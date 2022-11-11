@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block page_heading %}{{ 'entity.change_requested.title'|trans }}{%endblock%}
+{% block body %}
+
+    {{ 'entity.change_requested.text.html'|trans|wysiwyg }}
+
+{% endblock %}

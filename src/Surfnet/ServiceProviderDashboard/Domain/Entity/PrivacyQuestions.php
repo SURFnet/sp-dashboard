@@ -33,7 +33,7 @@ class PrivacyQuestions
      * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"autoincrement":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

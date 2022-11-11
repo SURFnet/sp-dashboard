@@ -50,7 +50,6 @@ class EditServiceTest extends WebTestCase
         ];
 
         $crawler = $this->client->request('GET', '/service/1/edit');
-
         $form = $crawler
             ->selectButton('Save')
             ->form();

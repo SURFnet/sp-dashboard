@@ -23,8 +23,8 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
-use Symfony\Component\Templating\EngineInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Twig\Environment as TwigEnvironment;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class MailMessageFactoryTest extends MockeryTestCase
@@ -46,7 +46,7 @@ class MailMessageFactoryTest extends MockeryTestCase
 
     protected function setUp()
     {
-        $this->templateEngine = m::mock(EngineInterface::class);
+        $this->templateEngine = m::mock(TwigEnvironment::class);
         $this->translator = m::mock(TranslatorInterface::class);
 
         $this->factory = new MailMessageFactory(
@@ -61,7 +61,8 @@ class MailMessageFactoryTest extends MockeryTestCase
     public function test_build_jira_ticket_creation_failed()
     {
         $this->translator
-            ->shouldReceive('trans');
+            ->shouldReceive('trans')
+            ->andReturn('');
 
         $this->templateEngine
             ->shouldReceive('render');
@@ -84,6 +85,6 @@ class MailMessageFactoryTest extends MockeryTestCase
 
         $message = $this->factory->buildJiraIssueFailedMessage($e, $entity);
 
-        $this->assertInstanceOf(Message::class, $message);
+        $this->assertInstanceOf(TemplatedEmail::class, $message);
     }
 }

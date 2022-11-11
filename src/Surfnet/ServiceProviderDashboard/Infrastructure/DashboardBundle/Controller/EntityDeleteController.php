@@ -78,7 +78,6 @@ class EntityDeleteController extends Controller
      *          "environment": "test"
      *     }
      * )
-     * @Template("@Dashboard/EntityDelete/delete.html.twig")
      * @Security("has_role('ROLE_USER')")
      * @param Request $request
      *
@@ -125,12 +124,12 @@ class EntityDeleteController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        return [
+        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
             'form' => $form->createView(),
             'environment' => $environment,
             'status' => $excludeFromPush === "1" ? Constants::STATE_PUBLICATION_REQUESTED : Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
-        ];
+        ]);
     }
 
     /**
@@ -143,7 +142,6 @@ class EntityDeleteController extends Controller
      *          "environment": "production"
      *     }
      * )
-     * @Template("@Dashboard/EntityDelete/delete.html.twig")
      * @Security("has_role('ROLE_USER')")
      *
      * @param Request $request
@@ -187,11 +185,11 @@ class EntityDeleteController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        return [
+        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
             'form' => $form->createView(),
             'environment' => $environment,
             'status' => Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
-        ];
+        ]);
     }
 }

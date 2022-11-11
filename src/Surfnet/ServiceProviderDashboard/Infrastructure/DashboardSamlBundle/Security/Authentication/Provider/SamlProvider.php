@@ -70,17 +70,17 @@ class SamlProvider implements AuthenticationProviderInterface
         ServiceRepository $services,
         AttributeDictionary $attributeDictionary,
         LoggerInterface $logger,
-        array $administratorTeams
+        string $administratorTeams
     ) {
         $this->contacts = $contacts;
         $this->services = $services;
         $this->attributeDictionary = $attributeDictionary;
         $this->logger = $logger;
+        $this->administratorTeams = explode(',', trim(str_replace('\'', '',$administratorTeams)));
         Assert::allStringNotEmpty(
-            $administratorTeams,
+            $this->administratorTeams,
             'All entries in the `administrator_teams` config parameter should be string.'
         );
-        $this->administratorTeams = $administratorTeams;
     }
 
     /**

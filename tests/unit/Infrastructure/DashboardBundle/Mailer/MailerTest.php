@@ -21,21 +21,21 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
-use Swift_Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\RawMessage;
 
 class MailerTest extends MockeryTestCase
 {
     public function test_sending_of_message_message()
     {
-        $message = m::mock(Message::class);
+        $message = m::mock(RawMessage::class);
 
-        $swiftMailer = m::mock(Swift_Mailer::class);
-        $swiftMailer
+        $mailer = m::mock(MailerInterface::class);
+        $mailer
             ->shouldReceive('send')
             ->with($message)
             ->once();
-        $mailer = new Mailer($swiftMailer);
+        $mailer = new Mailer($mailer);
         $mailer->send($message);
     }
 }

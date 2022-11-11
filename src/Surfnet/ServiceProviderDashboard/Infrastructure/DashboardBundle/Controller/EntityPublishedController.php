@@ -34,7 +34,6 @@ class EntityPublishedController extends Controller
      * @Route("/entity/published/production", name="entity_published_production")
      * @Route("/entity/published/test", name="entity_published_test")
      * @Security("has_role('ROLE_USER')")
-     * @Template()
      */
     public function publishedAction()
     {
@@ -67,7 +66,6 @@ class EntityPublishedController extends Controller
      * @Method("GET")
      * @Route("/entity/change-request", name="entity_change_request")
      * @Security("has_role('ROLE_USER')")
-     * @Template()
      */
     public function changeRequestAction()
     {
@@ -87,7 +85,6 @@ class EntityPublishedController extends Controller
      *
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
-     * @Template()
      */
     public function oidcConfirmationModalAction()
     {
@@ -99,9 +96,9 @@ class EntityPublishedController extends Controller
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 
-        return [
+        return $this->render('@Dashboard/EntityPublished/oidcConfirmationModal.html.twig', [
             'entity' => $viewObject,
             'environment' => $entity->getEnvironment(),
-        ];
+        ]);
     }
 }

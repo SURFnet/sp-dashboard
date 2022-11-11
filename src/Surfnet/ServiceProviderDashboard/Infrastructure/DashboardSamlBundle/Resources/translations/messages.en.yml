@@ -4,5 +4,5 @@ saml_authn_failed.button.try_again: "Retry to sign-in"
 saml_precondition_not_met.title: "Sign in"
 saml_precondition_not_met.text.precondition_not_met: "You are not authorised to log in."
 saml_unknown_service.title: Service unknown
-saml_unknown_service.no_service.text: You have been granted access to one or more services, but those services are not yet provisioned in the dashboard. You are member of the following teams:
+saml_unknown_service.no_service.text: 'You have been granted access to one or more services, but those services are not yet provisioned in the dashboard. You are member of the following teams:'
 saml_unknown_service.no_teams.text: You have successfully logged in, but you have not been granted access to one or more services.

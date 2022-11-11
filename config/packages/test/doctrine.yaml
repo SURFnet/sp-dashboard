@@ -1,4 +1,0 @@
-doctrine:
-  dbal:
-    driver: pdo_sqlite
-    path: "/tmp/spdashboard-webtests.sqlite"

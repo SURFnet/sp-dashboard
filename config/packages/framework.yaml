@@ -1,8 +1,6 @@
 framework:
     secret: '%env(APP_SECRET)%'
     csrf_protection: true
-    templating:
-        engines: [ 'twig' ]
     trusted_hosts: ~
     session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler

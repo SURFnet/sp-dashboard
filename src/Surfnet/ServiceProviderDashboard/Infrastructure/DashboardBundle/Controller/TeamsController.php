@@ -105,7 +105,7 @@ class TeamsController extends Controller
 
         $teamInfo['serviceId'] = $serviceId;
 
-        return $this->render('DashboardBundle:Teams:manage.html.twig', $teamInfo);
+        return $this->render('@Dashboard/Teams/manage.html.twig', $teamInfo);
     }
 
     /**
