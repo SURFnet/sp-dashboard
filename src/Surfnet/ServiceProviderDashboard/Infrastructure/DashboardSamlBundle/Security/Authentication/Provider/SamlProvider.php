@@ -78,9 +78,10 @@ class SamlProvider implements AuthenticationProviderInterface
         $this->logger = $logger;
         $this->administratorTeams = explode(',', trim(str_replace('\'', '', $administratorTeams)));
         Assert::allStringNotEmpty(
-            $this->administratorTeams,
+            $administratorTeams,
             'All entries in the `administrator_teams` config parameter should be string.'
         );
+        $this->administratorTeams = $administratorTeams;
     }
 
     /**

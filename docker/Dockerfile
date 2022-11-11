@@ -2,7 +2,8 @@ FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:latest AS no
 COPY . /var/www/html/
 WORKDIR /var/www/html/
 ENV SYMFONY_ENV=prod
-RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev
+RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev && \
+    composer run-script symfony-scripts
 
 FROM node:14 AS js-build
 COPY . /var/www/html/
@@ -23,7 +24,6 @@ EXPOSE 80
 CMD ["httpd", "-D", "FOREGROUND"]
 
 FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm:latest AS phpfpm-build
-COPY --from=node-build /var/www/html/config/. /var/www/html/config/
 COPY --from=node-build /var/www/html/public/. /var/www/html/public/
 COPY --from=node-build /var/www/html/vendor/. /var/www/html/vendor/
 COPY --from=node-build /var/www/html/var/. /var/www/html/var/
