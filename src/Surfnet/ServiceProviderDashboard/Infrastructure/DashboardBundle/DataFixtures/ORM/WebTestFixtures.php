@@ -35,6 +35,7 @@ class WebTestFixtures extends Fixture
         $service =  $this->createService('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl');
         $service->setProductionEntitiesEnabled(true);
         $service->setPrivacyQuestionsEnabled(true);
+        $service->setClientCredentialClientsEnabled(true);
         $manager->persist($service);
 
         // Service Ibuildings B.V. also has privacy questions

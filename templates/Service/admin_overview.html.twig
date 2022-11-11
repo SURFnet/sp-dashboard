@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+    <main>
+        {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
+
+        <h1>{% block page_heading %}{{ 'service.admin_overview.title'|trans({'%name%': 'Service'}) }}{%endblock%}</h1>
+        <div class="fieldset card">
+            <div class="wysiwyg">{{ 'service.admin_overview.introduction.html'|trans|wysiwyg }}</div>
+        </div>
+    </main>
+{% endblock %}

@@ -80,14 +80,13 @@ class EntityCreateController extends Controller
      *     name="entity_type"
      * )
      * @Security("has_role('ROLE_USER')")
-     * @Template("@Dashboard/EntityType/type.html.twig")
      *
      * @param Request $request
      *
      * @param int $serviceId
      * @param string $targetEnvironment
      * @param string $inputId
-     * @return array|RedirectResponse
+     * @return RedirectResponse|Response|array
      */
     public function typeAction(Request $request, $serviceId, string $targetEnvironment, string $inputId)
     {
@@ -134,7 +133,7 @@ class EntityCreateController extends Controller
             ]);
         }
 
-        return [
+        return $this->render('@Dashboard/EntityType/type.html.twig', [
             'form' => $form->createView(),
             'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
@@ -143,13 +142,12 @@ class EntityCreateController extends Controller
             'productionEnabled' => $isProductionEnabled,
             'entities' => $entityList->getEntities(),
             'manageId' => $formId,
-        ];
+        ]);
     }
 
     /**
      * @Method({"GET", "POST"})
      * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add")
-     * @Template("@Dashboard/EntityEdit/edit.html.twig")
      * @param Request $request
      * @param int $serviceId
      * @param null|string $targetEnvironment
@@ -216,10 +214,10 @@ class EntityCreateController extends Controller
             }
         }
 
-        return [
+        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
             'form' => $form->createView(),
             'type' => $type,
-        ];
+        ]);
     }
 
 
@@ -234,7 +232,6 @@ class EntityCreateController extends Controller
      *      name="entity_copy"
      * )
      * @Security("has_role('ROLE_USER')")
-     * @Template("@Dashboard/EntityEdit/edit.html.twig")
      *
      * @param int $serviceId
      * @param null|string $manageId set from the entity_copy route
@@ -313,9 +310,9 @@ class EntityCreateController extends Controller
             }
         }
 
-        return [
+        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
             'form' => $form->createView(),
             'type' => $entity->getProtocol()->getProtocol(),
-        ];
+        ]);
     }
 }

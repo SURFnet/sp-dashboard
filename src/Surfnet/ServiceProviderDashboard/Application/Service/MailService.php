@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 
 class MailService

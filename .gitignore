@@ -1,7 +1,7 @@
 /.vagrant/
 /ansible/*.retry
 docker-compose.override.yml
-app/js/coverage
+assets/js/coverage
 /build/
 /var/*
 !/var/cache
@@ -15,11 +15,12 @@ app/js/coverage
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
-/web/bundles/
 /.idea
 /node_modules
-/web/build
-/web/coverage
+/.env
+###> symfony 4 ###
+/public/build/
+###< symfony 4 ###
 
 ###> phpunit/phpunit ###
 /phpunit.xml

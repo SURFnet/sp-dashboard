@@ -33,6 +33,9 @@ class FakeTeamsQueryClient implements QueryTeamsRepository
 
     public function findTeamByUrn(string $urn): ?array
     {
-        return $this->data[$urn];
+        if (array_key_exists($urn, $this->data)) {
+            return $this->data[$urn];
+        }
+        return null;
     }
 }

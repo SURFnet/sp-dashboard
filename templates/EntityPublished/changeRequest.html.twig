@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'entity.change_request.title'|trans }}{%endblock%}</h1>
+
+    <div class="fieldset card action">
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: actions, isAdmin: isAdmin} %}
+    </div>
+
+    <div class="fieldset card">
+        {% if changeRequests.getChangeRequests()|length %}
+            <div class="wysiwyg">{{ 'entity.change_request.text.html'|trans|wysiwyg }}</div>
+        {% else %}
+            <div class="wysiwyg">{{ 'entity.change_request.none.text.html'|trans|wysiwyg }}</div>
+        {% endif %}
+    </div>
+
+    {%  for changeRequest in changeRequests.getChangeRequests() %}
+
+        <div class="fieldset card">
+            <h2>{{ changeRequest.created|date }}</h2>
+
+            {% if changeRequest.note is not null %}
+                <p>{{ changeRequest.note }}</p>
+            {% endif %}
+
+            <table  class="change-request-overview">
+                <tr>
+                    <th>{{ 'entity.change_request.value'|trans }}</th>
+                    <th>{{ 'entity.change_request.data'|trans }}</th>
+                </tr>
+                    {% for index, pathUpdate in changeRequest.pathUpdates %}
+                    <tr>
+                            <td>{{ index }}</td>
+                            <td>
+                            {% if pathUpdate is iterable %}
+                                <ul>
+                                    {%  for value in pathUpdate %}
+                                        <li>{{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                {{ pathUpdate }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {%  endfor %}
+
+            </table>
+        </div>
+    {% endfor %}
+{% endblock %}

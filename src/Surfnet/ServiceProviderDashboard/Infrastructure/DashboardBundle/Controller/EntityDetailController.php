@@ -58,7 +58,6 @@ class EntityDetailController extends Controller
      * @Method("GET")
      * @Route("/entity/detail/{serviceId}/{id}/{manageTarget}", name="entity_detail", defaults={"manageTarget" = false})
      * @Security("has_role('ROLE_USER')")
-     * @Template("@Dashboard/EntityDetail/detail.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
@@ -73,9 +72,9 @@ class EntityDetailController extends Controller
         }
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return [
+        return $this->render('@Dashboard/EntityDetail/detail.html.twig', [
             'entity' => $viewObject,
             'isAdmin' => $this->isGranted('ROLE_ADMINISTRATOR'),
-        ];
+        ]);
     }
 }

@@ -1,8 +1,0 @@
-{% extends '::base.html.twig' %}
-
-{% block page_heading %}{{ 'entity.published_production.title'|trans }}{%endblock%}
-{% block body %}
-
-    {{ 'entity.published_production.text.html'|trans({'%entityName%': entityName})|wysiwyg }}
-
-{% endblock %}

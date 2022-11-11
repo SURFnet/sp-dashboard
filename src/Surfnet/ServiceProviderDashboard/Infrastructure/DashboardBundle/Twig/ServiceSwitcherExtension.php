@@ -75,7 +75,7 @@ class ServiceSwitcherExtension extends Twig_Extension
         $form = $this->formFactory->create(ServiceSwitcherType::class);
 
         return $environment->render(
-            'DashboardBundle:TwigExtension:service_switcher.html.twig',
+            'TwigExtension\\service_switcher.html.twig',
             [
                 'form' => $form->createView(),
             ]

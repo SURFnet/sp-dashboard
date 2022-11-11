@@ -14,8 +14,12 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand }
 
+    Surfnet\ServiceProviderDashboard\Webtests\Mailer\FakeMailer:
+        arguments: ~
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer:
-        class: Surfnet\ServiceProviderDashboard\Webtests\Mailer\FakeMailer
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Webtests\Mailer\FakeMailer'
         public: true
 
     Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
@@ -35,37 +39,58 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeQueryClient
+        public: true
 
     surfnet.manage.client.query_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeQueryClient
+        public: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeIdentityProviderClient
+        public: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeEntityChangeRequestClient
+        public: true
 
     surfnet.manage.client.identity_provider_client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeIdentityProviderClient
+        public: true
 
     surfnet.manage.client.publish_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishEntityClient
+        public: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishEntityClient
+        public: true
 
     surfnet.manage.client.delete_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteManageEntityClient
+        public: true
 
     surfnet.manage.client.delete_client.test_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeDeleteManageEntityClient
+        public: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient
+        public: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakePublishTeamClient
+        public: true
 
+    Surfnet\ServiceProviderDashboard\Application\Service\TicketService:
+        arguments:
+            - '@surfnet.dashboard.repository.issue'
+            - '@logger'
+
+    surfnet.dashboard.repository.issue:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentIssueRepository
+        arguments:
+            $filePath:  '%kernel.project_dir%/issues.json'
+        public: true
 
     # These services are overloaded for functional tests and have been made public to prevent:
     #

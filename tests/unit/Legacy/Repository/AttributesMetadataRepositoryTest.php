@@ -31,7 +31,7 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->repository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources/');
+        $this->repository = new AttributesMetadataRepository(__DIR__ . '/../../../../assets/Resources/');
         parent::setUp();
     }
 
