@@ -14,7 +14,7 @@ jest
 describe('validate collection widget', function() {
 
   let stateHtml = `
-        <form action="/" method="POST">
+        <form action="/public" method="POST">
         <div class="collection-widget" data-prototype="<input type=&quot;text&quot; id=&quot;dashboard_bundle_entity_type_metadata_redirectUris___name__&quot; name=&quot;dashboard_bundle_entity_type[metadata][redirectUris][__name__]&quot;  />">
         <ul class="collection-list"></ul>
         </div>

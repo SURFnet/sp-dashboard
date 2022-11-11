@@ -5,11 +5,11 @@ services:
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
     resource: '../../Controller'
-    tags: [ 'controller.service_arguments' ]
+    tags: ['controller.service_arguments']
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\:
     resource: '../../Security/Voter'
-    tags: [ 'security.voter' ]
+    tags: ['security.voter']
 
   surfnet.dashboard.command_handler.create_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
@@ -514,8 +514,8 @@ services:
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\EntityConnectionRequestClient:
     arguments:
-    - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
-    - '@logger'
+      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
+      - '@logger'
 
   surfnet.manage.http.guzzle.prod_environment:
     class: GuzzleHttp\Client

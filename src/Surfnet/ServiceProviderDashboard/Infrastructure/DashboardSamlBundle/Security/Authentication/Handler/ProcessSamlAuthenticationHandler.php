@@ -74,8 +74,8 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
             } catch (AuthnFailedSamlResponseException $exception) {
                 $logger->notice(sprintf('SAML Authentication failed at IdP: "%s"', $exception->getMessage()));
                 $responseBody = $this->templating->render(
-                    'DashboardSamlBundle:Exception:authnFailed.html.twig',
-                    ['exception' => $exception]
+                    '@Dashboard/Exception/authnFailed.html.twig',
+                    ['exception' => $exception, 'page_title' => 'AuthnFailedSamlResponseException']
                 );
 
                 $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));

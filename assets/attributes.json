@@ -36,7 +36,7 @@
         "saml20Label": "Common name attribute",
         "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:cn</a><br />urn:oid: <a href='http://oid-info.com/get/2.5.4.3' target='_blank'>urn:oid:2.5.4.3</a></p> <p>Description: full name.</p>",
         "oidcngLabel": "name",
-	"oidcngInfo": "<p>name</p><p>Description: full name.</p>"
+        "oidcngInfo": "<p>name</p><p>Description: full name.</p>"
       }
     },
     "urns": [
@@ -184,7 +184,7 @@
     "translations" : {
       "en": {
         "saml20Label": "Preferred language attribute",
-	"saml20Info": "<p>urn:mace: urn:mace:dir:attribute-def:preferredLanguage<br />urn:oid: urn:oid:2.16.840.1.113730.3.1.39 </p> <p>Description: a two-letter abbreviation for the preferred language according to the ISO 639 language abbreviation code table; no subcodes</p>",
+        "saml20Info": "<p>urn:mace: urn:mace:dir:attribute-def:preferredLanguage<br />urn:oid: urn:oid:2.16.840.1.113730.3.1.39 </p> <p>Description: a two-letter abbreviation for the preferred language according to the ISO 639 language abbreviation code table; no subcodes</p>",
         "oidcngLabel": "locale",
         "oidcngInfo": "<p>locale</p> <p> Description: a two-letter abbreviation for the preferred language according to the ISO 639 language abbreviation code table; no subcodes.</p>"
       }

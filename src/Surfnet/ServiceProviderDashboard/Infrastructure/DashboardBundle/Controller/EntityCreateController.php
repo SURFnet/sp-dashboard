@@ -64,7 +64,8 @@ class EntityCreateController extends AbstractController
      *     name="entity_type",
      *     methods={"GET", "POST"}
      * )
-     * @Security("is_granted('ROLE_USER')")
+     * @Security("has_role('ROLE_USER')")
+     * @Template("@Dashboard/EntityType/type.html.twig")
      *
      * @param Request $request
      *
@@ -131,7 +132,9 @@ class EntityCreateController extends AbstractController
     }
 
     /**
-     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add",methods={"GET", "POST"})
+     * @Method({"GET", "POST"})
+     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add")
+     * @Template("@Dashboard/EntityEdit/edit.html.twig")
      * @param Request $request
      * @param int $serviceId
      * @param null|string $targetEnvironment

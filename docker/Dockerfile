@@ -3,7 +3,8 @@ COPY . /var/www/html/
 WORKDIR /var/www/html/
 ENV SYMFONY_ENV=prod
 RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev && \
-    composer run-script symfony-scripts
+    composer run-script symfony-scripts && \
+    bin/console assets:install
 
 FROM node:14 AS js-build
 COPY . /var/www/html/
