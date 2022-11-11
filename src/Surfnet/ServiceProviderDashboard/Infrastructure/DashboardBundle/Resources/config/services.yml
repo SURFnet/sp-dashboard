@@ -192,12 +192,12 @@ services:
     tags:
       - { name: dashboard.json_generator, identifier: oauth20_ccc }
 
-  Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
-      - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
-      - '%kernel.project_dir%/assets/Resources'
-      - '@logger'
+    Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+            - '%kernel.project_dir%/assets/Resources'
+            - '@logger'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
@@ -206,31 +206,31 @@ services:
     factory: ['@doctrine', 'getRepository']
     arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Contact]
 
-  Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
-    arguments:  ['%kernel.project_dir%/assets/Resources']
+    Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
+        arguments:  ['%kernel.project_dir%/assets/Resources']
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
-    arguments:  ['%kernel.project_dir%/assets/attributes.json']
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
+        arguments:  ['%kernel.project_dir%/assets/attributes.json']
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
-    public: true
-    factory: ['@doctrine', 'getRepository']
-    arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions]
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
+        public: true
+        factory: ['@doctrine', 'getRepository']
+        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions]
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository:
-    public: true
-    factory: ['@doctrine', 'getRepository']
-    arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository:
+        public: true
+        factory: ['@doctrine', 'getRepository']
+        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
-    public: true
-    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
-    arguments:
-      $serviceService: '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
-      $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
-      $tokenStorage: '@security.token_storage'
-      $manageTestConfig: "@surfnet.manage.configuration.test"
-      $manageProdConfig: "@surfnet.manage.configuration.production"
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
+        public: true
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
+        arguments:
+            $serviceService: '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
+            $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+            $tokenStorage: '@security.token_storage'
+            $manageTestConfig: "@surfnet.manage.configuration.test"
+            $manageProdConfig: "@surfnet.manage.configuration.production"
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension:
     tags: [twig.extension]
@@ -330,11 +330,11 @@ services:
       - '@logger'
       - '%env(jira_issue_type)%'
 
-  Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
-    public: true
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
-      - '%env(locale)%'
+    Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
+        public: true
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+            - '%env(locale)%'
 
   Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService:
     arguments:

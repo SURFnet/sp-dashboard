@@ -21,6 +21,12 @@ assets/js/coverage
 ###> symfony 4 ###
 /public/build/
 ###< symfony 4 ###
+/web/build
+/web/coverage
+/.env
+###> symfony 4 ###
+/public/build/
+###< symfony 4 ###
 
 ###> phpunit/phpunit ###
 /phpunit.xml
