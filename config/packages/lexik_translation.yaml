@@ -6,4 +6,4 @@ lexik_translation:
   resources_registration:
     type: all
     managed_locales_only: true
-  base_layout: "::Translation/layout.html.twig"
+  base_layout: "Translation/layout.html.twig"

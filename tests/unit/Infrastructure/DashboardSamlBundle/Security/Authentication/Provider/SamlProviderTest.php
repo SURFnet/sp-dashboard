@@ -84,7 +84,7 @@ class SamlProviderTest extends TestCase
 
     public function test_happy_flow()
     {
-        $provider  = $this->buildProvider(['urn:collab:foo:team.foobar.com']);
+        $provider  = $this->buildProvider('urn:collab:foo:team.foobar.com');
 
         $nameId = 'urn:collab:foo:team.foobar.com';
         $email = 'foo@team.foobar.com';
@@ -144,7 +144,7 @@ class SamlProviderTest extends TestCase
 
     public function test_happy_flow_with_empty_common_name()
     {
-        $provider  = $this->buildProvider(['urn:collab:foo:team.foobar.com']);
+        $provider  = $this->buildProvider('urn:collab:foo:team.foobar.com');
 
         $nameId = 'urn:collab:foo:team.foobar.com';
         $email = 'foo@team.foobar.com';
@@ -206,7 +206,7 @@ class SamlProviderTest extends TestCase
         $this->expectException(BadCredentialsException::class);
         $this->expectExceptionMessage('First value of attribute "mail" must be a string, "NULL" given');
 
-        $provider = $this->buildProvider(['urn:collab:foo:team.foobar.com']);
+        $provider = $this->buildProvider('urn:collab:foo:team.foobar.com');
 
         $nameId = 'urn:collab:foo:team.foobar.com';
 
@@ -237,20 +237,12 @@ class SamlProviderTest extends TestCase
 
     public function provideValidAdminTeams()
     {
-        return [
-            [['urn:collab:foo:team.foobar.com']],
-            [['urn:collab:foo:team.foobar.com', 'urn:collab:foo:team.foobar.com']],
-        ];
+        return "urn:collab:foo:team.foobar.com,urn:collab:foo:team.foobar.com,urn:collab:foo:team.foobar.com";
     }
 
     public function provideInvalidAdminTeams()
     {
-        return [
-            [['']],
-            [[345345]],
-            [[true, false]],
-            [[['foo', 'bar']]],
-        ];
+        return ",345345,true,false,foo,bar";
     }
 
     private function buildProvider($administratorTeams)

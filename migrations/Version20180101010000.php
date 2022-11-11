@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Squashed migration that replaces all previous migrations.
@@ -17,9 +18,10 @@ use Doctrine\DBAL\Schema\Schema;
 class Version20180101010000 extends AbstractMigration
 {
     /**
-     * @param Schema $schema
+     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf(
@@ -28,7 +30,7 @@ class Version20180101010000 extends AbstractMigration
         );
 
         // If this migration is run on an existing DB, clear the version table and play the squash migration.
-        if (count($this->version->getConfiguration()->getMigratedVersions()) > 0) {
+        if ($this->getMigratedVersions() > 0) {
             $this->addSql("TRUNCATE migration_versions");
         }
 
@@ -54,8 +56,22 @@ SQL;
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $this->abortIf(true, 'Drop the database schema to \'down\' this migration.');
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getMigratedVersions(): int
+    {
+        $select = $this->connection->executeQuery("SELECT COUNT(*) AS number FROM migration_versions");
+        $row = $select->fetchAllAssociative();
+        if (count($row)) {
+            return (int)$row[0]['number'];
+        }
+        return 0;
     }
 }

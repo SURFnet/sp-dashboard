@@ -20,9 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factor
 
 use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
-use Symfony\Component\Templating\EngineInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Environment as TwigEnvironment;
 
 /**
  * The mail message factory builds mail messages. These messages are set with a translatable title and their message
@@ -53,7 +53,7 @@ class MailMessageFactory
     private $translator;
 
     /**
-     * @var EngineInterface
+     * @var TwigEnvironment
      */
     private $templating;
 
@@ -62,14 +62,14 @@ class MailMessageFactory
      * @param string $receiver
      * @param string $noReply
      * @param TranslatorInterface $translator
-     * @param EngineInterface $templating
+     * @param TwigEnvironment $templating
      */
     public function __construct(
-        $sender,
-        $receiver,
-        $noReply,
+        string $sender,
+        string $receiver,
+        string $noReply,
         TranslatorInterface $translator,
-        EngineInterface $templating
+        TwigEnvironment $templating
     ) {
         $this->sender = $sender;
         $this->receiver = $receiver;
@@ -78,10 +78,10 @@ class MailMessageFactory
         $this->templating = $templating;
     }
 
-    public function buildJiraIssueFailedMessage(Exception $exception, ManageEntity $entity)
+    public function buildJiraIssueFailedMessage(Exception $exception, ManageEntity $entity): TemplatedEmail
     {
         $message = $this->createNewMessage();
-        $message->setSubject($this->translator->trans('mail.jira.publish_production_failed.subject'));
+        $message->subject($this->translator->trans('mail.jira.publish_production_failed.subject'));
 
         $template = $this->renderView(
             '@Dashboard/Mail/jiraPublicationFailed.html.twig',
@@ -92,23 +92,21 @@ class MailMessageFactory
             ]
         );
 
-        $message->setBody($template, 'text/html');
+        $message->htmlTemplate($template);
 
         return $message;
     }
 
-    private function createNewMessage()
+    private function createNewMessage(): TemplatedEmail
     {
-        $message = Message::newInstance();
-
-        $headers = $message->getHeaders();
+        $email = new TemplatedEmail();
+        $headers = $email->getHeaders();
         $headers->addTextHeader('Auto-Submitted', 'auto-generated');
-        # TODO: see https://github.com/swiftmailer/swiftmailer/issues/705
-        $message->setReturnPath($this->noReply);
-        $message->setFrom($this->sender);
-        $message->setTo($this->receiver);
+        $email->returnPath($this->noReply);
+        $email->from($this->sender);
+        $email->to($this->receiver);
 
-        return $message;
+        return $email;
     }
 
     private function renderView($view, array $parameters = array())

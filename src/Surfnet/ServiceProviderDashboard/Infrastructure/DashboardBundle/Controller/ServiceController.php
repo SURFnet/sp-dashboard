@@ -129,7 +129,6 @@ class ServiceController extends Controller
      * @Method({"GET"})
      * @Route("/", name="service_overview")
      * @Security("has_role('ROLE_USER')")
-     * @Template()
      */
     public function overviewAction()
     {
@@ -159,7 +158,7 @@ class ServiceController extends Controller
         /** @var ManageEntity $publishedEntity */
         $publishedEntity = $this->get('session')->get('published.entity.clone');
 
-        return $this->render('DashboardBundle:Service:overview.html.twig', [
+        return $this->render('@Dashboard/Service/overview.html.twig', [
             'services' => $serviceList,
             'isAdmin' => false,
             'publishedEntity' => $publishedEntity,
@@ -172,7 +171,6 @@ class ServiceController extends Controller
      * @Method({"GET", "POST"})
      * @Route("/service/create", name="service_add")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
      *
      * @return RedirectResponse|Response
      */
@@ -199,7 +197,7 @@ class ServiceController extends Controller
             }
         }
 
-        return $this->render('DashboardBundle:Service:create.html.twig', array(
+        return $this->render('@Dashboard/Service/create.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -208,7 +206,6 @@ class ServiceController extends Controller
      * @Method({"GET", "POST"})
      * @Route("/service/{serviceId}/edit", name="service_edit")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
      *
      * @return RedirectResponse|Response
      */
@@ -217,8 +214,6 @@ class ServiceController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
 
         $this->get('session')->getFlashBag()->clear();
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
 
         $command = new EditServiceCommand(
             $service->getId(),
@@ -243,12 +238,12 @@ class ServiceController extends Controller
 
         // On delete, forward to the service delete confirmation page.
         if ($this->isDeleteAction($form)) {
-            $logger->info('Forwarding to the delete confirmation page');
+            $this->logger->info('Forwarding to the delete confirmation page');
             return $this->redirectToRoute('service_delete', ['serviceId' => $serviceId]);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
+            $this->logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
                 $this->get('session')->getFlashBag()->add('info', 'service.edit.flash.success');
@@ -260,7 +255,7 @@ class ServiceController extends Controller
             }
         }
 
-        return $this->render('DashboardBundle:Service:edit.html.twig', array(
+        return $this->render('@Dashboard/Service/edit.html.twig', array(
             'form' => $form->createView(),
         ));
     }
@@ -269,7 +264,6 @@ class ServiceController extends Controller
      * @Method({"GET", "POST"})
      * @Route("/service/{serviceId}/delete", name="service_delete")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
      *
      * @param Request $request
      * @param $serviceId
@@ -313,11 +307,11 @@ class ServiceController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        return [
+        return $this->render('@Dashboard/Service/delete.html.twig', [
             'form' => $form->createView(),
             'serviceName' => $service->getName(),
             'entityList' => $this->entityService->getEntityListForService($service),
-        ];
+        ]);
     }
 
     /**
@@ -344,7 +338,6 @@ class ServiceController extends Controller
      * @Method({"GET"})
      * @Route("/service/{serviceId}", name="service_admin_overview")
      * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template("@Dashboard/Service/overview.html.twig")
      */
     public function adminOverviewAction($serviceId)
     {
@@ -358,7 +351,7 @@ class ServiceController extends Controller
         /** @var ManageEntity $publishedEntity */
         $publishedEntity = $this->get('session')->get('published.entity.clone');
 
-        return $this->render('DashboardBundle:Service:overview.html.twig', [
+        return $this->render('@Dashboard/Service/overview.html.twig', [
             'services' => $serviceList,
             'isAdmin' => true,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),

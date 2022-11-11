@@ -54,17 +54,13 @@ jobs:
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm chmod 777 /var/www/html/var/{logs,cache}
 
-    - name: Copy parameters.yaml.dist to parameters.yaml
+    - name: Copy .env.dist to .env
       run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm cp /var/www/html/app/config/parameters.yml.dist /var/www/html/app/config/parameters.yml
+        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm cp /var/www/html/.env.dist /var/www/html/.env
 
     - name: Wait until the spdashboard is accessable 
       run: |
         docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T openconext sh /usr/local/sbin/spdup.sh
-    
-    - name: Disable Symfony debug mode
-      run: | 
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm sed -i s/\'dev\',\ true/\'dev\',\ false/g /var/www/html/web/app_dev.php
 
     - name: Run cypress tests
       run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run --browser chrome

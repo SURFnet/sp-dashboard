@@ -5,16 +5,16 @@
     <target name="lint">
         <echo message="parallel-lint:" />
         <exec executable="vendor/bin/parallel-lint" failonerror="true">
-            <arg path="app" />
+            <arg path="config" />
             <arg path="src" />
             <arg path="tests" />
-            <arg path="web" />
+            <arg path="public" />
         </exec>
 
         <echo message="${line.separator}yamllint:" />
         <exec executable="bin/console" failonerror="true">
             <arg line="lint:yaml" />
-            <arg path="app/config" />
+            <arg path="config" />
         </exec>
 
         <echo message="${line.separator}composer validate:" />
@@ -29,7 +29,7 @@
 
         <echo message="${line.separator}stylelint:" />
         <exec executable="node_modules/stylelint/bin/stylelint.js" failonerror="true">
-            <arg line="app/scss/**/*.scss" />
+            <arg line="assets/scss/**/*.scss" />
             <arg line="-f unix" />
         </exec>
 
@@ -69,12 +69,12 @@
 
         <echo message="${line.separator}attribute-scheme-validation"/>
         <exec executable="node_modules/.bin/ajv" failonerror="true">
-            <arg line="compile -s app/Resources/schemas/attributes.scheme.json" />
+            <arg line="compile -s assets/Resources/schemas/attributes.scheme.json" />
         </exec>
 
         <echo message="${line.separator}attribute-data-validation"/>
         <exec executable="node_modules/.bin/ajv" failonerror="true">
-            <arg line="validate -s app/Resources/schemas/attributes.scheme.json -d app/config/attributes.json" />
+            <arg line="validate -s assets/Resources/schemas/attributes.scheme.json -d assets/attributes.json" />
         </exec>
 
         <echo message="${line.separator}phpcpd:" />
@@ -89,10 +89,10 @@
 
     <target name="create-test-db">
         <exec executable="bin/console" failonerror="true">
-            <arg line="doctrine:schema:drop --force --env=test" />
+            <arg line="doctrine:schema:drop --force --env test" />
         </exec>
         <exec executable="bin/console" failonerror="true">
-            <arg line="doctrine:schema:create --env=test" />
+            <arg line="doctrine:schema:create --env test" />
         </exec>
     </target>
 

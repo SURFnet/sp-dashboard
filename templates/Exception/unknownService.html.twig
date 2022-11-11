@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block page_heading %}{{ 'saml_unknown_service.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h2>{{ page_title }}</h2>
+
+    {% if teamNames is not empty %}
+        <p>{{ 'saml_unknown_service.no_service.text'|trans }}</p>
+        <br/>
+        <ul class="team-names">
+            {% for teamName in teamNames  %}
+                <li>{{ teamName }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ 'saml_unknown_service.no_teams.text'|trans }}</p>
+    {% endif %}
+
+    <br/>
+
+    <a class="btn btn-primary" href="{{ path('service_overview') }}">
+        {{ 'saml_authn_failed.button.try_again'|trans }}
+    </a>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% set type = entity.protocol %}
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+
+    <h1>{% block page_heading %}{{ 'entity.detail.title'|trans }}{% endblock %}</h1>
+
+    <div class="fieldset card action">
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions, isAdmin: isAdmin} %}
+    </div>
+    <div class="fieldset card">
+        <h2>{{ ('entity.detail.info.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.info.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+    </div>
+
+    <div class="fieldset card">
+        <h2>{{ ('entity.detail.metadata.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.metadata.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.metadata_url'|trans, value: entity.metadataUrl, informationPopup: 'entity.edit.information.metadataUrl'} %}
+        {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.acs_location'|trans, value: entity.acsLocations, informationPopup: 'entity.edit.information.acsLocation'} %}
+
+        {% if entity.protocol == "saml20" %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.entity_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.entityId'} %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_id_format'|trans, value: entity.nameIdFormat|replace({'urn:oasis:names:tc:SAML:2.0:nameid-format:': ''}), informationPopup: 'entity.edit.information.nameIdFormat'} %}
+        {% endif %}
+
+        {% if entity.protocol == "oidcng" %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
+            {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.redirect_uris'|trans, value: entity.redirectUris, informationPopup: 'entity.edit.information.redirectUris'} %}
+            {% include '@Dashboard/EntityDetail/detailListField.html.twig' with {label: 'entity.detail.metadata.grant_type'|trans, value: entity.grants, informationPopup: 'entity.edit.information.grantType'} %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.subject_type'|trans, value: entity.nameIdFormat|replace({'urn:oasis:names:tc:SAML:2.0:nameid-format:': ''}), informationPopup: 'entity.edit.information.subjectType'} %}
+            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.playground_enabled'|trans, value: entity.playgroundEnabled, informationPopup: 'entity.edit.information.enablePlayground'} %}
+            {% include '@Dashboard/EntityDetail/detailBooleanField.html.twig' with {label: 'entity.detail.metadata.is_public_client'|trans, value: entity.publicClient, informationPopup: 'entity.edit.information.isPublicClient'} %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.access_token_validity'|trans, value: entity.accessTokenValidity, informationPopup: 'entity.edit.information.accessTokenValidity'} %}
+        {% endif %}
+
+        {% if entity.protocol == "oauth20_rs" %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
+        {% endif %}
+
+        {% if entity.protocol == "oauth20_ccc" %}
+            {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.client_id'|trans, value: entity.entityId, informationPopup: 'entity.edit.information.clientId'} %}
+        {% endif %}
+
+
+        {% include '@Dashboard/EntityDetail/detailFormattedField.html.twig' with {label: 'entity.detail.metadata.certificate'|trans, value: entity.certificate, informationPopup: 'entity.edit.information.certificate'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.logo_url'|trans, value: entity.logoUrl, informationPopup: 'entity.edit.information.logoUrl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_nl'|trans, value: entity.nameNl, informationPopup: 'entity.edit.information.nameNl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.description_nl'|trans, value: entity.descriptionNl, informationPopup: 'entity.edit.information.descriptionNl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_en'|trans, value: entity.nameEn, informationPopup: 'entity.edit.information.nameEn'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.description_en'|trans, value: entity.descriptionEn, informationPopup: 'entity.edit.information.descriptionEn'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.application_url'|trans, value: entity.applicationUrl, informationPopup: 'entity.edit.information.applicationUrl'} %}
+        {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.eula_url'|trans, value: entity.eulaUrl, informationPopup: 'entity.edit.information.eulaUrl'} %}
+
+    </div>
+
+    {% if entity.protocol == "oidcng" or entity.protocol == 'oauth20_ccc' %}
+    <div class="fieldset card">
+        <h2>{{ 'entity.detail.metadata.resource_servers'|trans }}</h2>
+        {% include '@Dashboard/EntityDetail/detailResourceServersField.html.twig' with {label: 'entity.detail.metadata.resource_servers'|trans, value: entity.resourceServers, entity: entity, informationPopup: 'entity.edit.information.resourceServers'} %}
+    </div>
+    {% endif %}
+
+    <div class="fieldset card">
+        <h2>{{ ('entity.detail.contact.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.contact.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+
+        {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.administrative'|trans, value: entity.administrativeContact, informationPopup: 'entity.edit.information.administrativeContact'} %}
+        {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.technical'|trans, value: entity.technicalContact, informationPopup: 'entity.edit.information.technicalContact'} %}
+        {% include '@Dashboard/EntityDetail/detailContactField.html.twig' with {label: 'entity.detail.contact.support'|trans, value: entity.supportContact, informationPopup: 'entity.edit.information.supportContact'} %}
+
+    </div>
+
+    {% if entity.protocol != "oauth20_rs" and entity.protocol != "oauth20_ccc" %}
+
+    <div class="fieldset card">
+        <h2>{{ ('entity.detail.attribute.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.detail.attribute.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+
+        {% for attribute in entity.attributes %}
+            {% if not attribute.isExcludedForProtocol(entity.protocol) %}
+                {% include '@Dashboard/EntityDetail/detailAttributeField.html.twig' with {label: attribute.label, value: attribute.value, informationPopup: attribute.informationPopup} %}
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% endif %}
+
+    <div class="modal oidc-confirmation" id="reset-secret-confirmation">
+        {% include "@Dashboard/EntityModal/secretResetModal.html.twig" %}
+    </div>
+
+{% endblock %}

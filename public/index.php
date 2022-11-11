@@ -1,6 +1,7 @@
 <?php
 
-use App\Kernel;
+//use App\Kernel;
+use Surfnet\ServiceProviderDashboard\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

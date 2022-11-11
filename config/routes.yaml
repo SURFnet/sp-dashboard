@@ -23,5 +23,5 @@ logout:
   path: /logout
   defaults:
     _controller: FrameworkBundle:Redirect:urlRedirect
-    path: '%logout_redirect_url%'
+    path: 'https://www.surf.nl/over-surf/werkmaatschappijen/surfnet'
     permanent: true

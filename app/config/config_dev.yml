@@ -1,5 +1,0 @@
-imports:
-    - { resource: config.yml }
-
-swiftmailer:
-    port: 1025
