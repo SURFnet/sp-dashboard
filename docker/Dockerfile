@@ -3,8 +3,7 @@ COPY . /var/www/html/
 WORKDIR /var/www/html/
 ENV SYMFONY_ENV=prod
 RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev && \
-    composer run-script symfony-scripts && \
-    bin/console assets:install
+    composer run-script symfony-scripts
 
 FROM node:14 AS js-build
 COPY . /var/www/html/
@@ -37,7 +36,7 @@ COPY --from=js-build /var/www/html/node_modules/. /var/www/html/node_modules/
 LABEL maintainer "Bart Geesink" <bart.geesink@surf.nl>
 
 RUN chown -R www-data /var/www/html/var/cache && \
-    chown -R www-data /var/www/html/var/logs && \
+    chown -R www-data /var/www/html/var/log && \
     chown -R www-data /var/www/html/var/sessions && \
     rm -rf /var/www/html/var/cache/prod/
 
