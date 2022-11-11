@@ -120,7 +120,7 @@
         </exec>
     </target>
 
-    <target name="web-tests-no-coverage" depends="create-test-db">
+    <target name="web-tests-no-coverage">
         <exec executable="vendor/bin/phpunit" failonerror="true">
             <arg line="--testsuite webtests" />
         </exec>
