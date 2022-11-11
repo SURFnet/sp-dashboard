@@ -79,7 +79,6 @@ class EntityAclController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/entity/acl/{serviceId}/{id}", name="entity_acl")
-     * @Template()
      *
      * @param Request $request
      * @param string $serviceId
@@ -105,10 +104,10 @@ class EntityAclController extends Controller
 
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return [
+        return $this->render('@Dashboard/EntityAcl/acl.html.twig', [
             'form' => $form->createView(),
             'entity' => $viewObject,
             'isAdmin' => $this->authorizationService->isAdministrator(),
-        ];
+        ]);
     }
 }

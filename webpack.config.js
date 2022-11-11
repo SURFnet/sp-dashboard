@@ -1,11 +1,11 @@
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .setOutputPath('web/build/')
+    .setOutputPath('public/build/')
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
-    .addEntry('app', './app/js/application.js')
-    .addStyleEntry('global', './app/scss/application.scss')
+    .addEntry('app', './assets/js/application.js')
+    .addStyleEntry('global', './assets/scss/application.scss')
     .addLoader({ test: /\.scss$/, loader: 'import-glob-loader' })
     .cleanupOutputBeforeBuild()
     .autoProvidejQuery()

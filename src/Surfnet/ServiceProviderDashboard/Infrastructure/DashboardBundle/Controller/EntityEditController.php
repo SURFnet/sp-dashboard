@@ -49,7 +49,6 @@ class EntityEditController extends Controller
     /**
      * @Method({"GET", "POST"})
      * @Route("/entity/edit/{environment}/{manageId}/{serviceId}", name="entity_edit")
-     * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -119,10 +118,10 @@ class EntityEditController extends Controller
             }
         }
 
-        return [
+        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
             'form' => $form->createView(),
             'type' => $entity->getProtocol()->getProtocol(),
-        ];
+        ]);
     }
 
     /**

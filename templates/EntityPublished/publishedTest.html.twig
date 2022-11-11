@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body_container %}
+
+    {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
+
+    <h1>{% block page_heading %}{{ 'entity.published_test.title'|trans }}{%endblock%}</h1>
+
+    {% block body %}
+
+        {{ 'entity.published_test.text.html'|trans({'%entityName%': entityName})|wysiwyg }}
+
+    {% endblock %}
+{%endblock%}

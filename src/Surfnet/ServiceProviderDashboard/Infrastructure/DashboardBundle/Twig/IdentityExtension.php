@@ -62,7 +62,7 @@ class IdentityExtension extends Twig_Extension
         }
 
         return $environment->render(
-            'DashboardBundle:TwigExtension:identity.html.twig',
+            'TwigExtension\\identity.html.twig',
             [
                 'contact' => $contact,
             ]

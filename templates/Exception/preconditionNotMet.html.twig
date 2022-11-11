@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block page_heading %}{{ 'saml_precondition_not_met.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h2>{{ page_title }}</h2>
+
+    <p>{{ 'saml_precondition_not_met.text.precondition_not_met'|trans }}</p>
+{% endblock %}

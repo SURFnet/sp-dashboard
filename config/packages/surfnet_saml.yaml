@@ -3,12 +3,12 @@ surfnet_saml:
     service_provider:
       enabled: true
       assertion_consumer_route: dashboard_saml_consume_assertion
-      public_key: "%env(saml_sp_publickey)%"
-      private_key: "%env(saml_sp_privatekey)%"
+      public_key: "%env(resolve:saml_sp_publickey)%"
+      private_key: "%env(resolve:saml_sp_privatekey)%"
     metadata:
       entity_id_route: dashboard_saml_metadata
-      public_key: "%env(saml_metadata_publickey)%"
-      private_key: "%env(saml_metadata_privatekey)%"
+      public_key: "%env(resolve:saml_metadata_publickey)%"
+      private_key: "%env(resolve:saml_metadata_privatekey)%"
   remote:
     identity_provider:
       enabled: true

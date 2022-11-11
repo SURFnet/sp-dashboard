@@ -19,8 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -45,7 +43,6 @@ class SiteNoticeController extends Controller
      * session and in cookies.
      *
      * @Method("GET")
-     * @Template()
      */
     public function showGlobalSiteNoticeAction(Request $request)
     {
@@ -53,10 +50,10 @@ class SiteNoticeController extends Controller
         $cookie = $request->cookies->get($cookieString);
         $hasBeenClosed = (bool) $cookie;
 
-        return [
+        return $this->render('@Dashboard/SiteNotice/showGlobalSiteNotice.html.twig', [
             'cookieString' => $cookieString,
             'date' => $this->noticeDate,
             'hasBeenClosed' => $hasBeenClosed,
-        ];
+        ]);
     }
 }

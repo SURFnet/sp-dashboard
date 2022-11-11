@@ -35,6 +35,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Twig\Environment as TwigEnvironment;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) SamlResponse parsing, validation authentication and error handling
@@ -90,7 +91,7 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
         AuthenticatedSessionStateHandler $authenticatedSession,
         AuthenticationManagerInterface $authenticationManager,
         SamlAuthenticationLogger $authenticationLogger,
-        EngineInterface $templating
+        TwigEnvironment $templating
     ) {
         $this->tokenStorage               = $tokenStorage;
         $this->samlInteractionProvider    = $samlInteractionProvider;
@@ -116,8 +117,8 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
             } catch (AuthnFailedSamlResponseException $exception) {
                 $logger->notice(sprintf('SAML Authentication failed at IdP: "%s"', $exception->getMessage()));
                 $responseBody = $this->templating->render(
-                    'DashboardSamlBundle:Exception:authnFailed.html.twig',
-                    ['exception' => $exception]
+                    '@Dashboard/Exception/authnFailed.html.twig',
+                    ['exception' => $exception, 'page_title' => 'AuthnFailedSamlResponseException']
                 );
 
                 $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));
@@ -126,8 +127,8 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
             } catch (PreconditionNotMetException $exception) {
                 $logger->notice(sprintf('SAMLResponse precondition not met: "%s"', $exception->getMessage()));
                 $responseBody = $this->templating->render(
-                    'DashboardSamlBundle:Exception:preconditionNotMet.html.twig',
-                    ['exception' => $exception]
+                    '@Dashboard/Exception/preconditionNotMet.html.twig',
+                    ['exception' => $exception, 'page_title' => 'PreconditionNotMetException']
                 );
 
                 $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));
@@ -161,8 +162,8 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
                 return;
             } catch (UnknownServiceException $exception) {
                 $responseBody = $this->templating->render(
-                    'DashboardSamlBundle:Exception:unknownService.html.twig',
-                    ['teamNames' => $exception->getTeamNames()]
+                    '@Dashboard/Exception/unknownService.html.twig',
+                    ['teamNames' => $exception->getTeamNames(), 'page_title' => 'UnknownServiceException']
                 );
 
                 $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));

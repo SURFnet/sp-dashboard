@@ -9,7 +9,7 @@ CMD ["/usr/local/sbin/start.sh"]
 
 FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:latest AS spdphpfpm
 WORKDIR /var/www/html/
-COPY --from=composer:2.2.9 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
 COPY ./conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
 
