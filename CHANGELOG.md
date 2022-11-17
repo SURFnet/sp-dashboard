@@ -1,3 +1,7 @@
+## 4.2.1
+**Bugfixex**
+- Ignore ACS locations that do not have the HTTP-POST Binding. #561
+
 ## 4.2.0
 
 **Feature**
