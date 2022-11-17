@@ -251,7 +251,9 @@ class MetaData implements Comparable
         $index = 0;
         $acsLocations = [];
         while (isset($metaDataFields['AssertionConsumerService:'.$index.':Location'])) {
-            $acsLocations[] = $metaDataFields['AssertionConsumerService:'.$index.':Location'];
+            if ($metaDataFields['AssertionConsumerService:'.$index.':Binding'] === Constants::BINDING_HTTP_POST) {
+                $acsLocations[] = $metaDataFields['AssertionConsumerService:'.$index.':Location'];
+            }
             $index++;
         }
         return $acsLocations;

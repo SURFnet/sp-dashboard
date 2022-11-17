@@ -50,6 +50,15 @@ class MetaDataTest extends TestCase
         MetaData::fromApiResponse($data);
     }
 
+    public function test_it_accepts_same_acs_locations_for_different_bindings()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response_same_acs_location_different_binding.json'), true);
+        $metadata = MetaData::fromApiResponse($data);
+        $acsLocations = $metadata->getAcsLocations();
+        $this->assertCount(1, $acsLocations);
+        $this->assertEquals('https://fantasy.org', $acsLocations[0]);
+    }
+
     public function test_it_exceeds_max_asc_locations()
     {
         $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/response_json_exceeds_max_acs_locations.json'), true);
