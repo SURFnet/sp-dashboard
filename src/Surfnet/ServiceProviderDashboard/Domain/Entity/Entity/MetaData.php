@@ -93,7 +93,7 @@ class MetaData implements Comparable
         Assert::string($nameNl);
 
         if (count(array_unique($acsLocations)) !== count($acsLocations)) {
-            throw new Exception('Double acs locations. Expected unique locations');
+            throw new Exception('Double acs locations. Expected unique locations for entity: ' . $entityId);
         }
 
         if (count($acsLocations) > self::MAX_ACS_LOCATIONS) {
