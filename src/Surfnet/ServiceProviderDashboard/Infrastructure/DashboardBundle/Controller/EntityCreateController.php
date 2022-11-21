@@ -65,7 +65,6 @@ class EntityCreateController extends AbstractController
      *     methods={"GET", "POST"}
      * )
      * @Security("has_role('ROLE_USER')")
-     * @Template("@Dashboard/EntityType/type.html.twig")
      *
      * @param Request $request
      *
