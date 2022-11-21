@@ -19,19 +19,18 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\PrivacyQuestions\PrivacyQuestionsType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PrivacyQuestionsController extends Controller
+class PrivacyQuestionsController extends AbstractController
 {
     /**
      * @var CommandBus
@@ -59,9 +58,8 @@ class PrivacyQuestionsController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/{serviceId}/privacy", name="privacy_questions")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/service/{serviceId}/privacy", name="privacy_questions", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param int $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
@@ -83,7 +81,7 @@ class PrivacyQuestionsController extends Controller
 
     /**
      * @Route("/service/{serviceId}/privacy/create", name="privacy_questions_create")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      *
@@ -101,7 +99,7 @@ class PrivacyQuestionsController extends Controller
 
     /**
      * @Route("/service/{serviceId}/privacy/edit", name="privacy_questions_edit")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      *

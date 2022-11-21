@@ -19,21 +19,19 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class EntityDeleteController extends Controller
+class EntityDeleteController extends AbstractController
 {
     /**
      * @var CommandBus
@@ -69,16 +67,16 @@ class EntityDeleteController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
      * @Route(
      *     "/entity/delete/published/{serviceId}/{manageId}/{environment}",
      *     name="entity_delete_published",
+     *     methods={"GET", "POST"},
      *     defaults={
      *          "manageId": null,
-     *          "environment": "test"
+     *          "environment": "test",
      *     }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      * @param Request $request
      *
      * @param int $serviceId
@@ -133,16 +131,16 @@ class EntityDeleteController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
      * @Route(
      *     "/entity/delete/request/{serviceId}/{manageId}/{environment}",
      *     name="entity_delete_request",
+     *     methods={"GET", "POST"},
      *     defaults={
      *          "manageId": null,
      *          "environment": "production"
      *     }
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      * @param int $serviceId
@@ -171,9 +169,7 @@ class EntityDeleteController extends Controller
                 $this->commandBus->handle(
                     $this->commandFactory->buildRequestDeletePublishedEntityCommand(
                         $manageId,
-                        $contact,
-                        'entity.delete.request.ticket.summary',
-                        'entity.delete.request.ticket.description'
+                        $contact
                     )
                 );
             }

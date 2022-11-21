@@ -19,9 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
@@ -30,14 +27,15 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityAclController extends Controller
+class EntityAclController extends AbstractController
 {
     /**
      * @var CommandBus
@@ -77,8 +75,7 @@ class EntityAclController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/acl/{serviceId}/{id}", name="entity_acl")
+     * @Route("/entity/acl/{serviceId}/{id}", name="entity_acl", methods={"GET", "POST"})
      *
      * @param Request $request
      * @param string $serviceId

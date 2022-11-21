@@ -173,7 +173,7 @@
 
 {# Use a table to display the list of idp's for the entity acl's. #}
 {% block acl_list_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <table {{ block('widget_container_attributes') }}>
             <tr>
                 <th>&nbsp;</th>
@@ -188,7 +188,7 @@
                 </tr>
             {% endfor %}
         </table>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock %}
 
 {%- block number_widget -%}

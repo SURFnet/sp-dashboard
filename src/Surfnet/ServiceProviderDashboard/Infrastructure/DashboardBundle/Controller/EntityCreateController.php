@@ -19,10 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
@@ -33,15 +30,16 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\Enti
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\CreateNewEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityCreateController extends Controller
+class EntityCreateController extends AbstractController
 {
     use EntityControllerTrait;
 
@@ -71,15 +69,15 @@ class EntityCreateController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
      * @Route(
      *     "/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}",
      *     defaults={
      *          "targetEnvironment" = "test",
      *     },
-     *     name="entity_type"
+     *     name="entity_type",
+     *     methods={"GET", "POST"}
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      *
@@ -146,8 +144,7 @@ class EntityCreateController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add")
+     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add",methods={"GET", "POST"})
      * @param Request $request
      * @param int $serviceId
      * @param null|string $targetEnvironment
@@ -222,16 +219,16 @@ class EntityCreateController extends Controller
 
 
     /**
-     * @Method({"GET", "POST"})
      * @Route("/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}",
      *      defaults={
      *          "manageId" = null,
      *          "targetEnvironment" = "test",
      *          "sourceEnvironment" = "test"
      *      },
-     *      name="entity_copy"
+     *      name="entity_copy",
+     *      methods={"GET", "POST"}
      * )
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param int $serviceId
      * @param null|string $manageId set from the entity_copy route

@@ -28,7 +28,6 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlInteractionProvider;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -80,7 +79,7 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
     private $authenticationLogger;
 
     /**
-     * @var EngineInterface
+     * @var TwigEnvironment
      */
     private $templating;
 
@@ -117,8 +116,8 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
             } catch (AuthnFailedSamlResponseException $exception) {
                 $logger->notice(sprintf('SAML Authentication failed at IdP: "%s"', $exception->getMessage()));
                 $responseBody = $this->templating->render(
-                    '@Dashboard/Exception/authnFailed.html.twig',
-                    ['exception' => $exception, 'page_title' => 'AuthnFailedSamlResponseException']
+                    'DashboardSamlBundle:Exception:authnFailed.html.twig',
+                    ['exception' => $exception]
                 );
 
                 $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));

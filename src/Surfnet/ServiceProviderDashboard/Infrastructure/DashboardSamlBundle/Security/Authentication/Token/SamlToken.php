@@ -81,7 +81,7 @@ class SamlToken extends AbstractToken
      */
     public function hasRole($expected)
     {
-        foreach ($this->getRoles() as $role) {
+        foreach ($this->getRoleNames() as $role) {
             if ($role instanceof Role) {
                 $role = $role->getRole();
             }

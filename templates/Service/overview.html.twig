@@ -5,14 +5,14 @@
         {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
 
         <h1 id="main" class="service-title">
-            {% spaceless %}
+            {% aplly spaceless %}
                 {# if user is not an admin there might be more than one service #}
                 {% if isAdmin %}
                     {{ 'service.admin_overview.title'|trans({'%name%': services.services[0].name|default('Service') }) }}
                 {% else %}
                     {{ 'service.overview.title'|trans }}
                 {% endif %}
-            {% endspaceless %}
+            {% endapply %}
         </h1>
 
         {% for service in services %}
@@ -77,11 +77,11 @@
 
                         {# Production entities #}
                         <table class="service-status-entities-table production-entities">
-                            <caption>{% spaceless %}
+                            <caption>{% applyspaceless %}
                                     <h4 class="service-status-entities-table-title">
                                         {{ 'service.overview.entitylist.production.title'|trans }}
                                     </h4>
-                                {% endspaceless %}</caption>
+                                {% endapply %}</caption>
                             <tr>
                                 <th scope="col">{{ 'service.overview.entitylist.name'|trans }}</th>
                                 <th scope="col">{{ 'service.overview.entitylist.entityId'|trans }}</th>
@@ -127,11 +127,11 @@
 
                         {# Test entities #}
                         <table class="service-status-entities-table test-entities">
-                            <caption>{% spaceless %}
+                            <caption>{% apply spaceless %}
                                     <h4 class="service-status-entities-table-title">
                                         {{ 'service.overview.entitylist.test.title'|trans }}
                                     </h4>
-                                {% endspaceless %}</caption>
+                                {% endapply %}</caption>
                             <tr>
                                 <th scope="col">{{ 'service.overview.entitylist.name'|trans }}</th>
                                 <th scope="col">{{ 'service.overview.entitylist.entityId'|trans }}</th>

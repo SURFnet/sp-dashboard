@@ -18,22 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
-class EntityPublishedController extends Controller
+class EntityPublishedController extends AbstractController
 {
     /**
-     * @Method("GET")
-     * @Route("/entity/published/production", name="entity_published_production")
-     * @Route("/entity/published/test", name="entity_published_test")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/entity/published/production", name="entity_published_production", methods={"GET"})
+     * @Route("/entity/published/test", name="entity_published_test", methods={"GET"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function publishedAction()
     {
@@ -63,9 +60,8 @@ class EntityPublishedController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/entity/change-request", name="entity_change_request")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/entity/change-request", name="entity_change_request", methods={"GET"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function changeRequestAction()
     {
@@ -83,8 +79,7 @@ class EntityPublishedController extends Controller
      * This action is rendered inside a modal window, and is triggered from the
      * entity list action.
      *
-     * @Method("GET")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function oidcConfirmationModalAction()
     {
