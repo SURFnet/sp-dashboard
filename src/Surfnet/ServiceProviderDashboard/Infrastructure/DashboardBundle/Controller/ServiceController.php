@@ -21,10 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Exception;
 use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
@@ -47,17 +44,18 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ServiceController extends Controller
+class ServiceController extends AbstractController
 {
     /**
      * @var CommandBus
@@ -126,9 +124,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/", name="service_overview")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/", name="service_overview", methods={"GET"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function overviewAction()
     {
@@ -168,9 +165,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/create", name="service_add")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/service/create", name="service_add", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
      * @return RedirectResponse|Response
      */
@@ -203,9 +199,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/{serviceId}/edit", name="service_edit")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/service/{serviceId}/edit", name="service_edit", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
      * @return RedirectResponse|Response
      */
@@ -261,9 +256,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/{serviceId}/delete", name="service_delete")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/service/{serviceId}/delete", name="service_delete", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
      * @param Request $request
      * @param $serviceId
@@ -315,9 +309,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/select", name="select_service")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/service/select", name="select_service", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function selectAction(Request $request)
     {
@@ -335,9 +328,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/service/{serviceId}", name="service_admin_overview")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/service/{serviceId}", name="service_admin_overview", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
     public function adminOverviewAction($serviceId)
     {

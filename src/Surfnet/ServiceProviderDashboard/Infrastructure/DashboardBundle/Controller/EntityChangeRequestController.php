@@ -18,21 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Service\ChangeRequestService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class EntityChangeRequestController extends Controller
+class EntityChangeRequestController extends AbstractController
 {
     use EntityControllerTrait;
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/change-request/{environment}/{manageId}/{serviceId}", name="entity_published_change_request")
+     * @Route("/entity/change-request/{environment}/{manageId}/{serviceId}", name="entity_published_change_request", methods={"GET", "POST"})
      */
     public function changeRequestAction(
         Request $request,

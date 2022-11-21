@@ -29,11 +29,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('dashboard_saml');
-
+        $treeBuilder = new TreeBuilder('dashboard_saml');
+        $rootNode = $treeBuilder->getRootNode();
         $childNodes = $rootNode->children();
-
         $this->appendSessionConfiguration($childNodes);
 
         return $treeBuilder;

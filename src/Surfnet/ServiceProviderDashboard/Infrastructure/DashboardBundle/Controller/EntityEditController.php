@@ -18,20 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityEditController extends Controller
+class EntityEditController extends AbstractController
 {
     use EntityControllerTrait;
 
@@ -47,8 +45,7 @@ class EntityEditController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/edit/{environment}/{manageId}/{serviceId}", name="entity_edit")
+     * @Route("/entity/edit/{environment}/{manageId}/{serviceId}", name="entity_edit", methods={"GET", "POST"})
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -91,7 +88,8 @@ class EntityEditController extends Controller
         if ($form->isSubmitted()) {
             try {
                 if ($this->isPublishAction($form)) {
-                    $isProductionEntityEdit = $entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION;
+                    $isProductionEntityEdit = $entity->isPublished() &&
+                        $environment === Constants::ENVIRONMENT_PRODUCTION;
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
                         $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $flashBag);
@@ -108,7 +106,10 @@ class EntityEditController extends Controller
                 } elseif ($this->isCancelAction($form)) {
                     // Simply return to entity list, no entity was saved
                     if ($this->isGranted('ROLE_ADMINISTRATOR')) {
-                        return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
+                        return $this->redirectToRoute(
+                            'service_admin_overview',
+                            ['serviceId' => $entity->getService()->getId()]
+                        );
                     }
 
                     return $this->redirectToRoute('service_overview');
@@ -130,11 +131,8 @@ class EntityEditController extends Controller
      *
      * This method tests if the referer is set in the request headers, if so, it tests if the previous request
      * originated from the entity_add action.
-     *
-     * @param Request $request
-     * @return bool
      */
-    private function requestFromCreateAction(Request $request)
+    private function requestFromCreateAction(Request $request): bool
     {
         $requestUri = $request->headers->get('referer', false);
         if ($requestUri && preg_match('/\/entity\/create/', $requestUri)) {

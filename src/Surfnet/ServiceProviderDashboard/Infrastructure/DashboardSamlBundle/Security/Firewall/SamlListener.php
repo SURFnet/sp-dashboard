@@ -22,11 +22,13 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\AuthenticationHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlInteractionProvider;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
+use Symfony\Component\Security\Http\Firewall\AbstractListener;
 
-class SamlListener implements ListenerInterface
+class SamlListener extends AbstractListener
 {
     /**
      * @var LoggerInterface
@@ -53,7 +55,12 @@ class SamlListener implements ListenerInterface
         $this->logger                  = $logger;
     }
 
-    public function handle(GetResponseEvent $event)
+    public function supports(Request $request): ?bool
+    {
+        return true;
+    }
+
+    public function authenticate(RequestEvent $event)
     {
         try {
             $this->authenticationHandler->process($event);
