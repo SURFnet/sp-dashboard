@@ -18,11 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-class SiteNoticeController extends Controller
+class SiteNoticeController extends AbstractController
 {
     /**
      * @var string
@@ -41,8 +40,6 @@ class SiteNoticeController extends Controller
      * users to see is passed on.  Users can close the notification.
      * This desire to not see the notification is stored both in the
      * session and in cookies.
-     *
-     * @Method("GET")
      */
     public function showGlobalSiteNoticeAction(Request $request)
     {

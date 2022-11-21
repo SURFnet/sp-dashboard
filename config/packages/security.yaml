@@ -13,26 +13,21 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-            logout_on_user_change: true
 
         login_firewall:
             pattern:    ^/saml/metadata
             anonymous:  ~
-            logout_on_user_change: true
 
         published_metadata:
             pattern:    ^/entity/metadata/*
             anonymous:  ~
-            logout_on_user_change: true
 
         monitor:
             pattern: ^/(info|health)$
             security: false
-            logout_on_user_change: true
 
         saml_based:
             saml: true
-            logout_on_user_change: true
 
     access_control:
         - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
