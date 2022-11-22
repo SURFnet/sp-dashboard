@@ -24,34 +24,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class RequestDeletePublishedEntityCommand implements Command
 {
-    /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Uuid
-     */
-    private $manageId;
-
-    /**
-     * @var Contact
-     */
-    private $applicant;
-
-    /**
-     * @param string $manageId
-     * @param Contact $applicant
-     */
-    public function __construct($manageId, Contact $applicant)
-    {
-        $this->manageId = $manageId;
-        $this->applicant = $applicant;
+    public function __construct(
+        #[Assert\NotBlank]
+        #[Assert\Uuid]
+        private readonly string $manageId,
+        private readonly Contact $applicant
+    ) {
     }
 
-    public function getManageId()
+    public function getManageId(): string
     {
         return $this->manageId;
     }
 
-    public function getApplicant()
+    public function getApplicant(): Contact
     {
         return $this->applicant;
     }

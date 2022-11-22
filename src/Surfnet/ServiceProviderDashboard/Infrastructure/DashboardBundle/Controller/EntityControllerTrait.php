@@ -25,7 +25,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -34,7 +33,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
@@ -52,55 +50,15 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
  */
 trait EntityControllerTrait
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-    /**
-     * @var EntityTypeFactory
-     */
-    private $entityTypeFactory;
-    /**
-     * @var LoadEntityService
-     */
-    private $loadEntityService;
-
-    /**
-     * @var EntityMergeService
-     */
-    private $entityMergeService;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService,
-        EntityMergeService $entityMergeService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityTypeFactory $entityTypeFactory,
+        private readonly LoadEntityService $loadEntityService,
+        private readonly EntityMergeService $entityMergeService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->entityTypeFactory = $entityTypeFactory;
-        $this->loadEntityService = $loadEntityService;
-        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -109,7 +67,7 @@ trait EntityControllerTrait
      *
      * @return Form
      */
-    private function handleImport(Request $request, SaveSamlEntityCommand $command)
+    private function handleImport(Request $request, SaveSamlEntityCommand $command): Form
     {
         // Handle an import action based on the posted xml or import url.
         $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
@@ -146,7 +104,7 @@ trait EntityControllerTrait
         SaveEntityCommandInterface $saveCommand,
         bool $isEntityChangeRequest,
         FlashBagInterface $flashBag
-    ) {
+    ){
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
@@ -236,7 +194,7 @@ trait EntityControllerTrait
     private function findDestinationForRedirectToCreateConnectionRequest(
         PublishProductionCommandInterface $publishEntityCommand
     ): string {
-    
+
         switch (true) {
             case $publishEntityCommand instanceof EntityChangeRequestCommand:
                 return 'entity_change_request';
@@ -259,7 +217,7 @@ trait EntityControllerTrait
      * @param string $expectedButtonName
      * @return bool
      */
-    private function assertUsedSubmitButton(Form $form, $expectedButtonName)
+    private function assertUsedSubmitButton(Form $form, $expectedButtonName): bool
     {
         $button = $form->getClickedButton();
 

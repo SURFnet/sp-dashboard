@@ -26,14 +26,8 @@ class ManageEntityAccessGrantedVoter extends Voter
 {
     const MANAGE_ENTITY_ACCESS = "MANAGE_ENTITY_ACCESS";
 
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-
-    public function __construct(EntityServiceInterface $entityService)
+    public function __construct(private readonly EntityServiceInterface $entityService)
     {
-        $this->entityService = $entityService;
     }
 
     protected function supports($attribute, $subject)

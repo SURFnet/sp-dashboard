@@ -25,19 +25,6 @@ use function is_null;
 
 class OidcngResourceServerClient implements Comparable, OidcClientInterface
 {
-    /**
-     * @var string
-     */
-    private $clientId;
-    /**
-     * @var string
-     */
-    private $clientSecret;
-    /**
-     * @var string
-     */
-    private $grants;
-
     public static function fromApiResponse(array $data)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
@@ -57,13 +44,11 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     }
 
     public function __construct(
-        string $clientId,
-        ?string $clientSecret,
-        array $grants
+        private string $clientId,
+        private ?string $clientSecret,
+        private array $grants
     ) {
         $this->clientId = strtolower($clientId);
-        $this->clientSecret = $clientSecret;
-        $this->grants = $grants;
     }
 
     /**

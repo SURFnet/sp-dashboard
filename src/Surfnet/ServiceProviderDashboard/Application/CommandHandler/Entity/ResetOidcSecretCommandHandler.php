@@ -30,31 +30,16 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 
+/**
+ * @SuppressWarnings(PHPMD.LongClassName)
+ */
 class ResetOidcSecretCommandHandler implements CommandHandler
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var PublishEntityClient
-     */
-    private $publishEntityClient;
-
     public function __construct(
-        CommandBus $commandBus,
-        AuthorizationService $authorizationService,
-        PublishEntityClient $publishEntityClient
+        private readonly CommandBus $commandBus,
+        private readonly AuthorizationService $authorizationService,
+        private readonly PublishEntityClient $publishEntityClient
     ) {
-        $this->commandBus = $commandBus;
-        $this->authorizationService = $authorizationService;
-        $this->publishEntityClient = $publishEntityClient;
     }
 
     /**

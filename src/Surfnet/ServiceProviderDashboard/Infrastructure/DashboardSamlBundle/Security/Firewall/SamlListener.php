@@ -30,29 +30,11 @@ use Symfony\Component\Security\Http\Firewall\AbstractListener;
 
 class SamlListener extends AbstractListener
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var SamlInteractionProvider
-     */
-    private $samlInteractionProvider;
-
-    /**
-     * @var AuthenticationHandler
-     */
-    private $authenticationHandler;
-
     public function __construct(
-        AuthenticationHandler $authenticationHandler,
-        SamlInteractionProvider $samlInteractionProvider,
-        LoggerInterface $logger
+        private readonly AuthenticationHandler $authenticationHandler,
+        private readonly SamlInteractionProvider $samlInteractionProvider,
+        private readonly LoggerInterface $logger
     ) {
-        $this->authenticationHandler   = $authenticationHandler;
-        $this->samlInteractionProvider = $samlInteractionProvider;
-        $this->logger                  = $logger;
     }
 
     public function supports(Request $request): ?bool

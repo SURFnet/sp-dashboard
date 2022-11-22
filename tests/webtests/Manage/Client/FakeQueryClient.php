@@ -21,6 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use Surfnet\ServiceProviderDashboard\Tests\Manage\Client\ClientResultRaw;
+
 use function array_key_exists;
 use function json_decode;
 

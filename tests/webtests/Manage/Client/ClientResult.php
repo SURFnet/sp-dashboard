@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
+namespace Surfnet\ServiceProviderDashboard\Tests\Manage\Client;
 
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;

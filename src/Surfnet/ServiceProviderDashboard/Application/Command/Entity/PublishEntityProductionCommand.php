@@ -25,31 +25,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityProductionCommand implements PublishProductionCommandInterface, Command
 {
-    /**
-     * @var ManageEntity
-     * @Assert\Type{
-     *      type="\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity"
-     * }
-     */
-    private $manageEntity;
-
-    /**
-     * @var Contact
-     */
-    private $applicant;
-
-    /**
-     * @param string $id
-     */
-    public function __construct(ManageEntity $entity, Contact $applicatant)
-    {
-        $this->manageEntity = $entity;
-        $this->applicant = $applicatant;
+    public function __construct(
+        #[Assert\Type('\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity')]
+        private ManageEntity $manageEntity,
+        private Contact $applicant
+    ) {
     }
 
-    /**
-     * @return string
-     */
     public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;

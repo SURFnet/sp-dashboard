@@ -83,7 +83,7 @@ class WebTestCase extends SymfonyWebTestCase
     /** @var QueryTeamsRepository&FakeTeamsQueryClient */
     protected $teamsQueryClient;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Disable notices, strict and deprecated warnings. Many Symfony 3.4 deprecation warnings are still to be fixed.
         Debug::enable(E_RECOVERABLE_ERROR & ~E_DEPRECATED, false);
@@ -231,7 +231,7 @@ class WebTestCase extends SymfonyWebTestCase
         // autoincrement sequence. That is explicitly reset with the query below.
         // Preferably we'de use $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE); but that does not seem
         // to work with SQLite
-        $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
+        //$em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
         $executor->execute($loader->getFixtures());
     }

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Webtests\Metadata;
+namespace Surfnet\ServiceProviderDashboard\Tests\Metadata;
 
 use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
 

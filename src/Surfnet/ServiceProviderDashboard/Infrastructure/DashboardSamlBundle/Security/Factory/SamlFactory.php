@@ -20,35 +20,40 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Se
 
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Firewall\SamlListener;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class SamlFactory implements SecurityFactoryInterface
+class SamlFactory implements AuthenticatorFactoryInterface
 {
-    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
-    {
-        $providerId = 'security.authentication.provider.saml.' . $id;
-        $container->setDefinition(
-            $providerId,
-            new ChildDefinition(SamlProvider::class)
-        );
-
-        $listenerId = 'security.authentication.listener.saml.' . $id;
-        $container->setDefinition(
-            $listenerId,
-            new ChildDefinition(SamlListener::class)
-        );
-
-        $cookieHandlerId = 'security.logout.handler.cookie_clearing.' . $id;
-        $cookieHandler = $container->setDefinition(
-            $cookieHandlerId,
-            new ChildDefinition('security.logout.handler.cookie_clearing')
-        );
-        $cookieHandler->addArgument([]);
-
-        return array($providerId, $listenerId, $defaultEntryPoint);
+    public function createAuthenticator(
+        ContainerBuilder $container,
+        string $firewallName,
+        array $config,
+        string $userProviderId
+    ): array {
+//        $providerId = 'security.authentication.provider.saml.' . $firewallName;
+//        $container->setDefinition(
+//            $providerId,
+//            new ChildDefinition(SamlProvider::class)
+//        );
+//
+//        $listenerId = 'security.authentication.listener.saml.' . $firewallName;
+//        $container->setDefinition(
+//            $listenerId,
+//            new ChildDefinition(SamlListener::class)
+//        );
+//
+//        $cookieHandlerId = 'security.logout.handler.cookie_clearing.' . $firewallName;
+//        $cookieHandler = $container->setDefinition(
+//            $cookieHandlerId,
+//            new ChildDefinition('security.logout.handler.cookie_clearing')
+//        );
+//        $cookieHandler->addArgument([]);
+//
+//       return array($providerId, $listenerId);
+        return [];
     }
 
     public function getPosition()
@@ -63,5 +68,10 @@ class SamlFactory implements SecurityFactoryInterface
 
     public function addConfiguration(NodeDefinition $builder)
     {
+    }
+
+    public function getPriority(): int
+    {
+        return 0;
     }
 }

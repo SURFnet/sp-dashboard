@@ -24,14 +24,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 
 class SelectServiceCommandHandler implements CommandHandler
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $service;
-
-    public function __construct(AuthorizationService $service)
+    public function __construct(private AuthorizationService $service)
     {
-        $this->service = $service;
     }
 
     /**

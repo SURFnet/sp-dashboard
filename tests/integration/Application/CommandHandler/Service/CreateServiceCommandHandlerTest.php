@@ -28,7 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreateServiceCommandHandlerTest extends MockeryTestCase
 {
@@ -49,7 +49,7 @@ class CreateServiceCommandHandlerTest extends MockeryTestCase
      */
     private $translator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(ServiceRepository::class);
         $this->publishEntityClient = m::mock(PublishEntityClient::class);

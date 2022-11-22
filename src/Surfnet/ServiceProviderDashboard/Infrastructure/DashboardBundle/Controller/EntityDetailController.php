@@ -29,28 +29,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EntityDetailController extends AbstractController
 {
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var EntityDetailFactory
-     */
-    private $entityDetailFactory;
-
     public function __construct(
-        EntityServiceInterface $entityService,
-        AuthorizationService $authorizationService,
-        EntityDetailFactory $entityDetailFactory
+        private readonly EntityServiceInterface $entityService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityDetailFactory $entityDetailFactory
     ) {
-        $this->entityService = $entityService;
-        $this->authorizationService = $authorizationService;
-        $this->entityDetailFactory = $entityDetailFactory;
     }
 
     /**

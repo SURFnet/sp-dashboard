@@ -22,18 +22,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 class ChooseEntityTypeCommand
 {
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @var array
      */
     private $choices;
 
-    public function __construct($type = Constants::TYPE_SAML)
+    public function __construct(private $type = Constants::TYPE_SAML)
     {
-        $this->type = $type;
     }
 
     /**

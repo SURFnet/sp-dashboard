@@ -37,7 +37,7 @@ class ValidMetadataUrlValidatorTest extends ConstraintValidatorTestCase
      */
     private $repository;
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         m::close();

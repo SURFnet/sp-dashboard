@@ -25,7 +25,7 @@ class EntityEditTest extends WebTestCase
 {
     private $manageId;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

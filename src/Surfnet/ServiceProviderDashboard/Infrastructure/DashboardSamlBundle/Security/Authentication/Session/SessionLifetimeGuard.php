@@ -24,19 +24,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\Ti
 
 class SessionLifetimeGuard
 {
-    /**
-     * @var TimeFrame
-     */
-    private $relativeTimeoutLimit;
-    /**
-     * @var TimeFrame
-     */
-    private $absoluteTimeoutLimit;
-
-    public function __construct(TimeFrame $absoluteTimeoutLimit, TimeFrame $relativeTimeoutLimit)
-    {
-        $this->absoluteTimeoutLimit = $absoluteTimeoutLimit;
-        $this->relativeTimeoutLimit = $relativeTimeoutLimit;
+    public function __construct(
+        private readonly TimeFrame $absoluteTimeoutLimit,
+        private readonly TimeFrame $relativeTimeoutLimit
+    ) {
     }
 
     /**
@@ -46,7 +37,7 @@ class SessionLifetimeGuard
     public function sessionLifetimeWithinLimits(AuthenticatedSessionStateHandler $sessionStateHandler)
     {
         return $this->sessionLifetimeWithinAbsoluteLimit($sessionStateHandler)
-                && $this->sessionLifetimeWithinRelativeLimit($sessionStateHandler);
+            && $this->sessionLifetimeWithinRelativeLimit($sessionStateHandler);
     }
 
     /**

@@ -46,7 +46,7 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(DeleteManageEntityRepository::class);
 
@@ -70,13 +70,9 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
-        $this->commandHandler->handle($command);
+        $this->assertNull($this->commandHandler->handle($command));
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException
-     * @expectedExceptionMessage Deleting the entity yielded an non success response
-     */
     public function test_it_handles_non_error_responses()
     {
         $command = new DeletePublishedTestEntityCommand(
@@ -92,12 +88,13 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
+        $this->expectExceptionMessage("Deleting the entity yielded an non success response");
+        $this->expectException(
+            \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException::class
+        );
         $this->commandHandler->handle($command);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException
-     */
     public function test_it_handles_failing_delete_requests()
     {
         $command = new DeletePublishedTestEntityCommand(
@@ -113,6 +110,9 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
+        $this->expectException(
+            \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException::class
+        );
         $this->commandHandler->handle($command);
     }
 }

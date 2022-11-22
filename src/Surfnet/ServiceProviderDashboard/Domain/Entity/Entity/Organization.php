@@ -23,23 +23,14 @@ use Webmozart\Assert\Assert;
 
 class Organization implements Comparable
 {
-    private $nameEn;
-    private $displayNameEn;
-    private $urlEn;
-    private $nameNl;
-    private $displayNameNl;
-    private $urlNl;
-
     public static function fromApiResponse(array $metaDataFields)
     {
-        $nameEn = isset($metaDataFields['OrganizationName:en']) ? $metaDataFields['OrganizationName:en'] : '';
-        $displayNameEn = isset($metaDataFields['OrganizationDisplayName:en'])
-            ? $metaDataFields['OrganizationDisplayName:en'] : '';
-        $urlEn = isset($metaDataFields['OrganizationURL:en']) ? $metaDataFields['OrganizationURL:en'] : '';
-        $nameNl = isset($metaDataFields['OrganizationName:nl']) ? $metaDataFields['OrganizationName:nl'] : '';
-        $displayNameNl = isset($metaDataFields['OrganizationDisplayName:nl'])
-            ? $metaDataFields['OrganizationDisplayName:nl'] : '';
-        $urlNl = isset($metaDataFields['OrganizationURL:nl']) ? $metaDataFields['OrganizationURL:nl'] : '';
+        $nameEn = $metaDataFields['OrganizationName:en'] ?? '';
+        $displayNameEn = $metaDataFields['OrganizationDisplayName:en'] ?? '';
+        $urlEn = $metaDataFields['OrganizationURL:en'] ?? '';
+        $nameNl = $metaDataFields['OrganizationName:nl'] ?? '';
+        $displayNameNl = $metaDataFields['OrganizationDisplayName:nl'] ?? '';
+        $urlNl = $metaDataFields['OrganizationURL:nl'] ?? '';
 
         Assert::string($nameEn);
         Assert::string($displayNameEn);
@@ -52,19 +43,13 @@ class Organization implements Comparable
     }
 
     public function __construct(
-        ?string $nameEn,
-        ?string $displayNameEn,
-        ?string $urlEn,
-        ?string $nameNl,
-        ?string $displayNameNl,
-        ?string $urlNl
+        private ?string $nameEn,
+        private ?string $displayNameEn,
+        private ?string $urlEn,
+        private ?string $nameNl,
+        private ?string $displayNameNl,
+        private ?string $urlNl
     ) {
-        $this->nameEn = $nameEn;
-        $this->displayNameEn = $displayNameEn;
-        $this->urlEn = $urlEn;
-        $this->nameNl = $nameNl;
-        $this->displayNameNl = $displayNameNl;
-        $this->urlNl = $urlNl;
     }
 
     public function getNameEn(): ?string

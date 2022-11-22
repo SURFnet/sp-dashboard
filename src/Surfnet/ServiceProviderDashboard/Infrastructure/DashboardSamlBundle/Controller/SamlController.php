@@ -31,43 +31,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SamlController extends AbstractController
 {
-    /**
-     * @var LoggerInterface $logger
-     */
-    private $logger;
-
-    /**
-     * @var MetadataFactory $metadataFactory
-     */
-    private $metadataFactory;
-
-    /**
-     * @var PostBinding $postBinding
-     */
-    private $postBinding;
-
-    /**
-     * @var IdentityProvider $identityProvider
-     */
-    private $identityProvider;
-
-    /**
-     * @var ServiceProvider $serviceProvider
-     */
-    private $serviceProvider;
-
     public function __construct(
-        LoggerInterface $logger,
-        MetadataFactory $metadataFactory,
-        PostBinding $postBinding,
-        IdentityProvider $identityProvider,
-        ServiceProvider $serviceProvider
+        private LoggerInterface $logger,
+        private readonly MetadataFactory $metadataFactory,
+        private PostBinding $postBinding,
+        private IdentityProvider $identityProvider,
+        private ServiceProvider $serviceProvider
     ) {
-        $this->logger = $logger;
-        $this->metadataFactory = $metadataFactory;
-        $this->postBinding = $postBinding;
-        $this->identityProvider = $identityProvider;
-        $this->serviceProvider = $serviceProvider;
     }
 
     /**

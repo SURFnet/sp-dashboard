@@ -29,43 +29,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SamlInteractionProvider
 {
-    /**
-     * @var \Surfnet\SamlBundle\Entity\ServiceProvider
-     */
-    private $serviceProvider;
-
-    /**
-     * @var \Surfnet\SamlBundle\Entity\IdentityProvider
-     */
-    private $identityProvider;
-
-    /**
-     * @var \Surfnet\SamlBundle\Http\RedirectBinding
-     */
-    private $redirectBinding;
-
-    /**
-     * @var \Surfnet\SamlBundle\Http\PostBinding
-     */
-    private $postBinding;
-
-    /**
-     * @var SamlAuthenticationStateHandler
-     */
-    private $samlAuthenticationStateHandler;
-
     public function __construct(
-        ServiceProvider $serviceProvider,
-        IdentityProvider $identityProvider,
-        RedirectBinding $redirectBinding,
-        PostBinding $postBinding,
-        SamlAuthenticationStateHandler $samlAuthenticationStateHandler
+        private readonly ServiceProvider $serviceProvider,
+        private readonly IdentityProvider $identityProvider,
+        private readonly RedirectBinding $redirectBinding,
+        private readonly PostBinding $postBinding,
+        private readonly SamlAuthenticationStateHandler $samlAuthenticationStateHandler
     ) {
-        $this->serviceProvider                = $serviceProvider;
-        $this->identityProvider               = $identityProvider;
-        $this->redirectBinding                = $redirectBinding;
-        $this->postBinding                    = $postBinding;
-        $this->samlAuthenticationStateHandler = $samlAuthenticationStateHandler;
     }
 
     /**

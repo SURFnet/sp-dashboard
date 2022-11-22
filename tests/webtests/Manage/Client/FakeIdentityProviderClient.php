@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProviderFactory;
+use Surfnet\ServiceProviderDashboard\Tests\Manage\Client\ClientResult;
 
 class FakeIdentityProviderClient implements IdentityProviderRepository
 {

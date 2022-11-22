@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Webtests\Mailer;
+namespace Surfnet\ServiceProviderDashboard\Tests\Mailer;
 
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\MailerInterface;

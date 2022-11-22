@@ -36,7 +36,6 @@ class CreateNewEntityType extends AbstractType
 
     public function getBlockPrefix()
     {
-        $prefix = 'dashboard_bundle_choose_entity_type_' . $this->id;
-        return $prefix;
+        return 'dashboard_bundle_choose_entity_type_' . $this->id;
     }
 }

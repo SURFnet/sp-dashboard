@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use stdClass;
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use function array_diff;
 use function array_keys;
 
@@ -30,14 +29,8 @@ use function array_keys;
  */
 class ArpGenerator implements MetadataGenerator
 {
-    /**
-     * @var AttributeServiceInterface
-     */
-    private $attributeService;
-
-    public function __construct(AttributeServiceInterface $attributeService)
+    public function __construct(private readonly AttributeServiceInterface $attributeService)
     {
-        $this->attributeService = $attributeService;
     }
 
     public function build(ManageEntity $entity): array

@@ -30,51 +30,13 @@ use Webmozart\Assert\Assert;
 
 class IssueRepository implements TicketServiceInterface
 {
-    /**
-     * @var JiraServiceFactory
-     */
-    private $jiraFactory;
-
-    /**
-     * @var IssueFieldFactory
-     */
-    private $issueFactory;
-
-    /**
-     * @var string
-     */
-    private $projectKey;
-
-    /**
-     * @var string
-     */
-    private $issueType;
-
-    /**
-     * @var string
-     */
-    private $manageIdFieldName;
-
-    /**
-     * @var string
-     */
-    private $manageIdFieldLabel;
-
-    /**
-     * @param JiraServiceFactory $jiraFactory
-     * @param IssueFieldFactory $issueFactory
-     * @param string $projectKey
-     * @param string $issueType
-     * @param string $manageIdFieldName
-     * @param string $manageIdFieldLabel
-     */
     public function __construct(
-        JiraServiceFactory $jiraFactory,
-        IssueFieldFactory $issueFactory,
-        $projectKey,
-        $issueType,
-        $manageIdFieldName,
-        $manageIdFieldLabel
+        private readonly JiraServiceFactory $jiraFactory,
+        private readonly IssueFieldFactory $issueFactory,
+        private $projectKey,
+        private $issueType,
+        private $manageIdFieldName,
+        private $manageIdFieldLabel
     ) {
         Assert::stringNotEmpty($projectKey, 'Please set "jira_issue_project_key" in .env');
         Assert::stringNotEmpty($manageIdFieldName, 'Please set "jira_issue_manageid_fieldname" in .env');
@@ -82,13 +44,6 @@ class IssueRepository implements TicketServiceInterface
             $manageIdFieldLabel,
             'Please set "jira_issue_manageid_field_label" in .env'
         );
-
-        $this->jiraFactory = $jiraFactory;
-        $this->issueFactory = $issueFactory;
-        $this->projectKey = $projectKey;
-        $this->issueType = $issueType;
-        $this->manageIdFieldName = $manageIdFieldName;
-        $this->manageIdFieldLabel = $manageIdFieldLabel;
     }
 
     public function findByManageIds(array $manageIds)

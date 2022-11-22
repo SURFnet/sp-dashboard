@@ -48,7 +48,7 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
      */
     private $spDashboardMetadataGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->arpMetadataGenerator = m::mock(ArpGenerator::class);
         $this->privacyQuestionsMetadataGenerator = m::mock(PrivacyQuestionsMetadataGenerator::class);

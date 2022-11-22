@@ -39,7 +39,7 @@ class OauthClientCredentialsClientJsonGeneratorTest extends MockeryTestCase
      */
     private $spDashboardMetadataGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->privacyQuestionsMetadataGenerator = m::mock(PrivacyQuestionsMetadataGenerator::class);
         $this->spDashboardMetadataGenerator = m::mock(SpDashboardMetadataGenerator::class);

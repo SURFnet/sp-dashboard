@@ -24,13 +24,13 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Contracts\Component\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class MailMessageFactoryTest extends MockeryTestCase
 {
     /**
-     * @var EngineInterface|Mock
+     * @var TwigEnvironment|Mock
      */
     private $templateEngine;
 
@@ -44,7 +44,7 @@ class MailMessageFactoryTest extends MockeryTestCase
      */
     private $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->templateEngine = m::mock(TwigEnvironment::class);
         $this->translator = m::mock(TranslatorInterface::class);

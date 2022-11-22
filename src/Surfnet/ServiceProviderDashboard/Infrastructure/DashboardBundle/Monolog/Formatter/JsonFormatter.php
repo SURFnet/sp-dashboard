@@ -26,12 +26,12 @@ use Monolog\Formatter\JsonFormatter as MonologJsonFormatter;
  */
 class JsonFormatter extends MonologJsonFormatter
 {
-    public function format(array $record)
+    public function format(array $record): string
     {
         return parent::format($this->mapRecord($record));
     }
 
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         return parent::formatBatch(
             array_map(
@@ -43,7 +43,7 @@ class JsonFormatter extends MonologJsonFormatter
         );
     }
 
-    private function mapRecord(array $record)
+    private function mapRecord(array $record): array
     {
         return [
             'datetime' => $record['datetime']->format('c'),

@@ -26,14 +26,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  */
 class SpDashboardMetadataGenerator implements MetadataGenerator
 {
-    /**
-     * @var AttributesMetadataRepository
-     */
-    private $repository;
-
-    public function __construct(AttributesMetadataRepository $repository)
+    public function __construct(private readonly AttributesMetadataRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

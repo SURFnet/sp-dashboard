@@ -19,16 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
 use Webmozart\Assert\Assert;
-use Surfnet\ServiceProviderDashboard\Application\Dto\ChangeRequestDtoComparer;
 
 class ChangeRequestDtoCollection
 {
-    /**
-     * @var ChangeRequestDto[]
-     */
-    private $changeRequests = [];
-
-    public function __construct(array $changeRequests)
+    public function __construct(private array $changeRequests)
     {
         Assert::isArray($changeRequests);
 

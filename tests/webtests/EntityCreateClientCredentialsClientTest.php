@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCreateClientCredentialsClientTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures();

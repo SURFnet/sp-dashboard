@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Se
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\AuthenticatedSessionStateHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AuthenticatedUserHandler implements AuthenticationHandler
@@ -31,37 +31,15 @@ class AuthenticatedUserHandler implements AuthenticationHandler
      */
     private $nextHandler;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var AuthenticatedSessionStateHandler
-     */
-    private $sessionStateHandler;
-    /**
-     * @var SessionLifetimeGuard
-     */
-    private $sessionLifetimeGuard;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        SessionLifetimeGuard $sessionLifetimeGuard,
-        AuthenticatedSessionStateHandler $sessionStateHandler,
-        LoggerInterface $logger
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SessionLifetimeGuard $sessionLifetimeGuard,
+        private readonly AuthenticatedSessionStateHandler $sessionStateHandler,
+        private readonly LoggerInterface $logger
     ) {
-        $this->tokenStorage         = $tokenStorage;
-        $this->sessionLifetimeGuard = $sessionLifetimeGuard;
-        $this->sessionStateHandler  = $sessionStateHandler;
-        $this->logger               = $logger;
     }
 
-    public function process(GetResponseEvent $event)
+    public function process(RequestEvent $event)
     {
         if ($this->tokenStorage->getToken() !== null
             && $this->sessionLifetimeGuard->sessionLifetimeWithinLimits($this->sessionStateHandler)

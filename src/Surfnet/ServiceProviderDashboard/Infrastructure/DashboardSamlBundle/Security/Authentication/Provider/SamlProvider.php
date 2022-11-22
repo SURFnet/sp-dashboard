@@ -41,47 +41,22 @@ use Webmozart\Assert\Assert;
 class SamlProvider implements AuthenticationProviderInterface
 {
     /**
-     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository
-     */
-    private $contacts;
-
-    /**
-     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository
-     */
-    private $services;
-
-    /**
-     * @var \Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary
-     */
-    private $attributeDictionary;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var string[]
      */
     private $administratorTeams;
 
     public function __construct(
-        ContactRepository $contacts,
-        ServiceRepository $services,
-        AttributeDictionary $attributeDictionary,
-        LoggerInterface $logger,
+        private readonly ContactRepository $contacts,
+        private readonly ServiceRepository $services,
+        private readonly AttributeDictionary $attributeDictionary,
+        private readonly LoggerInterface $logger,
         string $administratorTeams
     ) {
-        $this->contacts = $contacts;
-        $this->services = $services;
-        $this->attributeDictionary = $attributeDictionary;
-        $this->logger = $logger;
         $this->administratorTeams = explode(',', trim(str_replace('\'', '',$administratorTeams)));
         Assert::allStringNotEmpty(
-            $administratorTeams,
+            $this->administratorTeams,
             'All entries in the `administrator_teams` config parameter should be string.'
         );
-        $this->administratorTeams = $administratorTeams;
     }
 
     /**

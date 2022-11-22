@@ -40,11 +40,6 @@ class DateTime
     private static $now;
 
     /**
-     * @var CoreDateTime
-     */
-    private $dateTime;
-
-    /**
      * @return self
      */
     public static function now()
@@ -71,10 +66,7 @@ class DateTime
         return new self($dateTime);
     }
 
-    /**
-     * @param CoreDateTime|null $dateTime
-     */
-    public function __construct(CoreDateTime $dateTime = null)
+    public function __construct(private ?CoreDateTime $dateTime = null)
     {
         $this->dateTime = $dateTime ?: new CoreDateTime();
     }

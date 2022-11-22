@@ -62,10 +62,7 @@ class ServiceStatusDto implements \JsonSerializable
         $this->percentage = $percentage;
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'states' => $this->states,

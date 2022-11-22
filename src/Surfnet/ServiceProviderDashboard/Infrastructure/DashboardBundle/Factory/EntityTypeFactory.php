@@ -39,30 +39,11 @@ use Symfony\Component\Form\FormFactoryInterface;
  */
 class EntityTypeFactory
 {
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
-
-    /**
-     * @var SaveCommandFactoryInterface
-     */
-    private $saveCommandFactory;
-
-    /**
-     * @var AttributeServiceInterface
-     */
-    private $attributeService;
-
     public function __construct(
-        FormFactoryInterface $formFactory,
-        SaveCommandFactoryInterface $saveCommandFactory,
-        AttributeServiceInterface $attributeService
+        private readonly FormFactoryInterface $formFactory,
+        private readonly SaveCommandFactoryInterface $saveCommandFactory,
+        private AttributeServiceInterface $attributeService
     ) {
-    
-        $this->formFactory = $formFactory;
-        $this->saveCommandFactory = $saveCommandFactory;
-        $this->attributeService = $attributeService;
     }
 
     public function createCreateForm(string $type, Service $service, string $environment)

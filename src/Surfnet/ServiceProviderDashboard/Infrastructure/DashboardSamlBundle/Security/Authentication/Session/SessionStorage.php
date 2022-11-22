@@ -32,17 +32,8 @@ class SessionStorage implements AuthenticatedSessionStateHandler, SamlAuthentica
     const AUTH_SESSION_KEY = '__auth/';
     const SAML_SESSION_KEY = '__saml/';
 
-    /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-     */
-    private $session;
-
-    /**
-     * @param SessionInterface $session
-     */
-    public function __construct(SessionInterface $session)
+    public function __construct(private readonly SessionInterface $session)
     {
-        $this->session = $session;
     }
 
     public function logAuthenticationMoment()
