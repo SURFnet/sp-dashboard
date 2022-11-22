@@ -37,29 +37,11 @@ use function sprintf;
  */
 class OidcngJsonGenerator implements GeneratorInterface
 {
-    /**
-     * @var ArpGenerator
-     */
-    private $arpMetadataGenerator;
-
-    /**
-     * @var PrivacyQuestionsMetadataGenerator
-     */
-    private $privacyQuestionsMetadataGenerator;
-
-    /**
-     * @var SpDashboardMetadataGenerator
-     */
-    private $spDashboardMetadataGenerator;
-
     public function __construct(
-        ArpGenerator $arpMetadataGenerator,
-        PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly ArpGenerator $arpMetadataGenerator,
+        private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
-        $this->arpMetadataGenerator = $arpMetadataGenerator;
-        $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
-        $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -295,6 +277,8 @@ class OidcngJsonGenerator implements GeneratorInterface
      * Logo dimensions are required in the SAML spec. They are always present,
      * except when the user just created the entity in the interface. We
      * determine the dimensions in those situations.
+     *
+     * @SuppressWarnings(PHPMD.ErrorControlOperator)
      *
      * @param ManageEntity $entity
      * @return array

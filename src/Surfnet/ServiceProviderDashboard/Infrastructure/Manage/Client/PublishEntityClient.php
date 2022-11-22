@@ -31,36 +31,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository
 
 class PublishEntityClient implements PublishEntityRepositoryInterface
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $client;
-
-    /**
-     * @var JsonGeneratorStrategy
-     */
-    private $generator;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var ApiConfig
-     */
-    private $manageConfig;
-
     public function __construct(
-        HttpClientInterface $client,
-        JsonGeneratorStrategy $generator,
-        ApiConfig $manageConfig,
-        LoggerInterface $logger
+        private readonly HttpClientInterface $client,
+        private readonly JsonGeneratorStrategy $generator,
+        private readonly ApiConfig $manageConfig,
+        private readonly LoggerInterface $logger
     ) {
-        $this->client = $client;
-        $this->generator = $generator;
-        $this->manageConfig = $manageConfig;
-        $this->logger = $logger;
     }
 
     /**

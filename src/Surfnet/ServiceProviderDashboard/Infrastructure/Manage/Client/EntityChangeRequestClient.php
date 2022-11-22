@@ -29,29 +29,11 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterfa
 
 class EntityChangeRequestClient implements EntityChangeRequestRepository
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $client;
-
-    /**
-     * @var JsonGeneratorStrategy
-     */
-    private $generator;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        HttpClientInterface $client,
-        JsonGeneratorStrategy $generator,
-        LoggerInterface $logger
+        private readonly HttpClientInterface $client,
+        private readonly JsonGeneratorStrategy $generator,
+        private readonly LoggerInterface $logger
     ) {
-        $this->client = $client;
-        $this->generator = $generator;
-        $this->logger = $logger;
     }
 
     public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity, Contact $contact): array

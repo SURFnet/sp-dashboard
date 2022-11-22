@@ -31,7 +31,7 @@ class ValidEntityIdValidatorTest extends ConstraintValidatorTestCase
      */
     private $mockHandler;
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         m::close();

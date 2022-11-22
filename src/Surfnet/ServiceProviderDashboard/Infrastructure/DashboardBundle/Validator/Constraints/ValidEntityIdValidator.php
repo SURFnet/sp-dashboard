@@ -19,8 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
-use Pdp\Parser;
-use Pdp\PublicSuffixListManager;
+use Symfony\Component\Form\Extension\Core\EventListener\FixUrlProtocolListener;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -60,10 +59,9 @@ class ValidEntityIdValidator extends ConstraintValidator
      */
     private function validateUri($value)
     {
+        $parser = new UrlParser($value);
         try {
-            $pslManager = new PublicSuffixListManager();
-            $parser = new Parser($pslManager->getList());
-            $parser->parseUrl($value);
+            $parser->parse();
         } catch (Exception $e) {
             return false;
         }

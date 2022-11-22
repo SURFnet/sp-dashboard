@@ -53,7 +53,7 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
      */
     private $authorizationService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->commandBus = m::mock(CommandBus::class);
         $this->authorizationService = m::mock(AuthorizationService::class);

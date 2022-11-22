@@ -36,25 +36,13 @@ use function sprintf;
 class OidcngResourceServerJsonGenerator implements GeneratorInterface
 {
     /**
-     * @var PrivacyQuestionsMetadataGenerator
-     */
-    private $privacyQuestionsMetadataGenerator;
-
-    /**
-     * @var SpDashboardMetadataGenerator
-     */
-    private $spDashboardMetadataGenerator;
-
-    /**
      * @param PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator
      * @param SpDashboardMetadataGenerator $spDashboardMetadataGenerator
      */
     public function __construct(
-        PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
-        $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
-        $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array

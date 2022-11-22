@@ -28,36 +28,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AuthorizationService
 {
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var ApiConfig[]
-     */
-    private $manageConfig;
-
     public function __construct(
-        ServiceService $serviceService,
-        Session $session,
-        TokenStorageInterface $tokenStorage,
+        private readonly ServiceService $serviceService,
+        private readonly Session $session,
+        private readonly TokenStorageInterface $tokenStorage,
         ApiConfig $manageTestConfig,
         ApiConfig $manageProdConfig
     ) {
-        $this->serviceService = $serviceService;
-        $this->session = $session;
-        $this->tokenStorage = $tokenStorage;
         $this->manageConfig = [
             'test' => $manageTestConfig,
             'prod' => $manageProdConfig,

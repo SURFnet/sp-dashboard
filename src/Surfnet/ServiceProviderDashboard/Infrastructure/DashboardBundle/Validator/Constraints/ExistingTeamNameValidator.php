@@ -25,26 +25,11 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class ExistingTeamNameValidator extends ConstraintValidator
 {
-    /**
-     * @var QueryTeamsRepository
-     */
-    private $queryService;
-
-    /**
-     * @var string
-     */
-    private $defaultStemName;
-
-    /**
-     * @var string
-     */
-    private $groupName;
-
-    public function __construct(QueryTeamsRepository $queryService, string $defaultStemName, string $groupName)
-    {
-        $this->queryService = $queryService;
-        $this->defaultStemName = $defaultStemName;
-        $this->groupName = $groupName;
+    public function __construct(
+        private readonly QueryTeamsRepository $queryService,
+        private readonly string $defaultStemName,
+        private readonly string $groupName
+    ) {
     }
 
     /**

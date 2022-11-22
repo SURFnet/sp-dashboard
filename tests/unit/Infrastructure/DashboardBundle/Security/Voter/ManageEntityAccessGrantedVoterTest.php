@@ -39,7 +39,7 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
      */
     private $voter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->service = m::mock(EntityServiceInterface::class);
         $this->voter = new ManageEntityAccessGrantedVoter($this->service);

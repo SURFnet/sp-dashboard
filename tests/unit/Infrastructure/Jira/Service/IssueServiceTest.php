@@ -56,7 +56,7 @@ class IssueServiceTest extends MockeryTestCase
      */
     private $jiraIssueService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = m::mock(JiraServiceFactory::class);
         $this->ticketFactory = m::mock(IssueFieldFactory::class);

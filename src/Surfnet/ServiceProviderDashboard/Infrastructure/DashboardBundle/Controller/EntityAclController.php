@@ -37,41 +37,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EntityAclController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-    /**
-     * @var EntityAclService
-     */
-    private $entityAclService;
-
-    /**
-     * @var EntityDetailFactory
-     */
-    private $entityDetailFactory;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        AuthorizationService $authorizationService,
-        EntityAclService $entityAclService,
-        EntityDetailFactory $entityDetailFactory
+        private CommandBus $commandBus,
+        private EntityService $entityService,
+        private AuthorizationService $authorizationService,
+        private EntityAclService $entityAclService,
+        private EntityDetailFactory $entityDetailFactory
     ) {
-
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->authorizationService = $authorizationService;
-        $this->entityAclService = $entityAclService;
-        $this->entityDetailFactory = $entityDetailFactory;
     }
 
     /**
@@ -90,7 +62,11 @@ class EntityAclController extends AbstractController
 
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 
-        $command = new UpdateEntityAclCommand($entity, $selectedIdps, $entity->getAllowedIdentityProviders()->isAllowAll());
+        $command = new UpdateEntityAclCommand(
+            $entity,
+            $selectedIdps,
+            $entity->getAllowedIdentityProviders()->isAllowAll()
+        );
         $form = $this->createForm(AclEntityType::class, $command);
 
         $form->handleRequest($request);

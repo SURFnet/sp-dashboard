@@ -23,7 +23,7 @@ class EntityAclTest extends WebTestCase
     private $entityId;
     private $serviceId;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

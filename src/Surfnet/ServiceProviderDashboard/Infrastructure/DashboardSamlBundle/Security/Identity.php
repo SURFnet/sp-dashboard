@@ -20,16 +20,13 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Se
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
-class Identity
+/**
+ * @method string getUserIdentifier()
+ */
+class Identity implements \Symfony\Component\Security\Core\User\UserInterface
 {
-    /**
-     * @var Contact
-     */
-    private $contact;
-
-    public function __construct(Contact $contact)
+    public function __construct(private Contact $contact)
     {
-        $this->contact = $contact;
     }
 
     /**
@@ -62,5 +59,35 @@ class Identity
     public function __toString()
     {
         return $this->contact->getDisplayName();
+    }
+
+    public function getRoles()
+    {
+        // TODO: Implement getRoles() method.
+    }
+
+    public function getPassword()
+    {
+        return "admin";
+    }
+
+    public function getSalt()
+    {
+        return "";
+    }
+
+    public function eraseCredentials()
+    {
+        return "";
+    }
+
+    public function getUsername()
+    {
+        return "admin";
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        // TODO: Implement @method string getUserIdentifier()
     }
 }

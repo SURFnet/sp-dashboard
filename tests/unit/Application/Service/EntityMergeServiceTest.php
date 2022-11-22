@@ -34,7 +34,7 @@ class EntityMergeServiceTest extends TestCase
     /** @var EntityMergeService */
     private $service;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
         $attributeService = new AttributeService($attributeRepository, 'en');

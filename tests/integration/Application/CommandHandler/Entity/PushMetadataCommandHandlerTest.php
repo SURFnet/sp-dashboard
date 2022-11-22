@@ -49,7 +49,7 @@ class PushMetadataCommandHandlerTest extends MockeryTestCase
      */
     private $commandHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->publishService = m::mock(ManagePublishService::class);
         $this->logger = m::mock(LoggerInterface::class);
@@ -66,11 +66,12 @@ class PushMetadataCommandHandlerTest extends MockeryTestCase
     {
         $this->publishService->shouldReceive('pushMetadata');
         $this->logger->shouldReceive('info')->with('Pushing metadata to EngineBlock using the test environment.');
-        $this->commandHandler->handle(new PushMetadataCommand('test'));
+        $this->assertNull($this->commandHandler->handle(new PushMetadataCommand('test')));
     }
 
     public function test_failed_push()
     {
+
         $e = new PushMetadataException('Foobar');
         $this->publishService
             ->shouldReceive('pushMetadata')
@@ -79,6 +80,7 @@ class PushMetadataCommandHandlerTest extends MockeryTestCase
         $this->logger->shouldReceive('info')->with('Pushing metadata to EngineBlock using the production environment.');
         $this->logger->shouldReceive('error')->with('Pushing to EngineBlock failed with message: "Foobar"');
         $this->flashBag->shouldReceive('add')->with('error', 'entity.edit.error.push');
-        $this->commandHandler->handle(new PushMetadataCommand('production'));
+
+        $this->assertNull($this->commandHandler->handle(new PushMetadataCommand('production')));
     }
 }

@@ -84,6 +84,6 @@ class Attribute
             return '-';
         }
 
-        return (string) $this->motivation;
+        return (string)$this->motivation;
     }
 }

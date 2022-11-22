@@ -23,42 +23,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class DeletePublishedProductionEntityCommand implements Command
 {
-    /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Uuid
-     */
-    private $manageId;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Uuid
-     */
-    private $protocol;
-
-    /**
-     * @param string $manageId
-     * @param $protocol
-     */
-    public function __construct($manageId, $protocol)
-    {
-        $this->manageId = $manageId;
-        $this->protocol = $protocol;
+    public function __construct(
+        #[Assert\NotBlank]
+        #[Assert\Uuid]
+        private readonly string $manageId,
+        #[Assert\NotBlank]
+        #[Assert\Uuid]
+        private readonly string $protocol
+    ) {
     }
 
-    /**
-     * @return string
-     */
-    public function getManageId()
+    public function getManageId(): string
     {
         return $this->manageId;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): string
     {
         return $this->protocol;
     }

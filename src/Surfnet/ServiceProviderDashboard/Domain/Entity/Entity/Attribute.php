@@ -22,12 +22,7 @@ use Webmozart\Assert\Assert;
 
 class Attribute
 {
-    private $name;
-    private $value;
-    private $source;
-    private $motivation;
-
-    public static function fromApiResponse($attributeName, array $attributeData)
+    public static function fromApiResponse($attributeName, array $attributeData): Attribute
     {
         $value = $attributeData['value'];
         $source = isset($attributeData['source']) ? $attributeData['source'] : '';
@@ -52,35 +47,35 @@ class Attribute
      * @param string $source
      * @param string $motivation
      */
-    public function __construct($name, $value, $source, $motivation)
-    {
-        $this->name = $name;
-        $this->value = $value;
-        $this->source = $source;
-        $this->motivation = $motivation;
+    public function __construct(
+        private readonly string $name,
+        private readonly string $value,
+        private string $source,
+        private string $motivation
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    public function getSource()
+    public function getSource(): string
     {
         return $this->source;
     }
 
-    public function hasMotivation()
+    public function hasMotivation(): bool
     {
         return $this->motivation !== null && $this->motivation !== '';
     }
 
-    public function getMotivation()
+    public function getMotivation(): string
     {
         return $this->motivation;
     }

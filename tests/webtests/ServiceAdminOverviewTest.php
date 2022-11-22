@@ -22,7 +22,7 @@ use GuzzleHttp\Psr7\Response;
 
 class ServiceAdminOverviewTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

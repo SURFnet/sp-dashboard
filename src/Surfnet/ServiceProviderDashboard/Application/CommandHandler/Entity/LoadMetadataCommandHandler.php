@@ -30,33 +30,11 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
 
 class LoadMetadataCommandHandler implements CommandHandler
 {
-    /**
-     * @var AttributeNameServiceInterface
-     */
-    private $attributeNameService;
-
-    /**
-     * @var FetcherInterface
-     */
-    private $metadataFetcher;
-
-    /**
-     * @var ParserInterface
-     */
-    private $metadataParser;
-
-    /**
-     * @param FetcherInterface $metadataFetcher
-     * @param ParserInterface $parser
-     */
     public function __construct(
-        AttributeNameServiceInterface $attributeNameService,
-        FetcherInterface $metadataFetcher,
-        ParserInterface $parser
+        private AttributeNameServiceInterface $attributeNameService,
+        private FetcherInterface $metadataFetcher,
+        private ParserInterface $metadataParser
     ) {
-        $this->attributeNameService = $attributeNameService;
-        $this->metadataFetcher = $metadataFetcher;
-        $this->metadataParser = $parser;
     }
 
     /**

@@ -30,29 +30,11 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UpdateEntityAclCommandHandler implements CommandHandler
 {
-    /**
-     * @var PublishEntityRepository
-     */
-    private $publishClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
     public function __construct(
-        PublishEntityRepository $publishClient,
-        LoggerInterface $logger,
-        FlashBagInterface $flashBag
+        private readonly PublishEntityRepository $publishClient,
+        private readonly LoggerInterface $logger,
+        private readonly FlashBagInterface $flashBag
     ) {
-        $this->publishClient = $publishClient;
-        $this->logger = $logger;
-        $this->flashBag = $flashBag;
     }
 
     /**

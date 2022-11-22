@@ -132,14 +132,8 @@ use function sprintf;
  */
 class QueryClient implements QueryTeamsRepository
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $client;
-
-    public function __construct(HttpClientInterface $client)
+    public function __construct(private readonly HttpClientInterface $client)
     {
-        $this->client = $client;
     }
 
     /**

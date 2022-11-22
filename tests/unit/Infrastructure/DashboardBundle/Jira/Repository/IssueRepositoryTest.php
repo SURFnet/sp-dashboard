@@ -32,13 +32,13 @@ class IssueRepositoryTest extends TestCase
      */
     private $repository;
 
-    public function setup()
+    public function setUp(): void
     {
         @unlink(self::CACHE_FILEPATH);
         $this->repository = new DevelopmentIssueRepository(self::CACHE_FILEPATH);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         @unlink(self::CACHE_FILEPATH);
     }

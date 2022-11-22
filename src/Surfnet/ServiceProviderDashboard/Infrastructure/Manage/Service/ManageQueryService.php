@@ -27,20 +27,10 @@ class ManageQueryService
 {
     private $validEnvironments = ['test', 'production'];
 
-    /**
-     * @var QueryManageRepository
-     */
-    private $testQueryClient;
-
-    /**
-     * @var QueryManageRepository
-     */
-    private $productionQueryClient;
-
-    public function __construct(QueryManageRepository $test, QueryManageRepository $production)
-    {
-        $this->testQueryClient = $test;
-        $this->productionQueryClient = $production;
+    public function __construct(
+        private readonly QueryManageRepository $testQueryClient,
+        private readonly QueryManageRepository $productionQueryClient
+    ) {
     }
 
     public function findManageIdByEntityId(string $environment, ?string $entityId): ?string

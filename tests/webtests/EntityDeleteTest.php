@@ -28,7 +28,7 @@ class EntityDeleteTest extends WebTestCase
     /** @var DevelopmentIssueRepository */
     private $ticketService;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

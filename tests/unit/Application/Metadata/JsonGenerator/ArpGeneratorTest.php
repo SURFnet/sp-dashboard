@@ -40,7 +40,7 @@ class ArpGeneratorTest extends MockeryTestCase
      */
     private $attributeService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->attributeRepository = new AttributeRepository(__DIR__ . '/../fixture/attributes.json');
         $this->attributeService = new AttributeService($this->attributeRepository, 'en');

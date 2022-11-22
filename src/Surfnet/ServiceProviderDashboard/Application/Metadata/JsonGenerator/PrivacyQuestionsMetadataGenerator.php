@@ -41,14 +41,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  */
 class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 {
-    /**
-     * @var AttributesMetadataRepository
-     */
-    private $repository;
-
-    public function __construct(AttributesMetadataRepository $repository)
+    public function __construct(private readonly AttributesMetadataRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function build(ManageEntity $entity): array

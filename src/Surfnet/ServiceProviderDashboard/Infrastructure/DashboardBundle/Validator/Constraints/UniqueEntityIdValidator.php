@@ -30,14 +30,8 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueEntityIdValidator extends ConstraintValidator
 {
-    /**
-     * @var ManageQueryService
-     */
-    private $queryService;
-
-    public function __construct(ManageQueryService $queryService)
+    public function __construct(private readonly ManageQueryService $queryService)
     {
-        $this->queryService = $queryService;
     }
 
     /**

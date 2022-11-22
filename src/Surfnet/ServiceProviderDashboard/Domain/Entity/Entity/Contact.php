@@ -23,12 +23,6 @@ use Webmozart\Assert\Assert;
 
 class Contact
 {
-    private $type;
-    private $givenName;
-    private $surName;
-    private $email;
-    private $phone;
-
     public static function from(array $contactData)
     {
         $type = $contactData['contactType'];
@@ -57,36 +51,36 @@ class Contact
         );
     }
 
-    private function __construct(string $type, ?string $givenName, ?string $surName, ?string $email, ?string $phone)
-    {
-        $this->type = $type;
-        $this->givenName = $givenName;
-        $this->surName = $surName;
-        $this->email = $email;
-        $this->phone = $phone;
+    private function __construct(
+        private readonly string $type,
+        private readonly ?string $givenName,
+        private readonly ?string $surName,
+        private readonly ?string $email,
+        private readonly ?string $phone
+    ) {
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getGivenName()
+    public function getGivenName(): ?string
     {
         return $this->givenName;
     }
 
-    public function getSurName()
+    public function getSurName(): ?string
     {
         return $this->surName;
     }
 
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function getPhone()
+    public function getPhone(): ?string
     {
         return $this->phone;
     }

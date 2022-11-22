@@ -53,7 +53,7 @@ class SamlProviderTest extends TestCase
      */
     private $logger;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contactRepo = m::mock(ContactRepository::class);
         $this->serviceRepo = m::mock(ServiceRepository::class);

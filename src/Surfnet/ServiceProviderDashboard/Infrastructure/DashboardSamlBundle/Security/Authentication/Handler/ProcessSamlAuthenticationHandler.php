@@ -30,7 +30,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -48,41 +48,6 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
      */
     private $nextHandler;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var SamlInteractionProvider
-     */
-    private $samlInteractionProvider;
-
-    /**
-     * @var SamlAuthenticationStateHandler
-     */
-    private $authenticationStateHandler;
-
-    /**
-     * @var AuthenticatedSessionStateHandler
-     */
-    private $authenticatedSession;
-
-    /**
-     * @var AuthenticationManagerInterface
-     */
-    private $authenticationManager;
-
-    /**
-     * @var SamlAuthenticationLogger
-     */
-    private $authenticationLogger;
-
-    /**
-     * @var TwigEnvironment
-     */
-    private $templating;
-
     public function __construct(
         TokenStorageInterface $tokenStorage,
         SamlInteractionProvider $samlInteractionProvider,
@@ -92,16 +57,9 @@ class ProcessSamlAuthenticationHandler implements AuthenticationHandler
         SamlAuthenticationLogger $authenticationLogger,
         TwigEnvironment $templating
     ) {
-        $this->tokenStorage               = $tokenStorage;
-        $this->samlInteractionProvider    = $samlInteractionProvider;
-        $this->authenticationStateHandler = $authenticationStateHandler;
-        $this->authenticatedSession       = $authenticatedSession;
-        $this->authenticationManager      = $authenticationManager;
-        $this->authenticationLogger       = $authenticationLogger;
-        $this->templating                 = $templating;
     }
 
-    public function process(GetResponseEvent $event)
+    public function process(RequestEvent $event)
     {
         if ($this->tokenStorage->getToken() === null
             && $this->samlInteractionProvider->isSamlAuthenticationInitiated()

@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Exception;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoInvalidTypeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\LogoNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\LogoValidationHelperInterface;
@@ -71,10 +72,13 @@ class ValidLogoValidator extends ConstraintValidator
      */
     private function getImageSizeValidation($value, Constraint $constraint)
     {
-        $imgData = @getimagesize($value);
-        if ($imgData === false) {
+        try {
+            $imgData = getimagesize($value);
+            if ($imgData === false) {
+                $this->context->addViolation($constraint->message);
+            }
+        } catch (Exception $e) {
             $this->context->addViolation($constraint->message);
-            return;
         }
     }
 }

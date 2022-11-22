@@ -34,7 +34,7 @@ class AttributeServiceTest extends TestCase
 
     private $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(AttributeRepositoryInterface::class);
         $this->service = new AttributeService($this->repository, 'en');

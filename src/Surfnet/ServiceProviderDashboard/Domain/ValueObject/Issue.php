@@ -86,7 +86,7 @@ class Issue implements JsonSerializable
         return $this->ticketStatus === self::STATUS_CLOSED || $this->ticketStatus === self::STATUS_RESOLVED;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             self::IDENTIFIER_KEY => $this->key,

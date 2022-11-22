@@ -27,38 +27,13 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ServiceController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var ServiceStatusService
-     */
-    private $serviceStatusService;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     /**
      * @param CommandBus $commandBus
      * @param AuthorizationService $authorizationService
@@ -67,17 +42,12 @@ class ServiceController extends AbstractController
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        CommandBus $commandBus,
-        AuthorizationService $authorizationService,
-        ServiceService $serviceService,
-        ServiceStatusService $serviceStatusService,
-        TranslatorInterface $translator
+        private CommandBus $commandBus,
+        private readonly AuthorizationService $authorizationService,
+        private readonly ServiceService $serviceService,
+        private readonly ServiceStatusService $serviceStatusService,
+        private readonly TranslatorInterface $translator
     ) {
-        $this->commandBus = $commandBus;
-        $this->authorizationService = $authorizationService;
-        $this->serviceService = $serviceService;
-        $this->serviceStatusService = $serviceStatusService;
-        $this->translator = $translator;
     }
 
     /**

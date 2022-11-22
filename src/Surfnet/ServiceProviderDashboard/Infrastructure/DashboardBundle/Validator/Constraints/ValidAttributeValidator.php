@@ -27,14 +27,8 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class ValidAttributeValidator extends ConstraintValidator
 {
-    /**
-     * @var AttributeServiceInterface
-     */
-    private $attributeService;
-
-    public function __construct(AttributeServiceInterface $attributeService)
+    public function __construct(private readonly AttributeServiceInterface $attributeService)
     {
-        $this->attributeService = $attributeService;
     }
 
     private function buildAttributeViolation(string $placeholder, string $attributeName): void

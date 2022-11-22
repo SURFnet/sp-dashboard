@@ -51,7 +51,7 @@ class AuthorizationServiceTest extends MockeryTestCase
      */
     private $manageConfigProd;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->serviceService = m::mock(ServiceService::class);
         $this->session = m::mock(Session::class);
@@ -91,7 +91,9 @@ class AuthorizationServiceTest extends MockeryTestCase
         $this->session->shouldReceive('set')
             ->with('selected_service_id', 1);
 
-        $this->service->changeActiveService(1);
+        $service = $this->service->changeActiveService(1);
+
+        $this->assertInstanceOf(Service::class, $service);
     }
 
     /**
@@ -115,9 +117,6 @@ class AuthorizationServiceTest extends MockeryTestCase
 
     /**
      * @group Service
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage User is not granted access to service with ID 2
      */
     public function test_service_throws_exception_if_access_to_service_is_not_granted()
     {
@@ -132,6 +131,8 @@ class AuthorizationServiceTest extends MockeryTestCase
         $this->session->shouldReceive('get')
             ->andReturn(2);
 
+        $this->expectExceptionMessage("User is not granted access to service with ID 2");
+        $this->expectException(\RuntimeException::class);
         $this->service->getSelectedServiceId();
     }
 }

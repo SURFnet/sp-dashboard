@@ -23,9 +23,6 @@
             "src/Surfnet/Repository/.gitignore"
         ]
     },
-    "doctrine/doctrine-cache-bundle": {
-        "version": "1.4.0"
-    },
     "doctrine/doctrine-fixtures-bundle": {
         "version": "v2.4.1"
     },
@@ -58,7 +55,7 @@
         ]
     },
     "lexik/translation-bundle": {
-        "version": "v4.4.0"
+        "version": "v6.0"
     },
     "nelmio/security-bundle": {
         "version": "2.12",
@@ -101,6 +98,18 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "squizlabs/php_codesniffer": {
+        "version": "3.7",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.6",
+            "ref": "1019e5c08d4821cb9b77f4891f8e9c31ff20ac6f"
+        },
+        "files": [
+            "phpcs.xml.dist"
+        ]
+    },
     "stfalcon/tinymce-bundle": {
         "version": "v2.5.0"
     },
@@ -117,7 +126,7 @@
         ]
     },
     "surfnet/stepup-saml-bundle": {
-        "version": "4.2.1"
+        "version": "dev-feature/sf5-upgrade"
     },
     "symfony/console": {
         "version": "4.4",
@@ -178,7 +187,7 @@
         ]
     },
     "symfony/maker-bundle": {
-        "version": "1.39",
+        "version": "1.48",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -240,20 +249,6 @@
         },
         "files": [
             "config/packages/security.yaml"
-        ]
-    },
-    "symfony/swiftmailer-bundle": {
-        "version": "3.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.5",
-            "ref": "f0b2fccdca2dfd97dc2fd5ad216d5e27c4f895ac"
-        },
-        "files": [
-            "config/packages/dev/swiftmailer.yaml",
-            "config/packages/swiftmailer.yaml",
-            "config/packages/test/swiftmailer.yaml"
         ]
     },
     "symfony/translation": {

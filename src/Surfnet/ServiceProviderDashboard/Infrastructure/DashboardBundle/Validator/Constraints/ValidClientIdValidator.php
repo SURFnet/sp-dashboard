@@ -19,8 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
-use Pdp\Parser;
-use Pdp\PublicSuffixListManager;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -37,12 +35,11 @@ class ValidClientIdValidator extends ConstraintValidator
             return;
         }
 
-        $pslManager = new PublicSuffixListManager();
-        $parser = new Parser($pslManager->getList());
+        $parser = new UrlParser($value);
 
         try {
-            $url = $parser->parseUrl($value);
-            if (isset($url->toArray()['port'])) {
+            $urlParts = $parser->parse($value);
+            if (isset($urlParts['port'])) {
                 $this->context->addViolation('validator.client_id.no_colon');
             }
         } catch (Exception $e) {

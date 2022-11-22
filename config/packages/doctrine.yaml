@@ -19,6 +19,6 @@ doctrine:
             Surfnet\ServiceProviderDashboard:
                 type: annotation
                 is_bundle: false
-                dir: "%kernel.root_dir%/Domain/Entity"
+                dir: "%kernel.project_dir%/src/Surfnet/ServiceProviderDashboard/Domain/Entity"
                 prefix: Surfnet\ServiceProviderDashboard\Domain\Entity
                 alias: SurfnetServiceProviderDashboard

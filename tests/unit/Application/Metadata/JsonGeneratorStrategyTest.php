@@ -50,7 +50,7 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
      */
     private $strategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->generator1 = m::mock(GeneratorInterface::class);
         $this->generator1->shouldReceive('generateForNewEntity');
@@ -72,10 +72,12 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
         $entity = m::mock(ManageEntity::class);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
-        $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+        $result = $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+        $this->assertIsArray($result);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
-        $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+        $result = $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+        $this->assertIsArray($result);
     }
 
     public function test_generate_for_existing_entity()
@@ -84,10 +86,12 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
         $diff = m::mock(EntityDiff::class);
-        $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $result = $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $this->assertIsArray($result);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
-        $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $result = $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $this->assertIsArray($result);
     }
 
     public function test_add_invalid_strategy()

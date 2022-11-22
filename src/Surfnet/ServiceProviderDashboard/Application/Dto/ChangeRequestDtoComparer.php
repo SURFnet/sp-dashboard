@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
-use DateTime;
-
 class ChangeRequestDtoComparer
 {
     public static function compareCreatedDescending(ChangeRequestDto $a, ChangeRequestDto $b): int

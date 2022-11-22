@@ -32,7 +32,8 @@ class IdentityService implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        throw new RuntimeException(sprintf('Cannot Refresh User "%s"', $user->getUsername()));
+//        throw new RuntimeException(sprintf('Cannot Refresh User "%s"', $user->getUsername()));
+        return $user;
     }
 
     public function supportsClass($class)

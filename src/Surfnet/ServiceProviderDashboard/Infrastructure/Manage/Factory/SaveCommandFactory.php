@@ -36,29 +36,11 @@ use function reset;
 
 class SaveCommandFactory implements SaveCommandFactoryInterface
 {
-    /**
-     * @var AttributeServiceInterface
-     */
-    private $attributeService;
-
-    /**
-     * @var string
-     */
-    private $playGroundUriProd;
-
-    /**
-     * @var string
-     */
-    private $playGroundUriTest;
-
     public function __construct(
-        AttributeServiceInterface $attributeService,
-        string $oidcPlaygroundUriTest,
-        string $oidcPlaygroundUriProd
+        private readonly AttributeServiceInterface $attributeService,
+        private readonly string $playGroundUriTest,
+        private readonly string $playGroundUriProd
     ) {
-        $this->attributeService = $attributeService;
-        $this->playGroundUriTest = $oidcPlaygroundUriTest;
-        $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
     public function buildSamlCommandByManageEntity(

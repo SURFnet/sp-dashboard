@@ -26,34 +26,11 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFact
 
 class IssueService implements TicketRepository
 {
-    /**
-     * @var JiraServiceFactory
-     */
-    private $factory;
-
-    /**
-     * @var IssueFieldFactory
-     */
-    private $fieldFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @param JiraServiceFactory $jiraFactory
-     * @param IssueFieldFactory $issueFieldFactory
-     * @param LoggerInterface $logger
-     */
     public function __construct(
-        JiraServiceFactory $jiraFactory,
-        IssueFieldFactory $issueFieldFactory,
-        LoggerInterface $logger
+        private readonly JiraServiceFactory $factory,
+        private readonly IssueFieldFactory $fieldFactory,
+        private readonly LoggerInterface $logger
     ) {
-        $this->factory = $jiraFactory;
-        $this->fieldFactory = $issueFieldFactory;
-        $this->logger = $logger;
     }
 
     public function createIssue(Ticket $ticket)

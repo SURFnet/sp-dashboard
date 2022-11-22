@@ -32,20 +32,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProvi
  */
 class IdentityProviderClient implements IdentityProviderRepository
 {
-    /**
-     * @var HttpClient
-     */
-    private $client;
-
-    /**
-     * @var Config
-     */
-    private $manageConfig;
-
-    public function __construct(HttpClient $client, Config $manageConfig)
-    {
-        $this->client = $client;
-        $this->manageConfig = $manageConfig;
+    public function __construct(
+        private readonly HttpClient $client,
+        private readonly Config $manageConfig
+    ) {
     }
 
     /**

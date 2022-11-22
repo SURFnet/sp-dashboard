@@ -44,7 +44,7 @@ class ServiceStatusServiceTest extends MockeryTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(PrivacyQuestionsRepository::class);
         $this->entityService = m::mock(EntityService::class);

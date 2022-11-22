@@ -40,7 +40,7 @@ class QueryClientTest extends MockeryTestCase
      */
     private $mockHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockHandler = new MockHandler();
         $guzzle = new Client(['handler' => $this->mockHandler]);

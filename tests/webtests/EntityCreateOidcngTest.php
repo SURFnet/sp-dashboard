@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCreateOidcngTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
