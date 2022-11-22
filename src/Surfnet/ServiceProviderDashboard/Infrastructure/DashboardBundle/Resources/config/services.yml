@@ -425,10 +425,10 @@ services:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
       - '@surfnet.manage.client.publish_client.prod_environment'
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient:
-        arguments:
-            - ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient']
-            - '@logger'
+  Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient:
+    arguments:
+      - ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient']
+      - '@logger'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\TeamsController:
     arguments:
@@ -483,20 +483,20 @@ services:
 
   surfnet.manage.http.guzzle.test_environment:
     class: GuzzleHttp\Client
-    factory: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient' ]
+    factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\ManageClientFactory:createClient"
     arguments:
       - "@surfnet.manage.configuration.test"
 
   surfnet.teams.http.guzzle:
     class: GuzzleHttp\Client
-    factory: [ 'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory', 'createClient' ]
+    factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\TeamsClientFactory:createClient"
     arguments:
       - "@surfnet.teams.configuration"
 
   surfnet.manage.http.http_client.prod_environment:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient
     arguments:
-      - ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory', 'createClient']
+      - [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory', 'createClient' ]
       - '@logger'
       - 'production'
 
@@ -518,7 +518,7 @@ services:
 
   surfnet.manage.http.guzzle.prod_environment:
     class: GuzzleHttp\Client
-    factory: [ 'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory','createClient' ]
+    factory: "Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Factory\\ManageClientFactory:createClient"
     arguments:
       - "@surfnet.manage.configuration.production"
 
