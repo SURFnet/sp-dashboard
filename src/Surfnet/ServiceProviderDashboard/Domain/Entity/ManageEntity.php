@@ -37,46 +37,15 @@ use function in_array;
  */
 class ManageEntity
 {
-    private $id;
-
     /**
      * @var string
      */
     private $status;
 
-    /**
-     * @var AttributeList
-     */
-    private $attributes;
-
-    /**
-     * @var MetaData
-     */
-    private $metaData;
-
-    /**
-     * @var OidcClientInterface
-     */
-    private $oidcClient;
-
-    /**
-     * @var Protocol
-     */
-    private $protocol;
-
-    /**
-     * @var AllowedIdentityProviders
-     */
-    private $allowedIdentityProviders;
-    
     private $comments;
 
     private $environment;
 
-    /**
-     * @var Service
-     */
-    private $service;
     /**
      * @var bool
      */
@@ -115,22 +84,15 @@ class ManageEntity
     }
 
     public function __construct(
-        ?string $id,
-        AttributeList $attributes,
-        MetaData $metaData,
-        AllowedIdentityProviders $allowedIdentityProviders,
-        Protocol $protocol,
-        ?OidcClientInterface $oidcClient = null,
-        ?Service $service = null
+        private ?string $id,
+        private readonly AttributeList $attributes,
+        private readonly MetaData $metaData,
+        private readonly AllowedIdentityProviders $allowedIdentityProviders,
+        private readonly Protocol $protocol,
+        private readonly ?OidcClientInterface $oidcClient = null,
+        private ?Service $service = null
     ) {
-        $this->id = $id;
         $this->status = Constants::STATE_PUBLISHED;
-        $this->attributes = $attributes;
-        $this->metaData = $metaData;
-        $this->oidcClient = $oidcClient;
-        $this->protocol = $protocol;
-        $this->allowedIdentityProviders = $allowedIdentityProviders;
-        $this->service = $service;
     }
 
     private static function extractManageProtocol(array $data): string

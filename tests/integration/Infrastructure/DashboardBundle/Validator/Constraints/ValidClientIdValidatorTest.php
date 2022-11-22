@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class ValidClientIdValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         m::close();

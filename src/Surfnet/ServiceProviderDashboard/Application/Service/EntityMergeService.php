@@ -74,8 +74,10 @@ class EntityMergeService
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function mergeEntityCommand(SaveEntityCommandInterface $command, ?ManageEntity $manageEntity = null): ManageEntity
-    {
+    public function mergeEntityCommand(
+        SaveEntityCommandInterface $command,
+        ?ManageEntity $manageEntity = null
+    ): ManageEntity {
         $metaData = new MetaData(
             $command->getEntityId(),
             $command->getMetadataUrl(),

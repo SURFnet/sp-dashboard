@@ -57,75 +57,21 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ServiceController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var ServiceStatusService
-     */
-    private $serviceStatusService;
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var QueryTeamsRepository
-     */
-    private $queryClient;
-
-    /**
-     * @var string
-     */
-    private $defaultStemName;
-
-    /**
-     * @param LoggerInterface $logger
-     */
-    private $logger;
-
     public function __construct(
-        CommandBus $commandBus,
-        AuthorizationService $authorizationService,
-        ServiceService $serviceService,
-        ServiceStatusService $serviceStatusService,
-        RouterInterface $router,
-        EntityService $entityService,
-        QueryTeamsRepository $queryClient,
-        LoggerInterface $logger,
-        string $defaultStemName
+        private readonly CommandBus $commandBus,
+        private readonly AuthorizationService $authorizationService,
+        private readonly ServiceService $serviceService,
+        private readonly ServiceStatusService $serviceStatusService,
+        private readonly RouterInterface $router,
+        private readonly EntityService $entityService,
+        private readonly QueryTeamsRepository $queryClient,
+        private readonly LoggerInterface $logger,
+        private readonly string $defaultStemName
     ) {
-        $this->commandBus = $commandBus;
-        $this->authorizationService = $authorizationService;
-        $this->serviceService = $serviceService;
-        $this->serviceStatusService = $serviceStatusService;
-        $this->router = $router;
-        $this->entityService = $entityService;
-        $this->queryClient = $queryClient;
-        $this->defaultStemName = $defaultStemName;
-        $this->logger = $logger;
     }
 
     /**
      * @Route("/", name="service_overview", methods={"GET"})
-     * @Security("is_granted('ROLE_USER')")
      */
     public function overviewAction()
     {

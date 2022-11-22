@@ -23,14 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SiteNoticeController extends AbstractController
 {
-    /**
-     * @var string
-     */
-    private $noticeDate;
-
-    public function __construct(string $noticeDate)
+    public function __construct(private string $noticeDate)
     {
-        $this->noticeDate = $noticeDate;
     }
 
     /**

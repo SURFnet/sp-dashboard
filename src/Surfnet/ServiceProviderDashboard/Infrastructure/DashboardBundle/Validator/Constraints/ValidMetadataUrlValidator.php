@@ -19,8 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Exception;
-use Pdp\Parser;
-use Pdp\PublicSuffixListManager;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -37,11 +35,10 @@ class ValidMetadataUrlValidator extends ConstraintValidator
             return;
         }
 
-        $pslManager = new PublicSuffixListManager();
-        $parser = new Parser($pslManager->getList());
+        $parser = new UrlParser($value);
 
         try {
-            $parser->parseUrl($value);
+            $parser->parse($value);
         } catch (Exception $e) {
             $this->context->addViolation('validator.entity_id.invalid_url');
             return;

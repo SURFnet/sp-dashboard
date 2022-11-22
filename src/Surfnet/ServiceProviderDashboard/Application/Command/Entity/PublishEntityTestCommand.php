@@ -24,17 +24,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityTestCommand implements Command
 {
-    /**
-     * @var ManageEntity
-     * @Assert\Type{
-     *      type="\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity"
-     * }
-     */
-    private $manageEntity;
-
-    public function __construct(ManageEntity $entity)
-    {
-        $this->manageEntity = $entity;
+    public function __construct(
+        #[Assert\Type('\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity')]
+        private readonly ManageEntity $manageEntity
+    ) {
     }
 
     public function getManageEntity(): ManageEntity

@@ -39,7 +39,7 @@ class OidcngResourceServerOptionsFactoryTest extends MockeryTestCase
 
     private $factory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testEntityRepository = m::mock(QueryClient::class);
         $this->productionEntityRepository = m::mock(QueryClient::class);

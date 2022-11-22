@@ -50,55 +50,15 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
  */
 trait EntityControllerTrait
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-    /**
-     * @var EntityTypeFactory
-     */
-    private $entityTypeFactory;
-    /**
-     * @var LoadEntityService
-     */
-    private $loadEntityService;
-
-    /**
-     * @var EntityMergeService
-     */
-    private $entityMergeService;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService,
-        EntityMergeService $entityMergeService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityTypeFactory $entityTypeFactory,
+        private readonly LoadEntityService $loadEntityService,
+        private readonly EntityMergeService $entityMergeService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->entityTypeFactory = $entityTypeFactory;
-        $this->loadEntityService = $loadEntityService;
-        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -107,7 +67,7 @@ trait EntityControllerTrait
      *
      * @return Form
      */
-    private function handleImport(Request $request, SaveSamlEntityCommand $command)
+    private function handleImport(Request $request, SaveSamlEntityCommand $command): Form
     {
         // Handle an import action based on the posted xml or import url.
         $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
@@ -143,7 +103,7 @@ trait EntityControllerTrait
         SaveEntityCommandInterface $saveCommand,
         bool $isEntityChangeRequest,
         FlashBagInterface $flashBag
-    ) {
+    ): RedirectResponse|Form {
         // Merge the save command data into the ManageEntity
         $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
 
@@ -182,9 +142,8 @@ trait EntityControllerTrait
             // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
             // page we will be redirecting to in a moment.
             $this->get('session')->set('published.entity.clone', clone $entity);
-
-            return $this->redirectToRoute($destination);
         }
+        return $this->redirectToRoute($destination);
     }
 
     /**
@@ -194,7 +153,7 @@ trait EntityControllerTrait
      * @param string $expectedButtonName
      * @return bool
      */
-    private function assertUsedSubmitButton(Form $form, $expectedButtonName)
+    private function assertUsedSubmitButton(Form $form, $expectedButtonName): bool
     {
         $button = $form->getClickedButton();
 

@@ -36,38 +36,14 @@ class HttpClient implements HttpClientInterface
     const MODE_TEST = 'test';
 
     /**
-     * @var ClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $mode;
-
-    /**
-     * @var string
-     */
-    private $apiName;
-
-    /**
      * @param string $mode The mode is used mainly for logging purposes, stating which environment was targeted.
      */
     public function __construct(
-        ClientInterface $httpClient,
-        LoggerInterface $logger,
-        string $apiName = self::TEST_API_NAME,
-        string $mode = self::MODE_TEST
+        private readonly ClientInterface $httpClient,
+        private readonly LoggerInterface $logger,
+        private readonly string $apiName = self::TEST_API_NAME,
+        private readonly string $mode = self::MODE_TEST
     ) {
-        $this->httpClient = $httpClient;
-        $this->logger = $logger;
-        $this->apiName = $apiName;
-        $this->mode = $mode;
     }
 
     /**

@@ -26,20 +26,9 @@ class ManagePublishService
 {
     private $validEnvironments = ['test', 'production'];
 
-    /**
-     * @var PublishEntityRepository
-     */
-    private $testClient;
-
-    /**
-     * @var PublishEntityRepository
-     */
-    private $productionClient;
-
-    public function __construct(PublishEntityRepository $test, PublishEntityRepository $production)
-    {
-        $this->testClient = $test;
-        $this->productionClient = $production;
+    public function __construct(
+        private readonly PublishEntityRepository $testClient,
+        private readonly PublishEntityRepository $productionClient) {
     }
 
     /**

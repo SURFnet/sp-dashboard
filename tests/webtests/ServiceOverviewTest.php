@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceOverviewTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

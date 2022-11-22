@@ -33,35 +33,6 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 class EntityChangeRequestCommandHandler implements CommandHandler
 {
     /**
-     * @var EntityChangeRequestRepository
-     */
-    private $repository;
-    /**
-     * @var TicketService
-     */
-    private $ticketService;
-
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $issueType;
-
-    /**
-     * @var MailService
-     */
-    private $mailService;
-
-    /**
      * @var string
      */
     private $summaryTranslationKey;
@@ -71,30 +42,18 @@ class EntityChangeRequestCommandHandler implements CommandHandler
      */
     private $descriptionTranslationKey;
 
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-
     public function __construct(
-        EntityChangeRequestRepository $repository,
-        EntityServiceInterface $entityService,
-        TicketService $ticketService,
-        FlashBagInterface $flashBag,
-        MailService $mailService,
-        LoggerInterface $logger,
-        string $issueType
+        private readonly EntityChangeRequestRepository $repository,
+        private readonly EntityServiceInterface $entityService,
+        private readonly TicketService $ticketService,
+        private readonly FlashBagInterface $flashBag,
+        private readonly MailService $mailService,
+        private readonly LoggerInterface $logger,
+        private readonly string $issueType
     ) {
         if (empty($issueType)) {
             throw new Exception('Please set "jira_issue_type_entity_change_request" in .env');
         }
-        $this->repository = $repository;
-        $this->entityService = $entityService;
-        $this->ticketService = $ticketService;
-        $this->mailService = $mailService;
-        $this->flashBag = $flashBag;
-        $this->logger = $logger;
-        $this->issueType = $issueType;
         $this->summaryTranslationKey = 'entity.change_request.ticket.summary';
         $this->descriptionTranslationKey = 'entity.change_request.ticket.description';
     }

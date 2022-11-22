@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServiceCreateTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -32,57 +32,21 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TeamsController extends AbstractController
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var DeleteEntityClient
-     */
-    private $deleteEntityClient;
-
-    /**
-     * @var PublishEntityClient
-     */
-    private $publishEntityClient;
-
-    /**
-     * @var QueryClient
-     */
-    private $queryClient;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    private $defaultStemName;
-
     public function __construct(
-        AuthorizationService $authorizationService,
-        DeleteEntityClient $deleteEntityClient,
-        PublishEntityClient $publishEntityClient,
-        QueryClient $queryClient,
-        TranslatorInterface $translator,
-        string $defaultStemName
+        private readonly AuthorizationService $authorizationService,
+        private readonly DeleteEntityClient $deleteEntityClient,
+        private readonly PublishEntityClient $publishEntityClient,
+        private readonly QueryClient $queryClient,
+        private readonly TranslatorInterface $translator,
+        private readonly string $defaultStemName
     ) {
-        $this->authorizationService = $authorizationService;
-        $this->deleteEntityClient = $deleteEntityClient;
-        $this->publishEntityClient = $publishEntityClient;
-        $this->queryClient = $queryClient;
-        $this->translator = $translator;
-        $this->defaultStemName = $defaultStemName;
     }
 
     /**

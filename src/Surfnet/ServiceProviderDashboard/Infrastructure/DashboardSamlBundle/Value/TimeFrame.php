@@ -23,17 +23,8 @@ use Surfnet\SamlBundle\Exception\InvalidArgumentException;
 
 final class TimeFrame
 {
-    /**
-     * @var DateInterval
-     */
-    private $timeFrame;
-
-    /**
-     * @param DateInterval $timeFrame
-     */
-    final private function __construct(DateInterval $timeFrame)
+    final private function __construct(private DateInterval $timeFrame)
     {
-        $this->timeFrame = $timeFrame;
     }
 
     /**

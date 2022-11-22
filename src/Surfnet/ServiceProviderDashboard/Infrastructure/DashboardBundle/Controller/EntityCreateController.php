@@ -43,29 +43,16 @@ class EntityCreateController extends AbstractController
 {
     use EntityControllerTrait;
 
-    /**
-     * @var ProtocolChoiceFactory
-     */
-    private $protocolChoiceFactory;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService,
-        ProtocolChoiceFactory $protocolChoiceFactory,
-        EntityMergeService $entityMergeService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityTypeFactory $entityTypeFactory,
+        private readonly LoadEntityService $loadEntityService,
+        private readonly ProtocolChoiceFactory $protocolChoiceFactory,
+        private readonly EntityMergeService $entityMergeService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->entityTypeFactory = $entityTypeFactory;
-        $this->loadEntityService = $loadEntityService;
-        $this->protocolChoiceFactory = $protocolChoiceFactory;
-        $this->entityMergeService = $entityMergeService;
     }
 
     /**

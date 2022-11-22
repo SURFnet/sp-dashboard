@@ -33,37 +33,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EntityDeleteController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var DeleteCommandFactory
-     */
-    private $commandFactory;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        DeleteCommandFactory $commandFactory,
-        AuthorizationService $authorizationService,
-        ServiceService $serviceService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly DeleteCommandFactory $commandFactory,
+        private readonly AuthorizationService $authorizationService,
+        private readonly ServiceService $serviceService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->authorizationService = $authorizationService;
-        $this->commandFactory = $commandFactory;
     }
 
     /**

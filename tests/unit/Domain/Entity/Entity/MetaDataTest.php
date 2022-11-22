@@ -237,6 +237,18 @@ class MetaDataTest extends TestCase
 
     private function metaData(string $mode)
     {
+        $organization = m::mock(Organization::class);
+        $organization->shouldReceive('merge');
+
+        $contactList = m::mock(ContactList::class);
+        $contactList->shouldReceive('merge');
+
+        $coin = m::mock(Coin::class, [null, null, null, null, null, null, null]);
+        $coin->shouldReceive('merge');
+
+        $logo = m::mock(Logo::class);
+        $logo->shouldReceive('merge');
+
         switch ($mode) {
             case 'a':
                 return new MetaData(
@@ -249,10 +261,10 @@ class MetaDataTest extends TestCase
                     'Description NL',
                     'Name EN',
                     'Name NL',
-                    m::mock(ContactList::class)->makePartial(),
-                    m::mock(Organization::class)->makePartial(),
-                    m::mock(Coin::class)->makePartial(),
-                    m::mock(Logo::class)->makePartial()
+                    $contactList,
+                    $organization,
+                    $coin,
+                    $logo
                 );
             case 'b':
                 return new MetaData(
@@ -265,10 +277,10 @@ class MetaDataTest extends TestCase
                     'Description B NL',
                     'Name B EN',
                     'Name B NL',
-                    m::mock(ContactList::class)->makePartial(),
-                    m::mock(Organization::class)->makePartial(),
-                    m::mock(Coin::class)->makePartial(),
-                    m::mock(Logo::class)->makePartial()
+                    $contactList,
+                    $organization,
+                    $coin,
+                    $logo
                 );
             case 'null':
                 return new MetaData(
@@ -281,10 +293,10 @@ class MetaDataTest extends TestCase
                     null,
                     null,
                     null,
-                    m::mock(ContactList::class)->makePartial(),
-                    m::mock(Organization::class)->makePartial(),
-                    m::mock(Coin::class)->makePartial(),
-                    m::mock(Logo::class)->makePartial()
+                    $contactList,
+                    $organization,
+                    $coin,
+                    $logo
                 );
         }
     }

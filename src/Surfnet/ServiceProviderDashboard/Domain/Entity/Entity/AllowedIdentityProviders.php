@@ -24,24 +24,14 @@ use function in_array;
 
 class AllowedIdentityProviders
 {
-    /**
-     * @var string[]
-     */
-    private $providers;
-
-    /**
-     * @var bool
-     */
-    private $allowAll;
-
-    public function __construct(array $providers, bool $allowAll)
-    {
+    public function __construct(
+        private array $providers,
+        private bool $allowAll
+    ) {
         Assert::allString($providers);
-        $this->providers = $providers;
-        $this->allowAll = $allowAll;
     }
 
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data): AllowedIdentityProviders
     {
         $providers = [];
         $allowAll = true;
@@ -57,43 +47,34 @@ class AllowedIdentityProviders
         return new self($providers, $allowAll);
     }
 
-    /**
-     * @return string[]
-     */
-    public function getAllowedIdentityProviders()
+    public function getAllowedIdentityProviders(): array
     {
         return $this->providers;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAllowAll()
+    public function isAllowAll(): bool
     {
         return $this->allowAll;
     }
 
-    /**
-     * @param IdentityProvider $provider
-     * @return bool
-     */
-    public function isWhitelisted(IdentityProvider $provider)
+    public function isWhitelisted(IdentityProvider $provider): bool
     {
         return in_array($provider->getEntityId(), $this->providers);
     }
 
-    public function merge(?AllowedIdentityProviders $allowedIdPs)
+    public function merge(?AllowedIdentityProviders $allowedIdPs): void
     {
         if ($allowedIdPs === null) {
             $this->providers = [];
             $this->allowAll = null;
             return;
         }
-        $this->providers = is_null($allowedIdPs->getAllowedIdentityProviders()) ? null : $allowedIdPs->getAllowedIdentityProviders();
+        $this->providers = is_null($allowedIdPs->getAllowedIdentityProviders()) ?
+            null : $allowedIdPs->getAllowedIdentityProviders();
         $this->allowAll = is_null($allowedIdPs->isAllowAll()) ? null : $allowedIdPs->isAllowAll();
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->allowAll = true;
         $this->providers = [];

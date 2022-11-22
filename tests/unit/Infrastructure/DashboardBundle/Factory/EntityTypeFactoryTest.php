@@ -60,7 +60,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
      */
     private $saveCommandFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
 
         $this->formFactory = m::mock(FormFactory::class);

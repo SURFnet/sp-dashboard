@@ -35,25 +35,40 @@ interface SaveEntityCommandInterface extends Command
     public function getManageId();
 
     public function getEntityId(): ?string;
+
     public function getMetadataUrl(): ?string;
+
     public function getAcsLocations(): ?array;
+
     public function getNameIdFormat(): ?string;
+
     public function getDescriptionEn(): ?string;
+
     public function getDescriptionNl(): ?string;
+
     public function getNameEn(): ?string;
+
     public function getNameNl(): ?string;
 
     public function getService(): Service;
 
     public function getTechnicalContact(): ?Contact;
+
     public function getAdministrativeContact(): ?Contact;
+
     public function getSupportContact(): ?Contact;
 
     public function getApplicationUrl(): ?string;
+
     public function getEulaUrl(): ?string;
+
     public function getCertificate(): ?string;
+
     public function getLogoUrl(): ?string;
+
     public function getComments(): ?string;
+
     public function getEnvironment(): ?string;
+
     public function getProtocol(): string;
 }

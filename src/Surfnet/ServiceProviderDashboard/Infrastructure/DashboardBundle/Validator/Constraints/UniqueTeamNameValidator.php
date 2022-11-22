@@ -25,20 +25,10 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueTeamNameValidator extends ConstraintValidator
 {
-    /**
-     * @var QueryTeamsRepository
-     */
-    private $queryService;
-
-    /**
-     * @var string
-     */
-    private $urnPrefix;
-
-    public function __construct(QueryTeamsRepository $queryService, string $urnPrefix)
-    {
-        $this->queryService = $queryService;
-        $this->urnPrefix = $urnPrefix;
+    public function __construct(
+        private readonly QueryTeamsRepository $queryService,
+        private readonly string $urnPrefix
+    ) {
     }
 
     /**

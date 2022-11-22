@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 class EditServiceTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

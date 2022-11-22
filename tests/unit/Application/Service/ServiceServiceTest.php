@@ -29,7 +29,7 @@ class ServiceServiceTest extends MockeryTestCase
     /** @var ServiceRepository|m\MockInterface */
     private $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(ServiceRepository::class);
         $this->service = new ServiceService($this->repository);

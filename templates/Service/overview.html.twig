@@ -5,7 +5,7 @@
         {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
 
         <h1 id="main" class="service-title">
-            {% aplly spaceless %}
+            {% apply spaceless %}
                 {# if user is not an admin there might be more than one service #}
                 {% if isAdmin %}
                     {{ 'service.admin_overview.title'|trans({'%name%': services.services[0].name|default('Service') }) }}
@@ -77,7 +77,7 @@
 
                         {# Production entities #}
                         <table class="service-status-entities-table production-entities">
-                            <caption>{% applyspaceless %}
+                            <caption>{% apply spaceless %}
                                     <h4 class="service-status-entities-table-title">
                                         {{ 'service.overview.entitylist.production.title'|trans }}
                                     </h4>
@@ -183,9 +183,9 @@
                 </div>
                 <div class="blocker">
                     {% if service.isProductionEntitiesEnabled %}
-                        <div class="modal add-entity-modal" role="dialog" aria-label="{{ 'entity.list.add_to_production'|trans ~ ' for ' ~ shortName }}" data-for="{{ productionId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
+                        <div class="modal add-entity-modal" role="dialog" aria-label="{{ 'entity.list.add_to_production'|trans ~ ' for ' ~ shortName }}" data-for="{{ productionId }}">{{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\EntityCreateController:typeAction', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
                     {% endif %}
-                    <div class="modal add-entity-modal" role="dialog" aria-label="{{ 'entity.list.add_to_test'|trans ~ ' for ' ~ shortName }}" data-for="{{ testId }}">{{ render(controller('DashboardBundle:EntityCreate:type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
+                    <div class="modal add-entity-modal" role="dialog" aria-label="{{ 'entity.list.add_to_test'|trans ~ ' for ' ~ shortName }}" data-for="{{ testId }}">{{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\EntityCreateController:typeAction', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
                 </div>
                 <p class="service-status-back-to-top">
                     <a href="#main" class="service-status-back-to-top-link">

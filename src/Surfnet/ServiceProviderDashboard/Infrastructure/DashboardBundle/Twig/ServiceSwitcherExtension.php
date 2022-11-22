@@ -27,28 +27,11 @@ use Twig_SimpleFunction;
 
 class ServiceSwitcherExtension extends Twig_Extension
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        AuthorizationService $authorizationService,
-        FormFactoryInterface $formFactory
+        private readonly TokenStorageInterface $tokenStorage,
+        private AuthorizationService $authorizationService,
+        private readonly FormFactoryInterface $formFactory
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorizationService = $authorizationService;
-        $this->formFactory = $formFactory;
     }
 
     public function getFunctions()

@@ -36,27 +36,27 @@ services:
       - '@surfnet_saml.http.post_binding'
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
 
-  # Authentication Handlers
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\AuthenticatedUserHandler:
-    arguments:
-      - '@security.token_storage'
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard'
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
-      - '@logger'
-    calls:
-      - ['setNext', ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ExplicitSessionTimeoutHandler']]
+#    # Authentication Handlers
+#    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\AuthenticatedUserHandler:
+#        arguments:
+#            - '@security.token_storage'
+#            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard'
+#            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
+#            - '@logger'
+#        calls:
+#            - ['setNext', ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ExplicitSessionTimeoutHandler']]
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ExplicitSessionTimeoutHandler:
-    arguments:
-      - '@security.token_storage'
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard'
-      - '@security.logout.handler.session'
-      - '@security.logout.handler.cookie_clearing.saml_based'
-      - '@router'
-      - '@logger'
-    calls:
-      - ['setNext', ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\InitiateSamlAuthenticationHandler']]
+#    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ExplicitSessionTimeoutHandler:
+#        arguments:
+#            - '@security.token_storage'
+#            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
+#            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard'
+#            - '@security.logout.handler.session'
+#            - '@security.logout.handler.cookie_clearing.saml_based'
+#            - '@router'
+#            - '@logger'
+#        calls:
+#            - ['setNext', ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\InitiateSamlAuthenticationHandler']]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\InitiateSamlAuthenticationHandler:
     arguments:

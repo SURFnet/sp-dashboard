@@ -31,36 +31,12 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityTestCommandHandler implements CommandHandler
 {
-    /**
-     * @var PublishEntityRepository
-     */
-    private $publishClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-
     public function __construct(
-        PublishEntityRepository $publishClient,
-        EntityServiceInterface $entityService,
-        LoggerInterface $logger,
-        FlashBagInterface $flashBag
+        private PublishEntityRepository $publishClient,
+        private EntityServiceInterface $entityService,
+        private LoggerInterface $logger,
+        private FlashBagInterface $flashBag
     ) {
-        $this->publishClient = $publishClient;
-        $this->entityService = $entityService;
-        $this->logger = $logger;
-        $this->flashBag = $flashBag;
     }
 
     /**

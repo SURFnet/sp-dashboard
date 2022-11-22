@@ -32,50 +32,13 @@ use Twig\Environment as TwigEnvironment;
  */
 class MailMessageFactory
 {
-    /**
-     * @var string
-     */
-    private $sender;
-
-    /**
-     * @var string
-     */
-    private $receiver;
-
-    /**
-     * @var string
-     */
-    private $noReply;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var TwigEnvironment
-     */
-    private $templating;
-
-    /**
-     * @param string $sender
-     * @param string $receiver
-     * @param string $noReply
-     * @param TranslatorInterface $translator
-     * @param TwigEnvironment $templating
-     */
     public function __construct(
-        string $sender,
-        string $receiver,
-        string $noReply,
-        TranslatorInterface $translator,
-        TwigEnvironment $templating
+        private readonly string $sender,
+        private readonly string $receiver,
+        private readonly string $noReply,
+        private readonly TranslatorInterface $translator,
+        private readonly TwigEnvironment $templating
     ) {
-        $this->sender = $sender;
-        $this->receiver = $receiver;
-        $this->noReply = $noReply;
-        $this->translator = $translator;
-        $this->templating = $templating;
     }
 
     public function buildJiraIssueFailedMessage(Exception $exception, ManageEntity $entity): TemplatedEmail

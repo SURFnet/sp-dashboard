@@ -29,32 +29,15 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Privacy
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PrivacyQuestionsController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
     public function __construct(
-        CommandBus $commandBus,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService
+        private readonly CommandBus $commandBus,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService
     ) {
-        $this->commandBus = $commandBus;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
     }
 
     /**
@@ -94,7 +77,7 @@ class PrivacyQuestionsController extends AbstractController
 
         $command = PrivacyQuestionsCommand::fromService($service);
 
-        return $this->renderForm($request, $command, $serviceId);
+        return $this->renderPrivacyQuestionsForm($request, $command, $serviceId);
     }
 
     /**
@@ -114,17 +97,14 @@ class PrivacyQuestionsController extends AbstractController
 
         $command = PrivacyQuestionsCommand::fromQuestions($questions);
 
-        return $this->renderForm($request, $command, $serviceId);
+        return $this->renderPrivacyQuestionsForm($request, $command, $serviceId);
     }
 
-    /**
-     * @param Request $request
-     * @param PrivacyQuestionsCommand $command
-     * @param int $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
-    private function renderForm(Request $request, PrivacyQuestionsCommand $command, $serviceId)
-    {
+    private function renderPrivacyQuestionsForm(
+        Request $request,
+        PrivacyQuestionsCommand $command,
+        int $serviceId
+    ): RedirectResponse|Response {
         $form = $this->createForm(PrivacyQuestionsType::class, $command);
         $form->handleRequest($request);
 

@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ServiceStatusAssemblerTest extends MockeryTestCase
 {
@@ -41,7 +41,7 @@ class ServiceStatusAssemblerTest extends MockeryTestCase
     /** @var TranslatorInterface|MockInterface */
     private $translator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->service = m::mock(Service::class);
         $this->serviceStatusService = m::mock(ServiceStatusService::class);

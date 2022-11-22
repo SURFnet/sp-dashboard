@@ -79,7 +79,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
      */
     private $entityService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->publishEntityClient = m::mock(PublishEntityRepository::class);
         $this->entityService = m::mock(EntityServiceInterface::class);
