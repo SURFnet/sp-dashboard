@@ -260,14 +260,15 @@ class OauthClientCredentialEntityType extends AbstractType
             ->add('manageId', HiddenType::class)
             ->add('environment', HiddenType::class)
 
-            ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']])
+            ->add('publishButton', SubmitType::class, ['label'=> $options['publish_button_label'], 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => SaveOauthClientCredentialClientCommand::class
+            'data_class' => SaveOauthClientCredentialClientCommand::class,
+            'publish_button_label' => 'Publish',
         ));
     }
 
