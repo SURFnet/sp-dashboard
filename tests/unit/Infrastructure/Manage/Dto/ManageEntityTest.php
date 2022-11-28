@@ -61,4 +61,45 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertSame('support@surfconext.nl', $contact->getEmail());
         $this->assertSame('', $contact->getPhone());
     }
+
+    public function test_diff_saml()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_contacts_response_1.json'), true));
+        $entity2 = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_contacts_response_2.json'), true));
+
+        $diff = $entity->diff($entity2);
+        $diffResults = $diff->getDiff();
+        $this->assertCount(4, $diffResults);
+        $this->assertEquals('https://monitorstand.example.com', $diffResults['entityid']);
+        $this->assertEquals('https://engine.surfconext.com/authentication/metadata', $diffResults['metadataurl']);
+        $this->assertEquals('John Doe', $diffResults['metaDataFields.contacts:1:givenName']);
+        // The ARP is generated in the 'provide everything' fashion the diff will assist us in the JSON generator
+        // on whether or not the arp should be part of the payload.
+        $this->assertArrayHasKey('arp', $diffResults);
+        // Bothe attributes changed
+        $this->assertCount(2, $diffResults['arp']['attributes']);
+    }
+
+    public function test_diff_oidc()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oidc_1.json'), true));
+        $entity2 = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oidc_2.json'), true));
+
+        $diff = $entity->diff($entity2);
+        $diffResults = $diff->getDiff();
+        $this->assertCount(4, $diffResults);
+        // Allowed entities are not part of the diff. We generate them in the JSON generator
+        $this->assertArrayNotHasKey('allowedEntities', $diffResults);
+        // ARP is part of the diff as an indicator of arp changes. We still generate
+        // the arp in the JSON generator
+        $this->assertArrayHasKey('arp', $diffResults);
+        $this->assertArrayHasKey('metaDataFields.name:en', $diffResults);
+        $this->assertEquals('Teams client credentials client for VOOT and FOOT access', $diffResults['metaDataFields.name:en']);
+        $this->assertIsArray($diffResults['metaDataFields.grants']);
+        $this->assertCount(1, $diffResults['metaDataFields.grants']);
+        $this->assertIsArray($diffResults['metaDataFields.redirectUrls']);
+        // Even though only one item is changed, both items are part of the diff as the redirect URLS are set in a
+        // 'provide everything' manner.
+        $this->assertCount(2, $diffResults['metaDataFields.redirectUrls']);
+    }
 }

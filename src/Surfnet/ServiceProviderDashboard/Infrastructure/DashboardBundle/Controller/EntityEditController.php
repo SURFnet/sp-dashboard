@@ -70,11 +70,6 @@ class EntityEditController extends Controller
                 'You are not allowed to view an Entity from another Service'
             );
         }
-        if ($entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION) {
-            throw $this->createAccessDeniedException(
-                'You are not allowed to edit a published production entity'
-            );
-        }
 
         $entity->setService($service);
 
@@ -97,11 +92,15 @@ class EntityEditController extends Controller
         if ($form->isSubmitted()) {
             try {
                 if ($this->isPublishAction($form)) {
+                    $isProductionEntityEdit = $entity->isPublished() && $environment === Constants::ENVIRONMENT_PRODUCTION;
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity($entity, $command, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $flashBag);
 
                         if ($response instanceof Response) {
+                            if ($environment !== Constants::ENVIRONMENT_PRODUCTION) {
+                                $flashBag->add('info', 'entity.edit.metadata.flash.success');
+                            }
                             return $response;
                         }
                     } else {

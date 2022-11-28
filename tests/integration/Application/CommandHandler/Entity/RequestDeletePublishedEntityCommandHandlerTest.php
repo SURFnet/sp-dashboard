@@ -81,7 +81,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 
         // As part of the integration test,
         // the TicketService and IssueFieldFactory is not mocked but included in the test.
-        $this->ticketService = new TicketService($this->issueRepository);
+        $this->ticketService = new TicketService($this->issueRepository, $this->logger);
 
         $this->flashBag = m::mock(FlashBagInterface::class);
 

@@ -19,11 +19,10 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
 use stdClass;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use function array_diff;
-use function array_intersect;
 use function array_keys;
 
 /**
@@ -32,24 +31,23 @@ use function array_keys;
 class ArpGenerator implements MetadataGenerator
 {
     /**
-     * @var AttributesMetadataRepository
+     * @var AttributeServiceInterface
      */
-    private $repository;
+    private $attributeService;
 
-    public function __construct(AttributesMetadataRepository $repository)
+    public function __construct(AttributeServiceInterface $attributeService)
     {
-        $this->repository = $repository;
+        $this->attributeService = $attributeService;
     }
 
     public function build(ManageEntity $entity): array
     {
         $attributes = [];
         $entityAttributes = $entity->getAttributes();
-        foreach ($this->repository->findAll() as $definition) {
-            $urn = reset($definition->urns);
-            $attrributeList = $entityAttributes->findAllByUrn($urn);
+        foreach ($this->attributeService->getUrns() as $urn) {
+            $attributeList = $entityAttributes->findAllByUrn($urn);
             // Only add the attributes with a motivation
-            foreach ($attrributeList as $attribute) {
+            foreach ($attributeList as $attribute) {
                 if (!$attribute || !$attribute->hasMotivation()) {
                     continue;
                 }
@@ -81,8 +79,8 @@ class ArpGenerator implements MetadataGenerator
 
     private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
     {
-        $spDashboardTracked = $this->repository->findAllAttributeUrns();
         $originalAttributes = $entity->getAttributes()->getOriginalAttributes();
+        $spDashboardTracked = $this->attributeService->getUrns();
         $nonTrackedUrns = array_diff(array_keys($originalAttributes), $spDashboardTracked);
 
         foreach ($nonTrackedUrns as $urn) {
@@ -94,18 +92,6 @@ class ArpGenerator implements MetadataGenerator
                     'motivation' => $attribute->getMotivation()
                 ];
             }
-        }
-
-        if ($entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            // The EPTI is to be added to the ARP invisibly. See: https://www.pivotaltracker.com/story/show/167511328
-            // The user cannot configure EPTI @ ARP settings but the value is used internally.
-            $attributes['urn:mace:dir:attribute-def:eduPersonTargetedID'] = [
-                [
-                    'source' => 'idp',
-                    'value' => '*',
-                    'motivation' => 'OIDC requires EduPersonTargetedID by default',
-                ]
-            ];
         }
     }
 }

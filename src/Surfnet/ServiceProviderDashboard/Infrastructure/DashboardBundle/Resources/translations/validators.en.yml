@@ -1,4 +1,5 @@
-validator.attribute.not_valid: 'Please provide a reason as to why you need this attribute.'
+validator.attribute.not_found: Attribute '%attributeName% does not exist.
+validator.attribute.motivation_not_set: Please provide a reason as to why you need this attribute '%attributeName%'.
 validator.attribute.at_least_one_attribute_required: 'At least one attribute must be enabled.'
 validator.logo.wrong_type: 'Logo should be a PNG or GIF image.'
 validator.logo.not_an_image: 'Logo is not a valid image. Press question mark for details.'
@@ -19,5 +20,6 @@ validator.client_id.invalid_url: 'Invalid clientId.'
 validator.client_id.registry_failure: 'Failed checking registry.'
 validator.client_id.already_exists: 'Entity has already been registered.'
 validator.client_id.empty: 'The clientId is not set.'
+validator.client_id.no_colon: 'Colons (:) are not allowed in clientId''s. Please remove it.'
 validator.unique_redirect_urls.duplicate_found: 'Duplicate redirect URIs are not allowed.'
 validator.redirect_url.reverse_does_not_contain_client_id: 'A reverse redirect URL must have the client id as hostname.'

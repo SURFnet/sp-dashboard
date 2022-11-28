@@ -141,7 +141,7 @@ class EntityActionsTest extends TestCase
             Constants::TYPE_OPENID_CONNECT_TNG,
             false
         );
-        $this->assertFalse($publishedToProd->allowEditAction());
+        $this->assertTrue($publishedToProd->allowEditAction());
         $shouldBeEditable = new EntityActions(
             'manage-id',
             1,
@@ -160,5 +160,33 @@ class EntityActionsTest extends TestCase
             false
         );
         $this->assertTrue($shouldBeEditable2->allowEditAction());
+    }
+
+    public function test_change_request_action_is_allowed()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::TYPE_SAML,
+            false
+        );
+
+        $this->assertTrue($actions->allowChangeRequestAction());
+    }
+
+    public function test_change_request_action_is_not_allowed()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_TEST,
+            Constants::TYPE_SAML,
+            false
+        );
+
+        $this->assertFalse($actions->allowChangeRequestAction());
     }
 }

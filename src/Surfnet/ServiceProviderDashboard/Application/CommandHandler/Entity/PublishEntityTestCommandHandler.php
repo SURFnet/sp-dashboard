@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
@@ -45,12 +46,19 @@ class PublishEntityTestCommandHandler implements CommandHandler
      */
     private $flashBag;
 
+    /**
+     * @var EntityServiceInterface
+     */
+    private $entityService;
+
     public function __construct(
         PublishEntityRepository $publishClient,
+        EntityServiceInterface $entityService,
         LoggerInterface $logger,
         FlashBagInterface $flashBag
     ) {
         $this->publishClient = $publishClient;
+        $this->entityService = $entityService;
         $this->logger = $logger;
         $this->flashBag = $flashBag;
     }
@@ -63,6 +71,11 @@ class PublishEntityTestCommandHandler implements CommandHandler
     public function handle(PublishEntityTestCommand $command)
     {
         $entity = $command->getManageEntity();
+        $pristineEntity = null;
+        if ($entity->isManageEntity()) {
+            // The entity as it is now known in Manage
+            $pristineEntity = $this->entityService->getManageEntityById($entity->getId(), $entity->getEnvironment());
+        }
         try {
             $this->logger->info(
                 sprintf(
@@ -71,7 +84,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
                 )
             );
 
-            $publishResponse = $this->publishClient->publish($entity);
+            $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
 
             if (array_key_exists('id', $publishResponse)) {
                 if ($this->isNewResourceServer($entity)) {

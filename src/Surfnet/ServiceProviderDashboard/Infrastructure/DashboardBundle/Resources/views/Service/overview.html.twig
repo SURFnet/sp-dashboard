@@ -1,20 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block body_container %}
-    {% set flashes = app.session.flashbag.all %}
-    {% if flashes is not empty %}
-        <div class="card messages">
-            {% for type, messages in flashes %}
-                {% for message in messages %}
-                    {% if type == 'wysiwyg' %}
-                        <div class="message {{ type }}">{{ message|trans|wysiwyg }}</div>
-                    {% else %}
-                        <div class="message {{ type }}">{{ message|trans }}</div>
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-        </div>
-    {%  endif %}
+    {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
 
     <h1 id="main" class="service-title">
         {% spaceless %}
@@ -37,51 +24,49 @@
                 <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
             {% endif %}
             <div class="service-status-container">
-                <h2 class="service-status-title">
-                    {{ service.name }}
-                    <ul class="service-status-title-actions">
-                        {% if isAdmin %}
-                            <li class="service-status-title-action-item">
-                                <a
-                                    class="button admin title service-status-title-button"
-                                    href="{{ path('service_edit', {'serviceId': service.id}) }}"
-                                >
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                    {{ 'service.overview.action.serviceEdit'|trans }}
-                                </a>
-                            </li>
-                            <li class="service-status-title-action-item">
-                                <a
-                                    class="button admin title service-status-title-button"
-                                    href="{{ path('service_delete', {'serviceId': service.id}) }}"
-                                >
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                    {{ 'service.overview.action.serviceDelete'|trans }}
-                                </a>
-                            </li>
-                            <li class="service-status-title-action-item">
-                                <a
-                                    class="button admin title service-status-title-button"
-                                    href="{{ path('service_manage_team', {'serviceId': service.id}) }}"
-                                >
-                                    <i class="fa fa-address-book" aria-hidden="true"></i>
-                                    {{ 'service.overview.action.serviceManageTeam'|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if service.arePrivacyQuestionsEnabled %}
-                            <li class="service-status-title-action-item">
-                                <a
-                                    class="button blue title service-status-title-button"
-                                    href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
-                                >
-                                    <i class="fa fa-key" aria-hidden="true"></i>
-                                    {{ 'service.overview.action.privacyQuestions'|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </h2>
+                <h2 class="service-status-title">{{ service.name }}</h2>
+                <ul class="service-status-title-actions">
+                    {% if isAdmin %}
+                        <li class="service-status-title-action-item">
+                            <a
+                                class="button admin title service-status-title-button"
+                                href="{{ path('service_edit', {'serviceId': service.id}) }}"
+                            >
+                                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                {{ 'service.overview.action.serviceEdit'|trans }}
+                            </a>
+                        </li>
+                        <li class="service-status-title-action-item">
+                            <a
+                                class="button admin title service-status-title-button"
+                                href="{{ path('service_delete', {'serviceId': service.id}) }}"
+                            >
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                {{ 'service.overview.action.serviceDelete'|trans }}
+                            </a>
+                        </li>
+                        <li class="service-status-title-action-item">
+                            <a
+                                class="button admin title service-status-title-button"
+                                href="{{ path('service_manage_team', {'serviceId': service.id}) }}"
+                            >
+                                <i class="fa fa-address-book" aria-hidden="true"></i>
+                                {{ 'service.overview.action.serviceManageTeam'|trans }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if service.arePrivacyQuestionsEnabled %}
+                        <li class="service-status-title-action-item">
+                            <a
+                                class="button blue title service-status-title-button"
+                                href="{{ path('privacy_questions', {'serviceId': service.id}) }}"
+                            >
+                                <i class="fa fa-key" aria-hidden="true"></i>
+                                {{ 'service.overview.action.privacyQuestions'|trans }}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
 
                 {% if not privacyStatusEntities[loop.index0] and service.arePrivacyQuestionsEnabled %}
                     {% include '@Dashboard/Privacy/notification.html.twig' with { hlvl: "3"} %}

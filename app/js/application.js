@@ -6,6 +6,7 @@ import './components/add_service.ts';
 import './components/change_member_role.ts';
 import './components/delete_member.ts';
 import './components/form.ts';
+import './components/flash_message.ts';
 import './components/invite_member.ts';
 import './components/resend_invite.ts';
 import './components/service_add_entity';

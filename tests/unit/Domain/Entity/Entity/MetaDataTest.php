@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\Entity\Entity;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\AcsLocationHelper;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ContactList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
@@ -28,6 +29,134 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Organization;
 
 class MetaDataTest extends TestCase
 {
+    public function test_it_can_load_asc_locations()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response.json'), true);
+        $metadata = MetaData::fromApiResponse($data);
+        $this->assertCount(3, $metadata->getAcsLocations());
+    }
+
+    public function test_it_throws_exception_on_invalid_acs_location()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response_invalid_acs_location.json'), true);
+        $this->expectExceptionMessage('Expected a string. Got: integer');
+        MetaData::fromApiResponse($data);
+    }
+
+    public function test_it_throws_exception_on_double_acs_locations()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response_double_acs_location.json'), true);
+        $this->expectExceptionMessage('Double acs locations. Expected unique locations');
+        MetaData::fromApiResponse($data);
+    }
+
+    public function test_it_accepts_same_acs_locations_for_different_bindings()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response_same_acs_location_different_binding.json'), true);
+        $metadata = MetaData::fromApiResponse($data);
+        $acsLocations = $metadata->getAcsLocations();
+        $this->assertCount(1, $acsLocations);
+        $this->assertEquals('https://fantasy.org', $acsLocations[0]);
+    }
+
+    public function test_it_exceeds_max_asc_locations()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/response_json_exceeds_max_acs_locations.json'), true);
+        $this->expectExceptionMessage('Maximum acs locations exceeded. Maximum '.MetaData::MAX_ACS_LOCATIONS.' acs location are supported');
+        MetaData::fromApiResponse($data);
+    }
+
+    public function test_it_adds_acs_location_to_the_meta_data()
+    {
+        $metadata = [];
+        AcsLocationHelper::addAcsLocationsToMetaData(['https://example1.com'], $metadata);
+        $this->assertEquals(
+            'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
+            $metadata['AssertionConsumerService:0:Binding']
+        );
+        $this->assertEquals(
+            'https://example1.com',
+            $metadata['AssertionConsumerService:0:Location']
+        );
+    }
+
+    public function test_it_adds_acs_locations_to_the_meta_data()
+    {
+        $metadata = [];
+        AcsLocationHelper::addAcsLocationsToMetaData(['https://example1.com', 'https://example2.com' ], $metadata);
+        $this->assertCount(4, $metadata);
+        $this->assertEquals(
+            'https://example1.com',
+            $metadata['AssertionConsumerService:0:Location']
+        );
+        $this->assertEquals(
+            'https://example2.com',
+            $metadata['AssertionConsumerService:1:Location']
+        );
+    }
+
+    public function test_it_adds_empty_acs_locations()
+    {
+        $metadata = [];
+        AcsLocationHelper::addEmptyAcsLocationsToMetaData([], $metadata);
+        $this->assertCount(20, $metadata);
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:0:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:1:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:2:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:3:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:4:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:5:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:6:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:7:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:8:Location']
+        );
+        $this->assertEquals(
+            null,
+            $metadata['AssertionConsumerService:9:Location']
+        );
+    }
+
+    public function test_it_adds_consecutive_acs_locations()
+    {
+        $metadata = [];
+        AcsLocationHelper::addAcsLocationsToMetaData([null, null, 'https://example1.com', null, 'https://example2.com' ], $metadata);
+        $this->assertCount(4, $metadata);
+        $this->assertEquals(
+            'https://example1.com',
+            $metadata['AssertionConsumerService:0:Location']
+        );
+        $this->assertEquals(
+            'https://example2.com',
+            $metadata['AssertionConsumerService:1:Location']
+        );
+    }
+
     /**
      * @dataProvider provideMetaDataTestData
      */
@@ -38,7 +167,7 @@ class MetaDataTest extends TestCase
         if ($expectation !== null) {
             self::assertEquals($expectation->getEntityId(), $metaData->getEntityId());
             self::assertEquals($expectation->getMetaDataUrl(), $metaData->getMetaDataUrl());
-            self::assertEquals($expectation->getAcsLocation(), $metaData->getAcsLocation());
+            self::assertEquals($expectation->getAcsLocations(), $metaData->getAcsLocations());
             self::assertEquals($expectation->getNameIdFormat(), $metaData->getNameIdFormat());
             self::assertEquals($expectation->getCertData(), $metaData->getCertData());
             self::assertEquals($expectation->getDescriptionEn(), $metaData->getDescriptionEn());
@@ -49,7 +178,7 @@ class MetaDataTest extends TestCase
         } else {
             self::assertNull($metaData->getEntityId());
             self::assertNull($metaData->getMetaDataUrl());
-            self::assertNull($metaData->getAcsLocation());
+            self::assertNull($metaData->getAcsLocations());
             self::assertNull($metaData->getNameIdFormat());
             self::assertNull($metaData->getCertData());
             self::assertNull($metaData->getDescriptionEn());
@@ -61,6 +190,30 @@ class MetaDataTest extends TestCase
             self::assertNull($metaData->getCoin());
             self::assertNull($metaData->getLogo());
         }
+    }
+
+    /**
+     * Bug fix reproduction test
+     *
+     * Bug report: the ACS locations did not seem be updated when creating a Manage Change Request
+     * Issue description: The actual acs location was not set with the acs uri. But with the manage fieldname for that
+     *                    acs location. `assertionConsumerService:0:Location` instead of
+     *                    `https://example.com/acs-location`. That resulted in a diff that did not actually result in
+     *                    any changes.
+     * Solution: Set the uri on the acs location metadata fields.
+     *
+     * See: https://www.pivotaltracker.com/story/show/182411730/comments/233831779
+     */
+    public function test_acs_locations_are_formed_correctly_as_array()
+    {
+        $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response.json'), true);
+        $metadata = MetaData::fromApiResponse($data);
+        $arrayData = $metadata->asArray();
+
+        // The array representation of the metadata should show the acs location fields as found in the Manage json.
+        self::assertEquals($data["data"]["metaDataFields"]["AssertionConsumerService:0:Location"], $arrayData["metaDataFields.AssertionConsumerService:0:Location"]);
+        self::assertEquals($data["data"]["metaDataFields"]["AssertionConsumerService:1:Location"], $arrayData["metaDataFields.AssertionConsumerService:1:Location"]);
+        self::assertEquals($data["data"]["metaDataFields"]["AssertionConsumerService:2:Location"], $arrayData["metaDataFields.AssertionConsumerService:2:Location"]);
     }
 
     public function provideMetaDataTestData()
@@ -89,7 +242,7 @@ class MetaDataTest extends TestCase
                 return new MetaData(
                     'https://www.example.org',
                     'https://www.example.org/metadata',
-                    'https://www.example.org/consume-assertion',
+                    ['https://www.example.org/consume-assertion'],
                     'nameIdFormat-transient',
                     'certData',
                     'Description EN',
@@ -105,7 +258,7 @@ class MetaDataTest extends TestCase
                 return new MetaData(
                     'https://www.example.orgB',
                     'https://www.example.org/metadataB',
-                    'https://www.example.org/consume-assertionB',
+                    ['https://www.example.org/consume-assertionB'],
                     'nameIdFormat-transientB',
                     'certDataB',
                     'Description B EN',

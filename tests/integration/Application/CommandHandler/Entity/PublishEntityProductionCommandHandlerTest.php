@@ -26,6 +26,9 @@ use Mockery\Mock;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
+use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
@@ -67,31 +70,31 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
     private $ticketService;
 
     /**
-     * @var Mailer|Mock
+     * @var MailService|Mock
      */
-    private $mailer;
+    private $mailService;
 
     /**
-     * @var MailMessageFactory|Mock
+     * @var EntityServiceInterface|Mock
      */
-    private $mailFactory;
+    private $entityService;
 
     public function setUp()
     {
         $this->publishEntityClient = m::mock(PublishEntityRepository::class);
+        $this->entityService = m::mock(EntityServiceInterface::class);
         $this->ticketService = m::mock(TicketService::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
         $this->logger = m::mock(LoggerInterface::class);
 
-        $this->mailer = m::mock(Mailer::class);
-        $this->mailFactory = m::mock(MailMessageFactory::class);
+        $this->mailService = m::mock(MailService::class);
 
         $this->commandHandler = new PublishEntityProductionCommandHandler(
             $this->publishEntityClient,
+            $this->entityService,
             $this->ticketService,
             $this->flashBag,
-            $this->mailFactory,
-            $this->mailer,
+            $this->mailService,
             $this->logger,
             'customIssueType'
         );
@@ -111,11 +114,13 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getMetaData->getNameEn')
             ->andReturn('Test Entity Name');
+        $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
+        $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
 
         $this->publishEntityClient
             ->shouldReceive('publish')
             ->once()
-            ->with($manageEntity)
+            ->with($manageEntity, $manageEntity)
             ->andReturn([
                 'id' => '123',
             ]);
@@ -143,16 +148,12 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('CXT-999');
 
         $this->ticketService
-            ->shouldReceive('createIssueFrom')
-            ->andReturn($issue);
-
-        $this->ticketService
-            ->shouldReceive('findByManageIdAndIssueType')
-            ->andReturn(null);
+            ->shouldReceive('createJiraTicket');
 
         $this->logger
             ->shouldReceive('info')
-            ->times(4);
+            ->times(2);
+        $this->entityService->shouldReceive('getManageEntityById')->andReturn($manageEntity);
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
@@ -179,7 +180,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->publishEntityClient
             ->shouldReceive('publish')
             ->once()
-            ->with($manageEntity)
+            ->with($manageEntity, $manageEntity)
             ->andReturn([
                 'id' => '123',
             ]);
@@ -191,6 +192,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getId')
             ->andReturn('123');
+        $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
+        $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
 
         $manageEntity
             ->shouldReceive('setStatus')
@@ -207,16 +210,12 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('CXT-999');
 
         $this->ticketService
-            ->shouldReceive('findByManageIdAndIssueType')
-            ->andReturn($issue);
-
-        $this->ticketService
-            ->shouldReceive('createIssueFrom')
-            ->andReturn($issue);
+            ->shouldReceive('createJiraTicket');
 
         $this->logger
             ->shouldReceive('info')
-            ->times(4);
+            ->times(2);
+        $this->entityService->shouldReceive('getManageEntityById')->andReturn($manageEntity);
 
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
@@ -244,6 +243,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getId')
             ->andReturn('123');
+        $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
+        $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
 
         $manageEntity
             ->shouldReceive('setStatus')
@@ -259,14 +260,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('createIssueFrom')
             ->andThrow(JiraException::class);
 
-        $message = m::mock(Message::class);
-        $this->mailFactory
-            ->shouldReceive('buildJiraIssueFailedMessage')
-            ->andReturn($message);
-
-        $this->mailer
-            ->shouldReceive('send')
-            ->with($message);
+        $this->mailService
+            ->shouldReceive('sendErrorReport');
 
         $this->logger
             ->shouldReceive('info')
@@ -279,6 +274,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->flashBag
             ->shouldReceive('add')
             ->with('error', 'entity.edit.error.publish');
+        $this->entityService->shouldReceive('getManageEntityById')->andReturn($manageEntity);
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
 

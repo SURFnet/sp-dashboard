@@ -3,16 +3,6 @@
   "version": 2,
   "type": "oidc10_rp",
   "data": {
-    "arp": {
-      "attributes": {
-        "urn:mace:dir:attribute-def:eduPersonTargetedID": [{
-          "source": "idp",
-          "value": "*",
-          "motivation": "OIDC requires EduPersonTargetedID by default"
-        }]
-      },
-      "enabled": true
-    },
     "type": "oidc10-rp",
     "entityid": "playground.openconext.nl",
     "active": true,

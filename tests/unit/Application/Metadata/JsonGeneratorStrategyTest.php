@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class JsonGeneratorStrategyTest extends MockeryTestCase
@@ -82,10 +83,11 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
         $entity = m::mock(ManageEntity::class);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
-        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
+        $diff = m::mock(EntityDiff::class);
+        $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
-        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
+        $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
     }
 
     public function test_add_invalid_strategy()
@@ -96,6 +98,7 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
         $this->expectException(JsonGeneratorStrategyNotFoundException::class);
         $this->expectExceptionMessage('The requested JsonGenerator for protocol "saml30" is not registered');
-        $this->strategy->generateForExistingEntity($entity, 'prodaccepted');
+        $diff = m::mock(EntityDiff::class);
+        $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
     }
 }

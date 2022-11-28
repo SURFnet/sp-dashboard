@@ -20,6 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCreateOidcngTest extends WebTestCase
@@ -196,12 +198,24 @@ class EntityCreateOidcngTest extends WebTestCase
                     ],
                 ],
                 'attributes' => [
-                    'givenNameAttribute' => [
+                    $this->getOneAttribute()->getName() => [
                         'requested' => true,
                         'motivation' => 'We really need it!',
                     ],
                 ],
             ],
         ];
+    }
+
+    /**
+     *  The attributes of the form are being built dynamically now, so fetch those attribute names from the
+     *  attribute service and built the form data. Return exactly one attribyteType.
+     */
+    protected function getOneAttribute(): Attribute
+    {
+        $service = $this->client->getContainer()->get(AttributeService::class);
+        $attribute = $service->getAttributeTypeAttributes();
+
+        return reset($attribute);
     }
 }

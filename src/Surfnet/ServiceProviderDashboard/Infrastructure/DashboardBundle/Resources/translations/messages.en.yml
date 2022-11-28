@@ -16,7 +16,7 @@ entity.delete.request.ticket.description: "h2. Details
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
-
+entity.delete.flash.success: "Your entity is deleted."
 unknownDisplayName: "Unknown"
 
 entity:
@@ -103,57 +103,12 @@ entity:
       saml20:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        given_name: Given name
-        surname: Surname
-        common_name: Common name attribute
-        display_name: Display name attribute
-        email_address: Email address attribute
-        organization: Organization attribute
-        organization_type: Organization type attribute
-        affiliation: Affiliation attribute
-        entitlement: Entitlement attribute
-        principle_name: Principle name attribute
-        uid: Uid attribute
-        prefered_language: Preferred language attribute
-        personal_code: Personal code attribute
-        scoped_affiliation: Scoped affiliation attribute
-        edu_person_targeted_id: Edu person targeted ID attribute
-        organization_unit_name: Organizational Unit Name
       oidc:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        given_name: Given name
-        surname: Surname
-        common_name: Common name attribute
-        display_name: Display name attribute
-        email_address: Email address attribute
-        organization: Organization attribute
-        organization_type: Organization type attribute
-        affiliation: Affiliation attribute
-        entitlement: Entitlement attribute
-        principle_name: Principle name attribute
-        uid: Uid attribute
-        prefered_language: Preferred language attribute
-        personal_code: Personal code attribute
-        scoped_affiliation: Scoped affiliation attribute
       oidcng:
         title: Attributes
         html: <strong>information about the attribute fields</strong>
-        given_name: Given name
-        surname: Surname
-        common_name: Common name attribute
-        display_name: Display name attribute
-        email_address: Email address attribute
-        organization: Organization attribute
-        organization_type: Organization type attribute
-        affiliation: Affiliation attribute
-        entitlement: Entitlement attribute
-        principle_name: Principle name attribute
-        uid: Uid attribute
-        prefered_language: Preferred language attribute
-        personal_code: Personal code attribute
-        scoped_affiliation: Scoped affiliation attribute
-        organization_unit_name: Organizational Unit Name
 entity.list.add_to_test: New test entity
 entity.list.add_to_production: New production entity
 entity.list.name: Entity
@@ -170,6 +125,7 @@ entity.list.action.copy: Copy
 entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
 entity.list.action.reset_secret: Reset client secret
+entity.list.action.change.request: Change Request
 entity.list.modal.oidc_confirmation:
   title: Confirmation
   client_id:
@@ -312,6 +268,7 @@ entity.edit.metadata.oidcng.title: Metadata
 entity.edit.metadata.oauth20_rs.title: Metadata
 entity.edit.metadata.oauth20_ccc.title: Metadata
 entity.edit.metadata.parse.exception: "The provided metadata is invalid."
+entity.edit.metadata.flash.success: "Your changes were saved!"
 entity.edit.contact_information.title: Contact information
 entity.edit.contact_information.html: "
 <p>Every service connected to SURFconext requires various types of contact details. Depending on the nature of the issue we will consult the following contact:</p>
@@ -360,6 +317,14 @@ entity.edit.attributes.oauth20_rs.html: "
 
 <p><i>Identity Providers will be informed about the attributes your service requests and must agree to the release of these attributes to your entity.</i></p>
 "
+entity.edit.attribute.invalid: The provided attribute % is invalid
+entity.change_requested.title: Your change request has been submitted for review
+entity.change_requested.text.html: "<p>As you where editing a production entity, we have taken your changes under review.</p>"
+entity.change_request.title: Change request overview
+entity.change_request.value: Value
+entity.change_request.data: Data
+entity.change_request.text.html: "<p>All outstanding change requests</p>"
+entity.change_request.none.text.html: "<p>No outstanding change requests</p>"
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
 entity.edit.oidcngResourceServers.title: Select the OIDC Resource Servers(s) that belong to this Client
@@ -389,53 +354,6 @@ entity.edit.information.administrativeContact: Text should be set in web transla
 entity.edit.information.supportContact: Text should be set in web translations
 entity.edit.information.oidcngResourceServers: Text should be set in web translations
 entity.edit.information.technicalContact: Text should be set in web translations
-entity.edit.information.saml20.givenNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.surNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.commonNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.displayNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.emailAddressAttribute: Text should be set in web translations
-entity.edit.information.saml20.organizationAttribute: Text should be set in web translations
-entity.edit.information.saml20.organizationTypeAttribute: Text should be set in web translations
-entity.edit.information.saml20.organizationUnitAttribute: Text should be set in web translations
-entity.edit.information.saml20.affiliationAttribute: Text should be set in web translations
-entity.edit.information.saml20.entitlementAttribute: Text should be set in web translations
-entity.edit.information.saml20.principleNameAttribute: Text should be set in web translations
-entity.edit.information.saml20.uidAttribute: Text should be set in web translations
-entity.edit.information.saml20.preferredLanguageAttribute: Text should be set in web translations
-entity.edit.information.saml20.personalCodeAttribute: Text should be set in web translations
-entity.edit.information.saml20.scopedAffiliationAttribute: Text should be set in web translations
-entity.edit.information.saml20.eduPersonTargetedIDAttribute: Text should be set in web translations
-entity.edit.information.oidc.givenNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.surNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.commonNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.displayNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.emailAddressAttribute: Text should be set in web translations
-entity.edit.information.oidc.organizationAttribute: Text should be set in web translations
-entity.edit.information.oidc.organizationTypeAttribute: Text should be set in web translations
-entity.edit.information.oidc.organizationUnitAttribute: Text should be set in web translations
-entity.edit.information.oidc.affiliationAttribute: Text should be set in web translations
-entity.edit.information.oidc.entitlementAttribute: Text should be set in web translations
-entity.edit.information.oidc.principleNameAttribute: Text should be set in web translations
-entity.edit.information.oidc.uidAttribute: Text should be set in web translations
-entity.edit.information.oidc.preferredLanguageAttribute: Text should be set in web translations
-entity.edit.information.oidc.personalCodeAttribute: Text should be set in web translations
-entity.edit.information.oidc.scopedAffiliationAttribute: Text should be set in web translations
-entity.edit.information.oidc.eduPersonTargetedIDAttribute: Text should be set in web translations
-entity.edit.information.oidcng.givenNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.surNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.commonNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.displayNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.emailAddressAttribute: Text should be set in web translations
-entity.edit.information.oidcng.organizationAttribute: Text should be set in web translations
-entity.edit.information.oidcng.organizationTypeAttribute: Text should be set in web translations
-entity.edit.information.oidcng.organizationUnitAttribute: Text should be set in web translations
-entity.edit.information.oidcng.affiliationAttribute: Text should be set in web translations
-entity.edit.information.oidcng.entitlementAttribute: Text should be set in web translations
-entity.edit.information.oidcng.principleNameAttribute: Text should be set in web translations
-entity.edit.information.oidcng.uidAttribute: Text should be set in web translations
-entity.edit.information.oidcng.preferredLanguageAttribute: Text should be set in web translations
-entity.edit.information.oidcng.personalCodeAttribute: Text should be set in web translations
-entity.edit.information.oidcng.scopedAffiliationAttribute: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
 entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.information.subjectType: Text should be set in web translations
@@ -460,6 +378,19 @@ entity.acl.error.publish: "Unable to publish the entity, try again later"
 entity.publish.request.ticket.summary: "Request to publish %entity_name% to production"
 entity.publish.request.ticket.description: "h2. Details
 
+*Applicant name*: %applicant_name%
+*Applicant email*: %applicant_email%.
+*Entity name (en)*: %entity_name%."
+
+entity.change_request.ticket.summary: "Request for changes for %entity_name%"
+entity.change_request.ticket.description: "h2. Details
+
+*Applicant name*: %applicant_name%
+*Applicant email*: %applicant_email%.
+*Entity name (en)*: %entity_name%."
+
+entity.change_request.ticket.summary: "Request for changes for %entity_name%"
+entity.change_request.ticket.description: "h2. Details
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
@@ -504,15 +435,19 @@ privacy.information.snDpaWhyNot: What items of the SURF model Data Processing Ag
 privacy.information.surfmarketDpaAgreement: Did you agree a Data Processing Agreement with SURFmarket?
 privacy.information.surfnetDpaAgreement: Are you willing to sign the model SURF Data Processing Agreement?
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
+privacy.edit.flash.success: Your changes were saved!
 service.admin_overview.introduction.html: "Please use the service switcher to manage the entities of one of the services."
 service.create.title: Add new service
 service.create.description: "Members of this team have access to SP %Name% via the SP Dashboard (sp.surfconext.nl) and can add/manage their entities on the SURFconext platform."
 service.create.personalNote: "Team created by SP Dashboard"
 service.create.invitationMessage: "Please accept this invitation by logging in with your institutional account or eduID account (create one at eduID.nl)."
+service.create.flash.success: "Your service was added successfully."
 service.edit.title: Edit service
+service.edit.flash.success: "Your changes were saved!"
 service.delete.title: "Delete service"
 service.delete.confirmation: "You are about to delete '%name%'. Are you sure?"
 service.delete.entity_list_text: "With this, you are also deleting the following entities:"
+service.delete.flash.success: "Your service was deleted."
 service.form.general.title: General
 service.form.status.title: Service status
 service.form.teams.title: Teams
@@ -618,40 +553,6 @@ teams.create.personalNote: Team created by SP Dashboard.
 teams.create.invitationMessage: Please accept this invitation by logging in with your institutional account or eduID account (create one at eduID.nl).
 
 mail.jira.publish_production_failed.subject: 'SP Dashboard: Jira issue creation failed'
-
-entity.edit.form.attributes.oidc.givenNameAttribute: Given name attribute
-entity.edit.form.attributes.oidc.surNameAttribute: Sur name attribute
-entity.edit.form.attributes.oidc.commonNameAttribute: Common name attribute
-entity.edit.form.attributes.oidc.displayNameAttribute: Display name attribute
-entity.edit.form.attributes.oidc.emailAddressAttribute: Email address attribute
-entity.edit.form.attributes.oidc.organizationAttribute: Organization attribute
-entity.edit.form.attributes.oidc.organizationTypeAttribute: Organization type attribute
-entity.edit.form.attributes.oidc.organizationUnitAttribute: Organizational Unit Name attribute
-entity.edit.form.attributes.oidc.affiliationAttribute: Affiliation attribute
-entity.edit.form.attributes.oidc.entitlementAttribute: Entitlement attribute
-entity.edit.form.attributes.oidc.principleNameAttribute: Principle name attribute
-entity.edit.form.attributes.oidc.uidAttribute: Uid attribute
-entity.edit.form.attributes.oidc.preferredLanguageAttribute: Preferred language attribute
-entity.edit.form.attributes.oidc.personalCodeAttribute: Personal code attribute
-entity.edit.form.attributes.oidc.scopedAffiliationAttribute: Scoped affiliation attribute
-entity.edit.form.attributes.oidc.eduPersonTargetedIDAttribute: Edu person targeted ID attribute
-
-entity.edit.form.attributes.saml20.givenNameAttribute: Given name attribute
-entity.edit.form.attributes.saml20.surNameAttribute: Sur name attribute
-entity.edit.form.attributes.saml20.commonNameAttribute: Common name attribute
-entity.edit.form.attributes.saml20.displayNameAttribute: Display name attribute
-entity.edit.form.attributes.saml20.emailAddressAttribute: Email address attribute
-entity.edit.form.attributes.saml20.organizationAttribute: Organization attribute
-entity.edit.form.attributes.saml20.organizationTypeAttribute: Organization type attribute
-entity.edit.form.attributes.saml20.organizationUnitAttribute: Organizational Unit Name attribute
-entity.edit.form.attributes.saml20.affiliationAttribute: Affiliation attribute
-entity.edit.form.attributes.saml20.entitlementAttribute: Entitlement attribute
-entity.edit.form.attributes.saml20.principleNameAttribute: Principle name attribute
-entity.edit.form.attributes.saml20.uidAttribute: Uid attribute
-entity.edit.form.attributes.saml20.preferredLanguageAttribute: Preferred language attribute
-entity.edit.form.attributes.saml20.personalCodeAttribute: Personal code attribute
-entity.edit.form.attributes.saml20.scopedAffiliationAttribute: Scoped affiliation attribute
-entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute: Edu person targeted ID attribute
 
 entity.actions.modal.oidc_client_reset.title: Confirmation
 entity.actions.modal.oidc_client_reset.warning: This action cannot be undone

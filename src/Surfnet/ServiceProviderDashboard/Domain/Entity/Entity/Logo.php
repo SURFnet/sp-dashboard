@@ -18,9 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Webmozart\Assert\Assert;
 
-class Logo
+class Logo implements Comparable
 {
     private $url;
     private $width;
@@ -67,5 +68,12 @@ class Logo
         $this->url = is_null($logo->getUrl()) ? null : $logo->getUrl();
         $this->width = is_null($logo->getWidth()) ? null : $logo->getWidth();
         $this->height = is_null($logo->getHeight()) ? null : $logo->getHeight();
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'metaDataFields.logo:0:url' => $this->getUrl(),
+        ];
     }
 }

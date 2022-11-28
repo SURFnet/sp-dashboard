@@ -1,6 +1,7 @@
 /.vagrant/
 /ansible/*.retry
 /app/config/parameters.yml
+docker-compose.override.yml
 app/js/coverage
 /build/
 /var/*

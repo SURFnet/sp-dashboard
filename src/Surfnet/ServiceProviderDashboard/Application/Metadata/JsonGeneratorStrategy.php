@@ -20,6 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
 use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 /**
@@ -58,10 +60,16 @@ class JsonGeneratorStrategy
      * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForExistingEntity(ManageEntity $entity, string $workflowState, string $updatedPart = '')
+    public function generateForExistingEntity(ManageEntity $entity, EntityDiff $differences, string $workflowState, string $updatedPart = '')
     {
         return $this->getStrategy($entity->getProtocol()->getProtocol())
-                    ->generateForExistingEntity($entity, $workflowState, $updatedPart);
+                    ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);
+    }
+
+    public function generateEntityChangeRequest(ManageEntity $entity, EntityDiff $differences, Contact $contact): array
+    {
+        return $this->getStrategy($entity->getProtocol()->getProtocol())
+            ->generateEntityChangeRequest($entity, $differences, $contact);
     }
 
     /**

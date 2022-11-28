@@ -18,9 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
 use Webmozart\Assert\Assert;
 
-class Organization
+class Organization implements Comparable
 {
     private $nameEn;
     private $displayNameEn;
@@ -114,5 +115,17 @@ class Organization
     public function updateNameNl($nameNl)
     {
         $this->nameNl = $nameNl;
+    }
+
+    public function asArray(): array
+    {
+        return [
+            'metaDataFields.OrganizationURL:nl' => $this->getUrlNl(),
+            'metaDataFields.OrganizationURL:en' => $this->getUrlEn(),
+            'metaDataFields.OrganizationName:nl' => $this->getNameNl(),
+            'metaDataFields.OrganizationName:en' => $this->getNameEn(),
+            'metaDataFields.OrganizationDisplayName:nl' => $this->getDisplayNameNl(),
+            'metaDataFields.OrganizationDisplayName:en' => $this->getDisplayNameEn(),
+        ];
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +27,15 @@ use Symfony\Component\Validator\Constraint;
  */
 class ValidAttribute extends Constraint
 {
-    public $message = 'validator.attribute.not_valid';
+    public $messageAttributeNotFound = 'validator.attribute.not_found';
+
+    public $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set';
 
     /**
      * @return string
      */
     public function validatedBy()
     {
-        return 'attribute';
+        return 'valid_attribute';
     }
 }

@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientC
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngResourceServerEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -47,10 +48,20 @@ class EntityTypeFactory
      */
     private $saveCommandFactory;
 
-    public function __construct(FormFactory $formFactory, SaveCommandFactoryInterface $saveCommandFactory)
-    {
+    /**
+     * @var AttributeServiceInterface
+     */
+    private $attributeService;
+
+    public function __construct(
+        FormFactory $formFactory,
+        SaveCommandFactoryInterface $saveCommandFactory,
+        AttributeServiceInterface $attributeService
+    ) {
+    
         $this->formFactory = $formFactory;
         $this->saveCommandFactory = $saveCommandFactory;
+        $this->attributeService = $attributeService;
     }
 
     public function createCreateForm(string $type, Service $service, string $environment)

@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 interface GeneratorInterface
@@ -41,7 +43,16 @@ interface GeneratorInterface
      */
     public function generateForExistingEntity(
         ManageEntity $entity,
+        EntityDiff $differences,
         string $workflowState,
         string $updatedPart = ''
     ): array;
+
+    /**
+     * Generate an Entity Change Request in Manage
+     *
+     * This should only be applied on published production entities. But should work
+     * on other publication states too.
+     */
+    public function generateEntityChangeRequest(ManageEntity $entity, EntityDiff $differences, Contact $contact): array;
 }

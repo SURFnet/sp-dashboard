@@ -629,7 +629,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $this->getSubjectType();
     }
 
-    public function getAcsLocation(): ?string
+    public function getAcsLocations(): ?array
     {
         return null;
     }

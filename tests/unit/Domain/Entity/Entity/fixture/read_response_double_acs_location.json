@@ -1,0 +1,67 @@
+{
+  "active" : true,
+  "allowedEntities" : [ ],
+  "allowedall" : true,
+  "arp" : {
+    "attributes" : {
+      "urn:mace:dir:attribute-def:sn" : [ {
+        "source" : "idp",
+        "value" : "*",
+        "motivation" : "Sur name"
+      } ],
+      "urn:mace:dir:attribute-def:givenName" : [ {
+        "source" : "idp",
+        "value" : "*",
+        "motivation" : "name"
+      } ]
+    },
+    "enabled" : true
+  },
+  "entityid" : "https://engine.surfconext.nl/authentication/sp/metadata",
+  "metaDataFields" : {
+    "AssertionConsumerService:0:Binding" : "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+    "AssertionConsumerService:0:Location" : "https://fantasy.org",
+    "AssertionConsumerService:1:Binding" : "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+    "AssertionConsumerService:1:Location" : "https://fantasy.org",
+    "NameIDFormat" : "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+    "OrganizationName:en" : "Ibuildings",
+    "OrganizationName:nl" : "Ibuildings",
+    "certData" : "MIID7DCCAtSgAwIBAgIJAIgMqnMYZ+t6MA0GCSqGSIb3DQEBCwUAMIGFMQswCQYD\r\nVQQGEwJOTDEQMA4GA1UECAwHVXRyZWNodDEQMA4GA1UEBwwHVXRyZWNodDEVMBMG\r\nA1UECgwMU1VSRm5ldCBCLlYuMRMwEQYDVQQLDApTVVJGY29uZXh0MSYwJAYDVQQD\r\nDB1lbmdpbmUuc3VyZmNvbmV4dC5ubCAyMDE4MTIxMzAeFw0xODEyMTMxNTI5MjBa\r\nFw0yMzEyMTMxNTI5MjBaMIGFMQswCQYDVQQGEwJOTDEQMA4GA1UECAwHVXRyZWNo\r\ndDEQMA4GA1UEBwwHVXRyZWNodDEVMBMGA1UECgwMU1VSRm5ldCBCLlYuMRMwEQYD\r\nVQQLDApTVVJGY29uZXh0MSYwJAYDVQQDDB1lbmdpbmUuc3VyZmNvbmV4dC5ubCAy\r\nMDE4MTIxMzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALPOGS+fBERf\r\nmWiV8aV85z45QsuFw3gkq0HbWR1JGz7cjqhjV6YZHFXyRt4ikG//9BIHS0xc/cW1\r\nsOMnSuCjDhY8Oh/dOk01zfgFXUcv+0iNlkEKGMlT/xJpIDIy/N4WjpGvkJO2oJHf\r\nrQUY115Du56MSMqd0gPvo1OsDvXroYivqxYpTTHzaf5TYQYPf6n/3rEfsu3u6L3p\r\nzE3/q38jnEyxfQ1UoZ9VF2Fy6oe/StlwhPUJhVwHlKDMqQ+T+tljDt26Ok9QL3zz\r\nW9JtBo+pnydMT/rg5h7NW8A9HASLnRLK8rFD9nBEdAPkK+elTE6QddRiTh9H84KC\r\ns0fQiiT6YFsCAwEAAaNdMFswHQYDVR0OBBYEFAJuZa7u0f0o2kB9uRPoB/ekx04s\r\nMB8GA1UdIwQYMBaAFAJuZa7u0f0o2kB9uRPoB/ekx04sMAsGA1UdDwQEAwIHgDAM\r\nBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQBXh5l8u+ncPXkMyDqDuikN\r\nLe/X5j0KNjvqUtQ6QPRSt8MMvjRYWZdVC0gMOtKEAY1/cYnA2y+0yrGqmy9I/zBd\r\nLV73BBLnVlV2WYATYOZLWNW36kjBtdSbH0oXBp7HOu/I4lP+Sv69eRN6p2/9CmDy\r\nKc5JUpXU3PEftv5Lwsqco8MMqqENhwzYlxRb96LFq08Un2QQoV60HqX4Ks79qUrn\r\njRL5pKtoP4ujLmPqQIieHpTgsvHSqSa+9tZMnyEaJEvl7vpNn1M7v1bWOWwjQvMl\r\nYnSq5b0U5gHXgpdBYSfWnCwwpq4h8KHZ7/XVvOVsdYpjHap+907OGhqXGBsIqf9U",
+    "coin:exclude_from_push" : false,
+    "coin:institution_guid" : "1d7cad87-afaa-436a-8923-76cc91dce18e",
+    "coin:privacy:access_data" : "DDDD",
+    "coin:privacy:certification" : false,
+    "coin:privacy:certification_valid_from" : "2020-09-08T00:00:00+00:00",
+    "coin:privacy:certification_valid_to" : "2023-09-08T00:00:00+00:00",
+    "coin:privacy:country" : "ZZZZ",
+    "coin:privacy:privacy_policy" : false,
+    "coin:privacy:security_measures" : "ZZZZZ",
+    "coin:privacy:surfmarket_dpa_agreement" : false,
+    "coin:privacy:surfnet_dpa_agreement" : false,
+    "coin:privacy:what_data" : "AAAAAA",
+    "coin:service_team_id" : "urn:collab:group:vm.openconext.org:demo:openconext:org:spd_ibuildings_ibuildings",
+    "coin:signature_method" : "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
+    "contacts:0:contactType" : "support",
+    "contacts:0:emailAddress" : "help@surfconext.nl",
+    "contacts:0:givenName" : "SURFconext",
+    "contacts:0:surName" : "Support",
+    "contacts:1:contactType" : "administrative",
+    "contacts:1:emailAddress" : "help@surfconext.nl",
+    "contacts:1:givenName" : "SURFconext",
+    "contacts:1:surName" : "Support",
+    "contacts:2:contactType" : "technical",
+    "contacts:2:emailAddress" : "help@surfconext.nl",
+    "contacts:2:givenName" : "SURFconext",
+    "contacts:2:surName" : "Support",
+    "description:en" : "SURFconext",
+    "description:nl" : "SURFconext",
+    "logo:0:height" : 100,
+    "logo:0:url" : "https://engine.surfconext.nl/images/logo.png",
+    "logo:0:width" : 322,
+    "name:en" : "SURFconext EngineBlock",
+    "name:nl" : "SURFconext EngineBlock"
+  },
+  "metadataurl" : "https://engine.surfconext.nl/authentication/sp/metadata",
+  "state" : "testaccepted",
+  "type" : "saml20-sp"
+}

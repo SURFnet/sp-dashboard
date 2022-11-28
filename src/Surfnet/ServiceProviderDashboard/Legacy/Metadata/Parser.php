@@ -24,7 +24,7 @@ use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\CertificateParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
@@ -53,9 +53,9 @@ class Parser implements ParserInterface
     private $certParser;
 
     /**
-     * @var AttributesMetadataRepository
+     * @var AttributeService
      */
-    private $attributesMetadataRepository;
+    private $attributeService;
 
     /**
      * @var string
@@ -67,22 +67,14 @@ class Parser implements ParserInterface
      */
     private $logger;
 
-    /**
-     * Constructor
-     *
-     * @param CertificateParserInterface $certParser
-     * @param AttributesMetadataRepository $attributesMetadataRepository
-     * @param string $schemaLocation
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         CertificateParserInterface $certParser,
-        AttributesMetadataRepository $attributesMetadataRepository,
-        $schemaLocation,
+        AttributeService $attributeService,
+        string $schemaLocation,
         LoggerInterface $logger
     ) {
         $this->certParser = $certParser;
-        $this->attributesMetadataRepository = $attributesMetadataRepository;
+        $this->attributeService = $attributeService;
         $this->schemaLocation = $schemaLocation;
         $this->logger = $logger;
     }
@@ -177,7 +169,7 @@ class Parser implements ParserInterface
             $acs = $acs->attributes();
 
             if ((string)$acs['Binding'] === self::BINDING_HTTP_POST) {
-                $metadata->acsLocation = (string)$acs['Location'];
+                $metadata->acsLocations[] = (string)$acs['Location'];
             }
 
             if ((int)$acs['index'] > 9) {
@@ -333,16 +325,16 @@ class Parser implements ParserInterface
      */
     private function parseAttributes($descriptor, Metadata $metadata)
     {
-        foreach ($descriptor->AttributeConsumingService->RequestedAttribute as $attribute) {
+        foreach ($descriptor->AttributeConsumingService->RequestedAttribute as $requestedAttribute) {
             $attr = new Attribute();
             $attr->setRequested(true);
             $attr->setMotivation('');
 
-            $attributes = $attribute->attributes();
+            $attributes = $requestedAttribute->attributes();
 
-            foreach ($this->attributesMetadataRepository->findAll() as $attributeMetadata) {
-                if (in_array($attributes['Name'], $attributeMetadata->urns)) {
-                    $metadata->{$attributeMetadata->id.'Attribute'} = $attr;
+            foreach ($this->attributeService->getAttributeTypeAttributes() as $attribute) {
+                if (in_array($attributes['Name'], $attribute->getUrns())) {
+                    $metadata->setAttribute($attribute->getName(), $attr);
                 }
             }
         }

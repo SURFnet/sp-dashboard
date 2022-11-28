@@ -132,7 +132,12 @@ class PrivacyQuestionsController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commandBus->handle($command);
-            return $this->redirectToRoute('privacy_questions', ['serviceId' => $serviceId]);
+            $this->addFlash('info', 'privacy.edit.flash.success');
+            // Simply return to entity list, no entity was saved
+            if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+                return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
+            }
+            return $this->redirectToRoute('service_overview');
         }
 
         return $this->render('@Dashboard/Privacy/form.html.twig', array(

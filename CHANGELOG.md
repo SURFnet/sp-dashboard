@@ -1,3 +1,48 @@
+## 4.3.0
+The 4.3.0 release seems somwhat meager compared to the vast ammount of changes performed in the 4.2.0 release.
+Don't be fooled tho. As this release is introducing a major overhaul on the way entity attributes (grants)
+are handled in the application. This error prone construction of having hard-coded references to the supported 
+attributes/grants resulted in many errors and bugs throughout the lifetime of SPD.
+
+Having these attributes in a configurable json file makes managing them much easier.
+
+**Features**
+- Dynamically handle SAML attributes (OIDC grants) from attributes.json configuration #537 #528 #531
+
+**Bugfix**
+Handle grants and redirect urls correctly when updating an OIDC entity #551
+
+## 4.2.1
+**Bugfixex**
+- Ignore ACS locations that do not have the HTTP-POST Binding. #561
+
+## 4.2.0
+**Feature**
+- Support more than one ACS location #521 #547
+- Implement production entity change request #522
+- Add a change request overview for production entities #542
+- Show flash message when privacy messages are changed #517
+- Visual feedback after creating, editing and deleting a service or entity #520
+- Allow closing of flash messages #532
+
+**Bugfixex**
+- Clear selected service on service switcher when serving sp dashboard #527
+- Create a Jira ticket after creating an entity change request #523
+- Disallow colons in a OIDC clientId #526
+- Transform Jira reporter name to custom field #538
+- Set only email on custom reporter Jira field #541
+- Remove flash message from production edit action #545
+- Refrain from adding epTID for OIDCNG #514
+
+**Maintenance**
+- Venture into using the MERGE WRITE Manage Endpoint for updating Entities #516
+- Filter out resolved Jira tickets #548
+- Repair Service overview h2 title issue #549
+
+**Chores**
+- Install JS and PHP 3rd party dependencies #515
+- Set the Timezone on the PHP FPM container #530
+
 ## 4.1.0
 **New features**
 - Add the teamId to the service switcher #501

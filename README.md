@@ -33,6 +33,12 @@ An entry in your hostsfile is still required for things to work. An example entr
 127.0.0.1 welcome.vm.openconext.org static.vm.openconext.org mujina-sp.vm.openconext.org mujina-idp.vm.openconext.org engine-api.vm.openconext.org oidc.vm.openconext.org manage.vm.openconext.org spdashboard.vm.openconext.org
 ```
 
+Is your host system on an ARM based archetecture CPU, and are you running a docker solution in a VM? Chances are 
+you are not going to be able to step debug with XDebug. To achieve this you will need to use a slightly different
+XDebug setting. In order to deliver those settings into the `php-fpm` container we suggest you a
+`docker-compose.overrides.yml` file based on the dist file you will find in the docroot. You might need to do some
+additional changes to your IDE. [This Jetbrains Blogpost](https://blog.jetbrains.com/phpstorm/2018/08/quickstart-with-docker-in-phpstorm/) 
+might aid in that area.
 
 **Deprecation warning!**
 The Ansible playbook for SP Dashboard depends on some roles from

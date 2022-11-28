@@ -18,6 +18,7 @@
 
 namespace Application\CommandHandler\Entity;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery as m;
@@ -57,15 +58,21 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
      * @var m\MockInterface&QueryClient
      */
     private $manageClient;
+    /**
+     * @var m\MockInterface&EntityServiceInterface
+     */
+    private $entityService;
 
     public function setUp()
     {
         $this->client = m::mock(PublishEntityClient::class);
         $this->logger = m::mock(LoggerInterface::class);
         $this->flashBag = m::mock(FlashBagInterface::class);
+        $this->entityService = m::mock(EntityServiceInterface::class);
 
         $this->commandHandler = new PublishEntityTestCommandHandler(
             $this->client,
+            $this->entityService,
             $this->logger,
             $this->flashBag
         );
@@ -92,7 +99,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $this->client
             ->shouldReceive('publish')
             ->once()
-            ->with($manageEntity)
+            ->with($manageEntity, $manageEntity)
             ->andReturn([
                 'id' => '123',
             ]);
@@ -106,7 +113,18 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getId')
             ->andReturn(123);
+        $manageEntity
+            ->shouldReceive('isManageEntity')
+            ->andReturn(true);
+        $manageEntity->shouldReceive('getId')
+            ->andReturn('uuid');
+        $manageEntity
+            ->shouldReceive('getEnvironment')
+            ->andReturn('test');
 
+        $this->entityService
+            ->shouldReceive('getManageEntityById')
+            ->andReturn($manageEntity);
         $command = new PublishEntityTestCommand($manageEntity);
         $this->commandHandler->handle($command);
     }
@@ -129,7 +147,14 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getAllowedIdentityProviders->isAllowAll')
             ->andReturn(true);
-
+        $manageEntity
+            ->shouldReceive('isManageEntity')
+            ->andReturn(true);
+        $manageEntity->shouldReceive('getId')
+            ->andReturn('uuid');
+        $manageEntity
+            ->shouldReceive('getEnvironment')
+            ->andReturn('test');
         $this->logger
             ->shouldReceive('info')
             ->times(1);
@@ -141,12 +166,16 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $this->client
             ->shouldReceive('publish')
             ->once()
-            ->with($manageEntity)
+            ->with($manageEntity, $manageEntity)
             ->andThrow(PublishMetadataException::class);
 
         $this->flashBag
             ->shouldReceive('add')
             ->with('error', 'entity.edit.error.publish');
+
+        $this->entityService
+            ->shouldReceive('getManageEntityById')
+            ->andReturn($manageEntity);
 
         $command = new PublishEntityTestCommand($manageEntity);
         $this->commandHandler->handle($command);

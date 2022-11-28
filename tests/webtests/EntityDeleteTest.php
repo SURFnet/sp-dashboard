@@ -20,10 +20,14 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentIssueRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityDeleteTest extends WebTestCase
 {
+    /** @var DevelopmentIssueRepository */
+    private $ticketService;
+
     public function setUp()
     {
         parent::setUp();
@@ -32,7 +36,7 @@ class EntityDeleteTest extends WebTestCase
         $this->logIn('ROLE_ADMINISTRATOR');
 
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
-
+        $this->ticketService = $this->client->getContainer()->get('surfnet.dashboard.repository.issue');
         $this->switchToService('SURFnet');
     }
 
@@ -106,6 +110,7 @@ class EntityDeleteTest extends WebTestCase
      */
     public function test_request_delete_a_published_production_entity_jira_not_available()
     {
+        $this->ticketService->shouldFailCreateIssue();
         $this->registerManageEntity(
             'production',
             'saml20_sp',
@@ -135,7 +140,7 @@ class EntityDeleteTest extends WebTestCase
 
         $crawler = $this->client->followRedirect();
 
-        $flashMessage = $crawler->filter('div.message.error');
+        $flashMessage = $crawler->filter('div.flashMessage.error');
 
         $this->assertEquals(
             'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.',

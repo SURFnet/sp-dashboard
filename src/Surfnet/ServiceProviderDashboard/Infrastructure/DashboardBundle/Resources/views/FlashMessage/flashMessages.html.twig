@@ -1,0 +1,12 @@
+{% set flashes = app.session.flashbag.all %}
+{% if flashes is not empty %}
+    {% for type, messages in flashes %}
+        {% for message in messages %}
+            {% if type == 'wysiwyg' %}
+                <div class="flashMessage {{ type }}">{{ message|trans|wysiwyg }}<i class="flashMessage__close fa fa-close" aria-hidden="true"></i></div>
+            {% else %}
+                <div class="flashMessage {{ type }}">{{ message|trans }}<i class="flashMessage__close fa fa-close" aria-hidden="true"></i></div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{%  endif %}

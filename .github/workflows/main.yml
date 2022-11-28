@@ -17,7 +17,9 @@ jobs:
 
     - name: Check out the repo
       uses: actions/checkout@v2
-
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
     - name: Build the php-fpm container and push to GitHub Packages
       uses: docker/build-push-action@v1
       with:

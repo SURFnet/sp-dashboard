@@ -78,10 +78,12 @@ parameters:
     jira_issue_priority: Medium
     jira_issue_type: spd-delete-production-entity
     jira_issue_type_publication_request: spd-request-production-entity
+    jira_issue_type_entity_change_request: spd-request-change-request-prod
     jira_issue_entityid_fieldname: customfield_13018
     jira_issue_manageid_fieldname: customfield_13401
     # The label that is set for the manage id field, used to compose the JQL which identifies a custom field by its label
     jira_issue_manageid_field_label: Manage entity ID
+    jira_issue_reporter_fieldname: customfield_99999
     jira_issue_project_key: CXT
 
     # Playground uri's for OIDC entities

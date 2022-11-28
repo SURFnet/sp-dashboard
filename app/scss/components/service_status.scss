@@ -112,14 +112,14 @@
   }
 }
 
-// todo: refactor base.css so we no longer need this convoluted selector
+/* todo: refactor base.css so we no longer need this convoluted selector */
 .page-container .card .service-status-container h2.service-status-title {
   align-items: center;
   color: $blue;
   display: flex;
   font-size: $h2Font;
   justify-content: flex-start;
-  margin: 0;
+  margin: 0 0 1.5rem 0;
 }
 
 .service-status-back-to-top {

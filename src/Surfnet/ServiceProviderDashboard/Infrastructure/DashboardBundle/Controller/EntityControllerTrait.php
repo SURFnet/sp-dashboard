@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Exception;
 use League\Tactician\CommandBus;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
@@ -140,18 +141,23 @@ trait EntityControllerTrait
     private function publishEntity(
         ?ManageEntity $entity,
         SaveEntityCommandInterface $saveCommand,
+        bool $isEntityChangeRequest,
         FlashBagInterface $flashBag
     ) {
         // Merge the save command data into the ManageEntity
         $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
 
-        switch ($entity->getEnvironment()) {
-            case Constants::ENVIRONMENT_TEST:
+        switch (true) {
+            case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity);
                 $destination = 'entity_published_test';
                 break;
-
-            case Constants::ENVIRONMENT_PRODUCTION:
+            case $isEntityChangeRequest:
+                $applicant = $this->authorizationService->getContact();
+                $publishEntityCommand = new EntityChangeRequestCommand($entity, $applicant);
+                $destination = 'entity_change_request';
+                break;
+            case $entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION:
                 $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
                 $destination = 'entity_published_production';
@@ -169,7 +175,7 @@ trait EntityControllerTrait
         }
 
         if (!$flashBag->has('error')) {
-            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
+            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isEntityChangeRequest) {
                 $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
             }
 

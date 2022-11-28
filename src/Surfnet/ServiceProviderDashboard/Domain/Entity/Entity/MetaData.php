@@ -19,14 +19,15 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngSpdClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Webmozart\Assert\Assert;
+use Exception;
 
-class MetaData
+class MetaData implements Comparable
 {
-    /**
-     * Supports 1 ACS location, the first entry is used that is passed from Manage
-     */
-    private $acsLocation;
+    const MAX_ACS_LOCATIONS = 10;
+
     private $entityId;
     private $metaDataUrl;
     private $nameIdFormat;
@@ -35,6 +36,11 @@ class MetaData
     private $descriptionNl;
     private $nameEn;
     private $nameNl;
+
+    /**
+     * @var array
+     */
+    private $acsLocations = [];
 
     /**
      * @var ContactList
@@ -61,15 +67,14 @@ class MetaData
      * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
      * @param array $data
      * @return MetaData
+     * @throws Exception
      */
     public static function fromApiResponse(array $data)
     {
         $metaDataFields = $data['data']['metaDataFields'];
-
         $entityId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
         $metaDataUrl = isset($data['data']['metadataurl']) ? $data['data']['metadataurl'] : '';
-        $acsLocation = isset($metaDataFields['AssertionConsumerService:0:Location'])
-            ? $metaDataFields['AssertionConsumerService:0:Location'] : '';
+        $acsLocations = self::getAcsLocationsFromMetaDataFields($metaDataFields);
         $nameIdFormat = isset($metaDataFields['NameIDFormat']) ? $metaDataFields['NameIDFormat'] : '';
         $certData = isset($metaDataFields['certData']) ? $metaDataFields['certData'] : '';
         $descriptionEn = isset($metaDataFields['description:en']) ? $metaDataFields['description:en'] : '';
@@ -79,13 +84,21 @@ class MetaData
 
         Assert::string($entityId);
         Assert::string($metaDataUrl);
-        Assert::string($acsLocation);
+        Assert::allString($acsLocations);
         Assert::string($nameIdFormat);
         Assert::string($certData);
         Assert::string($descriptionEn);
         Assert::string($descriptionNl);
         Assert::string($nameEn);
         Assert::string($nameNl);
+
+        if (count(array_unique($acsLocations)) !== count($acsLocations)) {
+            throw new Exception('Double acs locations. Expected unique locations');
+        }
+
+        if (count($acsLocations) > self::MAX_ACS_LOCATIONS) {
+            throw new Exception('Maximum acs locations exceeded. Maximum '.self::MAX_ACS_LOCATIONS.' acs location are supported');
+        }
 
         $contactList = ContactList::fromApiResponse($metaDataFields);
         $organization = Organization::fromApiResponse($metaDataFields);
@@ -95,7 +108,7 @@ class MetaData
         return new self(
             $entityId,
             $metaDataUrl,
-            $acsLocation,
+            $acsLocations,
             $nameIdFormat,
             $certData,
             $descriptionEn,
@@ -115,7 +128,7 @@ class MetaData
     public function __construct(
         ?string $entityId,
         ?string $metaDataUrl,
-        ?string $acsLocation,
+        ?array $acsLocations,
         ?string $nameIdFormat,
         ?string $certData,
         ?string $descriptionEn,
@@ -129,7 +142,7 @@ class MetaData
     ) {
         $this->entityId = $entityId;
         $this->metaDataUrl = $metaDataUrl;
-        $this->acsLocation = $acsLocation;
+        $this->acsLocations = $acsLocations;
         $this->nameIdFormat = $nameIdFormat;
         $this->certData = $certData;
         $this->descriptionEn = $descriptionEn;
@@ -157,9 +170,9 @@ class MetaData
         return $this->metaDataUrl;
     }
 
-    public function getAcsLocation(): ?string
+    public function getAcsLocations(): ?array
     {
-        return $this->acsLocation;
+        return $this->acsLocations;
     }
 
     public function getNameIdFormat(): ?string
@@ -220,7 +233,7 @@ class MetaData
     {
         $this->entityId = is_null($metaData->getEntityId()) ? null : $metaData->getEntityId();
         $this->metaDataUrl = is_null($metaData->getMetaDataUrl()) ? null : $metaData->getMetaDataUrl();
-        $this->acsLocation = is_null($metaData->getAcsLocation()) ? null : $metaData->getAcsLocation();
+        $this->acsLocations = is_null($metaData->getAcsLocations()) ? null : $metaData->getAcsLocations();
         $this->nameIdFormat = is_null($metaData->getNameIdFormat()) ? null : $metaData->getNameIdFormat();
         $this->certData = is_null($metaData->getCertData()) ? null : $metaData->getCertData();
         $this->descriptionEn = is_null($metaData->getDescriptionEn()) ? null : $metaData->getDescriptionEn();
@@ -231,5 +244,52 @@ class MetaData
         $this->contacts->merge($metaData->getContacts());
         $this->organization->merge($metaData->getOrganization());
         $this->logo->merge($metaData->getLogo());
+    }
+
+    private static function getAcsLocationsFromMetaDataFields(array $metaDataFields): ?array
+    {
+        $index = 0;
+        $acsLocations = [];
+        while (isset($metaDataFields['AssertionConsumerService:'.$index.':Location'])) {
+            if ($metaDataFields['AssertionConsumerService:'.$index.':Binding'] === Constants::BINDING_HTTP_POST) {
+                $acsLocations[] = $metaDataFields['AssertionConsumerService:'.$index.':Location'];
+            }
+            $index++;
+        }
+        return $acsLocations;
+    }
+
+    private function asArrayAcsLocations(): array
+    {
+        $data = [];
+        foreach ($this->getAcsLocations() ?? [] as $index => $location) {
+            $locationIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Location', $index);
+            $bindingIdentifier = sprintf('metaDataFields.AssertionConsumerService:%d:Binding', $index);
+            $data[$locationIdentifier] = $location;
+            $data[$bindingIdentifier] = Constants::BINDING_HTTP_POST;
+        }
+        return $data;
+    }
+
+    public function asArray(): array
+    {
+        $data = [
+            'entityid' => $this->getEntityId(),
+            'metadataurl' => $this->getMetaDataUrl(),
+            'metaDataFields.NameIDFormat' => $this->getNameIdFormat(),
+            'metaDataFields.certData' => $this->getCertData(),
+            'metaDataFields.description:nl' => $this->getDescriptionNl(),
+            'metaDataFields.description:en' => $this->getDescriptionEn(),
+            'metaDataFields.name:nl' => $this->getNameNl(),
+            'metaDataFields.name:en' => $this->getNameEn(),
+        ];
+
+        $data += $this->asArrayAcsLocations();
+        $data += $this->coin->asArray();
+        $data += $this->contacts->asArray();
+        $data += $this->logo->asArray();
+        $data += $this->organization->asArray();
+
+        return $data;
     }
 }

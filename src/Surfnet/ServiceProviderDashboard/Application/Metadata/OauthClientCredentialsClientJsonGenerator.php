@@ -21,8 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use function sprintf;
 
 /**
  * The OauthClientCredentialsClientJsonGenerator generates oidc10_rp entity json
@@ -63,11 +66,12 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
 
     public function generateForExistingEntity(
         ManageEntity $entity,
+        EntityDiff $differences,
         string $workflowState,
         string $updatedPart = ''
     ): array {
         return [
-            'pathUpdates' => $this->generateDataForExistingEntity($entity, $workflowState, $updatedPart),
+            'pathUpdates' => $this->generateDataForExistingEntity($entity, $differences, $workflowState, $updatedPart),
             'type' => 'oidc10_rp',
             'id' => $entity->getId(),
         ];
@@ -94,63 +98,50 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
+    public function generateEntityChangeRequest(
+        ManageEntity $entity,
+        EntityDiff $differences,
+        ContactEntity $contact
+    ): array {
+        $payload = [
+            'metaDataId' => $entity->getId(),
+            'type' => 'oidc10_rp',
+            'pathUpdates' => $this->generateForChangeRequest($differences),
+            'auditData' => [
+                'user' => $contact->getEmailAddress()
+            ],
+        ];
+
+        if ($entity->hasComments()) {
+            $payload['note'] = $entity->getComments();
+        }
+        return $payload;
+    }
+
     private function generateDataForExistingEntity(
         ManageEntity $entity,
+        EntityDiff $differences,
         string $workflowState,
         string $updatedPart
     ): array {
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
         ];
-
         switch ($updatedPart) {
             case 'ACL':
                 $metadata += $this->generateAclData($entity);
-                break;
+                return $metadata;
 
             default:
+                $metadata += $differences->getDiff();
                 $metadata['state'] = $workflowState;
-
                 $metadata += $this->generateAllowedResourceServers($entity);
-                $metadata += $this->flattenMetadataFields(
-                    $this->generateMetadataFields($entity)
-                );
+                $this->setExcludeFromPush($metadata, $entity, true);
+                if ($entity->hasComments()) {
+                    $metadata['revisionnote'] = $entity->getComments();
+                }
+                return $metadata;
         }
-
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
-
-        return $metadata;
-    }
-
-    /**
-     * Convert a list fields to a flat array expected by the merge-write API.
-     *
-     * Manage always returns metadata fields like this:
-     *
-     *     [ metaDataFields => [ description:en => ..., description:nl => ..., ...] ]
-     *
-     * But when using the merge-write API, sending a 'metaDataFields' property
-     * will overwrite all existing metadata fields. To prevent this, we only
-     * send the metadata fields we actually want to update by using the flat
-     * format:
-     *
-     *     [ metaDataFields.description:en => ..., metaDataFields.description:nl => ..., ...] ]
-     *
-     *
-     * @param array $fields
-     * @return array
-     */
-    private function flattenMetadataFields(array $fields)
-    {
-        $flatFields = [];
-
-        foreach ($fields as $name => $value) {
-            $flatFields['metaDataFields.'.$name] = $value;
-        }
-
-        return $flatFields;
     }
 
     /**
@@ -361,25 +352,35 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         ];
     }
 
-    private function setExcludeFromPush(&$metadata, ManageEntity $entity): void
+    private function setExcludeFromPush(&$metadata, ManageEntity $entity, $flatten = false): void
     {
+        $fieldName = 'coin:exclude_from_push';
+        if ($flatten) {
+            $fieldName = sprintf('metaDataFields.coin:exclude_from_push');
+        }
+
         // Scenario 1: When publishing to production, the coin:exclude_from_push must be present and set to '1'.
         // This prevents the entity from being pushed to EngineBlock.
         if ($entity->isProduction()) {
-            $metadata['coin:exclude_from_push'] = '1';
+            $metadata[$fieldName] = '1';
         }
 
         // Scenario 2: When dealing with a client secret reset, keep the current exclude from push state.
         $secret = $entity->getOidcClient()->getClientSecret();
         if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPush()) {
-            $metadata['coin:exclude_from_push'] = '0';
+            $metadata[$fieldName] = '0';
         }
 
         // Scenario 3: We are resetting the client secret, the service desk removed the exclude from push coin
         // attribute. This also indicates the entity is published. But now we do not want to reset the coin to '0', we
         // simply unset it.
         if ($secret && $entity->isManageEntity() && !$entity->isExcludedFromPushSet()) {
-            unset($metadata['coin:exclude_from_push']);
+            unset($metadata[$fieldName]);
         }
+    }
+
+    private function generateForChangeRequest(EntityDiff $differences): array
+    {
+        return $differences->getDiff();
     }
 }

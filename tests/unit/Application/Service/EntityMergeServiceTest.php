@@ -21,12 +21,13 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Service;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
+use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
-use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 
 class EntityMergeServiceTest extends TestCase
 {
@@ -35,14 +36,15 @@ class EntityMergeServiceTest extends TestCase
 
     protected function setUp()
     {
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../app/Resources');
-        $this->service = new EntityMergeService($metadataRepository, 'test', 'prod');
+        $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
+        $attributeService = new AttributeService($attributeRepository, 'en');
+        $this->service = new EntityMergeService($attributeService, 'test', 'prod');
         parent::setUp();
     }
 
     public function test_can_create_service()
     {
-        $service = new EntityMergeService(m::mock(AttributesMetadataRepository::class), 'test', 'prod');
+        $service = new EntityMergeService(m::mock(AttributeService::class), 'test', 'prod');
         self::assertInstanceOf(EntityMergeService::class, $service);
     }
 
@@ -90,7 +92,7 @@ class EntityMergeServiceTest extends TestCase
         return ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_response.json'), true));
     }
 
-    private function buildSamlCommand(Service $service)
+    private function buildSamlCommand(Service $service): SaveSamlEntityCommand
     {
         $command = new SaveSamlEntityCommand();
         $command->setEntityId('https://www.example.com');
@@ -100,7 +102,7 @@ class EntityMergeServiceTest extends TestCase
         $attr = new Attribute();
         $attr->setMotivation('Motivation');
         $attr->setRequested(true);
-        $command->setUidAttribute($attr);
+        $command->setAttribute('uidAttribute', $attr);
         $contact = new Contact();
         $contact->setFirstName('John');
         $contact->setLastName('Doe');

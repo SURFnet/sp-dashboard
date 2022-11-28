@@ -18,7 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository;
 
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
@@ -132,7 +134,7 @@ class IssueRepository implements TicketServiceInterface
         // Search CTX: "$issueType" issues with manage id as provided in the $manageId parameter
         $issues = $issueService->search(
             sprintf(
-                'project = %s AND issuetype = %s AND "%s" ~ %s',
+                'project = %s AND issuetype = %s AND resolution = Unresolved AND "%s" ~ %s',
                 $this->projectKey,
                 $issueType,
                 $this->manageIdFieldLabel,
@@ -158,5 +160,15 @@ class IssueRepository implements TicketServiceInterface
     {
         $issueService = $this->jiraFactory->buildIssueService();
         $issueService->deleteIssue($issueKey);
+    }
+
+    public function createJiraTicket(
+        ManageEntity $entity,
+        PublishProductionCommandInterface $command,
+        string $issueType,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey
+    ): Issue {
+        // Nothing to do here.
     }
 }

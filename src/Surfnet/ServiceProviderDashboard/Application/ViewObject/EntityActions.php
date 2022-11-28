@@ -86,8 +86,7 @@ class EntityActions
     public function allowEditAction(): bool
     {
         $notEditable =
-            $this->isPublishedToProduction()
-            || $this->readOnly
+            $this->readOnly
             || $this->status === Constants::STATE_REMOVAL_REQUESTED;
 
         if ($notEditable) {
@@ -167,6 +166,15 @@ class EntityActions
         $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED || $status == Constants::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
+
+    public function allowChangeRequestAction(): bool
+    {
+        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION) {
+            return false;
+        }
+        return $this->status == Constants::STATE_PUBLISHED;
+    }
+
 
     public function isPublishedToProduction()
     {

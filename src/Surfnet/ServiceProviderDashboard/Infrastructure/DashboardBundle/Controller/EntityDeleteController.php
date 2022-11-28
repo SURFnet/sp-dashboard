@@ -114,8 +114,9 @@ class EntityDeleteController extends Controller
                         ->buildDeletePublishedTestEntityCommand($manageId, $entity->getProtocol()->getProtocol());
                 }
                 $this->commandBus->handle($command);
-            }
 
+                $this->addFlash('info', 'entity.delete.flash.success');
+            }
             $service = $this->authorizationService->changeActiveService($serviceId);
             if ($this->isGranted('ROLE_ADMINISTRATOR')) {
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $service->getId()]);

@@ -38,6 +38,11 @@ class IssueFieldFactory
     /**
      * @var string
      */
+    private $reporterFieldName;
+
+    /**
+     * @var string
+     */
     private $priority;
 
     /**
@@ -50,18 +55,12 @@ class IssueFieldFactory
      */
     private $translator;
 
-    /**
-     * @param string $entityIdFieldName
-     * @param string $manageIdFieldName
-     * @param string $priority
-     * @param string $projectKey
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
-        $entityIdFieldName,
-        $manageIdFieldName,
-        $priority,
-        $projectKey,
+        string $entityIdFieldName,
+        string $manageIdFieldName,
+        string $reporterFieldName,
+        string $priority,
+        string $projectKey,
         TranslatorInterface $translator
     ) {
         Assert::stringNotEmpty(
@@ -77,12 +76,13 @@ class IssueFieldFactory
 
         $this->entityIdFieldName = $entityIdFieldName;
         $this->manageIdFieldName = $manageIdFieldName;
+        $this->reporterFieldName = $reporterFieldName;
         $this->priority = $priority;
         $this->projectKey = $projectKey;
         $this->translator = $translator;
     }
 
-    public function fromTicket(Ticket $ticket)
+    public function fromTicket(Ticket $ticket): IssueField
     {
         $issueField = new IssueField();
         $issueField->setProjectKey($this->projectKey)
@@ -90,6 +90,7 @@ class IssueFieldFactory
             ->setSummary($this->translateSummary($ticket))
             ->setIssueType($ticket->getIssueType())
             ->setPriorityName($this->priority)
+            ->addCustomField($this->reporterFieldName, $ticket->getApplicantEmail())
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
             ->addCustomField($this->manageIdFieldName, $ticket->getManageId())
         ;
@@ -97,7 +98,7 @@ class IssueFieldFactory
         return $issueField;
     }
 
-    private function translateDescription(Ticket $ticket)
+    private function translateDescription(Ticket $ticket): string
     {
         return $this->translator->trans($ticket->getDescriptionTranslationKey(), [
             '%applicant_name%' => $ticket->getApplicantName(),
@@ -106,7 +107,7 @@ class IssueFieldFactory
         ]);
     }
 
-    private function translateSummary(Ticket $ticket)
+    private function translateSummary(Ticket $ticket): string
     {
         return $this->translator->trans($ticket->getSummaryTranslationKey(), [
             '%entity_name%' => $ticket->getEntityName()

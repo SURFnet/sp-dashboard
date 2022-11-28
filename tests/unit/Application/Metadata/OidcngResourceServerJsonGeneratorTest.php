@@ -24,6 +24,8 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngResourceServerJsonGenerator;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use function file_get_contents;
@@ -109,30 +111,18 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $data = $generator->generateForExistingEntity($this->createManageEntity(), 'testaccepted');
+        $diff = m::mock(EntityDiff::class);
+        $diff->shouldReceive('getDiff')
+            ->andReturn(['metaDataFields.name:en' => 'A new hope']);
+        $data = $generator->generateForExistingEntity($this->createManageEntity(), $diff, 'testaccepted');
 
         $this->assertEquals(
             array(
                 'pathUpdates' =>
                     array(
                         'entityid' => 'entityid',
-                        'metaDataFields.NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
-                        'metaDataFields.description:en' => 'description en',
-                        'metaDataFields.description:nl' => 'description nl',
-                        'metaDataFields.name:en' => 'name en',
-                        'metaDataFields.name:nl' => 'name nl',
-                        'metaDataFields.contacts:0:contactType' => 'support',
-                        'metaDataFields.contacts:0:givenName' => 'givenname',
-                        'metaDataFields.contacts:0:surName' => 'surname',
-                        'metaDataFields.contacts:0:emailAddress' => 'emailaddress',
-                        'metaDataFields.contacts:0:telephoneNumber' => 'telephonenumber',
-                        'metaDataFields.OrganizationName:en' => 'orgen',
-                        'metaDataFields.OrganizationName:nl' => 'orgnl',
-                        'metaDataFields.secret' => 'test',
+                        'metaDataFields.name:en' => 'A new hope',
                         'state' => 'testaccepted',
-                        'metaDataFields.privacy' => 'privacy',
-                        'metaDataFields.coin:institution_id' => 'service-institution-id',
-                        'metaDataFields.coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
                         'revisionnote' => 'revisionnote'
                     ),
                 'type' => 'oauth20_rs',
@@ -142,6 +132,27 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $data
         );
     }
+
+    public function test_it_builds_an_entity_change_request()
+    {
+        $generator = new OidcngResourceServerJsonGenerator(
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+        $entity = $this->createManageEntity();
+        $changedEntity = $this->createChangedManageEntity();
+        $diff = $entity->diff($changedEntity);
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
+
+        $this->assertIsArray($data);
+        $this->assertEquals('manageId', $data['metaDataId']);
+        $this->assertEquals('oauth20_rs', $data['type']);
+        $this->assertIsArray($data['pathUpdates']);
+        $this->assertCount(4, $data['pathUpdates']);
+    }
+
     private function createManageEntity(
         ?bool $idpAllowAll = null,
         ?array $idpWhitelist = null,
@@ -181,6 +192,18 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                 ->shouldReceive('getEnvironment')
                 ->andReturn($environment);
         }
+        return $entity;
+    }
+
+    private function createChangedManageEntity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/oauth20_rs_response_changed.json'), true));
+        $service = new Service();
+        $service->setGuid('543b4e5b-76b5-453f-af1e-5648378bb266');
+        $service->setInstitutionId('service-institution-id');
+        $entity->setService($service);
+        $entity->setComments('revisionnote');
+        $entity = m::mock($entity);
         return $entity;
     }
 }

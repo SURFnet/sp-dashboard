@@ -1,8 +1,12 @@
 {
   "extends": "stylelint-config-recommended",
+  "customSyntax": "postcss-scss",
   "rules": {
     "at-rule-no-unknown": [true, {
       "ignoreAtRules": ["mixin", "include", "function", "return", "use"]
-    }]
+    }],
+    "function-no-unknown": false,
+    "annotation-no-unknown": false,
+    "no-invalid-position-at-import-rule": false
   }
 }

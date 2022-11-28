@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCo
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -36,6 +37,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SamlEntityType extends AbstractType
 {
     /**
+     * @var AttributeTypeFactory
+     */
+    private $attributeTypeFactory;
+
+    public function __construct(AttributeTypeFactory $attributeTypeFactory)
+    {
+        $this->attributeTypeFactory = $attributeTypeFactory;
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
      *
@@ -44,6 +55,12 @@ class SamlEntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $attributesContainer = $builder->create('attributes', FormType::class, [
+            'inherit_data' => true,
+            'attr' => ['class' => 'attributes']
+        ]);
+        $this->buildAttributeTypes($attributesContainer);
+
         $builder
             // The first button in a form defines the default behaviour when
             // submitting the form by pressing ENTER. We add a 'default
@@ -99,14 +116,24 @@ class SamlEntityType extends AbstractType
                         ]
                     )
                     ->add(
-                        'acsLocation',
-                        TextType::class,
+                        'acsLocations',
+                        CollectionType::class,
                         [
+                            'error_bubbling' => false,
+                            'prototype' => true,
+                            'allow_add' => true,
+                            'allow_delete' => true,
                             'required' => false,
+                            'entry_type' => TextType::class,
+                            'entry_options' => [
+                                'attr' => [
+                                    'data-parsley-redirecturis_set' => 'true',
+                                    'data-parsley-redirecturis_valid' => 'true',
+                                    'data-parsley-urlstrict' => null,
+                                ],
+                            ],
                             'attr' => [
                                 'data-help' => 'entity.edit.information.acsLocation',
-                                'data-parsley-urlstrict' => null,
-                                'data-parsley-trigger' => 'blur',
                             ],
                         ]
                     )
@@ -133,7 +160,7 @@ class SamlEntityType extends AbstractType
                                 'entity.edit.label.persistent' => Constants::NAME_ID_FORMAT_PERSISTENT,
                             ],
                             'attr' => [
-                                'class' => 'nameidformat-container',
+                                'class' => 'nameidformat-attributesContainer',
                                 'data-help' => 'entity.edit.information.nameIdFormat',
                             ],
                         ]
@@ -251,172 +278,7 @@ class SamlEntityType extends AbstractType
                         ]
                     )
             )
-            ->add(
-                $builder->create('attributes', FormType::class, [
-                    'inherit_data' => true,
-                    'attr' => ['class' => 'attributes']
-                ])
-                    ->add(
-                        'givenNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.givenNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.givenNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'surNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.surNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.surNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'commonNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.commonNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.commonNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'displayNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.displayNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.displayNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'emailAddressAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.emailAddressAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.emailAddressAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.organizationAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.organizationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationTypeAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.organizationTypeAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.organizationTypeAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'organizationUnitAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.organizationUnitAttribute',
-                            'by_reference' => false ,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.organizationUnitAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'affiliationAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.affiliationAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.affiliationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'entitlementAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.entitlementAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.entitlementAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'principleNameAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.principleNameAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.principleNameAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'uidAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.uidAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.uidAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'preferredLanguageAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.preferredLanguageAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.preferredLanguageAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'personalCodeAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.personalCodeAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.personalCodeAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'scopedAffiliationAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.scopedAffiliationAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.scopedAffiliationAttribute'],
-                        ]
-                    )
-                    ->add(
-                        'eduPersonTargetedIDAttribute',
-                        AttributeType::class,
-                        [
-                            'label' => 'entity.edit.form.attributes.saml20.eduPersonTargetedIDAttribute',
-                            'by_reference' => false,
-                            'required' => false,
-                            'attr' => ['data-help' => 'entity.edit.information.saml20.eduPersonTargetedIDAttribute'],
-                        ]
-                    )
-            )
+            ->add($attributesContainer)
             ->add(
                 $builder->create('comments', FormType::class, ['inherit_data' => true])
                     ->add(
@@ -443,12 +305,17 @@ class SamlEntityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => SaveSamlEntityCommand::class
+            'data_class' => SaveSamlEntityCommand::class,
         ));
     }
 
     public function getBlockPrefix()
     {
         return 'dashboard_bundle_entity_type';
+    }
+
+    private function buildAttributeTypes(FormBuilderInterface $container): FormBuilderInterface
+    {
+        return $this->attributeTypeFactory->build($container, Constants::TYPE_SAML);
     }
 }

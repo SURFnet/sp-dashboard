@@ -1,0 +1,46 @@
+{
+  "id": "411f8e0f-87a6-4ea7-8194-66b3e77f97d6",
+  "version": 0,
+  "type": "oidc10_rp",
+  "revision": {
+    "number": 0,
+    "created": 1543851541.752,
+    "parentId": null,
+    "updatedBy": "sp-dashboard",
+    "terminated": null
+  },
+  "data": {
+    "allowedEntities" : [
+      {"name" : "http://mock-idp"},
+      {"name" : "http://idp.harderwijk.edu.nl"}
+    ],
+    "allowedResourceServers" : [
+      {"name" : "voot.vm.openconext.org"},
+      {"name" : "foot.vm.openconext.org"}
+    ],
+    "allowedall" : false,
+    "arp" : {
+      "attributes" : {
+        "urn:mace:dir:attribute-def:displayName": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "Mumbo-jumbo"
+          }
+        ]
+      },
+      "enabled" : true
+    },
+    "entityid" : "teams.vm.openconext.org",
+    "metaDataFields" : {
+      "OrganizationName:en" : "OpenConext",
+      "description:en" : "OAuth client to access VOOT for group information",
+      "grants" : [ "implicit" ],
+      "name:en" : "Teams client credentials client for VOOT and FOOT access",
+      "redirectUrls" : [ "https://foobar.com", "http://idp.harderwijk.edu.nl/redirect" ],
+      "secret" : "$2a$10$dHNcZXXuAOZcqei9y8i5W.lJUERx4XKYYpZkNT8FfaLAc6DwUZNgW"
+    },
+    "state" : "prodaccepted",
+    "type" : "oidc10-rp"
+  }
+}
