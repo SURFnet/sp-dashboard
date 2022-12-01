@@ -29,7 +29,7 @@ class DeletePublishedTestEntityCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly DeleteManageEntityRepository $deleteEntityRepository,
-        private readonly LoggerInterface              $logger
+        private readonly LoggerInterface $logger
     ) {
     }
 

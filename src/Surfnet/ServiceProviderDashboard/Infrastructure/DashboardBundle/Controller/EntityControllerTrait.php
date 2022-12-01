@@ -104,9 +104,6 @@ trait EntityControllerTrait
         bool $isEntityChangeRequest,
         FlashBagInterface $flashBag
     ): RedirectResponse|Form {
-        // Merge the save command data into the ManageEntity
-        $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
-    ) {
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
@@ -128,11 +125,10 @@ trait EntityControllerTrait
             if ($publishEntityCommand instanceof PublishEntityTestCommand) {
                 return $this->redirectToRoute('entity_published_test');
             }
-
-            $destination = $this->findDestinationForRedirectToCreateConnectionRequest($publishEntityCommand);
-            $parameters = $this->findParametersForRedirectToCreateConnectionRequest($publishEntityCommand);
-            return $this->redirectToRoute($destination, $parameters);
         }
+        $destination = $this->findDestinationForRedirectToCreateConnectionRequest($publishEntityCommand);
+        $parameters = $this->findParametersForRedirectToCreateConnectionRequest($publishEntityCommand);
+        return $this->redirectToRoute($destination, $parameters);
     }
 
     private function createPublishEntityCommandFromEntity(?ManageEntity $entity, bool $isEntityChangeRequest)
@@ -209,11 +205,6 @@ trait EntityControllerTrait
                     sprintf('The environment with value "%s" is not supported.', $publishEntityCommand->getManageEntity()->getEnvironment())
                 );
         }
-            // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
-            // page we will be redirecting to in a moment.
-            $this->get('session')->set('published.entity.clone', clone $entity);
-        }
-        return $this->redirectToRoute($destination);
     }
 
     /**

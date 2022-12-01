@@ -24,20 +24,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepositor
 
 class ServiceStatusService
 {
-    /**
-     * @var PrivacyQuestionsRepository
-     */
-    private $privacyStatusRepository;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    public function __construct(PrivacyQuestionsRepository $privacyQuestionsRepository, EntityService $entityService)
-    {
-        $this->privacyStatusRepository = $privacyQuestionsRepository;
-        $this->entityService = $entityService;
+    public function __construct(
+        private readonly PrivacyQuestionsRepository $privacyStatusRepository,
+        private readonly EntityService $entityService
+    ) {
     }
 
     /**

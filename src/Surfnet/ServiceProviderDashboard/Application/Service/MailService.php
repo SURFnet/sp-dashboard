@@ -26,15 +26,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\Mail
 
 class MailService
 {
-    /** @var MailMessageFactory */
-    private $mailFactory;
-    /** @var Mailer */
-    private $mailer;
-
-    public function __construct(MailMessageFactory $mailFactory, Mailer $mailer)
-    {
-        $this->mailer = $mailer;
-        $this->mailFactory = $mailFactory;
+    public function __construct(
+        private readonly MailMessageFactory $mailFactory,
+        private readonly Mailer $mailer
+    ) {
     }
 
     public function sendErrorReport(ManageEntity $entity, Exception $exception)

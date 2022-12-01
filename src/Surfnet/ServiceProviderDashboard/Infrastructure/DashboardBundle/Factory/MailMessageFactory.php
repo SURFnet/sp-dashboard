@@ -21,7 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factor
 use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 
 /**

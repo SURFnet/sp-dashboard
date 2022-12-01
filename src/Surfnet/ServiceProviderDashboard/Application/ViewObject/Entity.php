@@ -27,83 +27,25 @@ use Symfony\Component\Routing\RouterInterface;
 class Entity
 {
     /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $entityId;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $contact;
-
-    /**
-     * @var string
-     */
-    private $state;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $protocol;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var EntityActions
      */
     private $actions;
 
     /**
-     * @param string $id
-     * @param string $entityId
-     * @param int $serviceId
-     * @param string $name
-     * @param string $contact
-     * @param string $state
-     * @param string $environment
-     * @param string $protocol
-     * @param bool $isReadOnly
-     * @param RouterInterface $router
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        $id,
-        $entityId,
-        $serviceId,
-        $name,
-        $contact,
-        $state,
-        $environment,
-        $protocol,
-        $isReadOnly,
-        RouterInterface $router
+        private readonly string $id,
+        private readonly string $entityId,
+        string $serviceId,
+        private readonly string $name,
+        private readonly string $contact,
+        private readonly string $state,
+        private readonly string $environment,
+        private readonly string $protocol,
+        bool $isReadOnly,
+        private readonly RouterInterface $router
     ) {
-        $this->id = $id;
-        $this->entityId = $entityId;
-        $this->name = $name;
-        $this->contact = $contact;
-        $this->state = $state;
-        $this->environment = $environment;
-        $this->protocol = $protocol;
-        $this->router = $router;
         $this->actions = new EntityActions($id, $serviceId, $state, $environment, $protocol, $isReadOnly);
     }
 

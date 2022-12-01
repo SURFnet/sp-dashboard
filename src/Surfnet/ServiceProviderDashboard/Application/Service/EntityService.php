@@ -41,66 +41,18 @@ use function sprintf;
 class EntityService implements EntityServiceInterface
 {
     /**
-     * @var EntityQueryRepositoryProvider
-     */
-    private $queryRepositoryProvider;
-
-    /**
-     * @var TicketServiceInterface
-     */
-    private $ticketService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var ApiConfig
-     */
-    private $testManageConfig;
-
-    /**
-     * @var ApiConfig
-     */
-    private $prodManageConfig;
-
-    /**
-     * @var string
-     */
-    private $removalStatus;
-
-    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
-        TicketServiceInterface $ticketService,
-        ServiceService $serviceService,
-        ApiConfig $testConfig,
-        ApiConfig $productionConfig,
-        RouterInterface $router,
-        LoggerInterface $logger,
-        string $removalStatus
+        private EntityQueryRepositoryProvider $queryRepositoryProvider,
+        private readonly TicketServiceInterface $ticketService,
+        private readonly ServiceService $serviceService,
+        private readonly ApiConfig $testManageConfig,
+        private readonly ApiConfig $prodManageConfig,
+        private readonly RouterInterface $router,
+        private readonly LoggerInterface $logger,
+        private readonly string $removalStatus
     ) {
-        $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
-        $this->ticketService = $ticketService;
-        $this->serviceService = $serviceService;
-        $this->router = $router;
-        $this->logger = $logger;
-        $this->testManageConfig = $testConfig;
-        $this->prodManageConfig = $productionConfig;
-        $this->removalStatus = $removalStatus;
     }
 
     public function createEntityUuid()

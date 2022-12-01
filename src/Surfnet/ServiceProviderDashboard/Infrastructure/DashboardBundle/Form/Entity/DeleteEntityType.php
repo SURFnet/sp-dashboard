@@ -32,7 +32,7 @@ class DeleteEntityType extends AbstractType
     {
         $builder
             ->add('delete', SubmitType::class, ['label' => 'Delete', 'attr' => ['class' => 'button']])
-            ->add('cancel', SubmitType::class, ['label'=> 'Cancel', 'attr' => ['class' => 'button']]);
+            ->add('cancel', SubmitType::class, ['label' => 'Cancel', 'attr' => ['class' => 'button']]);
     }
 
     public function getBlockPrefix()

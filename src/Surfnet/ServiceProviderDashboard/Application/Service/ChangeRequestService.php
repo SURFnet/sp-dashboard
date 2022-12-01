@@ -26,15 +26,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestReposi
 
 class ChangeRequestService implements ChangeRequestServiceInterface
 {
-    /**
-     * @var EntityChangeRequestRepository
-     */
-    private $repository;
-
     public function __construct(
-        EntityChangeRequestRepository $repository
+        private readonly EntityChangeRequestRepository $repository
     ) {
-        $this->repository = $repository;
     }
 
     public function findByIdAndProtocol(string $id, Protocol $protocol): ChangeRequestDtoCollection

@@ -26,56 +26,25 @@ class Attribute
 {
     const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $label;
-
-    /**
-     * @var string
-     */
-    private $info;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    private $urns = [];
-
-    private $excludeFrom = [];
-
     public function __construct(
-        string $id,
-        string $label,
-        string $info,
-        string $name,
-        array $urns,
-        array $excludeFrom
+        private readonly string $id,
+        private readonly string $label,
+        private readonly string $info,
+        private readonly string $name,
+        private readonly array $urns,
+        private readonly array $excludeFrom
     ) {
-        $this->id = $id;
-        $this->label = $label;
-        $this->info = $info;
-        $this->name = $name;
-        $this->urns = $urns;
-        $this->excludeFrom = $excludeFrom;
     }
 
     public static function fromAttribute(
         AttributeDto $attribute,
         AttributeTypeInformation $information
     ): Attribute {
-
         return new self(
             $attribute->id,
             $information->label,
             $information->info,
-            $attribute->id . ATTRIBUTE::ATTRIBUTE_NAME_SUFFIX,
+            $attribute->id . Attribute::ATTRIBUTE_NAME_SUFFIX,
             $attribute->urns,
             $attribute->form->excludeFrom
         );

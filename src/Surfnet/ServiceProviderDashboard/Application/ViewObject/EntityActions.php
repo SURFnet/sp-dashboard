@@ -25,51 +25,14 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
  */
 class EntityActions
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var int
-     */
-    private $serviceId;
-
-    /**
-     * @var string
-     */
-    private $status;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $protocol;
-
-    /**
-     * @var bool
-     */
-    private $readOnly;
-
     public function __construct(
-        string $id,
-        int $serviceId,
-        string $status,
-        string $environment,
-        string $protocol,
-        bool $isReadOnly
+        private readonly string $id,
+        private readonly int $serviceId,
+        private readonly string $status,
+        private readonly string $environment,
+        private readonly string $protocol,
+        private readonly bool $readOnly
     ) {
-
-        $this->id = $id;
-        $this->serviceId = $serviceId;
-        $this->status = $status;
-        $this->environment = $environment;
-        $this->protocol = $protocol;
-        $this->readOnly = $isReadOnly;
     }
 
     public function getId()
