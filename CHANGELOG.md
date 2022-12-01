@@ -12,8 +12,12 @@ Having these attributes in a configurable json file makes managing them much eas
 **Bugfix**
 Handle grants and redirect urls correctly when updating an OIDC entity #551
 
+## 4.2.2
+**Bugfix**
+- Repair publish call during ACL save (this is already fixed in develop 4.4)
+
 ## 4.2.1
-**Bugfixex**
+**Bugfix**
 - Ignore ACS locations that do not have the HTTP-POST Binding. #561
 
 ## 4.2.0
