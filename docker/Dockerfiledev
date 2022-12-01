@@ -1,6 +1,6 @@
 FROM ghcr.io/openconext/openconext-deploy/openconext-core:feature_build_image_with_teams_included AS openconext
 COPY ./conf/prep_oc.sh  /usr/local/sbin/prep_oc.sh
-COPY ./conf/saml20_sp.json /tmp/saml20_sp.json
+COPY ./conf/saml20_sp.json /usr/local/etc/saml20_sp.json
 COPY ./conf/engineblock.crt /etc/openconext/engineblock.crt
 COPY ./conf/engineblock.pem /etc/openconext/engineblock.pem
 COPY ./conf/start.sh /usr/local/sbin/start.sh
