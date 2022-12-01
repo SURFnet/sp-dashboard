@@ -30,22 +30,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
  */
 class LoadEntityService
 {
-    /**
-     * @var QueryManageRepository
-     */
-    private $manageTestClient;
-
-    /**
-     * @var QueryManageRepository
-     */
-    private $manageProductionClient;
-
     public function __construct(
-        QueryManageRepository $manageTestClient,
-        QueryManageRepository $manageProductionClient
+        private readonly QueryManageRepository $manageTestClient,
+        private readonly QueryManageRepository $manageProductionClient
     ) {
-        $this->manageTestClient = $manageTestClient;
-        $this->manageProductionClient = $manageProductionClient;
     }
 
     /**

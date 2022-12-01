@@ -22,17 +22,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class ServiceService
 {
-    /**
-     * @var ServiceRepository
-     */
-    private $services;
-
-    /**
-     * @param ServiceRepository $services
-     */
-    public function __construct(ServiceRepository $services)
-    {
-        $this->services = $services;
+    public function __construct(
+        private readonly ServiceRepository $services
+    ) {
     }
 
     /**

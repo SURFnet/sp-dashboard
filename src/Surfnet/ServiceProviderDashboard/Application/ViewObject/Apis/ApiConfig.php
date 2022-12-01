@@ -20,31 +20,12 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis;
 
 class ApiConfig
 {
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var ApiConnection
-     */
-    private $connection;
-
-    /**
-     * @var PublicationStatus
-     */
-    private $publicationStatus;
-
     public function __construct(
-        ApiConnection $connection,
-        PublicationStatus $publicationStatus = null,
-        string $environment = ''
+        private readonly ApiConnection $connection,
+        private readonly ?PublicationStatus $publicationStatus = null,
+        private readonly string $environment = ''
     ) {
-        $this->connection = $connection;
-        $this->publicationStatus = $publicationStatus;
-        $this->environment = $environment;
     }
-
 
     public function getEnvironment(): string
     {

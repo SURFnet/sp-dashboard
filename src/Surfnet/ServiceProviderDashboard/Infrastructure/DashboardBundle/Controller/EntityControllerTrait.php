@@ -97,7 +97,6 @@ trait EntityControllerTrait
 
     /**
      * @return RedirectResponse|Form
-     * @throws InvalidArgumentException
      */
     private function publishEntity(
         ?ManageEntity $entity,

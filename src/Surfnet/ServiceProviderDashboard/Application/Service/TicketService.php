@@ -30,20 +30,10 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 
 class TicketService implements TicketServiceInterface
 {
-    /**
-     * @var TicketServiceInterface
-     */
-    private $issueRepository;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(TicketServiceInterface $repository, LoggerInterface $logger)
-    {
-        $this->issueRepository = $repository;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly TicketServiceInterface $issueRepository,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     public function createIssueFrom(Ticket $ticket)

@@ -23,17 +23,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class EntityList implements IteratorAggregate
 {
-    /**
-     * @var Entity[]
-     */
-    private $entities;
-
-    /**
-     * @param Entity[] $entities
-     */
-    public function __construct(array $entities)
-    {
-        $this->entities = $entities;
+    public function __construct(
+        private array $entities
+    ) {
     }
 
     /**

@@ -29,236 +29,43 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 class EntityDetail
 {
     /**
-     * The local storage id
-     * @var string
-     */
-    private $id;
-
-    /**
-     * The manage id
-     * @var string
-     */
-    private $manageId;
-
-    /**
-     * @var string
-     */
-    private $metadataUrl;
-
-    /**
-     * @var array
-     */
-    private $acsLocations = [];
-
-    /**
-     * @var string
-     */
-    private $entityId;
-
-    /**
-     * @var string
-     */
-    private $protocol;
-
-    /**
-     * @var string
-     */
-    private $certificate;
-
-    /**
-     * @var string
-     */
-    private $logoUrl;
-
-    /**
-     * @var string
-     */
-    private $nameNl;
-
-    /**
-     * @var string
-     */
-    private $nameEn;
-
-    /**
-     * @var string
-     */
-    private $descriptionNl;
-
-    /**
-     * @var string
-     */
-    private $descriptionEn;
-
-    /**
-     * @var string
-     */
-    private $applicationUrl;
-
-    /**
-     * @var string
-     */
-    private $eulaUrl;
-
-    /**
-     * @var Contact
-     */
-    private $administrativeContact;
-
-    /**
-     * @var Contact
-     */
-    private $technicalContact;
-
-    /**
-     * @var Contact
-     */
-    private $supportContact;
-
-    /**
-     * @var EntityDetailAttribute[]
-     */
-    private $attributes;
-
-    /**
-     * @var string
-     */
-    private $nameIdFormat;
-
-    /**
-     * @var string
-     */
-    private $organizationNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationNameEn;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameNl;
-
-    /**
-     * @var string
-     */
-    private $organizationDisplayNameEn;
-
-    /**
-     * @var string
-     */
-    private $organizationUrlNl;
-
-    /**
-     * @var string
-     */
-    private $organizationUrlEn;
-
-    /**
-     * @var EntityActions
-     */
-    private $actions;
-
-    /**
-     * @var string[]
-     */
-    private $redirectUris;
-
-    /**
-     * @var array
-     */
-    private $grants;
-
-    /**
-     * @var bool
-     */
-    private $playgroundEnabled;
-
-    /**
-     * @var int
-     */
-    private $accessTokenValidity;
-
-    /**
-     * @var bool
-     */
-    private $isPublicClient;
-
-    /**
-     * @var ManageEntity[]|null
-     */
-    private $resourceServers = null;
-
-    /**
+     * @param ManageEntity[]|null $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        string $id,
-        string $manageId,
-        string $metadataUrl,
-        array $acsLocations,
-        string $entityId,
-        string $protocol,
-        string $certificate,
-        ?string $logoUrl,
-        string $nameNl,
-        string $nameEn,
-        string $descriptionNl,
-        string $descriptionEn,
-        string $applicationUrl,
-        string $eulaUrl,
-        ?Contact $administrativeContact,
-        ?Contact $technicalContact,
-        ?Contact $supportContact,
-        array $attributes,
-        EntityActions $actions,
-        string $nameIdFormat,
-        string $organizationNameNl,
-        string $organizationNameEn,
-        string $organizationDisplayNameNl,
-        string $organizationDisplayNameEn,
-        string $organizationUrlNl,
-        string $organizationUrlEn,
-        ?array $redirectUris,
-        ?array $grants,
-        ?bool $playgroundEnabled,
-        ?int $accessTokenValidity,
-        ?bool $isPublicClient,
-        ?array $resourceServers
+        private readonly string $id,
+        private readonly string $manageId,
+        private readonly string $metadataUrl,
+        private readonly array $acsLocations,
+        private readonly string $entityId,
+        private readonly string $protocol,
+        private readonly string $certificate,
+        private readonly ?string $logoUrl,
+        private readonly string $nameNl,
+        private readonly string $nameEn,
+        private readonly string $descriptionNl,
+        private readonly string $descriptionEn,
+        private readonly string $applicationUrl,
+        private readonly string $eulaUrl,
+        private readonly ?Contact $administrativeContact,
+        private readonly ?Contact $technicalContact,
+        private readonly ?Contact $supportContact,
+        private readonly array $attributes,
+        private readonly EntityActions $actions,
+        private readonly string $nameIdFormat,
+        private readonly string $organizationNameNl,
+        private readonly string $organizationNameEn,
+        private readonly string $organizationDisplayNameNl,
+        private readonly string $organizationDisplayNameEn,
+        private readonly string $organizationUrlNl,
+        private readonly string $organizationUrlEn,
+        private readonly ?array $redirectUris,
+        private readonly ?array $grants,
+        private readonly ?bool $playgroundEnabled,
+        private readonly ?int $accessTokenValidity,
+        private readonly ?bool $isPublicClient,
+        private readonly ?array $resourceServers
     ) {
-        $this->id = $id;
-        $this->manageId = $manageId;
-        $this->metadataUrl = $metadataUrl;
-        $this->acsLocations = $acsLocations;
-        $this->entityId = $entityId;
-        $this->protocol = $protocol;
-        $this->certificate = $certificate;
-        $this->logoUrl = $logoUrl;
-        $this->nameNl = $nameNl;
-        $this->nameEn = $nameEn;
-        $this->descriptionNl = $descriptionNl;
-        $this->descriptionEn = $descriptionEn;
-        $this->applicationUrl = $applicationUrl;
-        $this->eulaUrl = $eulaUrl;
-        $this->administrativeContact = $administrativeContact;
-        $this->technicalContact = $technicalContact;
-        $this->supportContact = $supportContact;
-        $this->attributes = $attributes;
-        $this->nameIdFormat = $nameIdFormat;
-        $this->organizationNameNl = $organizationNameNl;
-        $this->organizationNameEn = $organizationNameEn;
-        $this->organizationDisplayNameNl = $organizationDisplayNameNl;
-        $this->organizationDisplayNameEn = $organizationDisplayNameEn;
-        $this->organizationUrlNl = $organizationUrlNl;
-        $this->organizationUrlEn = $organizationUrlEn;
-        $this->actions = $actions;
-        $this->redirectUris = $redirectUris;
-        $this->grants = $grants;
-        $this->playgroundEnabled = $playgroundEnabled;
-        $this->accessTokenValidity = $accessTokenValidity;
-        $this->isPublicClient = $isPublicClient;
-        $this->resourceServers = $resourceServers;
     }
 
     public function isLocalEntity()

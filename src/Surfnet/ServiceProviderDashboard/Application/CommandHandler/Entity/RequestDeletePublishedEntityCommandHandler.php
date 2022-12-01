@@ -34,11 +34,6 @@ use Webmozart\Assert\Assert;
 class RequestDeletePublishedEntityCommandHandler implements CommandHandler
 {
     /**
-     * @var QueryManageRepository
-     */
-    private $queryClient;
-
-    /**
      * @var string
      */
     private $summaryTranslationKey;
@@ -49,14 +44,13 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
     private $descriptionTranslationKey;
 
     public function __construct(
-        private QueryManageRepository $manageProductionQueryClient,
-        private readonly string                $issueType,
-        private readonly TicketService         $ticketService,
-        private readonly FlashBagInterface     $flashBag,
-        private readonly LoggerInterface       $logger
+        private readonly QueryManageRepository $queryClient,
+        private readonly string $issueType,
+        private readonly TicketService $ticketService,
+        private readonly FlashBagInterface $flashBag,
+        private readonly LoggerInterface $logger
     ) {
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in .env');
-        $this->queryClient = $manageProductionQueryClient;
         $this->summaryTranslationKey = 'entity.delete.request.ticket.summary';
         $this->descriptionTranslationKey = 'entity.delete.request.ticket.description';
     }

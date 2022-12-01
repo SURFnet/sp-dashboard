@@ -21,29 +21,16 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service\ValueObject;
 
 class EntityMergeAttribute
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $urn;
-
     public function __construct(
-        string $name,
-        string $urn
+        private readonly string $name,
+        private readonly string $urn
     ) {
-        $this->name = $name;
-        $this->urn = $urn;
     }
 
     public static function fromAttribute(
         $name,
         $urn
     ): EntityMergeAttribute {
-
         return new self(
             $name,
             $urn
