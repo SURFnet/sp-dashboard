@@ -5,11 +5,11 @@ services:
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\:
     resource: '../../Controller'
-    tags: ['controller.service_arguments']
+    tags: [ 'controller.service_arguments' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\:
     resource: '../../Security/Voter'
-    tags: ['security.voter']
+    tags: [ 'security.voter' ]
 
   surfnet.dashboard.command_handler.create_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
@@ -72,19 +72,19 @@ services:
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand }
 
-    Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateConnectionRequestCommandHandler:
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
-            - '%jira_issue_type_idp_invite%'
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand }
+  Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateConnectionRequestCommandHandler:
+    arguments:
+      - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
+      - '%env(jira_issue_type_idp_invite)%'
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand }
 
-    surfnet.dashboard.command_handler.publish_test_entity:
-        class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
-        arguments:
-            $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
-        tags:
-            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
+  surfnet.dashboard.command_handler.publish_test_entity:
+    class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
+    arguments:
+      $publishClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+    tags:
+      - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand }
 
   Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\EntityChangeRequestCommandHandler:
     arguments:
@@ -173,7 +173,7 @@ services:
     class: GuzzleHttp\Client
 
   Surfnet\ServiceProviderDashboard\Legacy\Metadata\Fetcher:
-    arguments: ['@surfnet.dashboard.metadata.client', '@logger', '%env(metadata_url_timeout)%']
+    arguments: [ '@surfnet.dashboard.metadata.client', '@logger', '%env(metadata_url_timeout)%' ]
 
 
   Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy:
@@ -199,54 +199,54 @@ services:
     tags:
       - { name: dashboard.json_generator, identifier: oauth20_ccc }
 
-    Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
-            - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
-            - '%kernel.project_dir%/assets/Resources'
-            - '@logger'
+  Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
+    arguments:
+      - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
+      - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+      - '%kernel.project_dir%/assets/Resources'
+      - '@logger'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter\JsonFormatter
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository:
-    factory: ['@doctrine', 'getRepository']
-    arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Contact]
+    factory: [ '@doctrine', 'getRepository' ]
+    arguments: [ Surfnet\ServiceProviderDashboard\Domain\Entity\Contact ]
 
-    Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
-        arguments:  ['%kernel.project_dir%/assets/Resources']
+  Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository:
+    arguments: [ '%kernel.project_dir%/assets/Resources' ]
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
-        arguments:  ['%kernel.project_dir%/assets/attributes.json']
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
+    arguments: [ '%kernel.project_dir%/assets/attributes.json' ]
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
-        public: true
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions]
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
+    public: true
+    factory: [ '@doctrine', 'getRepository' ]
+    arguments: [ Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions ]
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository:
-        public: true
-        factory: ['@doctrine', 'getRepository']
-        arguments: [Surfnet\ServiceProviderDashboard\Domain\Entity\Service]
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository:
+    public: true
+    factory: [ '@doctrine', 'getRepository' ]
+    arguments: [ Surfnet\ServiceProviderDashboard\Domain\Entity\Service ]
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
-        public: true
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
-        arguments:
-            $serviceService: '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
-            $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
-            $tokenStorage: '@security.token_storage'
-            $manageTestConfig: "@surfnet.manage.configuration.test"
-            $manageProdConfig: "@surfnet.manage.configuration.production"
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService:
+    public: true
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
+    arguments:
+      $serviceService: '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
+      $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+      $tokenStorage: '@security.token_storage'
+      $manageTestConfig: "@surfnet.manage.configuration.test"
+      $manageProdConfig: "@surfnet.manage.configuration.production"
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension:
-    tags: [twig.extension]
+    tags: [ twig.extension ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\IdentityExtension:
-    tags: [twig.extension]
+    tags: [ twig.extension ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension:
-    tags: [twig.extension]
+    tags: [ twig.extension ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidEntityIdValidator:
     tags:
@@ -297,12 +297,12 @@ services:
       - { name: validator.constraint_validator, alias: metadata_url }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidLogoValidator:
-    arguments:  ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper']
+    arguments: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper' ]
     tags:
       - { name: validator.constraint_validator, alias: logo }
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\CurlLogoValidationHelper:
-    arguments:  ['@logger']
+    arguments: [ '@logger' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository:
     arguments:
@@ -319,8 +319,9 @@ services:
 
   Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService:
     arguments:
-      $oidcPlaygroundUriTest: '%env(playground_uri_test)%'
-      $oidcPlaygroundUriProd: '%env(playground_uri_prod)%'
+      - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+      - '%env(playground_uri_test)%'
+      - '%env(playground_uri_prod)%'
 
   Surfnet\ServiceProviderDashboard\Application\Service\ServiceService:
     class: Surfnet\ServiceProviderDashboard\Application\Service\ServiceService
@@ -336,11 +337,11 @@ services:
       - '@logger'
       - '%env(jira_issue_type)%'
 
-    Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
-        public: true
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
-            - '%env(locale)%'
+  Surfnet\ServiceProviderDashboard\Application\Service\AttributeService:
+    public: true
+    arguments:
+      - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository'
+      - '%env(locale)%'
 
   Surfnet\ServiceProviderDashboard\Application\Service\AttributeNameService:
     arguments:
@@ -424,10 +425,10 @@ services:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
       - '@surfnet.manage.client.publish_client.prod_environment'
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient:
-        arguments:
-            - '@surfnet.manage.http.guzzle.test_environment'
-            - '@logger'
+  Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient:
+    arguments:
+      - '@surfnet.manage.http.guzzle.test_environment'
+      - '@logger'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\TeamsController:
     arguments:
@@ -482,13 +483,13 @@ services:
 
   surfnet.manage.http.guzzle.test_environment:
     class: GuzzleHttp\Client
-    factory: ['@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient']
+    factory: [ '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory', 'createClient' ]
     arguments:
       - "@surfnet.manage.configuration.test"
 
   surfnet.teams.http.guzzle:
     class: GuzzleHttp\Client
-    factory: ['Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory', 'createClient']
+    factory: [ 'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\TeamsClientFactory', 'createClient' ]
     arguments:
       - "@surfnet.teams.configuration"
 
@@ -503,24 +504,25 @@ services:
     arguments:
       $client: '@surfnet.manage.http.http_client.prod_environment'
 
-    surfnet.teams.http.http_client:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient
-        arguments:
-           - '@surfnet.teams.http.guzzle'
-           - '@logger'
-           - ''
+  surfnet.teams.http.http_client:
+    class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient
+    arguments:
+      - '@surfnet.teams.http.guzzle'
+      - '@logger'
+      - ''
 
   surfnet.manage.http.guzzle.prod_environment:
     class: GuzzleHttp\Client
-    factory: ['Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory','createClient']
+    factory: [ 'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory','createClient' ]
     arguments:
       - "@surfnet.manage.configuration.production"
 
   Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactory
     arguments:
-      $oidcPlaygroundUriTest: '%env(playground_uri_test)%'
-      $oidcPlaygroundUriProd: '%env(playground_uri_prod)%'
+      - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+      - '%env(playground_uri_test)%'
+      - '%env(playground_uri_prod)%'
 
   Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory:
     arguments:
@@ -544,18 +546,18 @@ services:
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclListType:
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
-    tags: ['form.type']
+    tags: [ 'form.type' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType:
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService'
-    tags: ['form.type']
+    tags: [ 'form.type' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngEntityType:
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeTypeFactory'
-    tags: ['form.type']
+    tags: [ 'form.type' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType:
     arguments:
@@ -568,7 +570,7 @@ services:
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OauthClientCredentialEntityType:
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory'
-    tags: ['form.type']
+    tags: [ 'form.type' ]
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\OidcngResourceServerOptionsFactory:
     arguments:
@@ -622,7 +624,7 @@ services:
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory:
     $saveCommandFactory: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface'
-    $attributeService:  '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
+    $attributeService: '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory:
 

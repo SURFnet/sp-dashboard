@@ -28,43 +28,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreateServiceCommandHandler implements CommandHandler
 {
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
-
-    /**
-     * @var PublishTeamsRepository
-     */
-    private $publishEntityClient;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    private $prefixPart1;
-
-    /**
-     * @var string
-     */
-    private $prefixPart2;
-
     public function __construct(
-        ServiceRepository $serviceRepository,
-        PublishTeamsRepository $publishEntityClient,
-        TranslatorInterface $translator,
-        string $prefixPart1,
-        string $prefixPart2
+        private readonly ServiceRepository $serviceRepository,
+        private readonly PublishTeamsRepository $publishEntityClient,
+        private readonly TranslatorInterface $translator,
+        private readonly string $prefixPart1,
+        private readonly string $prefixPart2
     ) {
-        $this->serviceRepository = $serviceRepository;
-        $this->publishEntityClient = $publishEntityClient;
-        $this->translator = $translator;
-        $this->prefixPart1 = $prefixPart1;
-        $this->prefixPart2 = $prefixPart2;
     }
 
     /**

@@ -27,43 +27,18 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class Ticket
 {
-    /** @var string */
-    private $entityId;
-    /** @var string */
-    private $manageId;
-    /** @var string */
-    private $entityName;
-    /** @var string */
-    private $summaryTranslationKey;
-    /** @var string */
-    private $descriptionTranslationKey;
-    /** @var string */
-    private $applicantName;
-    /** @var string */
-    private $applicantEmail;
-    /** @var string */
-    private $issueType;
-    /** @var array */
-    private $connectionRequests;
+    private array $connectionRequests;
 
     public function __construct(
-        string $entityId,
-        string $manageId,
-        string $nameEn,
-        string $summaryTranslationKey,
-        string $descriptionTranslationKey,
-        string $applicantName,
-        string $applicantEmail,
-        ?string $issueType
+        private readonly string $entityId,
+        private readonly string $manageId,
+        private readonly string $entityName,
+        private readonly string $summaryTranslationKey,
+        private readonly string $descriptionTranslationKey,
+        private readonly string $applicantName,
+        private readonly string $applicantEmail,
+        private readonly ?string $issueType
     ) {
-        $this->entityId = $entityId;
-        $this->manageId = $manageId;
-        $this->entityName = $nameEn;
-        $this->summaryTranslationKey = $summaryTranslationKey;
-        $this->descriptionTranslationKey = $descriptionTranslationKey;
-        $this->applicantName = $applicantName;
-        $this->applicantEmail = $applicantEmail;
-        $this->issueType = $issueType;
     }
 
     public static function fromManageResponse(
@@ -107,7 +82,8 @@ class Ticket
             $descriptionTranslationKey,
             $applicant->getDisplayName(),
             $applicant->getEmailAddress(),
-            $issueType);
+            $issueType
+        );
 
         $ticket->connectionRequests = $connectionRequests;
 

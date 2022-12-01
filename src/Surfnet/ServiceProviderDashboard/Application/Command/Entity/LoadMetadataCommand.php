@@ -22,17 +22,10 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 
 class LoadMetadataCommand implements Command
 {
-    /**
-     * @var SaveSamlEntityCommand
-     */
-    private $saveEntityCommand;
-
-    private $requestData;
-
-    public function __construct(SaveSamlEntityCommand $command, array $requestData)
-    {
-        $this->saveEntityCommand = $command;
-        $this->requestData = $requestData;
+    public function __construct(
+        private readonly SaveSamlEntityCommand $saveEntityCommand,
+        private readonly array $requestData
+    ) {
     }
 
     /**

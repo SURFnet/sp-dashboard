@@ -22,35 +22,14 @@ use Webmozart\Assert\Assert;
 
 class Connection
 {
-    /**
-     * @var string
-     */
-    private $host;
-
-    /**
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $password;
-
-    /**
-     * @param string $host
-     * @param string $username
-     * @param string $password
-     */
-    public function __construct($host, $username, $password)
-    {
+    public function __construct(
+        private readonly string $host,
+        private readonly string $username,
+        private readonly string $password
+    ) {
         Assert::stringNotEmpty($host, 'Please set the manage host in .env');
         Assert::stringNotEmpty($username, 'Please set the manage username in .env');
         Assert::stringNotEmpty($password, 'Please set the manage password in .env');
-
-        $this->host = $host;
-        $this->username = $username;
-        $this->password = $password;
     }
 
     public function getHost()

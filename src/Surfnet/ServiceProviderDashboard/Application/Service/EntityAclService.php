@@ -25,19 +25,13 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepositor
 class EntityAclService
 {
     /**
-     * @var IdentityProviderRepository
-     */
-    private $identityProviderRepository;
-
-    /**
      * @var IdentityProvider[]|null
      */
     public $availableProviders = null;
 
     public function __construct(
-        IdentityProviderRepository $identityProviderRepository
+        private readonly IdentityProviderRepository $identityProviderRepository
     ) {
-        $this->identityProviderRepository = $identityProviderRepository;
     }
 
     /**

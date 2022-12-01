@@ -31,22 +31,12 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\A
 
 class AttributeService implements AttributeServiceInterface
 {
-    /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
-
     private $attributes = [];
 
-    /**
-     * @var string
-     */
-    private $language;
-
-    public function __construct(AttributeRepositoryInterface $attributeRepository, $language)
-    {
-        $this->attributeRepository = $attributeRepository;
-        $this->language = $language;
+    public function __construct(
+        private readonly AttributeRepositoryInterface $attributeRepository,
+        private readonly string $language
+    ) {
     }
 
     public function getAttributeTypeAttributes(): array
