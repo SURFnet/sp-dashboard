@@ -19,7 +19,6 @@
 namespace integration\Application\Validator\Constraints;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints\ValidAttribute;
@@ -46,7 +45,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_success_empty_attribute()
     {
         $constraint = new ValidAttribute();
-        $constraint->type = Constants::TYPE_SAML;
         $this->validator->validate(['emailAddressAttribute' => null], $constraint);
 
         $this->assertNoViolation();
@@ -55,7 +53,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_success_requested_attribute_with_motivation()
     {
         $constraint = new ValidAttribute();
-        $constraint->type = Constants::TYPE_SAML;
         $this->validator->validate($this->buildAttributes(
             'emailAddressAttribute',
             true,
@@ -68,7 +65,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_success_not_requested_attribute_with_null_motivation()
     {
         $constraint = new ValidAttribute();
-        $constraint->type = Constants::TYPE_SAML;
         $this->validator->validate($this->buildAttributes(
             'emailAddressAttribute',
             false,
@@ -81,7 +77,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_requested_attribute_with_empty_motivation()
     {
         $constraint = new ValidAttribute();
-        $constraint->type = Constants::TYPE_SAML;
         $this->validator->validate($this->buildAttributes(
             'emailAddressAttribute',
             true,
@@ -97,7 +92,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_requested_attribute_with_null_motivation()
     {
         $constraint = new ValidAttribute();
-        $constraint->type = Constants::TYPE_SAML;
         $this->validator->validate($this->buildAttributes(
             'emailAddressAttribute',
             true,
@@ -113,7 +107,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_invalid_non_existing_attribute()
     {
         $constraint = new ValidAttribute();
-        $constraint->type = Constants::TYPE_SAML;
         $this->validator->validate($this->buildAttributes(
             'fantasyAttribute',
             true,
@@ -129,7 +122,6 @@ class ValidAttributeValidatorTest extends ConstraintValidatorTestCase
     public function test_success_multiple_requested_attributes()
     {
         $constraint = new ValidAttribute();
-        $constraint->type = Constants::TYPE_SAML;
         $this->validator->validate($this->buildMultipleAttributes(
             ['emailAddressAttribute', 'eduPersonTargetedIDAttribute', 'surNameAttribute',]
         ), $constraint);

@@ -26,6 +26,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\NullAttr
 
 class AttributeRepository implements AttributeRepositoryInterface
 {
+    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
+
     private $attributesFileLocation;
     private $attributes = [];
 
@@ -72,5 +74,16 @@ class AttributeRepository implements AttributeRepositoryInterface
             $nameSpaceIdentifiers[] = $attribute->urns[0];
         }
         return $nameSpaceIdentifiers;
+    }
+
+    public function isAttributeName(string $name): bool
+    {
+        $attributes = $this->findAll();
+        foreach ($attributes as $attribute) {
+            if ($attribute->id . self::ATTRIBUTE_NAME_SUFFIX === $name) {
+                return true;
+            }
+        }
+        return false;
     }
 }

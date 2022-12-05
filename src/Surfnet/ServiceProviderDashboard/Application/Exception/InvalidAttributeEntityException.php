@@ -18,24 +18,10 @@ declare(strict_types=1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
+namespace Surfnet\ServiceProviderDashboard\Application\Exception;
 
-use Symfony\Component\Validator\Constraint;
+use Exception;
 
-/**
- * @Annotation
- */
-class ValidAttribute extends Constraint
+class InvalidAttributeEntityException extends Exception
 {
-    public $messageAttributeNotFound = 'validator.attribute.not_found';
-
-    public $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set';
-
-    /**
-     * @return string
-     */
-    public function validatedBy()
-    {
-        return 'valid_attribute';
-    }
 }

@@ -80,4 +80,47 @@ class AttributeRepositoryTest extends TestCase
             $this->assertContains($attribute->id, $expectedAttributes);
         }
     }
+
+    public function test_it_is_an_attribute()
+    {
+        $expectedAttributes = [
+            "displayNameAttribute",
+            "affiliationAttribute",
+            "scopedAffiliationAttribute",
+            "emailAddressAttribute",
+            "commonNameAttribute",
+            "organizationAttribute",
+            "organizationTypeAttribute",
+            "organizationUnitAttribute",
+            "surNameAttribute",
+            "givenNameAttribute",
+            "entitlementAttribute",
+            "uidAttribute",
+            "principleNameAttribute",
+            "preferredLanguageAttribute",
+            "personalCodeAttribute",
+            "eduPersonTargetedIDAttribute",
+        ];
+
+        $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
+        foreach ($expectedAttributes as $name) {
+            $this->assertTrue($attributeRepository->isAttributeName($name));
+        }
+    }
+
+    public function test_it_is_not_an_attribute()
+    {
+        $expectedAttributes = [
+            "displayNamesAttribute",
+            "fantasyAttribute",
+            "",
+            "[]",
+            ".*",
+        ];
+
+        $attributeRepository = new AttributeRepository(__DIR__ . '/Fixtures/attributes.json');
+        foreach ($expectedAttributes as $name) {
+            $this->assertFalse($attributeRepository->isAttributeName($name));
+        }
+    }
 }

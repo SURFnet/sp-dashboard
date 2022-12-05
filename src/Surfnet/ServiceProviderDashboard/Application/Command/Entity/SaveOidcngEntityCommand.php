@@ -204,7 +204,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $supportContact;
 
     /**
-     * @SpDashboardAssert\ValidAttribute(type="oidcng")
+     * @SpDashboardAssert\ValidAttribute()
      */
     private $attributes = [];
 
