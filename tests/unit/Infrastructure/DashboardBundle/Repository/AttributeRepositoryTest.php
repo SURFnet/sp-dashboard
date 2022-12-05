@@ -58,7 +58,7 @@ class AttributeRepositoryTest extends TestCase
         $expectedAttributes = [
             "displayName",
             "affiliation",
-            "scopedaffiliation",
+            "scopedAffiliation",
             "emailAddress",
             "commonName",
             "organization",

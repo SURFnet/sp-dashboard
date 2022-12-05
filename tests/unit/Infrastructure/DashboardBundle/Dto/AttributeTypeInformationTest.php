@@ -25,12 +25,16 @@ class AttributeTypeInformationTest extends TestCase
     public function test_it_is_created()
     {
         $en = [
-                'label' => 'emailAddressAttribute',
-                'info' => 'Description is placed here'
+            'saml20Label' => 'saml20 emailAddressAttribute',
+            'saml20Info' => 'saml20 Description is placed here',
+            'oidcngLabel' => 'oidcng emailAddressAttribute',
+            'oidcngInfo' => 'oidcng Description is placed here'
         ];
         $language = AttributeTypeInformation::fromLanguage($en, 'en');
 
-        $this->assertEquals('emailAddressAttribute', $language->label);
-        $this->assertEquals('Description is placed here', $language->info);
+        $this->assertEquals('saml20 emailAddressAttribute', $language->saml20Label);
+        $this->assertEquals('saml20 Description is placed here', $language->saml20Info);
+        $this->assertEquals('oidcng emailAddressAttribute', $language->oidcngLabel);
+        $this->assertEquals('oidcng Description is placed here', $language->oidcngInfo);
     }
 }
