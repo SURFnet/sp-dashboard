@@ -48,6 +48,8 @@ class ValidAttributeValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        $type = $constraint->type;
+
         foreach ($value ?? [] as $name => $attribute) {
             if (!isset($attribute)) {
                 continue;
@@ -55,7 +57,7 @@ class ValidAttributeValidator extends ConstraintValidator
 
             // We only want existing attributes
             try {
-                $attributeName = $this->attributeService->getAttributeFriendlyName($name);
+                $attributeName = $this->attributeService->getAttributeFriendlyName($name, $type);
             } catch (AttributeNotFoundException $e) {
                 $this->buildAttributeViolation($constraint->messageAttributeNotFound, $name);
             }
