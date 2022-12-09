@@ -15,12 +15,7 @@ COPY ./conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
 
 RUN /usr/sbin/update-ca-certificates && \
     rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ && \
-    apk --update --no-cache add yarn autoconf g++ make && \
-    docker-php-ext-install  mysqli && \
-    pecl install -f xdebug && \
-    docker-php-ext-enable xdebug && \
-    apk del --purge autoconf g++ make
-
+    apk --update --no-cache add yarn 
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
 
 FROM ghcr.io/openconext/openconext-containers/openconext-httpd:latest AS spdhttpd
