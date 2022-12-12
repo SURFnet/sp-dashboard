@@ -56,6 +56,11 @@ class EntityService implements EntityServiceInterface
     private $serviceService;
 
     /**
+     * @var ChangeRequestService
+     */
+    private $changeRequestService;
+
+    /**
      * @var RouterInterface
      */
     private $router;
@@ -87,6 +92,7 @@ class EntityService implements EntityServiceInterface
         EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
         TicketServiceInterface $ticketService,
         ServiceService $serviceService,
+        ChangeRequestService $changeRequestService,
         ApiConfig $testConfig,
         ApiConfig $productionConfig,
         RouterInterface $router,
@@ -96,6 +102,7 @@ class EntityService implements EntityServiceInterface
         $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
         $this->ticketService = $ticketService;
         $this->serviceService = $serviceService;
+        $this->changeRequestService = $changeRequestService;
         $this->router = $router;
         $this->logger = $logger;
         $this->testManageConfig = $testConfig;
@@ -194,7 +201,13 @@ class EntityService implements EntityServiceInterface
 
         $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
         foreach ($productionEntities as $result) {
-            $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
+            $hasChangeRequest = $this->hasChangeRequests($result);
+            $entities[] = ViewObject\Entity::fromManageProductionResult(
+                $result,
+                $this->router,
+                $service->getId(),
+                $hasChangeRequest
+            );
         }
 
         return new ViewObject\EntityList($entities);
@@ -345,5 +358,19 @@ class EntityService implements EntityServiceInterface
     {
         $entity->getMetaData()->getOrganization()->updateNameEn($orgNameEn);
         $entity->getMetaData()->getOrganization()->updateNameNl($orgNameNl);
+    }
+
+    /**
+     * @param ManageEntity $service
+     * @return bool
+     */
+    private function hasChangeRequests(ManageEntity $entity): bool
+    {
+        $changes = $this->changeRequestService->findByIdAndProtocol(
+            $entity->getId(),
+            $entity->getProtocol()
+        );
+
+        return count($changes->getChangeRequests()) > 0;
     }
 }

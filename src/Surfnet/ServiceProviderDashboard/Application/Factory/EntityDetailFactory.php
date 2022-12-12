@@ -63,7 +63,8 @@ class EntityDetailFactory
             $manageEntity->getStatus(),
             $manageEntity->getEnvironment(),
             $manageEntity->getProtocol()->getProtocol(),
-            $manageEntity->isReadOnly()
+            $manageEntity->isReadOnly(),
+            false
         );
 
         $grants = null;
