@@ -3,7 +3,7 @@ name: Run integration tests
 on:
   pull_request:
     branches: [ develop ]
-  push: 
+  push:
     branches: [ develop ]
 
 jobs:
@@ -86,8 +86,3 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome
         continue-on-error: true
-
-      - name: Run translations
-        run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer translations'
-
