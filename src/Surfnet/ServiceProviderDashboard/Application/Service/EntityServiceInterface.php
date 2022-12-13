@@ -54,4 +54,14 @@ interface EntityServiceInterface
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      */
     public function getManageEntityById($manageId, $env = 'test');
+
+    /**
+     * @param string $manageId
+     * @param string $env
+     * @return ManageEntity|null
+     *
+     * @throws InvalidArgumentException
+     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
+     */
+    public function getPristineManageEntityById($manageId, $env = 'test');
 }

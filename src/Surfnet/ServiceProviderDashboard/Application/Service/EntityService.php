@@ -242,6 +242,28 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
+     * @param string $manageId
+     * @param string $env
+     *
+     * @return ManageEntity|null
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryServiceProviderException
+     */
+    public function getPristineManageEntityById($manageId, $env = 'test')
+    {
+        $entity = $this->queryRepositoryProvider
+            ->fromEnvironment($env)
+            ->findByManageId($manageId);
+        $entity->setEnvironment($env);
+        // Set the service associated to the entity on the entity.
+        $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+        $entity->setService($service);
+        $this->updateStatus($entity);
+        return $entity;
+    }
+
+    /**
      * @param string $teamName
      * @return array|null
      * @throws QueryServiceProviderException
