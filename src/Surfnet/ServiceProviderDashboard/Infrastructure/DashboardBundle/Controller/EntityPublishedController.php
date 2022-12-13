@@ -65,10 +65,7 @@ class EntityPublishedController extends AbstractController
      */
     public function changeRequestAction()
     {
-        /** @var ManageEntity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
-        $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
-        return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig', $parameters);
+        return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig');
     }
 
     /**

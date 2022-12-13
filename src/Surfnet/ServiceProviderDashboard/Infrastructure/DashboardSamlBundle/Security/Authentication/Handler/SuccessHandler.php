@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler;
 
-use SAML2\Assertion;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
+use Symfony\Component\Security\Http\HttpUtils;
 
-interface AuthenticationHandler
+class SuccessHandler extends DefaultAuthenticationSuccessHandler
 {
-    /**
-     * Checks if it can process the event and if so does so. Also determines if there
-     * is a next handler to be called if it cannot process the event itself.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function process(Request $request): Assertion;
-
-    /**
-     * Allows setting the optional next handler
-     *
-     * @param AuthenticationHandler $handler
-     * @return void
-     */
-//    public function setNext(AuthenticationHandler $handler);
+    public function __construct(HttpUtils $httpUtils, array $options = [], LoggerInterface $logger = null)
+    {
+        parent::__construct($httpUtils, $options, $logger);
+    }
 }

@@ -25,6 +25,7 @@ use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\Http\RedirectBinding;
 use Surfnet\SamlBundle\SAML2\AuthnRequestFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnexpectedIssuerException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class SamlInteractionProvider
@@ -38,18 +39,12 @@ class SamlInteractionProvider
     ) {
     }
 
-    /**
-     * @return bool
-     */
-    public function isSamlAuthenticationInitiated()
+    public function isSamlAuthenticationInitiated(): bool
     {
         return $this->samlAuthenticationStateHandler->hasRequestId();
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function initiateSamlRequest()
+    public function initiateSamlRequest(): RedirectResponse
     {
         $authnRequest = AuthnRequestFactory::createNewRequest(
             $this->serviceProvider,
@@ -58,16 +53,11 @@ class SamlInteractionProvider
 
         $this->samlAuthenticationStateHandler->setRequestId($authnRequest->getRequestId());
 
-        return $this->redirectBinding->createRedirectResponseFor($authnRequest);
+        return $this->redirectBinding->createResponseFor($authnRequest);
     }
 
-    /**
-     * @param Request $request
-     * @return Assertion
-     */
-    public function processSamlResponse(Request $request)
+    public function processSamlResponse(Request $request): Assertion
     {
-        /** @var Assertion $assertion */
         $assertion = $this->postBinding->processResponse(
             $request,
             $this->identityProvider,
@@ -81,16 +71,13 @@ class SamlInteractionProvider
                 $assertion->getIssuer()
             ));
         }
-
-        $this->samlAuthenticationStateHandler->clearRequestId();
-
         return $assertion;
     }
 
     /**
      * Resets the SAML flow.
      */
-    public function reset()
+    public function reset(): void
     {
         $this->samlAuthenticationStateHandler->clearRequestId();
     }

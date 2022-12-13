@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler;
 
 use Exception;
+use SAML2\Assertion;
 use SAML2\Response\Exception\PreconditionNotMetException;
 use Surfnet\SamlBundle\Http\Exception\AuthnFailedSamlResponseException;
 use Surfnet\SamlBundle\Monolog\SamlAuthenticationLogger;
@@ -26,133 +27,60 @@ use Surfnet\SamlBundle\SAML2\Response\Assertion\InResponseTo;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\AuthenticatedSessionStateHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlAuthenticationStateHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlInteractionProvider;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Twig\Environment as TwigEnvironment;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) SamlResponse parsing, validation authentication and error handling
- *                                                 requires quite a few classes as it is fairly complex.
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- */
 class ProcessSamlAuthenticationHandler implements AuthenticationHandler
 {
-    /**
-     * @var AuthenticationHandler
-     */
-    private $nextHandler;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        SamlInteractionProvider $samlInteractionProvider,
-        SamlAuthenticationStateHandler $authenticationStateHandler,
-        AuthenticatedSessionStateHandler $authenticatedSession,
-        AuthenticationManagerInterface $authenticationManager,
-        SamlAuthenticationLogger $authenticationLogger,
-        TwigEnvironment $templating
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SamlInteractionProvider $samlInteractionProvider,
+        private readonly SamlAuthenticationStateHandler $authenticationStateHandler,
+        private readonly AuthenticatedSessionStateHandler $authenticatedSession,
+        private readonly SamlAuthenticationLogger $authenticationLogger,
+        private readonly Environment $templating
     ) {
     }
 
-    public function process(RequestEvent $event)
+    public function process(Request $request): Assertion
     {
-        if ($this->tokenStorage->getToken() === null
-            && $this->samlInteractionProvider->isSamlAuthenticationInitiated()
-        ) {
-            $expectedInResponseTo = $this->authenticationStateHandler->getRequestId();
-            $logger               = $this->authenticationLogger->forAuthentication($expectedInResponseTo);
+        $expectedInResponseTo = $this->authenticationStateHandler->getRequestId();
+        $logger = $this->authenticationLogger->forAuthentication($expectedInResponseTo);
 
-            $logger->notice('No authenticated user and AuthnRequest pending, attempting to process SamlResponse');
+        $logger->notice('No authenticated user and AuthnRequest pending, attempting to process SamlResponse');
 
-            try {
-                $assertion = $this->samlInteractionProvider->processSamlResponse($event->getRequest());
-            } catch (AuthnFailedSamlResponseException $exception) {
-                $logger->notice(sprintf('SAML Authentication failed at IdP: "%s"', $exception->getMessage()));
-                $responseBody = $this->templating->render(
-                    '@Dashboard/Exception/authnFailed.html.twig',
-                    ['exception' => $exception, 'page_title' => 'AuthnFailedSamlResponseException']
-                );
-
-                $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));
-
-                return;
-            } catch (PreconditionNotMetException $exception) {
-                $logger->notice(sprintf('SAMLResponse precondition not met: "%s"', $exception->getMessage()));
-                $responseBody = $this->templating->render(
-                    '@Dashboard/Exception/preconditionNotMet.html.twig',
-                    ['exception' => $exception, 'page_title' => 'PreconditionNotMetException']
-                );
-
-                $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));
-
-                return;
-            } catch (Exception $exception) {
-                $logger->error(sprintf('Failed SAMLResponse Parsing: "%s"', $exception->getMessage()));
-
-                throw new AuthenticationException('Failed SAMLResponse parsing', 0, $exception);
-            }
-
-            if (!InResponseTo::assertEquals($assertion, $expectedInResponseTo)) {
-                $logger->error('Unknown or unexpected InResponseTo in SAMLResponse');
-
-                throw new AuthenticationException('Unknown or unexpected InResponseTo in SAMLResponse');
-            }
-
-            $logger->notice('Successfully processed SAMLResponse, attempting to authenticate');
-
-            $token            = new SamlToken();
-            $token->assertion = $assertion;
-
-            try {
-                $authToken = $this->authenticationManager->authenticate($token);
-            } catch (AuthenticationException $failed) {
-                $logger->error(sprintf('Authentication Failed, reason: "%s"', $failed->getMessage()));
-
-                // By default deny authorization
-                $event->setResponse(new Response('', Response::HTTP_FORBIDDEN));
-
-                return;
-            } catch (UnknownServiceException $exception) {
-                $responseBody = $this->templating->render(
-                    '@Dashboard/Exception/unknownService.html.twig',
-                    ['teamNames' => $exception->getTeamNames(), 'page_title' => 'UnknownServiceException']
-                );
-
-                $event->setResponse(new Response($responseBody, Response::HTTP_UNAUTHORIZED));
-
-                return;
-            }
-
-            // Store the login timestamp in the session
-            $this->authenticatedSession->logAuthenticationMoment();
-            $this->tokenStorage->setToken($authToken);
-
-            // migrate the session to prevent session hijacking
-            $this->authenticatedSession->migrate();
-
-            $event->setResponse(new RedirectResponse($this->authenticatedSession->getCurrentRequestUri()));
-
-            $user = $authToken->getUser();
-            $logger->notice(
-                'Authentication succeeded, redirecting to original location',
-                ['user' => $user->getContact()->getNameId(), 'displayName' => (string)$user]
+        try {
+            $assertion = $this->samlInteractionProvider->processSamlResponse($request);
+        } catch (AuthnFailedSamlResponseException $exception) {
+            $logger->notice(sprintf('SAML Authentication failed at IdP: "%s"', $exception->getMessage()));
+            $responseBody = $this->templating->render(
+                'DashboardSamlBundle/Exception/authnFailed.html.twig',
+                ['exception' => $exception, 'page_title' => 'AuthnFailedSamlResponseException']
             );
 
-            return;
+            return new Response($responseBody, Response::HTTP_UNAUTHORIZED);
+        } catch (PreconditionNotMetException $exception) {
+            $logger->notice(sprintf('SAMLResponse precondition not met: "%s"', $exception->getMessage()));
+            $responseBody = $this->templating->render(
+                'DashboardSamlBundle/Exception/preconditionNotMet.html.twig',
+                ['exception' => $exception, 'page_title' => 'PreconditionNotMetException']
+            );
+
+            return new Response($responseBody, Response::HTTP_UNAUTHORIZED);
+        } catch (Exception $exception) {
+            $logger->error(sprintf('Failed SAMLResponse Parsing: "%s"', $exception->getMessage()));
+
+            throw new AuthenticationException('Failed SAMLResponse parsing', 0, $exception);
         }
 
-        if ($this->nextHandler) {
-            $this->nextHandler->process($event);
-        }
-    }
+        if (!InResponseTo::assertEquals($assertion, $expectedInResponseTo)) {
+            $logger->error('Unknown or unexpected InResponseTo in SAMLResponse');
 
-    public function setNext(AuthenticationHandler $handler)
-    {
-        $this->nextHandler = $handler;
+            throw new AuthenticationException('Unknown or unexpected InResponseTo in SAMLResponse');
+        }
+        return $assertion;
     }
 }

@@ -22,46 +22,40 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\AuthenticatedSessionStateHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\EventListener\CookieClearingLogoutListener;
 use Symfony\Component\Security\Http\EventListener\SessionLogoutListener;
-use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
-use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ExplicitSessionTimeoutHandler implements AuthenticationHandler
 {
-    /**
-     * @var AuthenticationHandler|null
-     */
-    private $nextHandler;
-
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly AuthenticatedSessionStateHandler $authenticatedSession,
-        private readonly SessionLifetimeGuard $sessionLifetimeGuard,
-        private readonly SessionLogoutListener $sessionLogoutHandler,
-        private readonly CookieClearingLogoutListener $cookieClearingLogoutHandler,
-        private readonly RouterInterface $router,
-        private readonly LoggerInterface $logger
+        private TokenStorageInterface $tokenStorage,
+        private AuthenticatedSessionStateHandler $authenticatedSessionStateHandler,
+        private SessionLifetimeGuard $sessionLifetimeGuard,
+        private SessionLogoutListener $sessionLogoutHandler,
+        private CookieClearingLogoutListener $cookieClearingLogoutHandler,
+        private RouterInterface $router,
+        private LoggerInterface $logger
     ) {
     }
 
-    public function process(RequestEvent $event)
+    public function process(Request $request): Response
     {
         if ($this->tokenStorage->getToken() !== null
-            && !$this->sessionLifetimeGuard->sessionLifetimeWithinLimits($this->authenticatedSession)
+            && !$this->sessionLifetimeGuard->sessionLifetimeWithinLimits($this->authenticatedSessionStateHandler)
         ) {
             $invalidatedBy = [];
-            if (!$this->sessionLifetimeGuard->sessionLifetimeWithinAbsoluteLimit($this->authenticatedSession)) {
+            if (!$this->sessionLifetimeGuard->sessionLifetimeWithinAbsoluteLimit($this->authenticatedSessionStateHandler)) {
                 $invalidatedBy[] = 'absolute';
             }
 
-            if (!$this->sessionLifetimeGuard->sessionLifetimeWithinRelativeLimit($this->authenticatedSession)) {
+            if (!$this->sessionLifetimeGuard->sessionLifetimeWithinRelativeLimit($this->authenticatedSessionStateHandler)) {
                 $invalidatedBy[] = 'relative';
             }
 
@@ -72,36 +66,28 @@ class ExplicitSessionTimeoutHandler implements AuthenticationHandler
             ));
 
 
-            $this->tokenStorage->getToken();
-            $request = $event->getRequest();
+            $token = $this->tokenStorage->getToken();
 
             // if the current request was not a GET request we cannot safely redirect to that page after login as it
             // may require a form resubmit for instance. Therefor, we redirect to the last GET request (either current
             // or previous).
-            $afterLoginRedirectTo = $this->authenticatedSession->getCurrentRequestUri();
-            if ($event->getRequest()->getMethod() === 'GET') {
-                $afterLoginRedirectTo = $event->getRequest()->getRequestUri();
+            $afterLoginRedirectTo = $this->authenticatedSessionStateHandler->getCurrentRequestUri();
+            if ($request->getMethod() === 'GET') {
+                $afterLoginRedirectTo = $request->getRequestUri();
             }
 
             // log the user out using Symfony methodology, see the LogoutListener
-            $event->setResponse(new RedirectResponse($this->router->generate('service_overview')));
+            $response = new RedirectResponse($this->router->generate('service_overview'));
 
             //$this->sessionLogoutHandler->logout($request, $event->getResponse(), $token);
-            $this->sessionLogoutHandler->onLogout($event);
-            $this->cookieClearingLogoutHandler->onLogout($request);
+            //$this->sessionLogoutHandler->onLogout($resonse);
+            //$this->cookieClearingLogoutHandler->onLogout($request);
             $this->tokenStorage->setToken(null);
 
             // the session is restarted after invalidation during the logout, so we can (re)store the last GET request
-            $this->authenticatedSession->setCurrentRequestUri($afterLoginRedirectTo);
+            $this->authenticatedSessionStateHandler->setCurrentRequestUri($afterLoginRedirectTo);
 
-            return;
+            return $response;
         }
-
-        $this->nextHandler?->process($event);
-    }
-
-    public function setNext(AuthenticationHandler $handler)
-    {
-        $this->nextHandler = $handler;
     }
 }

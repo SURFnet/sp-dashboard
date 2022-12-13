@@ -25,8 +25,14 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
  */
 class Identity implements \Symfony\Component\Security\Core\User\UserInterface
 {
-    public function __construct(private Contact $contact)
+    /**
+     * @var Contact
+     */
+    private $contact;
+
+    public function __construct(Contact $contact)
     {
+        $this->contact = $contact;
     }
 
     /**
@@ -63,27 +69,27 @@ class Identity implements \Symfony\Component\Security\Core\User\UserInterface
 
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        return $this->getContact()->getServices();
     }
 
     public function getPassword()
     {
-        return "admin";
+        // TODO: Implement getPassword() method.
     }
 
     public function getSalt()
     {
-        return "";
+        // TODO: Implement getSalt() method.
     }
 
     public function eraseCredentials()
     {
-        return "";
+        // TODO: Implement eraseCredentials() method.
     }
 
     public function getUsername()
     {
-        return "admin";
+        return $this->contact->getEmailAddress();
     }
 
     public function __call(string $name, array $arguments)

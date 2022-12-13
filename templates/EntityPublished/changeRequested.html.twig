@@ -3,6 +3,8 @@
 {% block page_heading %}{{ 'entity.change_requested.title'|trans }}{%endblock%}
 {% block body %}
 
+    {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
+
     {{ 'entity.change_requested.text.html'|trans|wysiwyg }}
 
 {% endblock %}

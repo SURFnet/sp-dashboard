@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\AccessDeniedException;
@@ -66,26 +67,30 @@ class HttpClient implements HttpClientInterface
             sprintf('Getting resource %s from %s (%s)', $resource, $this->apiName, $this->mode)
         );
 
-        return $this->request('GET', $resource, [
-            'exceptions' => false,
-            'headers' => $headers
-        ], function ($statusCode, $body, $method, $resource, $headers) {
-            if ($statusCode < 200 || $statusCode >= 300) {
-                throw new UnreadableResourceException(
-                    sprintf('Resource could not be read (status code %d)', $statusCode)
-                );
-            }
+        try {
+            return $this->request('GET', $resource, [
+                'exceptions' => false,
+                'headers' => $headers
+            ], function ($statusCode, $body, $method, $resource, $headers) {
+                if ($statusCode < 200 || $statusCode >= 300) {
+                    throw new UnreadableResourceException(
+                        sprintf('Resource could not be read (status code %d)', $statusCode)
+                    );
+                }
 
-            if ((isset($headers['Content-Type'])) &&
-                ($headers['Content-Type'] === 'application/json')) {
-                return $this->parseResponse($body, $method, $resource);
-            }
+                if ((isset($headers['Content-Type'])) &&
+                    ($headers['Content-Type'] === 'application/json')) {
+                    return $this->parseResponse($body, $method, $resource);
+                }
 
-            if ((isset($headers['Content-Type'])) &&
-                ($headers['Content-Type'] === 'application/xml')) {
-                return $body;
-            }
-        });
+                if ((isset($headers['Content-Type'])) &&
+                    ($headers['Content-Type'] === 'application/xml')) {
+                    return $body;
+                }
+            });
+        } catch (ClientException $e) {
+            return [];
+        }
     }
 
     /**

@@ -18,23 +18,18 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token;
 
-use SAML2\Assertion;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 
-class SamlToken extends AbstractToken
+class SamlToken extends PostAuthenticationToken
 {
-    /**
-     * @var Assertion
-     */
-    public $assertion;
-
-    public function __construct(array $roles = array())
+    public function __construct(UserInterface $user, string $firewallName, array $roles, array $attributes)
     {
-        parent::__construct($roles);
+        parent::__construct($user, $firewallName, $roles);
 
-        $this->setAuthenticated(count($roles));
+        $this->setAttributes($attributes);
     }
 
     /**
