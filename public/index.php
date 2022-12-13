@@ -1,5 +1,4 @@
 <?php
-
 //use App\Kernel;
 use Surfnet\ServiceProviderDashboard\Kernel;
 use Symfony\Component\ErrorHandler\Debug;

@@ -18,26 +18,31 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Service;
 
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\RuntimeException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\User;
 
 class IdentityService implements UserProviderInterface
 {
+    public function __construct(
+        private ContactRepository $contactRepository,
+        private string $defaultRoles) {
+    }
+
     public function loadUserByUsername($username)
     {
-        throw new RuntimeException(sprintf('Cannot Load User By Username "%s"', $username));
+        // Todo: this is not correct behavior!
+        return new User();
     }
 
     public function refreshUser(UserInterface $user)
     {
-//        throw new RuntimeException(sprintf('Cannot Refresh User "%s"', $user->getUsername()));
         return $user;
     }
 
     public function supportsClass($class)
     {
-        return $class === Identity::class;
+        return true;
     }
 }

@@ -21,18 +21,18 @@
     <rule ref="rulesets/controversial.xml" />
 
     <rule ref="rulesets/design.xml">
-        <exclude name="CouplingBetweenObjects"/>
+        <exclude name="CouplingBetweenObjects" />
     </rule>
 
     <rule ref="rulesets/design.xml/CouplingBetweenObjects">
         <properties>
-            <property name="minimum" value="20"/>
+            <property name="minimum" value="20" />
         </properties>
     </rule>
 
     <rule ref="rulesets/naming.xml">
-        <exclude name="ShortVariable"/>
-        <exclude name="LongVariable"/>
+        <exclude name="ShortVariable" />
+        <exclude name="LongVariable" />
         <exclude name="LongClassName" />
     </rule>
 </ruleset>
