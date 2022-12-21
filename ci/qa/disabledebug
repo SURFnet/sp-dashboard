@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+sed s/\'dev\',\ true/\'dev\',\ false/g /var/www/html/web/app_dev.php
+

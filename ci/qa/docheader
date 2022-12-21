@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+./vendor/bin/docheader \
+    check \
+    --docheader ci/qa/.docheader \
+    src/ \
+    tests $1

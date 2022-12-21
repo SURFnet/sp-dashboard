@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+./bin/console lexik:translations:import
+./bin/console lexik:translations:import DashboardBundle
+./bin/console lexik:translations:import DashboardSamlBundle
