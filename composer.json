@@ -95,8 +95,7 @@
       "@cvalidate",
       "@attrsc",
       "@attrdc",
-      "@droptestdb",
-      "@createtestdb",
+      "@test-db",
       "@test"
     ],
     "test-db": [
@@ -121,8 +120,8 @@
     "phpcov": "./ci/qa/phpcov",
     "test": "./ci/qa/phpunit",
     "cypress": "./ci/qa/cypress",
-    "yarn-audit": "./ci/qa/yarn-audit",
-    "translations": "./ci/qa/translations"
+    "security": "./ci/qa/security",
+    "translations": "bin/translations"
   },
   "config": {
     "optimize-autoloader": true,

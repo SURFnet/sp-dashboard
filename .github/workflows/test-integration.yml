@@ -22,7 +22,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
 
-      - name: Start the docker images for Cypress testing
+      - name: Start the docker images for testing
         run: ${DOCKER_COMPOSE} up -d
 
       - name: Import the certificate on the Cypress docker machine
@@ -81,14 +81,14 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer check'
 
-      - name: Run Audit
+      - name: Run audits
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer yarn-audit'
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer security'
         continue-on-error: true
 
       - name: Run Cypress tests
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer cypress'
+          ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome
         continue-on-error: true
 
       - name: Run translations
