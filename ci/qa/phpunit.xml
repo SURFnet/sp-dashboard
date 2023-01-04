@@ -5,37 +5,38 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.7/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="app/autoload.php"
+         bootstrap="../../app/autoload.php"
          beStrictAboutTestsThatDoNotTestAnything="true"
          failOnRisky="true">
 
     <php>
         <ini name="error_reporting" value="-1" />
+        <ini name="memory_limit" value="1024M" />
         <server name="KERNEL_CLASS" value="AppKernel" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="25" />
     </php>
 
     <testsuites>
         <testsuite name="unit">
-            <directory>tests/unit</directory>
+            <directory>../../tests/unit</directory>
         </testsuite>
 
         <testsuite name="integration">
-            <directory>tests/integration</directory>
+            <directory>../../tests/integration</directory>
         </testsuite>
 
         <testsuite name="webtests">
-            <directory>tests/webtests</directory>
+            <directory>../../tests/webtests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>src</directory>
+            <directory>../../src</directory>
             <exclude>
-                <directory>src/*Bundle/Resources</directory>
-                <directory>src/*/*Bundle/Resources</directory>
-                <directory>src/*/Bundle/*Bundle/Resources</directory>
+                <directory>../../src/*Bundle/Resources</directory>
+                <directory>../../src/*/*Bundle/Resources</directory>
+                <directory>../../src/*/Bundle/*Bundle/Resources</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+# Run the JS CPD tool:
+# - allowing for 30 lines of duplicate code
+# - and setting a total copy paste limit to 1% project wide
+# More info about jscpd usage: https://github.com/kucherenko/jscpd/tree/master/packages/jscpd#usage
+./node_modules/.bin/jscpd src  -l 30 -t 1
+./node_modules/.bin/jscpd app/js  -l 30 -t 1

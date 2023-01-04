@@ -66,7 +66,7 @@ Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
             'Accept': 'application/json',
             'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
         },
-        body:
+        body: ''
     })
         .then(response => response.json())
         .then(data => {

@@ -9,64 +9,89 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    timeout-minutes: 30
+    env:
+      DOCKER_COMPOSE: docker-compose -f docker-compose.yml -f docker-compose-ci.yml
+      DOCKER_COMPOSE_PHP_FPM: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm
+      DOCKER_COMPOSE_OPENCONEXT: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T openconext
+      DOCKER_COMPOSE_CYPRESS: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress
 
     steps:
 
-    - name: Check out the repo
-      uses: actions/checkout@v2
+      - name: Check out the repo
+        uses: actions/checkout@v2
 
-    - name: Start the docker images for Cypress testing
-      run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d
+      - name: Start the docker images for testing
+        run: ${DOCKER_COMPOSE} up -d
 
-    - name: Import the certificate on the Cypress docker machine
-      run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress sh /e2e/docker/conf/cypress_import_cert.sh
+      - name: Import the certificate on the Cypress docker machine
+        run: ${DOCKER_COMPOSE_CYPRESS} sh /e2e/docker/conf/cypress_import_cert.sh
 
-    - name: Run composer
-      run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /usr/local/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
-      env:
-        SYMFONY_ENV: dev
+      - name: Run composer
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} /usr/local/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
+        env:
+          SYMFONY_ENV: dev
 
-    - name: Run yarn
-      run: |
-        docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn install
-      env:
-        SYMFONY_ENV: dev
+      - name: Run yarn
+        run: |
+          docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn install
+        env:
+          SYMFONY_ENV: dev
 
-    - name: Create front end dependencies (yarn encore production)
-      run: |
-        docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn run encore production
-      env:
-        SYMFONY_ENV: dev
+      - name: Create front end dependencies (yarn encore production)
+        run: |
+          docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn run encore production
+        env:
+          SYMFONY_ENV: dev
 
-    - name: Get the database up and running
-      run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm bin/console doctrine:migrations:migrate
-      env:
-        SYMFONY_ENV: dev
+      - name: Get the database up and running
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} bin/console doctrine:migrations:migrate
+        env:
+          SYMFONY_ENV: dev
 
-    - name: Remove leftover files
-      run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm /bin/rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ 
+      - name: Remove leftover files
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} /bin/rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ 
 
-    - name: Make the log and cache dir writable
-      run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm chmod 777 /var/www/html/var/{logs,cache}
+      - name: Make the log and cache dir writable
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} chmod 777 /var/www/html/var/{logs,cache}
 
-    - name: Copy parameters.yml.dist to parameters.yml
-      run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm cp /var/www/html/app/config/parameters.yml.dist /var/www/html/app/config/parameters.yml
+      - name: Copy parameters.yml.dist to parameters.yml
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} cp /var/www/html/app/config/parameters.yml.dist /var/www/html/app/config/parameters.yml
 
-    - name: Wait until the spdashboard is accessable 
-      run: |
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T openconext sh /usr/local/sbin/spdup.sh
-    
-    - name: Disable Symfony debug mode
-      run: | 
-        docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm sed -i s/\'dev\',\ true/\'dev\',\ false/g /var/www/html/web/app_dev.php
+      - name: Wait until the spdashboard is accessable
+        run: |
+          ${DOCKER_COMPOSE_OPENCONEXT} sh /usr/local/sbin/spdup.sh
 
-    - name: Run cypress tests
-      run: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress cypress run --browser chrome
-      continue-on-error: true
-    
+      - name: Disable Symfony debug mode
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer disabledebug'
+
+      - name: Run Copy Paste Detector
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer jscpd'
+        continue-on-error: true
+
+      - name: Run CI tests
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer check'
+
+      - name: Run audits
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer security'
+        continue-on-error: true
+
+      - name: Run Cypress tests
+        run: |
+          ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome
+        continue-on-error: true
+
+      - name: Run translations
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer translations'
+
