@@ -1,13 +1,11 @@
 name: Run integration tests
 
-on:
-  pull_request:
-  push:
-    branches: [ develop ]
+on: [pull_request, push]
 
 jobs:
   build:
-
+    # Due to the cgroups 1 issue on the openconext container, we do not
+    # use the new ubuntu platform yet. As they started using cgroups v2
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     env:
@@ -70,18 +68,16 @@ jobs:
       - name: Run Copy Paste Detector
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer jscpd'
-        continue-on-error: true
 
       - name: Run CI tests
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer check'
 
-      - name: Run audits
-        run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer security'
-        continue-on-error: true
-
       - name: Run Cypress tests
         run: |
           ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome
         continue-on-error: true
+
+      - name: Run audits
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer security'
