@@ -3,6 +3,14 @@
   "description": "Dashboard application for SURFconext Service Providers",
   "license": "Apache-2.0",
   "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Surfnet\\": "src/Surfnet"
+    },
+    "classmap": [
+      "src/Surfnet/ServiceProviderDashboard/Kernel.php"
+    ]
+  },
   "require": {
     "php": "8.1.*",
     "ext-ctype": "*",
@@ -142,9 +150,6 @@
     "symfony-web-dir": "web",
     "symfony-tests-dir": "tests",
     "symfony-assets-install": "relative",
-    "incenteev-parameters": {
-      "file": "app/config/parameters.yml"
-    },
     "branch-alias": null
   }
 }

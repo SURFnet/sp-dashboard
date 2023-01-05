@@ -6,8 +6,8 @@ $fa-font-path: "../fonts";
 @import "fonts/roboto";
 
 @import "vars";
-@import "utilities/*";
+@import "./utilities/*";
 
-@import "base/*";
-@import "components/*";
-@import "pages/*";
+@import "./base/*";
+@import "./components/*";
+@import "./pages/*";
