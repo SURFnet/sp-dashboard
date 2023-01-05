@@ -1,13 +1,11 @@
 name: Run integration tests
 
-on:
-  pull_request:
-  push:
-    branches: [ develop ]
+on: [pull_request, push]
 
 jobs:
   build:
-
+    # Due to the cgroups 1 issue on the openconext container, we do not
+    # use the new ubuntu platform yet. As they started using cgroups v2
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     env:
@@ -89,4 +87,3 @@ jobs:
       - name: Run translations
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer translations'
-

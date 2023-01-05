@@ -148,8 +148,16 @@
     "security": "./ci/qa/security",
     "translations": "bin/translations"
   },
-  "conflict": {
-    "symfony/symfony": "*"
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "platform": {
+      "php": "8.1"
+    },
+    "allow-plugins": {
+      "ocramius/package-versions": true,
+      "symfony/flex": false
+    }
   },
   "extra": {
     "symfony": {
