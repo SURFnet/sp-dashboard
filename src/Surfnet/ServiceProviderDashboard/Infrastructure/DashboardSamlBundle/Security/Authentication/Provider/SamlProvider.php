@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
 use Psr\Log\LoggerInterface;
+use SAML2\Assertion;
 use Surfnet\SamlBundle\Exception\RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
@@ -29,8 +30,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\MissingSamlAttributeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Webmozart\Assert\Assert;
@@ -38,7 +37,7 @@ use Webmozart\Assert\Assert;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class SamlProvider implements AuthenticationProviderInterface
+class SamlProvider
 {
     /**
      * @var string[]
@@ -46,29 +45,30 @@ class SamlProvider implements AuthenticationProviderInterface
     private $administratorTeams;
 
     public function __construct(
-        private readonly ContactRepository $contacts,
-        private readonly ServiceRepository $services,
-        private readonly AttributeDictionary $attributeDictionary,
-        private readonly LoggerInterface $logger,
+    private readonly ContactRepository $contacts,
+    private readonly ServiceRepository $services,
+    private readonly AttributeDictionary $attributeDictionary,
+    private readonly LoggerInterface $logger,
         string $administratorTeams
     ) {
-        $this->administratorTeams = explode(',', trim(str_replace('\'', '', $administratorTeams)));
+        $teams = explode(",", str_replace('\'', '', $administratorTeams));
         Assert::allStringNotEmpty(
-            $this->administratorTeams,
+            $teams,
             'All entries in the `administrator_teams` config parameter should be string.'
         );
+        $this->administratorTeams = $teams;
     }
 
-    /**
-     * @param  SamlToken|TokenInterface $token
-     *
-     * @return TokenInterface
-     */
-    public function authenticate(TokenInterface $token)
+    public function getNameId(Assertion $assertion): string
     {
-        $translatedAssertion = $this->attributeDictionary->translate($token->assertion);
+        return $this->attributeDictionary->translate($assertion)->getNameID();
+    }
 
-        $nameId = $translatedAssertion->getNameID();
+    public function getContact(Assertion $assertion)
+    {
+        $translatedAssertion = $this->attributeDictionary->translate($assertion);
+
+        $nameId = $this->getNameId($assertion);
         try {
             $email = $this->getSingleStringValue('mail', $translatedAssertion);
         } catch (MissingSamlAttributeException $e) {
@@ -108,13 +108,8 @@ class SamlProvider implements AuthenticationProviderInterface
             $this->assignServicesToContact($contact, $teamNames);
             $this->contacts->save($contact);
         }
-
-        $authenticatedToken = new SamlToken([$role]);
-        $authenticatedToken->setUser(
-            new Identity($contact)
-        );
-
-        return $authenticatedToken;
+        $contact->assignRole($role);
+        return $contact;
     }
 
     /**

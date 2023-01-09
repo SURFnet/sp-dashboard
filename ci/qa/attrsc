@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+# attributes scheme check
+
+cd $(dirname $0)/../../
+
+# https://www.npmjs.com/package/ajv-cli
+./node_modules/.bin/ajv compile -s app/Resources/schemas/attributes.scheme.json

@@ -1,4 +1,4 @@
-FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:latest AS node-build
+FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:81 AS node-build
 COPY . /var/www/html/
 WORKDIR /var/www/html/
 ENV SYMFONY_ENV=prod
@@ -23,7 +23,7 @@ EXPOSE 80
 
 CMD ["httpd", "-D", "FOREGROUND"]
 
-FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm:latest AS phpfpm-build
+FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm:81 AS phpfpm-build
 COPY --from=node-build /var/www/html/public/. /var/www/html/public/
 COPY --from=node-build /var/www/html/vendor/. /var/www/html/vendor/
 COPY --from=node-build /var/www/html/var/. /var/www/html/var/
@@ -36,7 +36,7 @@ COPY --from=js-build /var/www/html/node_modules/. /var/www/html/node_modules/
 LABEL maintainer "Bart Geesink" <bart.geesink@surf.nl>
 
 RUN chown -R www-data /var/www/html/var/cache && \
-    chown -R www-data /var/www/html/var/logs && \
+    chown -R www-data /var/www/html/var/log && \
     chown -R www-data /var/www/html/var/sessions && \
     rm -rf /var/www/html/var/cache/prod/
 

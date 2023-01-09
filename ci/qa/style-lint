@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+# tsconfig should be in the root
+./node_modules/stylelint/bin/stylelint.js app/scss/**/*.scss -f unix $1

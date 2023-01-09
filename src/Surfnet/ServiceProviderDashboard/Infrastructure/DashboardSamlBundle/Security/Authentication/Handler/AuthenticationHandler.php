@@ -18,7 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler;
 
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use SAML2\Assertion;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 interface AuthenticationHandler
 {
@@ -26,10 +28,10 @@ interface AuthenticationHandler
      * Checks if it can process the event and if so does so. Also determines if there
      * is a next handler to be called if it cannot process the event itself.
      *
-     * @param RequestEvent $event
-     * @return void
+     * @param Request $request
+     * @return Response
      */
-    public function process(RequestEvent $event);
+    public function process(Request $request): Assertion;
 
     /**
      * Allows setting the optional next handler
@@ -37,5 +39,5 @@ interface AuthenticationHandler
      * @param AuthenticationHandler $handler
      * @return void
      */
-    public function setNext(AuthenticationHandler $handler);
+//    public function setNext(AuthenticationHandler $handler);
 }

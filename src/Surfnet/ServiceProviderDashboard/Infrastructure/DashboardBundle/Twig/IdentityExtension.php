@@ -48,7 +48,7 @@ class IdentityExtension extends Twig_Extension
         $contact = null;
 
         if ($token) {
-            $contact = $token->getUser()->getContact();
+            $contact = $token->getUser();
         }
 
         if (!$contact) {

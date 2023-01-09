@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+# https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage
+./vendor/bin/phpcs --runtime-set ignore_warnings_on_exit 1 --standard=ci/qa/phpcs.xml --warning-severity=6 --error-severity=1 src
