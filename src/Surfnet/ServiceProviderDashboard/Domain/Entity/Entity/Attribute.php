@@ -51,7 +51,7 @@ class Attribute
         private readonly string $name,
         private readonly string $value,
         private string $source,
-        private string $motivation
+        private ?string $motivation
     ) {
     }
 
