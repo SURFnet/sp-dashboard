@@ -18,7 +18,6 @@ services:
               arguments: [ '@service_container' ]
 
     # Firewall
-
     surfnet_saml.saml_provider:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider
         arguments:
@@ -30,21 +29,3 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider:
         alias: surfnet_saml.saml_provider
-
-    # Session
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard:
-        arguments:
-            - '@surfnet.dashboard.security.authentication.session.absolute_maximum_lifetime'
-            - '@surfnet.dashboard.security.authentication.session.relative_maximum_lifetime'
-
-    surfnet.dashboard.security.authentication.session.absolute_maximum_lifetime:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame
-        factory: [Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame, ofSeconds]
-        arguments:
-            - '%surfnet.dashboard.security.authentication.session.maximum_absolute_lifetime_in_seconds%'
-
-    surfnet.dashboard.security.authentication.session.relative_maximum_lifetime:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame
-        factory: [Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame, ofSeconds]
-        arguments:
-            - '%surfnet.dashboard.security.authentication.session.maximum_relative_lifetime_in_seconds%'
