@@ -35,10 +35,13 @@ COPY --from=js-build /var/www/html/node_modules/. /var/www/html/node_modules/
 
 LABEL maintainer "Bart Geesink" <bart.geesink@surf.nl>
 
+RUN mkdir -p /var/www/html/var/cache && \
+    mkdir -p /var/www/html/var/log && \
+    mkdir -p /var/www/html/var/sessions
+
 RUN chown -R www-data /var/www/html/var/cache && \
     chown -R www-data /var/www/html/var/log && \
-    chown -R www-data /var/www/html/var/sessions && \
-    rm -rf /var/www/html/var/cache/prod/
+    chown -R www-data /var/www/html/var/sessions
 
 COPY ./docker/conf/zz-docker.conf /usr/local/etc/php-fpm.d
 COPY ./docker/conf/10-docker-opcache-openconext.conf /usr/local/etc/php/conf.d/
