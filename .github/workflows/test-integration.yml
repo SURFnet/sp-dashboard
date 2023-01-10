@@ -55,7 +55,7 @@ jobs:
 
       - name: Make the log and cache dir writable
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} chmod 777 /var/www/html/var/{logs,cache}
+          ${DOCKER_COMPOSE_PHP_FPM} chmod 777 /var/www/html/var/{log,cache}
 
       - name: Wait until the spdashboard is accessable
         run: |
