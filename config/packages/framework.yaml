@@ -6,6 +6,8 @@ framework:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         cookie_secure: auto
         cookie_samesite: lax
+        cookie_lifetime: '%env(session_max_absolute_lifetime)%'
+        gc_maxlifetime: '%env(session_max_relative_lifetime)%'
     fragments: ~
     http_method_override: true
     assets:
