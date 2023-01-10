@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
@@ -30,7 +29,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  * @method string getUserIdentifier()
  */
-class Contact implements UserInterface
+class Contact
 {
     /**
      * @var int
@@ -179,22 +178,5 @@ class Contact implements UserInterface
     public function getRoles()
     {
         return $this->roles;
-    }
-
-    public function getPassword(): void
-    {
-    }
-
-    public function getSalt(): void
-    {
-    }
-
-    public function eraseCredentials(): void
-    {
-    }
-
-    public function getUsername(): string
-    {
-        return $this->nameId;
     }
 }

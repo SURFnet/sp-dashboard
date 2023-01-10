@@ -5,10 +5,9 @@ security:
     role_hierarchy:
         ROLE_ADMINISTRATOR: ROLE_USER
 
-    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        dashboard:
-            id: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Service\IdentityService
+        saml-provider:
+            id: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -28,18 +27,13 @@ security:
 
         saml_based:
             custom_authenticators:
-                - Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlAuthenticator
+                - Surfnet\SamlBundle\Security\Authentication\SamlAuthenticator
 
     access_control:
         - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         - { path: ^/entity/metadata, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         - { path: ^/translations, roles: ROLE_ADMINISTRATOR, requires_channel: https }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
-
-    # security.yaml --- tmp to find out about users and hashers
-    password_hashers:
-        Surfnet\ServiceProviderDashboard\Domain\ValueObject\User:
-            algorithm: auto
 
 nelmio_security:
     clickjacking:

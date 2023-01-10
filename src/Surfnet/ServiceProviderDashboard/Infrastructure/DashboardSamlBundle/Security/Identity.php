@@ -17,13 +17,12 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security;
 
+use BadMethodCallException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @method string getUserIdentifier()
- */
-class Identity implements \Symfony\Component\Security\Core\User\UserInterface
+class Identity implements UserInterface
 {
     /**
      * @var Contact
@@ -69,31 +68,30 @@ class Identity implements \Symfony\Component\Security\Core\User\UserInterface
 
     public function getRoles()
     {
-        return $this->getContact()->getServices();
+        return $this->getContact()->getRoles();
     }
 
     public function getPassword()
     {
-        // TODO: Implement getPassword() method.
+        return '';
     }
 
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return '';
     }
 
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
     public function getUsername()
     {
-        return $this->contact->getEmailAddress();
+        return $this->contact->getNameId();
     }
 
-    public function __call(string $name, array $arguments)
+    public function getUserIdentifier()
     {
-        // TODO: Implement @method string getUserIdentifier()
+        return $this->getUsername();
     }
 }

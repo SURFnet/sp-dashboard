@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception;
 
+use Surfnet\SamlBundle\Security\Exception\RuntimeException;
+
 class MissingSamlAttributeException extends RuntimeException
 {
 }
