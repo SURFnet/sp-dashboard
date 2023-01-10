@@ -99,38 +99,43 @@ trait EntityControllerTrait
 
     /**
      * @return RedirectResponse|Form
+     * @throws InvalidArgumentException
      */
     private function publishEntity(
         ?ManageEntity $entity,
         SaveEntityCommandInterface $saveCommand,
-        bool $isEntityChangeRequest,
+        bool $isPublishedProductionEntity,
         FlashBagInterface $flashBag
     ){
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
-            $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isEntityChangeRequest);
+            $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
             $this->commandBus->handle($publishEntityCommand);
         } catch (Exception $e) {
             $flashBag->add('error', 'entity.edit.error.publish');
+            return $this->redirectToRoute('service_overview');
         }
 
-        if (!$flashBag->has('error')) {
-            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isEntityChangeRequest) {
-                $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
-            }
+        if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isPublishedProductionEntity) {
+            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
+        }
 
-            // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
-            // page we will be redirecting to in a moment.
-            $this->get('session')->set('published.entity.clone', clone $entity);
+        // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
+        // page we will be redirecting to in a moment.
+        $this->get('session')->set('published.entity.clone', clone $entity);
 
-            if ($publishEntityCommand instanceof PublishEntityTestCommand) {
-                return $this->redirectToRoute('entity_published_test');
-            }
+        if ($publishEntityCommand instanceof PublishEntityTestCommand) {
+            return $this->redirectToRoute('entity_published_test');
+        }
 
-            $destination = $this->findDestinationForRedirectToCreateConnectionRequest($publishEntityCommand);
-            $parameters = $this->findParametersForRedirectToCreateConnectionRequest($publishEntityCommand);
+        try {
+            $destination = $this->findDestinationForRedirect($publishEntityCommand);
+            $parameters = $this->findParametersForRedirect($publishEntityCommand);
             return $this->redirectToRoute($destination, $parameters);
+        } catch (InvalidArgumentException $e) {
+            $flashBag->add('error', $e->getMessage());
+            return $this->redirectToRoute('service_overview');
         }
     }
 
@@ -178,7 +183,7 @@ trait EntityControllerTrait
         return $entityActions->allowCreateConnectionRequestAction();
     }
 
-    private function findParametersForRedirectToCreateConnectionRequest(
+    private function findParametersForRedirect(
         PublishProductionCommandInterface $publishEntityCommand
     ): array {
         if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
@@ -192,7 +197,7 @@ trait EntityControllerTrait
         return [];
     }
 
-    private function findDestinationForRedirectToCreateConnectionRequest(
+    private function findDestinationForRedirect(
         PublishProductionCommandInterface $publishEntityCommand
     ): string {
 
