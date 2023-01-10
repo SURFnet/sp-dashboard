@@ -20,9 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerFromOverviewType;
@@ -30,6 +28,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class EntityCreateConnectionRequestController extends AbstractController
 {
@@ -50,9 +49,12 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/create-connection-request/{environment}/{manageId}/{serviceId}", name="entity_published_create_connection_request")
-     * @throws \Exception
+     * @Route(
+     *     "/entity/create-connection-request/{environment}/{manageId}/{serviceId}",
+     *     name="entity_published_create_connection_request",
+     *     methods={"GET", "POST"})
+     *     )
+     * @throws Exception
      */
     public function connectionRequestFromEntityAction(
         Request $request,
@@ -90,9 +92,11 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/create-connection-request-from-overview/{environment}/{manageId}/{serviceId}", name="entity_published_create_connection_request_from_overview")
-     * @throws \Exception
+     * @Route(
+     *     "/entity/create-connection-request-from-overview/{environment}/{manageId}/{serviceId}",
+     *     name="entity_published_create_connection_request_from_overview",
+     *     methods={"GET", "POST"})
+     * @throws Exception
      */
     public function connectionRequestFromOverviewAction(
         Request $request,
@@ -127,8 +131,7 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     /**
-     * @Method("GET")
-     * @Route("/entity/send-connection-request", name="send_connection_request")
+     * @Route("/entity/send-connection-request", name="send_connection_request",methods={"GET"})
      */
     public function sendConnectionRequestAction()
     {
@@ -138,8 +141,7 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     /**
-     * @Method("GET")
-     * @Route("/entity/send-connection-request", name="publish_to_production_and_send_connection_request")
+     * @Route("/entity/send-connection-request", name="publish_to_production_and_send_connection_request",methods={"GET"})
      */
     public function publishedToProductionAndSendConnectionRequest(array $parameters)
     {
