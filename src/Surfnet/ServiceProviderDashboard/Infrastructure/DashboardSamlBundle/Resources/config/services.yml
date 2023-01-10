@@ -18,45 +18,9 @@ services:
               arguments: [ '@service_container' ]
 
     # Firewall
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ProcessSamlAuthenticationHandler:
-        arguments:
-            - '@security.token_storage'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlInteractionProvider'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
-            - '@surfnet_saml.logger'
-            - '@twig'
 
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlInteractionProvider:
-        arguments:
-            - '@surfnet_saml.hosted.service_provider'
-            - '@surfnet_saml.remote.idp'
-            - '@surfnet_saml.http.redirect_binding'
-            - '@surfnet_saml.http.post_binding'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\SuccessHandler:
-        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\SuccessHandler
-        arguments:
-            - '@security.http_utils'
-            - []
-            - '@logger'
-
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\SamlAuthenticator:
-        arguments:
-            - '@surfnet_saml.remote.idp'
-            - '@surfnet_saml.hosted.service_provider'
-            - '@surfnet_saml.http.redirect_binding'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\ProcessSamlAuthenticationHandler'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Handler\SuccessHandler'
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider'
-            - '@translator'
-            - '@router'
-            - '@logger'
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider:
+    surfnet_saml.saml_provider:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider
         arguments:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository'
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
@@ -64,11 +28,10 @@ services:
             - '@logger'
             - '%surfnet.dashboard.security.authentication.administrator_teams%'
 
-    # Session
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionStorage:
-        arguments:
-            - '@session'
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider:
+        alias: surfnet_saml.saml_provider
 
+    # Session
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard:
         arguments:
             - '@surfnet.dashboard.security.authentication.session.absolute_maximum_lifetime'
@@ -85,8 +48,3 @@ services:
         factory: [Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Value\TimeFrame, ofSeconds]
         arguments:
             - '%surfnet.dashboard.security.authentication.session.maximum_relative_lifetime_in_seconds%'
-
-    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Service\IdentityService:
-        arguments:
-            - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository'
-            - '%surfnet.dashboard.security.authentication.administrator_teams%'
