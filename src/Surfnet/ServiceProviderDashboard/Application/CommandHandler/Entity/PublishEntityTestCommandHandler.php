@@ -74,7 +74,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
         $pristineEntity = null;
         if ($entity->isManageEntity()) {
             // The entity as it is now known in Manage
-            $pristineEntity = $this->entityService->getManageEntityById($entity->getId(), $entity->getEnvironment());
+            $pristineEntity = $this->entityService->getPristineManageEntityById($entity->getId(), $entity->getEnvironment());
         }
         try {
             $this->logger->info(
