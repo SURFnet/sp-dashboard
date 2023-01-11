@@ -218,6 +218,7 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
+     *
      * @param string $manageId
      * @param string $env
      *
@@ -242,6 +243,10 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
+     * @desc get a pure manage entity together with the associated service. Notice that meta data of the
+     * organization is untouched, so that any difference on the organization data can be noticed and updated from
+     * the service accordingly.
+     *
      * @param string $manageId
      * @param string $env
      *
