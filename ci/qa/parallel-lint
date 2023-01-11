@@ -3,4 +3,4 @@
 cd $(dirname $0)/../../
 
 # https://github.com/JakubOnderka/PHP-Parallel-Lint
-./vendor/bin/parallel-lint app src tests web $1
+./vendor/bin/parallel-lint assets src tests public $1

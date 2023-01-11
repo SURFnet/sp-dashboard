@@ -133,7 +133,7 @@
     "docheader": "./ci/qa/docheader",
     "parallel-lint": "./ci/qa/parallel-lint",
     "yaml-lint": "./ci/qa/yaml-lint",
-    "ts-lint": "./ci/qa/ts-lint",
+    "ts-lint": "echo './ci/qa/ts-lint must be converted to eslint!'",
     "style-lint": "./ci/qa/style-lint",
     "cvalidate": "./ci/qa/cvalidate",
     "attrdc": "./ci/qa/attrdc",

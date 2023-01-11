@@ -3,4 +3,4 @@
 cd $(dirname $0)/../../
 
 # tsconfig should be in the root
-./node_modules/tslint/bin/eslint --project tsconfig.json $1
+./node_modules/eslint/bin/eslint --project ./ci/qa/.eslintrc.js $1
