@@ -107,7 +107,6 @@
       "@droptestdb",
       "@createtestdb"
     ],
-    "disabledebug": "./ci/qa/disabledebug",
     "jscpd": "./ci/qa/jscpd",
     "phpcs": "./ci/qa/phpcs",
     "phpcs_tests": "./ci/qa/phpcs_tests",
