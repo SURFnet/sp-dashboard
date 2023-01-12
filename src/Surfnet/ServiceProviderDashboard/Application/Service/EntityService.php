@@ -218,6 +218,7 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
+     *
      * @param string $manageId
      * @param string $env
      *
@@ -238,6 +239,32 @@ class EntityService implements EntityServiceInterface
         $this->updateStatus($entity);
         // As the organization names are tracked on the Service, we update it on the Manage Entity Organization VO
         $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
+        return $entity;
+    }
+
+    /**
+     * @desc get a pure manage entity together with the associated service. Notice that meta data of the
+     * organization is untouched, so that any difference on the organization data can be noticed and updated from
+     * the service accordingly.
+     *
+     * @param string $manageId
+     * @param string $env
+     *
+     * @return ManageEntity|null
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryServiceProviderException
+     */
+    public function getPristineManageEntityById($manageId, $env = 'test')
+    {
+        $entity = $this->queryRepositoryProvider
+            ->fromEnvironment($env)
+            ->findByManageId($manageId);
+        $entity->setEnvironment($env);
+        // Set the service associated to the entity on the entity.
+        $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+        $entity->setService($service);
+        $this->updateStatus($entity);
         return $entity;
     }
 

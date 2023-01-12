@@ -110,7 +110,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         if (!$entity->isManageEntity()) {
             throw new EntityNotFoundException('Unable to request changes to a unkown entity in Manage');
         }
-        $pristineEntity = $this->entityService->getManageEntityById($entity->getId(), $entity->getEnvironment());
+        $pristineEntity = $this->entityService->getPristineManageEntityById($entity->getId(), $entity->getEnvironment());
         try {
             $this->logger->info(
                 sprintf(

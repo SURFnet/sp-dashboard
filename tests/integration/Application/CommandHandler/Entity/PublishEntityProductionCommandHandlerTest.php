@@ -153,7 +153,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info')
             ->times(2);
-        $this->entityService->shouldReceive('getManageEntityById')->andReturn($manageEntity);
+        $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
@@ -215,7 +215,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info')
             ->times(2);
-        $this->entityService->shouldReceive('getManageEntityById')->andReturn($manageEntity);
+        $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
 
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
@@ -274,7 +274,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->flashBag
             ->shouldReceive('add')
             ->with('error', 'entity.edit.error.publish');
-        $this->entityService->shouldReceive('getManageEntityById')->andReturn($manageEntity);
+        $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
 
