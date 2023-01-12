@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory;
 
 use JiraRestApi\Issue\IssueField;
+use JiraRestApi\Issue\IssueType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
@@ -66,8 +67,8 @@ class IssueFieldFactory
         $issueField->setProjectKey($this->projectKey)
             ->setDescription($this->translateConnectionRequestDescriptions($ticket))
             ->setSummary($this->translateSummary($ticket))
-            ->setIssueType($ticket->getIssueType())
-            ->setPriorityName($this->priority)
+            ->setIssueTypeAsString($ticket->getIssueType())
+            ->setPriorityNameAsString($this->priority)
             ->addCustomField($this->reporterFieldName, $ticket->getApplicantEmail())
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
             ->addCustomField($this->manageIdFieldName, $ticket->getManageId())

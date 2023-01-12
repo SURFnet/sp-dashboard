@@ -20,7 +20,7 @@
     "guzzlehttp/guzzle": "^7.5.0",
     "knplabs/knp-menu-bundle": "^3.0.0",
     "league/tactician-bundle": "^1.1.17",
-    "lesstif/php-jira-rest-client": "^5.1.0",
+    "lesstif/php-jira-rest-client": "^5.2",
     "lexik/translation-bundle": "^v6.0",
     "nelmio/security-bundle": "^v2.10.3",
     "openconext/monitor-bundle": "^3.1.0",
