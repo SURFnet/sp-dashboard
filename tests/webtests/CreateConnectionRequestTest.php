@@ -18,14 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
-use Symfony\Component\DomCrawler\Field\ChoiceFormField;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 class CreateConnectionRequestTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

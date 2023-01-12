@@ -161,12 +161,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
      */
     public function test_it_can_republish()
     {
-        $contact = new Contact('nameid', 'name@example.org', 'display name');
-        $user = new Identity($contact);
-
-        $token = new SamlToken([]);
-        $token->setUser($user);
-
         $manageEntity = m::mock(ManageEntity::class);
         $manageEntity
             ->shouldReceive('getMetaData->getNameEn')
@@ -220,12 +214,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
     public function test_failing_jira_ticket_creation()
     {
-        $contact = new Contact('nameid', 'name@example.org', 'display name');
-        $user = new Identity($contact);
-
-        $token = new SamlToken([]);
-        $token->setUser($user);
-
         $manageEntity = m::mock(ManageEntity::class);
         $manageEntity
             ->shouldReceive('getMetaData->getNameEn')
