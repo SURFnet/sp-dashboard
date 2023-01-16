@@ -32,6 +32,7 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLISHED,
             Constants::ENVIRONMENT_TEST,
             Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
+            false,
             false
         );
         $this->assertFalse($actions->allowAclAction());
@@ -51,8 +52,15 @@ class EntityActionsTest extends TestCase
         $publicationStatus,
         $description
     ) {
-    
-        $actions = new EntityActions('manage-id', 1, $publicationStatus, Constants::ENVIRONMENT_TEST, $protocol, false);
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            $publicationStatus,
+            Constants::ENVIRONMENT_TEST,
+            $protocol,
+            false,
+            false
+        );
 
         $this->assertEquals($expectation, $actions->allowSecretResetAction(), $description);
     }
