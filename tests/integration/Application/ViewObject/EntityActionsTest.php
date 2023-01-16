@@ -32,6 +32,7 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLISHED,
             Constants::ENVIRONMENT_TEST,
             Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
+            false,
             false
         );
         $this->assertFalse($actions->allowAclAction());
@@ -52,7 +53,7 @@ class EntityActionsTest extends TestCase
         $description
     ) {
     
-        $actions = new EntityActions('manage-id', 1, $publicationStatus, Constants::ENVIRONMENT_TEST, $protocol, false);
+        $actions = new EntityActions('manage-id', 1, $publicationStatus, Constants::ENVIRONMENT_TEST, $protocol, false, false);
 
         $this->assertEquals($expectation, $actions->allowSecretResetAction(), $description);
     }
@@ -103,7 +104,8 @@ class EntityActionsTest extends TestCase
             Constants::STATE_DRAFT,
             Constants::ENVIRONMENT_TEST,
             Constants::TYPE_OPENID_CONNECT_TNG,
-            true
+            true,
+            false
         );
         $this->assertFalse($actions->allowEditAction());
         $this->assertFalse($actions->allowDeleteAction());
@@ -121,6 +123,7 @@ class EntityActionsTest extends TestCase
             Constants::STATE_REMOVAL_REQUESTED,
             Constants::ENVIRONMENT_PRODUCTION,
             Constants::TYPE_OPENID_CONNECT_TNG,
+            false,
             false
         );
         $this->assertFalse($removalRequested->allowEditAction());
@@ -130,7 +133,8 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLICATION_REQUESTED,
             Constants::ENVIRONMENT_PRODUCTION,
             Constants::TYPE_OPENID_CONNECT_TNG,
-            true
+            true,
+            false
         );
         $this->assertFalse($readOnly->allowEditAction());
         $publishedToProd = new EntityActions(
@@ -139,6 +143,7 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLISHED,
             Constants::ENVIRONMENT_PRODUCTION,
             Constants::TYPE_OPENID_CONNECT_TNG,
+            false,
             false
         );
         $this->assertTrue($publishedToProd->allowEditAction());
@@ -148,6 +153,7 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLICATION_REQUESTED,
             Constants::ENVIRONMENT_PRODUCTION,
             Constants::TYPE_OPENID_CONNECT_TNG,
+            false,
             false
         );
         $this->assertTrue($shouldBeEditable->allowEditAction());
@@ -157,6 +163,7 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLISHED,
             Constants::ENVIRONMENT_TEST,
             Constants::TYPE_OPENID_CONNECT_TNG,
+            false,
             false
         );
         $this->assertTrue($shouldBeEditable2->allowEditAction());
@@ -170,13 +177,29 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLISHED,
             Constants::ENVIRONMENT_PRODUCTION,
             Constants::TYPE_SAML,
-            false
+            false,
+            true
         );
 
         $this->assertTrue($actions->allowChangeRequestAction());
     }
 
-    public function test_change_request_action_is_not_allowed()
+    public function test_change_request_action_is_not_allowed_for_this_production_entity()
+    {
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            Constants::STATE_PUBLISHED,
+            Constants::ENVIRONMENT_PRODUCTION,
+            Constants::TYPE_SAML,
+            false,
+            false
+        );
+
+        $this->assertFalse($actions->allowChangeRequestAction());
+    }
+
+    public function test_change_request_action_is_not_allowed_for_test_entities()
     {
         $actions = new EntityActions(
             'manage-id',
@@ -184,7 +207,8 @@ class EntityActionsTest extends TestCase
             Constants::STATE_PUBLISHED,
             Constants::ENVIRONMENT_TEST,
             Constants::TYPE_SAML,
-            false
+            false,
+            true
         );
 
         $this->assertFalse($actions->allowChangeRequestAction());

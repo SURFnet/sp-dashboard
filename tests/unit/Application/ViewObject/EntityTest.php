@@ -95,6 +95,7 @@ class EntityTest extends MockeryTestCase
             $env,
             $protocol,
             false,
+            false,
             $router
         );
     }

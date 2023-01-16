@@ -310,6 +310,7 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
             - '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\ChangeRequestService'
             - '@surfnet.manage.configuration.test'
             - '@surfnet.manage.configuration.production'
             - '@router'

@@ -60,6 +60,7 @@ class EntityChangeRequestController extends Controller
             $entity->getStatus(),
             $entity->getEnvironment(),
             $entity->getProtocol()->getProtocol(),
+            true,
             true
         );
 
