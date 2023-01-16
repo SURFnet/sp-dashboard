@@ -1,3 +1,7 @@
+## 4.3.1
+**Feature**
+Label and translation adjustments in attributes.json #567
+
 ## 4.3.0
 The 4.3.0 release seems somwhat meager compared to the vast ammount of changes performed in the 4.2.0 release.
 Don't be fooled tho. As this release is introducing a major overhaul on the way entity attributes (grants)
