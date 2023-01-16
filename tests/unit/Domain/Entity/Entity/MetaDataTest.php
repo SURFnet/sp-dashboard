@@ -46,7 +46,7 @@ class MetaDataTest extends TestCase
     public function test_it_throws_exception_on_double_acs_locations()
     {
         $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response_double_acs_location.json'), true);
-        $this->expectExceptionMessage('Double acs locations. Expected unique locations');
+        $this->expectExceptionMessage('Double acs locations. Expected unique locations for entity: https://engine.surfconext.nl/authentication/sp/metadata');
         MetaData::fromApiResponse($data);
     }
 
