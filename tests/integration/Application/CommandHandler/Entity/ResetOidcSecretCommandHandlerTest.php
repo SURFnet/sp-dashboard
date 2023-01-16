@@ -70,6 +70,7 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
     {
         $status = Constants::STATE_PUBLISHED;
         $command = $this->buildCommand(Constants::ENVIRONMENT_TEST, $status);
+        $this->publicationClient->shouldReceive('pushMetadata');
         $this->commandBus
             ->shouldReceive('handle')
             ->once();

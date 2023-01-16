@@ -38,6 +38,12 @@
       width: 100px;
       display: inline-block;
     }
+    pre {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 1.2rem;
+      width: auto;
+    }
   }
   .button-row {
     height: 3em;

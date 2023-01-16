@@ -34,12 +34,22 @@ class Attribute
     /**
      * @var string
      */
-    private $label;
+    private $saml20Label;
 
     /**
      * @var string
      */
-    private $info;
+    private $saml20Info;
+
+    /**
+     * @var string
+     */
+    private $oidcngLabel;
+
+    /**
+     * @var string
+     */
+    private $oidcngInfo;
 
     /**
      * @var string
@@ -48,22 +58,26 @@ class Attribute
 
     private $urns = [];
 
-    private $excludeFrom = [];
+    private $excludeOnEntityType = [];
 
     public function __construct(
         string $id,
-        string $label,
-        string $info,
+        string $saml20Label,
+        string $saml20Info,
+        string $oidcngLabel,
+        string $oidcngInfo,
         string $name,
         array $urns,
-        array $excludeFrom
+        array $excludeOnEntityType
     ) {
         $this->id = $id;
-        $this->label = $label;
-        $this->info = $info;
+        $this->saml20Label = $saml20Label;
+        $this->saml20Info = $saml20Info;
+        $this->oidcngLabel = $oidcngLabel;
+        $this->oidcngInfo = $oidcngInfo;
         $this->name = $name;
         $this->urns = $urns;
-        $this->excludeFrom = $excludeFrom;
+        $this->excludeOnEntityType = $excludeOnEntityType;
     }
 
     public static function fromAttribute(
@@ -73,11 +87,13 @@ class Attribute
 
         return new self(
             $attribute->id,
-            $information->label,
-            $information->info,
-            $attribute->id . ATTRIBUTE::ATTRIBUTE_NAME_SUFFIX,
+            $information->saml20Label,
+            $information->saml20Info,
+            $information->oidcngLabel,
+            $information->oidcngInfo,
+            $attribute->id . Attribute::ATTRIBUTE_NAME_SUFFIX,
             $attribute->urns,
-            $attribute->form->excludeFrom
+            $attribute->excludeOnEntityType
         );
     }
 
@@ -86,14 +102,24 @@ class Attribute
         return $this->id;
     }
 
-    public function getLabel(): string
+    public function getSaml20Label(): string
     {
-        return $this->label;
+        return $this->saml20Label;
     }
 
-    public function getInfo(): string
+    public function getSaml20Info(): string
     {
-        return $this->info;
+        return $this->saml20Info;
+    }
+
+    public function getOidcngLabel(): string
+    {
+        return $this->oidcngLabel;
+    }
+
+    public function getOidcngInfo(): string
+    {
+        return $this->oidcngInfo;
     }
 
     public function getName(): string
@@ -108,6 +134,6 @@ class Attribute
 
     public function isExcluded(string $protocol): bool
     {
-        return in_array($protocol, $this->excludeFrom);
+        return in_array($protocol, $this->excludeOnEntityType);
     }
 }

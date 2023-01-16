@@ -81,14 +81,14 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         if ($entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION) {
             $publishCommand = new PublishEntityProductionCommand($entity, $this->authorizationService->getContact());
             $this->commandBus->handle($publishCommand);
-            if (!$entity->isExcludedFromPush()) {
-                // Push metadata (we push to production manage upon client secret resets)
-                // https://www.pivotaltracker.com/story/show/173009970
-                $this->publishEntityClient->pushMetadata();
-            }
         } else if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             $publishCommand = new PublishEntityTestCommand($entity);
             $this->commandBus->handle($publishCommand);
+        }
+        if (!$entity->isExcludedFromPush()) {
+            // Push metadata (we push to production manage upon client secret resets)
+            // https://www.pivotaltracker.com/story/show/173009970
+            $this->publishEntityClient->pushMetadata();
         }
     }
 }

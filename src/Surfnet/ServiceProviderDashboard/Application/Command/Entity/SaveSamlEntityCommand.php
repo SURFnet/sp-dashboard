@@ -195,7 +195,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     private $supportContact;
 
     /**
-     * @SpDashboardAssert\ValidAttribute()
+     * @SpDashboardAssert\ValidAttribute(type="saml20")
      */
     private $attributes = [];
 

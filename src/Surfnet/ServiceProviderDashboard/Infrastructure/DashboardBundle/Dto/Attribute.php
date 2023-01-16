@@ -27,27 +27,21 @@ class Attribute implements AttributeInterface
      */
     public $id;
 
-    /**
-     * @var AttributeForm
-     */
-    public $form;
+    public $excludeOnEntityType = [];
 
-    /**
-     * @var AttributeDetail
-     */
-    public $detail;
+    public $translations = [];
 
     public $urns = [];
 
     private function __construct(
         string $id,
-        array $form,
-        array $detail,
+        array $excludeOnEntityType,
+        array $translations,
         array $urns
     ) {
         $this->id = $id;
-        $this->form = AttributeForm::fromForm($form);
-        $this->detail = AttributeDetail::from($detail);
+        $this->excludeOnEntityType = $excludeOnEntityType;
+        $this->translations = $translations;
         $this->urns = $urns;
     }
 
@@ -55,9 +49,27 @@ class Attribute implements AttributeInterface
     {
         return new self(
             $attribute['id'],
-            $attribute['form'],
-            $attribute['detail'],
+            self::excludeOnEntityType($attribute),
+            self::translations($attribute['translations']),
             $attribute['urns']
         );
+    }
+
+    private static function translations(array $languages): array
+    {
+        $translations = [];
+        foreach ($languages as $language => $values) {
+            $translations[$language] = AttributeTypeInformation::fromLanguage($values, $language);
+        }
+        return $translations;
+    }
+
+    private static function excludeOnEntityType(array $attribute): ?array
+    {
+        $exclude = [];
+        if (array_key_exists('excludeOnEntityType', $attribute)) {
+            $exclude = $attribute['excludeOnEntityType'];
+        }
+        return $exclude;
     }
 }

@@ -21,7 +21,9 @@ declare(strict_types=1);
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity;
 
 use \Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Symfony\Component\Form\FormBuilderInterface;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 
 class AttributeTypeFactory
 {
@@ -35,10 +37,10 @@ class AttributeTypeFactory
         $this->attributeService = $attributeService;
     }
 
-    public function build(FormBuilderInterface $container, string $protocol): FormBuilderInterface
+    public function build(FormBuilderInterface $container, string $entityType): FormBuilderInterface
     {
         foreach ($this->attributeService->getAttributeTypeAttributes() as $attribute) {
-            if ($attribute->isExcluded($protocol)) {
+            if ($attribute->isExcluded($entityType)) {
                 continue;
             }
             $container
@@ -46,14 +48,40 @@ class AttributeTypeFactory
                     $attribute->getName(),
                     AttributeType::class,
                     [
-                        'label' => $attribute->getLabel(),
+                        'label' => $this->mapEntityToLabel($attribute, $entityType),
                         'by_reference' => false,
                         'required' => false,
-                        'attr' => ['data-help' => $attribute->getInfo()],
+                        'attr' => ['data-help' => $this->mapEntityToInfo($attribute, $entityType)],
                     ]
                 );
         }
 
         return $container;
+    }
+
+    private function mapEntityToLabel(
+        Attribute $attribute,
+        string $type
+    ): string {
+        switch ($type) {
+            case Constants::TYPE_SAML:
+                return $attribute->getSaml20Label();
+            case Constants::TYPE_OPENID_CONNECT_TNG:
+                return $attribute->getOidcngLabel();
+        }
+        return '';
+    }
+
+    private function mapEntityToInfo(
+        Attribute $attribute,
+        string $type
+    ): string {
+        switch ($type) {
+            case Constants::TYPE_SAML:
+                return $attribute->getSaml20Info();
+            case Constants::TYPE_OPENID_CONNECT_TNG:
+                return $attribute->getOidcngInfo();
+        }
+        return '';
     }
 }

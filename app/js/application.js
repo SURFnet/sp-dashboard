@@ -21,3 +21,4 @@ import './components/translation_ui.js';
 import './components/tooltips.js';
 import './components/modal.ts';
 import './components/site_notice.ts'
+import './components/a11y.ts';

@@ -116,7 +116,7 @@
 .page-container .card .service-status-container h2.service-status-title {
   align-items: center;
   color: $blue;
-  display: flex;
+  display: inline-block;
   font-size: $h2Font;
   justify-content: flex-start;
   margin: 0 0 1.5rem 0;
@@ -139,6 +139,10 @@
 
 .service {
   margin: 2rem 0;
+}
+
+.service-status-title-actions-container {
+  display: inline-block;
 }
 
 .service-status-title-actions {

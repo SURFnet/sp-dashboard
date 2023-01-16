@@ -1,0 +1,13 @@
+---
+
+version: "3.8"
+
+services:
+  cypress:
+    image: cypress/included:10.8.0
+    working_dir: /e2e
+    entrypoint: cypress open --project .
+    networks:
+      spdashboard:
+    volumes:
+      - .:/e2e
