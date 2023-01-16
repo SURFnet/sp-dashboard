@@ -24,54 +24,15 @@ class AttributeTest extends TestCase
 {
     public function test_it_is_created()
     {
-        $attribute =   [
+        $attribute = [
             'id' => 'emailAddress',
-            'form' => [
-                'translations' => [
-                    'en' => [
-                        'label' => 'emailAddressAttribute',
-                        'info' => 'Description is placed here'
-                    ]
-                ]
-            ],
-            'detail' => [
+            'excludeOnEntityType' => ['oidcng'],
+            'translations' => [
                 'en' => [
-                    'label' => 'emailAddressAttribute',
-                    'info' => 'Description is placed here'
-                ]
-            ],
-            'urns' => [
-                'urn:mace:dir:attribute-def:mail',
-                'urn:oid:0.9.2342.19200300.100.1.3'
-                ]
-        ];
-        $attributeDto = Attribute::fromAttribute($attribute);
-
-        $this->assertEquals('emailAddress', $attributeDto->id);
-        $this->assertIsArray($attributeDto->urns);
-        $this->assertIsObject($attributeDto->form);
-        $this->assertCount(2, $attributeDto->urns);
-        $this->assertEquals('urn:mace:dir:attribute-def:mail', $attributeDto->urns[0]);
-        $this->assertEquals('urn:oid:0.9.2342.19200300.100.1.3', $attributeDto->urns[1]);
-    }
-
-    public function test_exclude_on_entity_type()
-    {
-        $attribute =   [
-            'id' => 'emailAddress',
-            'form' => [
-                'excludeOnEntityType' => ['oidcng'],
-                'translations' => [
-                    'en' => [
-                        'label' => 'emailAddressAttribute',
-                        'info' => 'Description is placed here'
-                    ]
-                ]
-            ],
-            'detail' => [
-                'en' => [
-                    'label' => 'emailAddressAttribute',
-                    'info' => 'Description is placed here'
+                    'saml20Label' => 'saml20 emailAddressAttribute',
+                    'saml20Info' => 'saml20 Description is placed here',
+                    'oidcngLabel' => 'oidcng emailAddressAttribute',
+                    'oidcngInfo' => 'oidcng Description is placed here'
                 ]
             ],
             'urns' => [
@@ -83,9 +44,39 @@ class AttributeTest extends TestCase
 
         $this->assertEquals('emailAddress', $attributeDto->id);
         $this->assertIsArray($attributeDto->urns);
-        $this->assertIsObject($attributeDto->form);
-        $this->assertIsArray($attributeDto->form->excludeFrom);
-        $this->assertCount(1, $attributeDto->form->excludeFrom);
+        $this->assertIsArray($attributeDto->translations);
+        $this->assertIsArray($attributeDto->excludeOnEntityType);
+        $this->assertCount(2, $attributeDto->urns);
+        $this->assertEquals('urn:mace:dir:attribute-def:mail', $attributeDto->urns[0]);
+        $this->assertEquals('urn:oid:0.9.2342.19200300.100.1.3', $attributeDto->urns[1]);
+    }
+
+    public function test_exclude_on_entity_type()
+    {
+        $attribute = [
+            'id' => 'emailAddress',
+            'excludeOnEntityType' => ['oidcng'],
+            'translations' => [
+                'en' => [
+                    'saml20Label' => 'saml20 emailAddressAttribute',
+                    'saml20Info' => 'saml20 Description is placed here',
+                    'oidcngLabel' => 'oidcng emailAddressAttribute',
+                    'oidcngInfo' => 'oidcng Description is placed here'
+                ]
+            ],
+            'urns' => [
+                'urn:mace:dir:attribute-def:mail',
+                'urn:oid:0.9.2342.19200300.100.1.3'
+            ]
+        ];
+        $attributeDto = Attribute::fromAttribute($attribute);
+
+        $this->assertEquals('emailAddress', $attributeDto->id);
+        $this->assertIsArray($attributeDto->urns);
+        $this->assertIsArray($attributeDto->translations);
+        $this->assertCount(1, $attributeDto->translations);
+        $this->assertIsArray($attributeDto->excludeOnEntityType);
+        $this->assertCount(1, $attributeDto->excludeOnEntityType);
         $this->assertCount(2, $attributeDto->urns);
         $this->assertEquals('urn:mace:dir:attribute-def:mail', $attributeDto->urns[0]);
         $this->assertEquals('urn:oid:0.9.2342.19200300.100.1.3', $attributeDto->urns[1]);

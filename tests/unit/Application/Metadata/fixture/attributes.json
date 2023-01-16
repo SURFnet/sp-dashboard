@@ -1,18 +1,12 @@
 [
   {
     "id": "givenName",
-    "form" : {
-      "translations" : {
-        "en": {
-          "label": "Given name attribute",
-          "info": "Text should be set in web translations"
-        }
-      }
-    },
-    "detail" : {
+    "translations" : {
       "en": {
-        "label": "Given name attribute",
-        "info": "Text should be set in web translations"
+        "saml20Label": "Given name attribute",
+        "saml20Info": "Text should be set in web translations",
+        "oidcngLabel": "Given name attribute",
+        "oidcngInfo": "Text should be set in web translations"
       }
     },
     "urns": [
@@ -22,18 +16,12 @@
   },
   {
     "id": "surName",
-    "form" : {
-      "translations" : {
-        "en": {
-          "label": "Sur name attribute",
-          "info": "Text should be set in web translations"
-        }
-      }
-    },
-    "detail" : {
+    "translations" : {
       "en": {
-        "label": "Sur name attribute",
-        "info": "Text should be set in web translations"
+        "saml20Label": "Sur name attribute",
+        "saml20Info": "Text should be set in web translations",
+        "oidcngLabel": "Sur name attribute",
+        "oidcngInfo": "Text should be set in web translations"
       }
     },
     "urns": [
@@ -43,18 +31,12 @@
   },
   {
     "id": "commonName",
-    "form" : {
-      "translations" : {
-        "en": {
-          "label": "Common name attribute",
-          "info": "Text should be set in web translations"
-        }
-      }
-    },
-    "detail" : {
+    "translations" : {
       "en": {
-        "label": "Common name attribute",
-        "info": "Text should be set in web translations"
+        "saml20Label": "Common name attribute",
+        "saml20Info": "Text should be set in web translations",
+        "oidcngLabel": "Common name attribute",
+        "oidcngInfo": "Text should be set in web translations"
       }
     },
     "urns": [
@@ -64,18 +46,12 @@
   },
   {
     "id": "displayName",
-    "form" : {
-      "translations" : {
-        "en": {
-          "label": "Display name attribute",
-          "info": "Text should be set in web translations"
-        }
-      }
-    },
-    "detail" : {
+    "translations" : {
       "en": {
-        "label": "Display name attribute",
-        "info": "Text should be set in web translations"
+        "saml20Label": "Display name attribute",
+        "saml20Info": "Text should be set in web translations",
+        "oidcngLabel": "Display name attribute",
+        "oidcngInfo": "Text should be set in web translations"
       }
     },
     "urns": [
@@ -85,19 +61,13 @@
   },
   {
     "id": "emailAddress",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Email address attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Email address attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Email address attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Email address attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:dir:attribute-def:mail",
@@ -106,19 +76,13 @@
   },
   {
     "id": "organization",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Organization attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Organization attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Organization attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Organization attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:terena.org:attribute-def:schacHomeOrganization",
@@ -127,19 +91,13 @@
   },
   {
     "id": "organizationType",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Organization  type attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Organization  type attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Organization  type attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Organization  type attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:terena.org:attribute-def:schacHomeOrganizationType",
@@ -148,19 +106,13 @@
   },
   {
     "id": "organizationUnit",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Organization unit attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Organization unit attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Organization unit attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Organization unit attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:dir:attribute-def:ou",
@@ -169,19 +121,13 @@
   },
   {
     "id": "affiliation",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Affiliation attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Affiliation attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Affiliation attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Affiliation attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:dir:attribute-def:eduPersonAffiliation",
@@ -190,19 +136,13 @@
   },
   {
     "id": "entitlement",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Entitlement attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Entitlement attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Entitlement attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Entitlement attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:dir:attribute-def:eduPersonEntitlement",
@@ -211,19 +151,13 @@
   },
   {
     "id": "principleName",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Principle name attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Principle name attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Principle name attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Principle name attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:dir:attribute-def:eduPersonPrincipalName",
@@ -232,19 +166,13 @@
   },
   {
     "id": "uid",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Uid attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Uid attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Uid attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Uid attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:dir:attribute-def:uid",
@@ -253,19 +181,13 @@
   },
   {
     "id": "preferredLanguage",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Preferred language attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Preferred language attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Preferred language attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Preferred language attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:mace:dir:attribute-def:preferredLanguage",
@@ -274,19 +196,13 @@
   },
   {
     "id": "personalCode",
-    "form" : {
       "translations" : {
         "en": {
-          "label": "Personal code attribute",
-          "info": "Text should be set in web translations"
+          "saml20Label": "Personal code attribute",
+          "saml20Info": "Text should be set in web translations",
+          "oidcngLabel": "Personal code attribute",
+          "oidcngInfo": "Text should be set in web translations"
         }
-      }
-    },
-    "detail" : {
-      "en": {
-        "label": "Personal code attribute",
-        "info": "Text should be set in web translations"
-      }
     },
     "urns": [
       "urn:schac:attribute-def:schacPersonalUniqueCode",
@@ -295,18 +211,12 @@
   },
   {
     "id": "scopedAffiliation",
-    "form" : {
-      "translations" : {
-        "en": {
-          "label": "Scoped affiliation attribute",
-          "info": "Text should be set in web translations"
-        }
-      }
-    },
-    "detail" : {
+    "translations" : {
       "en": {
-        "label": "Scoped affiliation attribute",
-        "info": "Text should be set in web translations"
+        "saml20Label": "Scoped affiliation attribute",
+        "saml20Info": "Text should be set in web translations",
+        "oidcngLabel": "Scoped affiliation attribute",
+        "oidcngInfo": "Text should be set in web translations"
       }
     },
     "urns": [
@@ -316,21 +226,15 @@
   },
   {
     "id": "eduPersonTargetedID",
-    "form" : {
-      "excludeOnEntityType": [
-        "oidcng"
-      ],
-      "translations" : {
-        "en": {
-          "label": "Edu person targeted ID attribute",
-          "info": "Text should be set in web translations"
-        }
-      }
-    },
-    "detail" : {
+    "excludeOnEntityType": [
+      "oidcng"
+    ],
+    "translations" : {
       "en": {
-        "label": "Edu person targeted ID attribute",
-        "info": "Text should be set in web translations"
+        "saml20Label": "Edu person targeted ID attribute",
+        "saml20Info": "Text should be set in web translations",
+        "oidcngLabel": "Edu person targeted ID attribute",
+        "oidcngInfo": "Text should be set in web translations"
       }
     },
     "urns": [

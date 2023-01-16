@@ -18,27 +18,10 @@ declare(strict_types=1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
+namespace Surfnet\ServiceProviderDashboard\Application\Exception;
 
-class AttributeDetailLanguage
+use Exception;
+
+class InvalidAttributeEntityException extends Exception
 {
-    public $label;
-
-    public $info;
-
-    private function __construct(
-        string $label,
-        string $info
-    ) {
-        $this->label = $label;
-        $this->info = $info;
-    }
-
-    public static function from(array $language): AttributeDetailLanguage
-    {
-        return new self(
-            $language['label'],
-            $language['info']
-        );
-    }
 }
