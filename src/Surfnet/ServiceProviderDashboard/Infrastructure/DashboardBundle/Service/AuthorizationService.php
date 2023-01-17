@@ -26,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthorizationService
 {
@@ -68,7 +67,8 @@ class AuthorizationService
             return false;
         }
 
-        return $this->tokenStorage->getToken()->hasRole('ROLE_ADMINISTRATOR');
+        $roles = $this->tokenStorage->getToken()->getRoleNames();
+        return in_array('ROLE_ADMINISTRATOR', $roles);
     }
 
     /**
@@ -192,8 +192,9 @@ class AuthorizationService
         }
 
         $serviceNames = $this->serviceService->getServiceNamesById();
+        $roles = $token->getRoleNames();
 
-        if ($token->hasRole('ROLE_ADMINISTRATOR')) {
+        if (in_array('ROLE_ADMINISTRATOR', $roles)) {
             return $serviceNames;
         }
 
@@ -259,6 +260,6 @@ class AuthorizationService
     public function getContact(): Contact
     {
         /** @var Identity $user */
-        return $this->tokenStorage->getToken()->getUser();
+        return $this->tokenStorage->getToken()->getUser()->getContact();
     }
 }

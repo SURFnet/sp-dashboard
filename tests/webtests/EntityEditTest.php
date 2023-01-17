@@ -221,17 +221,17 @@ class EntityEditTest extends WebTestCase
         $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(1);
         $missingMessage = $crawler->filter('.message.preformatted')->eq(2);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "The metadata XML is invalid considering the associated XSD",
             $genericMessage->text(),
             'Expected an XML parse error.'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "EntityDescriptor', attribute 'entityED': The attribute 'entityED' is not allowed.",
             $notAllowedMessage->text(),
             'Expected an XML parse error.'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "EntityDescriptor': The attribute 'entityID' is required but missing.",
             $missingMessage->text(),
             'Expected an XML parse error.'
@@ -268,7 +268,7 @@ class EntityEditTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', "/entity/edit/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
         $form = $crawler
-            ->selectButton('Change request')
+            ->selectButton('Change')
             ->form();
         $this->client->submit($form, $this->buildValidFormData());
         self::assertEquals(302, $this->client->getResponse()->getStatusCode());

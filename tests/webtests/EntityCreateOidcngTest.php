@@ -88,9 +88,9 @@ class EntityCreateOidcngTest extends WebTestCase
         $messageTest = $crawler->filter('.no-entities-test')->text();
         $messageProduction = $crawler->filter('.no-entities-production')->text();
 
-        $this->assertContains("Ibuildings B.V. overview", $pageTitle);
-        $this->assertContains('No entities found.', $messageTest);
-        $this->assertContains('No entities found.', $messageProduction);
+        $this->assertStringContainsString("Ibuildings B.V. overview", $pageTitle);
+        $this->assertStringContainsString('No entities found.', $messageTest);
+        $this->assertStringContainsString('No entities found.', $messageProduction);
     }
 
     public function test_it_can_publish_the_form()
@@ -150,7 +150,7 @@ class EntityCreateOidcngTest extends WebTestCase
         $this->assertEquals('Warning! Some entries are missing or incorrect. Please review and fix those entries below.', trim($errorMessage));
 
         $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp('/\/entity\/create/', $uri);
+        $this->assertMatchesRegularExpression('/\/entity\/create/', $uri);
     }
 
     public function test_creating_draft_for_production_is_not_allowed()

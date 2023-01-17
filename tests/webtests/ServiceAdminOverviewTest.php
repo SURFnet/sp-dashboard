@@ -50,6 +50,6 @@ class ServiceAdminOverviewTest extends WebTestCase
 
         // One service should be on page: ibuildings
         $this->assertEquals(1, $nodes->count());
-        $this->assertContains('Ibuildings B.V.', $nodes->first()->text());
+        $this->assertStringContainsString('Ibuildings B.V.', $nodes->first()->text());
     }
 }

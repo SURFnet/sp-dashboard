@@ -69,9 +69,9 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         $messageTest = $crawler->filter('.no-entities-test')->text();
         $messageProduction = $crawler->filter('.no-entities-production')->text();
 
-        $this->assertContains("Ibuildings B.V. overview", $pageTitle);
-        $this->assertContains('No entities found.', $messageTest);
-        $this->assertContains('No entities found.', $messageProduction);
+        $this->assertStringContainsString("Ibuildings B.V. overview", $pageTitle);
+        $this->assertStringContainsString('No entities found.', $messageTest);
+        $this->assertStringContainsString('No entities found.', $messageProduction);
     }
 
     public function test_it_can_not_save_the_form_drafts_are_disabled()
@@ -118,7 +118,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
 
         // When a new entity is published, a flash message should be displayed
         $flashMessage = $crawler->filter('.flashMessage.wysiwyg')->text();
-        $this->assertContains('Select OIDC RP to connect this Resource Server to', $flashMessage);
+        $this->assertStringContainsString('Select OIDC RP to connect this Resource Server to', $flashMessage);
     }
 
     public function test_it_stays_on_create_action_when_publication_fails()
@@ -147,7 +147,7 @@ class EntityCreateOidcngResourceServerTest extends WebTestCase
         $this->assertEquals('Entity has already been registered.', trim($errorMessage));
 
         $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp('/\/entity\/create/', $uri);
+        $this->assertMatchesRegularExpression('/\/entity\/create/', $uri);
     }
 
     public function test_creating_draft_for_production_is_not_allowed()

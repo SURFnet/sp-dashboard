@@ -46,7 +46,8 @@ class ManageEntityAccessGrantedVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         // Administrator is always allowed to delete an entity
-        if ($token->hasRole('ROLE_ADMINISTRATOR')) {
+        $roles = $token->getRoleNames();
+        if (in_array('ROLE_ADMINISTRATOR', $roles)) {
             return true;
         }
 

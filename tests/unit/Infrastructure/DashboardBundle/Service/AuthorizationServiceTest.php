@@ -61,6 +61,7 @@ class AuthorizationServiceTest extends MockeryTestCase
 
         $token = m::mock(SamlToken::class);
         $token->shouldReceive('hasRole')->with('ROLE_ADMINISTRATOR')->andReturnTrue();
+        $token->shouldReceive('getRoleNames')->andReturn(['ROLE_ADMINISTRATOR']);
         $this->tokenStorage->shouldReceive('getToken')
             ->andReturn($token);
 

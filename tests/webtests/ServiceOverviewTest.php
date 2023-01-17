@@ -48,10 +48,10 @@ class ServiceOverviewTest extends WebTestCase
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
         $h1 = $crawler->filter('.service-title');
-        $this->assertContains('My services', $h1->first()->text());
+        $this->assertStringContainsString('My services', $h1->first()->text());
         $h2 = $crawler->filter('.service-status-title');
 
-        $this->assertContains('SURFnet', trim($h2->text()));
+        $this->assertStringContainsString('SURFnet', trim($h2->text()));
     }
 
     /**
@@ -77,8 +77,8 @@ class ServiceOverviewTest extends WebTestCase
         $serviceNode = $nodes->first();
         $service2 = $nodes->eq(1);
 
-        $this->assertContains('Ibuildings B.V.', trim($serviceNode->text()));
-        $this->assertContains('SURFnet', trim($service2->text()));
+        $this->assertStringContainsString('Ibuildings B.V.', trim($serviceNode->text()));
+        $this->assertStringContainsString('SURFnet', trim($service2->text()));
     }
 
     /**
@@ -123,7 +123,7 @@ class ServiceOverviewTest extends WebTestCase
         $SURF = $nodes->eq(1);
 
         $productionTableIbuildings = $Ibuildings->filter('.service-status-entities-table.production-entities');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Production entities',
             $productionTableIbuildings->filter('.service-status-entities-table-title')->text()
         );
@@ -131,7 +131,7 @@ class ServiceOverviewTest extends WebTestCase
         $this->assertEquals('No entities found.', $productionNoEntitiesIbuildings);
 
         $testTableIbuildings = $Ibuildings->filter('.service-status-entities-table.test-entities');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Test entities',
             $testTableIbuildings->filter('.service-status-entities-table-title')->text()
         );
@@ -139,7 +139,7 @@ class ServiceOverviewTest extends WebTestCase
         $this->assertEquals('No entities found.', $testNoEntitiesIbuildings);
 
         $productionTableSurf = $SURF->filter('.service-status-entities-table.production-entities');
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Production entities',
             $productionTableSurf->filter('.service-status-entities-table-title')->text()
         );
@@ -147,10 +147,10 @@ class ServiceOverviewTest extends WebTestCase
         $this->assertEquals('No entities found.', $productionNoEntitiesSurf);
 
         $testTableSurf = $SURF->filter('.service-status-entities-table.test-entities');
-        $this->assertContains('Test entities', $testTableSurf->filter('.service-status-entities-table-title')->text());
+        $this->assertStringContainsString('Test entities', $testTableSurf->filter('.service-status-entities-table-title')->text());
         $actionsRow = "ViewEditEditIdPwhitelistDelete";
-        $this->assertContains("SP1 Name English", $testTableSurf->text());
-        $this->assertContains("SP2 Name English", $testTableSurf->text());
+        $this->assertStringContainsString("SP1 Name English", $testTableSurf->text());
+        $this->assertStringContainsString("SP2 Name English", $testTableSurf->text());
     }
 
     public function test_service_overview_redirects_to_service_add_when_no_service_exists()
@@ -166,7 +166,7 @@ class ServiceOverviewTest extends WebTestCase
             'Expecting a redirect response to add form when no service exists'
         );
 
-        $this->assertRegExp('#service/create$#', $response->headers->get('location'));
+        $this->assertMatchesRegularExpression('#service/create$#', $response->headers->get('location'));
     }
 
     public function test_service_overview_shows_message_when_no_service_selected()
@@ -177,8 +177,8 @@ class ServiceOverviewTest extends WebTestCase
         $this->client->request('GET', '/');
         $response = $this->client->getResponse();
 
-        $this->assertContains('Service overview', $response->getContent());
-        $this->assertContains(
+        $this->assertStringContainsString('Service overview', $response->getContent());
+        $this->assertStringContainsString(
             'Please use the service switcher to manage the entities of one of the services.',
             $response->getContent()
         );
@@ -210,7 +210,7 @@ class ServiceOverviewTest extends WebTestCase
         // Verify the link is on the page to trigger the modal window
         $actions = $crawler->filter('.link[for^="add-for-production-Ibuildings-B.V."]');
 
-        $this->assertContains('New production entity', $actions->eq(0)->text(), 'Add for production link not found');
+        $this->assertStringContainsString('New production entity', $actions->eq(0)->text(), 'Add for production link not found');
     }
 
     private function rowsToArray(Crawler $crawler)

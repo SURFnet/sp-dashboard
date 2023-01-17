@@ -46,7 +46,7 @@ class EntityDetailTest extends WebTestCase
 
         $pageTitle = $crawler->filter('.page-container h1');
 
-        $this->assertContains("Entity details", $pageTitle->text());
+        $this->assertStringContainsString("Entity details", $pageTitle->text());
 
         $this->assertDetailEquals(0, 'Metadata URL', 'https://sp1-entityid.example.com/metadata');
         $this->assertDetailsAscLocationEquals(1, 'ACS location', 'https://sp1-entityid.example.com/acs');

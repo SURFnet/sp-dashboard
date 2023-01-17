@@ -39,8 +39,9 @@ class IssueFieldFactoryTest extends SymfonyWebTestCase
      */
     private $translator;
 
-    public function setUp()
+    public function setUp(): void
     {
+        self::ensureKernelShutdown();
         $this->client = static::createClient(
             [],
             [
@@ -54,7 +55,7 @@ class IssueFieldFactoryTest extends SymfonyWebTestCase
             ->get('translator');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

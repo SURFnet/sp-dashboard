@@ -51,7 +51,9 @@ class ServiceSwitcherExtension extends Twig_Extension
     public function render(Twig_Environment $environment)
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token || !$token->hasRole('ROLE_ADMINISTRATOR')) {
+        $roles = $token->getRoleNames();
+
+        if (!$token || !in_array('ROLE_ADMINISTRATOR', $roles)) {
             return '';
         }
 

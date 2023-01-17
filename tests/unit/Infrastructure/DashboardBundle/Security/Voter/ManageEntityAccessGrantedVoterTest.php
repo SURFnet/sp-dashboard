@@ -158,6 +158,10 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
                 }
             );
 
+        $token
+            ->shouldReceive('getRoleNames')
+            ->andReturn($roles);
+
         $user->shouldReceive('isPartOfTeam')
             ->andReturn($isPartOfTeam);
 

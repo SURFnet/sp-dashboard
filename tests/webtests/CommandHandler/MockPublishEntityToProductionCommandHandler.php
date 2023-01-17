@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\CommandHandler;
+namespace Surfnet\ServiceProviderDashboard\Webtests\CommandHandler;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;

@@ -57,9 +57,9 @@ class PrivacyQuestionsController extends AbstractController
 
         // Test if the questions have already been filled
         if ($service->getPrivacyQuestions() instanceof PrivacyQuestions) {
-            return $this->forward('DashboardBundle:PrivacyQuestions:edit', ['serviceId' => $serviceId]);
+            return $this->forward('Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::editAction', ['serviceId' => $serviceId]);
         }
-        return $this->forward('DashboardBundle:PrivacyQuestions:create', ['serviceId' => $serviceId]);
+        return $this->forward('Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::createAction', ['serviceId' => $serviceId]);
     }
 
     /**
