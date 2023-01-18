@@ -1,6 +1,8 @@
 context('Connection request e2e tests', () => {
 
   before(() => {
+    cy.removeEntitiesForTeam('urn:collab:group:vm.openconext.org:demo:openconext:org:ffffff')
+
     cy.createEntity(
         'https://connection-request.openconext.org',
         'urn:collab:group:vm.openconext.org:demo:openconext:org:ffffff',
@@ -91,9 +93,6 @@ context('Connection request e2e tests', () => {
     cy.get('.add_collection_entry').click();
     cy.get('.parsley-required').should('have.length', 1);
     cy.get('#connection_request_container_connectionRequests___name___email').should('have.focus');
-  })
-
-  after(() => {
-    cy.deleteEntity('https://connection-request.openconext.org', 'saml20_sp');
   });
+
 });

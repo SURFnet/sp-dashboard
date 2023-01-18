@@ -7,8 +7,8 @@ function stringTemplateParser(expression, valueObj) {
     return text
 }
 
-Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environment = 	'testaccepted', type = 'oidc10_rp') => {
-    const typeDashConverted = type.replace('_', '-');
+Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environment = 	'testaccepted', entityType = 'oidc10_rp') => {
+    let typeDashConverted = entityType.toString().replace('_', '-');
     let metadataTemplate = require('./fixtures/new_oidc_entity_template.json');
     if (attributes) {
         let arp = JSON.parse('{"arp": {"attributes": {},"enabled": true}}');
@@ -30,7 +30,7 @@ Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environm
         entityId: entityId,
         environment: environment,
         team: team,
-        type: type,
+        type: entityType,
         typeDashConverted: typeDashConverted,
         attributes: attributes,
     };
@@ -50,33 +50,66 @@ Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environm
             console.log(data);
         })
         .catch(error => {
-            console.log(error);
+            console.log(metadataTemplate, error);
         });
 });
 
 Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
 
+    const protocols = ['saml20_sp', 'oidc10_rp', 'oauth20_rs'];
 
     let searchUri = 'https://manage.vm.openconext.org/manage/api/internal/search/${type}'
 
-    fetch(searchUri, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
-        },
-        body: ''
-    })
+    const searchBody = '{"metaDataFields.coin:service_team_id": "' + teamName.toString() +'"}';
+
+    for (const index in protocols) {
+        const entityType = protocols[index];
+        const uri = searchUri.toString().replace('${type}', entityType);
+        fetch(uri, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
+            },
+            body: searchBody
+        })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            for (const entityIndex in data) {
+                const entityId = data[entityIndex]['_id'];
+                const deleteUri = 'https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}';
+                let uri = deleteUri.toString().replace('${entityId}', entityId);
+                uri = uri.toString().replace('${type}', entityType);
+
+                fetch(uri, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Basic ' + window.btoa("sp-dashboard:secret")
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        return true;
+                    })
+                    .catch(error => {
+                        return false;
+                    });
+            }
         })
         .catch(error => {
             console.log(error);
         });
+    }
+});
 
-    let deleteUri = 'https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}';
+Cypress.Commands.add('deleteEntity', (entityType = '', entityId = '') => {
+    const deleteUri = 'https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}';
+    let uri = deleteUri.toString().replace('${entityId}', entityId);
+    uri.toString().replace('${type}', entityType);
+
     fetch(deleteUri, {
         method: 'DELETE',
         headers: {
@@ -87,10 +120,10 @@ Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            return true;
         })
         .catch(error => {
-            console.log(error);
+            return false;
         });
 });
 
