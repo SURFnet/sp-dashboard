@@ -125,6 +125,16 @@
 {%- block collection_widget -%}
     <div class="collection-widget" {{ block('widget_attributes') }} data-prototype="{{ form_widget(form.vars.prototype)|e }}">
         {{ block('help_block') }}
+        {% if attr.class == 'connection-request-container' %}
+            <table class="collection-list">
+                <tr>
+                    <th class="text">Institution</th>
+                    <th class="text">Name</th>
+                    <th class="text">Email</th>
+                    <th>&nbsp</th>
+                </tr>
+            </table>
+        {% else %}
         <ul class="collection-list">
             {%- for child in form %}
                 <li class="collection-entry">
@@ -134,6 +144,7 @@
                 </li>
             {% endfor -%}
         </ul>
+        {% endif %}
     </div>
 {%- endblock collection_widget -%}
 

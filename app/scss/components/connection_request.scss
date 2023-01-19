@@ -1,6 +1,18 @@
 .connection-request-wrapper {
   .collection-list {
     margin-bottom: 1rem;
+
+    .button-small {
+      position: relative;
+      top: auto;
+      float: right;
+    }
+    th.text {
+      width: 32%;
+    }
+    td {
+      vertical-align: middle;
+    }
   }
   .read-only-view {
     display: flex;

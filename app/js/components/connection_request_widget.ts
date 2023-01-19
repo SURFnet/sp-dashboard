@@ -18,7 +18,8 @@ class CollectionWidget {
     $collectionWidget: JQuery,
   ) {
     this.$collectionWidget = $collectionWidget;
-    this.$collectionList = this.$collectionWidget.find('ul.collection-list');
+    this.$collectionList = this.$collectionWidget.find('table.collection-list');
+    this.$collectionList.hide();
     this.prototype = this.$collectionWidget.data('prototype');
     this.$input = $(this.prototype);
     this.$sendButton = $('button[id="connection_request_container_send"]');
@@ -85,13 +86,15 @@ class CollectionWidget {
     this.$input.parent().removeClass('error');
     $(this.errorMessageSelector).remove();
 
-    const collectionEntry = $('<li class="collection-entry"></li>');
-    const $removeEntryButton = $('<button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button>');
-
+    const collectionEntry = $('.collection-list');
+    const $removeEntryButton = $('<td><button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button></td>');
+    this.$collectionList.show();
     this.registerRemoveClickHandler($removeEntryButton);
 
+    // Finally add the remove button to the read only list entry and close the table row.
+    newElement.append($removeEntryButton);
+    newElement.append('</tr>');
     collectionEntry.append(newElement);
-    collectionEntry.append($removeEntryButton);
     this.$collectionList.append(collectionEntry);
 
     this.index += 1;
@@ -105,6 +108,10 @@ class CollectionWidget {
     const element = $(el.target);
 
     element.closest('.collection-entry').remove();
+    console.log(this.$collectionList.find('tr'))
+    if (this.$collectionList.find('tr').length === 1) {
+      this.$collectionList.hide();
+    }
   }
 
   /**
@@ -118,22 +125,20 @@ class CollectionWidget {
     const inputFields = this.prototype.replace(/__name__/g, this.index.toString());
     const $inputContainer = $(inputFields);
     const $fields = $inputContainer.find('input');
-    const $outputElement = $('<div class="read-only-view fieldset line connection-request-wrapper">');
-    // The value[Label|Input]Elements are used to match the input text with the new
-    // element that is added to the read-only list of connection requests.
-    const $valueLabelElements = this.$input.find('label:not(error)');
+    const $outputElement = $('<tr class="collection-entry">');
+
     const $valueInputElements = this.$input.find('input');
     $fields.each((_index: number, el: HTMLElement) => {
       const $fieldValue = $valueInputElements.eq(_index).val();
-      const $label = $valueLabelElements.eq(_index).text();
       const $el = $(el);
       $el.val($fieldValue as string);
       // The input fields should be in the output element, but they are hidden for the eye candy factor
       $el.hide();
-      $outputElement.append(`<div class="item"><label>${$label}</label>${$fieldValue}</div>`);
+      $outputElement.append(`<td>${$fieldValue}`);
       $outputElement.append($el);
-      $outputElement.append('</div>');
+      $outputElement.append('</td>');
     });
+
     return $outputElement;
   }
 
