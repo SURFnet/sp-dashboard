@@ -4,9 +4,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Given name attribute",
-        "saml20Info": "<p>urn:mace schema: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:givenName<br /></a>urn:oid schema: <a href='http://oid-info.com/get/2.5.4.42' target='_blank'>urn:oid:2.5.4.42</a><br/><br/>Description: given name / name known by combinations of title, initials, and name known</p>",
+        "saml20Info": "<p>urn:mace schema: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:givenName<br /></a>urn:oid schema: <a href='http://oid-info.com/get/2.5.4.42' target='_blank'>urn:oid:2.5.4.42</a><br/><br/>Description: Given name, also known as a first name, forename or Christian name / “name known by”; combinations of title, initials, and “name known by” are possible.</p>",
         "oidcngLabel": "given_name",
-        "oidcngInfo": "<p>given_name</p> <p>Description: given name / name known by; combinations of title, initials, and name known</p>"
+        "oidcngInfo": "<p>given_name</p> <p>Description: Given name, also known as a first name, forename or Christian name / “name known by”; combinations of title, initials, and “name known by” are possible.</p>"
       }
     },
     "urns": [
@@ -19,9 +19,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Surname attribute",
-        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:sn<br /></a>urn:oid:<a href='http://oid-info.com/get/2.5.4.4' target='_blank'>urn:oid:2.5.4.4</a></p> <p>Description: the surname of a person (including any words such as van,de, von, etc.) used for personalisation; this can be a combination of existing attributes.</p>",
+        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:sn<br /></a>urn:oid:<a href='http://oid-info.com/get/2.5.4.4' target='_blank'>urn:oid:2.5.4.4</ The surname of a person (including any words such as “van”, “de”, “von” etc.) used for personalization; this can be a combination of existing attributes.</p>",
         "oidcngLabel": "family_name",
-        "oidcngInfo": "<p>family_name</p> <p>Description: The surname of a person (including any words such as van, de, von etc.) used for Personalization; this can be a combination of existing attributes.</p>"
+        "oidcngInfo": "<p>family_name</p> <p>Description: The surname of a person (including any words such as “van”, “de”, “von” etc.) used for personalization; this can be a combination of existing attributes.</p>"
       }
     },
     "urns": [
@@ -78,10 +78,10 @@
     "id": "organization",
     "translations" : {
       "en": {
-        "saml20Label": "Organization attribute",
-        "saml20Info": "<p>urn:mace: urn:mace:terena.org:attribute-def:schacHomeOrganization<br /> urn:oid: urn:oid:1.3.6.1.4.1.25178.1.2.9<br />&nbsp;<br />Description: the user's organisation using the organisation&rsquo;s domain name; syntax in accordance with RFC 1035.</p>",
+        "saml20Label": "Home organization attribute",
+        "saml20Info": "<p>urn:mace: urn:mace:terena.org:attribute-def:schacHomeOrganization<br /> urn:oid: urn:oid:1.3.6.1.4.1.25178.1.2.9<br />&nbsp;<br />Description: the user's organization using the organization's domain name; syntax in accordance with RFC 1035.</p>",
         "oidcngLabel": "schac_home_organization",
-        "oidcngInfo": "<p>schac_home_organization</p> <p>Description: the user's organisation using the organisations domain name; syntax in accordance with RFC 1035.</p>"
+        "oidcngInfo": "<p>schac_home_organization</p> <p>Description: the user's organization using the organization's domain name; syntax in accordance with RFC 1035.</p>"
       }
     },
     "urns": [
@@ -94,9 +94,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Organization type attribute",
-        "saml20Info": "<p>urn:mace: <a href='http://www.terena.org/registry/terena.org/attribute-def/' target='_blank'>urn:mace:terena.org:attribute-def:schacHomeOrganizationType<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.25178.1.2.10' target='_blank'>urn:oid:1.3.6.1.4.1.25178.1.2.10</a></p> <p>Description: designation of the type of organisation as defined on<a href='http://www.terena.org/registry/terena.org/schac/homeOrganizationType' target='_blank'> http://www.terena.org/registry/terena.org/schac/homeOrganizationType.</a></p>",
+        "saml20Info": "<p>urn:mace: <a href='http://www.terena.org/registry/terena.org/attribute-def/' target='_blank'>urn:mace:terena.org:attribute-def:schacHomeOrganizationType<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.25178.1.2.10' target='_blank'>urn:oid:1.3.6.1.4.1.25178.1.2.10</a></p> <p>Description: designation of the type of organisation as defined on<a href='https://wiki.refeds.org/display/STAN/SCHAC+Releases' target='_blank'> https://wiki.refeds.org/display/STAN/SCHAC+Releases</a></p>",
         "oidcngLabel": "schac_home_organization_type",
-        "oidcngInfo": "<p>schac_home_organization_type</p> <p>Description: designation of the type of organisation as defined on http://www.terena.org/registry/terena.org/schac/homeOrganizationType.</p>"
+        "oidcngInfo": "<p>schac_home_organization_type</p> <p>Description: designation of the type of organisation as defined on https://wiki.refeds.org/display/STAN/SCHAC+Releases.</p>"
       }
     },
     "urns": [
@@ -109,9 +109,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Organization unit attribute",
-        "saml20Info": "<h2>OrganizationalUnitName</h2> <p>urn:mace:dir:attribute-def:ou</p> <p>Indicates the department, team, or faculty with which the user is associated within the issuing institution. This attribute is multi-valued, so multiple departments, teams or faculties can be listed</p>",
+        "saml20Info": "<h2>OrganizationalUnitName</h2> <p>urn:mace:dir:attribute-def:ou</p> <p> indicates the department, team, or faculty with which the user is associated within the issuing institution. This attribute is multi-valued, so multiple departments, teams or faculties can be listed For example: ICT Services, Industrial Engineering & Innovation Science, Facility Management Center </li> </ul> </p>",
         "oidcngLabel": "ou",
-        "oidcngInfo": "<p>OrganizationalUnitName</p> <p>Description:Indicates the department, team, or faculty with which the user is associated within the issuing institution. This attribute is multi-valued, so multiple departments, teams or faculties can be listed</p>"
+        "oidcngInfo": "<p>OrganizationalUnitName</p> <p>Description: indicates the department, team, or faculty with which the user is associated within the issuing institution. This attribute is multi-valued, so multiple departments, teams or faculties can be listed, for example: <ul> <li>ICT Services </li> <li>Industrial Engineering & Innovation Science </li> <li>Facility Management Center </li> </ul></p>"
       }
     },
     "urns": [
@@ -124,9 +124,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Affiliation attribute",
-        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:eduPersonAffiliation<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.5923.1.1.1.1' target='_blank'>urn:oid:1.3.6.1.4.1.5923.1.1.1.1</a></p> <p>Description: Indicates the relationship between the user and his home organisation. &nbsp;The following values are permitted:</p> <ul> <li>student - student</li> <li>employee - all employees</li> <li>staff - academic staff</li> <li>member - Anyone that holds at least one of the above affiliations is also a member</li> <li>faculty - primary role is teaching or research</li> <li>pre-student - registered but not yet a full student</li> <li>affiliate - A person who is authorised by the Institution to use the service</li></ul>",
+        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:eduPersonAffiliation<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.5923.1.1.1.1' target='_blank'>urn:oid:1.3.6.1.4.1.5923.1.1.1.1</a></p> <p>Description: indicates the relationship between the user and his home organisation. The following values are permitted:</p> <ul> <li>student - student</li> <li>employee - all employees</li> <li>staff - academic staff</li> <li>member - Anyone that holds at least one of the above affiliations is also a member</li> <li>faculty - primary role is teaching or research</li> <li>pre-student - registered but not yet a full student</li> <li>affiliate - A person who is authorised by the Institution to use the service</li></ul>",
         "oidcngLabel": "eduperson_affiliation",
-        "oidcngInfo": "<p>eduperson_affiliation</p> <p>Description: Indicates the relationship between the user and his home organisation. &nbsp;The following values are permitted:<br />* student - student<br />* employee - all employees<br />* staff - academic staff<br />* member - Anyone that holds at least one of the above affiliations is also a member<br />* faculty - primary role is teaching or research<br />* pre-student - registered but not yet a full student<br />* affiliate - A person who is authorised by the Institution to use the service</p>"
+        "oidcngInfo": "<p>eduperson_affiliation</p> <p>Description: indicates the relationship between the user and his home organisation. The following values are permitted:</p> <ul> <li>student - student</li> <li>employee - all employees</li> <li>staff - academic staff</li> <li>member - Anyone that holds at least one of the above affiliations is also a member</li> <li>faculty - primary role is teaching or research</li> <li>pre-student - registered but not yet a full student</li> <li>affiliate - A person who is authorised by the Institution to use the service</li></ul"
       }
     },
     "urns": [
@@ -139,9 +139,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Entitlement attribute",
-        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:eduPersonEntitlement<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.5923.1.1.1.7' target='_blank'>urn:oid:1.3.6.1.4.1.5923.1.1.1.7</a></p> <p>Description: entitlement; custom URI (URL or URN) that indicates an entitlement to something.</p>",
+        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:eduPersonEntitlement<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.5923.1.1.1.7' target='_blank'>urn:oid:1.3.6.1.4.1.5923.1.1.1.7</a></p> <p>Description: custom URI (URL or URN) that indicates an entitlement to something.</p>",
         "oidcngLabel": "eduperson_entitlement",
-        "oidcngInfo": "<p>eduperson_entitlement</p> <p>Description: entitlement; custom URI (URL or URN) that indicates an entitlement to something.</p>"
+        "oidcngInfo": "<p>eduperson_entitlement</p> <p>Description: custom URI (URL or URN) that indicates an entitlement to something.</p>"
       }
     },
     "urns": [
@@ -198,10 +198,10 @@
     "id": "personalCode",
     "translations" : {
       "en": {
-        "saml20Label": "Personal code attribute",
-        "saml20Info": "urn:mace: urn:schac:attribute-def:schacPersonalUniqueCode </br> urn:oid: urn:oid:1.3.6.1.4.1.25178.1.2.14 </br></br>Description: The user's student, employee, and/or member id as used in the institution's internal systems. Example: urn:schac:personalUniqueCode:nl:local:example.edu:employeeid:x12-3456 urn:schac:personalUniqueCode:nl:local:example.nl:studentid:s123456",
+        "saml20Label": "Employee-student number attribute",
+        "saml20Info": "urn:mace: urn:schac:attribute-def:schacPersonalUniqueCode </br> urn:oid: urn:oid:1.3.6.1.4.1.25178.1.2.14 </br></br>Description: The user's student, employee, and/or member id as used in the institution's internal systems. More information: https://wiki.surfnet.nl/pages/viewpage.action?pageId=11207351",
         "oidcngLabel": "schac_personal_unique_code",
-        "oidcngInfo": "<p>schac_personal_unique_code</p> <p>Description: The user's student, employee, and/or member id as used in the institution's internal systems. Example: urn:schac:personalUniqueCode:nl:local:example.edu:employeeid:x12-3456 urn:schac:personalUniqueCode:nl:local:example.nl:studentid:s1234567</p>"
+        "oidcngInfo": "<p>schac_personal_unique_code</p> <p>Description: The user's student, employee, and/or member id as used in the institution's internal systems. More information: https://wiki.surfnet.nl/pages/viewpage.action?pageId=11207351</p>"
       }
     },
     "urns": [
@@ -232,7 +232,7 @@
     "translations" : {
       "en": {
         "saml20Label": "EduPerson targeted ID attribute",
-        "saml20Info": "<p>urn:mace:dir:attribute-def:eduPersonTargetedID</p> <p>urn:oid:1.3.6.1.4.1.5923.1.1.1.10</p> <p>This attribute is created because the Subject -&gt; NameID itself is not part of the SAML v2.0 response and therefore only is available for application if the local SAML implementation explicitly support this. Within SURFconext the Subject -&gt; NameID is explicitly copied into the eduPersonTargetedID attribute, in order for the identifier to be used like any other attribute.</p>",
+        "saml20Info": "<p>urn:mace:dir:attribute-def:eduPersonTargetedID</p> <p>urn:oid:1.3.6.1.4.1.5923.1.1.1.10</p> <p>This attribute is created because the Subject NameID itself is not part of the SAML v2.0 response and therefore only is available for application if the local SAML implementation explicitly support this. Within SURFconext the Subject 'NameID' is explicitly copied into the eduPersonTargetedID attribute, in order for the identifier to be used like any other attribute.</p>",
         "oidcngLabel": "not used in OIDC",
         "oidcngInfo": "not used in OIDC"
       }
