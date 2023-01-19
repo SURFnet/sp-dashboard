@@ -125,7 +125,7 @@
 {%- block collection_widget -%}
     <div class="collection-widget" {{ block('widget_attributes') }} data-prototype="{{ form_widget(form.vars.prototype)|e }}">
         {{ block('help_block') }}
-        {% if attr.class == 'connection-request-container' %}
+        {% if attr.class is defined and attr.class == 'connection-request-container' %}
             <table class="collection-list">
                 <tr>
                     <th class="text">Institution</th>

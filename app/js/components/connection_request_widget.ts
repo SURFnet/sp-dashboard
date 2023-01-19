@@ -176,6 +176,7 @@ class CollectionWidget {
     const handleKeydownEnter = (event: JQuery.Event) => {
       if (event.key === 'Enter') {
         event.preventDefault();
+        this.enableButton(this.$sendButton);
         this.addCollectionEntry();
       }
     };
