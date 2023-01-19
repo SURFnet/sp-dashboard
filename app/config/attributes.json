@@ -4,9 +4,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Given name attribute",
-        "saml20Info": "<p>urn:mace schema: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:givenName<br /></a>urn:oid schema: <a href='http://oid-info.com/get/2.5.4.42' target='_blank'>urn:oid:2.5.4.42</a><br/><br/>Description: Given name, also known as a first name, forename or Christian name / “name known by”; combinations of title, initials, and “name known by” are possible.</p>",
+        "saml20Info": "<p>urn:mace schema: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:givenName<br /></a>urn:oid schema: <a href='http://oid-info.com/get/2.5.4.42' target='_blank'>urn:oid:2.5.4.42</a><br/><br/>Description: Given name, also known as a first name, forename or Christian name / name known by; combinations of title, initials, and name known by are possible.</p>",
         "oidcngLabel": "given_name",
-        "oidcngInfo": "<p>given_name</p> <p>Description: Given name, also known as a first name, forename or Christian name / “name known by”; combinations of title, initials, and “name known by” are possible.</p>"
+        "oidcngInfo": "<p>given_name</p> <p>Description: given name, also known as a first name, forename or Christian name / name known by; combinations of title, initials, and name known by are possible.</p>"
       }
     },
     "urns": [
@@ -19,9 +19,9 @@
     "translations" : {
       "en": {
         "saml20Label": "Surname attribute",
-        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:sn<br /></a>urn:oid:<a href='http://oid-info.com/get/2.5.4.4' target='_blank'>urn:oid:2.5.4.4</ The surname of a person (including any words such as “van”, “de”, “von” etc.) used for personalization; this can be a combination of existing attributes.</p>",
+        "saml20Info": "<p>urn:mace: <a href='http://middleware.internet2.edu/urn-mace/urn-mace-dir-attribute-def.html' target='_blank'>urn:mace:dir:attribute-def:sn<br /></a>urn:oid:<a href='http://oid-info.com/get/2.5.4.4' target='_blank'>urn:oid:2.5.4.4</a> The surname of a person (including any words such as &quot;van&quot;, &quot;de&quot;, &quot;von&quot; etc.) used for personalization; this can be a combination of existing attributes.</p>",
         "oidcngLabel": "family_name",
-        "oidcngInfo": "<p>family_name</p> <p>Description: The surname of a person (including any words such as “van”, “de”, “von” etc.) used for personalization; this can be a combination of existing attributes.</p>"
+        "oidcngInfo": "<p>family_name</p> <p>Description: The surname of a person (including any words such as &quot;van&quot;, &quot;de&quot;, &quot;von&quot; etc.) used for personalization; this can be a combination of existing attributes.</p>"
       }
     },
     "urns": [
