@@ -1,3 +1,7 @@
+## 4.4.0
+**Feature**
+- Added the IdP connection request feature for production entities #555 
+
 ## 4.3.1
 **Feature**
 Label and translation adjustments in attributes.json #567
