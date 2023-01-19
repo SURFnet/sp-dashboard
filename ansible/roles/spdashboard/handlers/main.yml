@@ -1,6 +1,0 @@
----
-- name: reload php72-fpm
-  service: name=php72-php-fpm state=reloaded
-
-- name: update_ca_trust
-  command: update-ca-trust
