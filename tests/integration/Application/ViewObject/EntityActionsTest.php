@@ -52,8 +52,15 @@ class EntityActionsTest extends TestCase
         $publicationStatus,
         $description
     ) {
-    
-        $actions = new EntityActions('manage-id', 1, $publicationStatus, Constants::ENVIRONMENT_TEST, $protocol, false, false);
+        $actions = new EntityActions(
+            'manage-id',
+            1,
+            $publicationStatus,
+            Constants::ENVIRONMENT_TEST,
+            $protocol,
+            false,
+            false
+        );
 
         $this->assertEquals($expectation, $actions->allowSecretResetAction(), $description);
     }

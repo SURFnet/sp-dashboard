@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * Copyright 2017 SURFnet B.V.
+ * Copyright 2022 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,25 +23,16 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Symfony\Component\Validator\Constraints as Assert;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConnectionRequest;
 
-class PublishEntityTestCommand implements Command
+interface CreateConnectionRequestCommandInterface extends Command
 {
     /**
-     * @var ManageEntity
-     * @Assert\Type{
-     *      type="\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity"
-     * }
+     * @return ConnectionRequest[]
      */
-    private $manageEntity;
+    public function getConnectionRequests(): array;
 
-    public function __construct(ManageEntity $entity)
-    {
-        $this->manageEntity = $entity;
-    }
+    public function getManageEntity(): ManageEntity;
 
-    public function getManageEntity(): ManageEntity
-    {
-        return $this->manageEntity;
-    }
+    public function getApplicant(): Contact;
 }

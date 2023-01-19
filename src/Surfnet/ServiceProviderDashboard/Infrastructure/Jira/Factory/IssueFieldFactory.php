@@ -98,6 +98,22 @@ class IssueFieldFactory
         return $issueField;
     }
 
+    public function fromConnectionRequestTicket(Ticket $ticket): IssueField
+    {
+        $issueField = new IssueField();
+        $issueField->setProjectKey($this->projectKey)
+            ->setDescription($this->translateConnectionRequestDescriptions($ticket))
+            ->setSummary($this->translateSummary($ticket))
+            ->setIssueType($ticket->getIssueType())
+            ->setPriorityName($this->priority)
+            ->addCustomField($this->reporterFieldName, $ticket->getApplicantEmail())
+            ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
+            ->addCustomField($this->manageIdFieldName, $ticket->getManageId())
+        ;
+
+        return $issueField;
+    }
+
     private function translateDescription(Ticket $ticket): string
     {
         return $this->translator->trans($ticket->getDescriptionTranslationKey(), [
@@ -105,6 +121,26 @@ class IssueFieldFactory
             '%applicant_email%' =>  $ticket->getApplicantEmail(),
             '%entity_name%' => $ticket->getEntityName()
         ]);
+    }
+
+    private function translateConnectionRequestDescriptions(Ticket $ticket): string
+    {
+        $translation = '';
+        $translationKey = 'entity.connection_request.ticket.applicant';
+        $translation .= $this->translator->trans($translationKey, [
+            '%applicant_name%' => $ticket->getApplicantName(),
+            '%applicant_email%' =>  $ticket->getApplicantEmail(),
+            '%entity_name%' => $ticket->getEntityName()]);
+
+        $translationKey = 'entity.connection_request.ticket.institution';
+        foreach ($ticket->getConnectionRequests() ?? [] as $connectionRequest) {
+            $translation .= $this->translator->trans($translationKey, [
+                '%institution_name%' => $connectionRequest->institution,
+                '%contact_name%' => $connectionRequest->name,
+                '%contact_email%' => $connectionRequest->email
+            ]);
+        }
+        return $translation;
     }
 
     private function translateSummary(Ticket $ticket): string

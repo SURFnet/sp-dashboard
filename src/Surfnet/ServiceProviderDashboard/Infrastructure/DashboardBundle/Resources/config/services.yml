@@ -72,6 +72,13 @@ services:
         tags:
             - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand }
 
+    Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\CreateConnectionRequestCommandHandler:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
+            - '%jira_issue_type_idp_invite%'
+        tags:
+            - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand }
+
     surfnet.dashboard.command_handler.publish_test_entity:
         class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityTestCommandHandler
         arguments:
@@ -481,6 +488,11 @@ services:
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\EntityChangeRequestClient:
         arguments:
             $client: '@surfnet.manage.http.http_client.prod_environment'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\EntityConnectionRequestClient:
+        arguments:
+            - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
+            - '@logger'
 
     surfnet.teams.http.http_client:
         class: Surfnet\ServiceProviderDashboard\Infrastructure\Teams\TeamsClient

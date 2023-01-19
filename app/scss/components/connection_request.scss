@@ -1,0 +1,56 @@
+.connection-request-wrapper {
+  .collection-list {
+    margin-bottom: 1rem;
+
+    .button-small {
+      position: relative;
+      float: right;
+      padding: 5px 10px;
+      top: 1.5rem;
+    }
+    th.text {
+      width: 32%;
+    }
+    td {
+      vertical-align: middle;
+    }
+  }
+  .read-only-view {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    line-height: 1.2rem;
+    margin-bottom: 0;
+    label {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .item {
+      line-height: 1.2rem;
+      width: 33.33%;
+    }
+  }
+  .error-message {
+    background-color: $criticalRed;
+    padding: 0.5rem;
+    border: 1px solid $red;
+    border-radius: 3px;
+    color: $black;
+  }
+
+  button[type="submit"]:disabled  {
+    border: 1px solid darken($medium-grey, 5%);
+    background-color: $light-grey;
+    cursor: not-allowed;
+  }
+}
+
+.line {
+  border-top: 2px solid #00829b;
+  padding-top: 5px;
+}
+
+.connection-request {
+  display: flex;
+  gap: 1.0rem;
+}

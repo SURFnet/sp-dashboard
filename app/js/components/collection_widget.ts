@@ -169,7 +169,8 @@ class CollectionWidget {
 }
 
 export function loadEntityOidcForm() {
-  const $widgets = $('form .collection-widget');
+  // Exclude the ConnectionRequest collection widget from being loaded
+  const $widgets = $('form .collection-widget:not(#connection_request_container_connectionRequests)');
   if ($widgets.length > 0) {
 
     $widgets.each((_index: number, el: HTMLElement) => {
