@@ -22,6 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerFromOverviewType;
@@ -78,10 +79,7 @@ class EntityCreateConnectionRequestController extends Controller
 
             if ($form->isValid()) {
                 $this->commandBus->handle($command);
-                return $this->render(
-                    '@Dashboard/EntityPublished/publishedProductionAndConnectionRequest.html.twig',
-                    $parameters
-                );
+                return $this->redirectToRoute('publish_to_production_and_send_connection_request');
             }
         }
 
@@ -118,15 +116,36 @@ class EntityCreateConnectionRequestController extends Controller
 
             if ($form->isValid()) {
                 $this->commandBus->handle($command);
-                return $this->render(
-                    '@Dashboard/EntityPublished/publishedConnectionRequest.html.twig'
-                );
+                return $this->redirectToRoute('send_connection_request');
             }
         }
 
         return $this->render(
             '@Dashboard/EntityPublished/createConnectionRequest.html.twig',
             ['form' => $form->createView()]
+        );
+    }
+
+    /**
+     * @Method("GET")
+     * @Route("/entity/send-connection-request", name="send_connection_request")
+     */
+    public function sendConnectionRequestAction()
+    {
+        return $this->render(
+            '@Dashboard/EntityPublished/sendConnectionRequest.html.twig'
+        );
+    }
+
+    /**
+     * @Method("GET")
+     * @Route("/entity/send-connection-request", name="publish_to_production_and_send_connection_request")
+     */
+    public function publishedToProductionAndSendConnectionRequest(array $parameters)
+    {
+        return $this->render(
+            '@Dashboard/EntityPublished/publishedProductionAndConnectionRequest.html.twig',
+            $parameters
         );
     }
 

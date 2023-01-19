@@ -1,0 +1,8 @@
+{% extends '::base.html.twig' %}
+
+{% block page_heading %}{{ 'entity.sent_connection_request.title'|trans }}{%endblock%}
+{% block body %}
+
+    {{ 'entity.sending_connection_request.text.html'|trans|wysiwyg }}
+
+{% endblock %}
