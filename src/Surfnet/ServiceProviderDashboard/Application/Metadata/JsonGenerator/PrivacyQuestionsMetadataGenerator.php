@@ -56,7 +56,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
             foreach ($privacyQuestions as $question) {
                 // Get the associated getter
                 $getterName = $question->getterName;
-                if (method_exists($privacyQuestionAnswers, $getterName)) {
+                if ($privacyQuestionAnswers !== null && method_exists($privacyQuestionAnswers, $getterName)) {
                     $answer = $privacyQuestionAnswers->$getterName();
                     if (!is_null($answer)) {
                         if ($answer instanceof DateTime) {

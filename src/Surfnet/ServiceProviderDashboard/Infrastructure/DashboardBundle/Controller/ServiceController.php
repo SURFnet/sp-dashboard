@@ -72,7 +72,7 @@ class ServiceController extends AbstractController
 
     /**
      * @Route("/", name="service_overview", methods={"GET"})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function overviewAction()
     {

@@ -4,9 +4,8 @@
 
     .button-small {
       position: relative;
+      top: auto;
       float: right;
-      padding: 5px 10px;
-      top: 1.5rem;
     }
     th.text {
       width: 32%;
@@ -37,11 +36,9 @@
     border-radius: 3px;
     color: $black;
   }
-
-  button[type="submit"]:disabled  {
-    border: 1px solid darken($medium-grey, 5%);
-    background-color: $light-grey;
-    cursor: not-allowed;
+  .button-small {
+    padding: 5px 10px;
+    top: 1.5rem;
   }
 
   button[type="submit"]:disabled  {
@@ -49,31 +46,6 @@
     background-color: $light-grey;
     cursor: not-allowed;
   }
-}
-
-.line {
-  border-top: 2px solid #00829b;
-  padding-top: 5px;
-}
-
-.connection-request {
-  display: flex;
-  gap: 1.0rem;
-}
-
-.line {
-  border-top: 2px solid #00829b;
-  padding-top: 5px;
-}
-
-.connection-request {
-  display: flex;
-  gap: 1.0rem;
-}
-
-.line {
-  border-top: 2px solid #00829b;
-  padding-top: 5px;
 }
 
 .connection-request {

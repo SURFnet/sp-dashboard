@@ -45,6 +45,7 @@
     "chart.js": "^2.7",
     "chartjs-plugin-datalabels": "^0.7",
     "core-js": "3",
+    "import-glob-loader": "^1.1.0",
     "jest-environment-jsdom": "^29.0.2",
     "jquery": ">=3.5.1",
     "jquery-modal": "^0.9.1",
