@@ -139,7 +139,7 @@
     },
     "allow-plugins": {
       "ocramius/package-versions": true,
-      "symfony/flex": false
+      "symfony/flex": true
     }
   },
   "extra": {

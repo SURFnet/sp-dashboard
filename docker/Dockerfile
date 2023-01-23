@@ -2,8 +2,7 @@ FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:81 AS node-b
 COPY . /var/www/html/
 WORKDIR /var/www/html/
 ENV SYMFONY_ENV=prod
-RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev && \
-    composer run-script symfony-scripts
+RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev
 
 FROM node:14 AS js-build
 COPY . /var/www/html/
