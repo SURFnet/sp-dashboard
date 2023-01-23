@@ -106,7 +106,7 @@ trait EntityControllerTrait
         SaveEntityCommandInterface $saveCommand,
         bool $isPublishedProductionEntity,
         FlashBagInterface $flashBag
-    ){
+    ) {
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
@@ -200,7 +200,6 @@ trait EntityControllerTrait
     private function findDestinationForRedirect(
         PublishProductionCommandInterface $publishEntityCommand
     ): string {
-
         switch (true) {
             case $publishEntityCommand instanceof EntityChangeRequestCommand:
                 return 'entity_change_request';
