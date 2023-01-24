@@ -83,7 +83,10 @@ class EntityDetailFactory
             $resourceServers = $manageEntity->getOidcClient()->getResourceServers();
         }
 
-        $attributes = $this->attributeService->createEntityDetailAttributes($manageEntity->getAttributes());
+        $attributes = $this->attributeService->createEntityDetailAttributes(
+            $manageEntity->getAttributes(),
+            $manageEntity->getProtocol()->getProtocol()
+        );
 
         return new EntityDetail(
             $manageEntity->getId(),

@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Command\Serv
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -57,6 +58,8 @@ class ServiceSwitcherType extends AbstractType
                 'required' => false,
             ]
         );
+        // Html validation requires a submit button on the form
+        $builder->add('submit', SubmitType::class, ['attr' => ['class' => 'hidden']]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

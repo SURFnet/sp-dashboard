@@ -21,8 +21,11 @@ services:
       spdashboard:
         aliases:
           - db.vm.openconext.org
+          - engine.vm.openconext.org
           - manage.vm.openconext.org
           - teams.vm.openconext.org
+          - spdashboard.vm.openconext.org
+          - mujina-idp.vm.openconext.org
     volumes:
       - spdashboard_mysql:/var/lib/mysql
       - spdashboard_mongo:/var/lib/mongo
@@ -37,9 +40,7 @@ services:
       target: spdphpfpm
     volumes:
       - .:/var/www/html/
-      - type: bind
-        source: /dev/log
-        target: /dev/log
+      - ./docker/conf/logging.yml:/var/www/html/app/config/logging.yml
     environment:
       - PHPFPM_PORT=9000
     networks:

@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\AttributeNotFoundExce
 use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetailAttribute;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute as AttributeDto;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
@@ -57,7 +58,7 @@ class AttributeService implements AttributeServiceInterface
             foreach ($attributes ?? [] as $value) {
                 $this->attributes[$value->id] = Attribute::fromAttribute(
                     $value,
-                    $value->form->languages[$this->language]
+                    $value->translations[$this->language]
                 );
             }
         }
@@ -90,31 +91,75 @@ class AttributeService implements AttributeServiceInterface
         return $urns;
     }
 
-    public function createEntityDetailAttributes(AttributeList $manageAttributes): array
-    {
+    public function createEntityDetailAttributes(
+        AttributeList $manageAttributes,
+        string $entityType
+    ): array {
         $attributes = [];
         foreach ($manageAttributes->getAttributes() as $attribute) {
             $attributeDto = $this->attributeRepository->findOneByName($attribute[0]->getName());
             if ($attributeDto instanceof AttributeDto) {
                 $viewObject = new EntityDetailAttribute();
                 $viewObject->value = $attribute[0]->getMotivation();
-                $viewObject->informationPopup = $attributeDto->detail->languages[$this->language]->info;
-                $viewObject->label = $attributeDto->detail->languages[$this->language]->label;
-                $viewObject->excludedFor = $attributeDto->form->excludeFrom;
+                $viewObject->informationPopup = $this->getInfoFromAttributeDto($attributeDto, $entityType);
+                $viewObject->label = $this->getLabelFromAttributeDto($attributeDto, $entityType);
+                $viewObject->excludedFor = $attributeDto->excludeOnEntityType;
                 $attributes[] = $viewObject;
             }
         }
         return $attributes;
     }
 
-    public function getAttributeFriendlyName(string $identifier): string
+    public function getAttributeFriendlyName(string $identifier, string $type): string
     {
         $attributes = $this->getAttributeTypeAttributes();
         foreach ($attributes ?? [] as $attribute) {
             if ($identifier === $attribute->getName()) {
-                return $attribute->getLabel();
+                return $this->getLabelFromAttribute($attribute, $type);
             }
         }
         throw new AttributeNotFoundException(sprintf('Unable to find attribute with identifier: %s', $identifier));
+    }
+
+    private function getLabelFromAttribute(
+        Attribute $attribute,
+        string $entityType
+    ) {
+        switch ($entityType) {
+            case Constants::TYPE_SAML:
+                return $attribute->getSaml20Label();
+            case Constants::TYPE_OPENID_CONNECT_TNG:
+                return $attribute->getOidcngLabel();
+            default:
+                return '';
+        }
+    }
+
+    private function getInfoFromAttributeDto(
+        AttributeDto $attributeDto,
+        string $entityType
+    ) {
+        switch ($entityType) {
+            case Constants::TYPE_SAML:
+                return $attributeDto->translations[$this->language]->saml20Info;
+            case Constants::TYPE_OPENID_CONNECT_TNG:
+                return $attributeDto->translations[$this->language]->oidcngInfo;
+            default:
+                return '';
+        }
+    }
+
+    private function getLabelFromAttributeDto(
+        AttributeDto $attributeDto,
+        string $entityType
+    ) {
+        switch ($entityType) {
+            case Constants::TYPE_SAML:
+                return $attributeDto->translations[$this->language]->saml20Label;
+            case Constants::TYPE_OPENID_CONNECT_TNG:
+                return $attributeDto->translations[$this->language]->oidcngLabel;
+            default:
+                return '';
+        }
     }
 }

@@ -202,6 +202,9 @@ class ServiceStatusAssembler
     {
         $result = [];
         foreach ($states as $name => $value) {
+            if (is_null($value)) {
+                continue;
+            }
             $result[$name] = $this->stateMapping[$name][$value];
         }
         return $result;

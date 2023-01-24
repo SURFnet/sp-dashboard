@@ -1,3 +1,21 @@
+## 4.3.1
+**Feature**
+Label and translation adjustments in attributes.json #567
+
+## 4.3.0
+The 4.3.0 release seems somwhat meager compared to the vast ammount of changes performed in the 4.2.0 release.
+Don't be fooled tho. As this release is introducing a major overhaul on the way entity attributes (grants)
+are handled in the application. This error prone construction of having hard-coded references to the supported 
+attributes/grants resulted in many errors and bugs throughout the lifetime of SPD.
+
+Having these attributes in a configurable json file makes managing them much easier.
+
+**Features**
+- Dynamically handle SAML attributes (OIDC grants) from attributes.json configuration #537 #528 #531
+
+**Bugfix**
+Handle grants and redirect urls correctly when updating an OIDC entity #551
+
 ## 4.2.2
 **Bugfix**
 - Repair publish call during ACL save (this is already fixed in develop 4.4)
@@ -48,6 +66,9 @@
 ## 4.0.1
 **Bugfixes**
 - fix broken modals after oidc creation & client secret reset
+
+**Development**
+- use the prebuilt openconext containers
 
 ## 4.0.0
 **Features**

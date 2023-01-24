@@ -22,27 +22,37 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
 class AttributeTypeInformation
 {
-    public $label;
+    public $saml20Label;
 
-    public $info;
+    public $saml20Info;
+
+    public $oidcngLabel;
+
+    public $oidcngInfo;
 
     public $language;
 
     private function __construct(
-        string $label,
-        string $info,
+        string $saml20Label,
+        string $saml20Info,
+        string $oidcngLabel,
+        string $oidcngInfo,
         string $language
     ) {
-        $this->label = $label;
-        $this->info = $info;
+        $this->saml20Label = $saml20Label;
+        $this->saml20Info = $saml20Info;
+        $this->oidcngLabel = $oidcngLabel;
+        $this->oidcngInfo = $oidcngInfo;
         $this->language = $language;
     }
 
     public static function fromLanguage(array $information, $language): ?AttributeTypeInformation
     {
         return new self(
-            $information['label'],
-            $information['info'],
+            $information['saml20Label'],
+            $information['saml20Info'],
+            $information['oidcngLabel'],
+            $information['oidcngInfo'],
             $language
         );
     }

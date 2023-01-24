@@ -1,149 +1,101 @@
 {
 	"definitions": {},
-	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://example.com/object1670226768.json",
 	"title": "Root",
 	"type": "array",
 	"default": [],
 	"items":{
-		"$id": "#root/items", 
-		"title": "Items", 
+		"$id": "#root/items",
+		"title": "Items",
 		"type": "object",
 		"required": [
 			"id",
-			"form",
-			"detail",
+			"translations",
 			"urns"
 		],
 		"properties": {
 			"id": {
-				"$id": "#root/items/id", 
-				"title": "Id", 
+				"$id": "#root/items/id",
+				"title": "Id",
 				"type": "string",
-				"default": "",
-				"examples": [
-					"givenName"
-				],
 				"pattern": "^[a-z][a-zA-Z]*$"
 			},
-			"form": {
-				"$id": "#root/items/form", 
-				"title": "Form", 
-				"type": "object",
-				"required": [
-					"translations"
-				],
-				"properties": {
-					"excludeOnEntityType": {
-						"$id": "#root/items/form/excludeOnEntityType",
-						"title": "Exclude on entity type",
-						"type": "array",
-						"default": [],
-						"items":{
-							"$id": "#root/items/form/excludeOnEntityType/items",
-							"title": "Items",
-							"type": "string",
-							"default": "",
-							"enum": [
-								"saml20",
-								"oidcng",
-								"oauth20_rs",
-								"oauth20_ccc"
-							]
-						}
-					},
-					"translations": {
-						"$id": "#root/items/form/translations",
-						"title": "Translations",
-						"type": "object",
-						"required": [
-							"en"
-						],
-						"patternProperties": {
-							"^en$": {
-								"$id": "#root/items/form/translations/en",
-								"title": "En",
-								"type": "object",
-								"required": [
-									"label",
-									"info"
-								],
-								"properties": {
-									"label": {
-										"$id": "#root/items/form/translations/en/label",
-										"title": "Label",
-										"type": "string",
-										"default": "",
-										"examples": [
-											"Given name attribute"
-										]
-									},
-									"info": {
-										"$id": "#root/items/form/translations/en/info",
-										"title": "Info",
-										"type": "string",
-										"default": ""
-									}
-								}
-							}
-						},
-						"additionalProperties": false
-					}
+			"excludeOnEntityType": {
+				"$id": "#root/items/excludeOnEntityType",
+				"title": "Excludeonentitytype",
+				"type": "array",
+				"default": [],
+				"items":{
+					"$id": "#root/items/excludeOnEntityType/items",
+					"title": "Items",
+					"type": "string",
+					"default": "",
+					"enum": [
+						"saml20",
+						"oidcng",
+						"oauth20_rs",
+						"oauth20_ccc"
+					]
 				}
-			}
-,
-			"detail": {
-				"$id": "#root/items/detail", 
-				"title": "Detail", 
+			},
+			"translations": {
+				"$id": "#root/items/translations",
+				"title": "Translations",
 				"type": "object",
 				"required": [
 					"en"
 				],
-				"patternProperties": {
-					"^en$": {
-						"$id": "#root/items/detail/en", 
-						"title": "En", 
+				"properties": {
+					"en": {
+						"$id": "#root/items/translations/en",
+						"title": "En",
 						"type": "object",
 						"required": [
-							"label",
-							"info"
+							"saml20Label",
+							"saml20Info",
+							"oidcngLabel",
+							"oidcngInfo"
 						],
 						"properties": {
-							"label": {
-								"$id": "#root/items/detail/en/label", 
-								"title": "Label", 
-								"type": "string",
-								"default": "",
-								"examples": [
-									"Given name attribute"
-								]
+							"saml20Label": {
+								"$id": "#root/items/translations/en/saml20Label",
+								"title": "Saml20label",
+								"type": "string"
 							},
-							"info": {
-								"$id": "#root/items/detail/en/info", 
-								"title": "Info", 
-								"type": "string",
-								"default": ""
+							"saml20Info": {
+								"$id": "#root/items/translations/en/saml20Info",
+								"title": "Saml20info",
+								"type": "string"
+							},
+							"oidcngLabel": {
+								"$id": "#root/items/translations/en/oidcngLabel",
+								"title": "oidcnglabel",
+								"type": "string"
+							},
+							"oidcngInfo": {
+								"$id": "#root/items/translations/en/oidcngInfo",
+								"title": "oidcnginfo",
+								"type": "string"
 							}
 						}
 					}
-				},
-				"additionalProperties": false
+
+				}
 			}
-,
+		,
 			"urns": {
-				"$id": "#root/items/urns", 
-				"title": "Urns", 
+				"$id": "#root/items/urns",
+				"title": "Urns",
 				"type": "array",
 				"default": [],
 				"items":{
-					"$id": "#root/items/urns/items", 
-					"title": "Items", 
-					"type": "string",
-					"default": "",
-					"examples": [
-						"urn:mace:dir:attribute-def:givenName"
-					]
+					"$id": "#root/items/urns/items",
+					"title": "Items",
+					"type": "string"
 				}
 			}
 		}
 	}
+
 }

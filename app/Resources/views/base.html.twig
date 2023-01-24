@@ -8,39 +8,44 @@
         {% endblock %}
     </head>
     <body>
-        <div class="flash hide undefined">
-            <div class="message-container">
-                <p></p>
-                <a class="close"><i class="fa fa-remove"></i></a>
+        <header>
+            <div class="flash hide undefined">
+                <div class="message-container">
+                    <p></p>
+                    <a class="close">
+                        <i class="fa fa-remove"></i>
+                        <span class="sr-only">{{ 'global.button.close'|trans }}</span>
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="header-container">
-            <div class="header">
-                <a class="logo" href="/">
-                    <img src="/images/surfconext-logo.png" alt="SURFconext" />
-                </a>
-                <ul class="links">
-                    <li class="title">
-                        <span>SP dashboard</span>
-                    </li>
-                    <li class="profile" tabindex="1">
-                        {{ identity() }}
-                    </li>
-                    <li class="border-left">
-                        <a href="{{ 'page.header.help_link'|trans }}" target="_blank">{{ 'page.header.help'|trans }}</a>
-                    </li>
-                    <li class="border-left"><a href={{ path('logout') }}>{{ 'page.header.logout'|trans }}</a></li>
-                    <li class="service-switcher">
-                        {{ service_switcher() }}
-                    </li>
-                </ul>
+            <div class="header-container">
+                <div class="header">
+                    <a class="logo" href="/">
+                        <img src="/images/surfconext-logo.png" alt="SURFconext" />
+                    </a>
+                    <ul class="links">
+                        <li class="title">
+                            <span>SP dashboard</span>
+                        </li>
+                        <li class="profile">
+                            {{ identity() }}
+                        </li>
+                        <li class="border-left">
+                            <a href="{{ 'page.header.help_link'|trans }}" target="_blank">{{ 'page.header.help'|trans }}</a>
+                        </li>
+                        <li class="border-left"><a href={{ path('logout') }}>{{ 'page.header.logout'|trans }}</a></li>
+                        <li class="service-switcher">
+                            {{ service_switcher() }}
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="navigation-container">
-            <div class="navigation">
-                {{ knp_menu_render('main') }}
+            <div class="navigation-container">
+                <div class="navigation">
+                    {{ knp_menu_render('main') }}
+                </div>
             </div>
-        </div>
+        </header>
         <div class="page-container">
             {{ render(controller('DashboardBundle:SiteNotice:showGlobalSiteNotice')) }}
 
