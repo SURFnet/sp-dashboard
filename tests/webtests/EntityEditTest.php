@@ -268,7 +268,7 @@ class EntityEditTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', "/entity/edit/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
         $form = $crawler
-            ->selectButton('Change request')
+            ->selectButton('Change')
             ->form();
         $this->client->submit($form, $this->buildValidFormData());
         self::assertEquals(302, $this->client->getResponse()->getStatusCode());

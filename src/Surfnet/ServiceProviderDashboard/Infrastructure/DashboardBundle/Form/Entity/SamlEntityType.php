@@ -306,7 +306,7 @@ class SamlEntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => SaveSamlEntityCommand::class,
-            'publish_button_label' => 'Publish',
+            'publish_button_label' => 'entity.add.label.publish',
         ));
     }
 

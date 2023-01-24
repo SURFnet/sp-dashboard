@@ -146,7 +146,7 @@ class EntityTypeFactory
         $options = [];
         if ($environment === Constants::ENVIRONMENT_PRODUCTION) {
             $options = ['validation_groups' => ['Default', 'production'],
-                'publish_button_label' => 'Change request',
+                'publish_button_label' => 'entity.edit.label.change',
                 ];
         }
         return $options;
