@@ -18,22 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-class SiteNoticeController extends Controller
+class SiteNoticeController extends AbstractController
 {
-    /**
-     * @var string
-     */
-    private $noticeDate;
-
-    public function __construct(string $noticeDate)
+    public function __construct(private string $noticeDate)
     {
-        $this->noticeDate = $noticeDate;
     }
 
     /**
@@ -43,9 +34,6 @@ class SiteNoticeController extends Controller
      * users to see is passed on.  Users can close the notification.
      * This desire to not see the notification is stored both in the
      * session and in cookies.
-     *
-     * @Method("GET")
-     * @Template()
      */
     public function showGlobalSiteNoticeAction(Request $request)
     {
@@ -53,10 +41,10 @@ class SiteNoticeController extends Controller
         $cookie = $request->cookies->get($cookieString);
         $hasBeenClosed = (bool) $cookie;
 
-        return [
+        return $this->render('@Dashboard/SiteNotice/showGlobalSiteNotice.html.twig', [
             'cookieString' => $cookieString,
             'date' => $this->noticeDate,
             'hasBeenClosed' => $hasBeenClosed,
-        ];
+        ]);
     }
 }

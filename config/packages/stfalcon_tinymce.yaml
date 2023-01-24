@@ -1,0 +1,10 @@
+stfalcon_tinymce:
+  tinymce_jquery: false
+  language: "%env(locale)%"
+  theme:
+    simple:
+      theme: "modern"
+      menubar: false
+      toolbar: "bold italic underline | styleselect | bullist numlist outdent indent | link"
+      plugins:
+        - "autolink lists link contextmenu paste"

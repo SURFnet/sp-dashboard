@@ -18,51 +18,35 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class EntityDetailController extends Controller
+class EntityDetailController extends AbstractController
 {
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var EntityDetailFactory
-     */
-    private $entityDetailFactory;
-
     public function __construct(
-        EntityServiceInterface $entityService,
-        AuthorizationService $authorizationService,
-        EntityDetailFactory $entityDetailFactory
+        private readonly EntityServiceInterface $entityService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityDetailFactory $entityDetailFactory
     ) {
-        $this->entityService = $entityService;
-        $this->authorizationService = $authorizationService;
-        $this->entityDetailFactory = $entityDetailFactory;
     }
 
     /**
-     * @Method("GET")
-     * @Route("/entity/detail/{serviceId}/{id}/{manageTarget}", name="entity_detail", defaults={"manageTarget" = false})
-     * @Security("has_role('ROLE_USER')")
-     * @Template("@Dashboard/EntityDetail/detail.html.twig")
+     * @Route("/entity/detail/{serviceId}/{id}/{manageTarget}",
+     *     name="entity_detail",
+     *     methods={"GET"},
+     *     defaults={"manageTarget" = false
+     *     })
+     * @Security("is_granted('ROLE_USER')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function detailAction(string $id, int $serviceId, string $manageTarget)
+    public function detailAction(string $id, int $serviceId, string $manageTarget): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $team = $service->getTeamName();
@@ -73,9 +57,9 @@ class EntityDetailController extends Controller
         }
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return [
+        return $this->render('@Dashboard/EntityDetail/detail.html.twig', [
             'entity' => $viewObject,
             'isAdmin' => $this->isGranted('ROLE_ADMINISTRATOR'),
-        ];
+        ]);
     }
 }

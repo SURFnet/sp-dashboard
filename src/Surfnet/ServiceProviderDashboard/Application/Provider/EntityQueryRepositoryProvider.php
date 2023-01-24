@@ -24,23 +24,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 
 class EntityQueryRepositoryProvider
 {
-    /**
-     * @var QueryManageRepository
-     */
-    private $manageTestQueryClient;
-
-    /**
-     * @var QueryManageRepository
-     */
-    private $manageProductionQueryClient;
-
-
     public function __construct(
-        QueryManageRepository $manageTestQueryClient,
-        QueryManageRepository $manageProductionQueryClient
+        private readonly QueryManageRepository $manageTestQueryClient,
+        private readonly QueryManageRepository $manageProductionQueryClient
     ) {
-        $this->manageTestQueryClient = $manageTestQueryClient;
-        $this->manageProductionQueryClient = $manageProductionQueryClient;
     }
 
     public function fromEnvironment(string $environment): QueryManageRepository

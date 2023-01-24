@@ -29,20 +29,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
 
 class DeleteEntityClient implements DeleteTeamsEntityRepositoryInterface
 {
-    /**
-     * @var HttpClient
-     */
-    private $client;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(HttpClient $client, LoggerInterface $logger)
-    {
-        $this->client = $client;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly HttpClient $client,
+        private LoggerInterface $logger
+    ) {
     }
 
 

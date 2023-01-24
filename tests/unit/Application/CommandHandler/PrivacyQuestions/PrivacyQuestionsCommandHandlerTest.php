@@ -23,6 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\PrivacyQuestions\PrivacyQuestionsCommandHandler;
+use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepository;
@@ -44,7 +45,7 @@ class PrivacyQuestionsCommandHandlerTest extends MockeryTestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(PrivacyQuestionsRepository::class);
         $this->logger = m::mock(LoggerInterface::class);
@@ -88,10 +89,6 @@ class PrivacyQuestionsCommandHandlerTest extends MockeryTestCase
         $this->commandHandler->handle($command);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException
-     * @expectedExceptionMessage Unable to find privacy question
-     */
     public function test_it_throws_exception_when_questions_entity_not_found()
     {
         $service = m::mock(Service::class);
@@ -119,6 +116,8 @@ class PrivacyQuestionsCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('error')
             ->with('Unable to fetch the privacy questions for "Foobar"');
 
+        $this->expectExceptionMessage("Unable to find privacy question");
+        $this->expectException(EntityNotFoundException::class);
         $this->commandHandler->handle($command);
     }
 }

@@ -1,13 +1,11 @@
 name: Run integration tests
 
-on:
-  pull_request:
-  push:
-    branches: [ develop ]
+on: [pull_request, push]
 
 jobs:
   build:
-
+    # Due to the cgroups 1 issue on the openconext container, we do not
+    # use the new ubuntu platform yet. As they started using cgroups v2
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     env:
@@ -57,19 +55,11 @@ jobs:
 
       - name: Make the log and cache dir writable
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} chmod 777 /var/www/html/var/{logs,cache}
-
-      - name: Copy parameters.yml.dist to parameters.yml
-        run: |
-          ${DOCKER_COMPOSE_PHP_FPM} cp /var/www/html/app/config/parameters.yml.dist /var/www/html/app/config/parameters.yml
+          ${DOCKER_COMPOSE_PHP_FPM} chmod 777 /var/www/html/var/ -R
 
       - name: Wait until the spdashboard is accessable
         run: |
           ${DOCKER_COMPOSE_OPENCONEXT} sh /usr/local/sbin/spdup.sh
-
-      - name: Disable Symfony debug mode
-        run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer disabledebug'
 
       - name: Run Copy Paste Detector
         run: |
@@ -93,4 +83,3 @@ jobs:
       - name: Run translations
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer translations'
-

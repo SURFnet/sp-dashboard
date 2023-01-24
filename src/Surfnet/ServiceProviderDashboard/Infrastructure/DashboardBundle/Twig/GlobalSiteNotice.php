@@ -18,35 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFunction;
 use Twig_Extension;
 
 class GlobalSiteNotice extends Twig_Extension
 {
-    /**
-     * @var bool
-     */
-    private $shouldDisplayGlobalSiteNotice;
-
-    /**
-     * @var String
-     */
-    private $allowedHtml;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
-        bool $shouldDisplayGlobalSiteNotice,
-        string $allowedHtml,
-        TranslatorInterface $translator
+        private readonly bool $shouldDisplayGlobalSiteNotice,
+        private readonly string $allowedHtml,
+        private readonly TranslatorInterface $translator
     ) {
-        $this->shouldDisplayGlobalSiteNotice = $shouldDisplayGlobalSiteNotice;
-        $this->allowedHtml = $allowedHtml;
-        $this->translator = $translator;
     }
 
     public function getFunctions()

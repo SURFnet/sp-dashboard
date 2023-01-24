@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-cd $(dirname $0)/../../
-
-# tsconfig should be in the root
-./node_modules/tslint/bin/tslint --project tsconfig.json $1

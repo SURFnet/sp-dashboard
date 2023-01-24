@@ -28,26 +28,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class EntityDetailFactory
 {
-    /**
-     * @var string
-     */
-    private $playGroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $playGroundUriProd;
-
-    private $attributeService;
-
     public function __construct(
-        AttributeServiceInterface $attributeService,
-        string $playGroundUriTest,
-        string $playGroundUriProd
+        private readonly AttributeServiceInterface $attributeService,
+        private readonly string $playGroundUriTest,
+        private readonly string $playGroundUriProd
     ) {
-        $this->attributeService = $attributeService;
-        $this->playGroundUriTest = $playGroundUriTest;
-        $this->playGroundUriProd = $playGroundUriProd;
     }
 
     public function buildFrom(ManageEntity $manageEntity): EntityDetail

@@ -1,9 +1,9 @@
 module.exports = {
     collectCoverage: false,
-    coverageDirectory: "app/js/coverage",
+    coverageDirectory: "assets/js/coverage",
     collectCoverageFrom: [
-        "app/js/**/*.{ts,tsx,js,jsx}",
-        "!web/build/**",
+        "assets/js/**/*.{ts,tsx,js,jsx}",
+        "!public/build/**",
         "!**/*test.{ts,tsx,js,jsx}",
         "!node_modules/**"
     ],

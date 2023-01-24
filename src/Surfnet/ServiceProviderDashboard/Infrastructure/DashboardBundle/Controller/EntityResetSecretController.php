@@ -19,28 +19,24 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Exception;
-use Ramsey\Uuid\Uuid;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityResetSecretController extends Controller
+class EntityResetSecretController extends AbstractController
 {
     use EntityControllerTrait;
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/reset-secret/{serviceId}/{manageId}/{environment}", name="entity_reset_secret")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/entity/reset-secret/{serviceId}/{manageId}/{environment}", name="entity_reset_secret", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_USER')")
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)

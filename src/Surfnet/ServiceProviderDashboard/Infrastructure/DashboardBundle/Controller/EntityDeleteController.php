@@ -19,67 +19,40 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class EntityDeleteController extends Controller
+class EntityDeleteController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var DeleteCommandFactory
-     */
-    private $commandFactory;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        DeleteCommandFactory $commandFactory,
-        AuthorizationService $authorizationService,
-        ServiceService $serviceService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly DeleteCommandFactory $commandFactory,
+        private readonly AuthorizationService $authorizationService,
+        private readonly ServiceService $serviceService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->authorizationService = $authorizationService;
-        $this->commandFactory = $commandFactory;
     }
 
     /**
-     * @Method({"GET", "POST"})
      * @Route(
      *     "/entity/delete/published/{serviceId}/{manageId}/{environment}",
      *     name="entity_delete_published",
+     *     methods={"GET", "POST"},
      *     defaults={
      *          "manageId": null,
-     *          "environment": "test"
+     *          "environment": "test",
      *     }
      * )
-     * @Template("@Dashboard/EntityDelete/delete.html.twig")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      * @param Request $request
      *
      * @param int $serviceId
@@ -125,26 +98,25 @@ class EntityDeleteController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        return [
+        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
             'form' => $form->createView(),
             'environment' => $environment,
             'status' => $excludeFromPush === "1" ? Constants::STATE_PUBLICATION_REQUESTED : Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
-        ];
+        ]);
     }
 
     /**
-     * @Method({"GET", "POST"})
      * @Route(
      *     "/entity/delete/request/{serviceId}/{manageId}/{environment}",
      *     name="entity_delete_request",
+     *     methods={"GET", "POST"},
      *     defaults={
      *          "manageId": null,
      *          "environment": "production"
      *     }
      * )
-     * @Template("@Dashboard/EntityDelete/delete.html.twig")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      * @param int $serviceId
@@ -173,9 +145,7 @@ class EntityDeleteController extends Controller
                 $this->commandBus->handle(
                     $this->commandFactory->buildRequestDeletePublishedEntityCommand(
                         $manageId,
-                        $contact,
-                        'entity.delete.request.ticket.summary',
-                        'entity.delete.request.ticket.description'
+                        $contact
                     )
                 );
             }
@@ -187,11 +157,11 @@ class EntityDeleteController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        return [
+        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
             'form' => $form->createView(),
             'environment' => $environment,
             'status' => Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
-        ];
+        ]);
     }
 }

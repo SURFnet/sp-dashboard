@@ -20,68 +20,31 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factor
 
 use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Message;
-use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment as TwigEnvironment;
 
 /**
  * The mail message factory builds mail messages. These messages are set with a translatable title and their message
  * is based on a twig template.
  *
- * The sender and receiver can be configured in the parameters.yml
+ * The sender and receiver can be configured in the .env
  */
 class MailMessageFactory
 {
-    /**
-     * @var string
-     */
-    private $sender;
-
-    /**
-     * @var string
-     */
-    private $receiver;
-
-    /**
-     * @var string
-     */
-    private $noReply;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var EngineInterface
-     */
-    private $templating;
-
-    /**
-     * @param string $sender
-     * @param string $receiver
-     * @param string $noReply
-     * @param TranslatorInterface $translator
-     * @param EngineInterface $templating
-     */
     public function __construct(
-        $sender,
-        $receiver,
-        $noReply,
-        TranslatorInterface $translator,
-        EngineInterface $templating
+        private readonly string $sender,
+        private readonly string $receiver,
+        private readonly string $noReply,
+        private readonly TranslatorInterface $translator,
+        private readonly TwigEnvironment $templating
     ) {
-        $this->sender = $sender;
-        $this->receiver = $receiver;
-        $this->noReply = $noReply;
-        $this->translator = $translator;
-        $this->templating = $templating;
     }
 
-    public function buildJiraIssueFailedMessage(Exception $exception, ManageEntity $entity)
+    public function buildJiraIssueFailedMessage(Exception $exception, ManageEntity $entity): TemplatedEmail
     {
         $message = $this->createNewMessage();
-        $message->setSubject($this->translator->trans('mail.jira.publish_production_failed.subject'));
+        $message->subject($this->translator->trans('mail.jira.publish_production_failed.subject'));
 
         $template = $this->renderView(
             '@Dashboard/Mail/jiraPublicationFailed.html.twig',
@@ -92,23 +55,21 @@ class MailMessageFactory
             ]
         );
 
-        $message->setBody($template, 'text/html');
+        $message->htmlTemplate($template);
 
         return $message;
     }
 
-    private function createNewMessage()
+    private function createNewMessage(): TemplatedEmail
     {
-        $message = Message::newInstance();
-
-        $headers = $message->getHeaders();
+        $email = new TemplatedEmail();
+        $headers = $email->getHeaders();
         $headers->addTextHeader('Auto-Submitted', 'auto-generated');
-        # TODO: see https://github.com/swiftmailer/swiftmailer/issues/705
-        $message->setReturnPath($this->noReply);
-        $message->setFrom($this->sender);
-        $message->setTo($this->receiver);
+        $email->returnPath($this->noReply);
+        $email->from($this->sender);
+        $email->to($this->receiver);
 
-        return $message;
+        return $email;
     }
 
     private function renderView($view, array $parameters = array())

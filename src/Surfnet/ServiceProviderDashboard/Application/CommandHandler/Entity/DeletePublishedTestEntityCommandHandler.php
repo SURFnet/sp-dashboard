@@ -27,22 +27,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityReposit
 
 class DeletePublishedTestEntityCommandHandler implements CommandHandler
 {
-    /**
-     * @var DeleteManageEntityRepository
-     */
-    private $deleteEntityRepository;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        DeleteManageEntityRepository $deleteEntityRepository,
-        LoggerInterface              $logger
+        private readonly DeleteManageEntityRepository $deleteEntityRepository,
+        private readonly LoggerInterface $logger
     ) {
-        $this->deleteEntityRepository = $deleteEntityRepository;
-        $this->logger = $logger;
     }
 
     public function handle(DeletePublishedTestEntityCommand $command)

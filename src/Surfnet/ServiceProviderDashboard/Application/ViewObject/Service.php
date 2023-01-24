@@ -22,51 +22,14 @@ use Symfony\Component\Routing\RouterInterface;
 
 class Service
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var bool
-     */
-    private $privacyQuestionsEnabled;
-
-    /**
-     * @var bool
-     */
-    private $productionEntitiesEnabled;
-
-    /**
-     * @var EntityList
-     */
-    private $entityList;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
     public function __construct(
-        string $id,
-        string $name,
-        bool $privacyQuestionsEnabled,
-        EntityList $entityList,
-        RouterInterface $router,
-        bool $productionEntitiesEnabled = false
+        private readonly string $id,
+        private readonly string $name,
+        private readonly bool $privacyQuestionsEnabled,
+        private readonly EntityList $entityList,
+        private readonly RouterInterface $router,
+        private readonly bool $productionEntitiesEnabled = false
     ) {
-    
-        $this->id = $id;
-        $this->name = $name;
-        $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-        $this->entityList = $entityList;
-        $this->router = $router;
-        $this->productionEntitiesEnabled = $productionEntitiesEnabled;
     }
 
     public static function fromService(DomainService $service, EntityList $entityList, RouterInterface $router)

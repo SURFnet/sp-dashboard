@@ -27,28 +27,11 @@ use Twig_SimpleFunction;
 
 class ServiceSwitcherExtension extends Twig_Extension
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        AuthorizationService $authorizationService,
-        FormFactoryInterface $formFactory
+        private readonly TokenStorageInterface $tokenStorage,
+        private AuthorizationService $authorizationService,
+        private readonly FormFactoryInterface $formFactory
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorizationService = $authorizationService;
-        $this->formFactory = $formFactory;
     }
 
     public function getFunctions()
@@ -68,14 +51,16 @@ class ServiceSwitcherExtension extends Twig_Extension
     public function render(Twig_Environment $environment)
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token || !$token->hasRole('ROLE_ADMINISTRATOR')) {
+        $roles = $token->getRoleNames();
+
+        if (!$token || !in_array('ROLE_ADMINISTRATOR', $roles)) {
             return '';
         }
 
         $form = $this->formFactory->create(ServiceSwitcherType::class);
 
         return $environment->render(
-            'DashboardBundle:TwigExtension:service_switcher.html.twig',
+            'TwigExtension\\service_switcher.html.twig',
             [
                 'form' => $form->createView(),
             ]

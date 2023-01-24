@@ -22,19 +22,10 @@ use Webmozart\Assert\Assert;
 
 class PublicationStatus
 {
-    /**
-     * @var string
-     */
-    private $status;
-
-    /**
-     * @param string $status
-     */
-    public function __construct($status = '')
-    {
-        Assert::stringNotEmpty($status, 'Please set the publication status in parameters.yml');
-
-        $this->status = $status;
+    public function __construct(
+        private string $status = ''
+    ) {
+        Assert::stringNotEmpty($status, 'Please set the publication status in .env');
     }
 
     public function getStatus()

@@ -1,0 +1,42 @@
+{% form_theme form 'form/fields.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+
+    <h1>{% block page_heading %}{% endblock %}</h1>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': '', 'class': 'service-form'}}) }}
+
+    {% for message in app.flashes('error') %}
+        <div class="message error">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {{ form_errors(form) }}
+
+    <div class="row">
+        <div class="fieldset card">
+            <h2>{{ 'service.form.general.title'|trans }}</h2>
+            {{ form_widget(form.general) }}
+        </div>
+
+        <div class="fieldset card pull-right">
+            <h2>{{ 'service.form.status.title'|trans }}</h2>
+            {{ form_widget(form.serviceStatus) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="fieldset card card--second">
+            <h2>{{  'service.form.teams.title'|trans }}</h2>
+            {{ form_widget(form.teams) }}
+        </div>
+    </div>
+
+    <div class="button-wrapper">
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

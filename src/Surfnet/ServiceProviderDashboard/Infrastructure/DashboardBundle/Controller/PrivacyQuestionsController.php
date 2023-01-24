@@ -19,49 +19,30 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\PrivacyQuestions\PrivacyQuestionsType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class PrivacyQuestionsController extends Controller
+class PrivacyQuestionsController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
     public function __construct(
-        CommandBus $commandBus,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService
+        private readonly CommandBus $commandBus,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService
     ) {
-        $this->commandBus = $commandBus;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/{serviceId}/privacy", name="privacy_questions")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/service/{serviceId}/privacy", name="privacy_questions", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param int $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
@@ -76,14 +57,20 @@ class PrivacyQuestionsController extends Controller
 
         // Test if the questions have already been filled
         if ($service->getPrivacyQuestions() instanceof PrivacyQuestions) {
-            return $this->forward('DashboardBundle:PrivacyQuestions:edit', ['serviceId' => $serviceId]);
+            return $this->forward(
+                'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::editAction',
+                ['serviceId' => $serviceId]
+            );
         }
-        return $this->forward('DashboardBundle:PrivacyQuestions:create', ['serviceId' => $serviceId]);
+        return $this->forward(
+            'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::createAction',
+            ['serviceId' => $serviceId]
+        );
     }
 
     /**
      * @Route("/service/{serviceId}/privacy/create", name="privacy_questions_create")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      *
@@ -96,12 +83,12 @@ class PrivacyQuestionsController extends Controller
 
         $command = PrivacyQuestionsCommand::fromService($service);
 
-        return $this->renderForm($request, $command, $serviceId);
+        return $this->renderPrivacyQuestionsForm($request, $command, $serviceId);
     }
 
     /**
      * @Route("/service/{serviceId}/privacy/edit", name="privacy_questions_edit")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      *
@@ -116,17 +103,14 @@ class PrivacyQuestionsController extends Controller
 
         $command = PrivacyQuestionsCommand::fromQuestions($questions);
 
-        return $this->renderForm($request, $command, $serviceId);
+        return $this->renderPrivacyQuestionsForm($request, $command, $serviceId);
     }
 
-    /**
-     * @param Request $request
-     * @param PrivacyQuestionsCommand $command
-     * @param int $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     */
-    private function renderForm(Request $request, PrivacyQuestionsCommand $command, $serviceId)
-    {
+    private function renderPrivacyQuestionsForm(
+        Request $request,
+        PrivacyQuestionsCommand $command,
+        int $serviceId
+    ): RedirectResponse|Response {
         $form = $this->createForm(PrivacyQuestionsType::class, $command);
         $form->handleRequest($request);
 

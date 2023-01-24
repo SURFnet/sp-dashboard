@@ -23,27 +23,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
 class DeleteServiceCommand implements Command
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * The Contact that initiated the service deletion.
-     * @var Contact
-     */
-    private $contact;
-
-    /**
-     * @var int
-     */
-    private $teamId;
-
-    public function __construct(int $id, Contact $contact, ?int $teamId)
-    {
-        $this->id = $id;
-        $this->contact = $contact;
-        $this->teamId = $teamId;
+    public function __construct(
+        private readonly int $id,
+        private readonly Contact $contact,
+        private readonly ?int $teamId
+    ) {
     }
 
     public function getId(): int

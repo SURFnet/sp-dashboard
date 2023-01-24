@@ -23,6 +23,7 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use RuntimeException;
+use Surfnet\SamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
@@ -33,13 +34,14 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient;
+use Symfony\Bundle\FrameworkBundle\Test\TestBrowserToken;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WebTestCase extends SymfonyWebTestCase
 {
@@ -83,8 +85,9 @@ class WebTestCase extends SymfonyWebTestCase
     /** @var QueryTeamsRepository&FakeTeamsQueryClient */
     protected $teamsQueryClient;
 
-    public function setUp()
+    public function setUp(): void
     {
+        self::ensureKernelShutdown();
         // Disable notices, strict and deprecated warnings. Many Symfony 3.4 deprecation warnings are still to be fixed.
         Debug::enable(E_RECOVERABLE_ERROR & ~E_DEPRECATED, false);
 
@@ -224,11 +227,14 @@ class WebTestCase extends SymfonyWebTestCase
         $loader->addFixture(new WebTestFixtures);
 
         $purger = new ORMPurger($em);
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $executor = new ORMExecutor($em, $purger);
 
         // The sequence of the Service table is important, purger only removes data, does not reset the
         // autoincrement sequence. That is explicitly reset with the query below.
-//        $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
+        // Preferably we'de use $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE); but that does not seem
+        // to work with SQLite
+        $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
         $executor->execute($loader->getFixtures());
     }
@@ -256,8 +262,6 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function logIn($role = 'ROLE_ADMINISTRATOR', array $services = [])
     {
-        $session = $this->client->getContainer()->get('session');
-
         $contact = new Contact('webtest:nameid:johndoe', 'johndoe@localhost', 'John Doe');
 
         if (empty($services)) {
@@ -267,18 +271,9 @@ class WebTestCase extends SymfonyWebTestCase
         foreach ($services as $service) {
             $contact->addService($service);
         }
+        $contact->assignRole($role);
 
-        $authenticatedToken = new SamlToken([$role]);
-        $authenticatedToken->setUser(
-            new Identity($contact)
-        );
-
-        $session->set('_security_saml_based', serialize($authenticatedToken));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-
-        $this->client->getCookieJar()->set($cookie);
+        $this->client->loginUser(new Identity($contact), 'saml_based');
     }
 
     /**

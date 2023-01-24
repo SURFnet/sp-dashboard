@@ -42,7 +42,7 @@ class SpDashboardMetadataGeneratorTest extends MockeryTestCase
         $entity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
 
         $entity->setService($service);
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources');
 
         $factory = new SpDashboardMetadataGenerator($metadataRepository);
 

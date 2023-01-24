@@ -21,6 +21,7 @@ use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ServiceNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -28,36 +29,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AuthorizationService
 {
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var ApiConfig[]
-     */
-    private $manageConfig;
-
     public function __construct(
-        ServiceService $serviceService,
-        Session $session,
-        TokenStorageInterface $tokenStorage,
+        private readonly ServiceService $serviceService,
+        private readonly Session $session,
+        private readonly TokenStorageInterface $tokenStorage,
         ApiConfig $manageTestConfig,
         ApiConfig $manageProdConfig
     ) {
-        $this->serviceService = $serviceService;
-        $this->session = $session;
-        $this->tokenStorage = $tokenStorage;
         $this->manageConfig = [
             'test' => $manageTestConfig,
             'prod' => $manageProdConfig,
@@ -89,7 +67,8 @@ class AuthorizationService
             return false;
         }
 
-        return $this->tokenStorage->getToken()->hasRole('ROLE_ADMINISTRATOR');
+        $roles = $this->tokenStorage->getToken()->getRoleNames();
+        return in_array('ROLE_ADMINISTRATOR', $roles);
     }
 
     /**
@@ -213,8 +192,9 @@ class AuthorizationService
         }
 
         $serviceNames = $this->serviceService->getServiceNamesById();
+        $roles = $token->getRoleNames();
 
-        if ($token->hasRole('ROLE_ADMINISTRATOR')) {
+        if (in_array('ROLE_ADMINISTRATOR', $roles)) {
             return $serviceNames;
         }
 
@@ -277,10 +257,9 @@ class AuthorizationService
         return in_array($serviceId, $allowedServiceIds);
     }
 
-    public function getContact()
+    public function getContact(): Contact
     {
         /** @var Identity $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-        return $user->getContact();
+        return $this->tokenStorage->getToken()->getUser()->getContact();
     }
 }

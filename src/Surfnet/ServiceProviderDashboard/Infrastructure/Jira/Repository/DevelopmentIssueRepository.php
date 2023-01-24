@@ -31,11 +31,6 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFacto
 class DevelopmentIssueRepository implements TicketServiceInterface
 {
     /**
-     * @var string
-     */
-    private $filePath;
-
-    /**
      * @var Issue[]|null $data
      */
     private $data;
@@ -44,12 +39,8 @@ class DevelopmentIssueRepository implements TicketServiceInterface
      */
     private $failIssueCreation = false;
 
-    /**
-     * @param string $filePath
-     */
-    public function __construct($filePath)
+    public function __construct(private readonly string $filePath)
     {
-        $this->filePath = $filePath;
     }
 
     public function shouldFailCreateIssue()

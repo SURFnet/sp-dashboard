@@ -1,0 +1,11 @@
+doctrine_migrations:
+    migrations_paths:
+        'Surfnet\ServiceProviderDashboard\Migrations': '%kernel.project_dir%/migrations'
+
+    storage:
+            table_storage:
+                table_name: 'migration_versions'
+                version_column_name: 'SP_Dashboard_migrations'
+
+    organize_migrations: false
+

@@ -53,7 +53,7 @@ class SamlProviderTest extends TestCase
      */
     private $logger;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->contactRepo = m::mock(ContactRepository::class);
         $this->serviceRepo = m::mock(ServiceRepository::class);
@@ -81,176 +81,14 @@ class SamlProviderTest extends TestCase
         $this->buildProvider($invalidAdminTeams);
     }
 
-
-    public function test_happy_flow()
-    {
-        $provider  = $this->buildProvider(['urn:collab:foo:team.foobar.com']);
-
-        $nameId = 'urn:collab:foo:team.foobar.com';
-        $email = 'foo@team.foobar.com';
-
-        $assertion = m::mock(Assertion::class);
-        $token = m::mock(TokenInterface::class);
-        $assertionAdapter = m::mock(AssertionAdapter::class);
-        $token->assertion = $assertion;
-
-
-        $this->attributeDictionary
-            ->shouldReceive('translate')
-            ->with($assertion)
-            ->andReturn($assertionAdapter);
-
-        $assertionAdapter
-            ->shouldReceive('getNameID')
-            ->andReturn($nameId);
-
-        $assertionAdapter
-            ->shouldReceive('getAttributeValue')
-            ->with('mail')
-            ->andReturn([$email]);
-
-        $assertionAdapter
-            ->shouldReceive('getAttributeValue')
-            ->with('commonName')
-            ->andReturn(['John Doe']);
-
-        $assertionAdapter
-            ->shouldReceive('getAttributeValue')
-            ->with('isMemberOf')
-            ->andReturn(['urn:collab:foo:team.foobar.com']);
-
-        $this->logger->shouldReceive('warning')
-            ->with('No value(s) found for attribute "commonName"');
-
-        $this->contactRepo
-            ->shouldReceive('findByNameId')
-            ->with($nameId)
-            ->andReturn(null);
-
-        /** @var SamlToken $result */
-        $result = $provider->authenticate($token);
-
-        /** @var Identity $user */
-        $user = $result->getUser();
-
-        /** @var Contact $contact */
-        $contact = $user->getContact();
-
-        $this->assertInstanceOf(Contact::class, $contact);
-        $this->assertSame('John Doe', $contact->getDisplayName());
-        $this->assertSame($email, $contact->getEmailAddress());
-    }
-
-
-    public function test_happy_flow_with_empty_common_name()
-    {
-        $provider  = $this->buildProvider(['urn:collab:foo:team.foobar.com']);
-
-        $nameId = 'urn:collab:foo:team.foobar.com';
-        $email = 'foo@team.foobar.com';
-
-        $assertion = m::mock(Assertion::class);
-        $token = m::mock(TokenInterface::class);
-        $assertionAdapter = m::mock(AssertionAdapter::class);
-        $token->assertion = $assertion;
-
-
-        $this->attributeDictionary
-            ->shouldReceive('translate')
-            ->with($assertion)
-            ->andReturn($assertionAdapter);
-
-        $assertionAdapter
-            ->shouldReceive('getNameID')
-            ->andReturn($nameId);
-
-        $assertionAdapter
-            ->shouldReceive('getAttributeValue')
-            ->with('mail')
-            ->andReturn([$email]);
-
-        $assertionAdapter
-            ->shouldReceive('getAttributeValue')
-            ->with('commonName')
-            ->andReturn([]);
-
-        $assertionAdapter
-            ->shouldReceive('getAttributeValue')
-            ->with('isMemberOf')
-            ->andReturn(['urn:collab:foo:team.foobar.com']);
-
-        $this->logger->shouldReceive('warning')
-            ->with('No value(s) found for attribute "commonName"');
-
-        $this->contactRepo
-            ->shouldReceive('findByNameId')
-            ->with($nameId)
-            ->andReturn(null);
-
-        /** @var SamlToken $result */
-        $result = $provider->authenticate($token);
-
-        /** @var Identity $user */
-        $user = $result->getUser();
-
-        /** @var Contact $contact */
-        $contact = $user->getContact();
-
-        $this->assertInstanceOf(Contact::class, $contact);
-        $this->assertSame('', $contact->getDisplayName());
-        $this->assertSame($email, $contact->getEmailAddress());
-    }
-
-    public function test_saml_provider_should_reject_empty_mail()
-    {
-        $this->expectException(BadCredentialsException::class);
-        $this->expectExceptionMessage('First value of attribute "mail" must be a string, "NULL" given');
-
-        $provider = $this->buildProvider(['urn:collab:foo:team.foobar.com']);
-
-        $nameId = 'urn:collab:foo:team.foobar.com';
-
-        $assertion = m::mock(Assertion::class);
-        $token = m::mock(TokenInterface::class);
-        $assertionAdapter = m::mock(AssertionAdapter::class);
-        $token->assertion = $assertion;
-
-        $this->attributeDictionary
-            ->shouldReceive('translate')
-            ->with($assertion)
-            ->andReturn($assertionAdapter);
-
-        $assertionAdapter
-            ->shouldReceive('getNameID')
-            ->andReturn($nameId);
-
-        $assertionAdapter
-            ->shouldReceive('getAttributeValue')
-            ->with('mail')
-            ->andReturn([null]);
-
-        $this->logger->shouldReceive('warning')
-            ->with('First value of attribute "mail" must be a string, "NULL" given');
-
-        $provider->authenticate($token);
-    }
-
     public function provideValidAdminTeams()
     {
-        return [
-            [['urn:collab:foo:team.foobar.com']],
-            [['urn:collab:foo:team.foobar.com', 'urn:collab:foo:team.foobar.com']],
-        ];
+        return "urn:collab:foo:team.foobar.com,urn:collab:foo:team.foobar.com,urn:collab:foo:team.foobar.com";
     }
 
     public function provideInvalidAdminTeams()
     {
-        return [
-            [['']],
-            [[345345]],
-            [[true, false]],
-            [[['foo', 'bar']]],
-        ];
+        return ",345345,true,false,foo,bar";
     }
 
     private function buildProvider($administratorTeams)

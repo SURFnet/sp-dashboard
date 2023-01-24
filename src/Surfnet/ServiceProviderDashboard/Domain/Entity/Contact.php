@@ -27,6 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository")
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
+ * @method string getUserIdentifier()
  */
 class Contact
 {
@@ -67,6 +68,8 @@ class Contact
      * @ORM\JoinColumn(nullable=false)
      */
     private $services;
+
+    private array $roles = [];
 
     /**
      * @param string $nameId
@@ -165,5 +168,15 @@ class Contact
     public function getServices()
     {
         return $this->services;
+    }
+
+    public function assignRole(string $role) : void
+    {
+        $this->roles[] = $role;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
     }
 }

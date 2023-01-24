@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.7/phpunit.xsd"
+         backupGlobals="false"
+         colors="true"
+         bootstrap="tests/bootstrap.php"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         failOnRisky="true">
+
+    <php>
+        <ini name="error_reporting" value="-1" />
+        <ini name="memory_limit" value="1024M"/>
+        <server name="KERNEL_CLASS" value="Surfnet\ServiceProviderDashboard\Kernel" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="25" />
+        <env name="APP_ENV" value="test" />
+    </php>
+
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests/unit</directory>
+        </testsuite>
+
+        <testsuite name="integration">
+            <directory>tests/integration</directory>
+        </testsuite>
+
+        <testsuite name="webtests">
+            <directory>tests/webtests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>src</directory>
+            <exclude>
+                <directory>src/*Bundle/Resources</directory>
+                <directory>src/*/*Bundle/Resources</directory>
+                <directory>src/*/Bundle/*Bundle/Resources</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

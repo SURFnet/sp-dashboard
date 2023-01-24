@@ -47,7 +47,7 @@ class IdentityProviderClientTest extends MockeryTestCase
      */
     private $config;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->config = m::mock(Config::class);
         $this->mockHandler = new MockHandler();

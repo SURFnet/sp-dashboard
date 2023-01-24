@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+parameters:
+  jira_enable_test_mode: true

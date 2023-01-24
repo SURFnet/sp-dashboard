@@ -18,27 +18,21 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer;
 
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer as MailerInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message as MessageInterface;
-use Swift_Mailer;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\RawMessage;
 
 /**
- * A very thin wrapper around the Swift_Mailer.
+ * A very thin wrapper around the Symfony Mailer.
  */
 class Mailer implements MailerInterface
 {
-    /**
-     * @var Swift_Mailer
-     */
-    private $swiftMailer;
-
-    public function __construct(Swift_Mailer $mailer)
+    public function __construct(private readonly MailerInterface $mailer)
     {
-        $this->swiftMailer = $mailer;
     }
 
-    public function send(MessageInterface $message)
+    public function send(RawMessage $message, Envelope $envelope = null): void
     {
-        $this->swiftMailer->send($message);
+        $this->mailer->send($message);
     }
 }

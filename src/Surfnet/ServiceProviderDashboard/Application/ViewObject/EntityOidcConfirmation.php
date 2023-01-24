@@ -26,30 +26,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 class EntityOidcConfirmation
 {
     /**
-     * @var string
-     */
-    private $entityId;
-
-    /**
-     * @var string
-     */
-    private $clientSecret;
-
-    /**
-     * @var string
-     */
-    private $protocol;
-
-    /**
-     * @param string $entityId
-     * @param string $clientSecret
-     * @param string $protocol
      * @throws InvalidArgumentException
      */
     public function __construct(
-        $entityId,
-        $clientSecret,
-        $protocol
+        private readonly string $entityId,
+        private readonly string $clientSecret,
+        string $protocol
     ) {
         $supportedProtocols = [
             Constants::TYPE_OPENID_CONNECT_TNG,
@@ -65,9 +47,6 @@ class EntityOidcConfirmation
                 )
             );
         }
-        $this->entityId = $entityId;
-        $this->clientSecret = $clientSecret;
-        $this->protocol = $protocol;
     }
 
     public static function fromEntity(ManageEntity $entity)

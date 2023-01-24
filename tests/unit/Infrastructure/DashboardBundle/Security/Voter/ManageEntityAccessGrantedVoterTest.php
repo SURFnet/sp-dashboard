@@ -39,7 +39,7 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
      */
     private $voter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->service = m::mock(EntityServiceInterface::class);
         $this->voter = new ManageEntityAccessGrantedVoter($this->service);
@@ -157,6 +157,10 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
                     return in_array($role, $roles);
                 }
             );
+
+        $token
+            ->shouldReceive('getRoleNames')
+            ->andReturn($roles);
 
         $user->shouldReceive('isPartOfTeam')
             ->andReturn($isPartOfTeam);

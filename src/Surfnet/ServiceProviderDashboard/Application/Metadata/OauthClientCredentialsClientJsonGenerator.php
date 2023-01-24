@@ -34,25 +34,14 @@ use function sprintf;
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.ElseExpression)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.LongClassName)
  */
 class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
 {
-    /**
-     * @var PrivacyQuestionsMetadataGenerator
-     */
-    private $privacyQuestionsMetadataGenerator;
-
-    /**
-     * @var SpDashboardMetadataGenerator
-     */
-    private $spDashboardMetadataGenerator;
-
     public function __construct(
-        PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
-        $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
-        $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -284,6 +273,8 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
      * Logo dimensions are required in the SAML spec. They are always present,
      * except when the user just created the entity in the interface. We
      * determine the dimensions in those situations.
+     *
+     * @SuppressWarnings(PHPMD.ErrorControlOperator)
      *
      * @param ManageEntity $entity
      * @return array

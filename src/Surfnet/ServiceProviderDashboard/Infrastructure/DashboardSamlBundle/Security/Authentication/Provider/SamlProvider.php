@@ -18,81 +18,60 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
+use BadMethodCallException;
 use Psr\Log\LoggerInterface;
+use SAML2\Assertion;
 use Surfnet\SamlBundle\Exception\RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
 use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
+use Surfnet\SamlBundle\Security\Authentication\Provider\SamlProviderInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\MissingSamlAttributeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class SamlProvider implements AuthenticationProviderInterface
+class SamlProvider implements SamlProviderInterface, UserProviderInterface
 {
-    /**
-     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository
-     */
-    private $contacts;
-
-    /**
-     * @var \Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository
-     */
-    private $services;
-
-    /**
-     * @var \Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary
-     */
-    private $attributeDictionary;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
     /**
      * @var string[]
      */
     private $administratorTeams;
 
     public function __construct(
-        ContactRepository $contacts,
-        ServiceRepository $services,
-        AttributeDictionary $attributeDictionary,
-        LoggerInterface $logger,
-        array $administratorTeams
+        private readonly ContactRepository $contacts,
+        private readonly ServiceRepository $services,
+        private readonly AttributeDictionary $attributeDictionary,
+        private readonly LoggerInterface $logger,
+        string $administratorTeams
     ) {
-        $this->contacts = $contacts;
-        $this->services = $services;
-        $this->attributeDictionary = $attributeDictionary;
-        $this->logger = $logger;
+        $teams = explode(",", str_replace('\'', '', $administratorTeams));
         Assert::allStringNotEmpty(
-            $administratorTeams,
+            $teams,
             'All entries in the `administrator_teams` config parameter should be string.'
         );
-        $this->administratorTeams = $administratorTeams;
+        $this->administratorTeams = $teams;
     }
 
-    /**
-     * @param  SamlToken|TokenInterface $token
-     *
-     * @return TokenInterface
-     */
-    public function authenticate(TokenInterface $token)
+    public function getNameId(Assertion $assertion): string
     {
-        $translatedAssertion = $this->attributeDictionary->translate($token->assertion);
+        return $this->attributeDictionary->translate($assertion)->getNameID();
+    }
 
-        $nameId = $translatedAssertion->getNameID();
+    public function getUser(Assertion $assertion): UserInterface
+    {
+        $translatedAssertion = $this->attributeDictionary->translate($assertion);
+
+        $nameId = $this->getNameId($assertion);
         try {
             $email = $this->getSingleStringValue('mail', $translatedAssertion);
         } catch (MissingSamlAttributeException $e) {
@@ -132,20 +111,11 @@ class SamlProvider implements AuthenticationProviderInterface
             $this->assignServicesToContact($contact, $teamNames);
             $this->contacts->save($contact);
         }
-
-        $authenticatedToken = new SamlToken([$role]);
-        $authenticatedToken->setUser(
-            new Identity($contact)
-        );
-
-        return $authenticatedToken;
+        $contact->assignRole($role);
+        return new Identity($contact);
     }
 
-    /**
-     * @param Contact $contact
-     * @param array $teamNames
-     */
-    private function assignServicesToContact(Contact $contact, array $teamNames)
+    private function assignServicesToContact(Contact $contact, array $teamNames): void
     {
         $services = $this->services->findByTeamNames($teamNames);
 
@@ -174,12 +144,7 @@ class SamlProvider implements AuthenticationProviderInterface
         }
     }
 
-    /**
-     * @param array<Service> $list
-     * @param Service $Service
-     * @return bool
-     */
-    private function serviceListContainsService(array $list, Service $service)
+    private function serviceListContainsService(array $list, Service $service): bool
     {
         foreach ($list as $serviceFromList) {
             if ($serviceFromList->getId() === $service->getId()) {
@@ -190,17 +155,7 @@ class SamlProvider implements AuthenticationProviderInterface
         return false;
     }
 
-    public function supports(TokenInterface $token)
-    {
-        return $token instanceof SamlToken;
-    }
-
-    /**
-     * @param string           $attribute
-     * @param AssertionAdapter $translatedAssertion
-     * @return string
-     */
-    private function getSingleStringValue($attribute, AssertionAdapter $translatedAssertion)
+    private function getSingleStringValue(string $attribute, AssertionAdapter $translatedAssertion): string
     {
         $values = $translatedAssertion->getAttributeValue($attribute);
 
@@ -239,5 +194,20 @@ class SamlProvider implements AuthenticationProviderInterface
         }
 
         return $value;
+    }
+
+    public function refreshUser(UserInterface $user)
+    {
+        return $user;
+    }
+
+    public function supportsClass(string $class)
+    {
+        return $class === Identity::class;
+    }
+
+    public function loadUserByUsername(string $username)
+    {
+        throw new BadMethodCallException('Use `getUser` to load a user by username');
     }
 }

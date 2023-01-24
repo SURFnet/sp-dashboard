@@ -22,14 +22,12 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 
 class PushMetadataCommand implements Command
 {
-    private $targetEnvironment;
-
-    public function __construct($environment)
-    {
-        $this->targetEnvironment = $environment;
+    public function __construct(
+        private readonly string $targetEnvironment
+    ) {
     }
 
-    public function targetEnvironment()
+    public function targetEnvironment(): string
     {
         return $this->targetEnvironment;
     }

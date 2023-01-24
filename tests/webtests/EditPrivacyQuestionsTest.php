@@ -91,7 +91,7 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $crawler = $this->client->followRedirect();
         // We are now on the service overview page
         $this->assertEquals('/', $this->client->getRequest()->getRequestUri());
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Your changes were saved!',
             $crawler->filter('div.flashMessage.info')->text()
         );

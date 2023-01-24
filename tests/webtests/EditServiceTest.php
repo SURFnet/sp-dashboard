@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 class EditServiceTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -50,7 +50,6 @@ class EditServiceTest extends WebTestCase
         ];
 
         $crawler = $this->client->request('GET', '/service/1/edit');
-
         $form = $crawler
             ->selectButton('Save')
             ->form();

@@ -32,50 +32,14 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityCli
 
 class DeleteServiceCommandHandler implements CommandHandler
 {
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
-
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-
-    /**
-     * @var DeleteCommandFactory
-     */
-    private $deleteCommandFactory;
-
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var DeleteEntityClient
-     */
-    private $deleteTeamClient;
-
     public function __construct(
-        ServiceRepository $serviceRepository,
-        EntityServiceInterface $entityService,
-        DeleteCommandFactory $deleteCommandFactory,
-        CommandBus $commandBus,
-        DeleteEntityClient $deleteTeamClient,
-        LoggerInterface $logger
+        private readonly ServiceRepository $serviceRepository,
+        private readonly EntityServiceInterface $entityService,
+        private readonly DeleteCommandFactory $deleteCommandFactory,
+        private readonly CommandBus $commandBus,
+        private readonly DeleteEntityClient $deleteTeamClient,
+        private readonly LoggerInterface $logger
     ) {
-        $this->serviceRepository = $serviceRepository;
-        $this->entityService = $entityService;
-        $this->deleteCommandFactory = $deleteCommandFactory;
-        $this->commandBus = $commandBus;
-        $this->logger = $logger;
-        $this->deleteTeamClient = $deleteTeamClient;
     }
 
     /**

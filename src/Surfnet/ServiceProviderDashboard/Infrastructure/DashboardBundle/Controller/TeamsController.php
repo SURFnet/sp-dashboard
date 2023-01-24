@@ -19,78 +19,39 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class TeamsController extends Controller
+class TeamsController extends AbstractController
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var DeleteEntityClient
-     */
-    private $deleteEntityClient;
-
-    /**
-     * @var PublishEntityClient
-     */
-    private $publishEntityClient;
-
-    /**
-     * @var QueryClient
-     */
-    private $queryClient;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    private $defaultStemName;
-
     public function __construct(
-        AuthorizationService $authorizationService,
-        DeleteEntityClient $deleteEntityClient,
-        PublishEntityClient $publishEntityClient,
-        QueryClient $queryClient,
-        TranslatorInterface $translator,
-        string $defaultStemName
+        private readonly AuthorizationService $authorizationService,
+        private readonly DeleteEntityClient $deleteEntityClient,
+        private readonly PublishEntityClient $publishEntityClient,
+        private readonly QueryClient $queryClient,
+        private readonly TranslatorInterface $translator,
+        private readonly string $defaultStemName
     ) {
-        $this->authorizationService = $authorizationService;
-        $this->deleteEntityClient = $deleteEntityClient;
-        $this->publishEntityClient = $publishEntityClient;
-        $this->queryClient = $queryClient;
-        $this->translator = $translator;
-        $this->defaultStemName = $defaultStemName;
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/service/{serviceId}/manageTeam", name="service_manage_team")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/service/{serviceId}/manageTeam", name="service_manage_team", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
     public function manageTeamAction(int $serviceId): Response
     {
@@ -105,13 +66,12 @@ class TeamsController extends Controller
 
         $teamInfo['serviceId'] = $serviceId;
 
-        return $this->render('DashboardBundle:Teams:manage.html.twig', $teamInfo);
+        return $this->render('@Dashboard/Teams/manage.html.twig', $teamInfo);
     }
 
     /**
-     * @Method({"POST"})
-     * @Route("/service/{serviceId}/sendInvite/{teamId}", name="team_send_invite")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/service/{serviceId}/sendInvite/{teamId}", name="team_send_invite", methods={"POST"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
      * @return RedirectResponse|Response
      */
@@ -138,9 +98,8 @@ class TeamsController extends Controller
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/service/{serviceId}/resendInvite/{invitationId}", name="team_resend_invite")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/service/{serviceId}/resendInvite/{invitationId}", name="team_resend_invite", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
     public function resendInviteAction(int $serviceId, int $invitationId): JsonResponse
     {
@@ -159,9 +118,8 @@ class TeamsController extends Controller
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/teams/changeRole/{memberId}/{newRole}", name="team_change_role")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/teams/changeRole/{memberId}/{newRole}", name="team_change_role", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
     public function changeRoleAction(int $memberId, string $newRole): JsonResponse
     {
@@ -178,9 +136,8 @@ class TeamsController extends Controller
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/teams/delete/{memberId}", name="team_delete_member")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
+     * @Route("/teams/delete/{memberId}", name="team_delete_member", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
     public function deleteMemberAction(int $memberId): JsonResponse
     {

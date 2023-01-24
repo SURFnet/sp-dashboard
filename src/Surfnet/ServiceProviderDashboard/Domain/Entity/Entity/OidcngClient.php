@@ -36,35 +36,6 @@ class OidcngClient implements Comparable, OidcClientInterface
         'entity.edit.label.implicit' => Constants::GRANT_TYPE_IMPLICIT
     ];
 
-    /**
-     * @var string
-     */
-    private $clientId;
-    /**
-     * @var string
-     */
-    private $clientSecret;
-    /**
-     * @var array
-     */
-    private $redirectUris;
-    /**
-     * @var array
-     */
-    private $grants;
-    /**
-     * @var bool
-     */
-    private $isPublicClient;
-    /**
-     * @var int
-     */
-    private $accessTokenValidity;
-    /**
-     * @var array
-     */
-    private $resourceServers;
-
     public static function fromApiResponse(array $data)
     {
         $clientId = self::getLowercasedStringOrEmpty($data['data'], 'entityid');
@@ -102,21 +73,14 @@ class OidcngClient implements Comparable, OidcClientInterface
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        string $clientId,
-        string $clientSecret,
-        array $redirectUris,
-        array $grants,
-        bool $isPublicClient,
-        int $accessTokenValidity,
-        array $resourceServers
+        private string $clientId,
+        private string $clientSecret,
+        private array $redirectUris,
+        private array $grants,
+        private bool $isPublicClient,
+        private int $accessTokenValidity,
+        private array $resourceServers
     ) {
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->redirectUris = $redirectUris;
-        $this->grants = $grants;
-        $this->isPublicClient = $isPublicClient;
-        $this->accessTokenValidity = $accessTokenValidity;
-        $this->resourceServers = $resourceServers;
     }
 
     /**

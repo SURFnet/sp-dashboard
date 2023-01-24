@@ -26,14 +26,8 @@ class ManageEntityAccessGrantedVoter extends Voter
 {
     const MANAGE_ENTITY_ACCESS = "MANAGE_ENTITY_ACCESS";
 
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-
-    public function __construct(EntityServiceInterface $entityService)
+    public function __construct(private readonly EntityServiceInterface $entityService)
     {
-        $this->entityService = $entityService;
     }
 
     protected function supports($attribute, $subject)
@@ -52,7 +46,8 @@ class ManageEntityAccessGrantedVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         // Administrator is always allowed to delete an entity
-        if ($token->hasRole('ROLE_ADMINISTRATOR')) {
+        $roles = $token->getRoleNames();
+        if (in_array('ROLE_ADMINISTRATOR', $roles)) {
             return true;
         }
 

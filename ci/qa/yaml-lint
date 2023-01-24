@@ -2,4 +2,4 @@
 
 cd $(dirname $0)/../../
 
-./bin/console lint:yaml app/config $i
+./bin/console lint:yaml config $i

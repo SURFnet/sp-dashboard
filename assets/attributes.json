@@ -1,0 +1,245 @@
+[
+  {
+    "id": "givenName",
+    "translations" : {
+      "en": {
+        "saml20Label": "Given name attribute",
+        "saml20Info": "<p>urn:mace schema: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:givenName</a><br />urn:oid schema: <a href='http://oid-info.com/get/2.5.4.42' target='_blank'>urn:oid:2.5.4.42</a> </p> <p>Description: Given name, also known as a first name, forename or Christian name / name known by; combinations of title, initials, and name known by are possible.</p>",
+        "oidcngLabel": "given_name",
+        "oidcngInfo": "<p>given_name</p> <p>Description: given name, also known as a first name, forename or Christian name / name known by; combinations of title, initials, and name known by are possible.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:givenName",
+      "urn:oid:2.5.4.42"
+    ]
+  },
+  {
+    "id": "surName",
+    "translations" : {
+      "en": {
+        "saml20Label": "Surname attribute",
+        "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:sn</a><br /><a href='http://oid-info.com/get/2.5.4.4' target='_blank'> urn:oid: urn:oid:2.5.4.4 </a></p> <p>Description: The surname of a person (including any words such as &quot;van&quot;, &quot;de&quot;, &quot;von&quot; etc.) used for personalization; this can be a combination of existing attributes.</p>",
+        "oidcngLabel": "family_name",
+        "oidcngInfo": "<p>family_name</p> <p>Description: The surname of a person (including any words such as &quot;van&quot;, &quot;de&quot;, &quot;von&quot; etc.) used for personalization; this can be a combination of existing attributes.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:sn",
+      "urn:oid:2.5.4.4"
+    ]
+  },
+  {
+    "id": "commonName",
+    "translations" : {
+      "en": {
+        "saml20Label": "Common name attribute",
+        "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:cn</a><br />urn:oid: <a href='http://oid-info.com/get/2.5.4.3' target='_blank'>urn:oid:2.5.4.3</a></p> <p>Description: full name.</p>",
+        "oidcngLabel": "name",
+        "oidcngInfo": "<p>name</p><p>Description: full name.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:cn",
+      "urn:oid:2.5.4.3"
+    ]
+  },
+  {
+    "id": "displayName",
+    "translations" : {
+      "en": {
+        "saml20Label": "Display name attribute",
+        "saml20Info": "<p>urn:mace: <a title='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:displayName</a><br />urn:oid: <a href='http://oid-info.com/cgi-bin/display?oid=2.16.840.1.113730.3.1.241&amp;action=display' target='_blank'>urn:oid:2.16.840.1.113730.3.1.241</a></p> <p>Description: name as displayed in applications.</p>",
+        "oidcngLabel": "nickname",
+        "oidcngInfo": "<p>nickname</p> <p>Description: name as displayed in applications.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:displayName",
+      "urn:oid:2.16.840.1.113730.3.1.241"
+    ]
+  },
+  {
+    "id": "emailAddress",
+    "translations" : {
+      "en": {
+        "saml20Label": "Email address attribute",
+        "saml20Info": "<p>email</p> <p>Description: e-mail address; syntax in accordance with RFC 5322.</p>",
+        "oidcngLabel": "email",
+        "oidcngInfo": "<p>email</p> <p>Description: e-mail address; syntax in accordance with RFC 5322.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:mail",
+      "urn:oid:0.9.2342.19200300.100.1.3"
+    ]
+  },
+  {
+    "id": "organization",
+    "translations" : {
+      "en": {
+        "saml20Label": "Home organization attribute",
+        "saml20Info": "<p>urn:mace: urn:mace:terena.org:attribute-def:schacHomeOrganization<br /> urn:oid: urn:oid:1.3.6.1.4.1.25178.1.2.9</p><p>Description: the user's organization using the organization's domain name; syntax in accordance with RFC 1035.</p>",
+        "oidcngLabel": "schac_home_organization",
+        "oidcngInfo": "<p>schac_home_organization</p> <p>Description: the user's organization using the organization's domain name; syntax in accordance with RFC 1035.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:terena.org:attribute-def:schacHomeOrganization",
+      "urn:oid:1.3.6.1.4.1.25178.1.2.9"
+    ]
+  },
+  {
+    "id": "organizationType",
+    "translations" : {
+      "en": {
+        "saml20Label": "Organization type attribute",
+        "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/SCHAC+Releases' target='_blank'>urn:mace:terena.org:attribute-def:schacHomeOrganizationType</a><br />urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.25178.1.2.10' target='_blank'>urn:oid:1.3.6.1.4.1.25178.1.2.10</a></p> <p>Description: designation of the type of organisation as defined on<a href='https://wiki.refeds.org/display/STAN/SCHAC+Releases' target='_blank'> https://wiki.refeds.org/display/STAN/SCHAC+Releases</a></p>",
+        "oidcngLabel": "schac_home_organization_type",
+        "oidcngInfo": "<p>schac_home_organization_type</p> <p>Description: designation of the type of organisation as defined on <a href='https://wiki.refeds.org/display/STAN/SCHAC+Releases' target='_blank'> https://wiki.refeds.org/display/STAN/SCHAC+Releases </a>.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:terena.org:attribute-def:schacHomeOrganizationType",
+      "urn:oid:1.3.6.1.4.1.25178.1.2.10"
+    ]
+  },
+  {
+    "id": "organizationUnit",
+    "translations" : {
+      "en": {
+        "saml20Label": "Organization unit attribute",
+        "saml20Info": "<p>urn:mace:dir:attribute-def:ou</p> <p> indicates the department, team, or faculty with which the user is associated within the issuing institution. This attribute is multi-valued, so multiple departments, teams or faculties can be listed For example: <ul> <li>ICT Services </li> <li>Industrial Engineering & Innovation Science </li> <li>Facility Management Center </li> </ul> </p>",
+        "oidcngLabel": "ou",
+        "oidcngInfo": "<p>OrganizationalUnitName</p> <p>Description: indicates the department, team, or faculty with which the user is associated within the issuing institution. This attribute is multi-valued, so multiple departments, teams or faculties can be listed, for example: <ul> <li>ICT Services </li> <li>Industrial Engineering & Innovation Science </li> <li>Facility Management Center </li> </ul></p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:ou",
+      "urn:oid:1.3.6.1.4.1.25178.1.2.10"
+    ]
+  },
+  {
+    "id": "affiliation",
+    "translations" : {
+      "en": {
+        "saml20Label": "Affiliation attribute",
+        "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:eduPersonAffiliation<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.5923.1.1.1.1' target='_blank'>urn:oid:1.3.6.1.4.1.5923.1.1.1.1</a></p> <p>Description: indicates the relationship between the user and his home organisation. The following values are permitted:</p> <ul> <li>student - student</li> <li>employee - all employees</li> <li>staff - academic staff</li> <li>member - Anyone that holds at least one of the above affiliations is also a member</li> <li>faculty - primary role is teaching or research</li> <li>pre-student - registered but not yet a full student</li> <li>affiliate - A person who is authorised by the Institution to use the service</li></ul>",
+        "oidcngLabel": "eduperson_affiliation",
+        "oidcngInfo": "<p>eduperson_affiliation</p><br> <p>Description: indicates the relationship between the user and his home organisation. The following values are permitted:</p> <ul> <li>student - student</li> <li>employee - all employees</li> <li>staff - academic staff</li> <li>member - Anyone that holds at least one of the above affiliations is also a member</li> <li>faculty - primary role is teaching or research</li> <li>pre-student - registered but not yet a full student</li> <li>affiliate - A person who is authorised by the Institution to use the service</li></ul"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonAffiliation",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.1"
+    ]
+  },
+  {
+    "id": "entitlement",
+    "translations" : {
+      "en": {
+        "saml20Label": "Entitlement attribute",
+        "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:eduPersonEntitlement<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.5923.1.1.1.7' target='_blank'>urn:oid:1.3.6.1.4.1.5923.1.1.1.7</a></p> <p>Description: custom URI (URL or URN) that indicates an entitlement to something.</p>",
+        "oidcngLabel": "eduperson_entitlement",
+        "oidcngInfo": "<p>eduperson_entitlement</p> <p>Description: custom URI (URL or URN) that indicates an entitlement to something.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonEntitlement",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.7"
+    ]
+  },
+  {
+    "id": "principleName",
+    "translations" : {
+      "en": {
+        "saml20Label": "Principle name attribute (EPPN)",
+        "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:eduPersonPrincipalName<br /></a>urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.5923.1.1.1.6' target='_blank'>urn:oid:1.3.6.1.4.1.5923.1.1.1.6</a></p> <p>Description: unique identifier for a user.</p>",
+        "oidcngLabel": "eduperson_principal_name",
+        "oidcngInfo": "<p>eduperson_principal_name</p><p>Description: unique identifier for a user.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonPrincipalName",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.6"
+    ]
+  },
+  {
+    "id": "uid",
+    "translations" : {
+      "en": {
+        "saml20Label": "Uid attribute",
+        "saml20Info": "<p>urn:mace: <a href='https://wiki.refeds.org/display/STAN/eduPerson+2021-11' target='_blank'>urn:mace:dir:attribute-def:uid</a><br />urn:oid: <a href='http://oid-info.com/get/1.3.6.1.4.1.1466.115.121.1.15' target='_blank'>urn:oid:0.9.2342.19200300.100.1.1</a></p> <p>Description: the unique code for a person that is used as the login name within the institution.</p>",
+        "oidcngLabel": "uids",
+        "oidcngInfo": "<p>uids</p><p>Description: the unique code within the institution for a person that is used as the login name.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:uid",
+      "urn:oid:0.9.2342.19200300.100.1.1"
+    ]
+  },
+  {
+    "id": "preferredLanguage",
+    "translations" : {
+      "en": {
+        "saml20Label": "Preferred language attribute",
+        "saml20Info": "<p>urn:mace: urn:mace:dir:attribute-def:preferredLanguage<br />urn:oid: urn:oid:2.16.840.1.113730.3.1.39 </p> <p>Description: a two-letter abbreviation for the preferred language according to the ISO 639 language abbreviation code table; no subcodes</p>",
+        "oidcngLabel": "locale",
+        "oidcngInfo": "<p>locale</p> <p> Description: a two-letter abbreviation for the preferred language according to the ISO 639 language abbreviation code table; no subcodes.</p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:preferredLanguage",
+      "urn:oid:2.16.840.1.113730.3.1.39"
+    ]
+  },
+  {
+    "id": "personalCode",
+    "translations" : {
+      "en": {
+        "saml20Label": "Employee-student number attribute",
+        "saml20Info": "<p>urn:mace: urn:schac:attribute-def:schacPersonalUniqueCode <br />urn:oid: urn:oid:1.3.6.1.4.1.25178.1.2.14 </p> <p>Description: The user's student, employee, and/or member id as used in the institution's internal systems. More information: <a href='https://wiki.surfnet.nl/pages/viewpage.action?pageId=11207351'> https://wiki.surfnet.nl/pages/viewpage.action?pageId=11207351</a> </p>",
+        "oidcngLabel": "schac_personal_unique_code",
+        "oidcngInfo": "<p>schac_personal_unique_code</p> <p>Description: The user's student, employee, and/or member id as used in the institution's internal systems. More information: <a href='https://wiki.surfnet.nl/pages/viewpage.action?pageId=11207351' target='_blank'> https://wiki.surfnet.nl/pages/viewpage.action?pageId=11207351</a></p>"
+      }
+    },
+    "urns": [
+      "urn:schac:attribute-def:schacPersonalUniqueCode",
+      "urn:oid:1.3.6.1.4.1.1466.155.121.1.15"
+    ]
+  },
+  {
+    "id": "scopedAffiliation",
+    "translations" : {
+      "en": {
+        "saml20Label": "Scoped affiliation attribute",
+        "saml20Info": "<p>urn:mace: urn:mace:dir:attribute-def:eduPersonScopedAffiliation<br />urn:oid: urn:oid:1.3.6.1.4.1.5923.1.1.1.9</p> <p>Description: Indicates the relationship between the user and a specific (security) domain with his home organisation. The following values are permitted: <ul> <li> student - student </li> <li> employee - all employees </li> <li> staff - academic staff </li> <li> member - anyone that holds at least one of the above affiliations is also a member </li></ul></p>",
+        "oidcngLabel": "eduperson_scoped_affiliation",
+        "oidcngInfo": "<p>eduperson_scoped_affiliation</p> <p>Description: Indicates the relationship between the user and a specific (security) domain with his home organisation. The following values are permitted: <ul> <li> student - student </li> <li> employee - all employees </li> <li> staff - academic staff </li> <li> member - anyone that holds at least one of the above affiliations is also a member </li></ul></p>"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonScopedAffiliation",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.9"
+    ]
+  },
+  {
+    "id": "eduPersonTargetedID",
+    "excludeOnEntityType": [
+      "oidcng"
+    ],
+    "translations" : {
+      "en": {
+        "saml20Label": "EduPerson targeted ID attribute",
+        "saml20Info": "<p>urn:mace:dir:attribute-def:eduPersonTargetedID<br />urn:oid:1.3.6.1.4.1.5923.1.1.1.10</p> <p>This attribute is created because the Subject NameID itself is not part of the SAML v2.0 response and therefore only is available for application if the local SAML implementation explicitly support this. Within SURFconext the Subject 'NameID' is explicitly copied into the eduPersonTargetedID attribute, in order for the identifier to be used like any other attribute.</p>",
+        "oidcngLabel": "not used in OIDC",
+        "oidcngInfo": "not used in OIDC"
+      }
+    },
+    "urns": [
+      "urn:mace:dir:attribute-def:eduPersonTargetedID",
+      "urn:oid:1.3.6.1.4.1.5923.1.1.1.10"
+    ]
+  }
+]

@@ -1,0 +1,66 @@
+{% form_theme form 'form/fields.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'entity.edit.title'|trans }}{%endblock%}</h1>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
+
+    <div class="fieldset card">
+
+        {% for type, messages in app.session.flashbag.all %}
+            {% for message in messages %}
+                <div class="message {{ type }}">{{ message|trans }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        {{ form_errors(form) }}
+
+        <h2>{{ ('entity.edit.info.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.edit.info.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+    </div>
+
+    <div class="fieldset card">
+        <h2>{{ ('entity.edit.metadata.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.edit.metadata.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+        {{ form_widget(form.metadata) }}
+    </div>
+
+    {% if form.oidcngResourceServers is defined %}
+
+        <div class="fieldset card">
+            <h2>{{ 'entity.edit.oidcngResourceServers.title'|trans }}</h2>
+            <div class="wysiwyg">{{ 'entity.edit.oidcngResourceServers.html'|trans|wysiwyg }}</div>
+            {{ form_widget(form.oidcngResourceServers) }}
+        </div>
+
+    {% endif %}
+
+    <div class="fieldset card contact">
+        <h2>{{ 'entity.edit.contact_information.title'|trans }}</h2>
+        <div class="wysiwyg">{{ 'entity.edit.contact_information.html'|trans|wysiwyg }}</div>
+        {{ form_widget(form.contactInformation) }}
+    </div>
+
+    {% if form.attributes is defined %}
+
+    <div class="fieldset card">
+        <h2>{{ ('entity.edit.attributes.' ~ type ~ '.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.edit.attributes.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+        {{ form_widget(form.attributes) }}
+    </div>
+
+    {% endif %}
+
+    <div class="fieldset card">
+        <h2>{{ 'entity.edit.comments.title'|trans }}</h2>
+        <div class="wysiwyg">{{ 'entity.edit.comments.html'|trans|wysiwyg }}</div>
+        {{ form_widget(form.comments) }}
+    </div>
+
+    <div class="button-wrapper">
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

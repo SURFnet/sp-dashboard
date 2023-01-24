@@ -19,9 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
@@ -30,56 +27,27 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityAclController extends Controller
+class EntityAclController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-    /**
-     * @var EntityAclService
-     */
-    private $entityAclService;
-
-    /**
-     * @var EntityDetailFactory
-     */
-    private $entityDetailFactory;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        AuthorizationService $authorizationService,
-        EntityAclService $entityAclService,
-        EntityDetailFactory $entityDetailFactory
+        private CommandBus $commandBus,
+        private EntityService $entityService,
+        private AuthorizationService $authorizationService,
+        private EntityAclService $entityAclService,
+        private EntityDetailFactory $entityDetailFactory
     ) {
-
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->authorizationService = $authorizationService;
-        $this->entityAclService = $entityAclService;
-        $this->entityDetailFactory = $entityDetailFactory;
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/acl/{serviceId}/{id}", name="entity_acl")
-     * @Template()
+     * @Route("/entity/acl/{serviceId}/{id}", name="entity_acl", methods={"GET", "POST"})
      *
      * @param Request $request
      * @param string $serviceId
@@ -94,7 +62,11 @@ class EntityAclController extends Controller
 
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 
-        $command = new UpdateEntityAclCommand($entity, $selectedIdps, $entity->getAllowedIdentityProviders()->isAllowAll());
+        $command = new UpdateEntityAclCommand(
+            $entity,
+            $selectedIdps,
+            $entity->getAllowedIdentityProviders()->isAllowAll()
+        );
         $form = $this->createForm(AclEntityType::class, $command);
 
         $form->handleRequest($request);
@@ -105,10 +77,10 @@ class EntityAclController extends Controller
 
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return [
+        return $this->render('@Dashboard/EntityAcl/acl.html.twig', [
             'form' => $form->createView(),
             'entity' => $viewObject,
             'isAdmin' => $this->authorizationService->isAdministrator(),
-        ];
+        ]);
     }
 }

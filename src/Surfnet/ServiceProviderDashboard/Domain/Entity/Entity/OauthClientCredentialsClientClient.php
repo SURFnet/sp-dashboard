@@ -29,28 +29,11 @@ use function is_null;
 
 class OauthClientCredentialsClientClient implements Comparable, OidcClientInterface
 {
-    /**
-     * @var string
-     */
-    private $clientId;
-    /**
-     * @var string
-     */
-    private $clientSecret;
-    /**
-     * @var array
-     */
-    private $resourceServers;
-
-    /**
-     * @var int
-     */
-    private $accessTokenValidity;
-
     public static function fromApiResponse(array $data)
     {
         $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
+        $clientSecret = isset($data['data']['metaDataFields']['secret']) ?
+            $data['data']['metaDataFields']['secret'] : '';
         $resourceServers = isset($data['resourceServers']) ? $data['resourceServers'] : [];
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
             ? (int) $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
@@ -69,15 +52,11 @@ class OauthClientCredentialsClientClient implements Comparable, OidcClientInterf
     }
 
     public function __construct(
-        string $clientId,
-        int $accessTokenValidity,
-        ?string $clientSecret,
-        array $resourceServers
+        private string $clientId,
+        private int $accessTokenValidity,
+        private ?string $clientSecret,
+        private array $resourceServers
     ) {
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->resourceServers = $resourceServers;
-        $this->accessTokenValidity = $accessTokenValidity;
     }
 
     /**

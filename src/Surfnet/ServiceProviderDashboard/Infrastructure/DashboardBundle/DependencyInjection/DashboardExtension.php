@@ -43,10 +43,10 @@ class DashboardExtension extends Extension
 
         $serviceContainer = $container->get('service_container');
         $environment = $serviceContainer->getParameter('kernel.environment');
-        $rootDir = $serviceContainer->getParameter('kernel.root_dir');
+        $rootDir = $serviceContainer->getParameter('kernel.project_dir');
 
         if ($environment === 'test') {
-            $loader->load($rootDir.'/../tests/webtests/Resources/config/services.yml');
+            $loader->load($rootDir.'/tests/webtests/Resources/config/services.yml');
         }
 
         foreach ($config['manage'] as $environment => $manageConfig) {
@@ -57,7 +57,7 @@ class DashboardExtension extends Extension
     }
 
     /**
-     * Creates a manage config aggregate based on the configuration in config.yml.
+     * Creates a manage config aggregate based on the configuration.
      *
      * Each environment will get a separate service named:
      *

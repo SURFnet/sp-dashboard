@@ -21,20 +21,15 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Mailer\Mailer;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\MailMessageFactory;
 
 class MailService
 {
-    /** @var MailMessageFactory */
-    private $mailFactory;
-    /** @var Mailer */
-    private $mailer;
-
-    public function __construct(MailMessageFactory $mailFactory, Mailer $mailer)
-    {
-        $this->mailer = $mailer;
-        $this->mailFactory = $mailFactory;
+    public function __construct(
+        private readonly MailMessageFactory $mailFactory,
+        private readonly Mailer $mailer
+    ) {
     }
 
     public function sendErrorReport(ManageEntity $entity, Exception $exception)

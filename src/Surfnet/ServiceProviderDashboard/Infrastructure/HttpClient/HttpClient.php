@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\AccessDeniedException;
@@ -30,44 +31,23 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\Runtim
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
 use function strtolower;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class HttpClient implements HttpClientInterface
 {
     const TEST_API_NAME = 'testApi';
     const MODE_TEST = 'test';
 
     /**
-     * @var ClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $mode;
-
-    /**
-     * @var string
-     */
-    private $apiName;
-
-    /**
      * @param string $mode The mode is used mainly for logging purposes, stating which environment was targeted.
      */
     public function __construct(
-        ClientInterface $httpClient,
-        LoggerInterface $logger,
-        string $apiName = self::TEST_API_NAME,
-        string $mode = self::MODE_TEST
+        private readonly ClientInterface $httpClient,
+        private readonly LoggerInterface $logger,
+        private readonly string $apiName = self::TEST_API_NAME,
+        private readonly string $mode = self::MODE_TEST
     ) {
-        $this->httpClient = $httpClient;
-        $this->logger = $logger;
-        $this->apiName = $apiName;
-        $this->mode = $mode;
     }
 
     /**
@@ -90,26 +70,30 @@ class HttpClient implements HttpClientInterface
             sprintf('Getting resource %s from %s (%s)', $resource, $this->apiName, $this->mode)
         );
 
-        return $this->request('GET', $resource, [
-            'exceptions' => false,
-            'headers' => $headers
-        ], function ($statusCode, $body, $method, $resource, $headers) {
-            if ($statusCode < 200 || $statusCode >= 300) {
-                throw new UnreadableResourceException(
-                    sprintf('Resource could not be read (status code %d)', $statusCode)
-                );
-            }
+        try {
+            return $this->request('GET', $resource, [
+                'exceptions' => false,
+                'headers' => $headers
+            ], function ($statusCode, $body, $method, $resource, $headers) {
+                if ($statusCode < 200 || $statusCode >= 300) {
+                    throw new UnreadableResourceException(
+                        sprintf('Resource could not be read (status code %d)', $statusCode)
+                    );
+                }
 
-            if ((isset($headers['Content-Type'])) &&
-                ($headers['Content-Type'] === 'application/json')) {
-                return $this->parseResponse($body, $method, $resource);
-            }
+                if ((isset($headers['Content-Type'])) &&
+                    ($headers['Content-Type'] === 'application/json')) {
+                    return $this->parseResponse($body, $method, $resource);
+                }
 
-            if ((isset($headers['Content-Type'])) &&
-                ($headers['Content-Type'] === 'application/xml')) {
-                return $body;
-            }
-        });
+                if ((isset($headers['Content-Type'])) &&
+                    ($headers['Content-Type'] === 'application/xml')) {
+                    return $body;
+                }
+            });
+        } catch (ClientException $e) {
+            return [];
+        }
     }
 
     /**

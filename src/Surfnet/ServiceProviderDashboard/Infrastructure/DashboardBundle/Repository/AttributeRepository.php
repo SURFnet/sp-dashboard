@@ -28,12 +28,10 @@ class AttributeRepository implements AttributeRepositoryInterface
 {
     const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
-    private $attributesFileLocation;
     private $attributes = [];
 
-    public function __construct(string $attributesFileLocation)
+    public function __construct(private readonly string $attributesFileLocation)
     {
-        $this->attributesFileLocation = $attributesFileLocation;
     }
 
     private function load(): array

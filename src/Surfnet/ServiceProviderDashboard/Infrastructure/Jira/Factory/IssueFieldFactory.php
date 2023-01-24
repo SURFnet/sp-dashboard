@@ -19,67 +19,31 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory;
 
 use JiraRestApi\Issue\IssueField;
+use JiraRestApi\Issue\IssueType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;
 
 class IssueFieldFactory
 {
-    /**
-     * @var string
-     */
-    private $entityIdFieldName;
-
-    /**
-     * @var string
-     */
-    private $manageIdFieldName;
-
-    /**
-     * @var string
-     */
-    private $reporterFieldName;
-
-    /**
-     * @var string
-     */
-    private $priority;
-
-    /**
-     * @var string
-     */
-    private $projectKey;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
-        string $entityIdFieldName,
-        string $manageIdFieldName,
-        string $reporterFieldName,
-        string $priority,
-        string $projectKey,
-        TranslatorInterface $translator
+        private readonly string $entityIdFieldName,
+        private readonly string $manageIdFieldName,
+        private readonly string $reporterFieldName,
+        private readonly string $priority,
+        private readonly string $projectKey,
+        private readonly TranslatorInterface $translator
     ) {
         Assert::stringNotEmpty(
             $entityIdFieldName,
-            'The entity id field name may not be empty, configure in parameters.yml'
+            'The entity id field name may not be empty, configure in .env'
         );
         Assert::stringNotEmpty(
             $manageIdFieldName,
-            'The manage id field name may not be empty, configure in parameters.yml'
+            'The manage id field name may not be empty, configure in .env'
         );
-        Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in parameters.yml');
-        Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in parameters.yml');
-
-        $this->entityIdFieldName = $entityIdFieldName;
-        $this->manageIdFieldName = $manageIdFieldName;
-        $this->reporterFieldName = $reporterFieldName;
-        $this->priority = $priority;
-        $this->projectKey = $projectKey;
-        $this->translator = $translator;
+        Assert::stringNotEmpty($priority, 'The priority may not be empty, configure in .env');
+        Assert::stringNotEmpty($projectKey, 'The project key may not be empty, configure in .env');
     }
 
     public function fromTicket(Ticket $ticket): IssueField
@@ -88,12 +52,11 @@ class IssueFieldFactory
         $issueField->setProjectKey($this->projectKey)
             ->setDescription($this->translateDescription($ticket))
             ->setSummary($this->translateSummary($ticket))
-            ->setIssueType($ticket->getIssueType())
-            ->setPriorityName($this->priority)
+            ->setIssueTypeAsString($ticket->getIssueType())
+            ->setPriorityNameAsString($this->priority)
             ->addCustomField($this->reporterFieldName, $ticket->getApplicantEmail())
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
-            ->addCustomField($this->manageIdFieldName, $ticket->getManageId())
-        ;
+            ->addCustomField($this->manageIdFieldName, $ticket->getManageId());
 
         return $issueField;
     }
@@ -104,8 +67,8 @@ class IssueFieldFactory
         $issueField->setProjectKey($this->projectKey)
             ->setDescription($this->translateConnectionRequestDescriptions($ticket))
             ->setSummary($this->translateSummary($ticket))
-            ->setIssueType($ticket->getIssueType())
-            ->setPriorityName($this->priority)
+            ->setIssueTypeAsString($ticket->getIssueType())
+            ->setPriorityNameAsString($this->priority)
             ->addCustomField($this->reporterFieldName, $ticket->getApplicantEmail())
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
             ->addCustomField($this->manageIdFieldName, $ticket->getManageId())

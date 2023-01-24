@@ -52,55 +52,15 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
  */
 trait EntityControllerTrait
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-    /**
-     * @var EntityTypeFactory
-     */
-    private $entityTypeFactory;
-    /**
-     * @var LoadEntityService
-     */
-    private $loadEntityService;
-
-    /**
-     * @var EntityMergeService
-     */
-    private $entityMergeService;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService,
-        EntityMergeService $entityMergeService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityTypeFactory $entityTypeFactory,
+        private readonly LoadEntityService $loadEntityService,
+        private readonly EntityMergeService $entityMergeService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->entityTypeFactory = $entityTypeFactory;
-        $this->loadEntityService = $loadEntityService;
-        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -109,7 +69,7 @@ trait EntityControllerTrait
      *
      * @return Form
      */
-    private function handleImport(Request $request, SaveSamlEntityCommand $command)
+    private function handleImport(Request $request, SaveSamlEntityCommand $command): Form
     {
         // Handle an import action based on the posted xml or import url.
         $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
@@ -144,34 +104,38 @@ trait EntityControllerTrait
     private function publishEntity(
         ?ManageEntity $entity,
         SaveEntityCommandInterface $saveCommand,
-        bool $isEntityChangeRequest,
+        bool $isPublishedProductionEntity,
         FlashBagInterface $flashBag
     ) {
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
-            $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isEntityChangeRequest);
+            $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
             $this->commandBus->handle($publishEntityCommand);
         } catch (Exception $e) {
             $flashBag->add('error', 'entity.edit.error.publish');
+            return $this->redirectToRoute('service_overview');
         }
 
-        if (!$flashBag->has('error')) {
-            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isEntityChangeRequest) {
-                $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
-            }
+        if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isPublishedProductionEntity) {
+            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
+        }
 
-            // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
-            // page we will be redirecting to in a moment.
-            $this->get('session')->set('published.entity.clone', clone $entity);
+        // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
+        // page we will be redirecting to in a moment.
+        $this->get('session')->set('published.entity.clone', clone $entity);
 
-            if ($publishEntityCommand instanceof PublishEntityTestCommand) {
-                return $this->redirectToRoute('entity_published_test');
-            }
+        if ($publishEntityCommand instanceof PublishEntityTestCommand) {
+            return $this->redirectToRoute('entity_published_test');
+        }
 
-            $destination = $this->findDestinationForRedirectToCreateConnectionRequest($publishEntityCommand);
-            $parameters = $this->findParametersForRedirectToCreateConnectionRequest($publishEntityCommand);
+        try {
+            $destination = $this->findDestinationForRedirect($publishEntityCommand);
+            $parameters = $this->findParametersForRedirect($publishEntityCommand);
             return $this->redirectToRoute($destination, $parameters);
+        } catch (InvalidArgumentException $e) {
+            $flashBag->add('error', $e->getMessage());
+            return $this->redirectToRoute('service_overview');
         }
     }
 
@@ -219,7 +183,7 @@ trait EntityControllerTrait
         return $entityActions->allowCreateConnectionRequestAction();
     }
 
-    private function findParametersForRedirectToCreateConnectionRequest(
+    private function findParametersForRedirect(
         PublishProductionCommandInterface $publishEntityCommand
     ): array {
         if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
@@ -233,10 +197,9 @@ trait EntityControllerTrait
         return [];
     }
 
-    private function findDestinationForRedirectToCreateConnectionRequest(
+    private function findDestinationForRedirect(
         PublishProductionCommandInterface $publishEntityCommand
     ): string {
-    
         switch (true) {
             case $publishEntityCommand instanceof EntityChangeRequestCommand:
                 return 'entity_change_request';
@@ -259,7 +222,7 @@ trait EntityControllerTrait
      * @param string $expectedButtonName
      * @return bool
      */
-    private function assertUsedSubmitButton(Form $form, $expectedButtonName)
+    private function assertUsedSubmitButton(Form $form, $expectedButtonName): bool
     {
         $button = $form->getClickedButton();
 

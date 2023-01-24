@@ -32,7 +32,7 @@ class ResetServiceCommandHandlerTest extends MockeryTestCase
     /** @var AuthorizationService|m\MockInterface */
     private $authService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->authService = m::mock(AuthorizationService::class);
         $this->commandHandler = new ResetServiceCommandHandler($this->authService);

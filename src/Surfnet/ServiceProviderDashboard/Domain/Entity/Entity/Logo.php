@@ -23,10 +23,6 @@ use Webmozart\Assert\Assert;
 
 class Logo implements Comparable
 {
-    private $url;
-    private $width;
-    private $height;
-
     public static function fromApiResponse(array $data)
     {
         $url = isset($data['logo:0:url']) ? $data['logo:0:url'] : '';
@@ -40,11 +36,11 @@ class Logo implements Comparable
         return new self($url, $width, $height);
     }
 
-    public function __construct(?string $url, ?int $width, ?int $height)
-    {
-        $this->url = $url;
-        $this->width = $width;
-        $this->height = $height;
+    public function __construct(
+        private ?string $url,
+        private ?int $width,
+        private ?int $height
+    ) {
     }
 
     public function getUrl(): ?string

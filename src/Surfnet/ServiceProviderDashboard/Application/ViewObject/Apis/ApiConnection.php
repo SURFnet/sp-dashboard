@@ -20,26 +20,11 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis;
 
 class ApiConnection
 {
-    /**
-     * @var string
-     */
-    private $host;
-
-    /**
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $password;
-
-    public function __construct(string $host, string $username, string $password)
-    {
-        $this->host = $host;
-        $this->username = $username;
-        $this->password = $password;
+    public function __construct(
+        private readonly string $host,
+        private readonly string $username,
+        private readonly string $password
+    ) {
     }
 
     public function getHost(): string

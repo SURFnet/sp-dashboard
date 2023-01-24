@@ -41,14 +41,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  */
 class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 {
-    /**
-     * @var AttributesMetadataRepository
-     */
-    private $repository;
-
-    public function __construct(AttributesMetadataRepository $repository)
+    public function __construct(private readonly AttributesMetadataRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     public function build(ManageEntity $entity): array
@@ -62,7 +56,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
             foreach ($privacyQuestions as $question) {
                 // Get the associated getter
                 $getterName = $question->getterName;
-                if (method_exists($privacyQuestionAnswers, $getterName)) {
+                if ($privacyQuestionAnswers !== null && method_exists($privacyQuestionAnswers, $getterName)) {
                     $answer = $privacyQuestionAnswers->$getterName();
                     if (!is_null($answer)) {
                         if ($answer instanceof DateTime) {

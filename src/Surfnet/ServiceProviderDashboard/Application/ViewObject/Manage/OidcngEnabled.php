@@ -25,19 +25,10 @@ use Webmozart\Assert\Assert;
  */
 class OidcngEnabled
 {
-    /**
-     * @var string
-     */
-    private $enabled;
-
-    /**
-     * @param string $status
-     */
-    public function __construct($enabled = '')
-    {
-        Assert::boolean($enabled, 'Please set the oidcng enabled config value in parameters.yml');
-
-        $this->enabled = $enabled;
+    public function __construct(
+        private string $enabled = ''
+    ) {
+        Assert::boolean($enabled, 'Please set the oidcng enabled config value in .env');
     }
 
     public function isEnabled()

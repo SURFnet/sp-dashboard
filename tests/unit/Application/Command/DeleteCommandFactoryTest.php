@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedT
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
 class DeleteCommandFactoryTest extends MockeryTestCase
@@ -35,13 +36,13 @@ class DeleteCommandFactoryTest extends MockeryTestCase
      */
     private $factory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = new DeleteCommandFactory();
     }
 
     /**
-     * @dataProvider testEntities
+     * @dataProvider provideEntities
      * @param EntityDto $entity
      * @param mixed $expectedCommand
      * @param string $testDescription
@@ -65,7 +66,7 @@ class DeleteCommandFactoryTest extends MockeryTestCase
         $this->factory->from($entity);
     }
 
-    public function testEntities()
+    public function provideEntities()
     {
         return [
             [
@@ -102,7 +103,8 @@ class DeleteCommandFactoryTest extends MockeryTestCase
             ->shouldReceive('getContact')
             ->andReturn(m::mock(Contact::class));
         $entity
-            ->shouldReceive('getProtocol');
+            ->shouldReceive('getProtocol')
+            ->andReturn(Constants::TYPE_SAML);
         return $entity;
     }
 }

@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntitySamlCreateSamlTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -108,9 +108,9 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $messageTest = $crawler->filter('.no-entities-test')->text();
         $messageProduction = $crawler->filter('.no-entities-production')->text();
 
-        $this->assertContains("Ibuildings B.V. overview", $pageTitle);
-        $this->assertContains('No entities found.', $messageTest);
-        $this->assertContains('No entities found.', $messageProduction);
+        $this->assertStringContainsString("Ibuildings B.V. overview", $pageTitle);
+        $this->assertStringContainsString('No entities found.', $messageTest);
+        $this->assertStringContainsString('No entities found.', $messageProduction);
     }
 
     /**
@@ -193,7 +193,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $this->assertEquals('Warning! Some entries are missing or incorrect. Please review and fix those entries below.', trim($errorMessage));
 
         $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp('/\/entity\/create/', $uri);
+        $this->assertMatchesRegularExpression('/\/entity\/create/', $uri);
     }
 
     public function test_it_shows_flash_message_on_importing_invalid_metadata()
@@ -227,17 +227,17 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(1);
         $missingMessage = $crawler->filter('.message.preformatted')->eq(2);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "The metadata XML is invalid considering the associated XSD",
             $genericMessage->text(),
             'Expected an XML parse error.'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "EntityDescriptor', attribute 'entityED': The attribute 'entityED' is not allowed.",
             $notAllowedMessage->text(),
             'Expected an XML parse error.'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "EntityDescriptor': The attribute 'entityID' is required but missing.",
             $missingMessage->text(),
             'Expected an XML parse error.'
@@ -304,7 +304,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $crawler = $this->client->submit($form, $formData);
         $notSupportedMultipleEntitiesMessage = $crawler->filter('.message.preformatted')->first();
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Using metadata that describes multiple entities is not supported. Please provide metadata describing a single SP entity.',
             $notSupportedMultipleEntitiesMessage->text(),
             'Expected an error message for unsupported multiple entities in metadata.'
