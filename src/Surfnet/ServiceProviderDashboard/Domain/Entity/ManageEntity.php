@@ -34,6 +34,8 @@ use function in_array;
  * entity is used in a specific context. This particularly applies for the factory
  * methods found in the 'Entity/Entity' namespace.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) This object contains a lot of properties which cannot not be easily
+ * simplified.
  */
 class ManageEntity
 {
@@ -349,5 +351,16 @@ class ManageEntity
         }
         $data += $this->protocol->asArray();
         return $data;
+    }
+
+    private function isStatusPublicationRequested()
+    {
+        return $this->getStatus() === Constants::STATE_PUBLICATION_REQUESTED;
+    }
+
+    public function isRequestedProductionEntity(
+        bool $isCopy
+    ) {
+        return $isCopy || ($this->isStatusPublicationRequested() && $this->isProduction());
     }
 }

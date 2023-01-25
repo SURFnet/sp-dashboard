@@ -98,7 +98,7 @@ class EntityTypeFactory
 
     public function createEditForm(ManageEntity $entity, Service $service, string $environment, $isCopy = false)
     {
-        $buildOptions = $this->isRequestedProductionEntity($entity, $isCopy) ?
+        $buildOptions = $entity->isRequestedProductionEntity($isCopy) ?
             $this->requestedBuildOptions($environment) : $this->publishedBuildOptions($environment);
 
         switch ($entity->getProtocol()->getProtocol()) {
@@ -131,16 +131,6 @@ class EntityTypeFactory
         }
 
         throw new InvalidArgumentException("invalid form type requested");
-    }
-
-    private function isRequestedProductionEntity(
-        ManageEntity $entity,
-        bool $isCopy
-    ) {
-        if ($isCopy || ($entity->getStatus() === Constants::STATE_PUBLICATION_REQUESTED && $entity->isProduction())) {
-            return true;
-        }
-        return false;
     }
 
     private function requestedBuildOptions($environment)
