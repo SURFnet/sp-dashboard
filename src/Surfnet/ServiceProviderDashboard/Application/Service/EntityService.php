@@ -73,7 +73,7 @@ class EntityService implements EntityServiceInterface
                 $entity->setService($service);
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
-                $this->updateStatus($entity);
+                $entity->updateStatusByExcludeFromPush();
                 $this->updateOrganizationNames(
                     $entity,
                     $service->getOrganizationNameEn(),
@@ -195,7 +195,7 @@ class EntityService implements EntityServiceInterface
         // Set the service associated to the entity on the entity.
         $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
         $entity->setService($service);
-        $this->updateStatus($entity);
+        $entity->updateStatusByExcludeFromPush();
         // As the organization names are tracked on the Service, we update it on the Manage Entity Organization VO
         $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
         return $entity;
@@ -223,7 +223,7 @@ class EntityService implements EntityServiceInterface
         // Set the service associated to the entity on the entity.
         $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
         $entity->setService($service);
-        $this->updateStatus($entity);
+        $entity->updateStatusByExcludeFromPush();
         return $entity;
     }
 
@@ -262,7 +262,7 @@ class EntityService implements EntityServiceInterface
             // Extract the Manage entity id's
             $manageIds = [];
             foreach ($entities as $entity) {
-                $this->updateStatus($entity);
+                $entity->updateStatusByExcludeFromPush();
                 $manageIds[] = $entity->getId();
             }
             $issueCollection = $this->ticketService->findByManageIds($manageIds);
@@ -270,7 +270,7 @@ class EntityService implements EntityServiceInterface
             // entities
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
-                    $this->updateStatus($entity);
+                    $entity->updateStatusByExcludeFromPush();
                     $issue = $issueCollection->getIssueById($entity->getId());
                     if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== $this->removalStatus) {
                         // A published entity needs no status update unless it's a removal requested entity
@@ -310,17 +310,6 @@ class EntityService implements EntityServiceInterface
             );
         }
         return null;
-    }
-
-    private function updateStatus(ManageEntity $entity)
-    {
-        $excludeFromPush = $entity->getMetaData()->getCoin()->getExcludeFromPush();
-        if ($excludeFromPush === '1') {
-            $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
-        }
-        if ($excludeFromPush === '0') {
-            $entity->updateStatus(Constants::STATE_PUBLISHED);
-        }
     }
 
     /**
