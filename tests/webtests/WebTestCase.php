@@ -23,7 +23,6 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use RuntimeException;
-use Surfnet\SamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
@@ -34,19 +33,16 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient;
-use Symfony\Bundle\FrameworkBundle\Test\TestBrowserToken;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Panther\Client;
+use Symfony\Component\Panther\PantherTestCase;
 
-class WebTestCase extends SymfonyWebTestCase
+class WebTestCase extends PantherTestCase
 {
     /**
-     * @var \Symfony\Bundle\FrameworkBundle\Client
+     * @var \Symfony\Component\Panther\Client;
      */
     protected $client;
     /**
@@ -88,41 +84,38 @@ class WebTestCase extends SymfonyWebTestCase
     public function setUp(): void
     {
         self::ensureKernelShutdown();
-        // Disable notices, strict and deprecated warnings. Many Symfony 3.4 deprecation warnings are still to be fixed.
-        Debug::enable(E_RECOVERABLE_ERROR & ~E_DEPRECATED, false);
-
-        $this->client = static::createClient(
-            [],
-            [
-                'HTTPS' => 'on',
-            ]
-        );
-
-        $this->client->disableReboot();
-        $this->testQueryClient = $this->client
-            ->getContainer()
+        //passthru('pkill -f chrome');
+        $this->client = Client::createChromeClient(null, ['--headless', '--disable-dev-shm-usage', '--no-sandbox']);
+        //$this->client = static::createPantherClient(array_replace(static::$defaultOptions, ['port' => 9081]));
+        $this->testQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
-        $this->prodQueryClient = $this->client
-            ->getContainer()
+        $this->prodQueryClient =  self::getContainer()
             ->get('surfnet.manage.client.query_client.prod_environment');
-        $this->prodIdPClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient');
-        $this->testIdPClient = $this->client
-            ->getContainer()
+        $this->prodIdPClient = self::getContainer()
+            ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient');
+        $this->testIdPClient =  self::getContainer()
             ->get('surfnet.manage.client.identity_provider_client.test_environment');
-        $this->prodPublicationClient = $this->client
-            ->getContainer()
+        $this->prodPublicationClient = self::getContainer()
             ->get('surfnet.manage.client.publish_client.prod_environment');
-        $this->testPublicationClient = $this->client->getContainer()->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient');
-        $this->testDeleteClient = $this->client
-            ->getContainer()
+        $this->testPublicationClient = self::getContainer()
+            ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient');
+        $this->testDeleteClient = self::getContainer()
             ->get('surfnet.manage.client.delete_client.test_environment');
-        $this->prodDeleteClient = $this->client
-            ->getContainer()
+        $this->prodDeleteClient = self::getContainer()
             ->get('surfnet.manage.client.delete_client.prod_environment');
-        $this->teamsQueryClient = $this->client
-            ->getContainer()
+        $this->teamsQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient');
     }
+
+//    public static function setUpBeforeClass(): void
+//    {
+//        exec('cd /var/www/html && composer dump-env test', $output, $resultCode);
+//    }
+//
+//    public static function tearDownAfterClass(): void
+//    {
+//        exec('rm /var/www/html/.env.local.php', $output, $resultCode);
+//    }
 
     protected function registerManageEntity(
         string $env,
@@ -234,7 +227,7 @@ class WebTestCase extends SymfonyWebTestCase
         // autoincrement sequence. That is explicitly reset with the query below.
         // Preferably we'de use $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE); but that does not seem
         // to work with SQLite
-        $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
+        //$em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
         $executor->execute($loader->getFixtures());
     }
@@ -253,7 +246,7 @@ class WebTestCase extends SymfonyWebTestCase
      */
     private function getEntityManager()
     {
-        return $this->client->getContainer()->get('doctrine')->getManager();
+        return self::getContainer()->get('doctrine')->getManager();
     }
 
     /**
@@ -273,7 +266,19 @@ class WebTestCase extends SymfonyWebTestCase
         }
         $contact->assignRole($role);
 
-        $this->client->loginUser(new Identity($contact), 'saml_based');
+        $crawler = $this->client->request('GET', 'https://spdashboard.vm.openconext.org');
+
+        DebugFile::dumpHtml($crawler->html(),'debugfile6.html');
+        $form = $crawler
+            ->selectButton('Log in')
+            ->form();
+
+        $form->setValues([
+            'username' => 'admin',
+            'password' => ''
+        ]);
+
+        $crawler = $this->client->submit($form);
     }
 
     /**
@@ -283,10 +288,17 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function switchToService($serviceName)
     {
-        $crawler = $this->client->request('GET', '/');
+        $crawler = $this->client->request('GET', 'https://spdashboard.vm.openconext.org');
+
+        DebugFile::dumpHtml($crawler->html(), 'debugfile5.html');
+
+        //$this->client->waitFor('service_switcher[selected_service_id]');
+
         $form = $crawler->filter('.service-switcher form')->form();
 
-        $service  = $this->getServiceRepository()->findByName($serviceName);
+        $service = $this->getServiceRepository()->findByName($serviceName);
+
+        //$this->client->waitFor('service_switcher[selected_service_id]');
 
         $form['service_switcher[selected_service_id]']->select($service->getId());
 
@@ -297,7 +309,9 @@ class WebTestCase extends SymfonyWebTestCase
             'Expecting a redirect response after selecting a service'
         );
 
-        return $this->client->followRedirect();
+        $this->client->followRedirects();
+
+        return $crawler;
     }
 
     /**
@@ -305,7 +319,7 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function getServiceRepository()
     {
-        return $this->client->getContainer()->get(ServiceRepository::class);
+        return self::getContainer()->get(ServiceRepository::class);
     }
 
     /**
@@ -313,6 +327,6 @@ class WebTestCase extends SymfonyWebTestCase
      */
     protected function getAuthorizationService()
     {
-        return $this->client->getContainer()->get(AuthorizationService::class);
+        return self::getContainer()->get(AuthorizationService::class);
     }
 }
