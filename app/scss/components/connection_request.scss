@@ -1,12 +1,15 @@
 .connection-request-wrapper {
+  .button-small {
+    padding: 5px 10px;
+    top: 1.5rem;
+  }
   .collection-list {
     margin-bottom: 1rem;
 
     .button-small {
       position: relative;
+      top: auto;
       float: right;
-      padding: 5px 10px;
-      top: 1.5rem;
     }
     th.text {
       width: 32%;
@@ -43,11 +46,6 @@
     background-color: $light-grey;
     cursor: not-allowed;
   }
-}
-
-.line {
-  border-top: 2px solid #00829b;
-  padding-top: 5px;
 }
 
 .connection-request {
