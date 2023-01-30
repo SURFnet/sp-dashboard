@@ -268,7 +268,7 @@ class OauthClientCredentialEntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => SaveOauthClientCredentialClientCommand::class,
-            'publish_button_label' => 'Publish',
+            'publish_button_label' => 'entity.add.label.publish',
         ));
     }
 

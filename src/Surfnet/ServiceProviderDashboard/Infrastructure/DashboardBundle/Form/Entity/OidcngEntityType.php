@@ -371,7 +371,7 @@ class OidcngEntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => SaveOidcngEntityCommand::class,
-            'publish_button_label' => 'Publish',
+            'publish_button_label' => 'entity.add.label.publish',
         ));
     }
 

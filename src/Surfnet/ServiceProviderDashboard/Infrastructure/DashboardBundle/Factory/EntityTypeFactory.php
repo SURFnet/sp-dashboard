@@ -70,18 +70,18 @@ class EntityTypeFactory
             case ($type === Constants::TYPE_SAML):
                 $command = SaveSamlEntityCommand::forCreateAction($service);
                 $command->setEnvironment($environment);
-                return $this->formFactory->create(SamlEntityType::class, $command, $this->createBuildOptions($environment));
+                return $this->formFactory->create(SamlEntityType::class, $command, $this->requestedBuildOptions($environment));
             case ($type === Constants::TYPE_OPENID_CONNECT_TNG):
                 $command = SaveOidcngEntityCommand::forCreateAction($service);
                 $command->setEnvironment($environment);
-                return $this->formFactory->create(OidcngEntityType::class, $command, $this->createBuildOptions($environment));
+                return $this->formFactory->create(OidcngEntityType::class, $command, $this->requestedBuildOptions($environment));
             case ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
                 $command = SaveOidcngResourceServerEntityCommand::forCreateAction($service);
                 $command->setEnvironment($environment);
                 return $this->formFactory->create(
                     OidcngResourceServerEntityType::class,
                     $command,
-                    $this->createBuildOptions($environment)
+                    $this->requestedBuildOptions($environment)
                 );
             case ($type === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT):
                 $command = SaveOauthClientCredentialClientCommand::forCreateAction($service);
@@ -89,7 +89,7 @@ class EntityTypeFactory
                 return $this->formFactory->create(
                     OauthClientCredentialEntityType::class,
                     $command,
-                    $this->createBuildOptions($environment)
+                    $this->requestedBuildOptions($environment)
                 );
         }
 
@@ -98,15 +98,18 @@ class EntityTypeFactory
 
     public function createEditForm(ManageEntity $entity, Service $service, string $environment, $isCopy = false)
     {
+        $buildOptions = $entity->isRequestedProductionEntity($isCopy) ?
+            $this->requestedBuildOptions($environment) : $this->publishedBuildOptions($environment);
+
         switch ($entity->getProtocol()->getProtocol()) {
             case (Constants::TYPE_SAML):
                 $command = $this->saveCommandFactory->buildSamlCommandByManageEntity($entity, $environment);
                 $command->setService($service);
-                return $this->formFactory->create(SamlEntityType::class, $command, $this->editBuildOptions($environment));
+                return $this->formFactory->create(SamlEntityType::class, $command, $buildOptions);
             case (Constants::TYPE_OPENID_CONNECT_TNG):
                 $command = $this->saveCommandFactory->buildOidcngCommandByManageEntity($entity, $environment, $isCopy);
                 $command->setService($service);
-                return $this->formFactory->create(OidcngEntityType::class, $command, $this->editBuildOptions($environment));
+                return $this->formFactory->create(OidcngEntityType::class, $command, $buildOptions);
             case (Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
                 $command = $this
                     ->saveCommandFactory
@@ -119,18 +122,18 @@ class EntityTypeFactory
                 return $this->formFactory->create(
                     OidcngResourceServerEntityType::class,
                     $command,
-                    $this->editBuildOptions($environment)
+                    $buildOptions
                 );
             case (Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT):
                 $command = $this->saveCommandFactory->buildOauthCccCommandByManageEntity($entity, $environment, $isCopy);
                 $command->setService($service);
-                return $this->formFactory->create(OauthClientCredentialEntityType::class, $command, $this->editBuildOptions($environment));
+                return $this->formFactory->create(OauthClientCredentialEntityType::class, $command, $buildOptions);
         }
 
         throw new InvalidArgumentException("invalid form type requested");
     }
 
-    private function createBuildOptions($environment)
+    private function requestedBuildOptions($environment)
     {
         $options = [];
         if ($environment === Constants::ENVIRONMENT_PRODUCTION) {
@@ -139,13 +142,13 @@ class EntityTypeFactory
         return $options;
     }
 
-    private function editBuildOptions($environment)
+    private function publishedBuildOptions($environment)
     {
         $options = [];
         if ($environment === Constants::ENVIRONMENT_PRODUCTION) {
             $options = ['validation_groups' => ['Default', 'production'],
-                'publish_button_label' => 'Change request',
-                ];
+                'publish_button_label' => 'entity.edit.label.change',
+            ];
         }
         return $options;
     }
