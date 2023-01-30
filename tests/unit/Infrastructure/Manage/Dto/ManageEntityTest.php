@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Manage\Dto;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -101,5 +102,19 @@ class ManageEntityTest extends MockeryTestCase
         // Even though only one item is changed, both items are part of the diff as the redirect URLS are set in a
         // 'provide everything' manner.
         $this->assertCount(2, $diffResults['metaDataFields.redirectUrls']);
+    }
+
+    public function test_is_status_publication_requested()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
+        $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
+        $this->assertEquals(Constants::STATE_PUBLICATION_REQUESTED, $entity->getStatus());
+    }
+
+    public function test_is_requested_production_entity_copy()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
+        $this->assertTrue($entity->isRequestedProductionEntity(true));
+        $this->assertFalse($entity->isRequestedProductionEntity(false));
     }
 }

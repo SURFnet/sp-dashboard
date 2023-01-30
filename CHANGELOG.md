@@ -1,5 +1,10 @@
+## 4.4.2
+**Bugfix**
+- Repair button change request #575
+
 ## 4.4.1
-Include 4.3.2 into the 4.4 tier of releases (More Label and translation adjustments #574)
+**Backport**
+- Include 4.3.2 into the 4.4 tier of releases (More Label and translation adjustments #574)
 
 ## 4.4.0
 **Feature**

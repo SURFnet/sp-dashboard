@@ -370,6 +370,8 @@ entity.edit.label.implicit: Implicit
 entity.edit.label.authorization_code_token: response_type=id_token
 entity.edit.label.implicit_id_token_token: response_type=id_token token
 entity.edit.label.implicit_id_token: response_type=id_token
+entity.edit.label.change: Change
+entity.add.label.publish: Publish
 entity.acl.title: Entity Idp access
 entity.acl.info.title: Info
 entity.acl.info.html: "
