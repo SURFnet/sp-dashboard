@@ -17,13 +17,6 @@ RUN /usr/sbin/update-ca-certificates && \
     rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ && \
     apk --update --no-cache add yarn
 
-# Chromium and ChromeDriver
-ENV PANTHER_NO_SANDBOX 1
-# Not mandatory, but recommended
-# ENV PANTHER_CHROME_ARGUMENTS='--disable-dev-shm-usage'
-ENV PANTHER_CHROME_ARGUMENTS="--disable-dev-shm-usage --disable-extensions --no-sandbox --whitelisted-ips=''"
-RUN apk add --no-cache chromium chromium-chromedriver
-
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
 
 FROM ghcr.io/openconext/openconext-containers/openconext-httpd:latest AS spdhttpd

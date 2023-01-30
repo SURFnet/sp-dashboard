@@ -22,6 +22,8 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -38,6 +40,7 @@ use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
+use function dd;
 
 class WebTestCase extends PantherTestCase
 {
@@ -84,9 +87,17 @@ class WebTestCase extends PantherTestCase
     public function setUp(): void
     {
         self::ensureKernelShutdown();
-        //passthru('pkill -f chrome');
-        $this->client = Client::createChromeClient(null, ['--headless', '--disable-dev-shm-usage', '--no-sandbox']);
-        //$this->client = static::createPantherClient(array_replace(static::$defaultOptions, ['port' => 9081]));
+
+        $chromeOptions = new ChromeOptions();
+        $chromeOptions->addArguments(['--disable-dev-shm-usage', '--disable-gpu',  '--headless', '--no-sandbox']);
+
+        $this->client = Client::createSeleniumClient(
+            'http://test-browser:3000/webdriver',
+            $chromeOptions->toCapabilities(),
+            '',
+        );
+
+
         $this->testQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
         $this->prodQueryClient =  self::getContainer()

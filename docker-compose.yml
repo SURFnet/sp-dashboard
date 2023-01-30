@@ -63,6 +63,18 @@ services:
         aliases: 
           - spdashboard_web
 
+  test-browser:
+    image: browserless/chrome:latest
+    ports:
+      - "3000:3000"
+    expose:
+      - 3000
+    extra_hosts:
+      - "spdashboard.vm.openconext.org:web"
+    networks:
+      spdashboard:
+        aliases:
+          - spdashboard_test-browser
 networks:
   spdashboard:
 
