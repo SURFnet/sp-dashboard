@@ -136,6 +136,10 @@ class ManageEntity
 
     public function updateStatusByExcludeFromPush(): void
     {
+        if (!$this->isExcludedFromPushSet()) {
+            return;
+        }
+
         if ($this->isExcludedFromPush()) {
             $this->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
             return;
@@ -143,7 +147,12 @@ class ManageEntity
         $this->updateStatus(Constants::STATE_PUBLISHED);
     }
 
-    public function updateStatus($newStatus)
+    public function updateStatusToRemovalRequested()
+    {
+        $this->status = Constants::STATE_REMOVAL_REQUESTED;
+    }
+
+    private function updateStatus($newStatus)
     {
         $this->status = $newStatus;
     }

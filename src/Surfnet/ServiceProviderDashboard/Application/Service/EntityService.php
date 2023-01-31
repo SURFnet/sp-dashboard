@@ -83,7 +83,7 @@ class EntityService implements EntityServiceInterface
                 $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
                     $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
                 if ($issue && $shouldUseTicketStatus) {
-                    $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+                    $entity->updateStatusToRemovalRequested();
                 }
                 return $entity;
             case 'test':
@@ -277,7 +277,7 @@ class EntityService implements EntityServiceInterface
                         continue;
                     }
                     if ($issue && $issue->getIssueType() === $this->removalStatus && !$issue->isClosedOrResolved()) {
-                        $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+                        $entity->updateStatusToRemovalRequested();
                     }
                 }
             }
