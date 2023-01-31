@@ -73,13 +73,12 @@ jobs:
       - name: Run audits
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer security'
-        continue-on-error: true
+
+      - name: Run JS tests
+          $(DOCKER_COMPOSE_PHP_FPM} sh -c 'composer jest'
 
       - name: Run Cypress tests
         run: |
-          ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome
+          ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome -C ./ci/qa/cypress.config.ts
         continue-on-error: true
 
-      - name: Run translations
-        run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer translations'

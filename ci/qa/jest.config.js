@@ -1,11 +1,12 @@
 module.exports = {
+    rootDir: "/var/www/html",
     collectCoverage: false,
-    coverageDirectory: "assets/js/coverage",
+    coverageDirectory: "./assets/js/coverage",
     collectCoverageFrom: [
-        "assets/js/**/*.{ts,tsx,js,jsx}",
-        "!public/build/**",
-        "!**/*test.{ts,tsx,js,jsx}",
-        "!node_modules/**"
+        "./assets/js/**/*.{ts,tsx,js,jsx}",
+        "!./public/build/**",
+        "!./**/*test.{ts,tsx,js,jsx}",
+        "!./node_modules/**"
     ],
     coverageThreshold: {
         "global": {
@@ -25,7 +26,7 @@ module.exports = {
     modulePathIgnorePatterns: [
         "\\.snap$",
         "<rootDir>/node_modules",
-        "<rootDir>/web/build"
+        "<rootDir>/public/build"
     ],
     transform: {
         "\\.(ts|tsx)$": "ts-jest"
