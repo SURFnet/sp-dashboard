@@ -64,17 +64,16 @@ services:
           - spdashboard_web
 
   test-browser:
-    image: browserless/chrome:latest
+    image: selenium/standalone-chrome:latest
+    hostname: test-browser
     ports:
-      - "3000:3000"
-    expose:
-      - 3000
-    extra_hosts:
-      - "spdashboard.vm.openconext.org:web"
+      - "5900:5900"
+      - "4444:4444"
+    privileged: true
+    shm_size: 2g
     networks:
       spdashboard:
-        aliases:
-          - spdashboard_test-browser
+
 networks:
   spdashboard:
 

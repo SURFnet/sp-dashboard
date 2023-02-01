@@ -92,11 +92,10 @@ class WebTestCase extends PantherTestCase
         $chromeOptions->addArguments(['--disable-dev-shm-usage', '--disable-gpu',  '--headless', '--no-sandbox']);
 
         $this->client = Client::createSeleniumClient(
-            'http://test-browser:3000/webdriver',
+            'http://test-browser:4444/wd/hub',
             $chromeOptions->toCapabilities(),
-            '',
+            'https://spdashboard.vm.openconext.org',
         );
-
 
         $this->testQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');

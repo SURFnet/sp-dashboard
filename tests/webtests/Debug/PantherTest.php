@@ -13,7 +13,6 @@ class PantherTest extends WebTestCase
         $this->loadFixtures();
 
         $this->logIn('ROLE_ADMINISTRATOR');
-
         try {
             $this->switchToService('Ibuildings B.V.');
         } catch(Exception $e) {
@@ -22,14 +21,4 @@ class PantherTest extends WebTestCase
             $this->client->close();
         }
     }
-
-//    public static function setUpBeforeClass(): void
-//    {
-//        exec('cd /Users/sjaakkallemein/src/sp-dashboard && composer dump-env test', $output, $resultCode);
-//    }
-//
-//    public static function tearDownAfterClass(): void
-//    {
-//        exec('rm /Users/sjaakkallemein/root/.env.local.php', $output, $resultCode);
-//    }
 }
