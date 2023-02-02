@@ -134,7 +134,25 @@ class ManageEntity
         return $this->metaData;
     }
 
-    public function updateStatus($newStatus)
+    public function updateStatusByExcludeFromPush(): void
+    {
+        if (!$this->isExcludedFromPushSet()) {
+            return;
+        }
+
+        if ($this->isExcludedFromPush()) {
+            $this->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
+            return;
+        }
+        $this->updateStatus(Constants::STATE_PUBLISHED);
+    }
+
+    public function updateStatusToRemovalRequested()
+    {
+        $this->status = Constants::STATE_REMOVAL_REQUESTED;
+    }
+
+    private function updateStatus($newStatus)
     {
         $this->status = $newStatus;
     }
@@ -184,7 +202,7 @@ class ManageEntity
 
     public function isExcludedFromPushSet()
     {
-        if (is_null($this->getMetaData()->getCoin()->getExcludeFromPush())) {
+        if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
             return false;
         }
         return true;
@@ -192,10 +210,10 @@ class ManageEntity
 
     public function isExcludedFromPush()
     {
-        if (is_null($this->getMetaData()->getCoin()->getExcludeFromPush())) {
+        if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
             return false;
         }
-        return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
+        return $this->getMetaData()?->getCoin()?->getExcludeFromPush() == 1;
     }
 
     public function isManageEntity(): bool

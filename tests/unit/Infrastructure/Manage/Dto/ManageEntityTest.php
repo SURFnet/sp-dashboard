@@ -104,17 +104,84 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertCount(2, $diffResults['metaDataFields.redirectUrls']);
     }
 
-    public function test_is_status_publication_requested()
-    {
-        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
-        $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
-        $this->assertEquals(Constants::STATE_PUBLICATION_REQUESTED, $entity->getStatus());
-    }
-
     public function test_is_requested_production_entity_copy()
     {
         $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
         $this->assertTrue($entity->isRequestedProductionEntity(true));
         $this->assertFalse($entity->isRequestedProductionEntity(false));
     }
+
+    public function test_it_can_has_status_published_when_excluded_from_push()
+    {
+        $data = json_decode(
+            file_get_contents(__dir__ . '/fixture/manage_entity_saml20_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+
+        static::assertEquals('published', $manageEntity->getStatus());
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_updates_status()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__.'/fixture/manage_entity_saml20_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusByExcludeFromPush();
+
+        static::assertEquals('requested', $manageEntity->getStatus());
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_does_not_update_when_not_excluded_from_push()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__ . '/fixture/manage_entity_saml20_no_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+
+        static::assertEquals('published', $manageEntity->getStatus());
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusByExcludeFromPush();
+
+        static::assertEquals('published', $manageEntity->getStatus());
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_sets_removal_requested_status()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__.'/fixture/manage_entity_saml20_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusToRemovalRequested();
+        static::assertEquals('removal requested', $manageEntity->getStatus());
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_sets_removal_requested_status_when_not_excluded_from_push()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__ . '/fixture/manage_entity_saml20_no_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusToRemovalRequested();
+        static::assertEquals('removal requested', $manageEntity->getStatus());
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+    }
+
 }
