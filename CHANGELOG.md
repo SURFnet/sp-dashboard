@@ -1,3 +1,7 @@
+## 4.4.3
+**Bugfix**
+- Repair positioning of plus button #578
+- 
 ## 4.4.2
 **Bugfix**
 - Repair button change request #575
