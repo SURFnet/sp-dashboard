@@ -93,6 +93,8 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
+        } else {
+            $metadata['revisionnote'] = JsonGenerator::DEFAULT_CREATED_REVISION_NOTE;
         }
 
         return $metadata;
@@ -114,7 +116,10 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
 
         if ($entity->hasComments()) {
             $payload['note'] = $entity->getComments();
+        } else {
+            $payload['note'] = JsonGenerator::DEFAULT_CHANGE_REQUEST_NOTE;
         }
+
         return $payload;
     }
 

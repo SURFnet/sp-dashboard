@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
+use PHPUnit\Util\Json;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
@@ -95,6 +96,8 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
         if ($entity->hasComments()) {
             $payload['note'] = $entity->getComments();
+        } else {
+            $payload['note'] = JsonGenerator::DEFAULT_CHANGE_REQUEST_NOTE;
         }
         return $payload;
         return $differences->getDiff();
@@ -122,7 +125,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         EntityDiff $differences,
         string $workflowState
     ): array {
-
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'state' => $workflowState,
@@ -132,6 +134,8 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         $this->setExcludeFromPush($metadata, $entity, true);
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
+        } else {
+            $metadata['revisionnote'] = JsonGenerator::DEFAULT_CHANGED_REVISION_NOTE;
         }
 
         return $metadata;

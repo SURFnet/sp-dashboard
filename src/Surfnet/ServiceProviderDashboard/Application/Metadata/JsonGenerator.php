@@ -35,6 +35,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
  */
 class JsonGenerator implements GeneratorInterface
 {
+    public const DEFAULT_CREATED_REVISION_NOTE = 'Entity created';
+    public const DEFAULT_CHANGED_REVISION_NOTE = 'Entity changed';
+    public const DEFAULT_CHANGE_REQUEST_NOTE = 'Change request';
+
     /**
      * @var ArpGenerator
      */
@@ -101,6 +105,8 @@ class JsonGenerator implements GeneratorInterface
 
         if ($entity->hasComments()) {
             $payload['note'] = $entity->getComments();
+        } else {
+            $payload['note'] = self::DEFAULT_CHANGE_REQUEST_NOTE;
         }
         return $payload;
     }
@@ -128,6 +134,8 @@ class JsonGenerator implements GeneratorInterface
 
         if ($entity->hasComments()) {
             $metadata['revisionnote'] = $entity->getComments();
+        } else {
+            $metadata['revisionnote'] = self::DEFAULT_CREATED_REVISION_NOTE;
         }
 
         return $metadata;
@@ -160,8 +168,9 @@ class JsonGenerator implements GeneratorInterface
                 $metadata['state'] = $workflowState;
                 if ($entity->hasComments()) {
                     $metadata['revisionnote'] = $entity->getComments();
+                } else {
+                    $metadata['revisionnote'] = self::DEFAULT_CHANGED_REVISION_NOTE;
                 }
-
                 // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
                 // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0
                 // by one of the administrators. If the entity was included for push, we make sure it is not overridden.

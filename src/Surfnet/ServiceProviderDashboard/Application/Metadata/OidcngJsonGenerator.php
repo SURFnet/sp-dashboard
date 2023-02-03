@@ -100,6 +100,8 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         if ($entity->hasComments()) {
             $payload['note'] = $entity->getComments();
+        } else {
+            $payload['note'] = JsonGenerator::DEFAULT_CREATED_REVISION_NOTE;
         }
         return $payload;
     }
@@ -150,6 +152,8 @@ class OidcngJsonGenerator implements GeneratorInterface
 
                 if ($entity->hasComments()) {
                     $metadata['revisionnote'] = $entity->getComments();
+                } else {
+                    $metadata['revisionnote'] = JsonGenerator::DEFAULT_CHANGED_REVISION_NOTE;
                 }
                 return $metadata;
         }
