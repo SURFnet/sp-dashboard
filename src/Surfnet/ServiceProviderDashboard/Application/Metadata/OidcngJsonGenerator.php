@@ -18,10 +18,12 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
+use PHPUnit\TextUI\XmlConfiguration\Constant;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
@@ -98,11 +100,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             ],
         ];
 
-        if ($entity->hasComments()) {
-            $payload['note'] = $entity->getComments();
-        } else {
-            $payload['note'] = JsonGenerator::DEFAULT_CREATED_REVISION_NOTE;
-        }
+        $payload['note'] = $entity->getRevisionNote();
         return $payload;
     }
 
@@ -121,9 +119,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
         $metadata += $this->generateAllowedResourceServers($entity);
 
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }
@@ -150,11 +146,8 @@ class OidcngJsonGenerator implements GeneratorInterface
                 $metadata += $this->generateAllowedResourceServers($entity);
                 $this->setExcludeFromPush($metadata, $entity, true);
 
-                if ($entity->hasComments()) {
-                    $metadata['revisionnote'] = $entity->getComments();
-                } else {
-                    $metadata['revisionnote'] = JsonGenerator::DEFAULT_CHANGED_REVISION_NOTE;
-                }
+                $metadata['revisionnote'] = $entity->getRevisionNote();
+
                 return $metadata;
         }
     }

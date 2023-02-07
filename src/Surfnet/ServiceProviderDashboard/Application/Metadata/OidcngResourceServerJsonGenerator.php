@@ -94,13 +94,9 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             ],
         ];
 
-        if ($entity->hasComments()) {
-            $payload['note'] = $entity->getComments();
-        } else {
-            $payload['note'] = JsonGenerator::DEFAULT_CHANGE_REQUEST_NOTE;
-        }
+        $payload['note'] = $entity->getRevisionNote();
+
         return $payload;
-        return $differences->getDiff();
     }
 
     private function generateDataForNewEntity(ManageEntity $entity, $workflowState)
@@ -114,9 +110,8 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             'metaDataFields' => $this->generateMetadataFields($entity),
         ];
 
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
+
         return $metadata;
     }
 
@@ -132,11 +127,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
         $metadata += $differences->getDiff();
         $this->setExcludeFromPush($metadata, $entity, true);
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        } else {
-            $metadata['revisionnote'] = JsonGenerator::DEFAULT_CHANGED_REVISION_NOTE;
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }

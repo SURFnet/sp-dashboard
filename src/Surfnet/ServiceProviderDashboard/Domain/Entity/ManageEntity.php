@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
+use SebastianBergmann\Type\UnknownType;
+use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
@@ -26,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\UnknownTypeException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use function in_array;
 
@@ -39,6 +42,10 @@ use function in_array;
  */
 class ManageEntity
 {
+    private const CREATED_REVISION_NOTE = 'Entity created';
+    private const CHANGED_REVISION_NOTE = 'Entity changed';
+    private const CHANGE_REQUEST_NOTE = 'Change request';
+
     private $id;
 
     /**
@@ -362,5 +369,24 @@ class ManageEntity
         bool $isCopy
     ) {
         return $isCopy || ($this->isStatusPublicationRequested() && $this->isProduction());
+    }
+
+    public function getRevisionNote(): string
+    {
+        if ($this->hasComments()) {
+            return $this->getComments();
+        }
+
+        // New entity
+        if ($this->id === null) {
+            return self::CREATED_REVISION_NOTE;
+        }
+
+        // Existing entity, but not published
+        if (!$this->isStatusPublicationRequested()) {
+            return self::CHANGED_REVISION_NOTE;
+        }
+
+        return self::CHANGE_REQUEST_NOTE;
     }
 }
