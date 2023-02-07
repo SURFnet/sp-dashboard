@@ -111,6 +111,7 @@
       "@droptestdb",
       "@createtestdb"
     ],
+    "jest": "./ci/qa/jest",
     "jscpd": "./ci/qa/jscpd",
     "phpcs": "./ci/qa/phpcs",
     "phpcs_tests": "./ci/qa/phpcs_tests",
