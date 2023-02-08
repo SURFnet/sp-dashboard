@@ -151,4 +151,23 @@ class ManageEntityTest extends MockeryTestCase
         $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_published.json'), true));
         $this->assertSame('Change request', $entity->getRevisionNote());
     }
+
+    public function test_it_has_entity_created_revision_notes_for_a_test_entity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_new_test_entity.json'), true));
+        $this->assertSame('Entity created', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_entity_changed_revision_notes_for_a_test_entity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_changed_test_entity.json'), true));
+        $entity->setStatus(Constants::STATE_PUBLICATION_REQUESTED);
+        $this->assertSame('Entity changed', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_changed_request_revision_notes_for_a_test_entity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_published_test_entity.json'), true));
+        $this->assertSame('Change request', $entity->getRevisionNote());
+    }
 }
