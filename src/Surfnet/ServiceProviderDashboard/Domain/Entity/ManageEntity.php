@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
-use SebastianBergmann\Type\UnknownType;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
@@ -28,7 +26,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngResourceServerClient;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
-use Surfnet\ServiceProviderDashboard\Domain\Exception\UnknownTypeException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SecretInterface;
 use function in_array;
 

@@ -62,7 +62,7 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertSame('Technical Support', $contact->getSurName());
         $this->assertSame('support@surfconext.nl', $contact->getEmail());
         $this->assertSame('', $contact->getPhone());
-        $this->assertSame('Entity changed', $entity->getRevisionNote());
+        $this->assertSame('Change request', $entity->getRevisionNote());
     }
 
     public function test_diff_saml()
@@ -81,7 +81,7 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertArrayHasKey('arp', $diffResults);
         // Bothe attributes changed
         $this->assertCount(2, $diffResults['arp']['attributes']);
-        $this->assertSame('Entity changed', $entity->getRevisionNote());
+        $this->assertSame('Change request', $entity->getRevisionNote());
 
     }
 
@@ -106,7 +106,7 @@ class ManageEntityTest extends MockeryTestCase
         // Even though only one item is changed, both items are part of the diff as the redirect URLS are set in a
         // 'provide everything' manner.
         $this->assertCount(2, $diffResults['metaDataFields.redirectUrls']);
-        $this->assertSame('Entity changed', $entity->getRevisionNote());
+        $this->assertSame('Change request', $entity->getRevisionNote());
 
     }
 
@@ -146,9 +146,9 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertSame('Entity changed', $entity->getRevisionNote());
     }
 
-    public function test_it_has_changed_request_revision_notes_for_a_publisched_state()
+    public function test_it_has_changed_request_revision_notes_for_a_published_state()
     {
-        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_changed_request.json'), true));
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_published.json'), true));
         $this->assertSame('Change request', $entity->getRevisionNote());
     }
 }
