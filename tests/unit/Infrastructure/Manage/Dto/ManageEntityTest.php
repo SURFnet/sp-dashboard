@@ -124,9 +124,6 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertFalse($entity->isRequestedProductionEntity(false));
     }
 
-    /**
-     * @throws UnknownTypeException
-     */
     public function test_it_has_revision_notes()
     {
         $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
@@ -136,9 +133,22 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertSame('another comment on entity', $entity->getRevisionNote());
     }
 
-    public function test_it_has_default_revision_notes()
+    public function test_it_has_entity_created_revision_notes_for_a_requested_state()
     {
-        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_new_entity.json'), true));
+        $this->assertSame('Entity created', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_entity_changed_revision_notes_for_a_requested_state()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_changed_entity.json'), true));
+        $entity->setStatus(Constants::STATE_PUBLICATION_REQUESTED);
         $this->assertSame('Entity changed', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_changed_request_revision_notes_for_a_publisched_state()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_changed_request.json'), true));
+        $this->assertSame('Change request', $entity->getRevisionNote());
     }
 }

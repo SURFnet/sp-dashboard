@@ -377,13 +377,13 @@ class ManageEntity
             return $this->getComments();
         }
 
-        // New entity
-        if ($this->id === null) {
+        // New entity?
+        if (!$this->isManageEntity()) {
             return self::CREATED_REVISION_NOTE;
         }
 
         // Existing entity, but not published
-        if (!$this->isStatusPublicationRequested()) {
+        if ($this->isStatusPublicationRequested()) {
             return self::CHANGED_REVISION_NOTE;
         }
 
