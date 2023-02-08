@@ -261,7 +261,7 @@ class ManageEntity
     /**
      * @return bool
      */
-    public function hasComments(): bool
+    private function hasComments(): bool
     {
         return !(empty($this->comments));
     }
@@ -346,7 +346,7 @@ class ManageEntity
     {
         $data = [];
         $data['id'] = $this->id;
-        $data['revisionnote'] = $this->getComments();
+        $data['revisionnote'] = $this->getRevisionNote();
         $data['environment'] = $this->environment;
         $data = $this->metaData->asArray();
         $data += $this->attributes->asArray();
