@@ -87,14 +87,14 @@ class WebTestCase extends PantherTestCase
     public function setUp(): void
     {
         self::ensureKernelShutdown();
+//        $this->client = Client::createChromeClient(null, ['--headless', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox']);
 
         $chromeOptions = new ChromeOptions();
-        $chromeOptions->addArguments(['--disable-dev-shm-usage', '--disable-gpu',  '--headless', '--no-sandbox']);
-
+        $chromeOptions->addArguments(['--disable-dev-shm-usage', '--disable-gpu', '--headless', '--no-sandbox']);
         $this->client = Client::createSeleniumClient(
             'http://test-browser:4444/wd/hub',
             $chromeOptions->toCapabilities(),
-            'https://spdashboard.vm.openconext.org',
+            'https://spdashboard.vm.openconext.org'
         );
 
         $this->testQueryClient = self::getContainer()
@@ -116,16 +116,6 @@ class WebTestCase extends PantherTestCase
         $this->teamsQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient');
     }
-
-//    public static function setUpBeforeClass(): void
-//    {
-//        exec('cd /var/www/html && composer dump-env test', $output, $resultCode);
-//    }
-//
-//    public static function tearDownAfterClass(): void
-//    {
-//        exec('rm /var/www/html/.env.local.php', $output, $resultCode);
-//    }
 
     protected function registerManageEntity(
         string $env,
