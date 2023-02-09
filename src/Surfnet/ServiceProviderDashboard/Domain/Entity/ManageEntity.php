@@ -43,8 +43,6 @@ class ManageEntity
     private const CHANGED_REVISION_NOTE = 'Entity changed';
     private const CHANGE_REQUEST_NOTE = 'Change request';
 
-    private $id;
-
     /**
      * @var string
      */
