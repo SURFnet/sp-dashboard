@@ -1,3 +1,7 @@
+## 4.4.4
+**Bugfix**
+- Add default text for revision notes #583
+
 ## 4.4.3
 **Bugfix**
 - Repair positioning of plus button #578
