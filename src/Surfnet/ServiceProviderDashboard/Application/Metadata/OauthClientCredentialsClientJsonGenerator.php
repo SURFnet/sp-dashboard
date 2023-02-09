@@ -91,9 +91,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
         $metadata += $this->generateAllowedResourceServers($entity);
 
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }
@@ -112,9 +110,8 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
             ],
         ];
 
-        if ($entity->hasComments()) {
-            $payload['note'] = $entity->getComments();
-        }
+        $payload['note'] = $entity->getRevisionNote();
+
         return $payload;
     }
 
@@ -137,9 +134,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
                 $metadata['state'] = $workflowState;
                 $metadata += $this->generateAllowedResourceServers($entity);
                 $this->setExcludeFromPush($metadata, $entity, true);
-                if ($entity->hasComments()) {
-                    $metadata['revisionnote'] = $entity->getComments();
-                }
+                $metadata['revisionnote'] = $entity->getRevisionNote();
                 return $metadata;
         }
     }

@@ -39,6 +39,10 @@ use function in_array;
  */
 class ManageEntity
 {
+    private const CREATED_REVISION_NOTE = 'Entity created';
+    private const CHANGED_REVISION_NOTE = 'Entity changed';
+    private const CHANGE_REQUEST_NOTE = 'Change request';
+
     private $id;
 
     /**
@@ -257,7 +261,7 @@ class ManageEntity
     /**
      * @return bool
      */
-    public function hasComments(): bool
+    private function hasComments(): bool
     {
         return !(empty($this->comments));
     }
@@ -342,7 +346,7 @@ class ManageEntity
     {
         $data = [];
         $data['id'] = $this->id;
-        $data['revisionnote'] = $this->getComments();
+        $data['revisionnote'] = $this->getRevisionNote();
         $data['environment'] = $this->environment;
         $data = $this->metaData->asArray();
         $data += $this->attributes->asArray();
@@ -362,5 +366,24 @@ class ManageEntity
         bool $isCopy
     ) {
         return $isCopy || ($this->isStatusPublicationRequested() && $this->isProduction());
+    }
+
+    public function getRevisionNote(): string
+    {
+        if ($this->hasComments()) {
+            return $this->getComments();
+        }
+
+        // New entity?
+        if (!$this->isManageEntity()) {
+            return self::CREATED_REVISION_NOTE;
+        }
+
+        // Existing entity, but not published
+        if ($this->isStatusPublicationRequested()) {
+            return self::CHANGED_REVISION_NOTE;
+        }
+
+        return self::CHANGE_REQUEST_NOTE;
     }
 }

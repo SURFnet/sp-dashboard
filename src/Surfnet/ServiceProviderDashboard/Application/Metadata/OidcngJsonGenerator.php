@@ -98,9 +98,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             ],
         ];
 
-        if ($entity->hasComments()) {
-            $payload['note'] = $entity->getComments();
-        }
+        $payload['note'] = $entity->getRevisionNote();
         return $payload;
     }
 
@@ -119,9 +117,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
         $metadata += $this->generateAllowedResourceServers($entity);
 
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }
@@ -148,9 +144,8 @@ class OidcngJsonGenerator implements GeneratorInterface
                 $metadata += $this->generateAllowedResourceServers($entity);
                 $this->setExcludeFromPush($metadata, $entity, true);
 
-                if ($entity->hasComments()) {
-                    $metadata['revisionnote'] = $entity->getComments();
-                }
+                $metadata['revisionnote'] = $entity->getRevisionNote();
+
                 return $metadata;
         }
     }
