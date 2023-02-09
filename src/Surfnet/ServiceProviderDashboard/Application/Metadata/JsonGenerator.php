@@ -81,9 +81,7 @@ class JsonGenerator implements GeneratorInterface
             ],
         ];
 
-        if ($entity->hasComments()) {
-            $payload['note'] = $entity->getComments();
-        }
+        $payload['note'] = $entity->getRevisionNote();
         return $payload;
     }
 
@@ -107,10 +105,7 @@ class JsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
         $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
 
-
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }
@@ -140,9 +135,7 @@ class JsonGenerator implements GeneratorInterface
                 }
                 $metadata = $this->generateArp($metadata, $entity);
                 $metadata['state'] = $workflowState;
-                if ($entity->hasComments()) {
-                    $metadata['revisionnote'] = $entity->getComments();
-                }
+                $metadata['revisionnote'] = $entity->getRevisionNote();
 
                 // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
                 // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0
