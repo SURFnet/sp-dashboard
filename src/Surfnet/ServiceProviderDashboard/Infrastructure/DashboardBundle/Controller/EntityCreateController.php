@@ -159,6 +159,12 @@ class EntityCreateController extends AbstractController
             );
         }
 
+        if (!$service->isClientCredentialClientsEnabled() && $type === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+            throw $this->createAccessDeniedException(
+                'You cannot create client credential clients entities because they are not allowed for this service'
+            );
+        }
+
         $form = $this->entityTypeFactory->createCreateForm($type, $service, $targetEnvironment);
         $command = $form->getData();
 
