@@ -55,7 +55,11 @@ class EntityPublishedController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
+        $parameters = [
+            'entityName' => $entity->getMetaData()->getNameEn(),
+            'showOidcPopup' => false,
+            'publishedEntity' => $entity
+        ];
 
         if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             return $this->render('@Dashboard/EntityPublished/publishedTest.html.twig', $parameters);

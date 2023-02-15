@@ -236,12 +236,12 @@ trait EntityControllerTrait
     private function findDestinationForRedirectToCreateConnectionRequest(
         PublishProductionCommandInterface $publishEntityCommand
     ): string {
-    
         switch (true) {
             case $publishEntityCommand instanceof EntityChangeRequestCommand:
                 return 'entity_change_request';
             case $publishEntityCommand instanceof PublishEntityProductionCommand:
-                if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
+                if ($publishEntityCommand->getManageEntity()->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED &&
+                    $this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
                     return 'entity_published_create_connection_request';
                 }
                 return 'entity_published_production';
