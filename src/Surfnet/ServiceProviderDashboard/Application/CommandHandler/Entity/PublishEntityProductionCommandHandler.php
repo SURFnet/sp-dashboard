@@ -87,8 +87,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             );
             $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
             if (array_key_exists('id', $publishResponse)) {
-                // Set entity status to published
-                $entity->setStatus(Constants::STATE_PUBLISHED);
                 $entity->setId($publishResponse['id']);
 
                 $this->logger->info(

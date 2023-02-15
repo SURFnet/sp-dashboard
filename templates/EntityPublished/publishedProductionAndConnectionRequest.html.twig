@@ -5,4 +5,9 @@
 
     {{ 'entity.published_production_and_sent_connection_request.text.html'|trans({'%entityName%': entityName})|wysiwyg }}
 
+    {% if showOidcPopup %}
+        <div class="modal" id="oidc-published-popup">
+            {{ render(controller('DashboardBundle:EntityPublished:oidcConfirmationModal', {'entity': publishedEntity})) }}
+        </div>
+    {% endif %}
 {% endblock %}
