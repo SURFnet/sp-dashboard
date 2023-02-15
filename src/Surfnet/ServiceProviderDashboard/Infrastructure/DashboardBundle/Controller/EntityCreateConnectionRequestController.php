@@ -22,8 +22,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerFromOverviewType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -71,7 +72,11 @@ class EntityCreateConnectionRequestController extends Controller
 
         if ($form->isSubmitted()) {
             $entity = $this->entityService->getManageEntityById($manageId, $environment);
-            $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
+            $parameters = [
+                'entityName' => $entity->getMetaData()->getNameEn(),
+                'showOidcPopup' => $this->showOidcPopup($entity),
+                'publishedEntity' => $entity
+            ];
 
             if ($this->isCancelAction($form) || !count($command->getConnectionRequests())) {
                 return $this->render('@Dashboard/EntityPublished/publishedProduction.html.twig', $parameters);
@@ -79,7 +84,7 @@ class EntityCreateConnectionRequestController extends Controller
 
             if ($form->isValid()) {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('publish_to_production_and_send_connection_request');
+                return $this->redirectToRoute('publish_to_production_and_send_connection_request', $parameters);
             }
         }
 
@@ -156,5 +161,18 @@ class EntityCreateConnectionRequestController extends Controller
             return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
         }
         return $this->redirectToRoute('service_overview');
+    }
+
+    private function showOidcPopup(?ManageEntity $publishedEntity)
+    {
+        if (is_null($publishedEntity)) {
+            return false;
+        }
+        $protocol = $publishedEntity->getProtocol()->getProtocol();
+        $protocolUsesSecret = $protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
+            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
+            $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
+
+        return $publishedEntity && $protocolUsesSecret && $publishedEntity->getOidcClient()->getClientSecret();
     }
 }
