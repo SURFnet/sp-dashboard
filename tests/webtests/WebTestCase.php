@@ -23,8 +23,9 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\WebDriverBy;
 use RuntimeException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
@@ -37,7 +38,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\S
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use function dd;
@@ -47,7 +48,7 @@ class WebTestCase extends PantherTestCase
     /**
      * @var \Symfony\Component\Panther\Client;
      */
-    protected $client;
+    protected static $client;
     /**
      * @var QueryManageRepository
      */
@@ -84,26 +85,58 @@ class WebTestCase extends PantherTestCase
     /** @var QueryTeamsRepository&FakeTeamsQueryClient */
     protected $teamsQueryClient;
 
+    public static function setUpBeforeClass(): void
+    {
+        exec('cd /var/www/html && composer dump-env test', $output, $resultCode);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        exec('rm /var/www/html/.env.local.php', $output, $resultCode);
+    }
+
+    public function dumpHtml(bool $screenShot = false)
+    {
+        static $no = 0;
+        if ($screenShot) {
+            self::$client->takeScreenshot(sprintf('/var/www/html/debug%d.png', $no));
+        }
+        DebugFile::dumpHtml(self::$client->getCrawler()->html(), sprintf('debug%d.html', $no++));
+    }
+
     public function setUp(): void
     {
         self::ensureKernelShutdown();
-//        $this->client = Client::createChromeClient(null, ['--headless', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox']);
+
+        // stop before setup the client, otherwise the client will hang up until a time-out occurs
+        self::stopWebServer();
 
         $chromeOptions = new ChromeOptions();
-        $chromeOptions->addArguments(['--disable-dev-shm-usage', '--disable-gpu', '--headless', '--no-sandbox']);
-        $this->client = Client::createSeleniumClient(
+        $chromeOptions->addArguments([
+                '--headless',
+                '--no-sandbox',
+                '--browser-test',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--window-size=1920,1080',
+            ]
+        );
+        $capabilities = $chromeOptions->toCapabilities();
+        $capabilities->setCapability('acceptSslCerts', true);
+        $capabilities->setCapability('acceptInsecureCerts', true);
+        self::$client = Client::createSeleniumClient(
             'http://test-browser:4444/wd/hub',
-            $chromeOptions->toCapabilities(),
+            $capabilities,
             'https://spdashboard.vm.openconext.org'
         );
 
         $this->testQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
-        $this->prodQueryClient =  self::getContainer()
+        $this->prodQueryClient = self::getContainer()
             ->get('surfnet.manage.client.query_client.prod_environment');
         $this->prodIdPClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient');
-        $this->testIdPClient =  self::getContainer()
+        $this->testIdPClient = self::getContainer()
             ->get('surfnet.manage.client.identity_provider_client.test_environment');
         $this->prodPublicationClient = self::getContainer()
             ->get('surfnet.manage.client.publish_client.prod_environment');
@@ -127,9 +160,9 @@ class WebTestCase extends PantherTestCase
         ?string $teamName = null
     ) {
         switch ($protocol) {
-            case "saml20_sp":
-            case "oidc10_rp":
-            case "oauth20_ccc":
+            case 'saml20_sp':
+            case 'oidc10_rp':
+            case 'oauth20_ccc':
                 $this->registerSp(
                     $env,
                     $protocol,
@@ -140,7 +173,7 @@ class WebTestCase extends PantherTestCase
                     $teamName
                 );
                 break;
-            case "saml20_idp":
+            case 'saml20_idp':
                 $this->registerIdP($env, $protocol, $id, $name, $entityId);
                 break;
         }
@@ -149,10 +182,10 @@ class WebTestCase extends PantherTestCase
     protected function registerManageEntityRaw(string $env, string $json)
     {
         switch ($env) {
-            case "production":
+            case 'production':
                 $this->prodQueryClient->registerEntityRaw($json);
                 break;
-            case "test":
+            case 'test':
                 $this->testQueryClient->registerEntityRaw($json);
                 break;
             default:
@@ -160,10 +193,17 @@ class WebTestCase extends PantherTestCase
         }
     }
 
-    private function registerSp(string $env, string $protocol, string $id, string $name, string $entityId, ?string $metadataUrl = null, ?string $teamName = null)
-    {
+    private function registerSp(
+        string $env,
+        string $protocol,
+        string $id,
+        string $name,
+        string $entityId,
+        ?string $metadataUrl = null,
+        ?string $teamName = null
+    ) {
         switch ($env) {
-            case "production":
+            case 'production':
                 $this->prodQueryClient->registerEntity(
                     $protocol,
                     $id,
@@ -173,7 +213,7 @@ class WebTestCase extends PantherTestCase
                     $teamName
                 );
                 break;
-            case "test":
+            case 'test':
                 $this->testQueryClient->registerEntity(
                     $protocol,
                     $id,
@@ -191,7 +231,7 @@ class WebTestCase extends PantherTestCase
     private function registerIdP(string $env, string $protocol, string $id, string $name, string $entityId)
     {
         switch ($env) {
-            case "production":
+            case 'production':
                 $this->prodIdPClient->registerEntity(
                     $protocol,
                     $id,
@@ -199,7 +239,7 @@ class WebTestCase extends PantherTestCase
                     $name
                 );
                 break;
-            case "test":
+            case 'test':
                 $this->testIdPClient->registerEntity(
                     $protocol,
                     $id,
@@ -212,7 +252,7 @@ class WebTestCase extends PantherTestCase
         }
     }
 
-    protected function loadFixtures()
+    protected function loadFixtures(): void
     {
         $em = $this->getEntityManager();
 
@@ -227,12 +267,12 @@ class WebTestCase extends PantherTestCase
         // autoincrement sequence. That is explicitly reset with the query below.
         // Preferably we'de use $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE); but that does not seem
         // to work with SQLite
-        //$em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
+        $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
         $executor->execute($loader->getFixtures());
     }
 
-    protected function clearFixtures()
+    protected function clearFixtures(): void
     {
         $em = $this->getEntityManager();
 
@@ -241,19 +281,12 @@ class WebTestCase extends PantherTestCase
         $executor->execute([]);
     }
 
-    /**
-     * @return EntityManager
-     */
-    private function getEntityManager()
+    private function getEntityManager(): EntityManager
     {
         return self::getContainer()->get('doctrine')->getManager();
     }
 
-    /**
-     * @param string $role
-     * @param Service[] $services
-     */
-    protected function logIn($role = 'ROLE_ADMINISTRATOR', array $services = [])
+    protected function logIn(string $role = 'ROLE_ADMINISTRATOR', array $services = [])
     {
         $contact = new Contact('webtest:nameid:johndoe', 'johndoe@localhost', 'John Doe');
 
@@ -266,9 +299,8 @@ class WebTestCase extends PantherTestCase
         }
         $contact->assignRole($role);
 
-        $crawler = $this->client->request('GET', 'https://spdashboard.vm.openconext.org');
+        $crawler = self::$client->request('GET', 'https://spdashboard.vm.openconext.org');
 
-        DebugFile::dumpHtml($crawler->html(),'debugfile6.html');
         $form = $crawler
             ->selectButton('Log in')
             ->form();
@@ -278,54 +310,41 @@ class WebTestCase extends PantherTestCase
             'password' => ''
         ]);
 
-        $crawler = $this->client->submit($form);
+        return self::$client->submit($form);
     }
 
     /**
      * @param $serviceName
-     * @return \Symfony\Component\DomCrawler\Crawler
-     * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
+     * @return Crawler
+     * @throws InvalidArgumentException
      */
-    protected function switchToService($serviceName)
+    protected function switchToService($serviceName): \Symfony\Component\DomCrawler\Crawler
     {
-        $crawler = $this->client->request('GET', 'https://spdashboard.vm.openconext.org');
-
-        DebugFile::dumpHtml($crawler->html(), 'debugfile5.html');
-
-        //$this->client->waitFor('service_switcher[selected_service_id]');
-
-        $form = $crawler->filter('.service-switcher form')->form();
-
         $service = $this->getServiceRepository()->findByName($serviceName);
 
-        //$this->client->waitFor('service_switcher[selected_service_id]');
+        $crawler = self::$client->request('GET', 'https://spdashboard.vm.openconext.org');
 
-        $form['service_switcher[selected_service_id]']->select($service->getId());
+        // Select the service drop down
+        $crawler->filter('.service-switcher form')->click();
 
-        $this->client->submit($form);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after selecting a service'
+        // Select the service option
+        $path = sprintf(
+            "//li[contains(@id,'-%s')]",
+            $service->getId()
         );
+        $crawler->findElement(WebDriverBy::xpath($path))->click();
 
-        $this->client->followRedirects();
+        self::$client->followRedirects();
 
         return $crawler;
     }
 
-    /**
-     * @return ServiceRepository
-     */
-    protected function getServiceRepository()
+    protected function getServiceRepository(): ServiceRepository
     {
         return self::getContainer()->get(ServiceRepository::class);
     }
 
-    /**
-     * @return AuthorizationService
-     */
-    protected function getAuthorizationService()
+    protected function getAuthorizationService(): AuthorizationService
     {
         return self::getContainer()->get(AuthorizationService::class);
     }
