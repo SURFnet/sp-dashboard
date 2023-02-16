@@ -1,3 +1,7 @@
+## 4.4.5
+**Bugfix**
+- Show secrets modal oidc after connection request #584
+
 ## 4.4.4
 **Bugfix**
 - Add default text for revision notes #583
