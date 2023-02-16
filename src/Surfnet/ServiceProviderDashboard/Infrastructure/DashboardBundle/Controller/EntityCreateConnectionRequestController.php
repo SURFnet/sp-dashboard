@@ -84,7 +84,7 @@ class EntityCreateConnectionRequestController extends Controller
 
             if ($form->isValid()) {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('publish_to_production_and_send_connection_request', $parameters);
+                return $this->render('@Dashboard/EntityPublished/sendConnectionRequest.html.twig', $parameters);
             }
         }
 
@@ -137,19 +137,14 @@ class EntityCreateConnectionRequestController extends Controller
      */
     public function sendConnectionRequestAction()
     {
-        return $this->render(
-            '@Dashboard/EntityPublished/sendConnectionRequest.html.twig'
-        );
-    }
+        $parameters = [
+            'entityName' => '',
+            'showOidcPopup' => false,
+            'publishedEntity' => null
+        ];
 
-    /**
-     * @Method("GET")
-     * @Route("/entity/send-connection-request", name="publish_to_production_and_send_connection_request")
-     */
-    public function publishedToProductionAndSendConnectionRequest(array $parameters)
-    {
         return $this->render(
-            '@Dashboard/EntityPublished/publishedProductionAndConnectionRequest.html.twig',
+            '@Dashboard/EntityPublished/sendConnectionRequest.html.twig',
             $parameters
         );
     }
