@@ -26,8 +26,8 @@ use function json_decode;
 
 class FakePublishEntityClient implements PublishEntityRepositoryInterface
 {
-    private $publishResponses;
-    private $pushOk = true;
+    private array $publishResponses = [];
+    private bool $pushOk = true;
 
     public function registerPublishResponse(string $entityId, string $response)
     {
