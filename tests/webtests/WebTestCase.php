@@ -18,12 +18,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Closure;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverBy;
+use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
@@ -38,17 +40,14 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\S
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
-use function dd;
+use Symfony\Component\Panther\ServerExtension;
 
 class WebTestCase extends PantherTestCase
 {
-    /**
-     * @var \Symfony\Component\Panther\Client;
-     */
-    protected static $client;
     /**
      * @var QueryManageRepository
      */
@@ -99,18 +98,13 @@ class WebTestCase extends PantherTestCase
     {
         static $no = 0;
         if ($screenShot) {
-            self::$client->takeScreenshot(sprintf('/var/www/html/debug%d.png', $no));
+            self::$pantherClient->takeScreenshot(sprintf('/var/www/html/debug%d.png', $no));
         }
-        DebugFile::dumpHtml(self::$client->getCrawler()->html(), sprintf('debug%d.html', $no++));
+        DebugFile::dumpHtml(self::$pantherClient->getCrawler()->html(), sprintf('debug%d.html', $no++));
     }
 
     public function setUp(): void
     {
-        self::ensureKernelShutdown();
-
-        // stop before setup the client, otherwise the client will hang up until a time-out occurs
-        self::stopWebServer();
-
         $chromeOptions = new ChromeOptions();
         $chromeOptions->addArguments([
                 '--headless',
@@ -124,11 +118,17 @@ class WebTestCase extends PantherTestCase
         $capabilities = $chromeOptions->toCapabilities();
         $capabilities->setCapability('acceptSslCerts', true);
         $capabilities->setCapability('acceptInsecureCerts', true);
-        self::$client = Client::createSeleniumClient(
+        self::$pantherClient = self::$pantherClients[0] = Client::createSeleniumClient(
             'http://test-browser:4444/wd/hub',
             $capabilities,
             'https://spdashboard.vm.openconext.org'
         );
+        ServerExtension::registerClient(self::$pantherClient);
+        // you can avoid having to use Closure::bind if you use PantherTestCaseTrait directly
+        Closure::bind(function(AbstractBrowser $client) {
+            // contrary to the name, calling it with argument will set local static variable inside getClient method
+            self::getClient($client);
+        }, null, PantherTestCase::class)(self::$pantherClient);
 
         $this->testQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
@@ -140,8 +140,10 @@ class WebTestCase extends PantherTestCase
             ->get('surfnet.manage.client.identity_provider_client.test_environment');
         $this->prodPublicationClient = self::getContainer()
             ->get('surfnet.manage.client.publish_client.prod_environment');
+        $this->prodPublicationClient->reset();
         $this->testPublicationClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient');
+        $this->testPublicationClient->reset();
         $this->testDeleteClient = self::getContainer()
             ->get('surfnet.manage.client.delete_client.test_environment');
         $this->prodDeleteClient = self::getContainer()
@@ -265,7 +267,7 @@ class WebTestCase extends PantherTestCase
 
         // The sequence of the Service table is important, purger only removes data, does not reset the
         // autoincrement sequence. That is explicitly reset with the query below.
-        // Preferably we'de use $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE); but that does not seem
+        // Preferably we'd use $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE); but that does not seem
         // to work with SQLite
         $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
@@ -299,7 +301,7 @@ class WebTestCase extends PantherTestCase
         }
         $contact->assignRole($role);
 
-        $crawler = self::$client->request('GET', 'https://spdashboard.vm.openconext.org');
+        $crawler = self::$pantherClient->request('GET', 'https://spdashboard.vm.openconext.org');
 
         $form = $crawler
             ->selectButton('Log in')
@@ -310,7 +312,7 @@ class WebTestCase extends PantherTestCase
             'password' => ''
         ]);
 
-        return self::$client->submit($form);
+        return self::$pantherClient->submit($form);
     }
 
     /**
@@ -322,7 +324,7 @@ class WebTestCase extends PantherTestCase
     {
         $service = $this->getServiceRepository()->findByName($serviceName);
 
-        $crawler = self::$client->request('GET', 'https://spdashboard.vm.openconext.org');
+        $crawler = self::$pantherClient->request('GET', 'https://spdashboard.vm.openconext.org');
 
         // Select the service drop down
         $crawler->filter('.service-switcher form')->click();
@@ -334,10 +336,27 @@ class WebTestCase extends PantherTestCase
         );
         $crawler->findElement(WebDriverBy::xpath($path))->click();
 
-        self::$client->followRedirects();
+        self::$pantherClient->followRedirects();
 
         return $crawler;
     }
+
+    protected static function assertOnPage(string $expectation, Crawler $crawler = null)
+    {
+        if (!$crawler) {
+            $crawler = self::$pantherClient->getCrawler();
+        }
+        if (!str_contains($crawler->html(), $expectation)) {
+            throw new ExpectationFailedException(
+                sprintf(
+                    'Expected text: "%s" was not found in the HTML of the current page',
+                    $expectation
+                )
+            );
+        }
+        self::assertTrue(true);
+    }
+
 
     protected function getServiceRepository(): ServiceRepository
     {

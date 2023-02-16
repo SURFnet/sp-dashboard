@@ -23,13 +23,15 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class DebugFile
 {
+    private static bool $firstTime = true;
+
     #[NoReturn]
     public static function dump(array $var, string $filename): void
     {
         ob_start();
         var_dump($var);
         $data = ob_get_clean();
-        $fp = fopen($filename, 'w');
+        $fp = fopen($filename, 'a');
         fwrite($fp, $data);
         fclose($fp);
     }
@@ -42,10 +44,13 @@ class DebugFile
     }
 
     #[NoReturn]
-    public static function dumpHtml(string $data, $filename): void
+    public static function dumpHtml(string $data, $filename, bool $newline = true): void
     {
-        $fp = fopen($filename, 'w');
+        $fp = fopen($filename, 'a');
         fwrite($fp, $data);
+        if ($newline) {
+            fwrite($fp, "\n");
+        }
         fclose($fp);
     }
 
@@ -62,7 +67,7 @@ class DebugFile
         ob_start();
         $crawler->html();
         $data = ob_get_clean();
-        $fp = fopen($filename, 'w');
+        $fp = fopen($filename, 'a');
         fwrite($fp, $data);
         fclose($fp);
         die;

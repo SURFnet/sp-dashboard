@@ -19,19 +19,31 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use RuntimeException;
+use SplFileObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
 use function array_key_exists;
+use function file_get_contents;
+use function file_put_contents;
 use function json_decode;
+use function json_encode;
 
 class FakePublishEntityClient implements PublishEntityRepositoryInterface
 {
     private array $publishResponses = [];
     private bool $pushOk = true;
+    private string $path = __DIR__ . '/../../../../var/webtest-manage.json';
+
+    public function reset()
+    {
+        $this->write([]);
+    }
 
     public function registerPublishResponse(string $entityId, string $response)
     {
-        $this->publishResponses[$entityId] = $response;
+        $data = $this->read();
+        $data[$entityId] = $response;
+        $this->write($data);
     }
 
     public function registerPushFail()
@@ -42,15 +54,26 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
     public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = '')
     {
         $entityId = $entity->getMetaData()->getEntityId();
-        if (!array_key_exists($entityId, $this->publishResponses)) {
+        $publishResponses = $this->read();
+        if (!array_key_exists($entityId, $publishResponses)) {
             throw new RuntimeException(sprintf('No pre programmed response is available for entity "%s"', $entityId));
         }
-        return json_decode($this->publishResponses[$entityId], true);
+        return json_decode($publishResponses[$entityId], true);
     }
 
     public function pushMetadata()
     {
         $response = $this->pushOk ? '{"status":"OK"}' : '{"status":"400"}';
         return json_decode($response, true);
+    }
+
+    private function read()
+    {
+        return json_decode(file_get_contents($this->path), true);
+    }
+
+    private function write(array $data)
+    {
+        file_put_contents($this->path, json_encode($data));
     }
 }

@@ -31,7 +31,7 @@ class CreatePrivacyQuestionsTest extends WebTestCase
 
         $this->logIn('ROLE_USER', [$service]);
 
-        $crawler = self::$client->request('GET', '/service/1/privacy');
+        $crawler = self::$pantherClient->request('GET', '/service/1/privacy');
 
         $this->assertEquals('GDPR related questions', $crawler->filter('h1')->first()->text());
         $formRows = $crawler->filter('div.form-row');
@@ -50,7 +50,7 @@ class CreatePrivacyQuestionsTest extends WebTestCase
 
         $this->logIn('ROLE_USER', [$service]);
 
-        $crawler = self::$client->request('GET', '/service/1/privacy');
+        $crawler = self::$pantherClient->request('GET', '/service/1/privacy');
 
         $formRows = $crawler->filter('div.form-row');
         $this->assertCount(14, $formRows);
@@ -67,11 +67,11 @@ class CreatePrivacyQuestionsTest extends WebTestCase
             'dashboard_bundle_privacy_questions_type[privacyPolicyUrl]' => 'http://example.org/privacy',
         ];
 
-        self::$client->submit($form, $formData);
-        self::$client->followRedirects();
+        self::$pantherClient->submit($form, $formData);
+        self::$pantherClient->followRedirects();
         $this->assertStringContainsString(
             'Your changes were saved!',
-            self::$client->getCrawler()->filter('div.flashMessage.info')->text()
+            self::$pantherClient->getCrawler()->filter('div.flashMessage.info')->text()
         );
     }
 }
