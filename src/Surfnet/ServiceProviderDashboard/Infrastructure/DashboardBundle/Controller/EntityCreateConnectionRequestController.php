@@ -84,7 +84,10 @@ class EntityCreateConnectionRequestController extends Controller
 
             if ($form->isValid()) {
                 $this->commandBus->handle($command);
-                return $this->render('@Dashboard/EntityPublished/sendConnectionRequest.html.twig', $parameters);
+                return $this->render(
+                    '@Dashboard/EntityPublished/publishedProductionAndConnectionRequest.html.twig',
+                    $parameters
+                );
             }
         }
 
