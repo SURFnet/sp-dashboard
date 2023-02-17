@@ -1,3 +1,7 @@
+## 4.4.6
+**Bugfix**
+- Display secrets after adding a connection request for an OIDC entity #585
+- 
 ## 4.4.5
 **Bugfix**
 - Show secrets modal oidc after connection request #584
