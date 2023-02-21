@@ -25,6 +25,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -112,7 +113,7 @@ class WebTestCase extends PantherTestCase
                 '--browser-test',
                 '--disable-dev-shm-usage',
                 '--disable-gpu',
-                '--window-size=1920,1080',
+                '--window-size=1920,1920',
             ]
         );
         $capabilities = $chromeOptions->toCapabilities();
@@ -132,8 +133,10 @@ class WebTestCase extends PantherTestCase
 
         $this->testQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient');
+        $this->testQueryClient->reset();
         $this->prodQueryClient = self::getContainer()
             ->get('surfnet.manage.client.query_client.prod_environment');
+        $this->prodQueryClient->reset();
         $this->prodIdPClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient');
         $this->testIdPClient = self::getContainer()
@@ -357,6 +360,16 @@ class WebTestCase extends PantherTestCase
         self::assertTrue(true);
     }
 
+    protected function fillFormField(WebDriverElement $form, string $targetField, string $value): void
+    {
+        $form->findElement(WebDriverBy::cssSelector($targetField))->clear();
+        $form->findElement(WebDriverBy::cssSelector($targetField))->sendKeys($value);
+    }
+
+    protected function click(WebDriverElement $form, string $targetField): void
+    {
+        $form->findElement(WebDriverBy::cssSelector($targetField))->click();
+    }
 
     protected function getServiceRepository(): ServiceRepository
     {
