@@ -19,8 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Facebook\WebDriver\WebDriverBy;
-use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CreatePrivacyQuestionsTest extends WebTestCase
 {
