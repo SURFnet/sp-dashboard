@@ -87,7 +87,7 @@ class WebTestCase extends PantherTestCase
 
     public static function setUpBeforeClass(): void
     {
-        exec('cd /var/www/html && composer dump-env test', $output, $resultCode);
+        exec('cd /var/www/html && composer dump-env test');
     }
 
     public static function tearDownAfterClass(): void
@@ -360,10 +360,20 @@ class WebTestCase extends PantherTestCase
         self::assertTrue(true);
     }
 
+    protected static function findBy(Client $client, string $cssSelector): WebDriverElement
+    {
+        return self::$pantherClient->findElement(WebDriverBy::cssSelector($cssSelector));
+    }
+
     protected function fillFormField(WebDriverElement $form, string $targetField, string $value): void
     {
         $form->findElement(WebDriverBy::cssSelector($targetField))->clear();
         $form->findElement(WebDriverBy::cssSelector($targetField))->sendKeys($value);
+    }
+
+    protected function checkFormField(WebDriverElement $form, string $targetField): void
+    {
+        $form->findElement(WebDriverBy::cssSelector($targetField))->click();
     }
 
     protected function click(WebDriverElement $form, string $targetField): void

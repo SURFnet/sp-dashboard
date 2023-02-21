@@ -18,8 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Debug;
 
+use Facebook\WebDriver\WebDriverKeys;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Panther\Client;
 
 class DebugFile
 {
@@ -71,5 +73,17 @@ class DebugFile
         fwrite($fp, $data);
         fclose($fp);
         die;
+    }
+
+    public static function takeScreenshot(Client $pantherClient)
+    {
+        $pantherClient->takeScreenshot('/var/www/html/debug.png');
+    }
+
+    public static function scrollDown(Client $pantherClient, int $times)
+    {
+        for ($i=1; $i < $times; $i++) {
+            $pantherClient->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
+        }
     }
 }
