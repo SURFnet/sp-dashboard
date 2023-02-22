@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use function array_key_exists;
 
 class FakeQueryClient implements QueryManageRepository
 {
@@ -147,7 +148,13 @@ class FakeQueryClient implements QueryManageRepository
     {
         $data = $this->read();
         foreach ($data as $id => $rawClientResult) {
-            $this->entities[$id] = ClientResult::decode($rawClientResult);
+            if (array_key_exists('protocol', $rawClientResult)) {
+                $this->entities[$id] = ClientResult::decode($rawClientResult);
+                continue;
+            }
+            if (array_key_exists('json', $rawClientResult)) {
+                $this->entities[$id] = ClientResultRaw::decode($rawClientResult);
+            }
         }
     }
 }

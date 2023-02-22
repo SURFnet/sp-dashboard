@@ -34,4 +34,8 @@ interface ClientResultInterface
     public function getId(): string;
 
     public function getEntityId(): string;
+
+    public static function decode($data): self;
+
+    public function encode(): array;
 }

@@ -51,4 +51,14 @@ class ClientResultRaw implements ClientResultInterface
         $data = json_decode($this->json, true);
         return $data['data']['entityid'];
     }
+
+    public static function decode($data): self
+    {
+        return new self($data['json']);
+    }
+
+    public function encode(): array
+    {
+        return ['json' => $this->json,];
+    }
 }
