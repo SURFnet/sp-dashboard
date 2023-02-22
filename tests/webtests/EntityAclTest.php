@@ -56,7 +56,7 @@ class EntityAclTest extends WebTestCase
             'https://engine.dev.support.surfconext.nl/authentication/idp/metadata'
         );
 
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
         $this->switchToService('SURFnet');
 
         $this->entityId = 'a8e7cffd-0409-45c7-a37a-000000000000';
@@ -65,7 +65,7 @@ class EntityAclTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/acl/{$this->serviceId}/{$this->entityId}");
+        $crawler = self::$pantherClient->request('GET', "/entity/acl/{$this->serviceId}/{$this->entityId}");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
             ->form();
