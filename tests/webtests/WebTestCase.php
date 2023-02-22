@@ -46,6 +46,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use Symfony\Component\Panther\ServerExtension;
+use function sizeof;
 
 class WebTestCase extends PantherTestCase
 {
@@ -153,6 +154,7 @@ class WebTestCase extends PantherTestCase
             ->get('surfnet.manage.client.delete_client.prod_environment');
         $this->teamsQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient');
+        $this->teamsQueryClient->reset();
     }
 
     protected function registerManageEntity(
@@ -275,6 +277,9 @@ class WebTestCase extends PantherTestCase
         $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
         $executor->execute($loader->getFixtures());
+
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', '{"teamId": 1}');
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:ibuildings.nl', '{"teamId": 2}');
     }
 
     protected function clearFixtures(): void
@@ -291,31 +296,30 @@ class WebTestCase extends PantherTestCase
         return self::getContainer()->get('doctrine')->getManager();
     }
 
-    protected function logIn(string $role = 'ROLE_ADMINISTRATOR', array $services = [])
+    protected function logOut()
     {
-        $contact = new Contact('webtest:nameid:johndoe', 'johndoe@localhost', 'John Doe');
+        self::$pantherClient->restart();
+    }
 
-        if (empty($services)) {
-            $services[] = new Service();
-        }
-
-        foreach ($services as $service) {
-            $contact->addService($service);
-        }
-        $contact->assignRole($role);
-
+    protected function logIn(Service $service = null)
+    {
         $crawler = self::$pantherClient->request('GET', 'https://spdashboard.vm.openconext.org');
 
-        $form = $crawler
-            ->selectButton('Log in')
-            ->form();
+        $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
+        $this->fillFormField($form, '#username', 'John Doe');
+        $this->fillFormField($form, '#password', 'secret');
+        // By default log in using an admin team (see .env.test > administrator_teams)
+        $teamName = 'urn:collab:admin.org:surf.nl';
+        if ($service) {
+            $teamName = $service->getTeamName();
+        }
+        $select = $crawler->filterXPath(".//select[@id='add-attribute']//option[@value='urn:mace:dir:attribute-def:isMemberOf']");
+        $select->click();
+        $isMemberOf = $crawler->filter('input[name="urn:mace:dir:attribute-def:isMemberOf"]');
+        $isMemberOf->sendKeys($teamName);
 
-        $form->setValues([
-            'username' => 'admin',
-            'password' => ''
-        ]);
-
-        return self::$pantherClient->submit($form);
+        $form->submit();
+        return self::$pantherClient->refreshCrawler();
     }
 
     /**
@@ -347,7 +351,7 @@ class WebTestCase extends PantherTestCase
     protected static function assertOnPage(string $expectation, Crawler $crawler = null)
     {
         if (!$crawler) {
-            $crawler = self::$pantherClient->getCrawler();
+            $crawler = self::$pantherClient->refreshCrawler();
         }
         if (!str_contains($crawler->html(), $expectation)) {
             throw new ExpectationFailedException(
@@ -360,7 +364,7 @@ class WebTestCase extends PantherTestCase
         self::assertTrue(true);
     }
 
-    protected static function findBy(Client $client, string $cssSelector): WebDriverElement
+    protected static function findBy(string $cssSelector): WebDriverElement
     {
         return self::$pantherClient->findElement(WebDriverBy::cssSelector($cssSelector));
     }

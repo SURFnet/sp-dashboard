@@ -86,4 +86,11 @@ class DebugFile
             $pantherClient->getKeyboard()->pressKey(WebDriverKeys::PAGE_DOWN);
         }
     }
+
+    public static function scrollUp(Client $pantherClient, int $times)
+    {
+        for ($i=1; $i < $times; $i++) {
+            $pantherClient->getKeyboard()->pressKey(WebDriverKeys::PAGE_UP);
+        }
+    }
 }

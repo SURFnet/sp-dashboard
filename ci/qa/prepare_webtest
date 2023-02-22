@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+composer test-db
+chmod 666 /tmp/spdashboard-webtests.sqlite

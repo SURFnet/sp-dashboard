@@ -29,7 +29,7 @@ class EntityCreateSamlTest extends WebTestCase
     {
         parent::setUp();
         $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
         $this->switchToService('Ibuildings B.V.');
     }
 
@@ -147,7 +147,6 @@ class EntityCreateSamlTest extends WebTestCase
 
         $formData = $this->buildValidFormData();
         self::$pantherClient->submit($form, $formData);
-        self::$pantherClient->followRedirects();
 
         $errorText = self::$pantherClient->getCrawler()->findElement(
             WebDriverBy::xpath("//li[@class='error parsley-urlstrict']")
