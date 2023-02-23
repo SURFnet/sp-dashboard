@@ -24,6 +24,7 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -107,6 +108,8 @@ class WebTestCase extends PantherTestCase
 
     public function setUp(): void
     {
+        self::stopWebServer();
+
         $chromeOptions = new ChromeOptions();
         $chromeOptions->addArguments([
                 '--headless',

@@ -19,14 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use RuntimeException;
-use SplFileObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
-use function array_key_exists;
-use function file_get_contents;
-use function file_put_contents;
-use function json_decode;
-use function json_encode;
 
 class FakePublishEntityClient implements PublishEntityRepositoryInterface
 {
