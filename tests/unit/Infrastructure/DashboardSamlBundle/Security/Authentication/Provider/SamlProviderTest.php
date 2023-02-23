@@ -20,22 +20,18 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 
 use InvalidArgumentException;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use SAML2\Assertion;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
-use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class SamlProviderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var m\MockInterface|ContactRepository
      */
@@ -61,34 +57,23 @@ class SamlProviderTest extends TestCase
         $this->logger = m::mock(LoggerInterface::class);
 
         parent::setUp();
+
     }
 
-    /**
-     * @dataProvider provideValidAdminTeams
-     */
-    public function test_administrator_teams_validation_accepts_valid_teams($validAdminTeams)
+    public function test_administrator_teams_validation_accepts_valid_teams()
     {
-        $this->assertInstanceOf(SamlProvider::class, $this->buildProvider($validAdminTeams));
+        $provider = $this->buildProvider("'urn:collab:foo:team.foobar.com','urn:collab:foo:team.foobar.com','urn:collab:foo:team.foobar.com'");
+        self::assertInstanceOf(
+            SamlProvider::class,
+            $provider
+        );
     }
 
-    /**
-     * @dataProvider provideInvalidAdminTeams
-     */
-    public function test_administrator_teams_validation_rejects_invalid_teams($invalidAdminTeams)
+    public function test_administrator_teams_validation_rejects_invalid_teams()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('All entries in the `administrator_teams` config parameter should be string.');
-        $this->buildProvider($invalidAdminTeams);
-    }
-
-    public function provideValidAdminTeams()
-    {
-        return "urn:collab:foo:team.foobar.com,urn:collab:foo:team.foobar.com,urn:collab:foo:team.foobar.com";
-    }
-
-    public function provideInvalidAdminTeams()
-    {
-        return ",345345,true,false,foo,bar";
+        $this->buildProvider(",345345,true,false,foo,bar");
     }
 
     private function buildProvider($administratorTeams)

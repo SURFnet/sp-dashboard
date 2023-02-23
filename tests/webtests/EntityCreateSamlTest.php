@@ -187,8 +187,6 @@ class EntityCreateSamlTest extends WebTestCase
 
         $formData = $this->buildValidFormData();
         self::$pantherClient->submit($form, $formData);
-        self::$pantherClient->followRedirects();
-        self::$pantherClient->takeScreenshot('/var/www/html/after.png');
 
         $pageTitle = self::$pantherClient->getCrawler()->filter('h1')->first()->text();
         self::assertEquals('Successfully published the entity to test', $pageTitle);
@@ -316,7 +314,6 @@ class EntityCreateSamlTest extends WebTestCase
         $this->switchToService('SURFnet');
 
         $crawler = self::$pantherClient->request('GET', '/entity/create/1/saml20/production');
-        self::$pantherClient->takeScreenshot('/var/www/html/foobar.png');
         self::assertOnPage('You do not have access to create entities without publishing to the test environment first');
     }
 

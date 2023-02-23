@@ -106,7 +106,7 @@
       "@cvalidate",
       "@attrsc",
       "@attrdc",
-      "@test-db",
+      "@prepare-webtest",
       "@test"
     ],
     "test-db": [
