@@ -18,17 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
-
 class EntityDetailTest extends WebTestCase
 {
 
     public function test_render_details_of_manage_entity()
     {
         $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
 
         $this->registerManageEntity(
             'production',
@@ -42,11 +38,9 @@ class EntityDetailTest extends WebTestCase
 
         $this->switchToService('SURFnet');
 
-        $crawler = $this->client->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
+        $crawler = self::$pantherClient->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
 
-        $pageTitle = $crawler->filter('.page-container h1');
-
-        $this->assertStringContainsString("Entity details", $pageTitle->text());
+        self::assertOnPage("Entity details");
 
         $this->assertDetailEquals(0, 'Metadata URL', 'https://sp1-entityid.example.com/metadata');
         $this->assertDetailsAscLocationEquals(1, 'ACS location', 'https://sp1-entityid.example.com/acs');
@@ -73,11 +67,11 @@ class EntityDetailTest extends WebTestCase
         );
 
         $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
 
         $this->switchToService('SURFnet');
 
-        $this->client->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
+        self::$pantherClient->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
 
         $this->assertAttributeDetailEquals(0, 'Display name attribute', 'Test Attribute 1');
         $this->assertAttributeDetailEquals(1, 'Email address attribute', 'No motivation set');
@@ -96,11 +90,11 @@ class EntityDetailTest extends WebTestCase
         );
 
         $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
 
         $this->switchToService('SURFnet');
 
-        $this->client->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
+        self::$pantherClient->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
         $this->assertNumberOfAttributeElementsEquals(0, 2);
         $this->assertNumberOfAttributeElementsEquals(1, 2);
     }
@@ -108,7 +102,7 @@ class EntityDetailTest extends WebTestCase
 
     private function assertListContains($position, $expectedLabel, array $expectedValues)
     {
-        $rows = $this->client->getCrawler()->filter('div.detail');
+        $rows = self::$pantherClient->getCrawler()->filter('div.detail');
         $row = $rows->eq($position);
         $label = $row->filter('label')->text();
         $listItems = $row->filter('li');
@@ -131,7 +125,7 @@ class EntityDetailTest extends WebTestCase
 
     private function assertIsChecked($position, $expectedLabel)
     {
-        $rows = $this->client->getCrawler()->filter('div.detail');
+        $rows = self::$pantherClient->getCrawler()->filter('div.detail');
         $row = $rows->eq($position);
         $label = $row->filter('label')->text();
         $icon = $row->filter('i')->last();
@@ -151,7 +145,7 @@ class EntityDetailTest extends WebTestCase
 
     private function assertDetailEquals($position, $expectedLabel, $expectedValue, $hasTooltip = true)
     {
-        $rows = $this->client->getCrawler()->filter('div.detail');
+        $rows = self::$pantherClient->getCrawler()->filter('div.detail');
         $row = $rows->eq($position);
         $label = $row->filter('label')->text();
         $spans = $row->filter('span');
@@ -178,7 +172,7 @@ class EntityDetailTest extends WebTestCase
 
     private function assertDetailsAscLocationEquals($position, $expectedLabel, $expectedValue, $hasTooltip = true)
     {
-        $rows = $this->client->getCrawler()->filter('div.detail');
+        $rows = self::$pantherClient->getCrawler()->filter('div.detail');
         $row = $rows->eq($position);
         $label = $row->filter('label')->text();
         $ul = $row->filter('ul');
@@ -195,8 +189,8 @@ class EntityDetailTest extends WebTestCase
 
     private function assertAttributeDetailEquals($position, $expectedTitle, $expectedValue)
     {
-        $rows = $this->client->getCrawler()->filter('div.detail.attribute');
-        $headings = $this->client->getCrawler()->filter('h3.attribute-title');
+        $rows = self::$pantherClient->getCrawler()->filter('div.detail.attribute');
+        $headings = self::$pantherClient->getCrawler()->filter('h3.attribute-title');
         $row = $rows->eq($position);
         $heading = $headings->eq($position);
 
@@ -216,7 +210,7 @@ class EntityDetailTest extends WebTestCase
 
     private function assertNumberOfAttributeElementsEquals($position, $expectedNumberOfElements)
     {
-        $rows = $this->client->getCrawler()->filter('div.detail.attribute');
+        $rows = self::$pantherClient->getCrawler()->filter('div.detail.attribute');
         $row = $rows->eq($position);
         $numberOfRowElements = $row->children()->count();
         $this->assertEquals(
