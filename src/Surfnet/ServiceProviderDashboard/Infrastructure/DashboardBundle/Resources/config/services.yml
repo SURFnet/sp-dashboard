@@ -23,6 +23,8 @@ services:
   surfnet.dashboard.command_handler.delete_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
     public: true
+    arguments:
+      - $deleteTeamClient: 'Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand }
 

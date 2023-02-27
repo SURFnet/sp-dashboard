@@ -153,6 +153,7 @@ class WebTestCase extends PantherTestCase
         $this->testPublicationClient->reset();
         $this->testDeleteClient = self::getContainer()
             ->get('surfnet.manage.client.delete_client.test_environment');
+        $this->testDeleteClient->reset();
         $this->prodDeleteClient = self::getContainer()
             ->get('surfnet.manage.client.delete_client.prod_environment');
         $this->teamsQueryClient = self::getContainer()

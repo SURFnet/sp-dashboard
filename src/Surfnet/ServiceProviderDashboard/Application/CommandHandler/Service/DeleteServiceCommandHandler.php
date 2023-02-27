@@ -27,8 +27,8 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteTeamsEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient;
 
 class DeleteServiceCommandHandler implements CommandHandler
 {
@@ -37,7 +37,7 @@ class DeleteServiceCommandHandler implements CommandHandler
         private readonly EntityServiceInterface $entityService,
         private readonly DeleteCommandFactory $deleteCommandFactory,
         private readonly CommandBus $commandBus,
-        private readonly DeleteEntityClient $deleteTeamClient,
+        private readonly DeleteTeamsEntityRepository $deleteTeamClient,
         private readonly LoggerInterface $logger
     ) {
     }

@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Ramsey\Uuid\Uuid;
+
 class ServiceCreateTest extends WebTestCase
 {
     public function setUp(): void
@@ -48,7 +50,7 @@ class ServiceCreateTest extends WebTestCase
         self::$pantherClient->request('GET', '/service/create');
         $form = self::findBy('form[name="dashboard_bundle_service_type"]');
         self::findBy('#dashboard_bundle_service_type_serviceStatus_serviceType_0')->click();
-        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][guid]"]', 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][guid]"]', Uuid::uuid4()->toString());
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][name]"]', 'The A Team');
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameNl]"]', 'team-a');
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameEn]"]', 'team-a');

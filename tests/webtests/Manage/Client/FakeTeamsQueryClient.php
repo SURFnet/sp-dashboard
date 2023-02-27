@@ -19,7 +19,6 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
-use function json_encode;
 
 class FakeTeamsQueryClient implements QueryTeamsRepository
 {
@@ -34,7 +33,7 @@ class FakeTeamsQueryClient implements QueryTeamsRepository
         string $urn,
         string $data
     ) {
-        $this->data[$urn] = [$urn, $data];
+        $this->data[$urn] = $data;
         $this->storeTeams();
     }
 
@@ -42,6 +41,9 @@ class FakeTeamsQueryClient implements QueryTeamsRepository
     {
         $this->load();
         if (array_key_exists($urn, $this->data)) {
+            if (is_string($this->data[$urn])) {
+                return json_decode($this->data[$urn], true);
+            }
             return $this->data[$urn];
         }
         return null;

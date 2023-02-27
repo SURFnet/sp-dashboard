@@ -32,7 +32,11 @@ class FakeDeleteManageEntityClient implements DeleteManageEntityRepository
         $this->deleteQueue[$entityId] = true;
         $this->write();
     }
-
+    public function reset()
+    {
+        $this->deleteQueue = [];
+        $this->write();
+    }
     public function delete($manageId, $protocol)
     {
         $this->read();

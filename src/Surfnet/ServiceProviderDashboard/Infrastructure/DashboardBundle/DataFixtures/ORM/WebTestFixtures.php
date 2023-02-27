@@ -61,6 +61,8 @@ class WebTestFixtures extends Fixture
         $service->setGuid(Uuid::uuid4());
         $service->setOrganizationNameEn($name);
         $service->setOrganizationNameNl($name);
+        $service->setContractSigned('no');
+        $service->setSurfconextRepresentativeApproved('yes');
         return $service;
     }
 
