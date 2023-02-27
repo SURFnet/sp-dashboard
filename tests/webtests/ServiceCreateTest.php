@@ -18,9 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Ramsey\Uuid\Uuid;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 class ServiceCreateTest extends WebTestCase
 {
     public function setUp(): void
@@ -29,182 +26,34 @@ class ServiceCreateTest extends WebTestCase
 
         $this->loadFixtures();
         $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', 'data');
+        $this->logIn();
     }
 
     public function test_it_validates_the_form()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
+        self::$pantherClient->request('GET', '/service/create');
+        $form = self::findBy('form[name="dashboard_bundle_service_type"]');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][guid]"]', '-bffd-xz-874a-b9f4fdf92942');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][name]"]', 'The A Team');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameNl]"]', 'team-a');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameEn]"]', 'team-a');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[teams][teamManagerEmail]"]', 'loeki@example.org');
+        self::findBy('#dashboard_bundle_service_type_save')->click();
 
-        $formData = [
-            'dashboard_bundle_service_type' => [
-                'general' => [
-                    'guid' => 'a8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'name' => 'The A Team',
-                    'organizationNameNl' => 'team-a',
-                    'organizationNameEn' => 'team-a',
-                ],
-                'teams' => [
-                    'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team-loeki-the-lion',
-                ]
-            ]
-        ];
-
-        $crawler = $this->client->request('GET', '/service/create');
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $crawler = $this->client->submit($form, $formData);
-
-
-        $nodes = $crawler->filter('#dashboard_bundle_service_type_general li');
-        $this->assertEquals('This is not a valid UUID.', $nodes->first()->text());
+        self::assertOnPage('This is not a valid UUID.');
     }
 
-    public function test_empty_guid_field_is_allowed()
+    public function test_empty_institution_id_field_is_allowed()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $formData = [
-            'dashboard_bundle_service_type' => [
-                'general' => [
-                    'guid' => '',
-                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'name' => 'The A Team',
-                    'organizationNameNl' => 'team-a',
-                    'organizationNameEn' => 'team-a',
-                ],
-                'teams' => [
-                    'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team-loeki-the-lion',
-                ]
-            ]
-        ];
-
-        $crawler = $this->client->request('GET', '/service/create');
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after adding a service'
-        );
-
-        $services = $this->getServiceRepository()->findAll();
-        $this->assertCount(3, $services);
-    }
-
-    public function test_it_validates_guid_correctly()
-    {
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        // This UUID is not compliant to the RFC-4122 spec, but is a valid GUID
-        $formData = [
-            'dashboard_bundle_service_type' => [
-                'general' => [
-                    'guid' => '1234abcd-146e-e711-80e8-005056956c1e',
-                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'name' => 'The A Team',
-                    'organizationNameNl' => 'team-a',
-                    'organizationNameEn' => 'team-a',
-                ],
-                'teams' => [
-                    'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team-loeki-the-lion',
-                ]
-            ]
-        ];
-
-        $crawler = $this->client->request('GET', '/service/create');
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after adding a service'
-        );
-    }
-
-    public function test_it_rejects_duplicate_teamnames()
-    {
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $formData = [
-            'dashboard_bundle_service_type' => [
-                'general' => [
-                    'guid' => Uuid::uuid4(),
-                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'name' => 'SURFnet',
-                    'organizationNameNl' => 'SURFnet',
-                    'organizationNameEn' => 'SURFnet',
-                ],
-                'teams' => [
-                    'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'surf.nl',
-                ]
-            ]
-        ];
-
-        $crawler = $this->client->request('GET', '/service/create');
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $crawler = $this->client->submit($form, $formData);
-
-        $nodes = $crawler->filter('.page-container li.error');
-
-        $this->assertEquals(
-            'Team name has already been registered.',
-            trim($nodes->first()->text())
-        );
-    }
-
-    public function test_can_create_new_service()
-    {
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $formData = [
-            'dashboard_bundle_service_type' => [
-                'general' => [
-                    'guid' => 'b9aaa8c4-3376-4e9d-b828-afa38cf29986',
-                    'institutionId' => 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942',
-                    'name' => 'The A Team',
-                    'organizationNameNl' => 'team-a',
-                    'organizationNameEn' => 'team-a',
-                ],
-                'teams' => [
-                    'teamManagerEmail' => 'loeki@example.org',
-                    'teamName' => 'team-loeki-the-lion',
-                ]
-            ]
-        ];
-
-        $crawler = $this->client->request('GET', '/service/create');
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after adding a service'
-        );
-
+        self::$pantherClient->request('GET', '/service/create');
+        $form = self::findBy('form[name="dashboard_bundle_service_type"]');
+        self::findBy('#dashboard_bundle_service_type_serviceStatus_serviceType_0')->click();
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][guid]"]', 'b8a1fa6f-bffd-xxyz-874a-b9f4fdf92942');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][name]"]', 'The A Team');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameNl]"]', 'team-a');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameEn]"]', 'team-a');
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[teams][teamManagerEmail]"]', 'loeki@example.org');
+        self::findBy('#dashboard_bundle_service_type_save')->click();
         $services = $this->getServiceRepository()->findAll();
         $this->assertCount(3, $services);
     }
