@@ -367,6 +367,22 @@ class WebTestCase extends PantherTestCase
         self::assertTrue(true);
     }
 
+    protected static function assertNotOnPage(string $expectation, Crawler $crawler = null)
+    {
+        if (!$crawler) {
+            $crawler = self::$pantherClient->refreshCrawler();
+        }
+        if (str_contains($crawler->html(), $expectation)) {
+            throw new ExpectationFailedException(
+                sprintf(
+                    'Expected text: "%s" was not supposed to be found in the HTML of the current page',
+                    $expectation
+                )
+            );
+        }
+        self::assertTrue(true);
+    }
+
     protected static function findBy(string $cssSelector): WebDriverElement
     {
         return self::$pantherClient->findElement(WebDriverBy::cssSelector($cssSelector));
