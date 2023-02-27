@@ -25,13 +25,24 @@ use function array_key_exists;
 
 class FakeQueryClient implements QueryManageRepository
 {
+
+    public function __construct(string $path)
+    {
+        $this->path = __DIR__ . $path;
+    }
+
     /**
      * @var ClientResult[]
      */
     private $entities = [];
 
-    private string $path = __DIR__ . '/../../../../var/webtest-query-client-manage.json';
+    private string $path;
 
+    public function atPath(string $path)
+    {
+        $this->path = $path;
+        return $this;
+    }
     public function reset()
     {
         $this->write([]);

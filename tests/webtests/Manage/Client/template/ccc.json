@@ -24,7 +24,7 @@
       ],
       "NameIDFormat": "nameidformat",
       "isResourceServer": false,
-      "contacts:0:emailAddress": "emailaddress",
+      "contacts:0:emailAddress": "emailaddress@example.com",
       "contacts:0:contactType": "support",
       "contacts:0:givenName": "givenname",
       "contacts:0:surName": "surname",

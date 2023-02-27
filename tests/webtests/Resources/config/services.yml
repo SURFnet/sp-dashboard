@@ -39,10 +39,12 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeQueryClient
+        arguments: ['/../../../../var/webtest-test-query-client-manage.json']
         public: true
 
     surfnet.manage.client.query_client.prod_environment:
         class: Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeQueryClient
+        arguments: ['/../../../../var/webtest-prod-query-client-manage.json']
         public: true
 
     Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient:

@@ -55,7 +55,7 @@
       "contacts:0:contactType": "support",
       "contacts:0:givenName": "givenname",
       "contacts:0:surName": "surname",
-      "contacts:0:emailAddress": "emailaddress",
+      "contacts:0:emailAddress": "emailaddress@example.com",
       "contacts:0:telephoneNumber": "telephonenumber",
       "OrganizationName:en": "%5$s Organisation Name English",
       "OrganizationDisplayName:en": "%5$s Organisation Name English",

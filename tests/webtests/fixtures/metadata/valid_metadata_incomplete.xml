@@ -8,9 +8,9 @@
                 <mdui:DisplayName xml:lang="en">DNEN</mdui:DisplayName>
                 <mdui:Description xml:lang="nl">DESCRNL</mdui:Description>
                 <mdui:Description xml:lang="en">DESCREN</mdui:Description>
-                <mdui:InformationURL xml:lang="en">URLEN</mdui:InformationURL>
-                <mdui:InformationURL xml:lang="nl">URLNL</mdui:InformationURL>
-                <mdui:Logo>LOGO</mdui:Logo>
+                <mdui:InformationURL xml:lang="en">https://URLEN.example.com</mdui:InformationURL>
+                <mdui:InformationURL xml:lang="nl">https://URLNL.example.com</mdui:InformationURL>
+                <mdui:Logo>https://LOGO.example.com/logo.png</mdui:Logo>
             </mdui:UIInfo>
         </md:Extensions>
         <md:KeyDescriptor use="signing">
