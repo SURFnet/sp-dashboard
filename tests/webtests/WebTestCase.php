@@ -24,13 +24,11 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
-use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
@@ -47,7 +45,6 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Panther\PantherTestCase;
 use Symfony\Component\Panther\ServerExtension;
-use function sizeof;
 
 class WebTestCase extends PantherTestCase
 {
@@ -305,15 +302,15 @@ class WebTestCase extends PantherTestCase
         self::$pantherClient->restart();
     }
 
-    protected function logIn(Service $service = null)
+    protected function logIn(Service $service = null, Service $secondService = null)
     {
         $crawler = self::$pantherClient->request('GET', 'https://spdashboard.vm.openconext.org');
 
         $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
         $this->fillFormField($form, '#username', 'John Doe');
         $this->fillFormField($form, '#password', 'secret');
-        // By default log in using an admin team (see .env.test > administrator_teams)
-        $teamName = 'urn:collab:admin.org:surf.nl';
+        // By default, log in using an admin team (see .env.test > administrator_teams)
+        $teamName = 'urn:collab:admin.org:example.org';
         if ($service) {
             $teamName = $service->getTeamName();
         }
@@ -322,7 +319,14 @@ class WebTestCase extends PantherTestCase
         $isMemberOf = $crawler->filter('input[name="urn:mace:dir:attribute-def:isMemberOf"]');
         $isMemberOf->sendKeys($teamName);
 
-        $form->submit();
+        if ($secondService) {
+            $secondTeamName = $secondService->getTeamName();
+            $select = $crawler->filterXPath(".//select[@id='add-attribute']//option[@value='urn:mace:dir:attribute-def:isMemberOf']");
+            $select->click();
+            $isMemberOf = $crawler->filter('input[name="urn:mace:dir:attribute-def:isMemberOf"]')->eq(1);
+            $isMemberOf->sendKeys($secondTeamName);
+        }
+        self::findBy('.button')->click();
         return self::$pantherClient->refreshCrawler();
     }
 
