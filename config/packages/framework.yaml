@@ -8,7 +8,8 @@ framework:
         cookie_samesite: lax
         cookie_lifetime: '%env(session_max_absolute_lifetime)%'
         gc_maxlifetime: '%env(session_max_relative_lifetime)%'
-    fragments: ~
+    esi: false
+    fragments: false
     http_method_override: true
     assets:
         json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
