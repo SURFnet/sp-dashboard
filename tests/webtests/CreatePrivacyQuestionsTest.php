@@ -27,9 +27,7 @@ class CreatePrivacyQuestionsTest extends WebTestCase
         $this->loadFixtures();
 
         $serviceRepository = $this->getServiceRepository();
-        $service = $serviceRepository->findByName('SURFnet');
-
-        $this->logIn('ROLE_USER', [$service]);
+        $this->logIn($serviceRepository->findByName('SURFnet'));
 
         $crawler = self::$pantherClient->request('GET', '/service/1/privacy');
 
@@ -43,9 +41,8 @@ class CreatePrivacyQuestionsTest extends WebTestCase
         $this->loadFixtures();
 
         $serviceRepository = $this->getServiceRepository();
-        $service = $serviceRepository->findByName('SURFnet');
 
-        $this->logIn('ROLE_USER', [$service]);
+        $this->logIn($serviceRepository->findByName('SURFnet'));
 
         $crawler = self::$pantherClient->request('GET', '/service/1/privacy');
 

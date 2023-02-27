@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Facebook\WebDriver\WebDriverBy;
+use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 
 class CreateConnectionRequestTest extends WebTestCase
 {
@@ -38,7 +39,7 @@ class CreateConnectionRequestTest extends WebTestCase
         );
 
         $this->manageId = '9628d851-abd1-2283-a8f1-a29ba5036174';
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
 
         $this->switchToService('SURFnet');
     }
@@ -46,6 +47,7 @@ class CreateConnectionRequestTest extends WebTestCase
     public function test_it_renders_the_form()
     {
         self::$pantherClient->request('GET', "/entity/create-connection-request/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
+        DebugFile::takeScreenshot(self::$pantherClient);
         self::assertOnPage('<h1>Create connection request</h1>');
         self::assertSelectorIsDisabled('#connection_request_container_send');
     }

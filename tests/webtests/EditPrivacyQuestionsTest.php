@@ -27,9 +27,8 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $this->loadFixtures();
 
         $serviceRepository = $this->getServiceRepository();
-        $service = $serviceRepository->findByName('Ibuildings B.V.');
 
-        $this->logIn('ROLE_USER', [$service]);
+        $this->logIn($serviceRepository->findByName('Ibuildings B.V.'));
 
         $crawler = self::$pantherClient->request('GET', '/service/2/privacy');
 
@@ -45,9 +44,8 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $this->loadFixtures();
 
         $serviceRepository = $this->getServiceRepository();
-        $service = $serviceRepository->findByName('Ibuildings B.V.');
 
-        $this->logIn('ROLE_USER', [$service]);
+        $this->logIn($serviceRepository->findByName('Ibuildings B.V.'));
 
         $crawler = self::$pantherClient->request('GET', '/service/2/privacy');
 
