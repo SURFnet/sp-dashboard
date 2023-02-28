@@ -66,7 +66,7 @@ class ParserTest extends MockeryTestCase
 
         $this->assertEquals($metadata->entityId, 'https://domain.org/saml/metadata');
 
-        $this->assertEquals($metadata->logoUrl, 'LOGO');
+        $this->assertEquals($metadata->logoUrl, 'https://LOGO.example.com/logo.png');
         $this->assertEquals($metadata->nameNl, 'DNNL');
         $this->assertEquals($metadata->nameEn, 'DNEN');
         $this->assertEquals($metadata->descriptionNl, 'DESCRNL');
