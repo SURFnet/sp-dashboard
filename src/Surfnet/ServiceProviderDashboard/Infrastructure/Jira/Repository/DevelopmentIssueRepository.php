@@ -145,13 +145,9 @@ class DevelopmentIssueRepository implements TicketServiceInterface
             $rawData = [];
         }
 
-        $this->failIssueCreation = $rawData['failIssueCreation'];
-        $this->data = $this->loadIssues($rawData['data']);
-
         if (!array_key_exists('failIssueCreation', $rawData)) {
             $rawData['failIssueCreation'] = false;
         }
-
 
         if (!array_key_exists('data', $rawData)) {
             $rawData['data'] = [];

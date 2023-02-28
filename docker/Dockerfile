@@ -18,7 +18,6 @@ COPY --from=js-build /var/www/html/public/build/. /var/www/html/public/build/
 COPY ./docker/conf/000-default.conf /usr/local/apache2/conf/
 COPY ./docker/conf/httpd.conf /usr/local/apache2/conf/
 
-
 EXPOSE 80
 
 CMD ["httpd", "-D", "FOREGROUND"]
@@ -51,6 +50,6 @@ RUN chown -R www-data /var/www/html/var/cache && \
 COPY ./docker/conf/zz-docker.conf /usr/local/etc/php-fpm.d
 COPY ./docker/conf/10-docker-opcache-openconext.conf /usr/local/etc/php/conf.d/
 COPY ./docker/conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
-COPY ./docker/conf/logging.yml /var/www/html/config/packages/prod/ 
+COPY ./docker/conf/logging.yml /var/www/html/config/packages/prod/monolog.yaml 
 RUN touch /var/www/html/.env
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
