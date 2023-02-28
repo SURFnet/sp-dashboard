@@ -86,7 +86,7 @@ class WebTestCase extends PantherTestCase
 
     public static function setUpBeforeClass(): void
     {
-        exec('cd /var/www/html && composer dump-env test');
+        exec('cd /var/www/html && composer dump-env test -q');
     }
 
     public static function tearDownAfterClass(): void
