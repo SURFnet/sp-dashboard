@@ -11,10 +11,10 @@ RUN yarn install && \
   yarn run encore production
 
 FROM ghcr.io/openconext/openconext-containers/openconext-httpd:latest AS httpd-build
-MAINTAINER Bart Geesink (bart.geesink@surf.nl)
+LABEL maintainer Bart Geesink (bart.geesink@surf.nl)
 RUN mkdir -p /var/www/html/
 COPY --from=node-build /var/www/html/public/. /var/www/html/public/
-COPY --from=js-build /var/www/html/public/build/. /var/www/html/web/public/
+COPY --from=js-build /var/www/html/public/build/. /var/www/html/public/build/
 COPY ./docker/conf/000-default.conf /usr/local/apache2/conf/
 COPY ./docker/conf/httpd.conf /usr/local/apache2/conf/
 
