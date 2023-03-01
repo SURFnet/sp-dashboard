@@ -18,9 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 
 class EntityCopyTest extends WebTestCase
 {

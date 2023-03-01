@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
-
 class ServiceDeleteTest extends WebTestCase
 {
     public function setUp(): void
@@ -68,8 +66,6 @@ class ServiceDeleteTest extends WebTestCase
         $this->assertCount(2, $entities, 'The two pre configured entities should be listed on the confirmation page');
 
         self::findBy('#dashboard_bundle_delete_service_type_delete')->click();
-        DebugFile::scrollDown(self::$pantherClient, 20);
-        DebugFile::takeScreenshot(self::$pantherClient);
 
         self::assertOnPage('Your service was deleted.');
     }

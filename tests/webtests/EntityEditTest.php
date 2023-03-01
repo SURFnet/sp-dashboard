@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeType;
-use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 
 class EntityEditTest extends WebTestCase
 {

@@ -18,8 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
-
 class EntityDeleteTest extends WebTestCase
 {
 
@@ -117,7 +115,6 @@ class EntityDeleteTest extends WebTestCase
             ->form();
 
         self::$pantherClient->submit($form);
-        DebugFile::takeScreenshot(self::$pantherClient);
         $this->assertOnPage(
             'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.'
         );
