@@ -17,7 +17,6 @@
  */
 
 use Surfnet\ServiceProviderDashboard\Kernel;
-use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

@@ -46,6 +46,7 @@ class ServiceDeleteTest extends WebTestCase
         $this->testDeleteClient->registerDeleteRequest('7398d851-abd1-2283-a8f1-a29ba5036174');
 
         $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', '{"teamId": 1}');
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:ibuildings.nl', '{"teamId": 2}');
         $this->logIn();
     }
 
@@ -81,8 +82,7 @@ class ServiceDeleteTest extends WebTestCase
         self::$pantherClient->request('GET', '/service/2/edit');
 
         self::findBy('#dashboard_bundle_edit_service_type_delete')->click();
-        $this->assertOnPage("You are about to delete 'Ibuildings'. Are you sure?");
-
+        $this->assertOnPage("You are about to delete 'Ibuildings B.V.'. Are you sure?");
         self::findBy('#dashboard_bundle_delete_service_type_delete')->click();
         self::assertOnPage('Your service was deleted.');
     }
