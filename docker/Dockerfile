@@ -49,7 +49,7 @@ RUN chown -R www-data /var/www/html/var/cache && \
 
 COPY ./docker/conf/zz-docker.conf /usr/local/etc/php-fpm.d
 COPY ./docker/conf/10-docker-opcache-openconext.conf /usr/local/etc/php/conf.d/
-COPY ./docker/conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
-COPY ./docker/conf/logging.yml /var/www/html/config/packages/prod/monolog.yaml 
+COPY ./docker/conf/10-override-php.ini /usr/local/etc/php/conf.d/
+RUN mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 RUN touch /var/www/html/.env
 CMD ["/usr/local/sbin/php-fpm" , "-F"]

@@ -649,6 +649,3 @@ services:
 
   Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator:
     - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
-
-  surfnet.dashboard.repository.issue:
-    class: ~
