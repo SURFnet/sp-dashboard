@@ -23,6 +23,8 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerFromOverviewType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
