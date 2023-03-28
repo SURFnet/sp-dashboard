@@ -139,10 +139,23 @@ class EntityCreateConnectionRequestController extends AbstractController
     /**
      * @Route("/entity/send-connection-request", name="send_connection_request",methods={"GET"})
      */
-    public function sendConnectionRequestAction()
+    public function sendConnectionRequestAction(Request $request)
     {
+        $parameters = [];
+        if ($request->query->has('showOidcPopup')) {
+            $parameters['showOidcPopup'] = $request->query->get('showOidcPopup');
+        }
+        if ($request->query->has('entityName')) {
+            $parameters['entityName'] = $request->query->get('entityName');
+        }
+        if ($this->get('session')->has('published.entity.clone')) {
+            $entity = $request->getSession()->get('published.entity.clone');
+            $parameters['publishedEntity'] = $entity;
+        }
+
         return $this->render(
-            '@Dashboard/EntityPublished/sendConnectionRequest.html.twig'
+            '@Dashboard/EntityPublished/sendConnectionRequest.html.twig',
+            $parameters
         );
     }
 
