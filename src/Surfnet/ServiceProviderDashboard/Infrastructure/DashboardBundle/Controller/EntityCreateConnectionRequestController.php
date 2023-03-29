@@ -20,18 +20,19 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ConnectionRequestContainerFromOverviewType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EntityCreateConnectionRequestController extends Controller
+class EntityCreateConnectionRequestController extends AbstractController
 {
     use EntityControllerTrait;
 
@@ -138,10 +139,23 @@ class EntityCreateConnectionRequestController extends Controller
     /**
      * @Route("/entity/send-connection-request", name="send_connection_request",methods={"GET"})
      */
-    public function sendConnectionRequestAction()
+    public function sendConnectionRequestAction(Request $request)
     {
+        $parameters = [];
+        if ($request->query->has('showOidcPopup')) {
+            $parameters['showOidcPopup'] = $request->query->get('showOidcPopup');
+        }
+        if ($request->query->has('entityName')) {
+            $parameters['entityName'] = $request->query->get('entityName');
+        }
+        if ($this->get('session')->has('published.entity.clone')) {
+            $entity = $request->getSession()->get('published.entity.clone');
+            $parameters['publishedEntity'] = $entity;
+        }
+
         return $this->render(
-            '@Dashboard/EntityPublished/sendConnectionRequest.html.twig'
+            '@Dashboard/EntityPublished/sendConnectionRequest.html.twig',
+            $parameters
         );
     }
 

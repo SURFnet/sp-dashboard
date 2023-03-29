@@ -19,21 +19,19 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository;
 
 use JiraRestApi\JiraException;
-use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 
 class DevelopmentIssueRepository implements TicketServiceInterface
 {
     /**
-     * @var Issue[]|null $data
+     * @var Issue[] $data
      */
-    private $data;
+    private $data = [];
     /**
      * @var bool
      */
@@ -45,7 +43,9 @@ class DevelopmentIssueRepository implements TicketServiceInterface
 
     public function shouldFailCreateIssue()
     {
+        $this->loadData();
         $this->failIssueCreation = true;
+        $this->storeData();
     }
 
     public function findByManageIds(array $manageIds)
@@ -93,10 +93,10 @@ class DevelopmentIssueRepository implements TicketServiceInterface
 
     public function createIssueFrom(Ticket $ticket): Issue
     {
+        $this->loadData();
         if ($this->failIssueCreation) {
             throw new JiraException('Unable to write the Jira issue (failure was requested by calling shouldFailCreateIssue)');
         }
-        $this->loadData();
         $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), Issue::STATUS_OPEN);
         $this->data[$ticket->getManageId()] = $issue;
         $this->storeData();
@@ -105,10 +105,10 @@ class DevelopmentIssueRepository implements TicketServiceInterface
 
     public function createIssueFromConnectionRequest(Ticket $ticket): Issue
     {
+        $this->loadData();
         if ($this->failIssueCreation) {
             throw new JiraException('Unable to write the Jira issue (failure was requested by calling shouldFailCreateIssue)');
         }
-        $this->loadData();
         $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), Issue::STATUS_OPEN);
         $this->data[$ticket->getManageId()] = $issue;
         $this->storeData();
@@ -124,15 +124,19 @@ class DevelopmentIssueRepository implements TicketServiceInterface
 
     private function storeData()
     {
-        file_put_contents($this->filePath, json_encode($this->data));
+        file_put_contents(
+            $this->filePath,
+            json_encode(
+                [
+                    'data' => $this->data,
+                    'failIssueCreation' => $this->failIssueCreation
+                ]
+            )
+        );
     }
 
     private function loadData()
     {
-        if (!is_null($this->data)) {
-            return;
-        }
-
         if (!is_file($this->filePath)) {
             file_put_contents($this->filePath, '{}');
         }
@@ -140,7 +144,17 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         if (is_null($rawData)) {
             $rawData = [];
         }
-        $this->data = $this->loadIssues($rawData);
+
+        if (!array_key_exists('failIssueCreation', $rawData)) {
+            $rawData['failIssueCreation'] = false;
+        }
+
+        if (!array_key_exists('data', $rawData)) {
+            $rawData['data'] = [];
+        }
+
+        $this->failIssueCreation = $rawData['failIssueCreation'];
+        $this->data = $this->loadIssues($rawData['data']);
     }
 
     private function loadIssues(array $rawData)
@@ -152,7 +166,6 @@ class DevelopmentIssueRepository implements TicketServiceInterface
             }
             $output[$issueData['key']] = Issue::fromSerializedData($issueData);
         }
-
         return $output;
     }
 }

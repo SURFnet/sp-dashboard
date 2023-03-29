@@ -23,6 +23,13 @@ services:
   surfnet.dashboard.command_handler.delete_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\DeleteServiceCommandHandler
     public: true
+    arguments:
+          - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
+          - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
+          - '@Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory'
+          - '@tactician.commandbus.default'
+          - '@Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\DeleteEntityClient'
+          - '@logger'
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand }
 
@@ -642,6 +649,3 @@ services:
 
   Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator:
     - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
-
-  surfnet.dashboard.repository.issue:
-    class: ~

@@ -32,7 +32,7 @@ class WebTestFixtures extends Fixture
         $service->setProductionEntitiesEnabled(false);
         $manager->persist($service);
 
-        $service =  $this->createService('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl');
+        $service =  $this->createService('Ibuildings B.V.', 'urn:collab:group:vm.openconext.org:demo:openconext:org:ibuildings.nl');
         $service->setProductionEntitiesEnabled(true);
         $service->setPrivacyQuestionsEnabled(true);
         $service->setClientCredentialClientsEnabled(true);
@@ -61,6 +61,8 @@ class WebTestFixtures extends Fixture
         $service->setGuid(Uuid::uuid4());
         $service->setOrganizationNameEn($name);
         $service->setOrganizationNameNl($name);
+        $service->setContractSigned('no');
+        $service->setSurfconextRepresentativeApproved('yes');
         return $service;
     }
 

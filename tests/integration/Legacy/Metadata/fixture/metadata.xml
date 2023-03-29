@@ -10,7 +10,7 @@
                 <mdui:Description xml:lang="en">DESCREN</mdui:Description>
                 <mdui:InformationURL xml:lang="en">URLEN</mdui:InformationURL>
                 <mdui:InformationURL xml:lang="nl">URLNL</mdui:InformationURL>
-                <mdui:Logo>LOGO</mdui:Logo>
+                <mdui:Logo>https://LOGO.example.com/logo.png</mdui:Logo>
             </mdui:UIInfo>
         </md:Extensions>
         <md:KeyDescriptor use="signing">

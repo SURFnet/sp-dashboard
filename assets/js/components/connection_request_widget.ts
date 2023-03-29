@@ -247,7 +247,7 @@ class CollectionWidget {
     let isUnique = true;
     const newInstitutionValue = newElement.find('input').first().val();
 
-    this.$collectionList.find('li').each((_index: number, el: HTMLElement) => {
+    this.$collectionList.find('tr').each((_index: number, el: HTMLElement) => {
       const $el = $(el);
       const existingValue = $el.find('input').first().val();
 

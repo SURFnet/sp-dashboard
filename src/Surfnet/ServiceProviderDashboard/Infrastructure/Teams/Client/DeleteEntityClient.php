@@ -20,14 +20,13 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client;
 
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteTeamsEntityRepository
-    as DeleteTeamsEntityRepositoryInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteTeamsEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\UnableToDeleteMembershipException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
 
-class DeleteEntityClient implements DeleteTeamsEntityRepositoryInterface
+class DeleteEntityClient implements DeleteTeamsEntityRepository
 {
     public function __construct(
         private readonly HttpClient $client,

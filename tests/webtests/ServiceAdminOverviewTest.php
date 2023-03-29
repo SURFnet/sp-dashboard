@@ -18,15 +18,13 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-
 class ServiceAdminOverviewTest extends WebTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
-
         $this->loadFixtures();
+        $this->logIn();
     }
 
     /**
@@ -34,13 +32,7 @@ class ServiceAdminOverviewTest extends WebTestCase
      */
     public function test_only_one_service_is_displayed()
     {
-        $serviceRepository = $this->getServiceRepository();
-        $surfNet = $serviceRepository->findByName('SURFnet');
-        $ibuildings = $serviceRepository->findByName('Ibuildings B.V.');
-
-        $this->logIn('ROLE_ADMINISTRATOR', [$surfNet, $ibuildings]);
-
-        $crawler = $this->client->request('GET', '/service/2');
+        $crawler = self::$pantherClient->request('GET', '/service/2');
 
         // By retrieving the h1 titles (stating the services) we can conclude if the correct data is displayed.
         $h1 = $crawler->filter('.page-container .service-title');

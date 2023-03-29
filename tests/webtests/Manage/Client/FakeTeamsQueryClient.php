@@ -23,19 +23,55 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
 class FakeTeamsQueryClient implements QueryTeamsRepository
 {
     private $data = [];
+    private string $path = __DIR__ . '/../../../../var/webtest-query-teams.json';
 
+    public function reset()
+    {
+        $this->write([]);
+    }
     public function registerTeam(
         string $urn,
         string $data
     ) {
-        $this->data[$urn] = [$urn, $data];
+        $this->data[$urn] = $data;
+        $this->storeTeams();
     }
 
     public function findTeamByUrn(string $urn): ?array
     {
+        $this->load();
         if (array_key_exists($urn, $this->data)) {
+            if (is_string($this->data[$urn])) {
+                return json_decode($this->data[$urn], true);
+            }
             return $this->data[$urn];
         }
         return null;
+    }
+
+
+    private function read()
+    {
+        return json_decode(file_get_contents($this->path), true);
+    }
+
+    private function write(array $data)
+    {
+        file_put_contents($this->path, json_encode($data));
+    }
+
+    private function storeTeams()
+    {
+        // Also store the new entity in the on-file storage
+        $data = [];
+        foreach ($this->data as $identifier => $team) {
+            $data[$identifier] = $team;
+        }
+        $this->write($data);
+    }
+
+    private function load()
+    {
+        $this->data = $this->read();
     }
 }

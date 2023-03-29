@@ -1,6 +1,6 @@
 ---
 
-version: "3.8"
+version: "3.4"
 
 services:
   openconext:
@@ -40,7 +40,6 @@ services:
       target: spdphpfpm
     volumes:
       - .:/var/www/html/
-      - ./docker/conf/logging.yml:/var/www/html/config/test/monolog.yaml
     environment:
       - PHPFPM_PORT=9000
     networks:
@@ -62,6 +61,17 @@ services:
       spdashboard:
         aliases: 
           - spdashboard_web
+
+  test-browser:
+    image: selenium/standalone-chrome:latest
+    hostname: test-browser
+    ports:
+      - "5900:5900"
+      - "4444:4444"
+    privileged: true
+    shm_size: 2g
+    networks:
+      spdashboard:
 
 networks:
   spdashboard:

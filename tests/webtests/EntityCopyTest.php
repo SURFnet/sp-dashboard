@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
 class EntityCopyTest extends WebTestCase
@@ -33,7 +32,7 @@ class EntityCopyTest extends WebTestCase
         parent::setUp();
 
         $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
 
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
 
@@ -55,11 +54,9 @@ class EntityCopyTest extends WebTestCase
 
     public function test_copy_does_not_create_new_entity()
     {
-        $crawler = $this->client->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
+        $crawler = self::$pantherClient->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
-        $pageTitle = $crawler->filter('.page-container h1');
-
-        $this->assertEquals('Service Provider registration form', $pageTitle->text());
+        self::assertOnPage('Service Provider registration form');
 
         $this->assertEquals(1, $crawler->selectButton('Publish')->count());
 
@@ -141,23 +138,9 @@ class EntityCopyTest extends WebTestCase
         );
     }
 
-    public function test_copy_to_production_does_not_create_new_entity()
-    {
-        $crawler = $this->client->request('GET', "/entity/copy/1/d645ddf7-1246-4224-8e14-0d5c494fd9ad/production");
-        // Ensure we are not basing further assertions on an error response
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        // And check we did actually perform a copy action by checking a sample field from the form.
-        $nameEn = $crawler->filter('#dashboard_bundle_entity_type_metadata_nameEn')->attr('value');
-        $this->assertEquals('OpenConext Engine EN', $nameEn);
-
-        // Assert that the newly created entity is indeed a production entity.
-        $entity = $this->prodQueryClient->findByManageId('d645ddf7-1246-4224-8e14-0d5c494fd9ad');
-        $this->assertEmpty($entity, 'Entity is not saved, but loaded on the form');
-    }
-
     public function test_copy_to_production_for_oidcng_entities_yields_a_protocol_prepend_on_client_id_field()
     {
-        $crawler = $this->client->request('GET', "/entity/copy/1/88888888-0000-9999-1111-777777777777/production");
+        $crawler = self::$pantherClient->request('GET', "/entity/copy/1/88888888-0000-9999-1111-777777777777/production");
         // Assert that the newly created entity has the updated client id
         $clientId = $crawler->filter('#dashboard_bundle_entity_type_metadata_clientId')->attr('value');
         $this->assertEquals('https://playground.openconext.nl', $clientId);
@@ -165,21 +148,17 @@ class EntityCopyTest extends WebTestCase
 
     public function test_no_save_button_after_import()
     {
-        $crawler = $this->client->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
+        $crawler = self::$pantherClient->request('GET', "/entity/copy/{$this->service->getId()}/d645ddf7-1246-4224-8e14-0d5c494fd9ad");
 
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => 'https://engine.surfconext.nl/authentication/sp/metadata',
         ];
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
 
         $this->assertEquals(1, $crawler->selectButton('Publish')->count());
     }

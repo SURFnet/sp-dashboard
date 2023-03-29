@@ -29,9 +29,9 @@ class IdentityHeaderTest extends WebTestCase
 
     public function test_page_header_displays_username()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
 
-        $crawler = $this->client->request('GET', '/service/create');
+        $crawler = self::$pantherClient->request('GET', '/service/create');
 
         $this->assertEquals(
             'John Doe',
@@ -41,22 +41,25 @@ class IdentityHeaderTest extends WebTestCase
 
     public function test_page_header_does_not_show_administration_links_to_services()
     {
-        $this->logIn('ROLE_USER');
+        $ibuildings = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+        $this->logOut();
+        $this->logIn($ibuildings);
 
-        $crawler = $this->client->request('GET', '/');
+        self::$pantherClient->request('GET', '/');
 
-        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Add new service")'));
-        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Edit service")'));
-        $this->assertEmpty($crawler->filter('.navigation ul li:contains("Translations")'));
+        self::assertNotOnPage('Add new service');
+        self::assertNotOnPage('Edit service');
+        self::assertNotOnPage('Translations');
     }
 
     public function test_page_header_displays_administration_links_to_administrators()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logOut();
+        $this->logIn();
 
-        $crawler = $this->client->request('GET', '/');
+        self::$pantherClient->request('GET', '/');
 
-        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Add new service")'));
-        $this->assertCount(1, $crawler->filter('.navigation ul li:contains("Translations")'));
+        self::assertOnPage('Add new service');
+        self::assertOnPage('Translations');
     }
 }

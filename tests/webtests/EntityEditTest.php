@@ -60,14 +60,14 @@ class EntityEditTest extends WebTestCase
 
         $this->manageId = '9729d851-cfdd-4283-a8f1-a29ba5036261';
 
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
 
         $this->switchToService('SURFnet');
     }
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler->filter('.page-container')
             ->selectButton('Publish')
@@ -83,104 +83,97 @@ class EntityEditTest extends WebTestCase
     public function test_it_rejects_unauthorized_visitors()
     {
         $ibuildings = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+        $this->logOut();
+        $this->logIn($ibuildings);
 
-        $this->logIn('ROLE_USER', [$ibuildings]);
-
-        $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        self::assertOnPage('HTTP 500');
+        self::assertOnPage('User is not granted access to service with ID');
     }
 
     public function test_it_loads_xml_from_url()
     {
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => 'https://engine.surfconext.nl/authentication/sp/metadata'
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
-
-        $this->client->submit($form, $formData);
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::$pantherClient->submit($form, $formData);
+        self::assertInputValueSame('dashboard_bundle_entity_type[metadata][entityId]', 'https://domain.org/saml/metadata');
+        self::assertInputValueSame('dashboard_bundle_entity_type[metadata][logoUrl]', 'https://LOGO.example.com/logo.png');
     }
 
     public function test_it_handles_valid_but_incomplete_metadata()
     {
-        $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata-valid-incomplete',
-                ],
-            ],
-        ];
+        $formData = ['dashboard_bundle_entity_type[metadata][importUrl]' => 'https://engine.surfconext.nl/authentication/sp/metadata-valid-incomplete'];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
 
-        $this->client->submit($form);
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::$pantherClient->submit($form);
+        self::assertOnPage('Warning! Some entries are missing or incorrect');
     }
 
     public function test_it_loads_xml_from_textarea()
     {
         $xml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata.xml');
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => '',
+            'dashboard_bundle_entity_type[metadata][pastedMetadata]' => $xml,
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        $this->testPublicationClient->registerPublishResponse(
+            'https://domain.org/saml/metadata',
+            '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
+        );
+
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        self::$pantherClient->submit($form, $formData);
 
-        $form = $crawler
-            ->selectButton('Publish')
-            ->form();
+        // Fill the form motivations (required when publishing an entity)
+        $formElement = self::findBy('form[name="dashboard_bundle_entity_type"]');
+        self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_emailAddressAttribute_motivation', 'foo');
+        self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_commonNameAttribute_motivation', 'foo');
+        self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_organizationAttribute_motivation', 'foo');
+        self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_personalCodeAttribute_motivation', 'foo');
+        self::findBy('#dashboard_bundle_entity_type_publishButton')->click();
 
-        $this->client->submit($form);
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $pageTitle = self::$pantherClient->refreshCrawler()->filter('h1')->first()->text();
+        self::assertOnPage('Your changes were saved!');
+        self::assertEquals('Successfully published the entity to test', $pageTitle);
     }
 
     public function test_it_shows_flash_message_on_exception()
     {
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => 'https://this.does.not/exist',
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => 'https://this.does.not/exist'
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
         $message = $crawler->filter('.message.error')->first();
 
         $this->assertEquals(
@@ -194,21 +187,17 @@ class EntityEditTest extends WebTestCase
     {
         $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata.xml');
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => '',
+            'dashboard_bundle_entity_type[metadata][pastedMetadata]' => $xml,
         ];
 
-        $crawler = $this->client->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
         $message = $crawler->filter('.message.error')->first();
 
         $this->assertEquals(
@@ -240,18 +229,14 @@ class EntityEditTest extends WebTestCase
 
     public function test_it_renders_the_change_request_form()
     {
-        $crawler = $this->client->request('GET', "/entity/change-request/test/{$this->manageId}/1");
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
-
+        $crawler = self::$pantherClient->request('GET', "/entity/change-request/test/{$this->manageId}/1");
         $title = $crawler->filter('.page-container h1');
         $this->assertEquals('Change request overview', $title->text());
     }
 
     public function test_it_renders_the_change_request()
     {
-        $crawler = $this->client->request('GET', "/entity/change-request/test/{$this->manageId}/1");
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
-
+        $crawler = self::$pantherClient->request('GET', "/entity/change-request/test/{$this->manageId}/1");
         $date = $crawler->filter('h2')->first();
         // Note the timezone difference here compared to the time found in the fixture.
         // The times in the fixture (in manage) are UTC. We are on Europe/Amsterdam (+2)
@@ -266,19 +251,17 @@ class EntityEditTest extends WebTestCase
 
     public function test_it_allows_publication_change_requests()
     {
-        $crawler = $this->client->request('GET', "/entity/edit/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
+        $this->prodPublicationClient->registerPublishResponse(
+            'https://sp2-surf.com/metadata',
+            '{"id":"9628d851-abd1-2283-a8f1-a29ba5036174"}'
+        );
+
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
         $form = $crawler
             ->selectButton('Change')
             ->form();
-        $this->client->submit($form, $this->buildValidFormData());
-        self::assertEquals(302, $this->client->getResponse()->getStatusCode());
-        $crawler = $this->client->followRedirect();
-        self::assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $message = $crawler->filter('.card p')->first();
-        $this->assertEquals(
-            'As you where editing a production entity, we have taken your changes under review.',
-            trim($message->text())
-        );
+        self::$pantherClient->submit($form, $this->buildValidFormData());
+        $this->assertOnPage('As you where editing a production entity, we have taken your changes under review.');
     }
 
     private function buildValidFormData()
@@ -294,8 +277,8 @@ class EntityEditTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][importUrl]' => 'https://engine.surfconext.nl/authentication/sp/metadata',
             'dashboard_bundle_entity_type[metadata][pastedMetadata]' => '',
             'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://sp2-surf.com/metadata',
-            'dashboard_bundle_entity_type[metadata][acsLocations]' => [],
             'dashboard_bundle_entity_type[metadata][entityId]' => 'https://sp2-surf.com',
+            'dashboard_bundle_entity_type[metadata][nameIdFormat]' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
             'dashboard_bundle_entity_type[metadata][certificate]' => file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'),
             'dashboard_bundle_entity_type[metadata][logoUrl]' => 'https://sp2-surf.com/images/logo.png',
             'dashboard_bundle_entity_type[metadata][nameNl]' => 'De Nederlandse naam voor dit entity',
@@ -320,14 +303,12 @@ class EntityEditTest extends WebTestCase
         ];
 
         foreach ($attributes as $attribute) {
+
             $entry = sprintf('dashboard_bundle_entity_type[attributes][%s][motivation]', $attribute->getName());
+            $entryRequested = sprintf('dashboard_bundle_entity_type[attributes][%s][requested]', $attribute->getName());
+            $result[$entryRequested] = true;
             $result[$entry] = 'some data here!';
         }
-
-        $result += [
-            'dashboard_bundle_entity_type[status]' => 'published',
-            'dashboard_bundle_entity_type[manageId]' => '9628d851-abd1-2283-a8f1-a29ba5036174',
-        ];
 
         return $result;
     }
@@ -337,7 +318,7 @@ class EntityEditTest extends WebTestCase
      */
     protected function getAttributeTypes(): array
     {
-        $service = $this->client->getContainer()->get(AttributeService::class);
+        $service = self::getContainer()->get(AttributeService::class);
 
         return $service->getAttributeTypeAttributes();
     }

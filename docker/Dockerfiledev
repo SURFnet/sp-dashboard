@@ -11,7 +11,8 @@ FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:81 AS spdphp
 WORKDIR /var/www/html/
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
-COPY ./conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
+COPY ./conf/10-override-php.ini /usr/local/etc/php/conf.d/
+RUN mv /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 RUN /usr/sbin/update-ca-certificates && \
     rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ && \

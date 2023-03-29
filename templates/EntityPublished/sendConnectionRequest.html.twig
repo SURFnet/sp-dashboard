@@ -5,4 +5,10 @@
 
     {{ 'entity.sending_connection_request.text.html'|trans|wysiwyg }}
 
+    {% if showOidcPopup %}
+        <div class="modal" id="oidc-published-popup">
+            {{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\EntityPublishedController::oidcConfirmationModalAction', {'entity': publishedEntity})) }}
+        </div>
+    {% endif %}
+
 {% endblock %}
