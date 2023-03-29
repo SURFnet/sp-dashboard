@@ -1,3 +1,41 @@
+## 5.0.0
+Main change made in this new major release is the upgrade to Symfony 5. These 
+pull requests make up the rest of the changes:
+
+- Symfony 5 upgrade #565
+- Upgrade Symfony webtests to utilize Panther #576
+- Move status logic to Manage entity #577
+- Add a default text for revision notes #583
+- Use global constants iso a string #582
+
+## 4.4.5
+**Bugfix**
+- Show secrets modal oidc after connection request #584
+
+## 4.4.4
+**Bugfix**
+- Add default text for revision notes #583
+
+## 4.4.3
+**Bugfix**
+- Repair positioning of plus button #578
+- 
+## 4.4.2
+**Bugfix**
+- Repair button change request #575
+
+## 4.4.1
+**Backport**
+- Include 4.3.2 into the 4.4 tier of releases (More Label and translation adjustments #574)
+
+## 4.4.0
+**Feature**
+- Added the IdP connection request feature for production entities #555 
+
+## 4.3.2
+**Feature**
+More Label and translation adjustments #574
+
 ## 4.3.1
 **Feature**
 Label and translation adjustments in attributes.json #567
@@ -25,7 +63,6 @@ Handle grants and redirect urls correctly when updating an OIDC entity #551
 - Ignore ACS locations that do not have the HTTP-POST Binding. #561
 
 ## 4.2.0
-
 **Feature**
 - Support more than one ACS location #521 #547
 - Implement production entity change request #522

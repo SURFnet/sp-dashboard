@@ -39,7 +39,7 @@ class UniqueEntityIdValidatorTest extends ConstraintValidatorTestCase
      */
     private $queryService;
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         m::close();

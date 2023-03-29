@@ -18,25 +18,16 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
-use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentIssueRepository;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 class EntityDeleteTest extends WebTestCase
 {
-    /** @var DevelopmentIssueRepository */
-    private $ticketService;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-
         $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
-
+        $this->logIn();
         $this->service = $this->getServiceRepository()->findByName('SURFnet');
-        $this->ticketService = $this->client->getContainer()->get('surfnet.dashboard.repository.issue');
+        $this->ticketService = self::getContainer()->get('surfnet.dashboard.repository.issue');
         $this->switchToService('SURFnet');
     }
 
@@ -54,7 +45,7 @@ class EntityDeleteTest extends WebTestCase
 
         $this->testDeleteClient->registerDeleteRequest('a8e7cffd-0409-45c7-a37a-000000000000');
 
-        $crawler = $this->client->request('GET', "/entity/delete/published/1/a8e7cffd-0409-45c7-a37a-000000000000");
+        $crawler = self::$pantherClient->request('GET', "/entity/delete/published/1/a8e7cffd-0409-45c7-a37a-000000000000");
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -64,12 +55,8 @@ class EntityDeleteTest extends WebTestCase
             ->selectButton('Delete')
             ->form();
 
-        $this->client->submit($form);
-        $response = $this->client->getResponse();
-        $this->assertTrue(
-            $response instanceof RedirectResponse,
-            'Expecting a redirect response after editing an entity'
-        );
+        self::$pantherClient->submit($form);
+        self::assertOnPage('Your entity is deleted');
     }
 
     public function test_delete_a_unpublished_production_entity()
@@ -86,7 +73,7 @@ class EntityDeleteTest extends WebTestCase
 
         $this->prodDeleteClient->registerDeleteRequest('a8e7cffd-0409-45c7-a37a-000000000000');
 
-        $crawler = $this->client->request('GET', "/entity/delete/published/1/a8e7cffd-0409-45c7-a37a-000000000000/production");
+        $crawler = self::$pantherClient->request('GET', "/entity/delete/published/1/a8e7cffd-0409-45c7-a37a-000000000000/production");
 
         $pageTitle = $crawler->filter('.page-container h1');
 
@@ -96,12 +83,9 @@ class EntityDeleteTest extends WebTestCase
             ->selectButton('Delete')
             ->form();
 
-        $this->client->submit($form);
+        self::$pantherClient->submit($form);
+        self::assertOnPage('Your entity is deleted');
 
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after editing an entity'
-        );
     }
 
     /**
@@ -110,7 +94,6 @@ class EntityDeleteTest extends WebTestCase
      */
     public function test_request_delete_a_published_production_entity_jira_not_available()
     {
-        $this->ticketService->shouldFailCreateIssue();
         $this->registerManageEntity(
             'production',
             'saml20_sp',
@@ -121,30 +104,19 @@ class EntityDeleteTest extends WebTestCase
             'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
-        $crawler = $this->client->request('GET', "/entity/delete/request/1/a8e7cffd-0409-45c7-a37a-000000000000");
+        $this->ticketService->shouldFailCreateIssue();
 
+        $crawler = self::$pantherClient->request('GET', "/entity/delete/request/1/a8e7cffd-0409-45c7-a37a-000000000000");
         $pageTitle = $crawler->filter('h1');
-
         $this->assertEquals('Delete entity', $pageTitle->text());
 
         $form = $crawler->filter('.page-container')
             ->selectButton('Delete')
             ->form();
 
-        $this->client->submit($form);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after opening a entity delete request ticket'
-        );
-
-        $crawler = $this->client->followRedirect();
-
-        $flashMessage = $crawler->filter('div.flashMessage.error');
-
-        $this->assertEquals(
-            'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.',
-            $flashMessage->text()
+        self::$pantherClient->submit($form);
+        $this->assertOnPage(
+            'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.'
         );
     }
 }

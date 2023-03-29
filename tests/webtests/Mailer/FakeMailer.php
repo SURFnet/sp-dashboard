@@ -18,8 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Mailer;
 
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Mailer as MailerInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Mailer\Message as MessageInterface;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\RawMessage;
 
 /**
  * Test stand in for the Mailer class from the infrastructure layer.
@@ -28,7 +29,7 @@ class FakeMailer implements MailerInterface
 {
     private $sent = [];
 
-    public function send(MessageInterface $message)
+    public function send(RawMessage $message, Envelope $envelope = null): void
     {
         $this->sent[] = $message;
     }

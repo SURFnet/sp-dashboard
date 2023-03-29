@@ -47,7 +47,7 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(DeleteManageEntityRepository::class);
 
@@ -74,13 +74,11 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
-        $this->commandHandler->handle($command);
+        $this->assertNull($this->commandHandler->handle($command));
     }
 
     public function test_it_handles_non_error_responses()
     {
-        $this->expectExceptionMessage("Deleting the entity yielded an non success response");
-        $this->expectException(EntityNotDeletedException::class);
         $command = new DeletePublishedProductionEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
             Constants::TYPE_SAML
@@ -94,12 +92,13 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
+        $this->expectExceptionMessage("Deleting the entity yielded an non success response");
+        $this->expectException(EntityNotDeletedException::class);
         $this->commandHandler->handle($command);
     }
 
     public function test_it_handles_failing_delete_requests()
     {
-        $this->expectException(EntityNotDeletedException::class);
         $command = new DeletePublishedProductionEntityCommand(
             'd6f394b2-08b1-4882-8b32-81688c15c489',
             Constants::TYPE_OPENID_CONNECT_TNG
@@ -113,6 +112,7 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
+        $this->expectException(EntityNotDeletedException::class);
         $this->commandHandler->handle($command);
     }
 }

@@ -1,0 +1,133 @@
+{
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Root",
+	"type": "array",
+	"default": [],
+	"items":{
+		"$id": "#root/items",
+		"title": "Items",
+		"type": "object",
+		"required": [
+			"id",
+			"translations",
+			"urns"
+		],
+		"properties": {
+			"id": {
+				"$id": "#root/items/id",
+				"title": "Id",
+				"type": "string",
+				"pattern": "^[a-z][a-zA-Z]*$"
+			},
+			"excludeOnEntityType": {
+				"$id": "#root/items/excludeOnEntityType",
+				"title": "Excludeonentitytype",
+				"type": "array",
+				"default": [],
+				"items":{
+					"$id": "#root/items/excludeOnEntityType/items",
+					"title": "Items",
+					"type": "string",
+					"default": "",
+					"enum": [
+						"saml20",
+						"oidcng",
+						"oauth20_rs",
+						"oauth20_ccc"
+					]
+				}
+			},
+			"translations": {
+				"$id": "#root/items/translations",
+				"title": "Translations",
+				"type": "object",
+				"required": [
+					"en"
+				],
+				"patternProperties": {
+					"^en$": {
+						"$id": "#root/items/translations/en",
+						"title": "En",
+						"type": "object",
+						"required": [
+							"saml20Label",
+							"saml20Info",
+							"oidcngLabel",
+							"oidcngInfo"
+						],
+						"properties": {
+							"saml20Label": {
+								"$id": "#root/items/translations/en/saml20Label",
+								"title": "Saml20label",
+								"type": "string"
+							},
+							"saml20Info": {
+								"$id": "#root/items/translations/en/saml20Info",
+								"title": "Saml20info",
+								"type": "string"
+							},
+							"oidcngLabel": {
+								"$id": "#root/items/translations/en/oidcngLabel",
+								"title": "oidcnglabel",
+								"type": "string"
+							},
+							"oidcngInfo": {
+								"$id": "#root/items/translations/en/oidcngInfo",
+								"title": "oidcnginfo",
+								"type": "string"
+							}
+						}
+					},
+					"(?!^en$)(^[a-z][a-z]$)": {
+						"$id": "#root/items/translations/other",
+						"title": "Other languages",
+						"type": "object",
+						"required": [
+							"saml20Label",
+							"saml20Info",
+							"oidcngLabel",
+							"oidcngInfo"
+						],
+						"properties": {
+							"saml20Label": {
+								"$id": "#root/items/translations/other/saml20Label",
+								"title": "Saml20label",
+								"type": "string"
+							},
+							"saml20Info": {
+								"$id": "#root/items/translations/other/saml20Info",
+								"title": "Saml20info",
+								"type": "string"
+							},
+							"oidcngLabel": {
+								"$id": "#root/items/translations/other/oidcngLabel",
+								"title": "oidcnglabel",
+								"type": "string"
+							},
+							"oidcngInfo": {
+								"$id": "#root/items/translations/other/oidcngInfo",
+								"title": "oidcnginfo",
+								"type": "string"
+							}
+						}
+					}
+				},
+				"additionalProperties": false
+			}
+		,
+			"urns": {
+				"$id": "#root/items/urns",
+				"title": "Urns",
+				"type": "array",
+				"default": [],
+				"items":{
+					"$id": "#root/items/urns/items",
+					"title": "Items",
+					"type": "string"
+				}
+			}
+		}
+	}
+
+}

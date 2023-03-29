@@ -61,7 +61,7 @@ class LoadEntityServiceTest extends MockeryTestCase
     const OIDCNG_PLAYGROUND_URL_TEST = 'http://tng-playground-test';
     const OIDCNG_PLAYGROUND_URL_PROD = 'http://tng-playground-prod';
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -204,12 +204,14 @@ class LoadEntityServiceTest extends MockeryTestCase
 JSON
             ));
 
-        $this->copyService->load(
+        $entity = $this->copyService->load(
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_TEST,
             Constants::ENVIRONMENT_TEST
         );
+
+        $this->assertInstanceOf(ManageEntity::class, $entity);
     }
 
     public function test_handler_loads_metadata_onto_new_entity_prod()
@@ -289,12 +291,14 @@ JSON
 JSON
             ));
 
-        $this->copyService->load(
+        $entity = $this->copyService->load(
             'manageid',
             $this->service,
             Constants::ENVIRONMENT_PRODUCTION,
             Constants::ENVIRONMENT_PRODUCTION
         );
+
+        $this->assertInstanceOf(ManageEntity::class, $entity);
     }
 
     public function test_it_removes_resource_servers_on_copy_to_production()

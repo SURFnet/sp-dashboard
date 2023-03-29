@@ -18,12 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 class ServiceDeleteTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures();
@@ -47,65 +44,31 @@ class ServiceDeleteTest extends WebTestCase
         );
         $this->testDeleteClient->registerDeleteRequest('9729d851-cfdd-4283-a8f1-a29ba5036261');
         $this->testDeleteClient->registerDeleteRequest('7398d851-abd1-2283-a8f1-a29ba5036174');
+
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', '{"teamId": 1}');
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:ibuildings.nl', '{"teamId": 2}');
+        $this->logIn();
     }
 
     public function test_removing_a_service_redirects_to_service_overview()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
         $this->switchToService('SURFnet');
 
-        $crawler = $this->client->request('GET', '/service/1/edit');
+        self::$pantherClient->request('GET', '/service/1/edit');
+        self::findBy('#dashboard_bundle_edit_service_type_delete')->click();
 
-        $form = $crawler
-            ->selectButton('Delete')
-            ->form();
+        $this->assertOnPage("You are about to delete 'SURFnet'. Are you sure?");
+        $this->assertOnPage("With this, you are also deleting the following entities");
 
-        $this->client->submit($form);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after deleting a service'
-        );
-
-        $crawler = $this->client->followRedirect();
-
-        $this->assertEquals(
-            '/service/1/delete',
-            $this->client->getRequest()->getRequestUri(),
-            "Expected to be on the service delete confirmation page"
-        );
-
+        $crawler = self::$pantherClient->refreshCrawler();
         // Assert the entities of the service are listed on the page
         $entities = $crawler->filter('table.entities tbody tr');
         // The two SURFnet entities are in the list.
         $this->assertCount(2, $entities, 'The two pre configured entities should be listed on the confirmation page');
 
-        $form = $crawler
-            ->selectButton('Delete')
-            ->form();
+        self::findBy('#dashboard_bundle_delete_service_type_delete')->click();
 
-        $this->client->submit($form);
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after pressing the delete button on the confirmation page'
-        );
-
-        $crawler = $this->client->followRedirect();
-
-        $this->assertEquals(
-            '/',
-            $this->client->getRequest()->getRequestUri(),
-            "Expected to be on the service overview page after successfully removing the service"
-        );
-
-        // TODO: Find a more robust way to test if the enity was removed.
-        $services = $crawler->filterXPath('//div[@class="service-status-title"]/a/text()')->extract(['_text']);
-
-        $this->assertNotContains(
-            'SURFnet',
-            $services,
-            "The SURFnet Service has been removed and should no longer be on the service overview page"
-        );
+        self::assertOnPage('Your service was deleted.');
     }
 
     /**
@@ -115,56 +78,12 @@ class ServiceDeleteTest extends WebTestCase
      */
     public function test_removing_a_service_with_privacy_questions_is_possible()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
-        $this->switchToService('SURFnet');
+        $this->switchToService('Ibuildings B.V.');
+        self::$pantherClient->request('GET', '/service/2/edit');
 
-        $crawler = $this->client->request('GET', '/service/2/edit');
-
-        $form = $crawler
-            ->selectButton('Delete')
-            ->form();
-
-        $this->client->submit($form);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after deleting a service'
-        );
-
-        $crawler = $this->client->followRedirect();
-
-        $this->assertEquals(
-            '/service/2/delete',
-            $this->client->getRequest()->getRequestUri(),
-            "Expected to be on the service delete confirmation page"
-        );
-
-        $form = $crawler
-            ->selectButton('Delete')
-            ->form();
-
-        $this->client->submit($form);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after pressing the delete button on the confirmation page'
-        );
-
-        $crawler = $this->client->followRedirect();
-
-        $this->assertEquals(
-            '/',
-            $this->client->getRequest()->getRequestUri(),
-            "Expected to be on the service overview page after successfully removing the service"
-        );
-
-        // TODO: Find a more robust way to test if the enity was removed.
-        $services = $crawler->filterXPath('//div[@class="service-status-title"]/a/text()')->extract(['_text']);
-
-        $this->assertNotContains(
-            'Ibuildings B.V.',
-            $services,
-            "The Ibuildings B.V. Service has been removed and should no longer be on the service overview page"
-        );
+        self::findBy('#dashboard_bundle_edit_service_type_delete')->click();
+        $this->assertOnPage("You are about to delete 'Ibuildings B.V.'. Are you sure?");
+        self::findBy('#dashboard_bundle_delete_service_type_delete')->click();
+        self::assertOnPage('Your service was deleted.');
     }
 }

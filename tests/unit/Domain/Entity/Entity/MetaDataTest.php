@@ -46,7 +46,7 @@ class MetaDataTest extends TestCase
     public function test_it_throws_exception_on_double_acs_locations()
     {
         $data['data'] = json_decode(file_get_contents(__DIR__.'/fixture/read_response_double_acs_location.json'), true);
-        $this->expectExceptionMessage('Double acs locations. Expected unique locations');
+        $this->expectExceptionMessage('Double acs locations. Expected unique locations for entity: https://engine.surfconext.nl/authentication/sp/metadata');
         MetaData::fromApiResponse($data);
     }
 
@@ -237,6 +237,18 @@ class MetaDataTest extends TestCase
 
     private function metaData(string $mode)
     {
+        $organization = m::mock(Organization::class);
+        $organization->shouldReceive('merge');
+
+        $contactList = m::mock(ContactList::class);
+        $contactList->shouldReceive('merge');
+
+        $coin = m::mock(Coin::class, [null, null, null, null, null, null, null]);
+        $coin->shouldReceive('merge');
+
+        $logo = m::mock(Logo::class);
+        $logo->shouldReceive('merge');
+
         switch ($mode) {
             case 'a':
                 return new MetaData(
@@ -249,10 +261,10 @@ class MetaDataTest extends TestCase
                     'Description NL',
                     'Name EN',
                     'Name NL',
-                    m::mock(ContactList::class)->makePartial(),
-                    m::mock(Organization::class)->makePartial(),
-                    m::mock(Coin::class)->makePartial(),
-                    m::mock(Logo::class)->makePartial()
+                    $contactList,
+                    $organization,
+                    $coin,
+                    $logo
                 );
             case 'b':
                 return new MetaData(
@@ -265,10 +277,10 @@ class MetaDataTest extends TestCase
                     'Description B NL',
                     'Name B EN',
                     'Name B NL',
-                    m::mock(ContactList::class)->makePartial(),
-                    m::mock(Organization::class)->makePartial(),
-                    m::mock(Coin::class)->makePartial(),
-                    m::mock(Logo::class)->makePartial()
+                    $contactList,
+                    $organization,
+                    $coin,
+                    $logo
                 );
             case 'null':
                 return new MetaData(
@@ -281,10 +293,10 @@ class MetaDataTest extends TestCase
                     null,
                     null,
                     null,
-                    m::mock(ContactList::class)->makePartial(),
-                    m::mock(Organization::class)->makePartial(),
-                    m::mock(Coin::class)->makePartial(),
-                    m::mock(Logo::class)->makePartial()
+                    $contactList,
+                    $organization,
+                    $coin,
+                    $logo
                 );
         }
     }

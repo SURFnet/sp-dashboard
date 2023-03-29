@@ -39,11 +39,11 @@ class ParserTest extends MockeryTestCase
      */
     private $logger;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->logger = m::mock(LoggerInterface::class);
 
-        $rootDir = __DIR__.'/../../../../app/Resources/';
+        $rootDir = __DIR__ . '/../../../../assets/Resources/';
         $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
         $this->parser = new Parser(
             new CertificateParser(),
@@ -66,7 +66,7 @@ class ParserTest extends MockeryTestCase
 
         $this->assertEquals($metadata->entityId, 'https://domain.org/saml/metadata');
 
-        $this->assertEquals($metadata->logoUrl, 'LOGO');
+        $this->assertEquals($metadata->logoUrl, 'https://LOGO.example.com/logo.png');
         $this->assertEquals($metadata->nameNl, 'DNNL');
         $this->assertEquals($metadata->nameEn, 'DNEN');
         $this->assertEquals($metadata->descriptionNl, 'DESCRNL');
@@ -155,23 +155,19 @@ CER
         $this->assertTrue($metadata->getAttribute('personalCodeAttribute')->isRequested());
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException
-     * @expectedExceptionMessage The metadata XML is invalid considering the associated XSD
-     */
     public function test_it_rejects_missing_acs_metadata()
     {
+        $this->expectExceptionMessage("The metadata XML is invalid considering the associated XSD");
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException::class);
         $this->logger->shouldReceive('error');
 
         $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_acs_metadata.xml'));
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The metadata should not contain an ACS with an index larger than 9.
-     */
     public function test_it_rejects_to_many_acs_entries()
     {
+        $this->expectExceptionMessage("The metadata should not contain an ACS with an index larger than 9.");
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
         $this->logger->shouldReceive('error');
         $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_index_metadata.xml'));
     }

@@ -33,7 +33,7 @@ class EntityDetailFactoryTest extends TestCase
 
     private $attributeService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->attributeService = m::mock(AttributeServiceInterface::class);
         $this->factory = new EntityDetailFactory($this->attributeService, 'https://test.uri', 'https://prod.uri');

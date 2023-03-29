@@ -21,10 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Exception;
 use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
@@ -47,82 +44,35 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ServiceController extends Controller
+class ServiceController extends AbstractController
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var ServiceStatusService
-     */
-    private $serviceStatusService;
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var QueryTeamsRepository
-     */
-    private $queryClient;
-
-    /**
-     * @var string
-     */
-    private $defaultStemName;
-
     public function __construct(
-        CommandBus $commandBus,
-        AuthorizationService $authorizationService,
-        ServiceService $serviceService,
-        ServiceStatusService $serviceStatusService,
-        RouterInterface $router,
-        EntityService $entityService,
-        QueryTeamsRepository $queryClient,
-        string $defaultStemName
+        private readonly CommandBus $commandBus,
+        private readonly AuthorizationService $authorizationService,
+        private readonly ServiceService $serviceService,
+        private readonly ServiceStatusService $serviceStatusService,
+        private readonly RouterInterface $router,
+        private readonly EntityService $entityService,
+        private readonly QueryTeamsRepository $queryClient,
+        private readonly LoggerInterface $logger,
+        private readonly string $defaultStemName
     ) {
-        $this->commandBus = $commandBus;
-        $this->authorizationService = $authorizationService;
-        $this->serviceService = $serviceService;
-        $this->serviceStatusService = $serviceStatusService;
-        $this->router = $router;
-        $this->entityService = $entityService;
-        $this->queryClient = $queryClient;
-        $this->defaultStemName = $defaultStemName;
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/", name="service_overview")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
+     * @Route("/", name="service_overview", methods={"GET"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function overviewAction()
     {
@@ -152,7 +102,7 @@ class ServiceController extends Controller
         /** @var ManageEntity $publishedEntity */
         $publishedEntity = $this->get('session')->get('published.entity.clone');
 
-        return $this->render('DashboardBundle:Service:overview.html.twig', [
+        return $this->render('@Dashboard/Service/overview.html.twig', [
             'services' => $serviceList,
             'isAdmin' => false,
             'publishedEntity' => $publishedEntity,
@@ -162,18 +112,14 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/create", name="service_add")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
+     * @Route("/service/create", name="service_add", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
      * @return RedirectResponse|Response
      */
     public function createAction(Request $request)
     {
         $this->get('session')->getFlashBag()->clear();
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
         $command = new CreateServiceCommand();
 
         $form = $this->createForm(CreateServiceType::class, $command);
@@ -182,7 +128,7 @@ class ServiceController extends Controller
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
+                $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
 
                 try {
                     $this->commandBus->handle($command);
@@ -194,16 +140,14 @@ class ServiceController extends Controller
             }
         }
 
-        return $this->render('DashboardBundle:Service:create.html.twig', array(
+        return $this->render('@Dashboard/Service/create.html.twig', array(
             'form' => $form->createView(),
         ));
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/{serviceId}/edit", name="service_edit")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
+     * @Route("/service/{serviceId}/edit", name="service_edit", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
      * @return RedirectResponse|Response
      */
@@ -212,8 +156,6 @@ class ServiceController extends Controller
         $service = $this->authorizationService->changeActiveService($serviceId);
 
         $this->get('session')->getFlashBag()->clear();
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
 
         $command = new EditServiceCommand(
             $service->getId(),
@@ -238,12 +180,12 @@ class ServiceController extends Controller
 
         // On delete, forward to the service delete confirmation page.
         if ($this->isDeleteAction($form)) {
-            $logger->info('Forwarding to the delete confirmation page');
+            $this->logger->info('Forwarding to the delete confirmation page');
             return $this->redirectToRoute('service_delete', ['serviceId' => $serviceId]);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
+            $this->logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
                 $this->get('session')->getFlashBag()->add('info', 'service.edit.flash.success');
@@ -255,16 +197,14 @@ class ServiceController extends Controller
             }
         }
 
-        return $this->render('DashboardBundle:Service:edit.html.twig', array(
+        return $this->render('@Dashboard/Service/edit.html.twig', array(
             'form' => $form->createView(),
         ));
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/{serviceId}/delete", name="service_delete")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template()
+     * @Route("/service/{serviceId}/delete", name="service_delete", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
      * @param Request $request
      * @param $serviceId
@@ -308,17 +248,16 @@ class ServiceController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        return [
+        return $this->render('@Dashboard/Service/delete.html.twig', [
             'form' => $form->createView(),
             'serviceName' => $service->getName(),
             'entityList' => $this->entityService->getEntityListForService($service),
-        ];
+        ]);
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/service/select", name="select_service")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/service/select", name="select_service", methods={"GET", "POST"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function selectAction(Request $request)
     {
@@ -336,10 +275,8 @@ class ServiceController extends Controller
     }
 
     /**
-     * @Method({"GET"})
-     * @Route("/service/{serviceId}", name="service_admin_overview")
-     * @Security("has_role('ROLE_ADMINISTRATOR')")
-     * @Template("@Dashboard/Service/overview.html.twig")
+     * @Route("/service/{serviceId}", name="service_admin_overview", methods={"GET"})
+     * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
     public function adminOverviewAction($serviceId)
     {
@@ -353,7 +290,7 @@ class ServiceController extends Controller
         /** @var ManageEntity $publishedEntity */
         $publishedEntity = $this->get('session')->get('published.entity.clone');
 
-        return $this->render('DashboardBundle:Service:overview.html.twig', [
+        return $this->render('@Dashboard/Service/overview.html.twig', [
             'services' => $serviceList,
             'isAdmin' => true,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),

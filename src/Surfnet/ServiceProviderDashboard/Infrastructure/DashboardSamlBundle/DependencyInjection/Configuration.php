@@ -29,11 +29,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('dashboard_saml');
-
+        $treeBuilder = new TreeBuilder('dashboard_saml');
+        $rootNode = $treeBuilder->getRootNode();
         $childNodes = $rootNode->children();
-
         $this->appendSessionConfiguration($childNodes);
 
         return $treeBuilder;
@@ -45,10 +43,9 @@ class Configuration implements ConfigurationInterface
     private function appendSessionConfiguration(NodeBuilder $childNodes)
     {
         $childNodes
-            ->arrayNode('administrator_teams')
-                ->info('All users in these teams get the administrator role')
+            ->scalarNode('administrator_teams')
+                ->info('All users in these teams get the administrator role. Teams is a string containing roles seperated by comma\'s')
                 ->isRequired()
-                ->scalarPrototype()->end()
             ->end()
             ->arrayNode('session_lifetimes')
                 ->isRequired()

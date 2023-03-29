@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 
 class AttributeNameService implements AttributeNameServiceInterface

@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveEntityCommandInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
@@ -33,6 +34,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\LoadEntityService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\EntityTypeFactory;
@@ -50,55 +52,15 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
  */
 trait EntityControllerTrait
 {
-    /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
-     * @var EntityService
-     */
-    private $entityService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-    /**
-     * @var EntityTypeFactory
-     */
-    private $entityTypeFactory;
-    /**
-     * @var LoadEntityService
-     */
-    private $loadEntityService;
-
-    /**
-     * @var EntityMergeService
-     */
-    private $entityMergeService;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService,
-        EntityMergeService $entityMergeService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityTypeFactory $entityTypeFactory,
+        private readonly LoadEntityService $loadEntityService,
+        private readonly EntityMergeService $entityMergeService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->entityTypeFactory = $entityTypeFactory;
-        $this->loadEntityService = $loadEntityService;
-        $this->entityMergeService = $entityMergeService;
     }
 
     /**
@@ -107,7 +69,7 @@ trait EntityControllerTrait
      *
      * @return Form
      */
-    private function handleImport(Request $request, SaveSamlEntityCommand $command)
+    private function handleImport(Request $request, SaveSamlEntityCommand $command): Form
     {
         // Handle an import action based on the posted xml or import url.
         $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
@@ -137,30 +99,59 @@ trait EntityControllerTrait
 
     /**
      * @return RedirectResponse|Form
+     * @throws InvalidArgumentException
      */
     private function publishEntity(
         ?ManageEntity $entity,
         SaveEntityCommandInterface $saveCommand,
-        bool $isEntityChangeRequest,
+        bool $isPublishedProductionEntity,
         FlashBagInterface $flashBag
     ) {
-        // Merge the save command data into the ManageEntity
-        $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
+        try {
+            // Merge the save command data into the ManageEntity
+            $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
+            $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
+            $this->commandBus->handle($publishEntityCommand);
+        } catch (Exception $e) {
+            $flashBag->add('error', 'entity.edit.error.publish');
+            return $this->redirectToRoute('service_overview');
+        }
 
+        if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isPublishedProductionEntity) {
+            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
+        }
+
+        // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
+        // page we will be redirecting to in a moment.
+        $this->get('session')->set('published.entity.clone', clone $entity);
+
+        if ($publishEntityCommand instanceof PublishEntityTestCommand) {
+            return $this->redirectToRoute('entity_published_test');
+        }
+
+        try {
+            $destination = $this->findDestinationForRedirect($publishEntityCommand);
+            $parameters = $this->findParametersForRedirect($publishEntityCommand);
+            return $this->redirectToRoute($destination, $parameters);
+        } catch (InvalidArgumentException $e) {
+            $flashBag->add('error', $e->getMessage());
+            return $this->redirectToRoute('service_overview');
+        }
+    }
+
+    private function createPublishEntityCommandFromEntity(?ManageEntity $entity, bool $isEntityChangeRequest)
+    {
         switch (true) {
             case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity);
-                $destination = 'entity_published_test';
                 break;
             case $isEntityChangeRequest:
                 $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new EntityChangeRequestCommand($entity, $applicant);
-                $destination = 'entity_change_request';
                 break;
             case $entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION:
                 $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
-                $destination = 'entity_published_production';
                 break;
             default:
                 throw new InvalidArgumentException(
@@ -168,22 +159,60 @@ trait EntityControllerTrait
                 );
         }
 
-        try {
-            $this->commandBus->handle($publishEntityCommand);
-        } catch (Exception $e) {
-            $flashBag->add('error', 'entity.edit.error.publish');
+        return $publishEntityCommand;
+    }
+
+    private function allowToRedirectToCreateConnectionRequest(
+        PublishProductionCommandInterface $publishEntityCommand
+    ): bool {
+        if (!($publishEntityCommand instanceof PublishEntityProductionCommand)) {
+            return false;
         }
+        $manageEntity = $publishEntityCommand->getManageEntity();
 
-        if (!$flashBag->has('error')) {
-            if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST && !$isEntityChangeRequest) {
-                $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
-            }
+        $entityActions = new EntityActions(
+            $manageEntity->getId(),
+            $manageEntity->getService()->getId(),
+            $manageEntity->getStatus(),
+            $manageEntity->getEnvironment(),
+            $manageEntity->getProtocol()->getProtocol(),
+            false,
+            false
+        );
 
-            // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
-            // page we will be redirecting to in a moment.
-            $this->get('session')->set('published.entity.clone', clone $entity);
+        return $entityActions->allowCreateConnectionRequestAction();
+    }
 
-            return $this->redirectToRoute($destination);
+    private function findParametersForRedirect(
+        PublishProductionCommandInterface $publishEntityCommand
+    ): array {
+        if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
+            $manageEntity = $publishEntityCommand->getManageEntity();
+            return [
+                'serviceId' => $manageEntity->getService()->getId(),
+                'manageId' => $manageEntity->getId(),
+                'environment' => $manageEntity->getEnvironment(),
+            ];
+        }
+        return [];
+    }
+
+    private function findDestinationForRedirect(
+        PublishProductionCommandInterface $publishEntityCommand
+    ): string {
+        switch (true) {
+            case $publishEntityCommand instanceof EntityChangeRequestCommand:
+                return 'entity_change_request';
+            case $publishEntityCommand instanceof PublishEntityProductionCommand:
+                if ($publishEntityCommand->getManageEntity()->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED &&
+                    $this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
+                    return 'entity_published_create_connection_request';
+                }
+                return 'entity_published_production';
+            default:
+                throw new InvalidArgumentException(
+                    sprintf('The environment with value "%s" is not supported.', $publishEntityCommand->getManageEntity()->getEnvironment())
+                );
         }
     }
 
@@ -194,7 +223,7 @@ trait EntityControllerTrait
      * @param string $expectedButtonName
      * @return bool
      */
-    private function assertUsedSubmitButton(Form $form, $expectedButtonName)
+    private function assertUsedSubmitButton(Form $form, $expectedButtonName): bool
     {
         $button = $form->getClickedButton();
 

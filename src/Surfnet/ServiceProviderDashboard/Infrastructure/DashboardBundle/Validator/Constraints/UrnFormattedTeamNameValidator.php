@@ -25,20 +25,10 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UrnFormattedTeamNameValidator extends ConstraintValidator
 {
-    /**
-     * @var string
-     */
-    private $defaultStemName;
-
-    /**
-     * @var string
-     */
-    private $groupName;
-
-    public function __construct(string $defaultStemName, string $groupName)
-    {
-        $this->defaultStemName = $defaultStemName;
-        $this->groupName = $groupName;
+    public function __construct(
+        private readonly string $defaultStemName,
+        private readonly string $groupName
+    ) {
     }
 
     /**

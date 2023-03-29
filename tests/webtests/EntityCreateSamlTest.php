@@ -18,27 +18,24 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Facebook\WebDriver\WebDriverBy;
 
-class EntitySamlCreateSamlTest extends WebTestCase
+class EntityCreateSamlTest extends WebTestCase
 {
-    public function setUp()
+
+    public function setUp(): void
     {
         parent::setUp();
-
         $this->loadFixtures();
-
-        $this->logIn('ROLE_ADMINISTRATOR');
-
+        $this->logIn();
         $this->switchToService('Ibuildings B.V.');
     }
 
     public function test_it_renders_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
         $form = $crawler->filter('.page-container')
             ->selectButton('Publish')
             ->form();
@@ -46,44 +43,42 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $nameEnfield = $form->get('dashboard_bundle_entity_type[metadata][nameEn]');
         $nameIdFormat = $form->get('dashboard_bundle_entity_type[metadata][nameIdFormat]');
 
-        $this->assertEquals(
+        self::assertEquals(
             '',
             $nameEnfield->getValue(),
             'Expect the NameEN field to be empty'
         );
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             ChoiceFormField::class,
             $nameIdFormat,
             'Expect the NameIdFormat to be a radio group'
         );
     }
+
     public function test_it_imports_metadata()
     {
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => 'https://engine.surfconext.nl/authentication/sp/metadata',
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' =>
+                'https://engine.surfconext.nl/authentication/sp/metadata',
         ];
 
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
 
         $form = $crawler->selectButton('Publish')->form();
 
         // The imported metadata is loaded in the form (see: /fixtures/metadata/valid_metadata.xml)
-        $this->assertEquals(
+        self::assertEquals(
             'DNNL',
             $form->get('dashboard_bundle_entity_type[metadata][nameNl]')->getValue()
         );
-        $this->assertEquals(
+        self::assertEquals(
             'DNEN',
             $form->get('dashboard_bundle_entity_type[metadata][nameEn]')->getValue()
         );
@@ -91,76 +86,153 @@ class EntitySamlCreateSamlTest extends WebTestCase
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
 
-        $this->client->submit($form);
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after saving an entity'
-        );
+        self::$pantherClient->submit($form);
+        self::$pantherClient->followRedirects();
 
-        $crawler = $this->client->followRedirect();
+        $crawler = self::$pantherClient->getCrawler();
         $pageTitle = $crawler->filter('.service-title')->first()->text();
         $messageTest = $crawler->filter('.no-entities-test')->text();
         $messageProduction = $crawler->filter('.no-entities-production')->text();
 
-        $this->assertContains("Ibuildings B.V. overview", $pageTitle);
-        $this->assertContains('No entities found.', $messageTest);
-        $this->assertContains('No entities found.', $messageProduction);
+        static::assertStringContainsString('Ibuildings B.V. overview', $pageTitle);
+        static::assertStringContainsString('No entities found.', $messageTest);
+        static::assertStringContainsString('No entities found.', $messageProduction);
     }
 
+    public function test_it_requires_an_acs_location()
+    {
+        $formData = $this->buildValidFormData();
+
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
+
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        self::$pantherClient->submit($form, $formData);
+        self::$pantherClient->followRedirects();
+
+        $errorText = self::$pantherClient->getCrawler()->findElement(
+            WebDriverBy::xpath("//li[@class='error']")
+        )->getText();
+
+        static::assertEquals(
+            'At least one ACS location is required',
+            $errorText
+        );
+    }
+
+    public function test_it_can_requires_a_valid_acs_location_url()
+    {
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
+
+        // Find the asc collection entry, fill the input with a syntactically valid URL and click the + button.
+        $crawler->findElement(
+            WebDriverBy::xpath("//div[@class='collection-entry']/input")
+        )->sendKeys('this-is-not-a-url');
+
+        $crawler->findElement(
+            WebDriverBy::xpath(
+                "//div[@class='collection-entry']/button[@class='button-small blue add_collection_entry']"
+            )
+        )->click();
+        $form = $crawler
+            ->selectButton('Publish')
+            ->form();
+
+        $formData = $this->buildValidFormData();
+        self::$pantherClient->submit($form, $formData);
+
+        $errorText = self::$pantherClient->getCrawler()->findElement(
+            WebDriverBy::xpath("//li[@class='error parsley-urlstrict']")
+        )->getText();
+
+        static::assertEquals(
+            'This value should be a valid URL.',
+            $errorText
+        );
+    }
+
+    /**
+     * @throws \Facebook\WebDriver\Exception\NoSuchElementException
+     * @throws \Facebook\WebDriver\Exception\TimeoutException
+     */
     public function test_it_can_publish_the_form()
     {
-        $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
-        $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $this->testPublicationClient->registerPublishResponse(
+            'https://entity-id.url',
+            '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
+        );
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
 
+        // Find the asc collection entry, fill the input with a syntactically valid URL and click the + button.
+        $crawler->findElement(
+            WebDriverBy::xpath("//div[@class='collection-entry']/input")
+        )->sendKeys('https://acsLocation.url');
+
+        $crawler->findElement(
+            WebDriverBy::xpath(
+                "//div[@class='collection-entry']/button[@class='button-small blue add_collection_entry']"
+            )
+        )->click();
         $form = $crawler
             ->selectButton('Publish')
             ->form();
 
-        $this->client->submit($form, $formData);
+        $formData = $this->buildValidFormData();
+        self::$pantherClient->submit($form, $formData);
 
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect to the published "thank you" endpoint'
-        );
-
-        $crawler = $this->client->followRedirect();
-        $pageTitle = $crawler->filter('h1')->first()->text();
-        $this->assertEquals('Successfully published the entity to test', $pageTitle);
+        $pageTitle = self::$pantherClient->getCrawler()->filter('h1')->first()->text();
+        self::assertEquals('Successfully published the entity to test', $pageTitle);
     }
 
-
-    public function test_attribute_is_not_required()
+    public function test_it_can_publish_multiple_acs_locations()
     {
-        $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
-        $formData = $this->buildValidFormData();
-        unset($formData['dashboard_bundle_entity_type']['attributes']);
+        $this->testPublicationClient->registerPublishResponse(
+            'https://entity-id.url',
+            '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
+        );
 
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
+
+        // Find the asc collection entry, fill the input with a syntactically valid URL and click the + button.
+        $crawler->findElement(
+            WebDriverBy::xpath("//div[@class='collection-entry']/input")
+        )->sendKeys('https://acsLocation1.url');
+
+        $crawler->findElement(
+            WebDriverBy::xpath(
+                "//div[@class='collection-entry']/button[@class='button-small blue add_collection_entry']"
+            )
+        )->click();
+
+        $crawler->findElement(
+            WebDriverBy::xpath("//div[@class='collection-entry']/input")
+        )->sendKeys('https://acsLocation2.url');
+
+        $crawler->findElement(
+            WebDriverBy::xpath(
+                "//div[@class='collection-entry']/button[@class='button-small blue add_collection_entry']"
+            )
+        )->click();
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
 
-        $this->client->submit($form, $formData);
+        $formData = $this->buildValidFormData();
+        self::$pantherClient->submit($form, $formData);
 
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect to the published "thank you" endpoint'
-        );
+        self::$pantherClient->followRedirects();
 
-        $crawler = $this->client->followRedirect();
-        $pageTitle = $crawler->filter('h1')->first()->text();
-        $this->assertEquals('Successfully published the entity to test', $pageTitle);
+        $pageTitle = self::$pantherClient->getCrawler()->filter('h1')->first()->text();
+        self::assertEquals('Successfully published the entity to test', $pageTitle);
     }
 
     public function test_it_stays_on_create_action_when_publish_failed()
@@ -171,49 +243,45 @@ class EntitySamlCreateSamlTest extends WebTestCase
             'oidc10_rp',
             'f1e394b2-08b1-4882-8b32-43876c15c743',
             'Existing SP',
-            'https://entity-id'
+            'https://entity-id.url'
         );
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
         $pageTitle = $crawler->filter('h1')->first()->text();
-        $this->assertEquals('Service Provider registration form', $pageTitle);
+        static::assertEquals('Service Provider registration form', $pageTitle);
 
         $errorMessage = $crawler->filter('div.message.error')->first()->text();
-        $this->assertEquals('Warning! Some entries are missing or incorrect. Please review and fix those entries below.', trim($errorMessage));
+        static::assertEquals('Warning! Some entries are missing or incorrect. Please review and fix those entries below.', trim($errorMessage));
 
-        $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp('/\/entity\/create/', $uri);
+        $url = self::$pantherClient->getCurrentURL();
+        static::assertMatchesRegularExpression('/\/entity\/create/', $url);
     }
 
     public function test_it_shows_flash_message_on_importing_invalid_metadata()
     {
         $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata.xml');
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => '',
+            'dashboard_bundle_entity_type[metadata][pastedMetadata]' => $xml,
         ];
 
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
         $message = $crawler->filter('.message.error')->first();
 
-        $this->assertEquals(
+        self::assertEquals(
             'The provided metadata is invalid.',
             trim($message->text()),
             'Expected an error message for this invalid importUrl'
@@ -223,17 +291,17 @@ class EntitySamlCreateSamlTest extends WebTestCase
         $notAllowedMessage = $crawler->filter('.message.preformatted')->eq(1);
         $missingMessage = $crawler->filter('.message.preformatted')->eq(2);
 
-        $this->assertContains(
-            "The metadata XML is invalid considering the associated XSD",
+        self::assertStringContainsString(
+            'The metadata XML is invalid considering the associated XSD',
             $genericMessage->text(),
             'Expected an XML parse error.'
         );
-        $this->assertContains(
+        self::assertStringContainsString(
             "EntityDescriptor', attribute 'entityED': The attribute 'entityED' is not allowed.",
             $notAllowedMessage->text(),
             'Expected an XML parse error.'
         );
-        $this->assertContains(
+        self::assertStringContainsString(
             "EntityDescriptor': The attribute 'entityID' is required but missing.",
             $missingMessage->text(),
             'Expected an XML parse error.'
@@ -243,38 +311,32 @@ class EntitySamlCreateSamlTest extends WebTestCase
     public function test_creating_draft_for_production_is_not_allowed()
     {
         // SURFnet is not allowed to create production entities.
-        $this->getAuthorizationService()->changeActiveService(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
+        $this->switchToService('SURFnet');
 
-        $this->client->request('GET', '/entity/create/1/saml20production');
-
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $crawler = self::$pantherClient->request('GET', '/entity/create/1/saml20/production');
+        self::assertOnPage('You do not have access to create entities without publishing to the test environment first');
     }
 
     public function test_it_imports_multiple_entity_descriptor_metadata_with_a_single_entity()
     {
         $xml = file_get_contents(__DIR__ . '/fixtures/metadata/valid_metadata_entities_descriptor.xml');
+
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => '',
+            'dashboard_bundle_entity_type[metadata][pastedMetadata]' => $xml,
         ];
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+        $crawler = self::$pantherClient->request('GET', '/entity/create/2/saml20/test');
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
 
         $form = $crawler->selectButton('Publish')->form();
 
         // The imported metadata is loaded in the form (see: /fixtures/metadata/valid_metadata_entities_descriptor.xml)
-        $this->assertEquals(
+        self::assertEquals(
             'FooBar: test instance',
             $form->get('dashboard_bundle_entity_type[metadata][nameEn]')->getValue()
         );
@@ -284,72 +346,56 @@ class EntitySamlCreateSamlTest extends WebTestCase
     {
         $xml = file_get_contents(__DIR__ . '/fixtures/metadata/invalid_metadata_entities_descriptor.xml');
         $formData = [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'importUrl' => '',
-                    'pastedMetadata' => $xml,
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][importUrl]' => '',
+            'dashboard_bundle_entity_type[metadata][pastedMetadata]' => $xml,
         ];
-        $crawler = $this->client->request('GET', "/entity/create/2/saml20/test");
+
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/saml20/test");
 
         $form = $crawler
             ->selectButton('Import')
             ->form();
 
-        $crawler = $this->client->submit($form, $formData);
+        $crawler = self::$pantherClient->submit($form, $formData);
         $notSupportedMultipleEntitiesMessage = $crawler->filter('.message.preformatted')->first();
 
-        $this->assertContains(
+        self::assertStringContainsString(
             'Using metadata that describes multiple entities is not supported. Please provide metadata describing a single SP entity.',
             $notSupportedMultipleEntitiesMessage->text(),
             'Expected an error message for unsupported multiple entities in metadata.'
         );
     }
-    
 
-    private function buildValidFormData()
+    private function buildValidFormData(): array
     {
+        $attributeName = $this->getOneAttribute()->getName();
+
         return [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'descriptionNl' => 'Description NL',
-                    'descriptionEn' => 'Description EN',
-                    'nameEn' => 'The A Team',
-                    'nameNl' => 'The A Team',
-                    'metadataUrl' => 'https://metadata-url',
-                    'acsLocations' => [],
-                    'entityId' => 'https://entity-id',
-                    'certificate' => file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'),
-                    'logoUrl' => 'https://logo-url',
-                ],
-                'contactInformation' => [
-                    'administrativeContact' => [
-                        'firstName' => 'John',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '999',
-                    ],
-                    'technicalContact' => [
-                        'firstName' => 'Johnny',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '888',
-                    ],
-                    'supportContact' => [
-                        'firstName' => 'Jack',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '777',
-                    ],
-                ],
-                'attributes' => [
-                    $this->getOneAttribute()->getName() => [
-                        'requested' => true,
-                        'motivation' => 'We really need it!',
-                    ],
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][descriptionNl]' => 'Description NL',
+            'dashboard_bundle_entity_type[metadata][descriptionEn]' => 'Description EN',
+            'dashboard_bundle_entity_type[metadata][nameEn]' => 'The A Team',
+            'dashboard_bundle_entity_type[metadata][nameNl]' => 'The A Team',
+            'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://metadata-url.net',
+            'dashboard_bundle_entity_type[metadata][entityId]' => 'https://entity-id.url',
+            'dashboard_bundle_entity_type[metadata][certificate]' => file_get_contents(
+                __DIR__ . '/fixtures/publish/valid.cer'
+            ),
+            'dashboard_bundle_entity_type[metadata][logoUrl]' =>
+                'https://spdasboard.vm.openconext.org/images/surfconext-logo.png',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][email]' => 'john@doe.com',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][phone]' => '999',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][firstName]' => 'Johnny',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][email]' => 'john@doe.com',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][phone]' => '888',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][firstName]' => 'Jack',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][email]' => 'john@doe.com',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][phone]' => '777',
+            'dashboard_bundle_entity_type[attributes][' . $attributeName . '][requested]' => true,
+            'dashboard_bundle_entity_type[attributes][' . $attributeName . '][motivation]' => 'We really need it!',
         ];
     }
 
@@ -359,7 +405,7 @@ class EntitySamlCreateSamlTest extends WebTestCase
      */
     protected function getOneAttribute(): Attribute
     {
-        $service = $this->client->getContainer()->get(AttributeService::class);
+        $service = self::getContainer()->get('Surfnet\ServiceProviderDashboard\Application\Service\AttributeService');
         $attribute = $service->getAttributeTypeAttributes();
 
         return reset($attribute);

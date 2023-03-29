@@ -41,7 +41,7 @@ class EntityQueryRepositoryProviderTest extends MockeryTestCase
     private $provider;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->manageTestQueryClient = m::mock(ManageQueryClient::class);
         $this->manageProductionQueryClient = m::mock(ManageQueryClient::class);

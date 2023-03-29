@@ -1,9 +1,0 @@
-# Valid scopes are manage.api.Scope.values(); =>  ["READ", "WRITE", "PUSH"]
-apiUsers:
-  {% for user in manage.apiUsers %}
-  - {
-      name: "{{ user.name }}",
-      password: "{{ user.password }}",
-      scopes: [ {{ user.scopes|join(', ') }} ]
-    }
-  {% endfor %}

@@ -18,23 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
-class EntityPublishedController extends Controller
+class EntityPublishedController extends AbstractController
 {
     /**
-     * @Method("GET")
-     * @Route("/entity/published/production", name="entity_published_production")
-     * @Route("/entity/published/test", name="entity_published_test")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
+     * @Route("/entity/published/production", name="entity_published_production", methods={"GET"})
+     * @Route("/entity/published/test", name="entity_published_test", methods={"GET"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function publishedAction()
     {
@@ -55,7 +51,11 @@ class EntityPublishedController extends Controller
             return $this->redirectToRoute('service_overview');
         }
 
-        $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
+        $parameters = [
+            'entityName' => $entity->getMetaData()->getNameEn(),
+            'showOidcPopup' => false,
+            'publishedEntity' => $entity
+        ];
 
         if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             return $this->render('@Dashboard/EntityPublished/publishedTest.html.twig', $parameters);
@@ -64,17 +64,12 @@ class EntityPublishedController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/entity/change-request", name="entity_change_request")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
+     * @Route("/entity/change-request", name="entity_change_request", methods={"GET"})
+     * @Security("is_granted('ROLE_USER')")
      */
     public function changeRequestAction()
     {
-        /** @var ManageEntity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
-        $parameters = ['entityName' => $entity->getMetaData()->getNameEn()];
-        return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig', $parameters);
+        return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig');
     }
 
     /**
@@ -85,9 +80,7 @@ class EntityPublishedController extends Controller
      * This action is rendered inside a modal window, and is triggered from the
      * entity list action.
      *
-     * @Method("GET")
-     * @Security("has_role('ROLE_USER')")
-     * @Template()
+     * @Security("is_granted('ROLE_USER')")
      */
     public function oidcConfirmationModalAction()
     {
@@ -99,9 +92,9 @@ class EntityPublishedController extends Controller
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 
-        return [
+        return $this->render('@Dashboard/EntityPublished/oidcConfirmationModal.html.twig', [
             'entity' => $viewObject,
             'environment' => $entity->getEnvironment(),
-        ];
+        ]);
     }
 }

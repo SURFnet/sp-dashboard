@@ -20,20 +20,26 @@ namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
-use function array_key_exists;
 
 class FakeDeleteManageEntityClient implements DeleteManageEntityRepository
 {
     private $deleteQueue = [];
 
+    private string $path = __DIR__ . '/../../../../var/webtest-delete-client-manage.json';
+
     public function registerDeleteRequest($entityId)
     {
         $this->deleteQueue[$entityId] = true;
+        $this->write();
     }
-
+    public function reset()
+    {
+        $this->deleteQueue = [];
+        $this->write();
+    }
     public function delete($manageId, $protocol)
     {
-
+        $this->read();
         $result = array_key_exists($manageId, $this->deleteQueue) && $this->deleteQueue[$manageId];
 
         if ($result !== true) {
@@ -42,5 +48,15 @@ class FakeDeleteManageEntityClient implements DeleteManageEntityRepository
             );
         }
         return self::RESULT_SUCCESS;
+    }
+
+    private function write()
+    {
+        file_put_contents($this->path, json_encode($this->deleteQueue));
+    }
+
+    private function read()
+    {
+        $this->deleteQueue = json_decode(file_get_contents($this->path), true);
     }
 }

@@ -41,66 +41,19 @@ use function sprintf;
 class EntityService implements EntityServiceInterface
 {
     /**
-     * @var EntityQueryRepositoryProvider
-     */
-    private $queryRepositoryProvider;
-
-    /**
-     * @var TicketServiceInterface
-     */
-    private $ticketService;
-
-    /**
-     * @var ServiceService
-     */
-    private $serviceService;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var ApiConfig
-     */
-    private $testManageConfig;
-
-    /**
-     * @var ApiConfig
-     */
-    private $prodManageConfig;
-
-    /**
-     * @var string
-     */
-    private $removalStatus;
-
-    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        EntityQueryRepositoryProvider $entityQueryRepositoryProvider,
-        TicketServiceInterface $ticketService,
-        ServiceService $serviceService,
-        ApiConfig $testConfig,
-        ApiConfig $productionConfig,
-        RouterInterface $router,
-        LoggerInterface $logger,
-        string $removalStatus
+        private EntityQueryRepositoryProvider $queryRepositoryProvider,
+        private readonly TicketServiceInterface $ticketService,
+        private readonly ServiceService $serviceService,
+        private readonly ChangeRequestService $changeRequestService,
+        private readonly ApiConfig $testManageConfig,
+        private readonly ApiConfig $prodManageConfig,
+        private readonly RouterInterface $router,
+        private readonly LoggerInterface $logger,
+        private readonly string $removalStatus
     ) {
-        $this->queryRepositoryProvider = $entityQueryRepositoryProvider;
-        $this->ticketService = $ticketService;
-        $this->serviceService = $serviceService;
-        $this->router = $router;
-        $this->logger = $logger;
-        $this->testManageConfig = $testConfig;
-        $this->prodManageConfig = $productionConfig;
-        $this->removalStatus = $removalStatus;
     }
 
     public function createEntityUuid()
@@ -120,7 +73,7 @@ class EntityService implements EntityServiceInterface
                 $entity->setService($service);
                 // Entities that are still excluded from push are not really published, but have a publication request
                 // with the service desk.
-                $this->updateStatus($entity);
+                $entity->updateStatusByExcludeFromPush();
                 $this->updateOrganizationNames(
                     $entity,
                     $service->getOrganizationNameEn(),
@@ -130,7 +83,7 @@ class EntityService implements EntityServiceInterface
                 $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
                     $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
                 if ($issue && $shouldUseTicketStatus) {
-                    $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+                    $entity->updateStatusToRemovalRequested();
                 }
                 return $entity;
             case 'test':
@@ -194,7 +147,13 @@ class EntityService implements EntityServiceInterface
 
         $productionEntities = $this->findPublishedProductionEntitiesByTeamName($service->getTeamName());
         foreach ($productionEntities as $result) {
-            $entities[] = ViewObject\Entity::fromManageProductionResult($result, $this->router, $service->getId());
+            $hasChangeRequest = $this->hasChangeRequests($result);
+            $entities[] = ViewObject\Entity::fromManageProductionResult(
+                $result,
+                $this->router,
+                $service->getId(),
+                $hasChangeRequest
+            );
         }
 
         return new ViewObject\EntityList($entities);
@@ -218,6 +177,7 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
+     *
      * @param string $manageId
      * @param string $env
      *
@@ -235,9 +195,35 @@ class EntityService implements EntityServiceInterface
         // Set the service associated to the entity on the entity.
         $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
         $entity->setService($service);
-        $this->updateStatus($entity);
+        $entity->updateStatusByExcludeFromPush();
         // As the organization names are tracked on the Service, we update it on the Manage Entity Organization VO
         $this->updateOrganizationNames($entity, $service->getOrganizationNameEn(), $service->getOrganizationNameNl());
+        return $entity;
+    }
+
+    /**
+     * @desc get a pure manage entity together with the associated service. Notice that meta data of the
+     * organization is untouched, so that any difference on the organization data can be noticed and updated from
+     * the service accordingly.
+     *
+     * @param string $manageId
+     * @param string $env
+     *
+     * @return ManageEntity|null
+     *
+     * @throws InvalidArgumentException
+     * @throws QueryServiceProviderException
+     */
+    public function getPristineManageEntityById($manageId, $env = 'test')
+    {
+        $entity = $this->queryRepositoryProvider
+            ->fromEnvironment($env)
+            ->findByManageId($manageId);
+        $entity->setEnvironment($env);
+        // Set the service associated to the entity on the entity.
+        $service = $this->serviceService->getServiceByTeamName($entity->getMetaData()->getCoin()->getServiceTeamId());
+        $entity->setService($service);
+        $entity->updateStatusByExcludeFromPush();
         return $entity;
     }
 
@@ -276,7 +262,7 @@ class EntityService implements EntityServiceInterface
             // Extract the Manage entity id's
             $manageIds = [];
             foreach ($entities as $entity) {
-                $this->updateStatus($entity);
+                $entity->updateStatusByExcludeFromPush();
                 $manageIds[] = $entity->getId();
             }
             $issueCollection = $this->ticketService->findByManageIds($manageIds);
@@ -284,14 +270,14 @@ class EntityService implements EntityServiceInterface
             // entities
             if (count($issueCollection) > 0) {
                 foreach ($entities as $entity) {
-                    $this->updateStatus($entity);
+                    $entity->updateStatusByExcludeFromPush();
                     $issue = $issueCollection->getIssueById($entity->getId());
                     if ($issue && !$entity->isExcludedFromPush() && $issue->getIssueType() !== $this->removalStatus) {
                         // A published entity needs no status update unless it's a removal requested entity
                         continue;
                     }
                     if ($issue && $issue->getIssueType() === $this->removalStatus && !$issue->isClosedOrResolved()) {
-                        $entity->updateStatus(Constants::STATE_REMOVAL_REQUESTED);
+                        $entity->updateStatusToRemovalRequested();
                     }
                 }
             }
@@ -326,17 +312,6 @@ class EntityService implements EntityServiceInterface
         return null;
     }
 
-    private function updateStatus(ManageEntity $entity)
-    {
-        $excludeFromPush = $entity->getMetaData()->getCoin()->getExcludeFromPush();
-        if ($excludeFromPush === '1') {
-            $entity->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
-        }
-        if ($excludeFromPush === '0') {
-            $entity->updateStatus(Constants::STATE_PUBLISHED);
-        }
-    }
-
     /**
      * As the organization names are tracked on the Service, we update it on the Manage
      * Entity Organization
@@ -345,5 +320,19 @@ class EntityService implements EntityServiceInterface
     {
         $entity->getMetaData()->getOrganization()->updateNameEn($orgNameEn);
         $entity->getMetaData()->getOrganization()->updateNameNl($orgNameNl);
+    }
+
+    /**
+     * @param ManageEntity $service
+     * @return bool
+     */
+    private function hasChangeRequests(ManageEntity $entity): bool
+    {
+        $changes = $this->changeRequestService->findByIdAndProtocol(
+            $entity->getId(),
+            $entity->getProtocol()
+        );
+
+        return count($changes->getChangeRequests()) > 0;
     }
 }

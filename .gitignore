@@ -1,8 +1,5 @@
-/.vagrant/
-/ansible/*.retry
-/app/config/parameters.yml
 docker-compose.override.yml
-app/js/coverage
+assets/js/coverage
 /build/
 /var/*
 !/var/cache
@@ -16,8 +13,38 @@ app/js/coverage
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
-/web/bundles/
 /.idea
 /node_modules
-/web/build
-/web/coverage
+/.env
+###> symfony 4 ###
+/public/build/
+/.env
+/public/build/
+###< symfony 4 ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+/phpunit.xml.dist
+###< symfony/phpunit-bridge ###
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###

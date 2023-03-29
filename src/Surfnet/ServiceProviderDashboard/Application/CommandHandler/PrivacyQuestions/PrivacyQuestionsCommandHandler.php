@@ -27,20 +27,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepositor
 
 class PrivacyQuestionsCommandHandler implements CommandHandler
 {
-    /**
-     * @var PrivacyQuestionsRepository
-     */
-    private $repository;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(PrivacyQuestionsRepository $repository, LoggerInterface $logger)
-    {
-        $this->repository = $repository;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly PrivacyQuestionsRepository $repository,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**

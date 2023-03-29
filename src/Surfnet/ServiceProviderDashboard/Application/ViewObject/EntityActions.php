@@ -54,15 +54,27 @@ class EntityActions
      * @var bool
      */
     private $readOnly;
+    /**
+     * @var bool
+     */
+    private $changeRequest;
 
-    public function __construct(string $id, int $serviceId, string $status, string $environment, string $protocol, bool $isReadOnly)
-    {
+    public function __construct(
+        string $id,
+        int $serviceId,
+        string $status,
+        string $environment,
+        string $protocol,
+        bool $isReadOnly,
+        bool $changeRequest
+    ) {
         $this->id = $id;
         $this->serviceId = $serviceId;
         $this->status = $status;
         $this->environment = $environment;
         $this->protocol = $protocol;
         $this->readOnly = $isReadOnly;
+        $this->changeRequest = $changeRequest;
     }
 
     public function getId()
@@ -163,18 +175,30 @@ class EntityActions
         $meetsProtocolRequirement = $protocol == Constants::TYPE_OPENID_CONNECT_TNG ||
             $protocol == Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
             $protocol == Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
-        $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED || $status == Constants::STATE_PUBLICATION_REQUESTED);
+        $meetsPublicationStatusRequirement = ($status == Constants::STATE_PUBLISHED ||
+            $status == Constants::STATE_PUBLICATION_REQUESTED);
         return $meetsProtocolRequirement && $meetsPublicationStatusRequirement;
     }
 
     public function allowChangeRequestAction(): bool
     {
-        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION) {
+        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION || !$this->changeRequest) {
             return false;
         }
         return $this->status == Constants::STATE_PUBLISHED;
     }
 
+    public function allowCreateConnectionRequestAction(): bool
+    {
+        if ($this->readOnly || $this->environment !== Constants::ENVIRONMENT_PRODUCTION) {
+            return false;
+        }
+        $protocol = $this->protocol;
+        $meetsProtocolRequirement = $protocol == Constants::TYPE_SAML ||
+            $protocol == Constants::TYPE_OPENID_CONNECT_TNG;
+
+        return $meetsProtocolRequirement && $this->status == Constants::STATE_PUBLISHED;
+    }
 
     public function isPublishedToProduction()
     {

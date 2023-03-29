@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -32,9 +32,10 @@ class WebTestFixtures extends Fixture
         $service->setProductionEntitiesEnabled(false);
         $manager->persist($service);
 
-        $service =  $this->createService('Ibuildings B.V.', 'urn:collab:org:ibuildings.nl');
+        $service =  $this->createService('Ibuildings B.V.', 'urn:collab:group:vm.openconext.org:demo:openconext:org:ibuildings.nl');
         $service->setProductionEntitiesEnabled(true);
         $service->setPrivacyQuestionsEnabled(true);
+        $service->setClientCredentialClientsEnabled(true);
         $manager->persist($service);
 
         // Service Ibuildings B.V. also has privacy questions
@@ -60,6 +61,8 @@ class WebTestFixtures extends Fixture
         $service->setGuid(Uuid::uuid4());
         $service->setOrganizationNameEn($name);
         $service->setOrganizationNameNl($name);
+        $service->setContractSigned('no');
+        $service->setSurfconextRepresentativeApproved('yes');
         return $service;
     }
 

@@ -27,29 +27,11 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PushMetadataCommandHandler implements CommandHandler
 {
-    /**
-     * @var ManagePublishService
-     */
-    private $publishService;
-
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        ManagePublishService $publishService,
-        FlashBagInterface $flashBag,
-        LoggerInterface $logger
+        private readonly ManagePublishService $publishService,
+        private readonly FlashBagInterface $flashBag,
+        private readonly LoggerInterface $logger
     ) {
-        $this->publishService = $publishService;
-        $this->flashBag = $flashBag;
-        $this->logger = $logger;
     }
 
     public function handle(PushMetadataCommand $command)

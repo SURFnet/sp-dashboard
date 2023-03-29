@@ -97,8 +97,10 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      *      )
      * })
      * @Assert\Count(
+     *     min = 1,
+     *     minMessage="At least one ACS location is required",
      *     max = 10,
-     *     maxMessage = "{{ limit }} ASC locations or less are allowed"
+     *     maxMessage = "{{ limit }} ACS locations or less are allowed"
      * )
      */
     private $acsLocations;

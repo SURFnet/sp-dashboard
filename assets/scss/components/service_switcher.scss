@@ -1,0 +1,16 @@
+@import "~select2";
+
+li.service-switcher {
+  .select2 {
+    min-width: 150px;
+  }
+
+  select {
+    display: none;
+  }
+}
+
+ul.team-names {
+  list-style: inside;
+}
+

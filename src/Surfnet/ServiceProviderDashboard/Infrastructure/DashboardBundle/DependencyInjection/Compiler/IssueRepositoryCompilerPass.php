@@ -40,13 +40,13 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $hasParameter = $container->hasParameter(self::ENABLE_TEST_MODE_FEATURE_FLAG);
-        $hasDefinition = $container->hasDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
+        $hasParameter = $container->getParameter(self::ENABLE_TEST_MODE_FEATURE_FLAG);
+        $hasDefinition = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
         if (!$hasParameter || !$hasDefinition) {
             return;
         }
 
-        $isTestModeEnabled = (bool) $container->getParameter(self::ENABLE_TEST_MODE_FEATURE_FLAG);
+        $isTestModeEnabled = (bool) $hasParameter;
 
         if ($isTestModeEnabled) {
             $this->configureServiceInTestMode($container);
@@ -66,10 +66,10 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
         $service->setArguments([
             $container->getDefinition(JiraServiceFactory::class),
             $container->getDefinition(IssueFieldFactory::class),
-            $container->getParameter('jira_issue_project_key'),
-            $container->getParameter('jira_issue_type'),
-            $container->getParameter('jira_issue_manageid_fieldname'),
-            $container->getParameter('jira_issue_manageid_field_label'),
+            $container->getParameter('env(jira_issue_project_key)'),
+            $container->getParameter('env(jira_issue_type)'),
+            $container->getParameter('env(jira_issue_manageid_fieldname)'),
+            $container->getParameter('env(jira_issue_manageid_field_label)')
         ]);
     }
 
@@ -82,7 +82,7 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
         $service = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
         $service->setClass(DevelopmentIssueRepository::class);
         $service->setArguments([
-            $container->getParameter('jira_test_mode_storage_path')
+            $container->getParameter('env(jira_test_mode_storage_path)')
         ]);
     }
 }

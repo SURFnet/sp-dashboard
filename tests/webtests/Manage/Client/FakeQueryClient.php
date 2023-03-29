@@ -22,14 +22,31 @@ use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use function array_key_exists;
-use function json_decode;
 
 class FakeQueryClient implements QueryManageRepository
 {
+
+    public function __construct(string $path)
+    {
+        $this->path = __DIR__ . $path;
+    }
+
     /**
      * @var ClientResult[]
      */
     private $entities = [];
+
+    private string $path;
+
+    public function atPath(string $path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+    public function reset()
+    {
+        $this->write([]);
+    }
 
     public function registerEntity(
         string $protocol,
@@ -40,6 +57,7 @@ class FakeQueryClient implements QueryManageRepository
         ?string $teamName = null
     ) {
         $this->entities[$id] = new ClientResult($protocol, $id, $entityId, $metadataUrl, $name, $teamName);
+        $this->storeEntities();
     }
 
     public function registerEntityRaw(string $json)
@@ -47,10 +65,12 @@ class FakeQueryClient implements QueryManageRepository
         // Yank the id from the json metadata
         $decoded = json_decode($json, true);
         $this->entities[$decoded['id']] = new ClientResultRaw($json);
+        $this->storeEntities();
     }
 
     public function findManageIdByEntityId($entityId)
     {
+        $this->load();
         foreach ($this->entities as $entity) {
             if ($entity->getEntityId() === $entityId) {
                 return $entity->getId();
@@ -65,6 +85,7 @@ class FakeQueryClient implements QueryManageRepository
 
     public function findByManageId($manageId)
     {
+        $this->load();
         if (array_key_exists($manageId, $this->entities)) {
             return ManageEntity::fromApiResponse($this->entities[$manageId]->getEntityResult());
         }
@@ -73,6 +94,7 @@ class FakeQueryClient implements QueryManageRepository
 
     public function findByTeamName($teamName, $state)
     {
+        $this->load();
         $searchResults = [];
         foreach ($this->entities as $entity) {
             $result = $entity->getEntityResult();
@@ -98,6 +120,7 @@ class FakeQueryClient implements QueryManageRepository
 
     public function findResourceServerByEntityId($entityId, $state)
     {
+        $this->load();
         foreach ($this->entities as $entity) {
             $result = $entity->getEntityResult();
             if (isset($result['data']['entityid']) && $result['data']['entityid'] === $entityId) {
@@ -109,5 +132,40 @@ class FakeQueryClient implements QueryManageRepository
     public function findByManageIdAndProtocol(string $manageId, string $protocol) :? ManageEntity
     {
         return $this->findByManageId($manageId);
+    }
+
+
+    private function read()
+    {
+        return json_decode(file_get_contents($this->path), true);
+    }
+
+    private function write(array $data)
+    {
+        file_put_contents($this->path, json_encode($data));
+    }
+
+    private function storeEntities()
+    {
+        // Also store the new entity in the on-file storage
+        $data = [];
+        foreach ($this->entities as $identifier => $entity) {
+            $data[$identifier] = $entity->encode();
+        }
+        $this->write($data);
+    }
+
+    private function load()
+    {
+        $data = $this->read();
+        foreach ($data as $id => $rawClientResult) {
+            if (array_key_exists('protocol', $rawClientResult)) {
+                $this->entities[$id] = ClientResult::decode($rawClientResult);
+                continue;
+            }
+            if (array_key_exists('json', $rawClientResult)) {
+                $this->entities[$id] = ClientResultRaw::decode($rawClientResult);
+            }
+        }
     }
 }

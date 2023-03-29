@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Manage\Dto;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -60,6 +61,7 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertSame('Technical Support', $contact->getSurName());
         $this->assertSame('support@surfconext.nl', $contact->getEmail());
         $this->assertSame('', $contact->getPhone());
+        $this->assertSame('Change request', $entity->getRevisionNote());
     }
 
     public function test_diff_saml()
@@ -78,6 +80,8 @@ class ManageEntityTest extends MockeryTestCase
         $this->assertArrayHasKey('arp', $diffResults);
         // Bothe attributes changed
         $this->assertCount(2, $diffResults['arp']['attributes']);
+        $this->assertSame('Change request', $entity->getRevisionNote());
+
     }
 
     public function test_diff_oidc()
@@ -101,5 +105,135 @@ class ManageEntityTest extends MockeryTestCase
         // Even though only one item is changed, both items are part of the diff as the redirect URLS are set in a
         // 'provide everything' manner.
         $this->assertCount(2, $diffResults['metaDataFields.redirectUrls']);
+        $this->assertSame('Change request', $entity->getRevisionNote());
+
+    }
+
+    public function test_is_requested_production_entity_copy()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
+        $this->assertTrue($entity->isRequestedProductionEntity(true));
+        $this->assertFalse($entity->isRequestedProductionEntity(false));
+    }
+
+    public function test_it_can_has_status_published_when_excluded_from_push()
+    {
+        $data = json_decode(
+            file_get_contents(__dir__ . '/fixture/manage_entity_saml20_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+
+        static::assertEquals('published', $manageEntity->getStatus());
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_updates_status()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__.'/fixture/manage_entity_saml20_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusByExcludeFromPush();
+
+        static::assertEquals('requested', $manageEntity->getStatus());
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_does_not_update_when_not_excluded_from_push()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__ . '/fixture/manage_entity_saml20_no_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+
+        static::assertEquals('published', $manageEntity->getStatus());
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusByExcludeFromPush();
+
+        static::assertEquals('published', $manageEntity->getStatus());
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_sets_removal_requested_status()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__.'/fixture/manage_entity_saml20_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusToRemovalRequested();
+        static::assertEquals('removal requested', $manageEntity->getStatus());
+        static::assertTrue($manageEntity->isExcludedFromPushSet());
+    }
+
+    public function test_it_sets_removal_requested_status_when_not_excluded_from_push()
+    {
+        $data = json_decode(
+            file_get_contents(__DIR__ . '/fixture/manage_entity_saml20_no_excluded_from_push.json'),
+            true
+        );
+        $manageEntity = ManageEntity::fromApiResponse($data);
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+
+        $manageEntity->updateStatusToRemovalRequested();
+        static::assertEquals('removal requested', $manageEntity->getStatus());
+        static::assertFalse($manageEntity->isExcludedFromPushSet());
+    }
+
+
+    public function test_it_has_revision_notes()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_sp_requested.json'), true));
+        $entity->setComments('comment on entity');
+        $this->assertSame('comment on entity', $entity->getRevisionNote());
+        $entity->setComments('another comment on entity');
+        $this->assertSame('another comment on entity', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_entity_created_revision_notes_for_a_requested_state()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_new_entity.json'), true));
+        $this->assertSame('Entity created', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_entity_changed_revision_notes_for_a_requested_state()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_changed_entity.json'), true));
+        $entity->setStatus(Constants::STATE_PUBLICATION_REQUESTED);
+        $this->assertSame('Entity changed', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_changed_request_revision_notes_for_a_published_state()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_published.json'), true));
+        $this->assertSame('Change request', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_entity_created_revision_notes_for_a_test_entity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_new_test_entity.json'), true));
+        $this->assertSame('Entity created', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_entity_changed_revision_notes_for_a_test_entity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_changed_test_entity.json'), true));
+        $entity->setStatus(Constants::STATE_PUBLICATION_REQUESTED);
+        $this->assertSame('Entity changed', $entity->getRevisionNote());
+    }
+
+    public function test_it_has_changed_request_revision_notes_for_a_test_entity()
+    {
+        $entity = ManageEntity::fromApiResponse(json_decode(file_get_contents(__DIR__ . '/fixture/saml20_published_test_entity.json'), true));
+        $this->assertSame('Change request', $entity->getRevisionNote());
     }
 }

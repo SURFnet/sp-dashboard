@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Application\Exception\AttributeNotFoundException;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidAttributeEntityException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ValueObject\EntityMergeAttribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetailAttribute;
@@ -32,22 +32,12 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\A
 
 class AttributeService implements AttributeServiceInterface
 {
-    /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
-
     private $attributes = [];
 
-    /**
-     * @var string
-     */
-    private $language;
-
-    public function __construct(AttributeRepositoryInterface $attributeRepository, $language)
-    {
-        $this->attributeRepository = $attributeRepository;
-        $this->language = $language;
+    public function __construct(
+        private readonly AttributeRepositoryInterface $attributeRepository,
+        private readonly string $language
+    ) {
     }
 
     public function getAttributeTypeAttributes(): array
@@ -110,56 +100,34 @@ class AttributeService implements AttributeServiceInterface
         return $attributes;
     }
 
-    public function getAttributeFriendlyName(string $identifier, string $type): string
+    public function isAttributeName(string $name): bool
     {
-        $attributes = $this->getAttributeTypeAttributes();
-        foreach ($attributes ?? [] as $attribute) {
-            if ($identifier === $attribute->getName()) {
-                return $this->getLabelFromAttribute($attribute, $type);
-            }
-        }
-        throw new AttributeNotFoundException(sprintf('Unable to find attribute with identifier: %s', $identifier));
-    }
-
-    private function getLabelFromAttribute(
-        Attribute $attribute,
-        string $entityType
-    ) {
-        switch ($entityType) {
-            case Constants::TYPE_SAML:
-                return $attribute->getSaml20Label();
-            case Constants::TYPE_OPENID_CONNECT_TNG:
-                return $attribute->getOidcngLabel();
-            default:
-                return '';
-        }
+        return $this->attributeRepository->isAttributeName($name);
     }
 
     private function getInfoFromAttributeDto(
         AttributeDto $attributeDto,
         string $entityType
-    ) {
+    ): string {
         switch ($entityType) {
             case Constants::TYPE_SAML:
                 return $attributeDto->translations[$this->language]->saml20Info;
             case Constants::TYPE_OPENID_CONNECT_TNG:
                 return $attributeDto->translations[$this->language]->oidcngInfo;
-            default:
-                return '';
         }
+        throw new InvalidAttributeEntityException(sprintf('Attribute information for entity %s is not supported', $entityType));
     }
 
     private function getLabelFromAttributeDto(
         AttributeDto $attributeDto,
         string $entityType
-    ) {
+    ): string {
         switch ($entityType) {
             case Constants::TYPE_SAML:
                 return $attributeDto->translations[$this->language]->saml20Label;
             case Constants::TYPE_OPENID_CONNECT_TNG:
                 return $attributeDto->translations[$this->language]->oidcngLabel;
-            default:
-                return '';
         }
+        throw new InvalidAttributeEntityException(sprintf('Attributes labels for entity %s are not supported', $entityType));
     }
 }

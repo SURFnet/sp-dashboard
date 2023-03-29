@@ -24,14 +24,8 @@ use Twig_SimpleFunction;
 
 class IdentityExtension extends Twig_Extension
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(private readonly TokenStorageInterface $tokenStorage)
     {
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getFunctions()
@@ -62,7 +56,7 @@ class IdentityExtension extends Twig_Extension
         }
 
         return $environment->render(
-            'DashboardBundle:TwigExtension:identity.html.twig',
+            'TwigExtension\\identity.html.twig',
             [
                 'contact' => $contact,
             ]

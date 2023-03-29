@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+php ./bin/console cache:clear --env=test
+./vendor/bin/phpunit -c ci/qa/phpunit.xml --testsuite unit --coverage-php /tmp/sp-dashboard-coverage/unit.cov
+./vendor/bin/phpunit -c ci/qa/phpunit.xml --testsuite integration --coverage-php /tmp/sp-dashboard-coverage/integration.cov
+./vendor/bin/phpunit -c ci/qa/phpunit.xml --testsuite webtests --coverage-php /tmp/sp-dashboard-coverage/webtests.cov

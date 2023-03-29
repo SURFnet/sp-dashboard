@@ -52,17 +52,8 @@ class QueryClient implements QueryManageRepository
 
     private $protocolSupport = [Protocol::SAML20_SP, Protocol::OIDC10_RP, Protocol::OAUTH20_RS];
 
-    /**
-     * @var HttpClientInterface
-     */
-    private $client;
-
-    /**
-     * @param HttpClientInterface $client
-     */
-    public function __construct(HttpClientInterface $client)
+    public function __construct(private HttpClientInterface $client)
     {
-        $this->client = $client;
     }
 
     /**

@@ -23,7 +23,7 @@ use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IssueFieldFactoryTest extends TestCase
 {
@@ -36,7 +36,7 @@ class IssueFieldFactoryTest extends TestCase
      */
     private $translator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->translator = m::mock(TranslatorInterface::class);
         $this->factory = new IssueFieldFactory(

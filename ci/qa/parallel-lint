@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+cd $(dirname $0)/../../
+
+# https://github.com/JakubOnderka/PHP-Parallel-Lint
+./vendor/bin/parallel-lint assets src tests public $1

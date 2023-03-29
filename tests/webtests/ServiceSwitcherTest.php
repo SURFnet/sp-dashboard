@@ -18,16 +18,15 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Facebook\WebDriver\WebDriverBy;
 
 /**
  * The service switcher was used for both the USER and ADMINISTRATOR roles. The users later stopped having this feature
- * in favour of a more user friendly service overview page.
+ * in favour of a more user-friendly service overview page.
  */
 class ServiceSwitcherTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -38,14 +37,9 @@ class ServiceSwitcherTest extends WebTestCase
 
         $serviceRepository = $this->getServiceRepository();
 
-        $this->logIn(
-            'ROLE_USER',
-            [
-                $serviceRepository->findByName('SURFnet'),
-            ]
-        );
+        $this->logIn($serviceRepository->findByName('SURFnet'));
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = self::$pantherClient->request('GET', '/');
 
         $this->assertEmpty($crawler->filter('select#service-switcher'));
     }
@@ -56,93 +50,37 @@ class ServiceSwitcherTest extends WebTestCase
 
         $serviceRepository = $this->getServiceRepository();
 
-        $this->logIn(
-            'ROLE_USER',
-            [
-                $serviceRepository->findByName('SURFnet'),
-                $serviceRepository->findByName('Ibuildings B.V.'),
-            ]
-        );
+        $this->logIn($serviceRepository->findByName('SURFnet'), $serviceRepository->findByName('Ibuildings B.V.'));
 
-        $crawler = $this->client->request('GET', '/');
+        $crawler = self::$pantherClient->request('GET', '/');
 
         $this->assertEmpty($crawler->filter('select#service-switcher'));
     }
 
     public function test_no_service_is_selected_when_session_is_empty()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
         $this->loadFixtures();
+        self::$pantherClient->request('GET', '/service/create');
 
-        $crawler = $this->client->request('GET', '/service/create');
-
-        $this->assertEmpty(
-            $crawler->filter('select#service-switcher option:selected')
-        );
+        $this->assertEmpty(self::findBy('select#service-switcher')->getText());
     }
 
     public function test_switcher_lists_all_services_for_administrators()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
         $this->loadFixtures();
+        $this->logIn();
 
-        $crawler = $this->client->request('GET', '/service/create');
+        $crawler = self::$pantherClient->request('GET', '/service/create');
+
         $options = $crawler->filter('select#service-switcher option');
-
         $this->assertCount(3, $options, 'Expecting 2 services in service switcher (excluding empty option)');
 
-        $this->assertEquals('', $options->eq(0)->text());
-        $this->assertEquals('Ibuildings B.V. [ibuildings.nl]', $options->eq(1)->text());
-        $this->assertEquals('SURFnet [surf.nl]', $options->eq(2)->text());
-    }
+        $crawler->filter('.service-switcher form')->click();
+        $ibuildings = "//li[contains(@id,'select2-service-switcher-result-')][1]";
+        $surf = "//li[contains(@id,'select2-service-switcher-result-')][2]";
 
-    public function test_switcher_remembers_selected_services()
-    {
-        $this->logIn('ROLE_ADMINISTRATOR');
-        $this->loadFixtures();
-
-        $crawler = $this->client->request('GET', '/service/create');
-        $form = $crawler->filter('.service-switcher form')
-            ->form();
-
-        $form['service_switcher[selected_service_id]']->select(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
-
-        $this->client->submit($form);
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after selecting a service'
-        );
-
-        $crawler = $this->client->followRedirect();
-
-        $selectedService = $crawler->filter('select#service-switcher option:selected')->first();
-
-        $this->assertEquals('SURFnet [surf.nl]', $selectedService->text(), "Service 'SURFnet' should be selected");
-    }
-
-    public function test_switcher_has_no_selected_option_when_overview_is_selected()
-    {
-        $this->logIn('ROLE_ADMINISTRATOR');
-        $this->loadFixtures();
-
-        $crawler = $this->client->request('GET', '/service/create');
-        $form = $crawler->filter('.service-switcher form')
-            ->form();
-
-        $form['service_switcher[selected_service_id]']->select(
-            $this->getServiceRepository()->findByName('SURFnet')->getId()
-        );
-
-        $this->client->submit($form);
-
-        $this->client->followRedirect();
-
-        $crawler = $this->client->request('GET', '/');
-        $selectedService = $crawler->filter('select#service-switcher option:selected')->first();
-
-        $this->assertCount(0, $selectedService);
+        $this->assertEquals('Ibuildings B.V. [ibuildings.nl]', $crawler->findElement(WebDriverBy::xpath($ibuildings))->getText());
+        $this->assertEquals('SURFnet [surf.nl]', $crawler->findElement(WebDriverBy::xpath($surf))->getText());
     }
 }

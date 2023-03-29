@@ -23,16 +23,11 @@ use IteratorAggregate;
 class ServiceList implements IteratorAggregate
 {
     /**
-     * @var Service[]
-     */
-    private $services;
-
-    /**
      * @param Service[] $services
      */
-    public function __construct(array $services)
-    {
-        $this->services = $services;
+    public function __construct(
+        private readonly array $services
+    ) {
     }
 
     /**

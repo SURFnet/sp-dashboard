@@ -19,10 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
@@ -33,61 +30,48 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\Enti
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\CreateNewEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\ProtocolChoiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityCreateController extends Controller
+class EntityCreateController extends AbstractController
 {
     use EntityControllerTrait;
 
-    /**
-     * @var ProtocolChoiceFactory
-     */
-    private $protocolChoiceFactory;
-
     public function __construct(
-        CommandBus $commandBus,
-        EntityService $entityService,
-        ServiceService $serviceService,
-        AuthorizationService $authorizationService,
-        EntityTypeFactory $entityTypeFactory,
-        LoadEntityService $loadEntityService,
-        ProtocolChoiceFactory $protocolChoiceFactory,
-        EntityMergeService $entityMergeService
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly ServiceService $serviceService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityTypeFactory $entityTypeFactory,
+        private readonly LoadEntityService $loadEntityService,
+        private readonly ProtocolChoiceFactory $protocolChoiceFactory,
+        private readonly EntityMergeService $entityMergeService
     ) {
-        $this->commandBus = $commandBus;
-        $this->entityService = $entityService;
-        $this->serviceService = $serviceService;
-        $this->authorizationService = $authorizationService;
-        $this->entityTypeFactory = $entityTypeFactory;
-        $this->loadEntityService = $loadEntityService;
-        $this->protocolChoiceFactory = $protocolChoiceFactory;
-        $this->entityMergeService = $entityMergeService;
     }
 
     /**
-     * @Method({"GET", "POST"})
      * @Route(
      *     "/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}",
      *     defaults={
      *          "targetEnvironment" = "test",
      *     },
-     *     name="entity_type"
+     *     name="entity_type",
+     *     methods={"GET", "POST"}
      * )
-     * @Security("has_role('ROLE_USER')")
-     * @Template("@Dashboard/EntityType/type.html.twig")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param Request $request
      *
      * @param int $serviceId
      * @param string $targetEnvironment
      * @param string $inputId
-     * @return array|RedirectResponse
+     * @return RedirectResponse|Response|array
      */
     public function typeAction(Request $request, $serviceId, string $targetEnvironment, string $inputId)
     {
@@ -134,7 +118,7 @@ class EntityCreateController extends Controller
             ]);
         }
 
-        return [
+        return $this->render('@Dashboard/EntityType/type.html.twig', [
             'form' => $form->createView(),
             'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
@@ -143,13 +127,11 @@ class EntityCreateController extends Controller
             'productionEnabled' => $isProductionEnabled,
             'entities' => $entityList->getEntities(),
             'manageId' => $formId,
-        ];
+        ]);
     }
 
     /**
-     * @Method({"GET", "POST"})
-     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add")
-     * @Template("@Dashboard/EntityEdit/edit.html.twig")
+     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add", methods={"GET","POST"})
      * @param Request $request
      * @param int $serviceId
      * @param null|string $targetEnvironment
@@ -174,6 +156,12 @@ class EntityCreateController extends Controller
             $targetEnvironment !== Constants::ENVIRONMENT_TEST) {
             throw $this->createAccessDeniedException(
                 'You do not have access to create entities without publishing to the test environment first'
+            );
+        }
+
+        if (!$service->isClientCredentialClientsEnabled() && $type === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+            throw $this->createAccessDeniedException(
+                'You cannot create client credential clients entities because they are not allowed for this service'
             );
         }
 
@@ -216,25 +204,24 @@ class EntityCreateController extends Controller
             }
         }
 
-        return [
+        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
             'form' => $form->createView(),
             'type' => $type,
-        ];
+        ]);
     }
 
 
     /**
-     * @Method({"GET", "POST"})
      * @Route("/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}",
      *      defaults={
      *          "manageId" = null,
      *          "targetEnvironment" = "test",
      *          "sourceEnvironment" = "test"
      *      },
-     *      name="entity_copy"
+     *      name="entity_copy",
+     *      methods={"GET", "POST"}
      * )
-     * @Security("has_role('ROLE_USER')")
-     * @Template("@Dashboard/EntityEdit/edit.html.twig")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @param int $serviceId
      * @param null|string $manageId set from the entity_copy route
@@ -313,9 +300,9 @@ class EntityCreateController extends Controller
             }
         }
 
-        return [
+        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
             'form' => $form->createView(),
             'type' => $entity->getProtocol()->getProtocol(),
-        ];
+        ]);
     }
 }

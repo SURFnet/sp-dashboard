@@ -21,11 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBu
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use Surfnet\SamlBundle\Security\Authentication\Token\SamlToken;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Token\SamlToken;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -51,13 +51,20 @@ class AuthorizationServiceTest extends MockeryTestCase
      */
     private $manageConfigProd;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->serviceService = m::mock(ServiceService::class);
         $this->session = m::mock(Session::class);
         $this->tokenStorage = m::mock(TokenStorageInterface::class);
         $this->manageConfigTest = m::mock(Config::class);
         $this->manageConfigProd = m::mock(Config::class);
+
+        $token = m::mock(SamlToken::class);
+        $token->shouldReceive('hasRole')->with('ROLE_ADMINISTRATOR')->andReturnTrue();
+        $token->shouldReceive('getRoleNames')->andReturn(['ROLE_ADMINISTRATOR']);
+        $this->tokenStorage->shouldReceive('getToken')
+            ->andReturn($token);
+
 
         $this->service = new AuthorizationService(
             $this->serviceService,
@@ -76,8 +83,6 @@ class AuthorizationServiceTest extends MockeryTestCase
         $service = m::mock(Service::class);
         $service->shouldReceive('getId')->andReturn(1);
 
-        $this->tokenStorage->shouldReceive('getToken')
-            ->andReturn(new SamlToken(['ROLE_ADMINISTRATOR']));
 
         $this->serviceService->shouldReceive('getServiceById')->andReturn(
             $service
@@ -91,7 +96,9 @@ class AuthorizationServiceTest extends MockeryTestCase
         $this->session->shouldReceive('set')
             ->with('selected_service_id', 1);
 
-        $this->service->changeActiveService(1);
+        $service = $this->service->changeActiveService(1);
+
+        $this->assertInstanceOf(Service::class, $service);
     }
 
     /**
@@ -99,9 +106,6 @@ class AuthorizationServiceTest extends MockeryTestCase
      */
     public function test_service_reads_selected_service_from_session()
     {
-        $this->tokenStorage->shouldReceive('getToken')
-            ->andReturn(new SamlToken(['ROLE_ADMINISTRATOR']));
-
         $this->serviceService->shouldReceive('getServiceNamesById')
             ->andReturn([
                 1 => 'SURFnet',
@@ -115,15 +119,9 @@ class AuthorizationServiceTest extends MockeryTestCase
 
     /**
      * @group Service
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage User is not granted access to service with ID 2
      */
     public function test_service_throws_exception_if_access_to_service_is_not_granted()
     {
-        $this->tokenStorage->shouldReceive('getToken')
-            ->andReturn(new SamlToken(['ROLE_ADMINISTRATOR']));
-
         $this->serviceService->shouldReceive('getServiceNamesById')
             ->andReturn([
                 1 => 'SURFnet',
@@ -132,6 +130,8 @@ class AuthorizationServiceTest extends MockeryTestCase
         $this->session->shouldReceive('get')
             ->andReturn(2);
 
+        $this->expectExceptionMessage("User is not granted access to service with ID 2");
+        $this->expectException(\RuntimeException::class);
         $this->service->getSelectedServiceId();
     }
 }

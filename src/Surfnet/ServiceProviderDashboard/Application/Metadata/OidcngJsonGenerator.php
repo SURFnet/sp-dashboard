@@ -37,29 +37,11 @@ use function sprintf;
  */
 class OidcngJsonGenerator implements GeneratorInterface
 {
-    /**
-     * @var ArpGenerator
-     */
-    private $arpMetadataGenerator;
-
-    /**
-     * @var PrivacyQuestionsMetadataGenerator
-     */
-    private $privacyQuestionsMetadataGenerator;
-
-    /**
-     * @var SpDashboardMetadataGenerator
-     */
-    private $spDashboardMetadataGenerator;
-
     public function __construct(
-        ArpGenerator $arpMetadataGenerator,
-        PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly ArpGenerator $arpMetadataGenerator,
+        private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
-        $this->arpMetadataGenerator = $arpMetadataGenerator;
-        $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
-        $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -98,9 +80,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             ],
         ];
 
-        if ($entity->hasComments()) {
-            $payload['note'] = $entity->getComments();
-        }
+        $payload['note'] = $entity->getRevisionNote();
         return $payload;
     }
 
@@ -119,9 +99,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
         $metadata += $this->generateAllowedResourceServers($entity);
 
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }
@@ -148,9 +126,8 @@ class OidcngJsonGenerator implements GeneratorInterface
                 $metadata += $this->generateAllowedResourceServers($entity);
                 $this->setExcludeFromPush($metadata, $entity, true);
 
-                if ($entity->hasComments()) {
-                    $metadata['revisionnote'] = $entity->getComments();
-                }
+                $metadata['revisionnote'] = $entity->getRevisionNote();
+
                 return $metadata;
         }
     }
@@ -295,6 +272,8 @@ class OidcngJsonGenerator implements GeneratorInterface
      * Logo dimensions are required in the SAML spec. They are always present,
      * except when the user just created the entity in the interface. We
      * determine the dimensions in those situations.
+     *
+     * @SuppressWarnings(PHPMD.ErrorControlOperator)
      *
      * @param ManageEntity $entity
      * @return array

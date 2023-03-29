@@ -28,28 +28,11 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.LongClassName)
+ */
 class RequestDeletePublishedEntityCommandHandler implements CommandHandler
 {
-    /**
-     * @var TicketService
-     */
-    private $ticketService;
-
-    /**
-     * @var QueryManageRepository
-     */
-    private $queryClient;
-
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     /**
      * @var string
      */
@@ -60,26 +43,16 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
      */
     private $descriptionTranslationKey;
 
-    /**
-     * @var string
-     */
-    private $issueType;
-
     public function __construct(
-        QueryManageRepository $manageProductionQueryClient,
-        string                $issueType,
-        TicketService         $ticketService,
-        FlashBagInterface     $flashBag,
-        LoggerInterface       $logger
+        private readonly QueryManageRepository $queryClient,
+        private readonly string $issueType,
+        private readonly TicketService $ticketService,
+        private readonly FlashBagInterface $flashBag,
+        private readonly LoggerInterface $logger
     ) {
-        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in parameters.yml');
-        $this->queryClient = $manageProductionQueryClient;
-        $this->ticketService = $ticketService;
-        $this->flashBag = $flashBag;
-        $this->logger = $logger;
+        Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in .env');
         $this->summaryTranslationKey = 'entity.delete.request.ticket.summary';
         $this->descriptionTranslationKey = 'entity.delete.request.ticket.description';
-        $this->issueType = $issueType;
     }
 
     public function handle(RequestDeletePublishedEntityCommand $command)

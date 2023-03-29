@@ -29,27 +29,18 @@ class JiraServiceFactory
      */
     private $config;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @param string $host
-     * @param string $username
-     * @param string $password
-     * @param LoggerInterface $logger
-     */
-    public function __construct($host, $username, $password, LoggerInterface $logger)
-    {
+    public function __construct(
+        string $host,
+        string $username,
+        string $password,
+        private readonly LoggerInterface $logger
+    ) {
         // Create a IssueService with a Jira connection built in.
         $this->config = new ArrayConfiguration([
             'jiraHost' => $host,
             'jiraUser' => $username,
             'jiraPassword' => $password
         ]);
-
-        $this->logger = $logger;
     }
 
     public function buildIssueService()

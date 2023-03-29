@@ -18,50 +18,35 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Facebook\WebDriver\WebDriverBy;
+
 class EditServiceTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->loadFixtures();
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:team-a', 'data');
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:surf.nl', 'data');
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:ibuildings.nl', 'data');
+        $this->teamsQueryClient->registerTeam('demo:openconext:org:team-a', '{"teamId": 3}');
     }
 
     public function test_can_edit_existing_service()
     {
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
         $this->switchToService('SURFnet');
+        $button = self::findBy('.service-status-title-button');
+        $button->click();
 
-        $formData = [
-            'dashboard_bundle_edit_service_type' => [
-                'general' => [
-                    'guid' => 'f1af6b9e-2546-4593-a57f-6ca34d2561e9',
-                    'name' => 'The A Team',
-                    'organizationNameNl' => 'team-a',
-                    'organizationNameEn' => 'team-a',
-                ],
-                'teams' => [
-                    'teamName' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:team-a',
-                ]
-            ]
-        ];
+        $crawler = self::$pantherClient->refreshCrawler();
 
-        $crawler = $this->client->request('GET', '/service/1/edit');
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        $service = $this->getServiceRepository()->findByName('The A Team');
-
-        $this->assertEquals('f1af6b9e-2546-4593-a57f-6ca34d2561e9', $service->getGuid());
-        $this->assertEquals('The A Team', $service->getName());
-        $this->assertEquals('urn:collab:group:vm.openconext.org:demo:openconext:org:team-a', $service->getTeamName());
+        $form = $crawler->findElement(WebDriverBy::cssSelector('form[name="dashboard_bundle_edit_service_type"]'));
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_guid', 'f1af6b9e-2546-4593-a57f-6ca34d2561e9');
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_name', 'The A Team');
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_general_organizationNameNl', 'Groepje A');
+        $this->checkFormField($form, '#dashboard_bundle_edit_service_type_serviceStatus_surfconextRepresentativeApproved_1');
+        $this->fillFormField($form, '#dashboard_bundle_edit_service_type_teams_teamName', 'urn:collab:group:vm.openconext.org:demo:openconext:org:team-a');
+        self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
+        self::assertOnPage('Your changes were saved!');
     }
 
     /**
@@ -72,63 +57,30 @@ class EditServiceTest extends WebTestCase
     {
         $serviceRepository = $this->getServiceRepository();
 
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
         $this->switchToService('SURFnet');
 
-        $crawler = $this->client->request('GET', '/service/1/edit');
+        $crawler = self::$pantherClient->request('GET', '/service/1/edit');
 
         // Step 1: Admin sets privacy questions enabled to false
         $formData = [
-            'dashboard_bundle_edit_service_type' => [
-                'general' => [
-                    'privacyQuestionsEnabled' => false,
-                ],
-                'teams' => [
-                    'teamName' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl',
-                ]
-            ]
+            'dashboard_bundle_edit_service_type[general][privacyQuestionsEnabled]' => false,
+            'dashboard_bundle_edit_service_type[teams][teamName]' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl',
+            'dashboard_bundle_edit_service_type[serviceStatus][surfconextRepresentativeApproved]' => 'no',
         ];
-
         $form = $crawler
             ->selectButton('Save')
             ->form();
-
-        $this->client->submit($form, $formData);
+        $form->setValues($formData);
+        self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
+        self::assertOnPage('Your changes were saved!');
 
         // Step 2: Surfnet can't access the privacy questions
+        $this->logOut();
         $surfNet = $serviceRepository->findByName('SURFnet');
-        $this->logIn('ROLE_USER', [$surfNet]);
+        $this->logIn($surfNet);
+        self::$pantherClient->request('GET', '/service/1/edit');
 
-        $this->client->request('GET', '/service/1/privacy');
-        $this->assertEquals(
-            404,
-            $this->client->getResponse()->getStatusCode(),
-            'Privacy questions page is not visitable.'
-        );
-
-        // Step 3: Admin enables the Privacy questions
-        $this->logIn('ROLE_ADMINISTRATOR');
-
-        $crawler = $this->client->request('GET', '/service/1/edit');
-
-        $formData = [
-            'dashboard_bundle_edit_service_type' => [
-                'general' => [
-                    'privacyQuestionsEnabled' => true,
-                ],
-                'teams' => [
-                    'teamName' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl',
-                ]
-            ]
-        ];
-
-        $form = $crawler
-            ->selectButton('Save')
-            ->form();
-
-        $this->client->submit($form, $formData);
-
-        $this->client->request('GET', '/service/1/privacy');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        self::assertOnPage('Access denied');
     }
 }

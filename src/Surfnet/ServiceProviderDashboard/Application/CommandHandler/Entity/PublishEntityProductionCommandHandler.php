@@ -35,35 +35,6 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
     /**
-     * @var PublishEntityRepository
-     */
-    private $publishClient;
-    /**
-     * @var TicketService
-     */
-    private $ticketService;
-
-    /**
-     * @var FlashBagInterface
-     */
-    private $flashBag;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $issueType;
-
-    /**
-     * @var MailService
-     */
-    private $mailService;
-
-    /**
      * @var string
      */
     private $summaryTranslationKey;
@@ -73,30 +44,18 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      */
     private $descriptionTranslationKey;
 
-    /**
-     * @var EntityServiceInterface
-     */
-    private $entityService;
-
     public function __construct(
-        PublishEntityRepository $publishClient,
-        EntityServiceInterface $entityService,
-        TicketService $ticketService,
-        FlashBagInterface $flashBag,
-        MailService $mailer,
-        LoggerInterface $logger,
-        string $issueType
+        private PublishEntityRepository $publishClient,
+        private EntityServiceInterface $entityService,
+        private TicketService $ticketService,
+        private FlashBagInterface $flashBag,
+        private MailService $mailService,
+        private LoggerInterface $logger,
+        private string $issueType
     ) {
         if (empty($issueType)) {
-            throw new Exception('Please set "jira_issue_type_publication_request" in parameters.yml');
+            throw new Exception('Please set "jira_issue_type_publication_request" in .env');
         }
-        $this->publishClient = $publishClient;
-        $this->entityService = $entityService;
-        $this->ticketService = $ticketService;
-        $this->mailService = $mailer;
-        $this->flashBag = $flashBag;
-        $this->logger = $logger;
-        $this->issueType = $issueType;
         $this->summaryTranslationKey = 'entity.publish.request.ticket.summary';
         $this->descriptionTranslationKey = 'entity.publish.request.ticket.description';
     }
@@ -117,7 +76,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         $pristineEntity = null;
         if ($entity->isManageEntity()) {
             // The entity as it is now known in Manage
-            $pristineEntity = $this->entityService->getManageEntityById($entity->getId(), $entity->getEnvironment());
+            $pristineEntity = $this->entityService->getPristineManageEntityById($entity->getId(), $entity->getEnvironment());
         }
         try {
             $this->logger->info(
@@ -128,8 +87,6 @@ class PublishEntityProductionCommandHandler implements CommandHandler
             );
             $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
             if (array_key_exists('id', $publishResponse)) {
-                // Set entity status to published
-                $entity->setStatus(Constants::STATE_PUBLISHED);
                 $entity->setId($publishResponse['id']);
 
                 $this->logger->info(

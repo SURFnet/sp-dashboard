@@ -24,30 +24,17 @@ use function is_null;
 
 class Coin implements Comparable
 {
-    private $signatureMethod;
-    private $serviceTeamId;
-    private $originalMetadataUrl;
-    private $excludeFromPush;
-    private $applicationUrl;
-    private $eula;
-    private $oidcClient;
-
     public static function fromApiResponse(array $metaDataFields)
     {
-        $signatureMethod = isset($metaDataFields['coin:signature_method'])
-            ? $metaDataFields['coin:signature_method'] : '';
-        $serviceTeamId = isset($metaDataFields['coin:service_team_id'])
-            ? $metaDataFields['coin:service_team_id'] : '';
-        $originalMetadataUrl = isset($metaDataFields['coin:original_metadata_url'])
-            ? $metaDataFields['coin:original_metadata_url'] : '';
-        $applicationUrl = isset($metaDataFields['coin:application_url'])
-            ? $metaDataFields['coin:application_url'] : '';
-        $eula = isset($metaDataFields['coin:eula'])
-            ? $metaDataFields['coin:eula'] : '';
+        $signatureMethod = $metaDataFields['coin:signature_method'] ?? '';
+        $serviceTeamId = $metaDataFields['coin:service_team_id'] ?? '';
+        $originalMetadataUrl = $metaDataFields['coin:original_metadata_url'] ?? '';
+        $applicationUrl = $metaDataFields['coin:application_url'] ?? '';
+        $eula = $metaDataFields['coin:eula'] ?? '';
         $excludeFromPush = isset($metaDataFields['coin:exclude_from_push'])
-            ? (int) $metaDataFields['coin:exclude_from_push'] : null;
+            ? (int)$metaDataFields['coin:exclude_from_push'] : null;
         $oidcClient = isset($metaDataFields['coin:oidc_client'])
-            ? (int) $metaDataFields['coin:oidc_client'] : 0;
+            ? (int)$metaDataFields['coin:oidc_client'] : 0;
 
         Assert::string($signatureMethod);
         Assert::string($serviceTeamId);
@@ -58,26 +45,25 @@ class Coin implements Comparable
         Assert::integer($oidcClient);
 
         return new self(
-            $signatureMethod, $serviceTeamId, $originalMetadataUrl, $excludeFromPush, $applicationUrl, $eula, $oidcClient
+            $signatureMethod,
+            $serviceTeamId,
+            $originalMetadataUrl,
+            $excludeFromPush,
+            $applicationUrl,
+            $eula,
+            $oidcClient
         );
     }
 
     public function __construct(
-        ?string $signatureMethod,
-        ?string $serviceTeamId,
-        ?string $originalMetadataUrl,
-        ?string $excludeFromPush,
-        ?string $applicationUrl,
-        ?string $eula,
-        ?int $oidcClient
+        private ?string $signatureMethod,
+        private ?string $serviceTeamId,
+        private ?string $originalMetadataUrl,
+        private ?string $excludeFromPush,
+        private ?string $applicationUrl,
+        private ?string $eula,
+        private ?int $oidcClient
     ) {
-        $this->signatureMethod = $signatureMethod;
-        $this->serviceTeamId = $serviceTeamId;
-        $this->originalMetadataUrl = $originalMetadataUrl;
-        $this->excludeFromPush = $excludeFromPush;
-        $this->applicationUrl = $applicationUrl;
-        $this->eula = $eula;
-        $this->oidcClient = $oidcClient;
     }
 
     public function getSignatureMethod()
@@ -125,7 +111,8 @@ class Coin implements Comparable
         $this->signatureMethod = is_null($coin->getSignatureMethod()) ? null : $coin->getSignatureMethod();
         $this->serviceTeamId = is_null($coin->getServiceTeamId()) ? null : $coin->getServiceTeamId();
         $this->originalMetadataUrl = is_null($coin->getOriginalMetadataUrl()) ? null : $coin->getOriginalMetadataUrl();
-        $this->excludeFromPush = is_null($coin->getExcludeFromPush()) ? $this->excludeFromPush : $coin->getExcludeFromPush();
+        $this->excludeFromPush = is_null($coin->getExcludeFromPush()) ?
+            $this->excludeFromPush : $coin->getExcludeFromPush();
         $this->applicationUrl = is_null($coin->getApplicationUrl()) ? null : $coin->getApplicationUrl();
         $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();

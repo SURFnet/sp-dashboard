@@ -18,25 +18,23 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use GuzzleHttp\Psr7\Response;
-use InvalidArgumentException;
+use Facebook\WebDriver\Exception\NoSuchElementException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EntityCreateClientCredentialsClientTest extends WebTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures();
-        $this->logIn('ROLE_ADMINISTRATOR');
+        $this->logIn();
         $this->switchToService('Ibuildings B.V.');
     }
 
     public function test_it_renders_the_form()
     {
         // Manage is queried for resource servers
-        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_ccc/test");
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/oauth20_ccc/test");
         $form = $crawler->filter('.page-container')
             ->selectButton('Publish')
             ->form();
@@ -52,62 +50,45 @@ class EntityCreateClientCredentialsClientTest extends WebTestCase
 
     public function test_no_attributes_on_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_ccc/test");
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/oauth20_ccc/test");
         // Manage is queried for resource servers
         $form = $crawler->filter('.page-container')
             ->selectButton('Publish')
             ->form();
 
         // CCC entities do not have any attributes
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(NoSuchElementException::class);
         $form->get('dashboard_bundle_entity_type[attributes][eduPersonTargetedIDAttribute][requested]');
     }
 
     public function test_it_can_cancel_out_of_the_form()
     {
-        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_ccc/test");
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/oauth20_ccc/test");
         $form = $crawler
             ->selectButton('Cancel')
             ->form();
 
-        $this->client->submit($form);
-        // The form is now redirected to the list view
-
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect response after cancelling out of the form'
-        );
-
-        $crawler = $this->client->followRedirect();
+        $crawler = self::$pantherClient->submit($form);
         $pageTitle = $crawler->filter('.service-title')->first()->text();
         $messageTest = $crawler->filter('.no-entities-test')->text();
         $messageProduction = $crawler->filter('.no-entities-production')->text();
 
-        $this->assertContains("Ibuildings B.V. overview", $pageTitle);
-        $this->assertContains('No entities found.', $messageTest);
-        $this->assertContains('No entities found.', $messageProduction);
+        $this->assertStringContainsString("Ibuildings B.V. overview", $pageTitle);
+        $this->assertStringContainsString('No entities found.', $messageTest);
+        $this->assertStringContainsString('No entities found.', $messageProduction);
     }
 
     public function test_it_can_publish_the_form()
     {
-        $this->testPublicationClient->registerPublishResponse('https://entity-id', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
+        $this->testPublicationClient->registerPublishResponse('https://entity-id.org', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
         $formData = $this->buildValidFormData();
-        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_ccc/test");
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/oauth20_ccc/test");
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
 
-        $this->client->submit($form, $formData);
-        // The form is now redirected to the list view
-        $this->assertTrue(
-            $this->client->getResponse() instanceof RedirectResponse,
-            'Expecting a redirect to the published "thank you" endpoint'
-        );
-
-        $this->client->followRedirect(); // redirect to published page
-        $crawler = $this->client->followRedirect(); // redirect to list page to show secret
-
+        $crawler = self::$pantherClient->submit($form, $formData);
         $confirmation = $crawler->filter('.oidc-confirmation');
         $label = $confirmation->filter('label')->text();
         $secret = $confirmation->filter('pre')->text();
@@ -125,71 +106,52 @@ class EntityCreateClientCredentialsClientTest extends WebTestCase
             Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT,
             'f1e394b2-08b1-4882-8b32-43876c15c743',
             'Existing RP',
-            'entity-id'
+            'entity-id.org'
         );
 
         $formData = $this->buildValidFormData();
 
-        $crawler = $this->client->request('GET', "/entity/create/2/oauth20_ccc/test");
+        $crawler = self::$pantherClient->request('GET', "/entity/create/2/oauth20_ccc/test");
 
         $form = $crawler
             ->selectButton('Publish')
             ->form();
-        $crawler = $this->client->submit($form, $formData);
 
-        $pageTitle = $crawler->filter('h1')->first()->text();
-        $this->assertEquals('Service Provider registration form', $pageTitle);
-
-        $errorMessage = $crawler->filter('div.message.error')->first()->text();
-        $this->assertEquals('Warning! Some entries are missing or incorrect. Please review and fix those entries below.', trim($errorMessage));
-
-        $uri = $this->client->getRequest()->getRequestUri();
-        $this->assertRegExp('/\/entity\/create/', $uri);
+        self::$pantherClient->submit($form, $formData);
+        self::assertOnPage('Service Provider registration form');
+        self::assertOnPage('Entity has already been registered.');
+        self::assertOnPage('Warning! Some entries are missing or incorrect. Please review and fix those entries below.');
     }
 
     public function test_creating_draft_for_production_is_not_allowed()
     {
-        // SURFnet is not allowed to create production entities.
         $this->switchToService('SURFnet');
 
-        $this->client->request('GET', "/entity/create/1/oauth20_ccc/production");
-
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        self::$pantherClient->request('GET', "/entity/create/1/oauth20_ccc/production");
+        self::assertOnPage('You do not have access to create entities without publishing to the test environment first');
     }
 
     private function buildValidFormData()
     {
         return [
-            'dashboard_bundle_entity_type' => [
-                'metadata' => [
-                    'descriptionNl' => 'Description NL',
-                    'descriptionEn' => 'Description EN',
-                    'nameEn' => 'The C Team',
-                    'nameNl' => 'The C Team',
-                    'clientId' => 'https://entity-id',
-                    'logoUrl' => 'https://logo-url',
-                ],
-                'contactInformation' => [
-                    'administrativeContact' => [
-                        'firstName' => 'John',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '999',
-                    ],
-                    'technicalContact' => [
-                        'firstName' => 'Johnny',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '888',
-                    ],
-                    'supportContact' => [
-                        'firstName' => 'Jack',
-                        'lastName' => 'Doe',
-                        'email' => 'john@doe.com',
-                        'phone' => '777',
-                    ],
-                ],
-            ],
+            'dashboard_bundle_entity_type[metadata][descriptionNl]' => 'Description NL',
+            'dashboard_bundle_entity_type[metadata][descriptionEn]' => 'Description EN',
+            'dashboard_bundle_entity_type[metadata][nameEn]' => 'The C Team',
+            'dashboard_bundle_entity_type[metadata][nameNl]' => 'The C Team',
+            'dashboard_bundle_entity_type[metadata][clientId]' => 'https://entity-id.org',
+            'dashboard_bundle_entity_type[metadata][logoUrl]' => 'https://logo-url.org/picture.png',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][email]' => 'john@doe.com',
+            'dashboard_bundle_entity_type[contactInformation][administrativeContact][phone]' => '999',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][firstName]' => 'Johnny',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][email]' => 'john@doe.com',
+            'dashboard_bundle_entity_type[contactInformation][technicalContact][phone]' => '888',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][firstName]' => 'Jack',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][lastName]' => 'Doe',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][email]' => 'john@doe.com',
+            'dashboard_bundle_entity_type[contactInformation][supportContact][phone]' => '777',
         ];
     }
 }

@@ -28,41 +28,7 @@ class MetaData implements Comparable
 {
     const MAX_ACS_LOCATIONS = 10;
 
-    private $entityId;
-    private $metaDataUrl;
-    private $nameIdFormat;
-    private $certData;
-    private $descriptionEn;
-    private $descriptionNl;
-    private $nameEn;
-    private $nameNl;
-
-    /**
-     * @var array
-     */
-    private $acsLocations = [];
-
-    /**
-     * @var ContactList
-     */
-    private $contacts;
-
-    /**
-     * @var Organization
-     */
-    private $organization;
-
-    /**
-     * @var Coin
-     */
-    private $coin;
-
-    /**
-     * @var Logo
-     */
-    private $logo;
-
-    /**
+     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
      * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
      * @param array $data
@@ -93,7 +59,7 @@ class MetaData implements Comparable
         Assert::string($nameNl);
 
         if (count(array_unique($acsLocations)) !== count($acsLocations)) {
-            throw new Exception('Double acs locations. Expected unique locations');
+            throw new Exception('Double acs locations. Expected unique locations for entity: ' . $entityId);
         }
 
         if (count($acsLocations) > self::MAX_ACS_LOCATIONS) {
@@ -126,33 +92,20 @@ class MetaData implements Comparable
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        ?string $entityId,
-        ?string $metaDataUrl,
-        ?array $acsLocations,
-        ?string $nameIdFormat,
-        ?string $certData,
-        ?string $descriptionEn,
-        ?string $descriptionNl,
-        ?string $nameEn,
-        ?string $nameNl,
-        ContactList $contacts,
-        Organization $organization,
-        Coin $coin,
-        Logo $logo
+        private ?string $entityId,
+        private ?string $metaDataUrl,
+        private ?array $acsLocations,
+        private ?string $nameIdFormat,
+        private ?string $certData,
+        private ?string $descriptionEn,
+        private ?string $descriptionNl,
+        private ?string $nameEn,
+        private ?string $nameNl,
+        private ContactList $contacts,
+        private Organization $organization,
+        private Coin $coin,
+        private Logo $logo
     ) {
-        $this->entityId = $entityId;
-        $this->metaDataUrl = $metaDataUrl;
-        $this->acsLocations = $acsLocations;
-        $this->nameIdFormat = $nameIdFormat;
-        $this->certData = $certData;
-        $this->descriptionEn = $descriptionEn;
-        $this->descriptionNl = $descriptionNl;
-        $this->nameEn = $nameEn;
-        $this->nameNl = $nameNl;
-        $this->contacts = $contacts;
-        $this->organization = $organization;
-        $this->coin = $coin;
-        $this->logo = $logo;
     }
 
     public function getEntityId(): ?string

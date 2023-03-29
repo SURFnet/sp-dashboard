@@ -32,22 +32,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
 
 class PublishEntityClient implements PublishTeamsRepositoryInterface
 {
-    /**
-     * @var HttpClient
-     */
-    private $client;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        HttpClient $client,
-        LoggerInterface $logger
+        private readonly HttpClient $client,
+        private readonly LoggerInterface $logger
     ) {
-        $this->client = $client;
-        $this->logger = $logger;
     }
 
     /**

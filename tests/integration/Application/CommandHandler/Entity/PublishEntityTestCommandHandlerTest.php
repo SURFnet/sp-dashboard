@@ -63,7 +63,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
      */
     private $entityService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = m::mock(PublishEntityClient::class);
         $this->logger = m::mock(LoggerInterface::class);
@@ -123,7 +123,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->andReturn('test');
 
         $this->entityService
-            ->shouldReceive('getManageEntityById')
+            ->shouldReceive('getPristineManageEntityById')
             ->andReturn($manageEntity);
         $command = new PublishEntityTestCommand($manageEntity);
         $this->commandHandler->handle($command);
@@ -174,7 +174,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->with('error', 'entity.edit.error.publish');
 
         $this->entityService
-            ->shouldReceive('getManageEntityById')
+            ->shouldReceive('getPristineManageEntityById')
             ->andReturn($manageEntity);
 
         $command = new PublishEntityTestCommand($manageEntity);

@@ -107,4 +107,28 @@ class ClientResult implements ClientResultInterface
     {
         return $this->entityId;
     }
+
+    public static function decode($data): self
+    {
+        return new self(
+            $data['protocol'],
+            $data['id'],
+            $data['entityId'],
+            $data['metadataUrl'],
+            $data['name'],
+            $data['teamName']
+        );
+    }
+
+    public function encode(): array
+    {
+        return [
+            'id' => $this->id,
+            'protocol' => $this->protocol,
+            'entityId' => $this->entityId,
+            'metadataUrl' => $this->metadataUrl,
+            'name' => $this->name,
+            'teamName' => $this->teamName,
+        ];
+    }
 }

@@ -39,7 +39,7 @@ class OauthClientCredentialsClientJsonGeneratorTest extends MockeryTestCase
      */
     private $spDashboardMetadataGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->privacyQuestionsMetadataGenerator = m::mock(PrivacyQuestionsMetadataGenerator::class);
         $this->spDashboardMetadataGenerator = m::mock(SpDashboardMetadataGenerator::class);
@@ -52,6 +52,7 @@ class OauthClientCredentialsClientJsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('build')
             ->andReturn(['sp' => 'sp']);
     }
+
     public function test_it_builds_an_entity_change_request()
     {
         $generator = new OauthClientCredentialsClientJsonGenerator(
@@ -70,6 +71,18 @@ class OauthClientCredentialsClientJsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('oidc10_rp', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
         $this->assertCount(2, $data['pathUpdates']);
+        $this->assertSame('revisionnote', $data['note']);
+    }
+
+    public function test_it_generate_has_revision_note_for_a_new_entity()
+    {
+        $generator = new OauthClientCredentialsClientJsonGenerator(
+            $this->privacyQuestionsMetadataGenerator,
+            $this->spDashboardMetadataGenerator
+        );
+        $entity = $this->createManageEntity();
+        $data = $generator->generateForNewEntity($entity, 'prodaccepted');
+        $this->assertSame('revisionnote', $data['data']['revisionnote']);
     }
 
     private function createManageEntity()

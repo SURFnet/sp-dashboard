@@ -21,7 +21,7 @@ use Surfnet\ServiceProviderDashboard\Application\Dto\ServiceStatusDto;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ServiceStatusAssembler
 {
@@ -91,10 +91,6 @@ class ServiceStatusAssembler
      * @var ServiceStatusDto
      */
     private $serviceStatusDto;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
 
     /**
      * ServiceStatusAssembler constructor.
@@ -105,10 +101,8 @@ class ServiceStatusAssembler
     public function __construct(
         Service $service,
         ServiceStatusService $serviceStatusService,
-        TranslatorInterface $translator
+        private TranslatorInterface $translator
     ) {
-        $this->translator = $translator;
-
         $states = $this->getStates($service, $serviceStatusService);
         $mappedStates = $this->mapStates($states);
         $legend = $this->getLegend();

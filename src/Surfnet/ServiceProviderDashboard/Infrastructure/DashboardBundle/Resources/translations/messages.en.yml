@@ -1,6 +1,6 @@
+allowed.html.tags: "Allowed html tags"
 site_notice.html: '<p>There is nothing wrong with your television set. <strong>Do not attempt to adjust the picture.</strong> We are controlling transmission. If we wish to make it louder, we will bring up the volume. If we wish to make it softer, we will tune it to a whisper. We will control the horizontal. We will control the vertical. We can roll the image, make it flutter. We can change the focus to a soft blur, or sharpen it to crystal clarity. <strong></p><p>For the next hour, sit quietly and we will control all that you see and hear.</strong> We repeat: There is nothing wrong with your television set. You are about to participate in a great adventure. You are about to experience the awe and mystery which reaches from the inner mind to... <a href="https://en.wikiquote.org/wiki/The_Outer_Limits_(1963_TV_series)">The Outer Limits</a>.</p>'
 site_notice.close: "Close notice"
-global.button.close: "Close"
 error.generic.title: "An error occurred"
 error.generic.text: "An unexpected error occurred. Please try again later."
 error.403.title: "Access denied"
@@ -127,6 +127,7 @@ entity.list.action.delete: Delete
 entity.list.action.copy_to_production: Copy to production
 entity.list.action.reset_secret: Reset client secret
 entity.list.action.change.request: Change Request
+entity.list.action.create.connection.request: Create connection request
 entity.list.modal.oidc_confirmation:
   title: Confirmation
   client_id:
@@ -326,6 +327,9 @@ entity.change_request.value: Value
 entity.change_request.data: Data
 entity.change_request.text.html: "<p>All outstanding change requests</p>"
 entity.change_request.none.text.html: "<p>No outstanding change requests</p>"
+entity.create_connection_request.title: Create connection request
+entity.create_connection_request.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
+entity.create_connection_request.edit.flash.success: Your connection request were successfully sent
 entity.edit.comments.title: Comments
 entity.edit.comments.html: "<p>If there are any questions regarding your SURFconext connection or this form, please leave them here.</p>"
 entity.edit.oidcngResourceServers.title: Select the OIDC Resource Servers(s) that belong to this Client
@@ -366,6 +370,8 @@ entity.edit.label.implicit: Implicit
 entity.edit.label.authorization_code_token: response_type=id_token
 entity.edit.label.implicit_id_token_token: response_type=id_token token
 entity.edit.label.implicit_id_token: response_type=id_token
+entity.edit.label.change: Change
+entity.add.label.publish: Publish
 entity.acl.title: Entity Idp access
 entity.acl.info.title: Info
 entity.acl.info.html: "
@@ -390,13 +396,23 @@ entity.change_request.ticket.description: "h2. Details
 *Applicant email*: %applicant_email%.
 *Entity name (en)*: %entity_name%."
 
-entity.change_request.ticket.summary: "Request for changes for %entity_name%"
-entity.change_request.ticket.description: "h2. Details
+entity.connection_request.ticket.summary: "Connection request for %entity_name%"
+entity.connection_request.ticket.applicant: "h2. Details
+
 *Applicant name*: %applicant_name%
 *Applicant email*: %applicant_email%.
-*Entity name (en)*: %entity_name%."
+*Entity name (en)*: %entity_name%.
 
+"
+entity.connection_request.ticket.institution: "Institution: %institution_name% Contact name: %contact_name% Contact email: %contact_email%
+
+"
 entity.published_production.text.html: "Thanks for publishing \"%entityName%\" to our production environment."
+entity.published_production_and_sent_connection_request.text.html: "Thanks for publishing \"%entityName%\" to our production environment and and connection request(s) to the service desk."
+entity.sending_connection_request.text.html: "Thanks for sending the connection request(s) to the service desk."
+entity.sent_connection_request.title: "Successfully sent the connection request(s) to the service desk"
+entity.published_production_and_sent_connection_request.title: "Successfully published the entity to production and sent connection request(s) to the service desk"
+
 entity.published_production.title: "Successfully published the entity to production"
 entity.published_test.text.html: "Thanks for publishing \"%entityName%\" to our test environment."
 entity.published_test.title: "Successfully published the entity to test"
@@ -485,6 +501,7 @@ service.overview.action.serviceEdit: Edit service
 service.overview.action.serviceDelete: Delete service
 service.overview.action.serviceManageTeam: Member management
 service.overview.graph.title: "%name% status summary"
+service.overview.graph.noscript: "Service overview graphp no script"
 service.overview.privacy.notification.title: "Privacy questions status"
 service.overview.privacy.notification.message: "The privacy questions for this service provider have not been answered.  Please answer "
 service.overview.privacy.notification.link: "the privacy questions"

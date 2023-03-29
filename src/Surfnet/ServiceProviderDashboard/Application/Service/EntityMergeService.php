@@ -46,36 +46,20 @@ use function in_array;
  */
 class EntityMergeService
 {
-    /**
-     * @var AttributeServiceInterface
-     */
-    private $attributeService;
-
-    /**
-     * @var string
-     */
-    private $playGroundUriTest;
-
-    /**
-     * @var string
-     */
-    private $playGroundUriProd;
-
     public function __construct(
-        AttributeServiceInterface $attributeService,
-        string $oidcPlaygroundUriTest,
-        string $oidcPlaygroundUriProd
+        private readonly AttributeServiceInterface $attributeService,
+        private readonly string $playGroundUriTest,
+        private readonly string $playGroundUriProd
     ) {
-        $this->attributeService = $attributeService;
-        $this->playGroundUriTest = $oidcPlaygroundUriTest;
-        $this->playGroundUriProd = $oidcPlaygroundUriProd;
     }
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function mergeEntityCommand(SaveEntityCommandInterface $command, ?ManageEntity $manageEntity = null): ManageEntity
-    {
+    public function mergeEntityCommand(
+        SaveEntityCommandInterface $command,
+        ?ManageEntity $manageEntity = null
+    ): ManageEntity {
         $metaData = new MetaData(
             $command->getEntityId(),
             $command->getMetadataUrl(),

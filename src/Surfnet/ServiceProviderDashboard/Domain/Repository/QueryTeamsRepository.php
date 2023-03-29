@@ -20,10 +20,5 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 interface QueryTeamsRepository
 {
-    /**
-     * @param string $entityId
-     *
-     * @return string
-     */
     public function findTeamByUrn(string $urn): ?array;
 }

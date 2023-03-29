@@ -72,7 +72,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
      */
     private $issueRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->queryClient = m::mock(QueryClient::class);
         $this->logger = m::mock(Logger::class);
@@ -134,7 +134,7 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('createIssueFrom')
             ->andReturn($issue);
 
-        $this->commandHandler->handle($command);
+        $this->assertNull($this->commandHandler->handle($command));
     }
 
     public function test_jira_down()
@@ -184,6 +184,6 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('add')
             ->with('error', 'entity.delete.request.failed');
 
-        $this->commandHandler->handle($command);
+        $this->assertNull($this->commandHandler->handle($command));
     }
 }

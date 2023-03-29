@@ -1,0 +1,76 @@
+{
+  "id": "411f8e0f-87a6-4ea7-8194-66b3e77f97d5",
+  "version": 0,
+  "type": "saml20_sp",
+  "revision": {
+    "number": 0,
+    "created": 1543851541.752,
+    "parentId": null,
+    "updatedBy": "sp-dashboard",
+    "terminated": null
+  },
+  "data": {
+    "arp": {
+      "attributes": {
+        "urn:mace:dir:attribute-def:displayName": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "asddsafadfsafdsfdasfadsafds dafs ad fsad fsafd saf ds"
+          }
+        ],
+        "urn:mace:dir:attribute-def:uid": [
+          {
+            "source": "idp",
+            "value": "*",
+            "motivation": "fd fads fdasafd s fdasfda s dfas dfa"
+          }
+        ]
+      },
+      "enabled": true
+    },
+    "entityid": "https:\/\/monitorstands.example.com",
+    "metadataurl": "https:\/\/engine.surfconext.nl\/authentication\/sp\/metadata",
+    "active": true,
+    "allowedEntities": [],
+    "allowedall": true,
+    "state": "testaccepted",
+    "type": "saml20-sp",
+    "metaDataFields": {
+      "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+      "AssertionConsumerService:0:Location": "https:\/\/engine.surfconext.nl\/authentication\/sp\/consume-assertion",
+      "NameIDFormat": "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+      "description:en": "SURFconext is a collaboration infrastructure that creates new opportunities to collaborate online based on a combination of applications from different providers.",
+      "description:nl": "SURFconext is een samenwerkingsinfrastructuur die nieuwe vormen van samenwerken mogelijk maakt door diensten van verschillende aanbieders te combineren.",
+      "name:en": "Monitor stands",
+      "name:nl": "Monitor stands",
+      "coin:signature_method": "http:\/\/www.w3.org\/2001\/04\/xmldsig-more#rsa-sha256",
+      "certData": "MIID3zCCAsegAwIBAgIJAMVC9xn1ZfsuMA0GCSqGSIb3DQEBCwUAMIGFMQswCQYD\r\nVQQGEwJOTDEQMA4GA1UECAwHVXRyZWNodDEQMA4GA1UEBwwHVXRyZWNodDEVMBMG\r\nA1UECgwMU1VSRm5ldCBCLlYuMRMwEQYDVQQLDApTVVJGY29uZXh0MSYwJAYDVQQD\r\nDB1lbmdpbmUuc3VyZmNvbmV4dC5ubCAyMDE0MDUwNTAeFw0xNDA1MDUxNDIyMzVa\r\nFw0xOTA1MDUxNDIyMzVaMIGFMQswCQYDVQQGEwJOTDEQMA4GA1UECAwHVXRyZWNo\r\ndDEQMA4GA1UEBwwHVXRyZWNodDEVMBMGA1UECgwMU1VSRm5ldCBCLlYuMRMwEQYD\r\nVQQLDApTVVJGY29uZXh0MSYwJAYDVQQDDB1lbmdpbmUuc3VyZmNvbmV4dC5ubCAy\r\nMDE0MDUwNTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKthMDbB0jKH\r\nefPzmRu9t2h7iLP4wAXr42bHpjzTEk6gttHFb4l\/hFiz1YBI88TjiH6hVjnozo\/Y\r\nHA2c51us+Y7g0XoS7653lbUN\/EHzvDMuyis4Xi2Ijf1A\/OUQfH1iFUWttIgtWK9+\r\nfatXoGUS6tirQvrzVh6ZstEp1xbpo1SF6UoVl+fh7tM81qz+Crr\/Kroan0UjpZOF\r\nTwxPoK6fdLgMAieKSCRmBGpbJHbQ2xxbdykBBrBbdfzIX4CDepfjE9h\/40ldw5jR\r\nn3e392jrS6htk23N9BWWrpBT5QCk0kH3h\/6F1Dm6TkyG9CDtt73\/anuRkvXbeygI\r\n4wml9bL3rE8CAwEAAaNQME4wHQYDVR0OBBYEFD+Ac7akFxaMhBQAjVfvgGfY8hNK\r\nMB8GA1UdIwQYMBaAFD+Ac7akFxaMhBQAjVfvgGfY8hNKMAwGA1UdEwQFMAMBAf8w\r\nDQYJKoZIhvcNAQELBQADggEBAC8L9D67CxIhGo5aGVu63WqRHBNOdo\/FAGI7LURD\r\nFeRmG5nRw\/VXzJLGJksh4FSkx7aPrxNWF1uFiDZ80EuYQuIv7bDLblK31ZEbdg1R\r\n9LgiZCdYSr464I7yXQY9o6FiNtSKZkQO8EsscJPPy\/Zp4uHAnADWACkOUHiCbcKi\r\nUUFu66dX0Wr\/v53Gekz487GgVRs8HEeT9MU1reBKRgdENR8PNg4rbQfLc3YQKLWK\r\n7yWnn\/RenjDpuCiePj8N8\/80tGgrNgK\/6fzM3zI18sSywnXLswxqDb\/J+jgVxnQ6\r\nMrsTf1urM8MnfcxG\/82oHIwfMh\/sXPCZpo+DTLkhQxctJ3M=",
+      "contacts:0:contactType": "support",
+      "contacts:0:givenName": "SURFconext",
+      "contacts:0:surName": "Helpdesk",
+      "contacts:0:emailAddress": "help@surfconext.nl",
+      "contacts:1:contactType": "administrative",
+      "contacts:1:givenName": "SURFconext",
+      "contacts:1:surName": "Administrative Contact",
+      "contacts:1:emailAddress": "support@surfconext.nl",
+      "contacts:2:contactType": "technical",
+      "contacts:2:givenName": "SURFconext",
+      "contacts:2:surName": "Technical Support",
+      "contacts:2:emailAddress": "support@surfconext.nl",
+      "OrganizationName:en": "SURFnet BV",
+      "OrganizationDisplayName:en": "SURFnet",
+      "OrganizationURL:en": "http:\/\/www.surfnet.nl\/en\/Pages\/default.aspx",
+      "OrganizationName:nl": "SURFnet BV",
+      "OrganizationDisplayName:nl": "SURFnet",
+      "OrganizationURL:nl": "http:\/\/www.surfnet.nl\/nl\/Pages\/default.aspx",
+      "coin:service_team_id": "team-2",
+      "coin:original_metadata_url": "https:\/\/engine.surfconext.nl\/authentication\/sp\/metadata",
+      "coin:exclude_from_push": "0",
+      "logo:0:url": "https:\/\/static.surfconext.nl\/media\/idp\/surfnet.png",
+      "logo:0:width": "200",
+      "logo:0:height": "160"
+    },
+    "eid": 31
+  }
+}

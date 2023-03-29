@@ -61,7 +61,7 @@ class DeleteServiceCommandHandlerTest extends MockeryTestCase
     /** @var LoggerInterface|MockInterface */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(ServiceRepository::class);
         $this->entityService = m::mock(EntityServiceInterface::class);

@@ -34,49 +34,24 @@ use function in_array;
  * entity is used in a specific context. This particularly applies for the factory
  * methods found in the 'Entity/Entity' namespace.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) This object contains a lot of properties which cannot not be easily
+ * simplified.
  */
 class ManageEntity
 {
-    private $id;
+    private const CREATED_REVISION_NOTE = 'Entity created';
+    private const CHANGED_REVISION_NOTE = 'Entity changed';
+    private const CHANGE_REQUEST_NOTE = 'Change request';
 
     /**
      * @var string
      */
     private $status;
 
-    /**
-     * @var AttributeList
-     */
-    private $attributes;
-
-    /**
-     * @var MetaData
-     */
-    private $metaData;
-
-    /**
-     * @var OidcClientInterface
-     */
-    private $oidcClient;
-
-    /**
-     * @var Protocol
-     */
-    private $protocol;
-
-    /**
-     * @var AllowedIdentityProviders
-     */
-    private $allowedIdentityProviders;
-    
     private $comments;
 
     private $environment;
 
-    /**
-     * @var Service
-     */
-    private $service;
     /**
      * @var bool
      */
@@ -115,22 +90,15 @@ class ManageEntity
     }
 
     public function __construct(
-        ?string $id,
-        AttributeList $attributes,
-        MetaData $metaData,
-        AllowedIdentityProviders $allowedIdentityProviders,
-        Protocol $protocol,
-        ?OidcClientInterface $oidcClient = null,
-        ?Service $service = null
+        private ?string $id,
+        private readonly AttributeList $attributes,
+        private readonly MetaData $metaData,
+        private readonly AllowedIdentityProviders $allowedIdentityProviders,
+        private readonly Protocol $protocol,
+        private readonly ?OidcClientInterface $oidcClient = null,
+        private ?Service $service = null
     ) {
-        $this->id = $id;
         $this->status = Constants::STATE_PUBLISHED;
-        $this->attributes = $attributes;
-        $this->metaData = $metaData;
-        $this->oidcClient = $oidcClient;
-        $this->protocol = $protocol;
-        $this->allowedIdentityProviders = $allowedIdentityProviders;
-        $this->service = $service;
     }
 
     private static function extractManageProtocol(array $data): string
@@ -170,7 +138,25 @@ class ManageEntity
         return $this->metaData;
     }
 
-    public function updateStatus($newStatus)
+    public function updateStatusByExcludeFromPush(): void
+    {
+        if (!$this->isExcludedFromPushSet()) {
+            return;
+        }
+
+        if ($this->isExcludedFromPush()) {
+            $this->updateStatus(Constants::STATE_PUBLICATION_REQUESTED);
+            return;
+        }
+        $this->updateStatus(Constants::STATE_PUBLISHED);
+    }
+
+    public function updateStatusToRemovalRequested()
+    {
+        $this->status = Constants::STATE_REMOVAL_REQUESTED;
+    }
+
+    private function updateStatus($newStatus)
     {
         $this->status = $newStatus;
     }
@@ -220,7 +206,7 @@ class ManageEntity
 
     public function isExcludedFromPushSet()
     {
-        if (is_null($this->getMetaData()->getCoin()->getExcludeFromPush())) {
+        if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
             return false;
         }
         return true;
@@ -228,10 +214,10 @@ class ManageEntity
 
     public function isExcludedFromPush()
     {
-        if (is_null($this->getMetaData()->getCoin()->getExcludeFromPush())) {
+        if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
             return false;
         }
-        return $this->getMetaData()->getCoin()->getExcludeFromPush() == 1 ? true : false;
+        return $this->getMetaData()?->getCoin()?->getExcludeFromPush() == 1;
     }
 
     public function isManageEntity(): bool
@@ -255,7 +241,7 @@ class ManageEntity
     /**
      * @return bool
      */
-    public function hasComments(): bool
+    private function hasComments(): bool
     {
         return !(empty($this->comments));
     }
@@ -340,7 +326,7 @@ class ManageEntity
     {
         $data = [];
         $data['id'] = $this->id;
-        $data['revisionnote'] = $this->getComments();
+        $data['revisionnote'] = $this->getRevisionNote();
         $data['environment'] = $this->environment;
         $data = $this->metaData->asArray();
         $data += $this->attributes->asArray();
@@ -349,5 +335,35 @@ class ManageEntity
         }
         $data += $this->protocol->asArray();
         return $data;
+    }
+
+    private function isStatusPublicationRequested()
+    {
+        return $this->getStatus() === Constants::STATE_PUBLICATION_REQUESTED;
+    }
+
+    public function isRequestedProductionEntity(
+        bool $isCopy
+    ) {
+        return $isCopy || ($this->isStatusPublicationRequested() && $this->isProduction());
+    }
+
+    public function getRevisionNote(): string
+    {
+        if ($this->hasComments()) {
+            return $this->getComments();
+        }
+
+        // New entity?
+        if (!$this->isManageEntity()) {
+            return self::CREATED_REVISION_NOTE;
+        }
+
+        // Existing entity, but not published
+        if ($this->isStatusPublicationRequested()) {
+            return self::CHANGED_REVISION_NOTE;
+        }
+
+        return self::CHANGE_REQUEST_NOTE;
     }
 }

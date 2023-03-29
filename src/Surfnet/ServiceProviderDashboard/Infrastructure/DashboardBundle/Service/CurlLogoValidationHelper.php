@@ -23,14 +23,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\Lo
 
 class CurlLogoValidationHelper implements LogoValidationHelperInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**

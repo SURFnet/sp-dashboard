@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -19,32 +21,19 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 
 class TicketService implements TicketServiceInterface
 {
-    /**
-     * @var TicketServiceInterface
-     */
-    private $issueRepository;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @param TicketServiceInterface $repository
-     */
-    public function __construct(TicketServiceInterface $repository, LoggerInterface $logger)
-    {
-        $this->issueRepository = $repository;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly TicketServiceInterface $issueRepository,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     public function createIssueFrom(Ticket $ticket)
@@ -52,12 +41,17 @@ class TicketService implements TicketServiceInterface
         return $this->issueRepository->createIssueFrom($ticket);
     }
 
-    public function findByManageIds(array $manageIds)
+    public function createIssueFromConnectionRequest(Ticket $ticket)
+    {
+        return $this->issueRepository->createIssueFromConnectionRequest($ticket);
+    }
+
+    public function findByManageIds(array $manageIds): IssueCollection
     {
         return $this->issueRepository->findByManageIds($manageIds);
     }
 
-    public function findByManageId($id)
+    public function findByManageId($id): ?Issue
     {
         return $this->issueRepository->findByManageId($id);
     }
@@ -65,7 +59,7 @@ class TicketService implements TicketServiceInterface
     /**
      * @param string $issueKey
      */
-    public function delete($issueKey)
+    public function delete($issueKey): void
     {
         $this->issueRepository->delete($issueKey);
     }
@@ -108,13 +102,31 @@ class TicketService implements TicketServiceInterface
         return $issue;
     }
 
+    public function createJiraTicketForConnectionRequests(
+        CreateConnectionRequestCommand $command,
+        string $issueType,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey
+    ): Issue {
+    
+        $ticket = Ticket::fromConnectionRequests(
+            $command->getManageEntity(),
+            $command->getApplicant(),
+            $command->getConnectionRequests(),
+            $issueType,
+            $summaryTranslationKey,
+            $descriptionTranslationKey
+        );
+        return $this->createIssueFromConnectionRequest($ticket);
+    }
+
     private function createTicketFromManageResponse(
         PublishProductionCommandInterface $command,
         ManageEntity $entity,
         string $issueType,
         string $summaryTranslationKey,
         string $descriptionTranslationKey
-    ) {
+    ): Ticket {
         return Ticket::fromManageResponse(
             $entity,
             $command->getApplicant(),

@@ -7,19 +7,16 @@ COPY ./conf/start.sh /usr/local/sbin/start.sh
 COPY ./conf/spdup.sh /usr/local/sbin/spdup.sh
 CMD ["/usr/local/sbin/start.sh"]
 
-FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:latest AS spdphpfpm
+FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:81 AS spdphpfpm
 WORKDIR /var/www/html/
-COPY --from=composer:1 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
-COPY ./conf/10-timezone-openconext.ini /usr/local/etc/php/conf.d/
+COPY ./conf/10-override-php.ini /usr/local/etc/php/conf.d/
+RUN mv /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 RUN /usr/sbin/update-ca-certificates && \
     rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ && \
-    apk --update --no-cache add yarn autoconf g++ make && \
-    docker-php-ext-install  mysqli && \
-    pecl install -f xdebug && \
-    docker-php-ext-enable xdebug && \
-    apk del --purge autoconf g++ make
+    apk --update --no-cache add yarn
 
 CMD ["/usr/local/sbin/php-fpm" , "-F"]
 

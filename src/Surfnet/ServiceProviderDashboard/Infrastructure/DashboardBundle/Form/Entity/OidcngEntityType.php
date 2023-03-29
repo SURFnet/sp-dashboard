@@ -357,7 +357,7 @@ class OidcngEntityType extends AbstractType
             ->add('manageId', HiddenType::class)
             ->add('environment', HiddenType::class)
 
-            ->add('publishButton', SubmitType::class, ['label'=> 'Publish', 'attr' => ['class' => 'button']])
+            ->add('publishButton', SubmitType::class, ['label'=> $options['publish_button_label'], 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
@@ -371,6 +371,7 @@ class OidcngEntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => SaveOidcngEntityCommand::class,
+            'publish_button_label' => 'entity.add.label.publish',
         ));
     }
 

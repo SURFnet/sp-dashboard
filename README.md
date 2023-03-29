@@ -14,18 +14,13 @@ their services. This can be both SAML 2.0, OpenID Connect Relying Parties and Oa
 
 ## Prerequisites
 
-- [PHP](https://secure.php.net/manual/en/install.php) (7.2)
+- [PHP](https://secure.php.net/manual/en/install.php) (8.1)
 - [Composer](https://getcomposer.org/doc/00-intro.md)
 - [Apache Ant](https://ant.apache.org/manual/install.html)
-- [Ansible](https://docs.ansible.com/ansible/intro_installation.html)
-- [Vagrant](https://www.vagrantup.com/docs/installation/)
-  - Optional, but recommended: [Hostsupdater plugin](https://github.com/cogitatio/vagrant-hostsupdater)
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-As of release 2.8 the Vagrant + Ansible dev environment has been discontinued in favour of a docker-compose installable
-dev machine. Instructions below should still help you in building a Vagrant based dev env, but this will be removed from
-the project in the next release. For now use `docker-compose up -d` to create and build the development environment.
+Use `docker-compose up -d` to create and build the development environment.
 
 An entry in your hostsfile is still required for things to work. An example entry would look like:
 
@@ -39,28 +34,6 @@ XDebug setting. In order to deliver those settings into the `php-fpm` container 
 `docker-compose.overrides.yml` file based on the dist file you will find in the docroot. You might need to do some
 additional changes to your IDE. [This Jetbrains Blogpost](https://blog.jetbrains.com/phpstorm/2018/08/quickstart-with-docker-in-phpstorm/) 
 might aid in that area.
-
-**Deprecation warning!**
-The Ansible playbook for SP Dashboard depends on some roles from
-[OpenConext-deploy](https://github.com/OpenConext/OpenConext-deploy), so in order to provision the Vagrant box you need
-to have that repository checked out in a directory called `OpenConext-deploy` in the parent directory of where this
-project lives.
-
-## Provision the VM
-
-**Deprecation warning!** Try the Docker dev env! 
-The VM is provisioned using Ansible and Vagrant. After you have installed those, you can run
-```
-vagrant up
-```
-
-Grab some coffee or two, and your VM will be ready.
-
-If you need to run specific roles on the VM, you can use the corresponding tag. The tags can be found in the playbook (ansible/vagrant.yml)
-The tags need to in the environment variable "ANSIBLE_TAGS", seperated by a ,. So if you want to provision the tags eb and profile, you'd run:
-```
-ANSIBLE_TAGS=eb,profile vagrant provision
-```
 
 ## Getting started
 
@@ -91,10 +64,6 @@ Some remarks:
 2. The Cypress tests should run in your dev environment. No fixture is provided yet to run the tests against.
 3. Running tests in PROD mode is encouraged (this disengages the web debug toolbar) saving false positives in a11y and html validation errors
 4. A service with ID = 2 should be present, it should have the add production entities option set.
-
-### Xdebug
-Xdebug is configured when provisioning your development Vagrant box. The Vagrantfile sets the `develop_spd` 
-environment variable in Ansible. This will prevent Xdebug from being enabled in test and production releases.
 
 ## Other resources
 

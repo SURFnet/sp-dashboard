@@ -27,41 +27,18 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class Ticket
 {
-    /** @var string */
-    private $entityId;
-    /** @var string */
-    private $manageId;
-    /** @var string */
-    private $entityName;
-    /** @var string */
-    private $summaryTranslationKey;
-    /** @var string */
-    private $descriptionTranslationKey;
-    /** @var string */
-    private $applicantName;
-    /** @var string */
-    private $applicantEmail;
-    /** @var string */
-    private $issueType;
+    private array $connectionRequests;
 
     public function __construct(
-        string $entityId,
-        string $manageId,
-        string $nameEn,
-        string $summaryTranslationKey,
-        string $descriptionTranslationKey,
-        string $applicantName,
-        string $applicantEmail,
-        ?string $issueType
+        private readonly string $entityId,
+        private readonly string $manageId,
+        private readonly string $entityName,
+        private readonly string $summaryTranslationKey,
+        private readonly string $descriptionTranslationKey,
+        private readonly string $applicantName,
+        private readonly string $applicantEmail,
+        private readonly ?string $issueType
     ) {
-        $this->entityId = $entityId;
-        $this->manageId = $manageId;
-        $this->entityName = $nameEn;
-        $this->summaryTranslationKey = $summaryTranslationKey;
-        $this->descriptionTranslationKey = $descriptionTranslationKey;
-        $this->applicantName = $applicantName;
-        $this->applicantEmail = $applicantEmail;
-        $this->issueType = $issueType;
     }
 
     public static function fromManageResponse(
@@ -84,6 +61,33 @@ class Ticket
             $applicant->getEmailAddress(),
             $issueType
         );
+    }
+
+    public static function fromConnectionRequests(
+        ManageEntity $entity,
+        Applicant $applicant,
+        array $connectionRequests,
+        string $issueType,
+        string $summaryTranslationKey,
+        string $descriptionTranslationKey
+    ): Ticket {
+        $entityId = $entity->getMetaData()->getEntityId();
+        $nameEn = $entity->getMetaData()->getNameEn();
+
+        $ticket = new self(
+            $entityId,
+            $entity->getId(),
+            $nameEn,
+            $summaryTranslationKey,
+            $descriptionTranslationKey,
+            $applicant->getDisplayName(),
+            $applicant->getEmailAddress(),
+            $issueType
+        );
+
+        $ticket->connectionRequests = $connectionRequests;
+
+        return $ticket;
     }
 
     public function getEntityId(): string
@@ -124,5 +128,13 @@ class Ticket
     public function getDescriptionTranslationKey(): string
     {
         return $this->descriptionTranslationKey;
+    }
+
+    /**
+     * @return ConnectionRequest[]
+     */
+    public function getConnectionRequests(): array
+    {
+        return $this->connectionRequests;
     }
 }

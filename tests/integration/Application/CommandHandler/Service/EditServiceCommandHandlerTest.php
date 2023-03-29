@@ -36,7 +36,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
     /** @var ServiceRepository|m\MockInterface */
     private $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = m::mock(ServiceRepository::class);
         $this->commandHandler = new EditServiceCommandHandler($this->repository);

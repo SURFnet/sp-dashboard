@@ -29,7 +29,7 @@ use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataReposit
 
 class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -60,7 +60,7 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $service->setPrivacyQuestions($privacyQuestions);
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources');
 
         $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
 
@@ -87,7 +87,7 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../app/Resources');
+        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources');
 
         $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
         $metadata = $factory->build($entity);

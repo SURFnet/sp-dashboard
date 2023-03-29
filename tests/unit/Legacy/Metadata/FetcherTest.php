@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Metadata;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -51,7 +52,7 @@ class FetcherTest extends MockeryTestCase
      */
     private $mockHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockHandler = new MockHandler();
         $handler = HandlerStack::create($this->mockHandler);
@@ -69,32 +70,25 @@ class FetcherTest extends MockeryTestCase
         $this->assertEquals('<xml>', $xml);
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Failed retrieving the metadata.
-     */
     public function test_it_handles_exceptions()
     {
-        $exception = new \Exception('');
+        $exception = new Exception('');
         $this->mockHandler->append($exception);
 
         $this->logger
             ->shouldReceive('info')
             ->with('Metadata exception', ['e' => $exception]);
 
+        $this->expectExceptionMessage("Failed retrieving the metadata.");
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
         $this->fetcher->fetch('https://exapmle.com/foobar.xml');
     }
 
-    /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Failed retrieving the metadata (SSL certificate cannot be authenticated - message:
-     *  cURL error 60: Peer certificate cannot be authenticated with known CA certificates.)
-     *  (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)
-     */
     public function test_it_handles_curl_ssl_authentication_error()
     {
-        $exceptionMessage = 'cURL error 60: Peer certificate cannot be authenticated with known CA certificates.
-                             (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)';
+        $this->expectExceptionMessage("Failed retrieving the metadata (SSL certificate cannot be authenticated - message:cURL error 60: Peer certificate cannot be authenticated with known CA certificates. (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)");
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
+        $exceptionMessage = 'cURL error 60: Peer certificate cannot be authenticated with known CA certificates. (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)';
         $exception = new ConnectException(
             $exceptionMessage,
             new Request('GET', 'https://exapmle.com/foobar.xml')
@@ -109,14 +103,13 @@ class FetcherTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Failed retrieving the metadata (SSL certificate is not valid - message:
+     *
+     *
      *  The remote server's SSL certificate or SSH md5 fingerprint was deemed not OK.
      */
     public function test_it_handles_curl_ssl_invalid_certificate_error()
     {
-        $exceptionMessage = 'cURL error 51: The remote server\'s SSL certificate or SSH md5 fingerprint was deemed not
-                             OK.';
+        $exceptionMessage = 'cURL error 51: The remote server\'s SSL certificate or SSH md5 fingerprint was deemed not OK.';
         $exception = new ConnectException(
             $exceptionMessage,
             new Request('GET', 'https://exapmle.com/foobar.xml')
@@ -127,18 +120,21 @@ class FetcherTest extends MockeryTestCase
             ->shouldReceive('info')
             ->with('Metadata CURL exception', ['e' => $exception]);
 
+        $this->expectExceptionMessage(
+            "Failed retrieving the metadata (SSL certificate is not valid - message:cURL error 51: The remote server's SSL certificate or SSH md5 fingerprint was deemed not OK."
+        );
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
         $this->fetcher->fetch('https://exapmle.com/foobar.xml');
     }
 
     /**
-     * @expectedException \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Failed retrieving the metadata (message:cURL error 52: Nothing was returned from the
+     *
+     *
      * server, and under the circumstances, getting nothing is considered an error.).
      */
     public function test_it_handles_curl_errors()
     {
-        $exceptionMessage = 'cURL error 52: Nothing was returned from the server, and under the circumstances, getting
-                             nothing is considered an error.';
+        $exceptionMessage = 'cURL error 52: Nothing was returned from the server, and under the circumstances, getting nothing is considered an error.';
         $exception = new ConnectException($exceptionMessage, new Request('GET', 'https://exapmle.com/foobar.xml'));
         $this->mockHandler->append($exception);
 
@@ -146,6 +142,10 @@ class FetcherTest extends MockeryTestCase
             ->shouldReceive('info')
             ->with('Metadata CURL exception', ['e' => $exception]);
 
+        $this->expectExceptionMessage(
+            "Failed retrieving the metadata (message:cURL error 52: Nothing was returned from the server, and under the circumstances, getting nothing is considered an error.)."
+        );
+        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
         $this->fetcher->fetch('https://exapmle.com/foobar.xml');
     }
 }

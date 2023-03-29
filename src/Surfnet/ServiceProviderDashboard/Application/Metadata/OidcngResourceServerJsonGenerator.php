@@ -36,25 +36,13 @@ use function sprintf;
 class OidcngResourceServerJsonGenerator implements GeneratorInterface
 {
     /**
-     * @var PrivacyQuestionsMetadataGenerator
-     */
-    private $privacyQuestionsMetadataGenerator;
-
-    /**
-     * @var SpDashboardMetadataGenerator
-     */
-    private $spDashboardMetadataGenerator;
-
-    /**
      * @param PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator
      * @param SpDashboardMetadataGenerator $spDashboardMetadataGenerator
      */
     public function __construct(
-        PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
     ) {
-        $this->privacyQuestionsMetadataGenerator = $privacyQuestionsMetadataGenerator;
-        $this->spDashboardMetadataGenerator = $spDashboardMetadataGenerator;
     }
 
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -93,11 +81,9 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             ],
         ];
 
-        if ($entity->hasComments()) {
-            $payload['note'] = $entity->getComments();
-        }
+        $payload['note'] = $entity->getRevisionNote();
+
         return $payload;
-        return $differences->getDiff();
     }
 
     private function generateDataForNewEntity(ManageEntity $entity, $workflowState)
@@ -111,9 +97,8 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             'metaDataFields' => $this->generateMetadataFields($entity),
         ];
 
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
+
         return $metadata;
     }
 
@@ -122,7 +107,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         EntityDiff $differences,
         string $workflowState
     ): array {
-
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
             'state' => $workflowState,
@@ -130,9 +114,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
         $metadata += $differences->getDiff();
         $this->setExcludeFromPush($metadata, $entity, true);
-        if ($entity->hasComments()) {
-            $metadata['revisionnote'] = $entity->getComments();
-        }
+        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }

@@ -19,61 +19,29 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Controller;
 
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Surfnet\SamlBundle\Entity\IdentityProvider;
 use Surfnet\SamlBundle\Entity\ServiceProvider;
 use Surfnet\SamlBundle\Exception\LogicException;
 use Surfnet\SamlBundle\Http\PostBinding;
 use Surfnet\SamlBundle\Http\XMLResponse;
 use Surfnet\SamlBundle\Metadata\MetadataFactory;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class SamlController extends Controller
+class SamlController extends AbstractController
 {
-    /**
-     * @var LoggerInterface $logger
-     */
-    private $logger;
-
-    /**
-     * @var MetadataFactory $metadataFactory
-     */
-    private $metadataFactory;
-
-    /**
-     * @var PostBinding $postBinding
-     */
-    private $postBinding;
-
-    /**
-     * @var IdentityProvider $identityProvider
-     */
-    private $identityProvider;
-
-    /**
-     * @var ServiceProvider $serviceProvider
-     */
-    private $serviceProvider;
-
     public function __construct(
-        LoggerInterface $logger,
-        MetadataFactory $metadataFactory,
-        PostBinding $postBinding,
-        IdentityProvider $identityProvider,
-        ServiceProvider $serviceProvider
+        private LoggerInterface $logger,
+        private readonly MetadataFactory $metadataFactory,
+        private PostBinding $postBinding,
+        private IdentityProvider $identityProvider,
+        private ServiceProvider $serviceProvider
     ) {
-        $this->logger = $logger;
-        $this->metadataFactory = $metadataFactory;
-        $this->postBinding = $postBinding;
-        $this->identityProvider = $identityProvider;
-        $this->serviceProvider = $serviceProvider;
     }
 
     /**
-     * @Method("POST")
-     * @Route("/saml/acs", name="dashboard_saml_consume_assertion")
+     * @Route("/saml/acs", name="dashboard_saml_consume_assertion", methods={"POST"})
      * @param Request $request
      */
     public function consumeAssertionAction(Request $request)
@@ -84,8 +52,7 @@ class SamlController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/saml/metadata", name="dashboard_saml_metadata")
+     * @Route("/saml/metadata", name="dashboard_saml_metadata", methods={"GET"})
      */
     public function metadataAction()
     {

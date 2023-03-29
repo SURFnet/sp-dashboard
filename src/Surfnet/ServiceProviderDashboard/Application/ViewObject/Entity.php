@@ -81,6 +81,7 @@ class Entity
      * @param string $environment
      * @param string $protocol
      * @param bool $isReadOnly
+     * @param bool $hasChangeRequests
      * @param RouterInterface $router
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
@@ -94,6 +95,7 @@ class Entity
         $environment,
         $protocol,
         $isReadOnly,
+        $hasChangeRequests,
         RouterInterface $router
     ) {
         $this->id = $id;
@@ -104,7 +106,15 @@ class Entity
         $this->environment = $environment;
         $this->protocol = $protocol;
         $this->router = $router;
-        $this->actions = new EntityActions($id, $serviceId, $state, $environment, $protocol, $isReadOnly);
+        $this->actions = new EntityActions(
+            $id,
+            $serviceId,
+            $state,
+            $environment,
+            $protocol,
+            $isReadOnly,
+            $hasChangeRequests
+        );
     }
 
     /**
@@ -113,8 +123,11 @@ class Entity
      * @param int $serviceId
      * @return Entity
      */
-    public static function fromManageTestResult(ManageEntity $result, RouterInterface $router, $serviceId)
-    {
+    public static function fromManageTestResult(
+        ManageEntity $result,
+        RouterInterface $router,
+        int $serviceId
+    ) {
         $formattedContact = self::formatManageContact($result);
         $protocol = $result->getProtocol()->getProtocol();
         return new self(
@@ -127,6 +140,7 @@ class Entity
             'test',
             $protocol,
             false,
+            false,
             $router
         );
     }
@@ -135,10 +149,15 @@ class Entity
      * @param ManageEntity $result
      * @param RouterInterface $router
      * @param int $serviceId
+     * @param bool $hasChangeRequests
      * @return Entity
      */
-    public static function fromManageProductionResult(ManageEntity $result, RouterInterface $router, $serviceId)
-    {
+    public static function fromManageProductionResult(
+        ManageEntity $result,
+        RouterInterface $router,
+        int $serviceId,
+        bool $hasChangeRequests
+    ) {
         $formattedContact = self::formatManageContact($result);
 
         // As long as the coin:exclude_from_push metadata is present, allow modifications to the entity by
@@ -161,6 +180,7 @@ class Entity
             'production',
             $protocol,
             false,
+            $hasChangeRequests,
             $router
         );
     }
