@@ -1,3 +1,13 @@
+## 5.0.0
+Main change made in this new major release is the upgrade to Symfony 5. These 
+pull requests make up the rest of the changes:
+
+- Symfony 5 upgrade #565
+- Upgrade Symfony webtests to utilize Panther #576
+- Move status logic to Manage entity #577
+- Add a default text for revision notes #583
+- Use global constants iso a string #582
+
 ## 4.4.5
 **Bugfix**
 - Show secrets modal oidc after connection request #584
