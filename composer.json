@@ -132,7 +132,6 @@
     "phpcov": "./ci/qa/phpcov",
     "test": "./ci/qa/phpunit",
     "cypress": "./ci/qa/cypress",
-    "security": "./ci/qa/security",
     "translations": "bin/translations"
   },
   "config": {
