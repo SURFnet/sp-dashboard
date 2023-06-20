@@ -33,7 +33,7 @@ class CreatePrivacyQuestionsTest extends WebTestCase
 
         $this->assertEquals('GDPR related questions', $crawler->filter('h1')->first()->text());
         $formRows = $crawler->filter('div.form-row');
-        $this->assertCount(14, $formRows);
+        $this->assertCount(5, $formRows);
     }
 
     public function test_it_can_submit_the_form()
@@ -48,14 +48,12 @@ class CreatePrivacyQuestionsTest extends WebTestCase
 
         $formRows = $crawler->filter('div.form-row');
 
-        $this->assertCount(14, $formRows);
+        $this->assertCount(5, $formRows);
 
         $form = $crawler->findElement(WebDriverBy::cssSelector('form[name="dashboard_bundle_privacy_questions_type"]'));
         $this->fillFormField($form, '#dashboard_bundle_privacy_questions_type_whatData', 'We will refrain from requesting any data');
         $this->fillFormField($form, '#dashboard_bundle_privacy_questions_type_accessData', 'Some data will be accessed');
         $this->fillFormField($form, '#dashboard_bundle_privacy_questions_type_country', 'The Netherlands');
-        $this->checkFormField($form, '#dashboard_bundle_privacy_questions_type_certification');
-        $this->fillFormField($form, '#dashboard_bundle_privacy_questions_type_privacyPolicyUrl', 'http://example.org/privacy');
         $form->submit();
 
         $crawler = self::$pantherClient->refreshCrawler();
