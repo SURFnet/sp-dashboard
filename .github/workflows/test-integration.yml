@@ -66,6 +66,10 @@ jobs:
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer jscpd'
         continue-on-error: true
 
+      - name: Run CI tests
+        run: |
+          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer check'
+
       - name: Run JS tests
         run: |
           ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer jest'
