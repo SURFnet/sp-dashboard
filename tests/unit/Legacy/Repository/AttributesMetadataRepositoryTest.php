@@ -71,21 +71,12 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
             "accessData",
             "country",
             "securityMeasures",
-            "certification",
-            "certificationLocation",
-            "certificationValidFrom",
-            "certificationValidTo",
-            "surfmarketDpaAgreement",
-            "surfnetDpaAgreement",
-            "snDpaWhyNot",
-            "privacyPolicy",
-            "privacyPolicyUrl",
             "otherInfo",
         ];
 
         $attributes = $this->repository->findAllPrivacyQuestionsAttributes();
 
-        $this->assertCount(14, $attributes);
+        $this->assertCount(5, $attributes);
         foreach ($attributes as $attribute) {
             $this->assertContains($attribute->id, $expectedAttributes);
         }

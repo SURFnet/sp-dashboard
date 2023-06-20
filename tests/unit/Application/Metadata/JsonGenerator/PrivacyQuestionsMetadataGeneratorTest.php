@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Metadata\JsonGenerator;
 
-use DateTime;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
@@ -43,18 +42,9 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $service->setPrivacyQuestionsEnabled(true);
 
         $privacyQuestions->setWhatData('What data');
-        $privacyQuestions->setSnDpaWhyNot('We can not comply.');
-        $privacyQuestions->setCertificationValidFrom(new DateTime('2018-06-04 00:00:00+02:00'));
-        $privacyQuestions->setCertificationValidTo(new DateTime('2018-06-06 00:00:00+02:00'));
-        $privacyQuestions->setCertification(false);
-        $privacyQuestions->setCertificationLocation('https://www.google.com');
-        $privacyQuestions->setPrivacyPolicy(true);
         $privacyQuestions->setOtherInfo('Other information');
         $privacyQuestions->setCountry('Country');
         $privacyQuestions->setAccessData('Access data');
-        $privacyQuestions->setSurfnetDpaAgreement(true);
-        $privacyQuestions->setSurfmarketDpaAgreement(false);
-        $privacyQuestions->setPrivacyPolicyUrl('https://www.google.com');
         $privacyQuestions->setSecurityMeasures('Measures');
 
         $service->setPrivacyQuestions($privacyQuestions);
@@ -66,14 +56,10 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 
         $metadata = $factory->build($entity);
 
-        $this->assertCount(14, $metadata);
+        $this->assertCount(5, $metadata);
 
         // Test some of the assertions
         $this->assertEquals('What data', $metadata['coin:privacy:what_data']);
-        $this->assertFalse(is_bool($metadata['coin:privacy:certification']));
-        $this->assertEquals('0', $metadata['coin:privacy:certification']);
-        $this->assertEquals('2018-06-04T00:00:00+02:00', $metadata['coin:privacy:certification_valid_from']);
-        $this->assertEquals('2018-06-06T00:00:00+02:00', $metadata['coin:privacy:certification_valid_to']);
     }
 
     public function test_it_retuns_empty_array_when_disabled()
