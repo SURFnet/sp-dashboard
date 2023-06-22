@@ -21,11 +21,13 @@ final class Version20230620124841 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE privacy_questions DROP certification, DROP certification_location, DROP certification_valid_from, DROP certification_valid_to, DROP surfmarket_dpa_agreement, DROP surfnet_dpa_agreement, DROP sn_dpa_why_not, DROP privacy_policy, DROP privacy_policy_url');
+        $this->addSql('ALTER TABLE privacy_questions ADD dpa_type LONGTEXT DEFAULT NULL, ADD privacy_statement_url_nl LONGTEXT DEFAULT NULL, ADD privacy_statement_url_en LONGTEXT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE privacy_questions ADD certification TINYINT(1) DEFAULT NULL, ADD certification_location VARCHAR(255) DEFAULT NULL, ADD certification_valid_from DATE DEFAULT NULL, ADD certification_valid_to DATE DEFAULT NULL, ADD surfmarket_dpa_agreement TINYINT(1) DEFAULT NULL, ADD surfnet_dpa_agreement TINYINT(1) DEFAULT NULL, ADD sn_dpa_why_not LONGTEXT DEFAULT NULL, ADD privacy_policy TINYINT(1) DEFAULT NULL, ADD privacy_policy_url VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE privacy_questions DROP dpa_type, DROP privacy_statement_url_nl, DROP privacy_statement_url_en');
     }
 }

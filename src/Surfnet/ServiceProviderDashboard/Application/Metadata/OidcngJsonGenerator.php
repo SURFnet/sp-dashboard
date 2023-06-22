@@ -126,6 +126,9 @@ class OidcngJsonGenerator implements GeneratorInterface
                 $metadata += $this->generateAllowedResourceServers($entity);
                 $this->setExcludeFromPush($metadata, $entity, true);
 
+                $this->privacyQuestionsMetadataGenerator->withMetadataPrefix();
+                $metadata += $this->privacyQuestionsMetadataGenerator->build($entity);
+
                 $metadata['revisionnote'] = $entity->getRevisionNote();
 
                 return $metadata;

@@ -62,6 +62,8 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->privacyQuestionsMetadataGenerator
             ->shouldReceive('build')
             ->andReturn(['privacy' => 'privacy']);
+        $this->privacyQuestionsMetadataGenerator
+            ->shouldReceive('withMetadataPrefix');
 
         $this->spDashboardMetadataGenerator
             ->shouldReceive('build')
@@ -230,6 +232,7 @@ class JsonGeneratorTest extends MockeryTestCase
                     'revisionnote' => 'revisionnote',
                     'metaDataFields.contacts:2:givenName' => 'John Doe',
                     'metaDataFields.coin:exclude_from_push' => '0',
+                    'privacy' => 'privacy',
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',

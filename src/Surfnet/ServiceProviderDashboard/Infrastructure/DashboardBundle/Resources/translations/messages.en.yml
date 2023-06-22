@@ -1,3 +1,8 @@
+global.button.close: "Close"
+global.menu.overview: "Service overview"
+global.menu.services: "Services"
+global.menu.new-service: "Add new service"
+global.menu.translations: "Translations"
 allowed.html.tags: "Allowed html tags"
 site_notice.html: '<p>There is nothing wrong with your television set. <strong>Do not attempt to adjust the picture.</strong> We are controlling transmission. If we wish to make it louder, we will bring up the volume. If we wish to make it softer, we will tune it to a whisper. We will control the horizontal. We will control the vertical. We can roll the image, make it flutter. We can change the focus to a soft blur, or sharpen it to crystal clarity. <strong></p><p>For the next hour, sit quietly and we will control all that you see and hear.</strong> We repeat: There is nothing wrong with your television set. You are about to participate in a great adventure. You are about to experience the awe and mystery which reaches from the inner mind to... <a href="https://en.wikiquote.org/wiki/The_Outer_Limits_(1963_TV_series)">The Outer Limits</a>.</p>'
 site_notice.close: "Close notice"
@@ -428,14 +433,26 @@ privacy.edit.title: GDPR related questions
 privacy.edit.introduction.html: "<p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href=\"#\">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>"
 privacy.form.label.accessData.html: 2. Who can access the data?
 privacy.form.label.country.html: 3. In what country is the data stored?
-privacy.form.label.otherInfo.html: 14. Other data privacy and security information
 privacy.form.label.securityMeasures.html: 4. What security measures have you taken?
 privacy.form.label.whatData.html: 1. What (kind of) data is processed?
+privacy.form.label.dpaType.html: 5. What data processing agreement (DPA) type applies?
+privacy.form.label.privacyStatementUrlNl.html: 6. Dutch privacy statement URL
+privacy.form.label.privacyStatementUrlEn.html: 7. English privacy statement URL
+privacy.form.label.otherInfo.html: 8. Other data privacy and security information
+privacy.form.label.save-button: Save
+privacy.form.dpaType.choice.dpa-not-applicable: DPA is not applicable
+privacy.form.dpaType.choice.through-surf: Service is acquired through SURF
+privacy.form.dpaType.choice.in-surf-agreement: Service is willing or has signed the SURF data processing agreement
+privacy.form.dpaType.choice.dpa-supplied-by-service: Service has own data processing agreement
+privacy.form.dpaType.choice.other: Other
 privacy.information.accessData: Specify which organizations, including your own, and per organization what roles / (groups of) individuals have access to the data (including backups etc). Explain why they need access, and what access exactly each one has (like read only of certain specified data).
 privacy.information.country: In what country/countries is the data stored (including copies etc)
 privacy.information.otherInfo: What other information do you want to share regarding data security, privacy etc?
 privacy.information.securityMeasures: What security measures have you taken (remember the encryption during transport and storage)?
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
+privacy.information.dpaType: DPA data type hint
+privacy.information.privacyStatementUrlNl: Privacy statement URL in Dutch
+privacy.information.privacyStatementUrlEn: Privacy statement URL in English
 privacy.edit.flash.success: Your changes were saved!
 service.admin_overview.introduction.html: "Please use the service switcher to manage the entities of one of the services."
 service.create.title: Add new service
