@@ -76,6 +76,24 @@ class PrivacyQuestions
      */
     private $service;
 
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $dpaType;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $privacyStatementUrlNl;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $privacyStatementUrlEn;
+
     public function setService(Service $service)
     {
         $this->service = $service;
@@ -167,5 +185,47 @@ class PrivacyQuestions
     public function setOtherInfo($otherInfo)
     {
         $this->otherInfo = $otherInfo;
+    }
+
+    public function setDpaType(string $dpaType): void
+    {
+        $this->dpaType = $dpaType;
+    }
+
+    public function getDpaType()
+    {
+        return $this->dpaType;
+    }
+
+    public function getPrivacyStatementUrlNl(): ?string
+    {
+        return $this->privacyStatementUrlNl;
+    }
+
+    public function setPrivacyStatementUrlNl(?string $privacyStatementUrlNl): void
+    {
+        $this->privacyStatementUrlNl = $privacyStatementUrlNl;
+    }
+
+    public function getPrivacyStatementUrlEn(): ?string
+    {
+        return $this->privacyStatementUrlEn;
+    }
+
+    public function setPrivacyStatementUrlEn(?string $privacyStatementUrlEn): void
+    {
+        $this->privacyStatementUrlEn = $privacyStatementUrlEn;
+    }
+
+    public function privacyStatementUrls(): array
+    {
+        $out = [];
+        if ($this->privacyStatementUrlEn) {
+            $out['mdui:PrivacyStatementURL:en'] = $this->privacyStatementUrlEn;
+        }
+        if ($this->privacyStatementUrlNl) {
+            $out['mdui:PrivacyStatementURL:nl'] = $this->privacyStatementUrlNl;
+        }
+        return $out;
     }
 }

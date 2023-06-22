@@ -58,6 +58,9 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('build')
             ->andReturn(['privacy' => 'privacy']);
 
+        $this->privacyQuestionsMetadataGenerator
+            ->shouldReceive('withMetadataPrefix');
+
         $this->spDashboardMetadataGenerator
             ->shouldReceive('build')
             ->andReturn([]);
@@ -123,7 +126,8 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'entityid' => 'entityid',
                         'metaDataFields.name:en' => 'A new hope',
                         'state' => 'testaccepted',
-                        'revisionnote' => 'revisionnote'
+                        'revisionnote' => 'revisionnote',
+                        'privacy' => 'privacy'
                     ),
                 'type' => 'oauth20_rs',
                 'id' => 'manageId',

@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
@@ -46,6 +47,9 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $privacyQuestions->setCountry('Country');
         $privacyQuestions->setAccessData('Access data');
         $privacyQuestions->setSecurityMeasures('Measures');
+        $privacyQuestions->setPrivacyStatementUrlEn('https://foobar.example.com/privacy');
+        $privacyQuestions->setPrivacyStatementUrlNl('https://foobar.example.nl/privacy');
+        $privacyQuestions->setDpaType('dpa_in_surf_agreement'); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
 
         $service->setPrivacyQuestions($privacyQuestions);
         $entity->setService($service);
@@ -56,10 +60,16 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 
         $metadata = $factory->build($entity);
 
-        $this->assertCount(5, $metadata);
+        $this->assertCount(8, $metadata);
 
-        // Test some of the assertions
         $this->assertEquals('What data', $metadata['coin:privacy:what_data']);
+        $this->assertEquals('Access data', $metadata['coin:privacy:access_data']);
+        $this->assertEquals('Country', $metadata['coin:privacy:country']);
+        $this->assertEquals('Measures', $metadata['coin:privacy:security_measures']);
+        $this->assertEquals('Other information', $metadata['coin:privacy:other_info']);
+        $this->assertEquals('https://foobar.example.com/privacy', $metadata['mdui:PrivacyStatementURL:en']);
+        $this->assertEquals('https://foobar.example.nl/privacy', $metadata['mdui:PrivacyStatementURL:nl']);
+        $this->assertEquals('dpa_in_surf_agreement', $metadata['coin:privacy:dpa_type']); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
     }
 
     public function test_it_retuns_empty_array_when_disabled()

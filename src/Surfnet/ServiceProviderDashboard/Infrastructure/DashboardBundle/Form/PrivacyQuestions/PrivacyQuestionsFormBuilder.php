@@ -18,8 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\PrivacyQuestions;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class PrivacyQuestionsFormBuilder
@@ -82,6 +85,50 @@ class PrivacyQuestionsFormBuilder
         );
 
         $builder->add(
+            'dpaType',
+            ChoiceType::class,
+            [
+                'expanded' => true,
+                'multiple' => false,
+                'label' => 'privacy.form.label.dpaType.html',
+                'required' => false,
+                'choices' => DpaType::choices(),
+                'empty_data' => DpaType::DEFAULT,
+                'placeholder' => false,
+                'attr' => [
+                    'data-help' => 'privacy.information.dpaType',
+                    'rows' => 8,
+                ],
+            ]
+        );
+
+        $builder->add(
+            'privacyStatementUrlNl',
+            UrlType::class,
+            [
+                'label' => 'privacy.form.label.privacyStatementUrlNl.html',
+                'required' => false,
+                'attr' => [
+                    'data-help' => 'privacy.information.privacyStatementUrlNl',
+                    'rows' => 8,
+                ],
+            ]
+        );
+
+        $builder->add(
+            'privacyStatementUrlEn',
+            UrlType::class,
+            [
+                'label' => 'privacy.form.label.privacyStatementUrlEn.html',
+                'required' => false,
+                'attr' => [
+                    'data-help' => 'privacy.information.privacyStatementUrlEn',
+                    'rows' => 8,
+                ],
+            ]
+        );
+
+        $builder->add(
             'otherInfo',
             TextareaType::class,
             [
@@ -94,6 +141,13 @@ class PrivacyQuestionsFormBuilder
             ]
         );
 
-        $builder->add('save', SubmitType::class, ['attr' => ['class'=>'button']]);
+        $builder->add(
+            'save',
+            SubmitType::class,
+            [
+                'label' => 'privacy.form.label.save-button',
+                'attr' => ['class'=>'button']
+            ]
+        );
     }
 }

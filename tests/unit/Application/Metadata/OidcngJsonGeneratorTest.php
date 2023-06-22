@@ -57,6 +57,8 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $this->privacyQuestionsMetadataGenerator
             ->shouldReceive('build')
             ->andReturn(['privacy' => 'privacy']);
+        $this->privacyQuestionsMetadataGenerator
+            ->shouldReceive('withMetadataPrefix');
 
         $this->spDashboardMetadataGenerator
             ->shouldReceive('build')
@@ -92,6 +94,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.OrganizationName:nl' => 'Drop Supplies',
                     'metaDataFields.OrganizationDisplayName:en' => 'Drop Supplies',
                     'revisionnote' => 'revisionnote',
+                    'privacy' => 'privacy'
                 ],
             ],
             $data
@@ -129,6 +132,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
 
                         ],
                         'revisionnote' => 'revisionnote',
+                        'privacy' => 'privacy'
                     ),
                 'type' => 'oidc10_rp',
                 'id' => 'manageId',

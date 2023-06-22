@@ -38,5 +38,22 @@
     "urns": [
       "coin:privacy:other_info"
     ]
+  },
+  {
+    "id": "dpaType",
+    "friendlyName": "DPAType",
+    "getterName": "getDpaType",
+    "urns": [
+      "coin:privacy:dpa_type"
+    ]
+  },
+  {
+    "id": "privacyStatementUrl",
+    "friendlyName": "PrivacyStatementUrl",
+    "getterName": "getPrivacyStatementUrl",
+    "urns": [
+      "mdui:PrivacyStatementURL:nl",
+      "mdui:PrivacyStatementURL:en"
+    ]
   }
 ]

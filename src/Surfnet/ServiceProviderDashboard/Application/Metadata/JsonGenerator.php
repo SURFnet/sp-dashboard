@@ -146,6 +146,8 @@ class JsonGenerator implements GeneratorInterface
                 if ($entity->isManageEntity() && !$entity->isExcludedFromPush()) {
                     $metadata['metaDataFields.coin:exclude_from_push'] = '0';
                 }
+                $this->privacyQuestionsMetadataGenerator->withMetadataPrefix();
+                $metadata += $this->privacyQuestionsMetadataGenerator->build($entity);
 
                 return $metadata;
         }

@@ -18,10 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions;
 
-use DateTime;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -69,6 +70,22 @@ class PrivacyQuestionsCommand implements Command
     private $otherInfo;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Type("Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType")
+     */
+    private DpaType $dpaType;
+
+    /**
+     * @Assert\Url()
+     */
+    public ?string $privacyStatementUrlNl = '';
+
+    /**
+     * @Assert\Url()
+     */
+    public ?string $privacyStatementUrlEn = '';
+
+    /**
      * @param string $whatData
      */
     public function setWhatData($whatData)
@@ -106,6 +123,11 @@ class PrivacyQuestionsCommand implements Command
     public function setOtherInfo($otherInfo)
     {
         $this->otherInfo = $otherInfo;
+    }
+
+    public function setDpaType(string $dpaType)
+    {
+        $this->dpaType = DpaType::fromString($dpaType);
     }
 
     /**
@@ -164,11 +186,16 @@ class PrivacyQuestionsCommand implements Command
         return $this->mode;
     }
 
+    public function getDpaType(): DpaType
+    {
+        return $this->dpaType;
+    }
+
     public static function fromService(Service $service)
     {
         $command = new self;
         $command->mode = self::MODE_CREATE;
-
+        $command->dpaType = DpaType::build(DpaType::DEFAULT);
         $command->service = $service;
         return $command;
     }
@@ -184,7 +211,9 @@ class PrivacyQuestionsCommand implements Command
         $command->securityMeasures = $questions->getSecurityMeasures();
         $command->service = $questions->getService();
         $command->whatData = $questions->getWhatData();
-
+        $command->dpaType = DpaType::from($questions);
+        $command->privacyStatementUrlNl = $questions->getPrivacyStatementUrlNl();
+        $command->privacyStatementUrlEn = $questions->getPrivacyStatementUrlEn();
         return $command;
     }
 }

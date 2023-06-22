@@ -71,5 +71,12 @@ class PrivacyQuestionsCommandHandler implements CommandHandler
         $questions->setOtherInfo($command->getOtherInfo());
         $questions->setSecurityMeasures($command->getSecurityMeasures());
         $questions->setWhatData($command->getWhatData());
+        $questions->setDpaType($command->getDpaType()->type);
+        if ($command->privacyStatementUrlEn) {
+            $questions->setPrivacyStatementUrlEn($command->privacyStatementUrlEn);
+        }
+        if ($command->privacyStatementUrlNl) {
+            $questions->setPrivacyStatementUrlNl($command->privacyStatementUrlNl);
+        }
     }
 }
