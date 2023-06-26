@@ -7,7 +7,7 @@ parameters:
     locale: en
     router.request_context.base_url: ''
     # By enabling 'jira_enable_test_mode', no real Jira backend is required to still simulate the Jira integration
-    jira_enable_test_mode: true
+    jira_enable_test_mode: "%env(jira_enable_test_mode)%"
 
 services:
     # default configuration for services in *this* file
