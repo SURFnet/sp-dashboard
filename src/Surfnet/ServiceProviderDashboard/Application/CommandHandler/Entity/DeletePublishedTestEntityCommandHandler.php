@@ -24,11 +24,13 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotDeletedException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 
 class DeletePublishedTestEntityCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly DeleteManageEntityRepository $deleteEntityRepository,
+        private readonly PublishEntityRepository $publishClient,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -56,7 +58,10 @@ class DeletePublishedTestEntityCommandHandler implements CommandHandler
         }
 
         if ($response !== DeleteManageEntityRepository::RESULT_SUCCESS) {
-            throw new EntityNotDeletedException('Deleting the entity yielded an non success response');
+            throw new EntityNotDeletedException('Deleting the entity yielded a non success response');
         }
+
+        // Push metadata to EngineBlock and other listeners nudging them to update their indexed entity metadata
+        $this->publishClient->pushMetadata();
     }
 }
