@@ -1,0 +1,2 @@
+parameters:
+  jira_enable_test_mode: false

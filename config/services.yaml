@@ -6,8 +6,6 @@
 parameters:
     locale: en
     router.request_context.base_url: ''
-    # By enabling 'jira_enable_test_mode', no real Jira backend is required to still simulate the Jira integration
-    jira_enable_test_mode: true
 
 services:
     # default configuration for services in *this* file
@@ -19,4 +17,5 @@ services:
         arguments:
             - '%env(DATABASE_URL)%'
 
+    # This service is configured in the Jira IssueRepositoryCompilerPass
     surfnet.dashboard.repository.issue: ~
