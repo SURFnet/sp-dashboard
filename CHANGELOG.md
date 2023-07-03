@@ -1,3 +1,6 @@
+## 5.0.1
+- Repair jira_enable_test_mode feature flag #592
+
 ## 5.0.0
 Main change made in this new major release is the upgrade to Symfony 5. These 
 pull requests make up the rest of the changes:

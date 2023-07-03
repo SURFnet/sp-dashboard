@@ -16,6 +16,7 @@ services:
       connect.vm.openconext.org: 127.0.0.1
       test.openconext.org: 127.0.0.1
       teams.vm.openconext.org: 127.0.0.1
+      ansible-test-ga: 127.0.0.1
     privileged: true
     networks:
       spdashboard:

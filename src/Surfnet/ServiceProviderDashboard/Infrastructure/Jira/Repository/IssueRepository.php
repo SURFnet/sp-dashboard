@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\IssueFieldFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 use Webmozart\Assert\Assert;
+use function array_key_exists;
 
 class IssueRepository implements TicketServiceInterface
 {
@@ -55,6 +56,9 @@ class IssueRepository implements TicketServiceInterface
         );
         $collection = [];
         foreach ($issues->issues as $issue) {
+            if (!array_key_exists($this->manageIdFieldName, $issue->fields->customFields)) {
+                continue;
+            }
             $manageId = $issue->fields->customFields[$this->manageIdFieldName];
             if (in_array($manageId, $manageIds)) {
                 $collection[$manageId] = new Issue($issue->key, $this->issueType, $issue->fields->status->name);

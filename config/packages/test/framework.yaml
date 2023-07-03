@@ -1,3 +1,7 @@
+imports:
+    # Load the test services.yml overload file
+    - { resource: services.yml }
+
 framework:
     test: true
     session:
