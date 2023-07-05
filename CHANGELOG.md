@@ -1,3 +1,11 @@
+## 5.1.0
+- Update security scanner policy #589
+- Install security updates #590
+- Resolve semver to a safe version #593
+- Remove unused privacy questions #588
+- Introduce new privacy questions #591
+- Push test metadata upon entity deletion #594
+
 ## 5.0.1
 - Repair jira_enable_test_mode feature flag #592
 
