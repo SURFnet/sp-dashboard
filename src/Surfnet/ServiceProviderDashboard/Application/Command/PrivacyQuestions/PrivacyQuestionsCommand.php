@@ -18,10 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions;
 
-use DateTime;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -64,54 +65,25 @@ class PrivacyQuestionsCommand implements Command
     private $securityMeasures;
 
     /**
-     * @var bool
-     */
-    private $certification;
-
-    /**
-     * @var string
-     */
-    private $certificationLocation;
-
-    /**
-     * @var DateTime
-     */
-    private $certificationValidFrom;
-
-    /**
-     * @var DateTime
-     */
-    private $certificationValidTo;
-
-    /**
-     * @var bool
-     */
-    private $surfmarketDpaAgreement;
-
-    /**
-     * @var bool
-     */
-    private $surfnetDpaAgreement;
-
-    /**
-     * @var string
-     */
-    private $snDpaWhyNot;
-
-    /**
-     * @var string
-     */
-    private $privacyPolicy;
-
-    /**
-     * @var string
-     */
-    private $privacyPolicyUrl;
-
-    /**
      * @var string
      */
     private $otherInfo;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Type("Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType")
+     */
+    private DpaType $dpaType;
+
+    /**
+     * @Assert\Url()
+     */
+    public ?string $privacyStatementUrlNl = '';
+
+    /**
+     * @Assert\Url()
+     */
+    public ?string $privacyStatementUrlEn = '';
 
     /**
      * @param string $whatData
@@ -146,83 +118,16 @@ class PrivacyQuestionsCommand implements Command
     }
 
     /**
-     * @param bool $certification
-     */
-    public function setCertification($certification)
-    {
-        $this->certification = $certification;
-    }
-
-    /**
-     * @param string $certificationLocation
-     */
-    public function setCertificationLocation($certificationLocation)
-    {
-        $this->certificationLocation = $certificationLocation;
-    }
-
-    /**
-     * @param DateTime $certificationValidFrom
-     */
-    public function setCertificationValidFrom(DateTime $certificationValidFrom = null)
-    {
-        $this->certificationValidFrom = $certificationValidFrom;
-    }
-
-    /**
-     * @param DateTime $certificationValidTo
-     */
-    public function setCertificationValidTo(DateTime $certificationValidTo = null)
-    {
-        $this->certificationValidTo = $certificationValidTo;
-    }
-
-    /**
-     * @param bool $surfmarketDpaAgreement
-     */
-    public function setSurfmarketDpaAgreement($surfmarketDpaAgreement)
-    {
-        $this->surfmarketDpaAgreement = $surfmarketDpaAgreement;
-    }
-
-    /**
-     * @param bool $surfnetDpaAgreement
-     */
-    public function setSurfnetDpaAgreement($surfnetDpaAgreement)
-    {
-        $this->surfnetDpaAgreement = $surfnetDpaAgreement;
-    }
-
-    /**
-     * @param string $snDpaWhyNot
-     */
-    public function setSnDpaWhyNot($snDpaWhyNot)
-    {
-        $this->snDpaWhyNot = $snDpaWhyNot;
-    }
-
-    /**
-     * @param bool $privacyPolicy
-     */
-    public function setPrivacyPolicy($privacyPolicy)
-    {
-        $this->privacyPolicy = $privacyPolicy;
-    }
-
-    /**
-     * @param string $privacyPolicyUrl
-     */
-    public function setPrivacyPolicyUrl($privacyPolicyUrl)
-    {
-        $this->privacyPolicyUrl = $privacyPolicyUrl;
-    }
-
-    /**
      * @param string $otherInfo
      */
     public function setOtherInfo($otherInfo)
     {
         $this->otherInfo = $otherInfo;
+    }
+
+    public function setDpaType(string $dpaType)
+    {
+        $this->dpaType = DpaType::fromString($dpaType);
     }
 
     /**
@@ -258,79 +163,6 @@ class PrivacyQuestionsCommand implements Command
     }
 
     /**
-     * @return bool
-     */
-    public function isCertification()
-    {
-        return $this->certification;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCertificationLocation()
-    {
-        return $this->certificationLocation;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getCertificationValidFrom()
-    {
-        return $this->certificationValidFrom;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getCertificationValidTo()
-    {
-        return $this->certificationValidTo;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSurfmarketDpaAgreement()
-    {
-        return $this->surfmarketDpaAgreement;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSurfnetDpaAgreement()
-    {
-        return $this->surfnetDpaAgreement;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSnDpaWhyNot()
-    {
-        return $this->snDpaWhyNot;
-    }
-
-    /**
-     * @return bool
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getPrivacyPolicy()
-    {
-        return $this->privacyPolicy;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrivacyPolicyUrl()
-    {
-        return $this->privacyPolicyUrl;
-    }
-
-    /**
      * @return string
      */
     public function getOtherInfo()
@@ -354,19 +186,17 @@ class PrivacyQuestionsCommand implements Command
         return $this->mode;
     }
 
+    public function getDpaType(): DpaType
+    {
+        return $this->dpaType;
+    }
+
     public static function fromService(Service $service)
     {
         $command = new self;
         $command->mode = self::MODE_CREATE;
-
+        $command->dpaType = DpaType::build(DpaType::DEFAULT);
         $command->service = $service;
-
-        $validFrom = new DateTime('-2 years');
-        $validTo = new DateTime('+1 years');
-
-        $command->certificationValidFrom = $validFrom;
-        $command->certificationValidTo = $validTo;
-
         return $command;
     }
 
@@ -376,21 +206,14 @@ class PrivacyQuestionsCommand implements Command
         $command->mode = self::MODE_EDIT;
 
         $command->accessData = $questions->getAccessData();
-        $command->certification = $questions->isCertified();
-        $command->certificationLocation = $questions->getCertificationLocation();
-        $command->certificationValidFrom = $questions->getCertificationValidFrom();
-        $command->certificationValidTo = $questions->getCertificationValidTo();
         $command->country = $questions->getCountry();
         $command->otherInfo = $questions->getOtherInfo();
-        $command->privacyPolicy = $questions->getPrivacyPolicy();
-        $command->privacyPolicyUrl = $questions->getPrivacyPolicyUrl();
         $command->securityMeasures = $questions->getSecurityMeasures();
         $command->service = $questions->getService();
-        $command->snDpaWhyNot = $questions->getSnDpaWhyNot();
-        $command->surfmarketDpaAgreement = $questions->isSurfmarketDpaAgreement();
-        $command->surfnetDpaAgreement = $questions->isSurfnetDpaAgreement();
         $command->whatData = $questions->getWhatData();
-
+        $command->dpaType = DpaType::from($questions);
+        $command->privacyStatementUrlNl = $questions->getPrivacyStatementUrlNl();
+        $command->privacyStatementUrlEn = $questions->getPrivacyStatementUrlEn();
         return $command;
     }
 }

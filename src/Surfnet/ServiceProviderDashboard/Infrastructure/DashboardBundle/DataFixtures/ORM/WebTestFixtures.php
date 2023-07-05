@@ -23,6 +23,7 @@ use Doctrine\Persistence\ObjectManager;
 use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
 
 class WebTestFixtures extends Fixture
 {
@@ -71,6 +72,7 @@ class WebTestFixtures extends Fixture
         $privacyQuestions = new PrivacyQuestions();
         $privacyQuestions->setService($service);
         $privacyQuestions->setWhatData('All your data are belong to us');
+        $privacyQuestions->setDpaType(DpaType::DEFAULT);
 
         return $privacyQuestions;
     }

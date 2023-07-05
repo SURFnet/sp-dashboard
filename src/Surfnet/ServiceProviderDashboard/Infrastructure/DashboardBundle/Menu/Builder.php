@@ -55,19 +55,19 @@ class Builder
         }
 
         if ($this->authorizationService->isAdministrator() && $this->authorizationService->getActiveServiceId()) {
-            $menu->addChild('Service overview', [
+            $menu->addChild('global.menu.overview', [
                 'route' => 'service_admin_overview',
                 'routeParameters' => ['serviceId' => $this->authorizationService->getActiveServiceId()],
             ]);
         } else {
-            $menu->addChild('Services', ['route' => 'service_overview']);
+            $menu->addChild('global.menu.services', ['route' => 'service_overview']);
         }
         if ($this->authorizationService->isAdministrator()) {
-            $menu->addChild('Add new service', array(
+            $menu->addChild('global.menu.new-service', array(
                 'route' => 'service_add',
             ));
 
-            $menu->addChild('Translations', array(
+            $menu->addChild('global.menu.translations', array(
                 'route' => 'lexik_translation_overview',
             ));
         }

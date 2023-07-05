@@ -18,29 +18,35 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use DateTime;
+use stdClass;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
 
 /**
- * Reads the PrivacyQuestions from the Entity that is injected, It than references the answers found in the
- * privacy questions against the privacy question attributes that are found in the AttributesMetadataRepository.
+ * Reads the PrivacyQuestions from the Entity that is injected,
+ * it than references the answers found in the privacy questions
+ * against the privacy question attributes that are found in the
+ * AttributesMetadataRepository.
  *
- * The two are merged into an associative array that is comprised of attributename and answer to the privacy question.
+ * The two are merged into an associative array that is composed
+ * of attribute name and answer to the privacy question.
  *
  * Example (in json format for readability):
  *
  * {
  *   "what_data": "All sorts of data will be accessed.",
- *   "certification": false,
- *   "certification_valid_from": "2018-06-04",
- *   "certification_valid_to": "2018-06-06",
- *   "sn_dpa_why_not": "We can not comply."
+ *   "security_measures": "We've taken every precaution."
  * }
  *
  */
 class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 {
+    /**
+     * @var true
+     */
+    private bool $addMetaDataPrefix = false;
+
     public function __construct(private readonly AttributesMetadataRepository $repository)
     {
     }
@@ -54,24 +60,58 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 
         if ($entity->getService()->isPrivacyQuestionsEnabled()) {
             foreach ($privacyQuestions as $question) {
-                // Get the associated getter
+                if ($question->id === 'privacyStatementUrl') {
+                    $privacyStatements = $privacyQuestionAnswers->privacyStatementUrls();
+                    $privacyStatementsTranslated = [];
+                    foreach ($privacyStatements as $urn => $value) {
+                        $privacyStatementsTranslated[$this->buildKey($urn)] = $value;
+                    }
+                    $attributes += $privacyStatementsTranslated;
+                    continue;
+                }
+
                 $getterName = $question->getterName;
                 if ($privacyQuestionAnswers !== null && method_exists($privacyQuestionAnswers, $getterName)) {
-                    $answer = $privacyQuestionAnswers->$getterName();
-                    if (!is_null($answer)) {
-                        if ($answer instanceof DateTime) {
-                            $answer = (string) $answer->format(DateTime::RFC3339);
-                        }
-                        // Manage expects booleans as strings.
-                        if (is_bool($answer)) {
-                            $answer = ($answer) ? '1' : '0';
-                        }
-                        $attributes[$question->urns[0]] = $answer;
-                    }
+                    $this->buildPrivacyQuestion(
+                        $attributes,
+                        $getterName,
+                        $privacyQuestionAnswers,
+                        $question
+                    );
                 }
             }
         }
 
         return $attributes;
+    }
+
+    public function withMetadataPrefix(): void
+    {
+        $this->addMetaDataPrefix = true;
+    }
+
+    private function buildKey(string $urn)
+    {
+        if ($this->addMetaDataPrefix) {
+            return 'metaDataFields.' . $urn;
+        }
+        return $urn;
+    }
+
+    public function buildPrivacyQuestion(
+        array &$attributes,
+        string $getterName,
+        PrivacyQuestions $privacyQuestionAnswers,
+        mixed $question
+    ): void {
+        $answer = $privacyQuestionAnswers->$getterName();
+        if (!is_null($answer)) {
+            // Manage expects booleans as strings.
+            if (is_bool($answer)) {
+                $answer = ($answer) ? '1' : '0';
+            }
+            $key = $this->buildKey($question->urns[0]);
+            $attributes[$key] = $answer;
+        }
     }
 }

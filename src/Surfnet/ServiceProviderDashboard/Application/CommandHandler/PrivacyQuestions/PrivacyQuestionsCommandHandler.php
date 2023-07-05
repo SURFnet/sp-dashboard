@@ -67,18 +67,16 @@ class PrivacyQuestionsCommandHandler implements CommandHandler
     {
         $questions->setService($command->getService());
         $questions->setAccessData($command->getAccessData());
-        $questions->setCertification($command->isCertification());
-        $questions->setCertificationLocation($command->getCertificationLocation());
-        $questions->setCertificationValidFrom($command->getCertificationValidFrom());
-        $questions->setCertificationValidTo($command->getCertificationValidTo());
         $questions->setCountry($command->getCountry());
         $questions->setOtherInfo($command->getOtherInfo());
-        $questions->setPrivacyPolicy($command->getPrivacyPolicy());
-        $questions->setPrivacyPolicyUrl($command->getPrivacyPolicyUrl());
         $questions->setSecurityMeasures($command->getSecurityMeasures());
-        $questions->setSnDpaWhyNot($command->getSnDpaWhyNot());
-        $questions->setSurfmarketDpaAgreement($command->isSurfmarketDpaAgreement());
-        $questions->setSurfnetDpaAgreement($command->isSurfnetDpaAgreement());
         $questions->setWhatData($command->getWhatData());
+        $questions->setDpaType($command->getDpaType()->type);
+        if ($command->privacyStatementUrlEn) {
+            $questions->setPrivacyStatementUrlEn($command->privacyStatementUrlEn);
+        }
+        if ($command->privacyStatementUrlNl) {
+            $questions->setPrivacyStatementUrlNl($command->privacyStatementUrlNl);
+        }
     }
 }

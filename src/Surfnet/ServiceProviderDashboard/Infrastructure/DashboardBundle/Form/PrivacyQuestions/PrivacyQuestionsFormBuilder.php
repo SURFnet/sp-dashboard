@@ -18,8 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\PrivacyQuestions;
 
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -85,101 +85,45 @@ class PrivacyQuestionsFormBuilder
         );
 
         $builder->add(
-            'certification',
-            CheckboxType::class,
+            'dpaType',
+            ChoiceType::class,
             [
-                'label' => 'privacy.form.label.certification.html',
+                'expanded' => true,
+                'multiple' => false,
+                'label' => 'privacy.form.label.dpaType.html',
                 'required' => false,
-                'attr' => ['data-help' => 'privacy.information.certification'],
-            ]
-        );
-
-        $builder->add(
-            'certificationLocation',
-            TextareaType::class,
-            [
-                'label' => 'privacy.form.label.certificationLocation.html',
-                'required' => false,
+                'choices' => DpaType::choices(),
+                'empty_data' => DpaType::DEFAULT,
+                'placeholder' => false,
                 'attr' => [
-                    'data-help' => 'privacy.information.certificationLocation',
+                    'data-help' => 'privacy.information.dpaType',
                     'rows' => 8,
                 ],
             ]
         );
 
         $builder->add(
-            'certificationValidFrom',
-            DateType::class,
-            [
-                'label' => 'privacy.form.label.certificationValidFrom.html',
-                'required' => false,
-                'widget' => 'single_text',
-            ]
-        );
-
-        $builder->add(
-            'certificationValidTo',
-            DateType::class,
-            [
-                'label' => 'privacy.form.label.certificationValidTo.html',
-                'required' => false,
-                'widget' => 'single_text',
-            ]
-        );
-
-        $builder->add(
-            'surfmarketDpaAgreement',
-            CheckboxType::class,
-            [
-                'label' => 'privacy.form.label.surfmarketDpaAgreement.html',
-                'required' => false,
-                'attr' => ['data-help' => 'privacy.information.surfmarketDpaAgreement'],
-            ]
-        );
-
-        $builder->add(
-            'surfnetDpaAgreement',
-            CheckboxType::class,
-            [
-                'label' => 'privacy.form.label.surfnetDpaAgreement.html',
-                'required' => false,
-                'attr' => ['data-help' => 'privacy.information.surfnetDpaAgreement'],
-            ]
-        );
-
-        $builder->add(
-            'snDpaWhyNot',
-            TextareaType::class,
-            [
-                'label' => 'privacy.form.label.snDpaWhyNot.html',
-                'required' => false,
-                'attr' => [
-                    'data-help' => 'privacy.information.snDpaWhyNot',
-                    'rows' => 8,
-                ],
-            ]
-        );
-
-        $builder->add(
-            'privacyPolicy',
-            CheckboxType::class,
-            [
-                'label' => 'privacy.form.label.privacyPolicy.html',
-                'required' => false,
-                'attr' => ['data-help' => 'privacy.information.privacyPolicy'],
-            ]
-        );
-
-        $builder->add(
-            'privacyPolicyUrl',
+            'privacyStatementUrlNl',
             UrlType::class,
             [
-                'label' => 'privacy.form.label.privacyPolicyUrl.html',
+                'label' => 'privacy.form.label.privacyStatementUrlNl.html',
                 'required' => false,
-                'default_protocol' => 'https',
                 'attr' => [
-                    'data-parsley-type' => "url",
-                    'data-help' => 'privacy.information.privacyPolicyUrl',
+                    'data-help' => 'privacy.information.privacyStatementUrlNl',
+                    'rows' => 8,
+                ],
+            ]
+        );
+
+        $builder->add(
+            'privacyStatementUrlEn',
+            UrlType::class,
+            [
+                'label' => 'privacy.form.label.privacyStatementUrlEn.html',
+                'required' => false,
+                'attr' => [
+                    'data-help' => 'privacy.information.privacyStatementUrlEn',
+                    'rows' => 8,
                 ],
             ]
         );
@@ -197,6 +141,13 @@ class PrivacyQuestionsFormBuilder
             ]
         );
 
-        $builder->add('save', SubmitType::class, ['attr' => ['class'=>'button']]);
+        $builder->add(
+            'save',
+            SubmitType::class,
+            [
+                'label' => 'privacy.form.label.save-button',
+                'attr' => ['class'=>'button']
+            ]
+        );
     }
 }

@@ -45,6 +45,7 @@ services:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePublishedTestEntityCommandHandler
     arguments:
       - '@surfnet.manage.client.delete_client.test_environment'
+      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
     public: true
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand }

@@ -1,7 +1,8 @@
+imports:
+  # Load the dev services.yml overload file
+  - { resource: services.yml }
+
 framework:
-#  router:
-#    resource: '%kernel.root_dir%/config/routes_dev.yaml'
-#    strict_requirements: true
   profiler: { only_exceptions: false }
   session:
     save_path: '/tmp/sp-dashboard-sessions'

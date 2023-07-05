@@ -5,7 +5,9 @@ doctrine_migrations:
     storage:
             table_storage:
                 table_name: 'migration_versions'
-                version_column_name: 'SP_Dashboard_migrations'
+                version_column_name: 'version'
+                version_column_length: 192
 
     organize_migrations: false
-
+    em:
+        default

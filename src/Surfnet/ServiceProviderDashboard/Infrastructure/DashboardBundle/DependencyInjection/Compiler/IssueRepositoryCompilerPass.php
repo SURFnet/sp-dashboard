@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentI
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use function is_bool;
 
 class IssueRepositoryCompilerPass implements CompilerPassInterface
 {
@@ -40,15 +41,13 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $hasParameter = $container->getParameter(self::ENABLE_TEST_MODE_FEATURE_FLAG);
+        $enableJiraTestMode = $container->getParameter(self::ENABLE_TEST_MODE_FEATURE_FLAG);
         $hasDefinition = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
-        if (!$hasParameter || !$hasDefinition) {
+        if (!is_bool($enableJiraTestMode) && !$hasDefinition) {
             return;
         }
 
-        $isTestModeEnabled = (bool) $hasParameter;
-
-        if ($isTestModeEnabled) {
+        if ($enableJiraTestMode) {
             $this->configureServiceInTestMode($container);
         } else {
             $this->configureService($container);
@@ -71,6 +70,7 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
             $container->getParameter('env(jira_issue_manageid_fieldname)'),
             $container->getParameter('env(jira_issue_manageid_field_label)')
         ]);
+        $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);
     }
 
     /**
@@ -84,5 +84,6 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
         $service->setArguments([
             $container->getParameter('env(jira_test_mode_storage_path)')
         ]);
+        $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);
     }
 }

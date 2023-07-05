@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\DeletePub
 use Surfnet\ServiceProviderDashboard\Application\Exception\UnableToDeleteEntityException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 
 class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
 {
@@ -42,9 +43,11 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
     private $repository;
 
     /**
-     * @var LoggerInterface|Mock
+     * @var LoggerInterface&Mock
      */
     private $logger;
+
+    private PublishEntityRepository $publishClient;
 
     public function setUp(): void
     {
@@ -52,8 +55,11 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
 
         $this->logger = m::mock(LoggerInterface::class);
 
+        $this->publishClient = m::mock(PublishEntityRepository::class);
+
         $this->commandHandler = new DeletePublishedTestEntityCommandHandler(
             $this->repository,
+            $this->publishClient,
             $this->logger
         );
     }
@@ -61,6 +67,10 @@ class DeletePublishedTestEntityCommandHandlerTest extends MockeryTestCase
     public function test_it_can_delete_an_entity_from_test()
     {
         $command = new DeletePublishedTestEntityCommand('d6f394b2-08b1-4882-8b32-81688c15c489', Constants::TYPE_SAML);
+
+        $this->publishClient
+            ->shouldReceive('pushMetadata')
+            ->once();
 
         $this->repository
             ->shouldReceive('delete')

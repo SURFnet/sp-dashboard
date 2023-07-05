@@ -1,8 +1,27 @@
 # Use a Jira test stand in
 
-By default SP dashboard is configured to not use the test stand in option in dev or production modes. To enable this 
+By default SP dashboard is configured to not use the test stand in option in production mode. To enable this 
 feature. Simply configure the `jira_enable_test_mode: true` and `jira_test_mode_storage_path: '../var/issues.json'` to
 your liking. The values above are sensible defaults.
+
+The feature flag must be configured in yaml config, as the container is configured during compile time at which point
+the .env vars are not available. This requires you to configure this flag in the parameters section of the environment
+corresponding `config/packages/%env%/services.yml`.
+
+If for example, in dev mode you want to enable the Jira mock test stand in you configure:
+
+`config/packages/dev/services.yml`
+
+```yaml
+parameters:  
+  jira_enable_test_mode: true
+```
+
+And in `.env`
+
+```dotenv
+jira_test_mode_storage_path='../var/issues.json'
+```
 
 The Jira interaction is now skipped, and all actions are handled in a happy flow manner. Resulting in a JSON file that
 is filled with ticket id's that are then used by the application to track the Jira workflow state.
