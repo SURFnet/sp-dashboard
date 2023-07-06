@@ -24,7 +24,6 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
@@ -54,9 +53,9 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $service->setPrivacyQuestions($privacyQuestions);
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources');
-
-        $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
+        $factory = new PrivacyQuestionsMetadataGenerator(
+            new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources')
+        );
 
         $metadata = $factory->build($entity);
 
@@ -83,11 +82,28 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
 
         $entity->setService($service);
 
-        $metadataRepository = new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources');
+        $factory = new PrivacyQuestionsMetadataGenerator(
+            new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources')
+        );
 
-        $factory = new PrivacyQuestionsMetadataGenerator($metadataRepository);
         $metadata = $factory->build($entity);
 
         $this->assertEmpty($metadata);
+    }
+    public function test_does_not_fail_when_no_questions_and_answers_provided()
+    {
+        $entity = m::mock(ManageEntity::class)->makePartial();
+        $service = m::mock(Service::class)->makePartial();
+
+        $service->setPrivacyQuestionsEnabled(true);
+        $entity->setService($service);
+
+        $factory = new PrivacyQuestionsMetadataGenerator(
+            new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources')
+        );
+
+        $metadata = $factory->build($entity);
+
+        $this->assertCount(0, $metadata);
     }
 }
