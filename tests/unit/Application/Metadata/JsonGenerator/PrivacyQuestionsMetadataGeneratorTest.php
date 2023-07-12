@@ -49,7 +49,7 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $privacyQuestions->setSecurityMeasures('Measures');
         $privacyQuestions->setPrivacyStatementUrlEn('https://foobar.example.com/privacy');
         $privacyQuestions->setPrivacyStatementUrlNl('https://foobar.example.nl/privacy');
-        $privacyQuestions->setDpaType('dpa_in_surf_agreement'); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
+        $privacyQuestions->setDpaType('service_aqcuired_through_surf'); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
 
         $service->setPrivacyQuestions($privacyQuestions);
         $entity->setService($service);
@@ -69,7 +69,7 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $this->assertEquals('Other information', $metadata['coin:privacy:other_info']);
         $this->assertEquals('https://foobar.example.com/privacy', $metadata['mdui:PrivacyStatementURL:en']);
         $this->assertEquals('https://foobar.example.nl/privacy', $metadata['mdui:PrivacyStatementURL:nl']);
-        $this->assertEquals('dpa_in_surf_agreement', $metadata['coin:privacy:dpa_type']); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
+        $this->assertEquals('service_aqcuired_through_surf', $metadata['coin:privacy:dpa_type']); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
     }
 
     public function test_it_retuns_empty_array_when_disabled()

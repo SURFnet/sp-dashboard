@@ -34,10 +34,10 @@ use function in_array;
  *  "coin:privacy:dpa_type": {
  *    "type": "string",
  *    "enum": [
- *      "dpa_not_applicable",
- *      "dpa_in_surf_agreement",
- *      "dpa_model_surf",
- *      "dpa_supplied_by_service",
+ *      "service_is_not_processor",
+ *      "service_aqcuired_through_surf",
+ *      "service_willing_or_signed_surf_model_dpa",
+ *      "service_has_own_dpa",
  *      "other"
  *    ],
  *    "default" : "service_has_own_dpa",
@@ -46,10 +46,10 @@ use function in_array;
  */
 class DpaType
 {
-    private const DPA_TYPE_NOT_APPLICABLE = 'dpa_not_applicable';
-    private const DPA_TYPE_MODEL_SURF = 'dpa_model_surf';
-    private const DPA_TYPE_IN_SURF_AGREEMENT = 'dpa_in_surf_agreement';
-    private const DPA_TYPE_SUPPLIED_BY_SERVICE = 'dpa_supplied_by_service';
+    private const DPA_TYPE_NOT_APPLICABLE = 'service_is_not_processor';
+    private const DPA_TYPE_MODEL_SURF = 'service_willing_or_signed_surf_model_dpa';
+    private const DPA_TYPE_IN_SURF_AGREEMENT = 'service_aqcuired_through_surf';
+    private const DPA_TYPE_SUPPLIED_BY_SERVICE = 'service_has_own_dpa';
     private const DPA_TYPE_OTHER = 'other';
 
     public const DEFAULT = self::DPA_TYPE_SUPPLIED_BY_SERVICE;
