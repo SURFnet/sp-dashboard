@@ -11,6 +11,9 @@ services:
     resource: '../../Security/Voter'
     tags: ['security.voter']
 
+  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\EventListener\ExceptionListener:
+    tags: [kernel.event_listener]
+
   surfnet.dashboard.command_handler.create_service:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Service\CreateServiceCommandHandler
     public: true
