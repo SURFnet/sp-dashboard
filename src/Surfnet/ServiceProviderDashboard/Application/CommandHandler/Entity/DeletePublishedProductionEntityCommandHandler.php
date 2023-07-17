@@ -59,7 +59,7 @@ class DeletePublishedProductionEntityCommandHandler implements CommandHandler
         }
 
         if ($response !== DeleteManageEntityRepository::RESULT_SUCCESS) {
-            throw new EntityNotDeletedException('Deleting the entity yielded an non success response');
+            throw new EntityNotDeletedException('Deleting the entity yielded a non success response');
         }
     }
 }

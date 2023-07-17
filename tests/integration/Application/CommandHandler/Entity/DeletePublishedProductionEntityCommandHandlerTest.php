@@ -92,7 +92,7 @@ class DeletePublishedProductionEntityCommandHandlerTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('info');
 
-        $this->expectExceptionMessage("Deleting the entity yielded an non success response");
+        $this->expectExceptionMessage("Deleting the entity yielded a non success response");
         $this->expectException(EntityNotDeletedException::class);
         $this->commandHandler->handle($command);
     }
