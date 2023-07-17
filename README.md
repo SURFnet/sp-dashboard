@@ -44,7 +44,7 @@ used in development to run the application.
 
 Install database migrations
 ```
-$ docker exec sp-dashboard_php-fpm_1  /var/www/html/bin/console doctrine:migrations:migrate
+$ docker exec sp-dashboard-php-fpm-1 /var/www/html/bin/console doctrine:migrations:migrate
 ```
 
 The application is now up and running and can be accessed at
