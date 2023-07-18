@@ -7,7 +7,8 @@ $(() => {
 
   if (!!flashUl && !!deleteLinks) {
     deleteLinks.forEach(item => {
-      item.addEventListener('mousedown', (event) => {
+      item.addEventListener('click', (event) => {
+        event.preventDefault();
         event.stopImmediatePropagation();
         const target = event.target as HTMLSelectElement;
         if (!target.matches('.teams__deleteMemberLink')) return;
