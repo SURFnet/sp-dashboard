@@ -40,7 +40,7 @@ describe('validate collection widget', function() {
     $('.add_collection_entry').click();
 
     let expected = `
-        <ul class=\"collection-list\"><li class=\"collection-entry\"><input type=\"text\" id=\"dashboard_bundle_entity_type_metadata_redirectUris_0\" name=\"dashboard_bundle_entity_type[metadata][redirectUris][0]\" readonly=\"\"><button type=\"button\" class=\"button-small remove_collection_entry\"><i class=\"fa fa-trash\"></i></button></li></ul>
+        <ul class=\"collection-list\"><li class=\"collection-entry\"><input type=\"text\" id=\"dashboard_bundle_entity_type_metadata_redirectUris_0\" name=\"dashboard_bundle_entity_type[metadata][redirectUris][0]\" readonly=\"\"><button type=\"button\" class=\"button-small remove_collection_entry\"><i class=\"fa fa-trash\"></i></button><button type=\"button\" class=\"button-small edit_collection_entry\"><i class=\"fa fa-pencil\"></i></button></li></ul>
         <div class="collection-entry"><input type="text"><button type="button" class="button-small blue add_collection_entry"><i class="fa fa-plus"></i></button></div>`;
 
     let actual = $('.collection-widget').html();
@@ -83,7 +83,7 @@ describe('validate collection widget', function() {
     // Should yield an error
     $('.add_collection_entry').click();
 
-    let expected= `<li class="collection-entry"><input type="text" id="dashboard_bundle_entity_type_metadata_redirectUris_0" name="dashboard_bundle_entity_type[metadata][redirectUris][0]" readonly=""><button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button></li><li class="collection-entry"><input type="text" id="dashboard_bundle_entity_type_metadata_redirectUris_1" name="dashboard_bundle_entity_type[metadata][redirectUris][1]" readonly=""><button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button></li>`;
+    let expected= `<li class=\"collection-entry\"><input type=\"text\" id=\"dashboard_bundle_entity_type_metadata_redirectUris_0\" name=\"dashboard_bundle_entity_type[metadata][redirectUris][0]\" readonly=\"\"><button type=\"button\" class=\"button-small remove_collection_entry\"><i class=\"fa fa-trash\"></i></button><button type=\"button\" class=\"button-small edit_collection_entry\"><i class=\"fa fa-pencil\"></i></button></li><li class=\"collection-entry\"><input type=\"text\" id=\"dashboard_bundle_entity_type_metadata_redirectUris_1\" name=\"dashboard_bundle_entity_type[metadata][redirectUris][1]\" readonly=\"\"><button type=\"button\" class=\"button-small remove_collection_entry\"><i class=\"fa fa-trash\"></i></button><button type=\"button\" class=\"button-small edit_collection_entry\"><i class=\"fa fa-pencil\"></i></button></li>`;
     let actual = $('.collection-list').html();
     expect(actual).toBe(expected);
   });

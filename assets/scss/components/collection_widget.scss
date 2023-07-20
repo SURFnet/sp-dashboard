@@ -2,7 +2,7 @@
   .collection-entry {
     box-sizing: border-box;
     width: 100%;
-    padding-right: 40px;
+    padding-right: 80px;
 
     position: relative;
 
@@ -21,10 +21,8 @@
     position: absolute;
     right: 0;
     top: 0;
-
-
     display: inline-block;
-    padding: 5px 10px;
+    padding: 3px 8px;
     text-transform: uppercase;
     background-color: white;
     color: $blue;
@@ -36,5 +34,8 @@
     cursor: pointer;
 
     @include no-text-decoration;
+  }
+  .edit_collection_entry{
+    right: 38px;
   }
 }
