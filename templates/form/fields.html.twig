@@ -144,6 +144,7 @@
             {%- for child in form %}
                 <li class="collection-entry">
                     {{- form_widget(child,  {'attr': {'readonly': 'readonly'}}) -}}
+                    <button type="button" class="button-small edit_collection_entry"><i class="fa fa-pencil"></i></button>
                     <button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button>
                     {{- form_errors(child) -}}
                 </li>
