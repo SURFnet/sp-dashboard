@@ -58,7 +58,7 @@ class ServiceService
      *
      * @param array $allowedServices The input should be service names keyed by service id.
      *                               As provided by: AuthorizationService::getAllowedServiceNamesById
-     * @return array
+     * @return Service[]
      */
     public function getServicesByAllowedServices(array $allowedServices)
     {
