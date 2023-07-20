@@ -50,6 +50,9 @@ class CollectionWidget {
     this.$collectionList.find('.remove_collection_entry').each((_index: number, el: any) => {
       this.registerRemoveClickHandler($(el));
     });
+    this.$collectionList.find('.edit_collection_entry').each((_index: number, el: any) => {
+      this.registerEditClickHandler($(el));
+    });
 
     this.registerAddClickHandler($addEntryButton);
     this.registerBeforeSubmitHandler($addEntryButton);
@@ -72,11 +75,14 @@ class CollectionWidget {
 
     const collectionEntry = $('<li class="collection-entry"></li>');
     const $removeEntryButton = $('<button type="button" class="button-small remove_collection_entry"><i class="fa fa-trash"></i></button>');
+    const $editEntryButton = $('<button type="button" class="button-small edit_collection_entry"><i class="fa fa-pencil"></i></button>');
 
     this.registerRemoveClickHandler($removeEntryButton);
+    this.registerEditClickHandler($editEntryButton);
 
     collectionEntry.append(newElement);
     collectionEntry.append($removeEntryButton);
+    collectionEntry.append($editEntryButton);
     this.$collectionList.append(collectionEntry);
 
     this.index += 1;
@@ -90,6 +96,21 @@ class CollectionWidget {
     const element = $(el.target);
 
     element.closest('.collection-entry').remove();
+  }
+  /**
+   * Remove the collection entry from the list
+   * @param el
+   */
+  private editCollectionEntry(el: JQuery.TriggeredEvent) {
+    // First make all entries readonly once again
+    this.$collectionList.find('.edit_collection_entry').each((_index: number, el: any) => {
+      $(el).closest('.collection-entry').children('input').prop('readonly', true);
+    });
+    const element = $(el.target);
+    const target = element.closest('.collection-entry').children('input');
+    // Then make targeted element editable
+    target.removeAttr('readonly');
+
   }
 
   /**
@@ -113,6 +134,13 @@ class CollectionWidget {
       this.removeCollectionEntry(el);
     };
     $removeEntryButton.on('click', handleRemoveClick);
+  }
+
+  private registerEditClickHandler($editEntryButton: JQuery<HTMLElement>) {
+    const handleRemoveClick = (el: JQuery.TriggeredEvent) => {
+      this.editCollectionEntry(el);
+    };
+      $editEntryButton.on('click', handleRemoveClick);
   }
 
   /**
