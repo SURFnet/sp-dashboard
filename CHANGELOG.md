@@ -6,6 +6,10 @@
 - Introduce new privacy questions #591
 - Push test metadata upon entity deletion #594
 
+## 5.0.2
+- Prevent team member double delete drama #600
+- Render the custom unknown service error page #599 
+
 ## 5.0.1
 - Repair jira_enable_test_mode feature flag #592
 
