@@ -5,7 +5,8 @@ $(() => {
   const flashUl = document.querySelector('.teams__flashMessages') as HTMLUListElement;
   const changeRoleLinks = document.querySelectorAll('.teams__changeMemberRole');
   changeRoleLinks.forEach(item => {
-    item.addEventListener('mousedown', (event) => {
+    item.addEventListener('click', (event) => {
+      event.preventDefault();
       const target = event.target as HTMLAnchorElement;
       const roleName = target.getAttribute('data-role');
       const parentElement = target.closest('div');
