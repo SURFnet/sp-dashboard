@@ -97,8 +97,14 @@ class PrivacyQuestionsFormBuilder
                 'placeholder' => false,
                 'attr' => [
                     'data-help' => 'privacy.information.dpaType',
+                    'class' => 'dpa-types',
                     'rows' => 8,
                 ],
+                'choice_attr' => function ($choice) {
+                    return [
+                        'help' => $choice,
+                    ];
+                },
             ]
         );
 
