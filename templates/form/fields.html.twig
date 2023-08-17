@@ -116,6 +116,11 @@
             <div class="radio-container">
             {{- form_widget(child) -}}
             {{- form_label(child, null, {translation_domain: choice_translation_domain, 'label_attr': {'for': child.vars.id}}) -}}
+                {% if child.vars.attr.help is defined %}
+                    <span data-tippy-content="{{ ('privacy.information.dpaType.' ~ child.vars.attr.help)|trans }}" class="help-button">
+                        <i class="fa fa-question-circle"></i>
+                    </span>
+                {% endif %}
             </div>
         {% endfor -%}
     </div>
