@@ -97,7 +97,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                 );
 
                 // No need to create a Jira ticket when resetting the client secret
-                if ($command instanceof PublishEntityProductionCommand) {
+                if ($command instanceof PublishEntityProductionCommand && !$command->isClientReset()) {
                     $this->ticketService->createJiraTicket(
                         $entity,
                         $command,
