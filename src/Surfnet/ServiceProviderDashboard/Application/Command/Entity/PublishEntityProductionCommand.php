@@ -25,11 +25,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PublishEntityProductionCommand implements PublishProductionCommandInterface, Command
 {
+    private bool $isClientReset = false;
+
     public function __construct(
         #[Assert\Type('\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity')]
         private ManageEntity $manageEntity,
         private Contact $applicant
     ) {
+    }
+
+    public function isClientReset(): bool
+    {
+        return $this->isClientReset;
+    }
+
+    public function markPublishClientReset(): void
+    {
+        $this->isClientReset = true;
     }
 
     public function getManageEntity(): ManageEntity
