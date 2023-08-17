@@ -38,7 +38,8 @@ class ResetOidcSecretCommandHandler implements CommandHandler
     public function __construct(
         private readonly CommandBus $commandBus,
         private readonly AuthorizationService $authorizationService,
-        private readonly PublishEntityClient $publishEntityClient
+        private readonly PublishEntityClient $publishProdEntityClient,
+        private readonly PublishEntityClient $publishTestEntityClient
     ) {
     }
 
@@ -73,7 +74,11 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         if (!$entity->isExcludedFromPush()) {
             // Push metadata (we push to production manage upon client secret resets)
             // https://www.pivotaltracker.com/story/show/173009970
-            $this->publishEntityClient->pushMetadata();
+            if ($entity->isProduction()) {
+                $this->publishProdEntityClient->pushMetadata();
+                return;
+            }
+            $this->publishTestEntityClient->pushMetadata();
         }
     }
 }
