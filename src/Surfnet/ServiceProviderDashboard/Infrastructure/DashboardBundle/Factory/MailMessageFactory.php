@@ -22,7 +22,6 @@ use Exception;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\Environment as TwigEnvironment;
 
 /**
  * The mail message factory builds mail messages. These messages are set with a translatable title and their message
@@ -36,8 +35,7 @@ class MailMessageFactory
         private readonly string $sender,
         private readonly string $receiver,
         private readonly string $noReply,
-        private readonly TranslatorInterface $translator,
-        private readonly TwigEnvironment $templating
+        private readonly TranslatorInterface $translator
     ) {
     }
 
@@ -66,10 +64,5 @@ class MailMessageFactory
         $email->to($this->receiver);
 
         return $email;
-    }
-
-    private function renderView($view, array $parameters = array())
-    {
-        return $this->templating->render($view, $parameters);
     }
 }

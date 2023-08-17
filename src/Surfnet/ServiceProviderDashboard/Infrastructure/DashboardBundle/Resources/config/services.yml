@@ -170,8 +170,6 @@ services:
       - '%env(mail_receiver)%'
       - '%env(mail_no_reply)%'
       - '@translator'
-      - '@twig'
-
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Menu\Builder:
     tags:
