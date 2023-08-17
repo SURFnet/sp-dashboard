@@ -126,7 +126,16 @@ class EntityCreateConnectionRequestController extends AbstractController
 
             if ($form->isValid()) {
                 $this->commandBus->handle($command);
-                return $this->redirectToRoute('send_connection_request');
+                $entity = $command->getManageEntity();
+
+                return $this->redirectToRoute(
+                    'send_connection_request',
+                    [
+                        'entityName' => $entity->getMetaData()->getNameEn(),
+                        'showOidcPopup' => $this->showOidcPopup($entity),
+                        'publishedEntity' => $entity,
+                    ]
+                );
             }
         }
 

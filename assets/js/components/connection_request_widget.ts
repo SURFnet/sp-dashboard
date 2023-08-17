@@ -199,7 +199,7 @@ class CollectionWidget {
 
   private registerSendHandler($sendButton: JQuery<HTMLElement>) {
     const handleSubmit = () => {
-      this.disableInputs();
+      // this.disableInputs();
       if (this.hasConnectionRequests()) {
         this.disableParsleyValidation();
       }
@@ -221,9 +221,9 @@ class CollectionWidget {
     this.$input.find('input').val('');
   }
 
-  private disableInputs() {
-    this.$input.find('input').prop('disabled', true);
-  }
+  // private disableInputs() {
+  //   this.$input.find('input').prop('disabled', true);
+  // }
 
   private hasValidInputs() {
     // @ts-ignore
