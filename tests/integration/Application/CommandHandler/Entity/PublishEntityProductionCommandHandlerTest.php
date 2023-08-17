@@ -100,11 +100,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
     public function test_it_can_publish()
     {
-        $contact = new Contact('nameid', 'name@example.org', 'display name');
-        $user = new Identity($contact);
-
-        $token = new SamlToken($user, 'tst', ['ROLE_ADMIN'], []);
-
         $manageEntity = m::mock(ManageEntity::class);
         $manageEntity
             ->shouldReceive('getMetaData->getNameEn')
@@ -262,6 +257,59 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
 
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
+        $this->commandHandler->handle($command);
+    }
+
+    public function test_does_not_create_ticket_when_client_resetting()
+    {
+        $manageEntity = m::mock(ManageEntity::class);
+        $manageEntity
+            ->shouldReceive('getMetaData->getNameEn')
+            ->andReturn('Test Entity Name');
+        $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
+        $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
+
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity, $manageEntity)
+            ->andReturn([
+                'id' => '123',
+            ]);
+
+        $manageEntity
+            ->shouldReceive('getMetaData->getEntityId')
+            ->andReturn('https://app.example.com/');
+
+        $manageEntity
+            ->shouldReceive('getId')
+            ->andReturn('123');
+
+        $manageEntity
+            ->shouldReceive('setStatus')
+            ->with(Constants::STATE_PUBLISHED);
+        $manageEntity
+            ->shouldReceive('setId')
+            ->with('123');
+
+        $manageEntity
+            ->shouldReceive('getService->getConnectionStatus');
+
+        $issue = m::mock(Issue::class)->makePartial();
+        $issue->shouldReceive('getKey')
+            ->andReturn('CXT-999');
+
+        $this->ticketService
+            ->shouldNotReceive('createJiraTicket');
+
+        $this->logger
+            ->shouldReceive('info')
+            ->times(2);
+        $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
+
+        $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+        $command = new PublishEntityProductionCommand($manageEntity, $applicant);
+        $command->markPublishClientReset();
         $this->commandHandler->handle($command);
     }
 }
