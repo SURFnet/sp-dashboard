@@ -147,7 +147,8 @@ services:
   surfnet.dashboard.command_handler.reset_oidc_secret:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\ResetOidcSecretCommandHandler
     arguments:
-      $publishEntityClient: '@surfnet.manage.client.publish_client.prod_environment'
+      $publishTestEntityClient: '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient'
+      $publishProdEntityClient: '@surfnet.manage.client.publish_client.prod_environment'
     public: true
     tags:
       - { name: tactician.handler, command: Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand }
