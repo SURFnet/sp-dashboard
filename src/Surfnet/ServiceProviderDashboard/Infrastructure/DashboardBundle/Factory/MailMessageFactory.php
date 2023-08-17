@@ -44,18 +44,14 @@ class MailMessageFactory
     public function buildJiraIssueFailedMessage(Exception $exception, ManageEntity $entity): TemplatedEmail
     {
         $message = $this->createNewMessage();
-        $message->subject($this->translator->trans('mail.jira.publish_production_failed.subject'));
-
-        $template = $this->renderView(
-            '@Dashboard/Mail/jiraPublicationFailed.html.twig',
-            [
+        $message
+            ->subject($this->translator->trans('mail.jira.publish_production_failed.subject'))
+            ->htmlTemplate('@Dashboard/Mail/jiraPublicationFailed.html.twig')
+            ->context([
                 'exception' => $exception,
                 'entityId' => $entity->getMetaData()->getEntityId(),
                 'serviceName' => $entity->getService()->getName(),
-            ]
-        );
-
-        $message->htmlTemplate($template);
+            ]);
 
         return $message;
     }
