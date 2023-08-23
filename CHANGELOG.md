@@ -1,3 +1,6 @@
+## 5.1.1
+-  Add DPA choice specific tooltips #608
+
 ## 5.1.0
 - Update security scanner policy #589
 - Install security updates #590
