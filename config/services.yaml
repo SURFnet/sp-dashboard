@@ -19,3 +19,12 @@ services:
 
     # This service is configured in the Jira IssueRepositoryCompilerPass
     surfnet.dashboard.repository.issue: ~
+
+    Surfnet\SamlBundle\Security\Authentication\Handler\FailureHandler:
+        class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Authentication\Handler\FailureHandler
+        arguments:
+            - '@http_kernel'
+            - '@security.http_utils'
+            - []
+            - '@logger'
+            - '@twig'

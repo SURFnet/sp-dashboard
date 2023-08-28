@@ -1,10 +1,8 @@
 twig:
-    default_path: '%kernel.project_dir%/templates'
     paths:
         '%kernel.project_dir%/templates': 'Dashboard'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
-    exception_controller: null
     globals:
         locale: "%env(locale)%"
         logout: "%env(logout_redirect_url)%"

@@ -58,7 +58,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 
         $attributes = [];
 
-        if ($entity->getService()->isPrivacyQuestionsEnabled()) {
+        if ($privacyQuestionAnswers !== null && $entity->getService()->isPrivacyQuestionsEnabled()) {
             foreach ($privacyQuestions as $question) {
                 if ($question->id === 'privacyStatementUrl') {
                     $privacyStatements = $privacyQuestionAnswers->privacyStatementUrls();
@@ -71,7 +71,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
                 }
 
                 $getterName = $question->getterName;
-                if ($privacyQuestionAnswers !== null && method_exists($privacyQuestionAnswers, $getterName)) {
+                if (method_exists($privacyQuestionAnswers, $getterName)) {
                     $this->buildPrivacyQuestion(
                         $attributes,
                         $getterName,

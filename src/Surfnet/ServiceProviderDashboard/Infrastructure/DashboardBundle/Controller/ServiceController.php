@@ -51,6 +51,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use function reset;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -83,8 +84,17 @@ class ServiceController extends AbstractController
         if (empty($services)) {
             return $this->redirectToRoute('service_add');
         }
+        // If only one service is available and you are admin, select that one
+        if ($this->isGranted('ROLE_ADMINISTRATOR') && count($services) === 1) {
+            $service = reset($services);
+            $this->authorizationService->changeActiveService($service->getId());
+            return $this->redirect(
+                $this->generateUrl('service_admin_overview', ['serviceId' => $service->getId()])
+            );
+        }
 
-        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+        // If more than one service and you are admin, the show the: select a service from the switcher message
+        if ($this->isGranted('ROLE_ADMINISTRATOR') && count($services) > 1) {
             return $this->render("@Dashboard/Service/admin_overview.html.twig");
         }
 

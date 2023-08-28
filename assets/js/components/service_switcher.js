@@ -9,6 +9,8 @@ $(document).ready(function() {
     }
 
     $('select#service-switcher')
-        .select2()
+        .select2({
+            placeholder: ''
+        })
         .change(submitFormOnSelectionChange);
 });

@@ -62,7 +62,8 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
         $this->commandHandler = new ResetOidcSecretCommandHandler(
             $this->commandBus,
             $this->authorizationService,
-            $this->publicationClient
+            $this->publicationClient,
+            $this->publicationClient,
         );
     }
 
@@ -133,6 +134,9 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getEnvironment')
             ->andReturn($environment);
+        $manageEntity
+            ->shouldReceive('isProduction')
+            ->andReturn($status === Constants::ENVIRONMENT_PRODUCTION);
         $manageEntity
             ->shouldReceive('getProtocol->getProtocol')
             ->andReturn($protocol);

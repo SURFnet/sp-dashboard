@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -31,11 +32,18 @@ class ValidAttribute extends Constraint
 
     public $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set';
 
+    public $type = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
+
     /**
      * @return string
      */
     public function validatedBy()
     {
         return 'valid_attribute';
+    }
+
+    public function getDefaultOption()
+    {
+        return 'type';
     }
 }

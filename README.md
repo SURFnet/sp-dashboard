@@ -3,7 +3,7 @@
          align="right" />
 </a>
 
-[![Build status](https://img.shields.io/travis/SURFnet/sp-dashboard.svg)](https://travis-ci.com/SURFnet/sp-dashboard)
+[![Build status](https://github.com/SURFnet/sp-dashboard/actions/workflows/test-integration.yml/badge.svg)](https://github.com/SURFnet/sp-dashboard/actions/workflows/test-integration.yml)
 [![License](https://img.shields.io/github/license/SURFnet/sp-dashboard.svg)](https://github.com/SURFnet/sp-dashboard/blob/master/LICENSE.txt)
 
 # Service Provider Dashboard
@@ -44,7 +44,7 @@ used in development to run the application.
 
 Install database migrations
 ```
-$ docker exec sp-dashboard_php-fpm_1  /var/www/html/bin/console doctrine:migrations:migrate
+$ docker exec sp-dashboard-php-fpm-1 /var/www/html/bin/console doctrine:migrations:migrate
 ```
 
 The application is now up and running and can be accessed at
