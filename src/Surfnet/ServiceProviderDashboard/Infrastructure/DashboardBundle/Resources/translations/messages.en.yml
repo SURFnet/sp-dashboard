@@ -450,7 +450,6 @@ privacy.information.country: In what country/countries is the data stored (inclu
 privacy.information.otherInfo: What other information do you want to share regarding data security, privacy etc?
 privacy.information.securityMeasures: What security measures have you taken (remember the encryption during transport and storage)?
 privacy.information.whatData: Describe what (kind of) data is processed in the service, and pay specific attention to possible processing of personal data.
-privacy.information.dpaType: DPA data type hint
 privacy.information.privacyStatementUrlNl: Privacy statement URL in Dutch
 privacy.information.privacyStatementUrlEn: Privacy statement URL in English
 privacy.edit.flash.success: Your changes were saved!

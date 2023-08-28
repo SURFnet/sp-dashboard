@@ -96,7 +96,6 @@ class PrivacyQuestionsFormBuilder
                 'empty_data' => DpaType::DEFAULT,
                 'placeholder' => false,
                 'attr' => [
-                    'data-help' => 'privacy.information.dpaType',
                     'class' => 'dpa-types',
                     'rows' => 8,
                 ],
