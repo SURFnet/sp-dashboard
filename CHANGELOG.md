@@ -1,3 +1,6 @@
+## 5.1.2
+- Remove tooltip from DPA type parent element #610
+
 ## 5.1.1
 -  Add DPA choice specific tooltips #608
 
