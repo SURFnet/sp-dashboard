@@ -1,3 +1,11 @@
+## 5.2.0
+ - Collection widgets now allow editing #602
+ - Improve client reset behavior #607
+ - Set template on mail message correctly #606
+ - Stylelint was upgraded to v15 #596
+ - Prevent double actions on teams invite screens #605
+ - Service switcher improvements #603
+
 ## 5.1.2
 - Remove tooltip from DPA type parent element #610
 
