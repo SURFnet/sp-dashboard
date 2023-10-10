@@ -56,8 +56,8 @@ class DpaType
 
     private static array $allowedDpaTypes = [
         'privacy.form.dpaType.choice.dpa-not-applicable' => self::DPA_TYPE_NOT_APPLICABLE,
-        'privacy.form.dpaType.choice.through-surf' => self::DPA_TYPE_MODEL_SURF,
-        'privacy.form.dpaType.choice.in-surf-agreement' => self::DPA_TYPE_IN_SURF_AGREEMENT,
+        'privacy.form.dpaType.choice.through-surf' => self::DPA_TYPE_IN_SURF_AGREEMENT,
+        'privacy.form.dpaType.choice.in-surf-agreement' => self::DPA_TYPE_MODEL_SURF,
         'privacy.form.dpaType.choice.dpa-supplied-by-service' => self::DPA_TYPE_SUPPLIED_BY_SERVICE,
         'privacy.form.dpaType.choice.other' => self::DPA_TYPE_OTHER
     ];
