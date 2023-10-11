@@ -10,36 +10,77 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-20.04
+    permissions:
+      packages: write
+      contents: read
 
     steps:
 
-    - name: Check out the repo
-      uses: actions/checkout@v2
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 14
-    - name: Build the php-fpm container and push to GitHub Packages
-      uses: docker/build-push-action@v1
-      with:
-        dockerfile: docker/Dockerfile
-        username: ${{ github.actor }}
-        password: ${{ secrets.GH_CONTAINER_REGISTRY_PAT }}
-        registry: ghcr.io
-        repository: surfnet/sp-dashboard/spdashboard_php-fpm
-        tag_with_ref: true
-        push: true
-        target: phpfpm-build
+      - name: Check out the repo
+        uses: actions/checkout@v3
 
-    - name: Build the Apache container and push to GitHub Packages
-      uses: docker/build-push-action@v1
-      with:
-        dockerfile: docker/Dockerfile
-        username: ${{ github.actor }}
-        password: ${{ secrets.GH_CONTAINER_REGISTRY_PAT }}
-        registry: ghcr.io
-        repository: surfnet/sp-dashboard/spdashboard_web
-        tag_with_ref: true
-        push: true
-        target: httpd-build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            image=moby/buildkit:v0.12.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set docker metadata for php fpm container
+        id: metaphpfpm
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/surfnet/sp-dashboard/spdashboard_php-fpm
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
+      - name: Set docker metadata for web container
+        id: metahttpd
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/surfnet/sp-dashboard/spdashboard_web
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
+      - name: Build the php-fpm container and push to GitHub Packages
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: ${{ steps.metaphpfpm.outputs.tags }}
+          target: phpfpm-build
+
+      - name: Build the Apache container and push to GitHub Packages
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: ${{ steps.metahttpd.outputs.tags }}
+          target: httpd-build

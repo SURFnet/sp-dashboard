@@ -12,6 +12,7 @@ RUN yarn install && \
 
 FROM ghcr.io/openconext/openconext-containers/openconext-httpd:latest AS httpd-build
 LABEL maintainer Bart Geesink (bart.geesink@surf.nl)
+LABEL org.opencontainers.image.source=https://github.com/surfnet/sp-dashboard
 RUN mkdir -p /var/www/html/
 COPY --from=node-build /var/www/html/public/. /var/www/html/public/
 COPY --from=js-build /var/www/html/public/build/. /var/www/html/public/build/
@@ -37,7 +38,8 @@ COPY --from=node-build /var/www/html/composer.json /var/www/html/
 COPY --from=js-build /var/www/html/public/build/. /var/www/html/public/build/
 COPY --from=js-build /var/www/html/node_modules/. /var/www/html/node_modules/
 
-LABEL maintainer "Bart Geesink" <bart.geesink@surf.nl>
+LABEL maintainer Bart Geesink (bart.geesink@surf.nl)
+LABEL org.opencontainers.image.source=https://github.com/surfnet/sp-dashboard
 
 RUN mkdir -p /var/www/html/var/cache && \
   mkdir -p /var/www/html/var/log && \
