@@ -4,6 +4,7 @@ framework:
     trusted_hosts: ~
     session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        storage_factory_id: session.storage.factory.native
         cookie_secure: auto
         cookie_samesite: lax
         cookie_lifetime: '%env(session_max_absolute_lifetime)%'
