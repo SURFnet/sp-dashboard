@@ -77,6 +77,7 @@
     "phpmd/phpmd": "^2.13",
     "phpunit/phpcov": "~8.2.1",
     "phpunit/phpunit": "~9.5.26",
+    "rector/rector": "^0.19.0",
     "sebastian/phpcpd": "^6.0.3",
     "squizlabs/php_codesniffer": "^3.7",
     "symfony/css-selector": "5.4.*",
