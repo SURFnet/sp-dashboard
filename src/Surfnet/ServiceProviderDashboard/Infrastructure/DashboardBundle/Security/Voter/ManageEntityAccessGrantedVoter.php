@@ -30,7 +30,7 @@ class ManageEntityAccessGrantedVoter extends Voter
     {
     }
 
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         if ($attribute !== self::MANAGE_ENTITY_ACCESS) {
             return false;
@@ -43,7 +43,7 @@ class ManageEntityAccessGrantedVoter extends Voter
         return true;
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         // Administrator is always allowed to delete an entity
         $roles = $token->getRoleNames();
