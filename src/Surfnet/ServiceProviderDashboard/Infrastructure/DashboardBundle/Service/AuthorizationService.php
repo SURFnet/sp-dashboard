@@ -24,14 +24,14 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AuthorizationService
 {
     public function __construct(
         private readonly ServiceService $serviceService,
-        private readonly Session $session,
+        private readonly RequestStack $requestStack,
         private readonly TokenStorageInterface $tokenStorage,
         ApiConfig $manageTestConfig,
         ApiConfig $manageProdConfig
@@ -129,7 +129,7 @@ class AuthorizationService
      */
     private function setSelectedServiceId($serviceId)
     {
-        $this->session->set('selected_service_id', $serviceId);
+        $this->requestStack->getSession()->set('selected_service_id', $serviceId);
 
         return $this;
     }
@@ -141,7 +141,7 @@ class AuthorizationService
      */
     public function getSelectedServiceId()
     {
-        $serviceId = $this->session->get('selected_service_id');
+        $serviceId = $this->requestStack->getSession()->get('selected_service_id');
 
         if ($serviceId && !$this->hasAccessToService($serviceId)) {
             throw new RuntimeException(
@@ -174,7 +174,7 @@ class AuthorizationService
      */
     public function hasSelectedServiceId()
     {
-        return $this->session->has('selected_service_id');
+        return $this->requestStack->getSession()->has('selected_service_id');
     }
 
     /**

@@ -244,7 +244,7 @@ services:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
     arguments:
       $serviceService: '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
-      $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+      $requestStack: '@request_stack'
       $tokenStorage: '@security.token_storage'
       $manageTestConfig: "@surfnet.manage.configuration.test"
       $manageProdConfig: "@surfnet.manage.configuration.production"
