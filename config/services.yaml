@@ -25,6 +25,6 @@ services:
         arguments:
             - '@http_kernel'
             - '@security.http_utils'
+            - '@twig'
             - []
             - '@logger'
-            - '@twig'
