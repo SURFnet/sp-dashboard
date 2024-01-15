@@ -29,11 +29,11 @@ use Twig\Environment;
 class FailureHandler extends SamlBundleFailureHandler
 {
     public function __construct(
-        HttpKernelInterface $httpKernel,
-        HttpUtils $httpUtils,
-        array $options = [],
-        LoggerInterface $logger = null,
-        private Environment $templating,
+        HttpKernelInterface          $httpKernel,
+        HttpUtils                    $httpUtils,
+        private readonly Environment $templating,
+        array                        $options = [],
+        LoggerInterface              $logger = null,
     ) {
         parent::__construct($httpKernel, $httpUtils, $options, $logger);
     }
