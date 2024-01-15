@@ -22,10 +22,10 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig_Environment;
-use Twig_Extension;
+use Twig\Extension\AbstractExtension;
 use Twig_SimpleFunction;
 
-class ServiceSwitcherExtension extends Twig_Extension
+class ServiceSwitcherExtension extends AbstractExtension
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,

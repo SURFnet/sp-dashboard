@@ -20,9 +20,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFunction;
-use Twig_Extension;
+use Twig\Extension\AbstractExtension;
 
-class GlobalSiteNotice extends Twig_Extension
+class GlobalSiteNotice extends AbstractExtension
 {
     public function __construct(
         private readonly bool $shouldDisplayGlobalSiteNotice,
