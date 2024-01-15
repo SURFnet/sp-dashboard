@@ -29,7 +29,7 @@ class WysiwygExtension extends AbstractExtension
      */
     private static $purifier = null;
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter(
