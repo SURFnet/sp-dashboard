@@ -34,35 +34,32 @@ class AuthorizationServiceTest extends MockeryTestCase
 {
     private ServiceService|MockInterface|m\LegacyMockInterface $serviceService;
     private Session|m\LegacyMockInterface|MockInterface $session;
-    private m\LegacyMockInterface|TokenStorageInterface|MockInterface $tokenStorage;
     private AuthorizationService $service;
-    private MockInterface|Config|m\LegacyMockInterface $manageConfigTest;
-    private MockInterface|Config|m\LegacyMockInterface $manageConfigProd;
-    private m\LegacyMockInterface|RequestStack|MockInterface $requestStack;
+
     public function setUp(): void
     {
         $this->serviceService = m::mock(ServiceService::class);
-        $this->tokenStorage = m::mock(TokenStorageInterface::class);
-        $this->manageConfigTest = m::mock(Config::class);
-        $this->manageConfigProd = m::mock(Config::class);
-        $this->requestStack = m::mock(RequestStack::class);
+        $tokenStorage = m::mock(TokenStorageInterface::class);
+        $manageConfigTest = m::mock(Config::class);
+        $manageConfigProd = m::mock(Config::class);
+        $requestStack = m::mock(RequestStack::class);
 
         $token = m::mock(SamlToken::class);
         $token->shouldReceive('hasRole')->with('ROLE_ADMINISTRATOR')->andReturnTrue();
         $token->shouldReceive('getRoleNames')->andReturn(['ROLE_ADMINISTRATOR']);
-        $this->tokenStorage->shouldReceive('getToken')
+        $tokenStorage->shouldReceive('getToken')
             ->andReturn($token);
-        $this->requestStack->shouldReceive('getSession')->andReturn(m::mock(Session::class));
+        $requestStack->shouldReceive('getSession')->andReturn(m::mock(Session::class));
 
         $this->service = new AuthorizationService(
             $this->serviceService,
-            $this->requestStack,
-            $this->tokenStorage,
-            $this->manageConfigTest,
-            $this->manageConfigProd
+            $requestStack,
+            $tokenStorage,
+            $manageConfigTest,
+            $manageConfigProd
         );
 
-        $this->session = $this->requestStack->getSession();
+        $this->session = $requestStack->getSession();
     }
 
     /**
