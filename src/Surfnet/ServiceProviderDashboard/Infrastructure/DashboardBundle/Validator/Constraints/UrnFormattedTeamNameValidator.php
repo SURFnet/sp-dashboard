@@ -35,7 +35,7 @@ class UrnFormattedTeamNameValidator extends ConstraintValidator
      * @param string $value
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $teamName = $value;
         $hasDefaultStemName = strpos($teamName, $this->defaultStemName);

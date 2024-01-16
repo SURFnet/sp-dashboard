@@ -44,11 +44,10 @@ class ResetOidcSecretCommandHandler implements CommandHandler
     }
 
     /**
-     * @param ResetOidcSecretCommand $command
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
      */
-    public function handle(ResetOidcSecretCommand $command)
+    public function handle(ResetOidcSecretCommand $command): void
     {
         $entity = $command->getManageEntity();
 
@@ -68,7 +67,7 @@ class ResetOidcSecretCommandHandler implements CommandHandler
             $publishCommand = new PublishEntityProductionCommand($entity, $this->authorizationService->getContact());
             $publishCommand->markPublishClientReset();
             $this->commandBus->handle($publishCommand);
-        } else if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
+        } elseif ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             $publishCommand = new PublishEntityTestCommand($entity);
             $this->commandBus->handle($publishCommand);
         }

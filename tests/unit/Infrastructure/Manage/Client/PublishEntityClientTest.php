@@ -112,7 +112,7 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator
             ->shouldReceive('generateForNewEntity')
-            ->andReturn($json);
+            ->andReturn(json_decode($json, true));
 
         $response = $this->client->publish($entity, $entity);
         $this->assertEquals('1', $response['id']);
@@ -146,7 +146,7 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator
             ->shouldReceive('generateForExistingEntity')
-            ->andReturn($json);
+            ->andReturn(json_decode($json, true));
 
         $response = $this->client->publish($entity, $entity);
         $this->assertEquals('1', $response['id']);
@@ -190,7 +190,7 @@ class PublishEntityClientTest extends MockeryTestCase
 
         $this->generator
             ->shouldReceive('generateForNewEntity')
-            ->andReturn($json);
+            ->andReturn(json_decode($json, true));
 
         $this->client->publish($entity, $entity);
     }

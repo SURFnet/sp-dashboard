@@ -22,13 +22,9 @@ use Surfnet\SamlBundle\Security\Exception\RuntimeException;
 
 class UnknownServiceException extends RuntimeException
 {
-    private $teamNames = [];
-
-    public function __construct(array $teamNames, $message = "")
+    public function __construct(private readonly array $teamNames, $message = "")
     {
         parent::__construct($message, 400, null);
-
-        $this->teamNames = $teamNames;
     }
 
     /**

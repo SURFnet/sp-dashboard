@@ -29,6 +29,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AuthorizationService
 {
+    /**
+     * @var array<string, \Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig>
+     */
+    public $manageConfig;
     public function __construct(
         private readonly ServiceService $serviceService,
         private readonly RequestStack $requestStack,
@@ -46,10 +50,10 @@ class AuthorizationService
     /**
      * @return bool
      */
-    public function isLoggedIn()
+    public function isLoggedIn(): bool
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token) {
+        if ($token === null) {
             return false;
         }
 
@@ -61,7 +65,7 @@ class AuthorizationService
      *
      * @return bool
      */
-    public function isAdministrator()
+    public function isAdministrator(): bool
     {
         if (!$this->isLoggedIn()) {
             return false;
@@ -87,7 +91,7 @@ class AuthorizationService
     public function getActiveServiceId()
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token) {
+        if ($token === null) {
             throw new RuntimeException(
                 'No authentication token found in session'
             );
@@ -127,7 +131,7 @@ class AuthorizationService
      *
      * @return AuthorizationService
      */
-    private function setSelectedServiceId($serviceId)
+    private function setSelectedServiceId($serviceId): static
     {
         $this->requestStack->getSession()->set('selected_service_id', $serviceId);
 
@@ -158,7 +162,7 @@ class AuthorizationService
      * @param int $serviceId
      * @return string
      */
-    public function assertServiceIdAllowed($serviceId)
+    public function assertServiceIdAllowed($serviceId): void
     {
         if ($serviceId && !$this->hasAccessToService($serviceId)) {
             throw new RuntimeException(
@@ -182,10 +186,10 @@ class AuthorizationService
      *
      * @return array
      */
-    public function getAllowedServiceNamesById()
+    public function getAllowedServiceNamesById(): array
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token) {
+        if ($token === null) {
             throw new RuntimeException(
                 'No authentication token found in session'
             );
@@ -207,7 +211,7 @@ class AuthorizationService
 
         return array_filter(
             $serviceNames,
-            function ($id) use ($contact) {
+            function ($id) use ($contact): bool {
                 foreach ($contact->getServices() as $service) {
                     if ($service->getId() === $id) {
                         return true;
@@ -238,7 +242,7 @@ class AuthorizationService
         return $service;
     }
 
-    public function resetService()
+    public function resetService(): void
     {
         $this->setSelectedServiceId(null);
     }
@@ -248,7 +252,7 @@ class AuthorizationService
      * @param string $serviceId
      * @return bool
      */
-    private function hasAccessToService($serviceId)
+    private function hasAccessToService($serviceId): bool
     {
         $allowedServiceIds = array_keys(
             $this->getAllowedServiceNamesById()

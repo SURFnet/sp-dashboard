@@ -25,20 +25,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ConnectionRequest
 {
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $institution;
 
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $email;
 }

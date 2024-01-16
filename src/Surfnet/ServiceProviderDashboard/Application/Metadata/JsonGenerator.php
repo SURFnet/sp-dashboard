@@ -86,11 +86,9 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param ManageEntity $entity
-     * @param string $workflowState
      * @return array
      */
-    private function generateDataForNewEntity(ManageEntity $entity, $workflowState)
+    private function generateDataForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         // the type for entities is always saml because manage is using saml internally
         $metadata = [
@@ -121,8 +119,7 @@ class JsonGenerator implements GeneratorInterface
         ];
         switch ($updatedPart) {
             case 'ACL':
-                $metadata += $this->generateAclData($entity);
-                return $metadata;
+                return $metadata + $this->generateAclData($entity);
 
             default:
                 $metadata += $differences->getDiff();
@@ -147,19 +144,18 @@ class JsonGenerator implements GeneratorInterface
                     $metadata['metaDataFields.coin:exclude_from_push'] = '0';
                 }
                 $this->privacyQuestionsMetadataGenerator->withMetadataPrefix();
-                $metadata += $this->privacyQuestionsMetadataGenerator->build($entity);
 
-                return $metadata;
+                return $metadata + $this->privacyQuestionsMetadataGenerator->build($entity);
         }
     }
 
-    private function generateForChangeRequest(ManageEntity $entity, EntityDiff $differences)
+    private function generateForChangeRequest(ManageEntity $entity, EntityDiff $differences): array
     {
         $metadata = $differences->getDiff();
         return $this->generateArp($metadata, $entity);
     }
 
-    private function generateAcsLocations(ManageEntity $entity, array &$metadata, $addPrefix = false)
+    private function generateAcsLocations(ManageEntity $entity, array &$metadata, bool $addPrefix = false): void
     {
         AcsLocationHelper::addAcsLocationsToMetaData($entity->getMetaData()->getAcsLocations(), $metadata, $addPrefix);
         if ($entity->isManageEntity()) {
@@ -171,7 +167,10 @@ class JsonGenerator implements GeneratorInterface
         }
     }
 
-    private function generateMetadataFields(ManageEntity $entity)
+    /**
+     * @return mixed[]
+     */
+    private function generateMetadataFields(ManageEntity $entity): array
     {
         $metadata = array_merge(
             [
@@ -209,7 +208,7 @@ class JsonGenerator implements GeneratorInterface
         if ($entity->isManageEntity() && !$entity->isExcludedFromPush()) {
             $metadata['coin:exclude_from_push'] = '0';
         }
-        if ($entity->getMetaData()->getLogo() !== null && $entity->getMetaData()->getLogo()->getUrl() !== '') {
+        if ($entity->getMetaData()->getLogo() instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
 
@@ -219,7 +218,7 @@ class JsonGenerator implements GeneratorInterface
     private function generateCertDataMetadata(ManageEntity $entity): array
     {
         $metadata = [];
-        if (!empty($entity->getMetaData()->getCertData())) {
+        if ($entity->getMetaData()->getCertData() !== null && $entity->getMetaData()->getCertData() !== '' && $entity->getMetaData()->getCertData() !== '0') {
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getMetaData()->getCertData()
             );
@@ -231,10 +230,9 @@ class JsonGenerator implements GeneratorInterface
     /**
      * Strip header and footer from certificate data.
      *
-     * @param string $certData
      * @return string
      */
-    private function stripCertificateEnvelope($certData)
+    private function stripCertificateEnvelope(string $certData): string
     {
         $certData = str_replace('-----BEGIN CERTIFICATE-----', '', $certData);
         $certData = str_replace('-----END CERTIFICATE-----', '', $certData);
@@ -243,10 +241,9 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param ManageEntity $entity
      * @return array
      */
-    private function generateAllContactsMetadata(ManageEntity $entity)
+    private function generateAllContactsMetadata(ManageEntity $entity): array
     {
         $metadata = [];
         $index = 0;
@@ -259,7 +256,7 @@ class JsonGenerator implements GeneratorInterface
             );
         }
 
-        if ($entity->getMetaData()->getContacts()->findAdministrativeContact()) {
+        if ($entity->getMetaData()->getContacts()->findAdministrativeContact() !== null) {
             $metadata += $this->generateContactMetadata(
                 'administrative',
                 $index++,
@@ -267,7 +264,7 @@ class JsonGenerator implements GeneratorInterface
             );
         }
 
-        if ($entity->getMetaData()->getContacts()->findTechnicalContact()) {
+        if ($entity->getMetaData()->getContacts()->findTechnicalContact() !== null) {
             $metadata += $this->generateContactMetadata(
                 'technical',
                 $index++,
@@ -292,30 +289,27 @@ class JsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param string $contactType
-     * @param int $index
-     * @param Contact $contact
      * @return array
      */
-    private function generateContactMetadata($contactType, $index, Contact $contact)
+    private function generateContactMetadata(string $contactType, int $index, Contact $contact): array
     {
         $metadata = [
             sprintf('contacts:%d:contactType', $index) => $contactType,
         ];
 
-        if (!empty($contact->getGivenName())) {
+        if ($contact->getGivenName() !== null && $contact->getGivenName() !== '' && $contact->getGivenName() !== '0') {
             $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getGivenName();
         }
 
-        if (!empty($contact->getSurName())) {
+        if ($contact->getSurName() !== null && $contact->getSurName() !== '' && $contact->getSurName() !== '0') {
             $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getSurName();
         }
 
-        if (!empty($contact->getEmail())) {
+        if ($contact->getEmail() !== null && $contact->getEmail() !== '' && $contact->getEmail() !== '0') {
             $metadata[sprintf('contacts:%d:emailAddress', $index)] = $contact->getEmail();
         }
 
-        if (!empty($contact->getPhone())) {
+        if ($contact->getPhone() !== null && $contact->getPhone() !== '' && $contact->getPhone() !== '0') {
             $metadata[sprintf('contacts:%d:telephoneNumber', $index)] = $contact->getPhone();
         }
 
@@ -331,10 +325,9 @@ class JsonGenerator implements GeneratorInterface
      *
      * @SuppressWarnings(PHPMD.ErrorControlOperator)
      *
-     * @param ManageEntity $entity
      * @return array
      */
-    private function generateLogoMetadata(ManageEntity $entity)
+    private function generateLogoMetadata(ManageEntity $entity): array
     {
         $logo = $entity->getMetaData()->getLogo();
         $metadata = [];
@@ -348,7 +341,7 @@ class JsonGenerator implements GeneratorInterface
             );
 
             if ($logoData !== false) {
-                list($width, $height) = $logoData;
+                [$width, $height] = $logoData;
             } else {
                 $width = 50;
                 $height = 50;
@@ -362,10 +355,9 @@ class JsonGenerator implements GeneratorInterface
 
 
     /**
-     * @param ManageEntity $entity
      * @return array
      */
-    private function generateAclData(ManageEntity $entity)
+    private function generateAclData(ManageEntity $entity): array
     {
         if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
             return [

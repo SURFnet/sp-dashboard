@@ -43,7 +43,6 @@ class Builder
     /**
      * @SuppressWarnings(PHPMD.ElseExpression) Using else in this situation is preferable over another less expressive
      *                                         solution
-     * @param array $options
      * @return ItemInterface
      */
     public function mainMenu(array $options)
@@ -63,13 +62,9 @@ class Builder
             $menu->addChild('global.menu.services', ['route' => 'service_overview']);
         }
         if ($this->authorizationService->isAdministrator()) {
-            $menu->addChild('global.menu.new-service', array(
-                'route' => 'service_add',
-            ));
+            $menu->addChild('global.menu.new-service', ['route' => 'service_add']);
 
-            $menu->addChild('global.menu.translations', array(
-                'route' => 'lexik_translation_overview',
-            ));
+            $menu->addChild('global.menu.translations', ['route' => 'lexik_translation_overview']);
         }
 
         return $menu;

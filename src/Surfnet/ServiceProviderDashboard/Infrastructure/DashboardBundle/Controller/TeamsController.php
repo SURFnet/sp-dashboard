@@ -50,10 +50,10 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}/manageTeam", name="service_manage_team", methods={"GET"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
-    public function manageTeamAction(int $serviceId): Response
+    #[Route(path: '/service/{serviceId}/manageTeam', name: 'service_manage_team', methods: ['GET'])]
+    public function manageTeam(int $serviceId): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $sanitizedTeamName = str_replace($this->defaultStemName, '', $service->getTeamName());
@@ -70,16 +70,15 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}/sendInvite/{teamId}", name="team_send_invite", methods={"POST"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     *
      * @return RedirectResponse|Response
      */
-    public function sendInviteAction(Request $request, int $serviceId, int $teamId)
+    #[Route(path: '/service/{serviceId}/sendInvite/{teamId}', name: 'team_send_invite', methods: ['POST'])]
+    public function sendInvite(Request $request, int $serviceId, int $teamId): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $this->get('session')->getFlashBag()->clear();
         $email = $request->get('email');
-        $role = strtoupper($request->get('role'));
+        $role = strtoupper((string) $request->get('role'));
         $invite = [
             'teamId' => $teamId,
             'intendedRole' => $role,
@@ -98,56 +97,56 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}/resendInvite/{invitationId}", name="team_resend_invite", methods={"GET"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
-    public function resendInviteAction(int $serviceId, int $invitationId): JsonResponse
+    #[Route(path: '/service/{serviceId}/resendInvite/{invitationId}', name: 'team_resend_invite', methods: ['GET'])]
+    public function resendInvite(int $serviceId, int $invitationId): JsonResponse
     {
         $message = $this->translator->trans('teams.create.invitationMessage');
 
         try {
             $this->publishEntityClient->resendInvitation($invitationId, $message);
             $response = new JsonResponse('ok');
-            $response->setStatusCode(200);
+            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (ResendInviteException $e) {
             $response = new JsonResponse($e->getMessage());
-            $response->setStatusCode(406);
+            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_ACCEPTABLE);
         }
 
         return $response;
     }
 
     /**
-     * @Route("/teams/changeRole/{memberId}/{newRole}", name="team_change_role", methods={"GET"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
-    public function changeRoleAction(int $memberId, string $newRole): JsonResponse
+    #[Route(path: '/teams/changeRole/{memberId}/{newRole}', name: 'team_change_role', methods: ['GET'])]
+    public function changeRole(int $memberId, string $newRole): JsonResponse
     {
         try {
             $this->publishEntityClient->changeMembership($memberId, $newRole);
             $response = new JsonResponse('ok');
-            $response->setStatusCode(200);
+            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $response = new JsonResponse($e->getMessage());
-            $response->setStatusCode(406);
+            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_ACCEPTABLE);
         }
 
         return $response;
     }
 
     /**
-     * @Route("/teams/delete/{memberId}", name="team_delete_member", methods={"GET"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
-    public function deleteMemberAction(int $memberId): JsonResponse
+    #[Route(path: '/teams/delete/{memberId}', name: 'team_delete_member', methods: ['GET'])]
+    public function deleteMember(int $memberId): JsonResponse
     {
         try {
             $this->deleteEntityClient->deleteMembership($memberId);
             $response = new JsonResponse('success');
-            $response->setStatusCode(200);
+            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $response = new JsonResponse($e->getMessage());
-            $response->setStatusCode(406);
+            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_ACCEPTABLE);
         }
 
         return $response;

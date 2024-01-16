@@ -27,24 +27,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\Runtim
 
 class OidcngResourceServerOptionsFactory
 {
-    private $testEntityRepository;
-
-    private $productionRepository;
-
-    private $testPublicationState;
-
-    private $productionPublicationState;
-
-    public function __construct(
-        QueryManageRepository $testEntityRepository,
-        QueryManageRepository $productionRepository,
-        string                $testPublicationState,
-        string                $productionPublicationState
-    ) {
-        $this->testEntityRepository = $testEntityRepository;
-        $this->productionRepository = $productionRepository;
-        $this->testPublicationState = $testPublicationState;
-        $this->productionPublicationState = $productionPublicationState;
+    public function __construct(private readonly QueryManageRepository $testEntityRepository, private readonly QueryManageRepository $productionRepository, private readonly string                $testPublicationState, private readonly string                $productionPublicationState)
+    {
     }
 
 
@@ -54,26 +38,21 @@ class OidcngResourceServerOptionsFactory
      */
     public function build(string $teamName, string $environment): array
     {
-        switch ($environment) {
-            case Constants::ENVIRONMENT_TEST:
-                return $this->createChoicesFrom(
-                    $this->testEntityRepository->findOidcngResourceServersByTeamName(
-                        $teamName,
-                        $this->testPublicationState
-                    )
-                );
-
-            case Constants::ENVIRONMENT_PRODUCTION:
-                return  $this->createChoicesFrom(
-                    $this->productionRepository->findOidcngResourceServersByTeamName(
-                        $teamName,
-                        $this->productionPublicationState
-                    )
-                );
-
-            default:
-                throw new InvalidEnvironmentException(sprintf('Environment "%s" is not supported', $environment));
-        }
+        return match ($environment) {
+            Constants::ENVIRONMENT_TEST => $this->createChoicesFrom(
+                $this->testEntityRepository->findOidcngResourceServersByTeamName(
+                    $teamName,
+                    $this->testPublicationState
+                )
+            ),
+            Constants::ENVIRONMENT_PRODUCTION => $this->createChoicesFrom(
+                $this->productionRepository->findOidcngResourceServersByTeamName(
+                    $teamName,
+                    $this->productionPublicationState
+                )
+            ),
+            default => throw new InvalidEnvironmentException(sprintf('Environment "%s" is not supported', $environment)),
+        };
     }
 
     /**

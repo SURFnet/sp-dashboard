@@ -50,9 +50,9 @@ use function sprintf;
 class QueryClient implements QueryManageRepository
 {
 
-    private $protocolSupport = [Protocol::SAML20_SP, Protocol::OIDC10_RP, Protocol::OAUTH20_RS];
+    private array $protocolSupport = [Protocol::SAML20_SP, Protocol::OIDC10_RP, Protocol::OAUTH20_RS];
 
-    public function __construct(private HttpClientInterface $client)
+    public function __construct(private readonly HttpClientInterface $client)
     {
     }
 
@@ -123,13 +123,13 @@ class QueryClient implements QueryManageRepository
             //  construction below.
             $data = $this->read(Protocol::SAML20_SP, $manageId);
             // If the saml endpoint yields no results, try the oidc.
-            if (empty($data)) {
+            if ($data === null || $data === []) {
                 $data = $this->read(Protocol::OIDC10_RP, $manageId);
             }
-            if (empty($data)) {
+            if ($data === null || $data === []) {
                 $data = $this->read(Protocol::OAUTH20_RS, $manageId);
             }
-            if (empty($data)) {
+            if ($data === null || $data === []) {
                 return null;
             }
 
@@ -149,7 +149,7 @@ class QueryClient implements QueryManageRepository
     {
         try {
             $data = $this->read($protocol, $manageId);
-            if (empty($data)) {
+            if ($data === null || $data === []) {
                 return null;
             }
             $this->loadDetailedResourceServers($data);
@@ -195,9 +195,7 @@ class QueryClient implements QueryManageRepository
 
             // For each search result, query manage to get the full SP entity data.
             return array_map(
-                function ($result) {
-                    return $this->findByManageIdAndProtocol($result['_id'], $result['type']);
-                },
+                fn($result): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity => $this->findByManageIdAndProtocol($result['_id'], $result['type']),
                 $searchResults
             );
         } catch (HttpException $e) {
@@ -220,14 +218,14 @@ class QueryClient implements QueryManageRepository
 
             $searchResults = $this->client->post(
                 json_encode($params),
-                sprintf('/manage/api/internal/search/oauth20_rs')
+                '/manage/api/internal/search/oauth20_rs'
             );
 
             // For each search result, query manage to get the full SP entity data.
             return array_filter(array_map(
-                function ($result) {
+                function (array $result) {
                     $entity = $this->findByManageId($result['_id']);
-                    if ($entity) {
+                    if ($entity !== null) {
                         return $entity;
                     }
                 },
@@ -251,15 +249,14 @@ class QueryClient implements QueryManageRepository
 
         $searchResults = $this->client->post(
             json_encode($params),
-            sprintf('/manage/api/internal/search/oauth20_rs')
+            '/manage/api/internal/search/oauth20_rs'
         );
 
         $count = count($searchResults);
         if ($count != 1) {
             throw new UnexpectedResultException(
                 sprintf(
-                    'Unable to find resource server with entityId "%s". ' .
-                    'Expected one search result, found %s results. ' .
+                    'Unable to find resource server with entityId "%s". Expected one search result, found %s results. ' .
                     'Please verify this entity exists in Manage. ',
                     $entityId,
                     $count
@@ -274,11 +271,10 @@ class QueryClient implements QueryManageRepository
     /**
      * Search for both oidc and saml entities.
      *
-     * @param array $params
      * @return array|null
      * @throws HttpException
      */
-    private function doSearchQuery(array $params)
+    private function doSearchQuery(array $params): array
     {
         $results = [];
         foreach ($this->protocolSupport as $protocol) {
@@ -291,16 +287,16 @@ class QueryClient implements QueryManageRepository
         return $results;
     }
 
-    private function loadDetailedResourceServers(array &$data)
+    private function loadDetailedResourceServers(array &$data): void
     {
         // When loading OIDCng entities, we also want details of the connected resource servers
-        $manageProtocol = isset($data['type']) ? $data['type'] : '';
+        $manageProtocol = $data['type'] ?? '';
         $isResourceServer = (isset($data['data']['metaDataFields']['isResourceServer']) &&
             $data['data']['metaDataFields']['isResourceServer']);
 
         if ($manageProtocol === Protocol::OIDC10_RP && !$isResourceServer) {
             $resourceServers = [];
-            $rs = isset($data['data']['allowedResourceServers']) ? $data['data']['allowedResourceServers'] : [];
+            $rs = $data['data']['allowedResourceServers'] ?? [];
             foreach ($rs as $resourceServer) {
                 $resourceServers[] = $this->findResourceServerByEntityId(
                     $resourceServer['name'],

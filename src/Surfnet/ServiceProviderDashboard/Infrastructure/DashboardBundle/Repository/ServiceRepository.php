@@ -28,7 +28,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
     /**
      * @param Service $service
      */
-    public function save(Service $service)
+    public function save(Service $service): void
     {
         $this->getEntityManager()->persist($service);
         $this->getEntityManager()->flush($service);
@@ -38,7 +38,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
      * @param Service $service
      * @return bool
      */
-    public function isUnique(Service $service)
+    public function isUnique(Service $service): bool
     {
         $this->isTeamNameUnique($service->getTeamName(), $service->getId());
         return true;
@@ -49,7 +49,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
      * @param int|null $id
      * @throws InvalidArgumentException
      */
-    private function isTeamNameUnique($teamName, $id = null)
+    private function isTeamNameUnique($teamName, $id = null): void
     {
         $qb = $this->createQueryBuilder('s')
             ->where('s.teamName = :teamname')
@@ -120,7 +120,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
         ]);
     }
 
-    public function delete(Service $service)
+    public function delete(Service $service): void
     {
         $this->getEntityManager()->remove($service);
         $this->getEntityManager()->flush($service);

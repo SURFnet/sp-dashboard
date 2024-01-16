@@ -22,20 +22,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ResourceServerCollection
 {
     /**
-     * @Assert\All({
-     *     @Assert\NotBlank
-     * }, groups={"Default", "production"})
-     *
-     * @var string[]
-     */
-    private $clientsIds;
-
-    /**
      * @param string[] $clientsIds
      */
-    public function __construct(array $clientsIds)
+    public function __construct(
+        /**
+         * @Assert\All({
+         *     @Assert\NotBlank
+         * }, groups={"Default", "production"})
+         *
+         */
+        private readonly array $clientsIds
+    )
     {
-        $this->clientsIds = $clientsIds;
     }
 
     /**

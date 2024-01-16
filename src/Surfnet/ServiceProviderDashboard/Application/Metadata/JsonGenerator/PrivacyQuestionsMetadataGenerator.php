@@ -90,7 +90,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
         $this->addMetaDataPrefix = true;
     }
 
-    private function buildKey(string $urn)
+    private function buildKey(string $urn): string
     {
         if ($this->addMetaDataPrefix) {
             return 'metaDataFields.' . $urn;

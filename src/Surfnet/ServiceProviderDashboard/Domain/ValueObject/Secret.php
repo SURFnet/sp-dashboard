@@ -21,15 +21,9 @@ use Exception;
 
 class Secret implements SecretInterface
 {
-    /**
-     * @var string
-     */
-    private static $allowedChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    private static string $allowedChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    /**
-     * @var string
-     */
-    private $secret = '';
+    private string $secret = '';
 
     /**
      * @param int $length

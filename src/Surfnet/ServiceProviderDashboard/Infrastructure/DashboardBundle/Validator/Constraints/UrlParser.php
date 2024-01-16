@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\In
 
 class UrlParser
 {
-    const SCHEME_PATTERN = '#^(http|ftp)s?://#i';
+    final public const SCHEME_PATTERN = '#^(http|ftp)s?://#i';
 
     public function __construct(private string $url)
     {

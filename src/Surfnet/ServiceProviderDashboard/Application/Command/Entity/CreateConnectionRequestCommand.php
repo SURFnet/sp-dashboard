@@ -31,22 +31,10 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
     /**
      * @var ConnectionRequest[]
      */
-    private $connectionRequests = [];
+    private array $connectionRequests = [];
 
-    /**
-     * @var ManageEntity
-     */
-    private $manageEntity;
-
-    /**
-     * @var Contact
-     */
-    private $applicant;
-
-    public function __construct(ManageEntity $manageEntity, Contact $applicant)
+    public function __construct(private readonly ManageEntity $manageEntity, private readonly Contact $applicant)
     {
-        $this->manageEntity = $manageEntity;
-        $this->applicant = $applicant;
     }
 
     /**

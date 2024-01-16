@@ -34,15 +34,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ServiceController extends AbstractController
 {
-    /**
-     * @param CommandBus $commandBus
-     * @param AuthorizationService $authorizationService
-     * @param ServiceService $serviceService
-     * @param ServiceStatusService $serviceStatusService
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
-        private CommandBus $commandBus,
+        private readonly CommandBus $commandBus,
         private readonly AuthorizationService $authorizationService,
         private readonly ServiceService $serviceService,
         private readonly ServiceStatusService $serviceStatusService,
@@ -51,14 +44,13 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/api/service/status/{id}", name="api_service_status", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_USER')")
      *
      * @param int $id
-     *
      * @return JsonResponse
      */
-    public function statusAction($id)
+    #[Route(path: '/api/service/status/{id}', name: 'api_service_status', methods: ['GET', 'POST'])]
+    public function status($id): \Symfony\Component\HttpFoundation\JsonResponse
     {
         $this->authorizationService->assertServiceIdAllowed($id);
 

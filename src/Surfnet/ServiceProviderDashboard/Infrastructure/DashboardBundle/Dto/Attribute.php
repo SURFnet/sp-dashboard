@@ -27,10 +27,19 @@ class Attribute implements AttributeInterface
      */
     public $id;
 
+    /**
+     * @var mixed[]
+     */
     public $excludeOnEntityType = [];
 
+    /**
+     * @var mixed[]
+     */
     public $translations = [];
 
+    /**
+     * @var mixed[]
+     */
     public $urns = [];
 
     private function __construct(

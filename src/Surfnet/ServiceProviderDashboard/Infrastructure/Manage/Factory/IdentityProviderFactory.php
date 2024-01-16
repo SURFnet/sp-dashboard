@@ -27,7 +27,7 @@ class IdentityProviderFactory
      * @param $manageResult
      * @return IdentityProvider
      */
-    public static function fromManageResult($manageResult)
+    public static function fromManageResult(array $manageResult): \Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider
     {
         return new IdentityProvider(
             $manageResult['_id'],

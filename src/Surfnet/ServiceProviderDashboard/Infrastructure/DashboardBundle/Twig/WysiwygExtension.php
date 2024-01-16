@@ -24,17 +24,14 @@ use Twig\TwigFilter;
 
 class WysiwygExtension extends AbstractExtension
 {
-    /**
-     * @var HTMLPurifier
-     */
-    private static $purifier = null;
+    private static ?\HTMLPurifier $purifier = null;
 
     public function getFilters(): array
     {
         return [
             new TwigFilter(
                 'wysiwyg',
-                [$this, 'sanitize'],
+                $this->sanitize(...),
                 ['is_safe' => ['html']]
             ),
         ];
@@ -59,7 +56,7 @@ class WysiwygExtension extends AbstractExtension
         return self::$purifier->purify($raw);
     }
 
-    private static function initialise()
+    private static function initialise(): void
     {
         if (!is_null(self::$purifier)) {
             return;

@@ -24,20 +24,11 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 
 class ResetServiceCommandHandler implements CommandHandler
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $service;
-
-    public function __construct(AuthorizationService $service)
+    public function __construct(private readonly AuthorizationService $service)
     {
-        $this->service = $service;
     }
 
-    /**
-     * @param ResetServiceCommand $command
-     */
-    public function handle(ResetServiceCommand $command)
+    public function handle(ResetServiceCommand $command): void
     {
         $this->service->resetService();
     }

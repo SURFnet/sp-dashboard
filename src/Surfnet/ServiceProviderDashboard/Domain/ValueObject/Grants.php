@@ -19,7 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 class Grants
 {
-    private $grants = [];
+    private array $grants = [];
 
     public function addGrant(OidcGrantType $grant): void
     {

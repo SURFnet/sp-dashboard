@@ -24,60 +24,10 @@ use function in_array;
 
 class Attribute
 {
-    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
+    final public const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $saml20Label;
-
-    /**
-     * @var string
-     */
-    private $saml20Info;
-
-    /**
-     * @var string
-     */
-    private $oidcngLabel;
-
-    /**
-     * @var string
-     */
-    private $oidcngInfo;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    private $urns = [];
-
-    private $excludeOnEntityType = [];
-
-    public function __construct(
-        string $id,
-        string $saml20Label,
-        string $saml20Info,
-        string $oidcngLabel,
-        string $oidcngInfo,
-        string $name,
-        array $urns,
-        array $excludeOnEntityType
-    ) {
-        $this->id = $id;
-        $this->saml20Label = $saml20Label;
-        $this->saml20Info = $saml20Info;
-        $this->oidcngLabel = $oidcngLabel;
-        $this->oidcngInfo = $oidcngInfo;
-        $this->name = $name;
-        $this->urns = $urns;
-        $this->excludeOnEntityType = $excludeOnEntityType;
+    public function __construct(private readonly string $id, private readonly string $saml20Label, private readonly string $saml20Info, private readonly string $oidcngLabel, private readonly string $oidcngInfo, private readonly string $name, private readonly array $urns, private readonly array $excludeOnEntityType)
+    {
     }
 
     public static function fromAttribute(

@@ -41,13 +41,13 @@ class PrivacyQuestionsController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}/privacy", name="privacy_questions", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_USER')")
      *
      * @param int $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function privacyAction($serviceId)
+    #[Route(path: '/service/{serviceId}/privacy', name: 'privacy_questions', methods: ['GET', 'POST'])]
+    public function privacy($serviceId): \Symfony\Component\HttpFoundation\Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -69,15 +69,14 @@ class PrivacyQuestionsController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}/privacy/create", name="privacy_questions_create")
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param Request $request
      *
      * @param $serviceId
      * @return Response
      */
-    public function createAction(Request $request, $serviceId)
+    #[Route(path: '/service/{serviceId}/privacy/create', name: 'privacy_questions_create')]
+    public function create(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -87,15 +86,14 @@ class PrivacyQuestionsController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}/privacy/edit", name="privacy_questions_edit")
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param Request $request
      *
      * @param $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editAction(Request $request, $serviceId)
+    #[Route(path: '/service/{serviceId}/privacy/edit', name: 'privacy_questions_edit')]
+    public function edit(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\Response
     {
         $service = $this->serviceService->getServiceById($serviceId);
 
@@ -124,8 +122,6 @@ class PrivacyQuestionsController extends AbstractController
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/Privacy/form.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render('@Dashboard/Privacy/form.html.twig', ['form' => $form->createView()]);
     }
 }

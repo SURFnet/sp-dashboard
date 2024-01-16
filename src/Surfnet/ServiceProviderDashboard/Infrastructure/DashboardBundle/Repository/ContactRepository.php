@@ -27,7 +27,7 @@ class ContactRepository extends DoctrineEntityRepository implements ContactRepos
     /**
      * @param Contact $contact
      */
-    public function save(Contact $contact)
+    public function save(Contact $contact): void
     {
         $this->getEntityManager()->persist($contact);
         $this->getEntityManager()->flush($contact);

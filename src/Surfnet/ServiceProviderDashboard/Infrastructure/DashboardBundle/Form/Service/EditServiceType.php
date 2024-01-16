@@ -29,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditServiceType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -122,12 +122,10 @@ class EditServiceType extends AbstractType
         ->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
-            array(
-                'data_class' => EditServiceCommand::class,
-            )
+            ['data_class' => EditServiceCommand::class]
         );
     }
 

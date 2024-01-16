@@ -38,7 +38,7 @@ class AcsLocationHelper
      * the dashboard.
      *
      */
-    public static function addAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false)
+    public static function addAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false): void
     {
         $prefix = $addPrefix ? 'metaDataFields.' : '';
         $locations = self::cleanArray($acsLocations);
@@ -51,7 +51,7 @@ class AcsLocationHelper
     /**
      * Add empty remaining locations so Manage can delete them
      */
-    public static function addEmptyAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false)
+    public static function addEmptyAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false): void
     {
         $prefix = $addPrefix ? 'metaDataFields.' : '';
         $index = count(self::cleanArray($acsLocations));

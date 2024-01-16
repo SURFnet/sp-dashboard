@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class ProtocolChoiceFactory
 {
-    private $availableOptions = [
+    private array $availableOptions = [
         Constants::TYPE_SAML => 'entity.type.saml20.title',
         Constants::TYPE_OPENID_CONNECT_TNG => 'entity.type.oidcng.client.title',
         Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER => 'entity.type.oidcng.resource_server.title',
@@ -33,7 +33,7 @@ class ProtocolChoiceFactory
      * Based on target environment, builds the available protocol choices for the ChooseEntityType form.
      * @return array
      */
-    public function buildOptions()
+    public function buildOptions(): array
     {
         $options = $this->availableOptions;
 

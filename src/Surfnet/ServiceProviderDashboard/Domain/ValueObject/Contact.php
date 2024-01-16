@@ -21,34 +21,31 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact as ContactEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Contact
+class Contact implements \Stringable
 {
     /**
-     * @Assert\NotBlank(groups={"Default", "production"})
      * @var string
      */
+    #[Assert\NotBlank(groups: ['Default', 'production'])]
     private $firstName;
 
     /**
-     * @Assert\NotBlank(groups={"Default", "production"})
      * @var string
      */
+    #[Assert\NotBlank(groups: ['Default', 'production'])]
     private $lastName;
 
-    /**
-     * @Assert\NotBlank(groups={"Default", "production"})
-     * @var string
-     */
-    private $email;
+    #[Assert\NotBlank(groups: ['Default', 'production'])]
+    private string|null|array $email = null;
 
     /**
      * @var string
      */
     private $phone;
 
-    public static function from(?ContactEntity $contact)
+    public static function from(?ContactEntity $contact): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact
     {
-        if ($contact) {
+        if ($contact instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact) {
             $instance = new self;
             $instance->email = $contact->getEmail();
             $instance->firstName = $contact->getGivenName();
@@ -72,7 +69,7 @@ class Contact
      *
      * @return Contact
      */
-    public function setFirstName($firstName)
+    public function setFirstName($firstName): static
     {
         $this->firstName = $firstName;
 
@@ -92,7 +89,7 @@ class Contact
      *
      * @return Contact
      */
-    public function setLastName($lastName)
+    public function setLastName($lastName): static
     {
         $this->lastName = $lastName;
 
@@ -112,7 +109,7 @@ class Contact
      *
      * @return Contact
      */
-    public function setEmail($email)
+    public function setEmail($email): static
     {
         // Managa adds a mailto: prefix to the contact email address in the
         // metadata XML, we strip it as a workaround.
@@ -134,7 +131,7 @@ class Contact
      *
      * @return Contact
      */
-    public function setPhone($phone)
+    public function setPhone($phone): static
     {
         $this->phone = $phone;
 
@@ -144,7 +141,7 @@ class Contact
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $result = $this->firstName . ' ' . $this->lastName .' (' . $this->email;
 
@@ -152,9 +149,7 @@ class Contact
             $result .= ' / ' . $this->phone;
         }
 
-        $result .= ')';
-
-        return $result;
+        return $result . ')';
     }
 
     /**

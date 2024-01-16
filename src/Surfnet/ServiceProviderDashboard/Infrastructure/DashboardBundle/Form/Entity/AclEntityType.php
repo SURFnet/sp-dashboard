@@ -27,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AclEntityType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
             'selectAll',
@@ -40,10 +40,8 @@ class AclEntityType extends AbstractType
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => UpdateEntityAclCommand::class
-        ));
+        $resolver->setDefaults(['data_class' => UpdateEntityAclCommand::class]);
     }
 }

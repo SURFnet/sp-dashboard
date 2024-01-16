@@ -34,7 +34,7 @@ class PushMetadataCommandHandler implements CommandHandler
     ) {
     }
 
-    public function handle(PushMetadataCommand $command)
+    public function handle(PushMetadataCommand $command): void
     {
         $this->logger->info(
             sprintf(

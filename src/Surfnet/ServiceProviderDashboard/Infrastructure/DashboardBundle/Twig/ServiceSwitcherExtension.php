@@ -29,7 +29,7 @@ class ServiceSwitcherExtension extends AbstractExtension
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private AuthorizationService $authorizationService,
+        private readonly AuthorizationService $authorizationService,
         private readonly FormFactoryInterface $formFactory
     ) {
     }
@@ -39,7 +39,7 @@ class ServiceSwitcherExtension extends AbstractExtension
         return [
             new Twig_SimpleFunction(
                 'service_switcher',
-                [$this, 'render'],
+                $this->render(...),
                 ['is_safe' => ['html'], 'needs_environment' => true]
             ),
         ];
@@ -52,7 +52,7 @@ class ServiceSwitcherExtension extends AbstractExtension
     {
         $token = $this->tokenStorage->getToken();
 
-        if (!$token) {
+        if ($token === null) {
             return '';
         }
         $roles = $token->getRoleNames();

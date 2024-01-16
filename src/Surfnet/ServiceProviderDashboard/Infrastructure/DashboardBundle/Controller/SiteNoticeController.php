@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SiteNoticeController extends AbstractController
 {
-    public function __construct(private string $noticeDate)
+    public function __construct(private readonly string $noticeDate)
     {
     }
 
@@ -35,7 +35,7 @@ class SiteNoticeController extends AbstractController
      * This desire to not see the notification is stored both in the
      * session and in cookies.
      */
-    public function showGlobalSiteNoticeAction(Request $request)
+    public function showGlobalSiteNotice(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $cookieString = str_replace('.', '_', 'site_notice.closed.' . $this->noticeDate);
         $cookie = $request->cookies->get($cookieString);

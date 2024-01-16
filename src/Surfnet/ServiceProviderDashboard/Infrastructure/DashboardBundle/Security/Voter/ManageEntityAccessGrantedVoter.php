@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ManageEntityAccessGrantedVoter extends Voter
 {
-    const MANAGE_ENTITY_ACCESS = "MANAGE_ENTITY_ACCESS";
+    final public const MANAGE_ENTITY_ACCESS = "MANAGE_ENTITY_ACCESS";
 
     public function __construct(private readonly EntityServiceInterface $entityService)
     {
@@ -35,12 +35,7 @@ class ManageEntityAccessGrantedVoter extends Voter
         if ($attribute !== self::MANAGE_ENTITY_ACCESS) {
             return false;
         }
-
-        if (!isset($subject['manageId']) || !isset($subject['environment'])) {
-            return false;
-        }
-
-        return true;
+        return isset($subject['manageId']) && isset($subject['environment']);
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool

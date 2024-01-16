@@ -30,7 +30,7 @@ class UniqueRedirectUrlsValidator extends ConstraintValidator
      * @param Constraint $constraint
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         /**
          * @var SaveOidcngEntityCommand $entityCommand

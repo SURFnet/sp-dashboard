@@ -37,16 +37,11 @@ class EntityDetailController extends AbstractController
     }
 
     /**
-     * @Route("/entity/detail/{serviceId}/{id}/{manageTarget}",
-     *     name="entity_detail",
-     *     methods={"GET"},
-     *     defaults={"manageTarget" = false
-     *     })
      * @Security("is_granted('ROLE_USER')")
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function detailAction(string $id, int $serviceId, string $manageTarget): Response
+    #[Route(path: '/entity/detail/{serviceId}/{id}/{manageTarget}', name: 'entity_detail', methods: ['GET'], defaults: ['manageTarget' => false])]
+    public function detail(string $id, int $serviceId, string $manageTarget): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $team = $service->getTeamName();

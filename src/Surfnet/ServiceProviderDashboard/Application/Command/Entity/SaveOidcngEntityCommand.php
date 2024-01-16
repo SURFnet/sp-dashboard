@@ -37,8 +37,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 {
     /**
      * @var string
-     * @Assert\Uuid
      */
+    #[Assert\Uuid]
     private $id;
 
     /**
@@ -46,32 +46,22 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     private $status;
 
-    /**
-     * @var Service
-     */
-    private $service;
+    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
+
+    private bool $archived = false;
+
+    
+    #[Assert\NotBlank]
+    #[Assert\Choice(choices: ['production', 'test'], strict: true)]
+    private string $environment = Constants::ENVIRONMENT_TEST;
 
     /**
-     * @var bool
-     */
-    private $archived = false;
-
-    /**
-     * @var string
      *
-     * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"production", "test"}, strict=true)
-     */
-    private $environment = Constants::ENVIRONMENT_TEST;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
      * @SpDashboardAssert\ValidClientId()
      * @SpDashboardAssert\UniqueEntityId()
      */
-    private $entityId;
+    #[Assert\NotBlank]
+    private ?string $entityId = null;
 
     /**
      * @var string
@@ -80,18 +70,14 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     /**
      * @var string[]
-     * @Assert\Count(
-     *      min = 1,
-     *      max = 1000,
-     *      minMessage = "You need to add a minimum of {{ limit }} redirect Url.|You need to add a minimum of {{ limit }} redirect Urls.",
-     * )
      * @Assert\All({
      *     @Assert\NotBlank(),
      *     @SpDashboardAssert\ValidRedirectUrl()
      * })
      * @SpDashboardAssert\UniqueRedirectUrls()
      */
-    private $redirectUrls;
+    #[Assert\Count(min: 1, max: 1000, minMessage: 'You need to add a minimum of {{ limit }} redirect Url.|You need to add a minimum of {{ limit }} redirect Urls.')]
+    private ?array $redirectUrls = null;
 
     /**
      * @var bool
@@ -100,113 +86,94 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     /**
      * @var array $grants defaults to Constants::GRANT_TYPE_AUTHORIZATION_CODE
-     *
-     * @Assert\NotBlank()
      */
-    private $grants = [Constants::GRANT_TYPE_AUTHORIZATION_CODE];
+    #[Assert\NotBlank]
+    private array $grants = [Constants::GRANT_TYPE_AUTHORIZATION_CODE];
 
-    /**
-     * @var int
-     * @Assert\NotBlank
-     * @Assert\LessThanOrEqual(86400)
-     * @Assert\GreaterThanOrEqual(3600)
-     */
-    private $accessTokenValidity = 3600;
+    #[Assert\NotBlank]
+    #[Assert\LessThanOrEqual(86400)]
+    #[Assert\GreaterThanOrEqual(3600)]
+    private int $accessTokenValidity = 3600;
 
     /**
      * @var string
      *
-     * @Assert\Url()
      * @SpDashboardAssert\ValidLogo()
-     * @Assert\NotBlank()
      */
+    #[Assert\Url]
+    #[Assert\NotBlank]
     private $logoUrl;
 
     /**
      * The subject type is comparable to the SAML name id format, that is why the Constants::NAME_ID_FORMAT_DEFAULT
      * (transient) is used to set the default value.
-     *
-     * @var string
-     * @Assert\Choice(
-     *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Constants",
-     *         "getValidNameIdFormats"
-     *     },
-     *     strict=true
-     * )
      */
-    private $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
+    #[Assert\Choice(callback: [\Surfnet\ServiceProviderDashboard\Domain\Entity\Constants::class, 'getValidNameIdFormats'], strict: true)]
+    private string $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameNl;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameEn;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionNl;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionEn;
 
     /**
      * @var string
-     *
-     * @Assert\Url()
      */
+    #[Assert\Url]
     private $applicationUrl;
 
     /**
      * @var string
-     *
-     * @Assert\Url()
      */
+    #[Assert\Url]
     private $eulaUrl;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
      */
+    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
     private $administrativeContact;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid()
      */
+    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Valid]
     private $technicalContact;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
      */
+    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
     private $supportContact;
 
     /**
      * @SpDashboardAssert\ValidAttribute(type="oidcng")
      */
-    private $attributes = [];
+    private array $attributes = [];
 
     /**
      * @var string
@@ -226,10 +193,9 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string[]
      */
-    private $resourceServers = [];
+    private array $resourceServers = [];
 
-    /** @var bool */
-    private $isCopy;
+    private ?bool $isCopy = null;
 
     public function __construct()
     {
@@ -250,7 +216,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return $this->getAttribute($property);
     }
 
-    public function setAttribute(string $property, ?Attribute $value)
+    public function setAttribute(string $property, ?Attribute $value): void
     {
         $this->attributes[$property] = $value;
     }
@@ -268,11 +234,9 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param Service $service
-     * @param bool $isCopy
      * @return SaveOidcngEntityCommand
      */
-    public static function forCreateAction(Service $service, bool $isCopy = false)
+    public static function forCreateAction(Service $service, bool $isCopy = false): self
     {
         $command = new self();
         $command->service = $service;
@@ -309,10 +273,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return $this->isCopy;
     }
 
-    /**
-     * @param bool $isCopy
-     */
-    public function setIsCopy(bool $isCopy)
+    public function setIsCopy(bool $isCopy): void
     {
         $this->isCopy = $isCopy;
     }
@@ -328,7 +289,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param bool $archived
      */
-    public function setArchived($archived)
+    public function setArchived($archived): void
     {
         $this->archived = $archived;
     }
@@ -341,7 +302,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $environment
      */
-    public function setEnvironment($environment)
+    public function setEnvironment($environment): void
     {
         if (!in_array(
             $environment,
@@ -366,7 +327,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $entityId
      */
-    public function setEntityId($entityId)
+    public function setEntityId($entityId): void
     {
         $this->entityId = strtolower($entityId);
     }
@@ -390,7 +351,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $secret
      */
-    public function setSecret($secret)
+    public function setSecret($secret): void
     {
         $this->secret = $secret;
     }
@@ -406,7 +367,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string[] $redirectUrls
      */
-    public function setRedirectUrls($redirectUrls)
+    public function setRedirectUrls($redirectUrls): void
     {
         $urls = []; // because numeric array keys can be sparse so a for-loop cannot be trusted
         foreach ($redirectUrls as $url) {
@@ -429,7 +390,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $logoUrl
      */
-    public function setLogoUrl($logoUrl)
+    public function setLogoUrl($logoUrl): void
     {
         $this->logoUrl = $logoUrl;
     }
@@ -442,7 +403,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $nameNl
      */
-    public function setNameNl($nameNl)
+    public function setNameNl($nameNl): void
     {
         $this->nameNl = $nameNl;
     }
@@ -455,7 +416,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $nameEn
      */
-    public function setNameEn($nameEn)
+    public function setNameEn($nameEn): void
     {
         $this->nameEn = $nameEn;
     }
@@ -468,7 +429,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $descriptionNl
      */
-    public function setDescriptionNl($descriptionNl)
+    public function setDescriptionNl($descriptionNl): void
     {
         $this->descriptionNl = $descriptionNl;
     }
@@ -481,7 +442,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $descriptionEn
      */
-    public function setDescriptionEn($descriptionEn)
+    public function setDescriptionEn($descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
     }
@@ -497,7 +458,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $applicationUrl
      */
-    public function setApplicationUrl($applicationUrl)
+    public function setApplicationUrl($applicationUrl): void
     {
         $this->applicationUrl = $applicationUrl;
     }
@@ -510,7 +471,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $eulaUrl
      */
-    public function setEulaUrl($eulaUrl)
+    public function setEulaUrl($eulaUrl): void
     {
         $this->eulaUrl = $eulaUrl;
     }
@@ -523,7 +484,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param Contact $administrativeContact
      */
-    public function setAdministrativeContact($administrativeContact)
+    public function setAdministrativeContact($administrativeContact): void
     {
         $this->administrativeContact = $administrativeContact;
     }
@@ -536,7 +497,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param Contact $technicalContact
      */
-    public function setTechnicalContact($technicalContact)
+    public function setTechnicalContact($technicalContact): void
     {
         $this->technicalContact = $technicalContact;
     }
@@ -549,7 +510,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param Contact $supportContact
      */
-    public function setSupportContact($supportContact)
+    public function setSupportContact($supportContact): void
     {
         $this->supportContact = $supportContact;
     }
@@ -565,30 +526,27 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $comments
      */
-    public function setComments($comments)
+    public function setComments($comments): void
     {
         $this->comments = $comments;
     }
 
-    public function isForProduction()
+    public function isForProduction(): bool
     {
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
 
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         $this->status = $status;
     }
 
-    /**
-     * @param Service $service
-     */
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
@@ -604,7 +562,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $manageId
      */
-    public function setManageId($manageId)
+    public function setManageId($manageId): void
     {
         $this->manageId = $manageId;
     }
@@ -625,7 +583,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param bool $isPublicClient
      */
-    public function setIsPublicClient($isPublicClient)
+    public function setIsPublicClient($isPublicClient): void
     {
         $this->isPublicClient = $isPublicClient;
     }
@@ -641,7 +599,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param int $accessTokenValidity
      */
-    public function setAccessTokenValidity($accessTokenValidity)
+    public function setAccessTokenValidity($accessTokenValidity): void
     {
         $this->accessTokenValidity = (int) $accessTokenValidity;
     }
@@ -657,7 +615,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param bool $enablePlayground
      */
-    public function setEnablePlayground($enablePlayground)
+    public function setEnablePlayground($enablePlayground): void
     {
         $this->enablePlayground = $enablePlayground;
     }
@@ -673,7 +631,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param OidcGrantType $grants
      */
-    public function setGrants($grants)
+    public function setGrants($grants): void
     {
         $this->grants = $grants;
     }
@@ -689,7 +647,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $subjectType
      */
-    public function setSubjectType($subjectType)
+    public function setSubjectType($subjectType): void
     {
         $this->subjectType = $subjectType;
         // If the SubjectType is not set in the draft, we set the default value (transient) as requested in:
@@ -710,7 +668,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string[] $resourceServers
      */
-    public function setOidcngResourceServers($resourceServers)
+    public function setOidcngResourceServers($resourceServers): void
     {
         $this->resourceServers = $resourceServers;
     }

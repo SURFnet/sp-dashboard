@@ -66,7 +66,6 @@ class IdentityProviderClient implements IdentityProviderRepository
     }
 
     /**
-     * @param array $params
      * @return array|null
      * @throws HttpException
      */

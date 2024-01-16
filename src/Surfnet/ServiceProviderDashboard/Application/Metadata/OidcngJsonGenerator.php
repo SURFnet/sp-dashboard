@@ -115,8 +115,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
         switch ($updatedPart) {
             case 'ACL':
-                $metadata += $this->generateAclData($entity);
-                return $metadata;
+                return $metadata + $this->generateAclData($entity);
 
             default:
                 $metadata += $differences->getDiff();
@@ -136,10 +135,9 @@ class OidcngJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param ManageEntity $entity
      * @return array
      */
-    private function generateMetadataFields(ManageEntity $entity)
+    private function generateMetadataFields(ManageEntity $entity): int|float|array
     {
         $metadata = array_merge(
             [
@@ -168,7 +166,7 @@ class OidcngJsonGenerator implements GeneratorInterface
 
         $metadata += $this->generateOidcClient($entity);
 
-        if ($entity->getMetaData()->getLogo() !== null && $entity->getMetaData()->getLogo()->getUrl() !== '') {
+        if ($entity->getMetaData()->getLogo() instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata += $this->generateLogoMetadata($entity);
         }
 
@@ -176,15 +174,14 @@ class OidcngJsonGenerator implements GeneratorInterface
     }
 
     /**
-     * @param ManageEntity $entity
      * @return array
      */
-    private function generateOidcClient(ManageEntity $entity)
+    private function generateOidcClient(ManageEntity $entity): array
     {
         $metadata = [];
-        if ($entity->getOidcClient()) {
+        if ($entity->getOidcClient() !== null) {
             $secret = $entity->getOidcClient()->getClientSecret();
-            if ($secret) {
+            if ($secret !== '' && $secret !== '0') {
                 $metadata['secret'] = $secret;
             }
             // Reset the redirect URI list in order to get a correct JSON formatting (See #163646662)
@@ -204,7 +201,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $contacts = $entity->getMetaData()->getContacts();
 
         if ($contacts) {
-            if ($contacts->findSupportContact()) {
+            if ($contacts->findSupportContact() !== null) {
                 $metadata += $this->generateContactMetadata(
                     'support',
                     $index++,
@@ -212,7 +209,7 @@ class OidcngJsonGenerator implements GeneratorInterface
                 );
             }
 
-            if ($contacts->findAdministrativeContact()) {
+            if ($contacts->findAdministrativeContact() !== null) {
                 $metadata += $this->generateContactMetadata(
                     'administrative',
                     $index++,
@@ -220,7 +217,7 @@ class OidcngJsonGenerator implements GeneratorInterface
                 );
             }
 
-            if ($contacts->findTechnicalContact()) {
+            if ($contacts->findTechnicalContact() !== null) {
                 $metadata += $this->generateContactMetadata(
                     'technical',
                     $index++,
@@ -244,25 +241,25 @@ class OidcngJsonGenerator implements GeneratorInterface
         return array_filter($metadata);
     }
 
-    private function generateContactMetadata($contactType, $index, Contact $contact): array
+    private function generateContactMetadata(string $contactType, int $index, Contact $contact): array
     {
         $metadata = [
             sprintf('contacts:%d:contactType', $index) => $contactType,
         ];
 
-        if (!empty($contact->getGivenName())) {
+        if ($contact->getGivenName() !== null && $contact->getGivenName() !== '' && $contact->getGivenName() !== '0') {
             $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getGivenName();
         }
 
-        if (!empty($contact->getSurName())) {
+        if ($contact->getSurName() !== null && $contact->getSurName() !== '' && $contact->getSurName() !== '0') {
             $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getSurName();
         }
 
-        if (!empty($contact->getEmail())) {
+        if ($contact->getEmail() !== null && $contact->getEmail() !== '' && $contact->getEmail() !== '0') {
             $metadata[sprintf('contacts:%d:emailAddress', $index)] = $contact->getEmail();
         }
 
-        if (!empty($contact->getPhone())) {
+        if ($contact->getPhone() !== null && $contact->getPhone() !== '' && $contact->getPhone() !== '0') {
             $metadata[sprintf('contacts:%d:telephoneNumber', $index)] = $contact->getPhone();
         }
 
@@ -278,10 +275,9 @@ class OidcngJsonGenerator implements GeneratorInterface
      *
      * @SuppressWarnings(PHPMD.ErrorControlOperator)
      *
-     * @param ManageEntity $entity
      * @return array
      */
-    private function generateLogoMetadata(ManageEntity $entity)
+    private function generateLogoMetadata(ManageEntity $entity): array
     {
         $logoUrl = $entity->getMetaData()->getLogo()->getUrl();
         $metadata = [
@@ -291,7 +287,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $logoData = @getimagesize($logoUrl);
 
         if ($logoData !== false) {
-            list($width, $height) = $logoData;
+            [$width, $height] = $logoData;
         } else {
             $width = 50;
             $height = 50;
@@ -327,11 +323,11 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
     }
 
-    private function generateAllowedResourceServers(ManageEntity $entity)
+    private function generateAllowedResourceServers(ManageEntity $entity): array
     {
         $allowedResourceServers = [];
         $client = $entity->getOidcClient();
-        if ($client) {
+        if ($client !== null) {
             $collection = $client->getResourceServers();
             if ($collection) {
                 foreach ($collection as $clientId) {
@@ -349,11 +345,11 @@ class OidcngJsonGenerator implements GeneratorInterface
         ];
     }
 
-    private function setExcludeFromPush(&$metadata, ManageEntity $entity, $flatten = false): void
+    private function setExcludeFromPush(array &$metadata, ManageEntity $entity, bool $flatten = false): void
     {
         $fieldName = 'coin:exclude_from_push';
         if ($flatten) {
-            $fieldName = sprintf('metaDataFields.coin:exclude_from_push');
+            $fieldName = 'metaDataFields.coin:exclude_from_push';
         }
 
         // Scenario 1: When publishing to production, the coin:exclude_from_push must be present and set to '1'.

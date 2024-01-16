@@ -34,7 +34,7 @@ class OidcngSpdClientIdParser
      * @param string $entityId
      * @return string
      */
-    public static function parse($entityId)
+    public static function parse($entityId): string
     {
         $clientIdFormat = "https://%s";
 

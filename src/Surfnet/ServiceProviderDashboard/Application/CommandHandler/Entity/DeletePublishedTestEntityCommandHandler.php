@@ -35,7 +35,7 @@ class DeletePublishedTestEntityCommandHandler implements CommandHandler
     ) {
     }
 
-    public function handle(DeletePublishedTestEntityCommand $command)
+    public function handle(DeletePublishedTestEntityCommand $command): void
     {
         $this->logger->info(
             sprintf(

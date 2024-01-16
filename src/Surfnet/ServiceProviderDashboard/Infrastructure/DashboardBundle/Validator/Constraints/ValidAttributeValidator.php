@@ -39,7 +39,7 @@ class ValidAttributeValidator extends ConstraintValidator
      * @param array $value
      * @param Constraint $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         foreach ($value ?? [] as $name => $attribute) {
             if (!isset($attribute)) {

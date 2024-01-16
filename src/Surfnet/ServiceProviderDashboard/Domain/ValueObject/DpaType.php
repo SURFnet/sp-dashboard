@@ -44,7 +44,7 @@ use function in_array;
  *    "info": "Determines what DPA this service has to offer"
  *  }
  */
-class DpaType
+class DpaType implements \Stringable
 {
     private const DPA_TYPE_NOT_APPLICABLE = 'dpa_not_applicable';
     private const DPA_TYPE_MODEL_SURF = 'dpa_model_surf';
@@ -52,7 +52,7 @@ class DpaType
     private const DPA_TYPE_SUPPLIED_BY_SERVICE = 'dpa_supplied_by_service';
     private const DPA_TYPE_OTHER = 'other';
 
-    public const DEFAULT = self::DPA_TYPE_SUPPLIED_BY_SERVICE;
+    final public const DEFAULT = self::DPA_TYPE_SUPPLIED_BY_SERVICE;
 
     private static array $allowedDpaTypes = [
         'privacy.form.dpaType.choice.dpa-not-applicable' => self::DPA_TYPE_NOT_APPLICABLE,
@@ -80,7 +80,7 @@ class DpaType
         return self::build($dpaType);
     }
 
-    public static function build(string $type)
+    public static function build(string $type): self
     {
         if (in_array($type, self::$allowedDpaTypes, true)) {
             return new self($type);
@@ -89,7 +89,7 @@ class DpaType
         return new self(self::DEFAULT);
     }
 
-    public static function choices()
+    public static function choices(): array
     {
         return self::$allowedDpaTypes;
     }

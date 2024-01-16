@@ -41,33 +41,12 @@ class Contact
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(length=150)
-     */
-    private $nameId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(length=255)
-     */
-    private $displayName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(length=255)
-     */
-    private $emailAddress;
-
-    /**
      * @var ArrayCollection<Service>
      *
      * @ORM\ManyToMany(targetEntity="Service", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $services;
+    private \Doctrine\Common\Collections\ArrayCollection $services;
 
     private array $roles = [];
 
@@ -76,12 +55,17 @@ class Contact
      * @param string $emailAddress
      * @param string $displayName
      */
-    public function __construct($nameId, $emailAddress, $displayName)
+    public function __construct(/**
+     * @ORM\Column(length=150)
+     */
+    private $nameId, /**
+     * @ORM\Column(length=255)
+     */
+    private $emailAddress, /**
+     * @ORM\Column(length=255)
+     */
+    private $displayName)
     {
-        $this->nameId = $nameId;
-        $this->emailAddress = $emailAddress;
-        $this->displayName = $displayName;
-
         $this->services = new ArrayCollection();
     }
 
@@ -90,7 +74,7 @@ class Contact
      *
      * @return Contact
      */
-    public function setEmailAddress($emailAddress)
+    public function setEmailAddress($emailAddress): void
     {
         $this->emailAddress = $emailAddress;
     }
@@ -108,7 +92,7 @@ class Contact
      *
      * @return Contact
      */
-    public function setDisplayName($displayName)
+    public function setDisplayName($displayName): static
     {
         $this->displayName = $displayName;
 
@@ -129,11 +113,9 @@ class Contact
     }
 
     /**
-     * @param Service $service
-     *
      * @return Contact
      */
-    public function addService(Service $service)
+    public function addService(Service $service): static
     {
         $this->services->add($service);
 
@@ -141,11 +123,9 @@ class Contact
     }
 
     /**
-     * @param Service $service
-     *
      * @return Contact
      */
-    public function removeService(Service $service)
+    public function removeService(Service $service): static
     {
         $this->services->removeElement($service);
 
@@ -153,8 +133,6 @@ class Contact
     }
 
     /**
-     * @param Service $service
-     *
      * @return bool
      */
     public function hasService(Service $service)
@@ -175,7 +153,7 @@ class Contact
         $this->roles[] = $role;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }

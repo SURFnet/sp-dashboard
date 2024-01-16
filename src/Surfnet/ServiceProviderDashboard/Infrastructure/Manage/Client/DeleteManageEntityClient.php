@@ -31,7 +31,7 @@ class DeleteManageEntityClient implements DeleteEntityRepositoryInterface
 {
     public function __construct(
         private readonly HttpClientInterface $client,
-        private LoggerInterface $logger
+        private readonly LoggerInterface $logger
     ) {
     }
 

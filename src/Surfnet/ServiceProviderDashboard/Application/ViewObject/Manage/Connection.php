@@ -32,17 +32,17 @@ class Connection
         Assert::stringNotEmpty($password, 'Please set the manage password in .env');
     }
 
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }

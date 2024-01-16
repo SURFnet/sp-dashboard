@@ -56,24 +56,14 @@ class EntityCreateController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}",
-     *     defaults={
-     *          "targetEnvironment" = "test",
-     *     },
-     *     name="entity_type",
-     *     methods={"GET", "POST"}
-     * )
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param Request $request
      *
      * @param int $serviceId
-     * @param string $targetEnvironment
-     * @param string $inputId
      * @return RedirectResponse|Response|array
      */
-    public function typeAction(Request $request, $serviceId, string $targetEnvironment, string $inputId)
+    #[Route(path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}', defaults: ['targetEnvironment' => 'test'], name: 'entity_type', methods: ['GET', 'POST'])]
+    public function type(Request $request, $serviceId, string $targetEnvironment, string $inputId): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $choices = $this->protocolChoiceFactory->buildOptions();
@@ -97,7 +87,7 @@ class EntityCreateController extends AbstractController
             $sourceEnvironment = null;
 
             if ($withTemplate === 'yes') {
-                $template = explode('/', $request->get($formId . '_entityid/value'));
+                $template = explode('/', (string) $request->get($formId . '_entityid/value'));
                 $manageId = $template[0];
                 $sourceEnvironment = $template[1];
             }
@@ -131,8 +121,6 @@ class EntityCreateController extends AbstractController
     }
 
     /**
-     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add", methods={"GET","POST"})
-     * @param Request $request
      * @param int $serviceId
      * @param null|string $targetEnvironment
      * @param null|string $type
@@ -143,7 +131,8 @@ class EntityCreateController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function createAction(Request $request, $serviceId, $targetEnvironment, $type)
+    #[Route(path: '/entity/create/{serviceId}/{type}/{targetEnvironment}', name: 'entity_add', methods: ['GET', 'POST'])]
+    public function create(Request $request, $serviceId, $targetEnvironment, $type): \Symfony\Component\HttpFoundation\Response
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
@@ -199,7 +188,7 @@ class EntityCreateController extends AbstractController
 
                     return $this->redirectToRoute('service_overview');
                 }
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
             }
         }
@@ -212,15 +201,6 @@ class EntityCreateController extends AbstractController
 
 
     /**
-     * @Route("/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}",
-     *      defaults={
-     *          "manageId" = null,
-     *          "targetEnvironment" = "test",
-     *          "sourceEnvironment" = "test"
-     *      },
-     *      name="entity_copy",
-     *      methods={"GET", "POST"}
-     * )
      * @Security("is_granted('ROLE_USER')")
      *
      * @param int $serviceId
@@ -236,7 +216,8 @@ class EntityCreateController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function copyAction(Request $request, $serviceId, $manageId, $targetEnvironment, $sourceEnvironment)
+    #[Route(path: '/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}', defaults: ['manageId' => null, 'targetEnvironment' => 'test', 'sourceEnvironment' => 'test'], name: 'entity_copy', methods: ['GET', 'POST'])]
+    public function copy(Request $request, $serviceId, string $manageId, string $targetEnvironment, string $sourceEnvironment): \Symfony\Component\HttpFoundation\Response
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
@@ -295,7 +276,7 @@ class EntityCreateController extends AbstractController
 
                     return $this->redirectToRoute('service_overview');
                 }
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
             }
         }

@@ -22,9 +22,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
 interface ContactRepository
 {
-    /**
-     * @param Contact $contact
-     */
     public function save(Contact $contact);
 
     /**

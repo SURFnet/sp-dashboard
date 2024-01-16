@@ -37,10 +37,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param NodeBuilder $childNodes
-     */
-    private function appendManageConfiguration(NodeBuilder $childNodes)
+    private function appendManageConfiguration(NodeBuilder $childNodes): void
     {
         $childNodes
             ->arrayNode('manage')

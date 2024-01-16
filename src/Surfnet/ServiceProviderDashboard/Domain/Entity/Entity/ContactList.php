@@ -27,7 +27,7 @@ class ContactList implements Comparable
 {
     // Contacts are indexed on an integer index that is set to the contact type
     // This allows us to reference the contact information in Manage without issue
-    private static $supportedContactTypes = [
+    private static array $supportedContactTypes = [
         0 => 'administrative',
         1 => 'technical',
         2 => 'support',
@@ -35,12 +35,12 @@ class ContactList implements Comparable
 
     private $contacts = [];
 
-    public static function fromApiResponse(array $metaDataFields)
+    public static function fromApiResponse(array $metaDataFields): self
     {
         // 1. Structure the flat keyed data into an associative array
         $contactsData = [];
         foreach ($metaDataFields as $fieldName => $value) {
-            if (substr($fieldName, 0, 9) === 'contacts:') {
+            if (str_starts_with($fieldName, 'contacts:')) {
                 $fieldNameParts = explode(':', $fieldName);
                 $contactsData[$fieldNameParts[1]][$fieldNameParts[2]] = $value;
             }
@@ -57,7 +57,7 @@ class ContactList implements Comparable
         return $list;
     }
 
-    public function add(Contact $contact)
+    public function add(Contact $contact): void
     {
         $this->contacts[$this->getIndexByType($contact->getType())] = $contact;
     }
@@ -68,10 +68,7 @@ class ContactList implements Comparable
     public function findTechnicalContact()
     {
         $index = $this->getIndexByType('technical');
-        if (isset($this->contacts[$index])) {
-            return $this->contacts[$index];
-        }
-        return null;
+        return $this->contacts[$index] ?? null;
     }
 
     /**
@@ -80,10 +77,7 @@ class ContactList implements Comparable
     public function findAdministrativeContact()
     {
         $index = $this->getIndexByType('administrative');
-        if (isset($this->contacts[$index])) {
-            return $this->contacts[$index];
-        }
-        return null;
+        return $this->contacts[$index] ?? null;
     }
 
     /**
@@ -92,31 +86,28 @@ class ContactList implements Comparable
     public function findSupportContact()
     {
         $index = $this->getIndexByType('support');
-        if (isset($this->contacts[$index])) {
-            return $this->contacts[$index];
-        }
-        return null;
+        return $this->contacts[$index] ?? null;
     }
 
-    private function clear()
+    private function clear(): void
     {
         $this->contacts = [];
     }
 
-    public function merge(ContactList $contacts)
+    public function merge(ContactList $contacts): void
     {
         $this->clear();
-        if ($contacts !== null) {
+        if ($contacts instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ContactList) {
             $technical = $contacts->findTechnicalContact();
-            if ($technical) {
+            if ($technical !== null) {
                 $this->add($technical);
             }
             $support = $contacts->findSupportContact();
-            if ($support) {
+            if ($support !== null) {
                 $this->add($support);
             }
             $administrative = $contacts->findAdministrativeContact();
-            if ($administrative) {
+            if ($administrative !== null) {
                 $this->add($administrative);
             }
         }

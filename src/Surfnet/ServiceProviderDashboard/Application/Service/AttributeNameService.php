@@ -24,14 +24,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\A
 
 class AttributeNameService implements AttributeNameServiceInterface
 {
-    /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
-
-    public function __construct(AttributeRepository $attributeRepository)
+    public function __construct(private readonly AttributeRepository $attributeRepository)
     {
-        $this->attributeRepository = $attributeRepository;
     }
 
     public function getAttributeTypeNames(): array

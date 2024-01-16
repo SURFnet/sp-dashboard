@@ -32,7 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\A
 
 class AttributeService implements AttributeServiceInterface
 {
-    private $attributes = [];
+    private array $attributes = [];
 
     public function __construct(
         private readonly AttributeRepositoryInterface $attributeRepository,
@@ -105,29 +105,21 @@ class AttributeService implements AttributeServiceInterface
         return $this->attributeRepository->isAttributeName($name);
     }
 
-    private function getInfoFromAttributeDto(
-        AttributeDto $attributeDto,
-        string $entityType
-    ): string {
-        switch ($entityType) {
-            case Constants::TYPE_SAML:
-                return $attributeDto->translations[$this->language]->saml20Info;
-            case Constants::TYPE_OPENID_CONNECT_TNG:
-                return $attributeDto->translations[$this->language]->oidcngInfo;
-        }
-        throw new InvalidAttributeEntityException(sprintf('Attribute information for entity %s is not supported', $entityType));
+    private function getInfoFromAttributeDto(AttributeDto $attributeDto, string $entityType): string
+    {
+        return match ($entityType) {
+            Constants::TYPE_SAML => $attributeDto->translations[$this->language]->saml20Info,
+            Constants::TYPE_OPENID_CONNECT_TNG => $attributeDto->translations[$this->language]->oidcngInfo,
+            default => throw new InvalidAttributeEntityException(sprintf('Attribute information for entity %s is not supported', $entityType)),
+        };
     }
 
-    private function getLabelFromAttributeDto(
-        AttributeDto $attributeDto,
-        string $entityType
-    ): string {
-        switch ($entityType) {
-            case Constants::TYPE_SAML:
-                return $attributeDto->translations[$this->language]->saml20Label;
-            case Constants::TYPE_OPENID_CONNECT_TNG:
-                return $attributeDto->translations[$this->language]->oidcngLabel;
-        }
-        throw new InvalidAttributeEntityException(sprintf('Attributes labels for entity %s are not supported', $entityType));
+    private function getLabelFromAttributeDto(AttributeDto $attributeDto, string $entityType): string
+    {
+        return match ($entityType) {
+            Constants::TYPE_SAML => $attributeDto->translations[$this->language]->saml20Label,
+            Constants::TYPE_OPENID_CONNECT_TNG => $attributeDto->translations[$this->language]->oidcngLabel,
+            default => throw new InvalidAttributeEntityException(sprintf('Attributes labels for entity %s are not supported', $entityType)),
+        };
     }
 }

@@ -393,9 +393,6 @@ services:
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
 
-  Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory:
-    class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory
-
   Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory:
     class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory
 

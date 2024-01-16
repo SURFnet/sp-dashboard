@@ -35,9 +35,7 @@ class JsonFormatter extends MonologJsonFormatter
     {
         return parent::formatBatch(
             array_map(
-                function (array $record) {
-                    return $this->mapRecord($record);
-                },
+                fn(array $record): array => $this->mapRecord($record),
                 $records
             )
         );

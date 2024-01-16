@@ -25,22 +25,21 @@ final class ResourcePathFormatter
 {
     /**
      * @param string $resourcePathFormat
-     * @param array $parameters
      * @return string
      * @throws RuntimeException
      */
-    public static function format($resourcePathFormat, array $parameters)
+    public static function format($resourcePathFormat, array $parameters): string
     {
         if (!is_string($resourcePathFormat)) {
             throw new InvalidArgumentException('Resource path data expected to be string');
         }
 
         $resource = $resourcePathFormat;
-        if (count($parameters) > 0) {
+        if ($parameters !== []) {
             $resource = vsprintf($resourcePathFormat, array_map('urlencode', $parameters));
         }
 
-        if (empty($resource)) {
+        if ($resource === '' || $resource === '0') {
             throw new RuntimeException(sprintf(
                 'Could not construct resource path from format "%s", parameters "%s"',
                 $resourcePathFormat,

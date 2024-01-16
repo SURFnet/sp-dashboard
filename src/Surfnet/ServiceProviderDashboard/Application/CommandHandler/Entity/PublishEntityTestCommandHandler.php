@@ -32,19 +32,17 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 class PublishEntityTestCommandHandler implements CommandHandler
 {
     public function __construct(
-        private PublishEntityRepository $publishClient,
-        private EntityServiceInterface $entityService,
-        private LoggerInterface $logger,
-        private FlashBagInterface $flashBag
+        private readonly PublishEntityRepository $publishClient,
+        private readonly EntityServiceInterface $entityService,
+        private readonly LoggerInterface $logger,
+        private readonly FlashBagInterface $flashBag
     ) {
     }
 
     /**
-     * @param PublishEntityTestCommand $command
-     *
      * @throws InvalidArgumentException
      */
-    public function handle(PublishEntityTestCommand $command)
+    public function handle(PublishEntityTestCommand $command): void
     {
         $entity = $command->getManageEntity();
         $pristineEntity = null;
@@ -62,10 +60,8 @@ class PublishEntityTestCommandHandler implements CommandHandler
 
             $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
 
-            if (array_key_exists('id', $publishResponse)) {
-                if ($this->isNewResourceServer($entity)) {
-                    $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
-                }
+            if (array_key_exists('id', $publishResponse) && $this->isNewResourceServer($entity)) {
+                $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(
@@ -79,7 +75,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
         }
     }
 
-    private function isNewResourceServer(ManageEntity $entity)
+    private function isNewResourceServer(ManageEntity $entity): bool
     {
         $isNewEntity = empty($entity->getId());
         return $isNewEntity

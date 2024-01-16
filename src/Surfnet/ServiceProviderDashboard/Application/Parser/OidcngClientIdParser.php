@@ -44,7 +44,7 @@ class OidcngClientIdParser
         $clientId = str_replace($parts['scheme'].'://', '', $entityId);
 
         // If a trailing slash is present, stripit!
-        if (substr($clientId, -1) === '/') {
+        if (str_ends_with($clientId, '/')) {
             $clientId = substr($clientId, 0, -1);
         }
 

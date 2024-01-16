@@ -32,7 +32,7 @@ class JsonGeneratorStrategy
     /**
      * @var GeneratorInterface[] $strategies Keyed on the supported entity types
      */
-    private $strategies;
+    private ?array $strategies = null;
 
     /**
      * Add a strategy
@@ -40,9 +40,8 @@ class JsonGeneratorStrategy
      * Called from JsonGeneratorStrategyCompilerPass during compile time
      *
      * @param string $identifier
-     * @param GeneratorInterface $generator
      */
-    public function addStrategy($identifier, GeneratorInterface $generator)
+    public function addStrategy($identifier, GeneratorInterface $generator): void
     {
         $this->strategies[$identifier] = $generator;
     }
@@ -51,7 +50,7 @@ class JsonGeneratorStrategy
      * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForNewEntity(ManageEntity $entity, string $workflowState)
+    public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         return $this->getStrategy($entity->getProtocol()->getProtocol())->generateForNewEntity($entity, $workflowState);
     }
@@ -60,7 +59,7 @@ class JsonGeneratorStrategy
      * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForExistingEntity(ManageEntity $entity, EntityDiff $differences, string $workflowState, string $updatedPart = '')
+    public function generateForExistingEntity(ManageEntity $entity, EntityDiff $differences, string $workflowState, string $updatedPart = ''): array
     {
         return $this->getStrategy($entity->getProtocol()->getProtocol())
                     ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);

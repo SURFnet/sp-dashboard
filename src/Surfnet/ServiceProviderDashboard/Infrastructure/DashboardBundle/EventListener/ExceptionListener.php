@@ -29,8 +29,8 @@ use Twig\Environment;
 class ExceptionListener
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private Environment $templating,
+        private readonly LoggerInterface $logger,
+        private readonly Environment $templating,
     ) {
     }
 

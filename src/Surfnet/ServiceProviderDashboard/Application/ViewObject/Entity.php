@@ -26,50 +26,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class Entity
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $entityId;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $contact;
-
-    /**
-     * @var string
-     */
-    private $state;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $protocol;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var EntityActions
-     */
-    private $actions;
+    private readonly \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions $actions;
 
     /**
      * @param string $id
@@ -82,52 +39,40 @@ class Entity
      * @param string $protocol
      * @param bool $isReadOnly
      * @param bool $hasChangeRequests
-     * @param RouterInterface $router
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        $id,
-        $entityId,
+        private $id,
+        private $entityId,
         $serviceId,
-        $name,
-        $contact,
-        $state,
-        $environment,
-        $protocol,
+        private $name,
+        private $contact,
+        private $state,
+        private $environment,
+        private $protocol,
         $isReadOnly,
         $hasChangeRequests,
-        RouterInterface $router
+        private readonly RouterInterface $router
     ) {
-        $this->id = $id;
-        $this->entityId = $entityId;
-        $this->name = $name;
-        $this->contact = $contact;
-        $this->state = $state;
-        $this->environment = $environment;
-        $this->protocol = $protocol;
-        $this->router = $router;
         $this->actions = new EntityActions(
-            $id,
+            $this->id,
             $serviceId,
-            $state,
-            $environment,
-            $protocol,
+            $this->state,
+            $this->environment,
+            $this->protocol,
             $isReadOnly,
             $hasChangeRequests
         );
     }
 
     /**
-     * @param ManageEntity $result
-     * @param RouterInterface $router
-     * @param int $serviceId
      * @return Entity
      */
     public static function fromManageTestResult(
         ManageEntity $result,
         RouterInterface $router,
         int $serviceId
-    ) {
+    ): self {
         $formattedContact = self::formatManageContact($result);
         $protocol = $result->getProtocol()->getProtocol();
         return new self(
@@ -146,10 +91,6 @@ class Entity
     }
 
     /**
-     * @param ManageEntity $result
-     * @param RouterInterface $router
-     * @param int $serviceId
-     * @param bool $hasChangeRequests
      * @return Entity
      */
     public static function fromManageProductionResult(
@@ -157,7 +98,7 @@ class Entity
         RouterInterface $router,
         int $serviceId,
         bool $hasChangeRequests
-    ) {
+    ): self {
         $formattedContact = self::formatManageContact($result);
 
         // As long as the coin:exclude_from_push metadata is present, allow modifications to the entity by
@@ -188,10 +129,10 @@ class Entity
     /**
      * @return string
      */
-    private static function formatManageContact(ManageEntity $metadata)
+    private static function formatManageContact(ManageEntity $metadata): string
     {
         $administrative = $metadata->getMetaData()->getContacts()->findAdministrativeContact();
-        if ($administrative) {
+        if ($administrative !== null) {
             return sprintf(
                 '%s %s (%s)',
                 $administrative->getGivenName(),
@@ -259,7 +200,7 @@ class Entity
         return $this->protocol;
     }
 
-    public function isPublishedToProduction()
+    public function isPublishedToProduction(): bool
     {
         return $this->state == 'published' && $this->environment == 'production';
     }
@@ -267,7 +208,7 @@ class Entity
     /**
      * @return bool
      */
-    public function isPublished()
+    public function isPublished(): bool
     {
         return $this->getState() === 'published';
     }
@@ -275,7 +216,7 @@ class Entity
     /**
      * @return bool
      */
-    public function isRequested()
+    public function isRequested(): bool
     {
         return $this->getState() === 'requested';
     }

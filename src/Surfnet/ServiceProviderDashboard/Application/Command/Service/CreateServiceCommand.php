@@ -30,88 +30,58 @@ class CreateServiceCommand implements Command
 {
     /**
      * @var string
-     * @Assert\Uuid(strict=false)
      */
+    #[Assert\Uuid(strict: false)]
     private $guid;
 
     /**
      * @var string
-     * @Assert\NotBlank
      * @SpDashboardAssert\UniqueTeamName()
      */
+    #[Assert\NotBlank]
     private $teamName;
 
     /**
      * @var string
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
     private $name;
 
-    /**
-     * @var string
-     * @Assert\NotBlank
-     * @Assert\Email()
-     */
-    private $teamManagerEmail;
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private ?string $teamManagerEmail = null;
 
     /**
      * @var string
      */
     private $institutionId;
 
-    /**
-     * @var bool
-     */
-    private $productionEntitiesEnabled = false;
+    private bool $productionEntitiesEnabled = false;
 
-    /**
-     * @var bool
-     */
-    private $privacyQuestionsEnabled = true;
+    private bool $privacyQuestionsEnabled = true;
 
-    /**
-     * @var bool
-     */
-    private $clientCredentialClientsEnabled = false;
+    private bool $clientCredentialClientsEnabled = false;
 
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $serviceType = Service::SERVICE_TYPE_NON_INSTITUTE;
+    #[Assert\NotBlank]
+    private string $serviceType = Service::SERVICE_TYPE_NON_INSTITUTE;
 
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $intakeStatus = Service::INTAKE_STATUS_NO;
+    #[Assert\NotBlank]
+    private string $intakeStatus = Service::INTAKE_STATUS_NO;
 
-    /**
-     * @var string
-     */
-    private $contractSigned = Service::CONTRACT_SIGNED_NO;
+    private string $contractSigned = Service::CONTRACT_SIGNED_NO;
 
-    /**
-     * @var string
-     */
-    private $surfconextRepresentativeApproved = Service::SURFCONEXT_APPROVED_NO;
+    private string $surfconextRepresentativeApproved = Service::SURFCONEXT_APPROVED_NO;
 
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationNameNl;
+    #[Assert\NotBlank]
+    private ?string $organizationNameNl = null;
 
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationNameEn;
+    #[Assert\NotBlank]
+    private ?string $organizationNameEn = null;
 
     /**
      * @param string $guid
      */
-    public function setGuid($guid)
+    public function setGuid($guid): void
     {
         $this->guid = $guid;
     }
@@ -119,7 +89,7 @@ class CreateServiceCommand implements Command
     /**
      * @param string $teamName
      */
-    public function setTeamName($teamName)
+    public function setTeamName($teamName): void
     {
         $this->teamName = $teamName;
     }
@@ -127,7 +97,7 @@ class CreateServiceCommand implements Command
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -135,7 +105,7 @@ class CreateServiceCommand implements Command
     /**
      * @param bool $enabled
      */
-    public function setProductionEntitiesEnabled($enabled)
+    public function setProductionEntitiesEnabled($enabled): void
     {
         $this->productionEntitiesEnabled = $enabled;
     }
@@ -143,7 +113,7 @@ class CreateServiceCommand implements Command
     /**
      * @param bool $privacyQuestionsEnabled
      */
-    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
+    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled): void
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
@@ -151,7 +121,7 @@ class CreateServiceCommand implements Command
     /**
      * @param string $serviceType
      */
-    public function setServiceType($serviceType)
+    public function setServiceType($serviceType): void
     {
         $this->serviceType = $serviceType;
     }
@@ -159,7 +129,7 @@ class CreateServiceCommand implements Command
     /**
      * @param string $intakeStatus
      */
-    public function setIntakeStatus($intakeStatus)
+    public function setIntakeStatus($intakeStatus): void
     {
         $this->intakeStatus = $intakeStatus;
     }
@@ -167,7 +137,7 @@ class CreateServiceCommand implements Command
     /**
      * @param string $contractSigned
      */
-    public function setContractSigned($contractSigned)
+    public function setContractSigned($contractSigned): void
     {
         $this->contractSigned = $contractSigned;
     }
@@ -175,7 +145,7 @@ class CreateServiceCommand implements Command
     /**
      * @param string $surfconextRepresentativeApproved
      */
-    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
+    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved): void
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
     }
@@ -183,7 +153,7 @@ class CreateServiceCommand implements Command
     /**
      * @param string $institutionId
      */
-    public function setInstitutionId($institutionId)
+    public function setInstitutionId($institutionId): void
     {
         $this->institutionId = $institutionId;
     }
@@ -264,7 +234,7 @@ class CreateServiceCommand implements Command
      * New services have no privacy questions answers yet.
      * @return bool
      */
-    public function hasPrivacyQuestionsAnswered()
+    public function hasPrivacyQuestionsAnswered(): bool
     {
         return false;
     }
@@ -285,9 +255,6 @@ class CreateServiceCommand implements Command
         return $this->organizationNameNl;
     }
 
-    /**
-     * @param string $organizationNameNl
-     */
     public function setOrganizationNameNl(string $organizationNameNl): void
     {
         $this->organizationNameNl = $organizationNameNl;
@@ -301,9 +268,6 @@ class CreateServiceCommand implements Command
         return $this->organizationNameEn;
     }
 
-    /**
-     * @param string $organizationNameEn
-     */
     public function setOrganizationNameEn(string $organizationNameEn): void
     {
         $this->organizationNameEn = $organizationNameEn;

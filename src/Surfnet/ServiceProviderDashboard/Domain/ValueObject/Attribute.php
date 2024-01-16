@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-class Attribute
+class Attribute implements \Stringable
 {
     /**
      * @var bool
@@ -43,7 +43,7 @@ class Attribute
      *
      * @return $this
      */
-    public function setRequested($requested)
+    public function setRequested($requested): static
     {
         $this->requested = $requested;
 
@@ -63,22 +63,22 @@ class Attribute
      *
      * @return $this
      */
-    public function setMotivation($motivation)
+    public function setMotivation($motivation): static
     {
         $this->motivation = $motivation;
 
         return $this;
     }
 
-    public function hasMotivation()
+    public function hasMotivation(): bool
     {
-        return !empty(trim($this->motivation));
+        return trim($this->motivation) !== '' && trim($this->motivation) !== '0';
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (!$this->requested) {
             return '-';

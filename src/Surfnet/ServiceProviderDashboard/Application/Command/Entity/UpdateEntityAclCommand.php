@@ -26,27 +26,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateEntityAclCommand implements Command
 {
-    private $manageEntity;
-
-    /**
-     * @var IdentityProvider[]
-     * @Assert\All({
-     *     @Assert\NotBlank(),
-     *     @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider")
-     * })
-     */
-    private $selected;
-
-    /**
-     * @var bool
-     */
-    private $selectAll = false;
-
-    public function __construct(ManageEntity $entity, array $selectedIdps, bool $selectAll)
+    public function __construct(
+        private readonly ManageEntity $manageEntity,
+        /**
+         * @var IdentityProvider[]
+         * @Assert\All({
+         *     @Assert\NotBlank(),
+         *     @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider")
+         * })
+         */
+        private array $selected,
+        private bool $selectAll
+    )
     {
-        $this->manageEntity = $entity;
-        $this->selected = $selectedIdps;
-        $this->selectAll = $selectAll;
     }
 
     /**
@@ -68,7 +60,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @param IdentityProvider[] $idps
      */
-    public function setSelected(array $idps)
+    public function setSelected(array $idps): void
     {
         $this->selected = $idps;
     }
@@ -84,7 +76,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @param bool $selectAll
      */
-    public function setSelectAll($selectAll)
+    public function setSelectAll($selectAll): void
     {
         $this->selectAll = (bool)$selectAll;
     }

@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
 
 class WebTestFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $service = $this->createService('SURFnet', 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl');
         $service->setProductionEntitiesEnabled(false);
@@ -47,12 +47,10 @@ class WebTestFixtures extends Fixture
     }
 
     /**
-     * @param string $name
-     * @param string $teamName
      *
      * @return Service
      */
-    private function createService($name, $teamName)
+    private function createService(string $name, string $teamName): \Surfnet\ServiceProviderDashboard\Domain\Entity\Service
     {
         $service = new Service();
         $service->setName($name);
@@ -67,7 +65,7 @@ class WebTestFixtures extends Fixture
         return $service;
     }
 
-    private function createPrivacyQuestions(Service $service)
+    private function createPrivacyQuestions(Service $service): \Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions
     {
         $privacyQuestions = new PrivacyQuestions();
         $privacyQuestions->setService($service);

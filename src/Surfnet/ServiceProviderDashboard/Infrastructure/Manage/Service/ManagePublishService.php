@@ -24,7 +24,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\Runtim
 
 class ManagePublishService
 {
-    private $validEnvironments = ['test', 'production'];
+    private array $validEnvironments = ['test', 'production'];
 
     public function __construct(
         private readonly PublishEntityRepository $testClient,
@@ -37,12 +37,12 @@ class ManagePublishService
      * @throws InvalidArgumentException
      * @throws PushMetadataException
      */
-    public function pushMetadata($environment)
+    public function pushMetadata($environment): void
     {
         $this->getClient($environment)->pushMetadata();
     }
 
-    private function getClient($environment)
+    private function getClient($environment): \Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository
     {
         if (!in_array($environment, $this->validEnvironments)) {
             throw new InvalidArgumentException(

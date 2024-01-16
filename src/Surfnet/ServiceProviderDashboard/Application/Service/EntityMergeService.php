@@ -137,7 +137,7 @@ class EntityMergeService
         $newEntity->setComments($command->getComments());
         $newEntity->setEnvironment($command->getEnvironment());
         // If no existing ManageEntity is provided, then return the newly created entity
-        if (!$manageEntity) {
+        if (!$manageEntity instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity) {
             return $newEntity;
         }
         $manageEntity->merge($newEntity);
@@ -224,18 +224,14 @@ class EntityMergeService
         $playgroundUrl = $command->getEnvironment() === Constants::ENVIRONMENT_TEST ? $this->playGroundUriTest : $this->playGroundUriProd;
         $urls = $command->getRedirectUrls();
         // Add the playground URL if requested in the form (checkbox was checked)
-        if ($command->isEnablePlayground()) {
-            if (!in_array($playgroundUrl, $urls)) {
-                $urls[] = $playgroundUrl;
-            }
+        if ($command->isEnablePlayground() && !in_array($playgroundUrl, $urls)) {
+            $urls[] = $playgroundUrl;
         }
         // Test if we should remove the playground URL (checkbox unchecked, but url remained in set)
-        if (!$command->isEnablePlayground()) {
-            if (in_array($playgroundUrl, $urls)) {
-                foreach ($urls as $key => $url) {
-                    if ($url === $playgroundUrl) {
-                        unset($urls[$key]);
-                    }
+        if (!$command->isEnablePlayground() && in_array($playgroundUrl, $urls)) {
+            foreach ($urls as $key => $url) {
+                if ($url === $playgroundUrl) {
+                    unset($urls[$key]);
                 }
             }
         }

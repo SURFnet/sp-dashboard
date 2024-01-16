@@ -20,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 class EntityDiff
 {
-    private $diff;
+    private readonly array $diff;
 
     public function __construct(array $data, array $compareTo)
     {
@@ -50,23 +50,20 @@ class EntityDiff
                     // Redirect urls should not be diffed, the complete list should be provided
                     // Grants should not be diffed, the complete list should be provided
                     // But only when the values changed between the two different versions
-                    if (count($recursiveDiff) > 0 &&
+                    if ($recursiveDiff !== [] &&
                         ($key === 'metaDataFields.redirectUrls' || $key === 'metaDataFields.grants')
                     ) {
                         $recursiveDiff = $value;
                     }
-
-                    if (count($recursiveDiff)) {
+                    if ($recursiveDiff !== []) {
                         $diffResults[$key] = $recursiveDiff;
                     }
-                } else {
-                    if ($value != $originalData[$key]) {
-                        // When a secret is not changed (resulting in an empty value) do not include it in the diff.
-                        if ($key === 'metaDataFields.secret' && $value === '') {
-                            continue;
-                        }
-                        $diffResults[$key] = $value;
+                } elseif ($value != $originalData[$key]) {
+                    // When a secret is not changed (resulting in an empty value) do not include it in the diff.
+                    if ($key === 'metaDataFields.secret' && $value === '') {
+                        continue;
                     }
+                    $diffResults[$key] = $value;
                 }
             } else {
                 $diffResults[$key] = $value;
@@ -75,7 +72,7 @@ class EntityDiff
 
         // Before returning the diff. Test if the source array contains keys not present in the new data. That way
         // we can also mark removed metadata items correctly.
-        foreach ($originalData as $key => $value) {
+        foreach (array_keys($originalData) as $key) {
             if (!array_key_exists($key, $data)) {
                 $diffResults[$key] = null;
             }

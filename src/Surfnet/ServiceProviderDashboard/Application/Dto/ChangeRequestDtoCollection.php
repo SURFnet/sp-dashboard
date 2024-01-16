@@ -29,7 +29,7 @@ class ChangeRequestDtoCollection
         foreach ($changeRequests as $id => $changeRequest) {
             $this->changeRequests[$id] = ChangeRequestDto::fromChangeRequest($changeRequest);
         }
-        usort($this->changeRequests, [ChangeRequestDtoComparer::class, 'compareCreatedDescending']);
+        usort($this->changeRequests, ChangeRequestDtoComparer::compareCreatedDescending(...));
     }
 
     public function getChangeRequests(): array

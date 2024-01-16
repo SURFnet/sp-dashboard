@@ -43,17 +43,7 @@ class EntityDeleteController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/entity/delete/published/{serviceId}/{manageId}/{environment}",
-     *     name="entity_delete_published",
-     *     methods={"GET", "POST"},
-     *     defaults={
-     *          "manageId": null,
-     *          "environment": "test",
-     *     }
-     * )
      * @Security("is_granted('ROLE_USER')")
-     * @param Request $request
      *
      * @param int $serviceId
      * @param string|null $manageId
@@ -62,7 +52,8 @@ class EntityDeleteController extends AbstractController
      * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      */
-    public function deletePublishedAction(Request $request, $serviceId, $manageId, $environment)
+    #[Route(path: '/entity/delete/published/{serviceId}/{manageId}/{environment}', name: 'entity_delete_published', methods: ['GET', 'POST'], defaults: ['manageId' => null, 'environment' => 'test'])]
+    public function deletePublished(Request $request, $serviceId, $manageId, $environment): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $this->denyAccessUnlessGranted(
             "MANAGE_ENTITY_ACCESS",
@@ -107,18 +98,8 @@ class EntityDeleteController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/entity/delete/request/{serviceId}/{manageId}/{environment}",
-     *     name="entity_delete_request",
-     *     methods={"GET", "POST"},
-     *     defaults={
-     *          "manageId": null,
-     *          "environment": "production"
-     *     }
-     * )
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param Request $request
      * @param int $serviceId
      * @param string|null $manageId
      * @param string|null $environment
@@ -126,7 +107,8 @@ class EntityDeleteController extends AbstractController
      * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      */
-    public function deleteRequestAction(Request $request, $serviceId, $manageId, $environment)
+    #[Route(path: '/entity/delete/request/{serviceId}/{manageId}/{environment}', name: 'entity_delete_request', methods: ['GET', 'POST'], defaults: ['manageId' => null, 'environment' => 'production'])]
+    public function deleteRequest(Request $request, $serviceId, $manageId, $environment): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $this->denyAccessUnlessGranted(
             "MANAGE_ENTITY_ACCESS",

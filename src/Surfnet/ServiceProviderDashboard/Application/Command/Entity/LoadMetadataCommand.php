@@ -31,7 +31,7 @@ class LoadMetadataCommand implements Command
     /**
      * @return SaveSamlEntityCommand
      */
-    public function getSaveEntityCommand()
+    public function getSaveEntityCommand(): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand
     {
         return $this->saveEntityCommand;
     }
@@ -41,12 +41,12 @@ class LoadMetadataCommand implements Command
         return $this->saveEntityCommand->getId();
     }
 
-    public function isUrlSet()
+    public function isUrlSet(): bool
     {
         return !empty($this->requestData['metadata']['importUrl']);
     }
 
-    public function isXmlSet()
+    public function isXmlSet(): bool
     {
         return !empty($this->requestData['metadata']['pastedMetadata']);
     }
@@ -61,7 +61,7 @@ class LoadMetadataCommand implements Command
         return $this->requestData['metadata']['pastedMetadata'];
     }
 
-    public function setNameIdFormat($nameIdFormat)
+    public function setNameIdFormat($nameIdFormat): void
     {
         $this->saveEntityCommand->setNameIdFormat($nameIdFormat);
     }

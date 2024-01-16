@@ -36,7 +36,7 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */
-    public function validateLogo($url)
+    public function validateLogo($url): void
     {
         $this->logger->debug(sprintf('Validating logo: "%s" using curl', $url));
 
@@ -60,9 +60,9 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
         $this->logger->debug(sprintf('Downloaded a file with content type: "%s"', $contentType));
 
         // Test if the response is not in the 4xx / 5xx range
-        if ($responseCode >= 400 || !empty($error)) {
+        if ($responseCode >= 400 || $error !== '' && $error !== '0') {
             $this->logger->info('The logo can not be downloaded');
-            if (!empty($error)) {
+            if ($error !== '' && $error !== '0') {
                 $this->logger->info(sprintf('Received the following curl error: "%s"', $error));
             }
             throw new LogoNotFoundException('Downloading of the logo failed');

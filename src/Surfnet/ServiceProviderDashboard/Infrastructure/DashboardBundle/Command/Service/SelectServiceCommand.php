@@ -38,7 +38,7 @@ class SelectServiceCommand implements Command
     /**
      * @param string $selectedServiceId
      */
-    public function setSelectedServiceId($selectedServiceId)
+    public function setSelectedServiceId($selectedServiceId): void
     {
         $this->selectedServiceId = $selectedServiceId;
     }

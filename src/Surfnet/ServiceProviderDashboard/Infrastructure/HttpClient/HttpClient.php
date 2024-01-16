@@ -36,8 +36,8 @@ use function strtolower;
  */
 class HttpClient implements HttpClientInterface
 {
-    const TEST_API_NAME = 'testApi';
-    const MODE_TEST = 'test';
+    final public const TEST_API_NAME = 'testApi';
+    final public const MODE_TEST = 'test';
 
     /**
      * @param string $mode The mode is used mainly for logging purposes, stating which environment was targeted.
@@ -74,7 +74,7 @@ class HttpClient implements HttpClientInterface
             return $this->request('GET', $resource, [
                 'exceptions' => false,
                 'headers' => $headers
-            ], function ($statusCode, $body, $method, $resource, $headers) {
+            ], function ($statusCode, $body, $method, $resource, array $headers) {
                 if ($statusCode < 200 || $statusCode >= 300) {
                     throw new UnreadableResourceException(
                         sprintf('Resource could not be read (status code %d)', $statusCode)
@@ -91,7 +91,7 @@ class HttpClient implements HttpClientInterface
                     return $body;
                 }
             });
-        } catch (ClientException $e) {
+        } catch (ClientException) {
             return [];
         }
     }
@@ -213,7 +213,7 @@ class HttpClient implements HttpClientInterface
                 throw $this->getResourceException($method, $statusCode);
             }
 
-            if (!empty($body)) {
+            if ($body !== '' && $body !== '0') {
                 return $this->parseResponse($body, $method, $resource);
             }
 
@@ -232,7 +232,7 @@ class HttpClient implements HttpClientInterface
     {
         try {
             return JsonResponseParser::parse($body);
-        } catch (InvalidJsonException $e) {
+        } catch (InvalidJsonException) {
             throw new MalformedResponseException(
                 sprintf('Cannot %s resource "%s": malformed JSON returned', strtolower($method), $resource)
             );

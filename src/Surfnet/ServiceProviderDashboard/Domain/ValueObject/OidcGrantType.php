@@ -22,7 +22,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class OidcGrantType
 {
-    private static $validGrantTypes = [
+    private static array $validGrantTypes = [
         Constants::GRANT_TYPE_AUTHORIZATION_CODE,
         Constants::GRANT_TYPE_IMPLICIT,
         Constants::GRANT_TYPE_CLIENT_CREDENTIALS,

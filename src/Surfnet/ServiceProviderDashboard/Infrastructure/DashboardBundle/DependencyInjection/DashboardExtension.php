@@ -30,7 +30,7 @@ class DashboardExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
 
@@ -67,7 +67,7 @@ class DashboardExtension extends Extension
      * @param $config
      * @param $container
      */
-    public function parseManageConfiguration($environment, $config, $container)
+    public function parseManageConfiguration(string $environment, $config, $container): void
     {
         $manageConfiguration = new Definition(Config::class);
         $manageConfiguration->setClass(Config::class);
@@ -80,7 +80,7 @@ class DashboardExtension extends Extension
     /**
      * Creates a config aggregate based on the configuration in config.yml for teams.
      */
-    public function parseTeamsConfiguration(array $config, ContainerBuilder $container)
+    public function parseTeamsConfiguration(array $config, ContainerBuilder $container): void
     {
         $configuration = new Definition(Config::class);
         $configuration->setClass(Config::class);

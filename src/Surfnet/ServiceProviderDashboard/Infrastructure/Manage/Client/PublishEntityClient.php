@@ -99,7 +99,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         } catch (HttpException $e) {
             $this->logger->error(
                 'Unable to push to Engineblock',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new PushMetadataException('Unable to push the metadata to Engineblock', 0, $e);
         }
@@ -107,7 +107,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         if ($response['status'] != "OK") {
             $this->logger->error(
                 'Manage rejected the push to Engineblock',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new PushMetadataException('Pushing did not succeed.');
         }

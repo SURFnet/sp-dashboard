@@ -35,13 +35,13 @@ class EntityResetSecretController extends AbstractController
     use EntityControllerTrait;
 
     /**
-     * @Route("/entity/reset-secret/{serviceId}/{manageId}/{environment}", name="entity_reset_secret", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_USER')")
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function resetAction(Request $request, int $serviceId, string $manageId, string $environment)
+    #[Route(path: '/entity/reset-secret/{serviceId}/{manageId}/{environment}', name: 'entity_reset_secret', methods: ['GET', 'POST'])]
+    public function reset(int $serviceId, string $manageId, string $environment): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $flashBag = $this->get('session')->getFlashBag();
         $flashBag->clear();
@@ -58,7 +58,7 @@ class EntityResetSecretController extends AbstractController
         $resetOidcSecretCommand = new ResetOidcSecretCommand($manageEntity);
         try {
             $this->commandBus->handle($resetOidcSecretCommand);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $flashBag->add('error', 'entity.edit.error.publish');
         }
         // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting

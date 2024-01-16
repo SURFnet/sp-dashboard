@@ -214,12 +214,12 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         return $command;
     }
 
-    private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList)
+    private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList): void
     {
         foreach ($this->attributeService->getAttributeTypeAttributes() as $attributeDefinition) {
             $urn = $attributeDefinition->getUrns();
             $manageAttribute = $attributeList->findByUrn(reset($urn));
-            if (!$manageAttribute) {
+            if ($manageAttribute === null) {
                 continue;
             }
 
@@ -231,7 +231,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         }
     }
 
-    private function setRedirectUris(SaveEntityCommandInterface $command, ManageEntity $manageEntity, string $environment)
+    private function setRedirectUris(SaveEntityCommandInterface $command, ManageEntity $manageEntity, string $environment): void
     {
         $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
         $playGroundUri = ($environment === Constants::ENVIRONMENT_PRODUCTION ? $this->playGroundUriProd : $this->playGroundUriTest);

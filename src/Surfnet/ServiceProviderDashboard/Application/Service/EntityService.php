@@ -44,7 +44,7 @@ class EntityService implements EntityServiceInterface
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        private EntityQueryRepositoryProvider $queryRepositoryProvider,
+        private readonly EntityQueryRepositoryProvider $queryRepositoryProvider,
         private readonly TicketServiceInterface $ticketService,
         private readonly ServiceService $serviceService,
         private readonly ChangeRequestService $changeRequestService,
@@ -136,7 +136,7 @@ class EntityService implements EntityServiceInterface
         return $entity;
     }
 
-    public function getEntityListForService(Service $service)
+    public function getEntityListForService(Service $service): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList
     {
         $entities = [];
 
@@ -159,7 +159,10 @@ class EntityService implements EntityServiceInterface
         return new ViewObject\EntityList($entities);
     }
 
-    public function getEntitiesForService(Service $service)
+    /**
+     * @return mixed[]
+     */
+    public function getEntitiesForService(Service $service): array
     {
         $entities = [];
 
@@ -292,7 +295,6 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param ManageEntity $entity
      * @return Issue|null
      */
     private function findIssueBy(ManageEntity $entity)
@@ -316,7 +318,7 @@ class EntityService implements EntityServiceInterface
      * As the organization names are tracked on the Service, we update it on the Manage
      * Entity Organization
      */
-    public function updateOrganizationNames(ManageEntity $entity, $orgNameEn, $orgNameNl)
+    public function updateOrganizationNames(ManageEntity $entity, $orgNameEn, $orgNameNl): void
     {
         $entity->getMetaData()->getOrganization()->updateNameEn($orgNameEn);
         $entity->getMetaData()->getOrganization()->updateNameNl($orgNameNl);
@@ -333,6 +335,6 @@ class EntityService implements EntityServiceInterface
             $entity->getProtocol()
         );
 
-        return count($changes->getChangeRequests()) > 0;
+        return $changes->getChangeRequests() !== [];
     }
 }

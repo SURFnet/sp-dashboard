@@ -41,39 +41,40 @@ class EntityTypeFactory
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
         private readonly SaveCommandFactoryInterface $saveCommandFactory,
-        private AttributeServiceInterface $attributeService
+        private readonly AttributeServiceInterface $attributeService
     ) {
     }
 
     public function createCreateForm(string $type, Service $service, string $environment)
     {
-        switch (true) {
-            case ($type === Constants::TYPE_SAML):
-                $command = SaveSamlEntityCommand::forCreateAction($service);
-                $command->setEnvironment($environment);
-                return $this->formFactory->create(SamlEntityType::class, $command, $this->requestedBuildOptions($environment));
-            case ($type === Constants::TYPE_OPENID_CONNECT_TNG):
-                $command = SaveOidcngEntityCommand::forCreateAction($service);
-                $command->setEnvironment($environment);
-                return $this->formFactory->create(OidcngEntityType::class, $command, $this->requestedBuildOptions($environment));
-            case ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
-                $command = SaveOidcngResourceServerEntityCommand::forCreateAction($service);
-                $command->setEnvironment($environment);
-                return $this->formFactory->create(
-                    OidcngResourceServerEntityType::class,
-                    $command,
-                    $this->requestedBuildOptions($environment)
-                );
-            case ($type === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT):
-                $command = SaveOauthClientCredentialClientCommand::forCreateAction($service);
-                $command->setEnvironment($environment);
-                return $this->formFactory->create(
-                    OauthClientCredentialEntityType::class,
-                    $command,
-                    $this->requestedBuildOptions($environment)
-                );
+        if ($type === Constants::TYPE_SAML) {
+            $command = SaveSamlEntityCommand::forCreateAction($service);
+            $command->setEnvironment($environment);
+            return $this->formFactory->create(SamlEntityType::class, $command, $this->requestedBuildOptions($environment));
         }
-
+        if ($type === Constants::TYPE_OPENID_CONNECT_TNG) {
+            $command = SaveOidcngEntityCommand::forCreateAction($service);
+            $command->setEnvironment($environment);
+            return $this->formFactory->create(OidcngEntityType::class, $command, $this->requestedBuildOptions($environment));
+        }
+        if ($type === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
+            $command = SaveOidcngResourceServerEntityCommand::forCreateAction($service);
+            $command->setEnvironment($environment);
+            return $this->formFactory->create(
+                OidcngResourceServerEntityType::class,
+                $command,
+                $this->requestedBuildOptions($environment)
+            );
+        }
+        if ($type === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
+            $command = SaveOauthClientCredentialClientCommand::forCreateAction($service);
+            $command->setEnvironment($environment);
+            return $this->formFactory->create(
+                OauthClientCredentialEntityType::class,
+                $command,
+                $this->requestedBuildOptions($environment)
+            );
+        }
         throw new InvalidArgumentException("invalid form type requested: " . $type);
     }
 
@@ -114,7 +115,7 @@ class EntityTypeFactory
         throw new InvalidArgumentException("invalid form type requested");
     }
 
-    private function requestedBuildOptions($environment)
+    private function requestedBuildOptions(string $environment): array
     {
         $options = [];
         if ($environment === Constants::ENVIRONMENT_PRODUCTION) {
@@ -123,7 +124,7 @@ class EntityTypeFactory
         return $options;
     }
 
-    private function publishedBuildOptions($environment)
+    private function publishedBuildOptions(string $environment): array
     {
         $options = [];
         if ($environment === Constants::ENVIRONMENT_PRODUCTION) {

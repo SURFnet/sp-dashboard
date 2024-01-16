@@ -72,10 +72,10 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/", name="service_overview", methods={"GET"})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function overviewAction()
+    #[Route(path: '/', name: 'service_overview', methods: ['GET'])]
+    public function overview(): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
         $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
@@ -122,12 +122,11 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/service/create", name="service_add", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     *
      * @return RedirectResponse|Response
      */
-    public function createAction(Request $request)
+    #[Route(path: '/service/create', name: 'service_add', methods: ['GET', 'POST'])]
+    public function create(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $this->get('session')->getFlashBag()->clear();
         $command = new CreateServiceCommand();
@@ -136,32 +135,26 @@ class ServiceController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
-
-                try {
-                    $this->commandBus->handle($command);
-                    $this->get('session')->getFlashBag()->add('info', 'service.create.flash.success');
-                    return $this->redirectToRoute('service_overview');
-                } catch (Exception $e) {
-                    $this->addFlash('error', $e->getMessage());
-                }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
+            try {
+                $this->commandBus->handle($command);
+                $this->get('session')->getFlashBag()->add('info', 'service.create.flash.success');
+                return $this->redirectToRoute('service_overview');
+            } catch (Exception $e) {
+                $this->addFlash('error', $e->getMessage());
             }
         }
 
-        return $this->render('@Dashboard/Service/create.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render('@Dashboard/Service/create.html.twig', ['form' => $form->createView()]);
     }
 
     /**
-     * @Route("/service/{serviceId}/edit", name="service_edit", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     *
      * @return RedirectResponse|Response
      */
-    public function editAction(Request $request, int $serviceId)
+    #[Route(path: '/service/{serviceId}/edit', name: 'service_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -202,25 +195,22 @@ class ServiceController extends AbstractController
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
-            } catch (EntityNotFoundException $e) {
+            } catch (EntityNotFoundException) {
                 $this->addFlash('error', 'The Service could not be found while handling the request');
             }
         }
 
-        return $this->render('@Dashboard/Service/edit.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render('@Dashboard/Service/edit.html.twig', ['form' => $form->createView()]);
     }
 
     /**
-     * @Route("/service/{serviceId}/delete", name="service_delete", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
-     * @param Request $request
      * @param $serviceId
      * @return RedirectResponse|Response
      */
-    public function deleteAction(Request $request, $serviceId)
+    #[Route(path: '/service/{serviceId}/delete', name: 'service_delete', methods: ['GET', 'POST'])]
+    public function delete(Request $request, $serviceId): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -266,10 +256,10 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/service/select", name="select_service", methods={"GET", "POST"})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function selectAction(Request $request)
+    #[Route(path: '/service/select', name: 'select_service', methods: ['GET', 'POST'])]
+    public function select(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $command = new SelectServiceCommand();
         $form = $this->createForm(ServiceSwitcherType::class, $command);
@@ -285,10 +275,10 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}", name="service_admin_overview", methods={"GET"})
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
      */
-    public function adminOverviewAction($serviceId)
+    #[Route(path: '/service/{serviceId}', name: 'service_admin_overview', methods: ['GET'])]
+    public function adminOverview($serviceId): \Symfony\Component\HttpFoundation\Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entityList = $this->entityService->getEntityListForService($service);
@@ -318,10 +308,9 @@ class ServiceController extends AbstractController
      * Check if the form was submitted using the given button name.
      *
      * @param EditServiceType $form
-     * @param string $expectedButtonName
      * @return bool
      */
-    private function assertUsedSubmitButton(FormInterface $form, $expectedButtonName)
+    private function assertUsedSubmitButton(FormInterface $form, string $expectedButtonName): bool
     {
         $button = $form->getClickedButton();
 
@@ -332,7 +321,7 @@ class ServiceController extends AbstractController
         return $button->getName() === $expectedButtonName;
     }
 
-    private function showOidcPopup(?ManageEntity $publishedEntity)
+    private function showOidcPopup(?ManageEntity $publishedEntity): bool
     {
         if (is_null($publishedEntity)) {
             return false;

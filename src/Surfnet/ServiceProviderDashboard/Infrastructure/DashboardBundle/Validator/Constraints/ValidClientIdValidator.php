@@ -28,7 +28,7 @@ class ValidClientIdValidator extends ConstraintValidator
      * @param string     $value
      * @param Constraint $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (empty($value)) {
             $this->context->addViolation('validator.client_id.empty');
@@ -38,11 +38,11 @@ class ValidClientIdValidator extends ConstraintValidator
         $parser = new UrlParser($value);
 
         try {
-            $urlParts = $parser->parse($value);
+            $urlParts = $parser->parse();
             if (isset($urlParts['port'])) {
                 $this->context->addViolation('validator.client_id.no_colon');
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->context->addViolation('validator.client_id.invalid_url');
             return;
         }

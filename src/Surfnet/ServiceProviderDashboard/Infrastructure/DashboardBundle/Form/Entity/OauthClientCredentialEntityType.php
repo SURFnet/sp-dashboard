@@ -35,14 +35,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OauthClientCredentialEntityType extends AbstractType
 {
-    /**
-     * @var OidcngResourceServerOptionsFactory
-     */
-    private $oidcngResourceServerOptionsFactory;
-
-    public function __construct(OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory)
+    public function __construct(private readonly OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory)
     {
-        $this->oidcngResourceServerOptionsFactory = $oidcngResourceServerOptionsFactory;
     }
 
     /**
@@ -52,7 +46,7 @@ class OauthClientCredentialEntityType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
 
@@ -205,9 +199,7 @@ class OauthClientCredentialEntityType extends AbstractType
                                     'data-help' => 'entity.edit.information.oidcngResourceServers',
                                     'class' => 'wide'
                                 ],
-                                'choice_attr' => function () {
-                                    return ['class' => 'decorated'];
-                                },
+                                'choice_attr' => fn(): array => ['class' => 'decorated'],
                             ]
                         )
                 );
@@ -264,12 +256,9 @@ class OauthClientCredentialEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SaveOauthClientCredentialClientCommand::class,
-            'publish_button_label' => 'entity.add.label.publish',
-        ));
+        $resolver->setDefaults(['data_class' => SaveOauthClientCredentialClientCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
     public function getBlockPrefix()

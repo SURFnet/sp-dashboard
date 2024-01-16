@@ -30,7 +30,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConnectionRequestContainerFromOverviewType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -60,13 +60,9 @@ class ConnectionRequestContainerFromOverviewType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => CreateConnectionRequestCommand::class,
-            'validation_groups' => false,
-            'expanded' => true,
-        ));
+        $resolver->setDefaults(['data_class' => CreateConnectionRequestCommand::class, 'validation_groups' => false, 'expanded' => true]);
     }
 
     public function getBlockPrefix()

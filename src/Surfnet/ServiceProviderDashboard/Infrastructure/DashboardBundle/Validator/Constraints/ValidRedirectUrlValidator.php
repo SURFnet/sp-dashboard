@@ -31,7 +31,7 @@ class ValidRedirectUrlValidator extends UrlValidator
      * @param Constraint $constraint
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         // This validator is used on a collection of Redirect URLs, Its possible violations are already present.
         $numberOfViolations = $this->context->getViolations()->count();
@@ -50,7 +50,7 @@ class ValidRedirectUrlValidator extends UrlValidator
         // Test if we have Url violations, if so re validate the url with the reverse redirect URL rules
         $violations = $this->context->getViolations();
         if ($violations->count() > $numberOfViolations) {
-            $parts = parse_url($this->allowSingleSlash($value));
+            $parts = parse_url((string) $this->allowSingleSlash($value));
             if (!isset($parts['host'])) {
                 return;
             }
@@ -61,7 +61,7 @@ class ValidRedirectUrlValidator extends UrlValidator
 
             $storedHost = $parts['host'];
             $parts['host'] = $this->reverseHostname($parts['scheme']);
-            if (!substr_count($clientId, $parts['host']) > 0) {
+            if (!substr_count($clientId, (string) $parts['host']) > 0) {
                 $this->context->addViolation('validator.redirect_url.reverse_does_not_contain_client_id');
             }
             $parts['scheme'] = $storedHost;
@@ -79,10 +79,9 @@ class ValidRedirectUrlValidator extends UrlValidator
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @param array $parts
      * @return string
      */
-    private function buildUrl(array $parts)
+    private function buildUrl(array $parts): string
     {
         return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') .
             ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
@@ -96,12 +95,12 @@ class ValidRedirectUrlValidator extends UrlValidator
             (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
     }
 
-    private function reverseHostname($hostname)
+    private function reverseHostname($hostname): string
     {
-        return implode('.', array_reverse(explode('.', $hostname)));
+        return implode('.', array_reverse(explode('.', (string) $hostname)));
     }
 
-    private function allowSingleSlash(string $url)
+    private function allowSingleSlash(string $url): string|array
     {
         $hasDoubleSlash = strpos($url, '://');
         $hasSingleSlash = strpos($url, ':/');
@@ -115,7 +114,7 @@ class ValidRedirectUrlValidator extends UrlValidator
     private function dropLastAddedErrors(
         ConstraintViolationListInterface $violations,
         int $numberOfViolationsBeforeExecution
-    ) {
+    ): void {
         // Convert the violations to an array for easier manipulation
         $violationsArray = $violations->getIterator()->getArrayCopy();
         $numberOfViolations = $violations->count();

@@ -37,22 +37,20 @@ class EntityEditController extends AbstractController
      * Subscribe to the PRE_SUBMIT form event to be able to import the metadata
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            FormEvents::PRE_SUBMIT => 'onPreSubmit',
-        );
+        return [FormEvents::PRE_SUBMIT => 'onPreSubmit'];
     }
 
     /**
-     * @Route("/entity/edit/{environment}/{manageId}/{serviceId}", name="entity_edit", methods={"GET", "POST"})
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function editAction(Request $request, string $environment, string $manageId, int $serviceId)
+    #[Route(path: '/entity/edit/{environment}/{manageId}/{serviceId}', name: 'entity_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, string $environment, string $manageId, int $serviceId): \Symfony\Component\HttpFoundation\Response
     {
         $flashBag = $this->get('session')->getFlashBag();
         $service = $this->serviceService->getServiceById($serviceId);
@@ -114,7 +112,7 @@ class EntityEditController extends AbstractController
 
                     return $this->redirectToRoute('service_overview');
                 }
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
             }
         }
@@ -135,9 +133,6 @@ class EntityEditController extends AbstractController
     private function requestFromCreateAction(Request $request): bool
     {
         $requestUri = $request->headers->get('referer', false);
-        if ($requestUri && preg_match('/\/entity\/create/', $requestUri)) {
-            return true;
-        }
-        return false;
+        return $requestUri && preg_match('/\/entity\/create/', $requestUri);
     }
 }

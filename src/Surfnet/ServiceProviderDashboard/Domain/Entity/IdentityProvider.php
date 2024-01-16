@@ -23,10 +23,7 @@ use Webmozart\Assert\Assert;
 class IdentityProvider
 {
     /**
-     * @param string $manageId
-     * @param string $entityId
      * @param string $nameNl
-     * @param string $nameEn
      */
     public function __construct(
         private readonly string $manageId,
@@ -46,7 +43,7 @@ class IdentityProvider
     /**
      * @return string
      */
-    public function getManageId()
+    public function getManageId(): string
     {
         return $this->manageId;
     }
@@ -54,7 +51,7 @@ class IdentityProvider
     /**
      * @return string
      */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
@@ -62,7 +59,7 @@ class IdentityProvider
     /**
      * @return string
      */
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
@@ -70,7 +67,7 @@ class IdentityProvider
     /**
      * @return string
      */
-    public function getNameEn()
+    public function getNameEn(): string
     {
         return $this->nameEn;
     }
@@ -78,8 +75,8 @@ class IdentityProvider
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return (empty($this->nameNl) ? $this->nameEn : $this->nameNl);
+        return ($this->nameNl === null || $this->nameNl === '' || $this->nameNl === '0' ? $this->nameEn : $this->nameNl);
     }
 }

@@ -28,11 +28,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class EntityPublishedController extends AbstractController
 {
     /**
-     * @Route("/entity/published/production", name="entity_published_production", methods={"GET"})
-     * @Route("/entity/published/test", name="entity_published_test", methods={"GET"})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function publishedAction()
+    #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
+    #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
+    public function published(): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         /** @var ManageEntity $entity */
         $entity = $this->get('session')->get('published.entity.clone');
@@ -64,10 +64,10 @@ class EntityPublishedController extends AbstractController
     }
 
     /**
-     * @Route("/entity/change-request", name="entity_change_request", methods={"GET"})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function changeRequestAction()
+    #[Route(path: '/entity/change-request', name: 'entity_change_request', methods: ['GET'])]
+    public function changeRequest(): \Symfony\Component\HttpFoundation\Response
     {
         return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig');
     }
@@ -82,7 +82,7 @@ class EntityPublishedController extends AbstractController
      *
      * @Security("is_granted('ROLE_USER')")
      */
-    public function oidcConfirmationModalAction()
+    public function oidcConfirmationModal(): \Symfony\Component\HttpFoundation\Response
     {
         /** @var ManageEntity $entity */
         $entity = $this->get('session')->get('published.entity.clone');

@@ -29,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CreateServiceType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -129,11 +129,9 @@ class CreateServiceType extends AbstractType
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => CreateServiceCommand::class,
-        ));
+        $resolver->setDefaults(['data_class' => CreateServiceCommand::class]);
     }
 
     public function getBlockPrefix()

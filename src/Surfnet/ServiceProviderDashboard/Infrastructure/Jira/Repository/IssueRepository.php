@@ -47,7 +47,7 @@ class IssueRepository implements TicketServiceInterface
         );
     }
 
-    public function findByManageIds(array $manageIds)
+    public function findByManageIds(array $manageIds): \Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search all CTX: spd-delete-production-entity issues
@@ -67,7 +67,7 @@ class IssueRepository implements TicketServiceInterface
         return new IssueCollection($collection);
     }
 
-    public function findByManageId($manageId)
+    public function findByManageId($manageId): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search CTX: spd-delete-production-entity issues with manage id as provided in the $manageId parameter
@@ -87,7 +87,7 @@ class IssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function findByManageIdAndIssueType($manageId, $issueType)
+    public function findByManageIdAndIssueType($manageId, $issueType): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search CTX: "$issueType" issues with manage id as provided in the $manageId parameter
@@ -107,7 +107,7 @@ class IssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function createIssueFrom(Ticket $ticket)
+    public function createIssueFrom(Ticket $ticket): \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
     {
         $issueField = $this->issueFactory->fromTicket($ticket);
         $issueService = $this->jiraFactory->buildIssueService();
@@ -123,7 +123,7 @@ class IssueRepository implements TicketServiceInterface
         return new Issue($issue->key, $ticket->getIssueType(), Issue::STATUS_OPEN);
     }
 
-    public function delete($issueKey)
+    public function delete($issueKey): void
     {
         $issueService = $this->jiraFactory->buildIssueService();
         $issueService->deleteIssue($issueKey);

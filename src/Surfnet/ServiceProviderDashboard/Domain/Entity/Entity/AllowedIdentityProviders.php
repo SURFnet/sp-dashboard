@@ -64,7 +64,7 @@ class AllowedIdentityProviders
 
     public function merge(?AllowedIdentityProviders $allowedIdPs): void
     {
-        if ($allowedIdPs === null) {
+        if (!$allowedIdPs instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders) {
             $this->providers = [];
             $this->allowAll = null;
             return;

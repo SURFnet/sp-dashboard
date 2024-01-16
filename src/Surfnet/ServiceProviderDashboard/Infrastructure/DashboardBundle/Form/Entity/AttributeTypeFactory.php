@@ -27,14 +27,8 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
 
 class AttributeTypeFactory
 {
-    /**
-     * @var AttributeServiceInterface
-     */
-    private $attributeService;
-
-    public function __construct(AttributeServiceInterface $attributeService)
+    public function __construct(private readonly AttributeServiceInterface $attributeService)
     {
-        $this->attributeService = $attributeService;
     }
 
     public function build(FormBuilderInterface $container, string $entityType): FormBuilderInterface
@@ -59,29 +53,21 @@ class AttributeTypeFactory
         return $container;
     }
 
-    private function mapEntityToLabel(
-        Attribute $attribute,
-        string $type
-    ): string {
-        switch ($type) {
-            case Constants::TYPE_SAML:
-                return $attribute->getSaml20Label();
-            case Constants::TYPE_OPENID_CONNECT_TNG:
-                return $attribute->getOidcngLabel();
-        }
-        return '';
+    private function mapEntityToLabel(Attribute $attribute, string $type): string
+    {
+        return match ($type) {
+            Constants::TYPE_SAML => $attribute->getSaml20Label(),
+            Constants::TYPE_OPENID_CONNECT_TNG => $attribute->getOidcngLabel(),
+            default => '',
+        };
     }
 
-    private function mapEntityToInfo(
-        Attribute $attribute,
-        string $type
-    ): string {
-        switch ($type) {
-            case Constants::TYPE_SAML:
-                return $attribute->getSaml20Info();
-            case Constants::TYPE_OPENID_CONNECT_TNG:
-                return $attribute->getOidcngInfo();
-        }
-        return '';
+    private function mapEntityToInfo(Attribute $attribute, string $type): string
+    {
+        return match ($type) {
+            Constants::TYPE_SAML => $attribute->getSaml20Info(),
+            Constants::TYPE_OPENID_CONNECT_TNG => $attribute->getOidcngInfo(),
+            default => '',
+        };
     }
 }

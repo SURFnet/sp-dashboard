@@ -19,10 +19,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 class NullSecret implements SecretInterface
 {
-    /**
-     * @var string
-     */
-    private $secret = '';
+    private string $secret = '';
 
     /**
      * @return string

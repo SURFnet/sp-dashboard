@@ -32,7 +32,7 @@ class MailService
     ) {
     }
 
-    public function sendErrorReport(ManageEntity $entity, Exception $exception)
+    public function sendErrorReport(ManageEntity $entity, Exception $exception): void
     {
         $message = $this->mailFactory->buildJiraIssueFailedMessage($exception, $entity);
         $this->mailer->send($message);

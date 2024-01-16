@@ -29,7 +29,7 @@ class ValidMetadataUrlValidator extends ConstraintValidator
      * @param string     $value
      * @param Constraint $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (empty($value)) {
             return;
@@ -38,8 +38,8 @@ class ValidMetadataUrlValidator extends ConstraintValidator
         $parser = new UrlParser($value);
 
         try {
-            $parser->parse($value);
-        } catch (Exception $e) {
+            $parser->parse();
+        } catch (Exception) {
             $this->context->addViolation('validator.entity_id.invalid_url');
             return;
         }

@@ -39,7 +39,7 @@ class UniqueEntityIdValidator extends ConstraintValidator
      * @param Constraint $constraint
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $entityCommand = $this->context->getRoot()->getData();
 
@@ -59,7 +59,7 @@ class UniqueEntityIdValidator extends ConstraintValidator
 
         try {
             $manageId = $this->queryService->findManageIdByEntityId($mode, $value);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->context->addViolation('validator.entity_id.registry_failure');
             return;
         }

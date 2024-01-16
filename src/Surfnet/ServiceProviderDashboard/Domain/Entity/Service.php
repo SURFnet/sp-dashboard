@@ -32,30 +32,30 @@ use Doctrine\ORM\Mapping as ORM;
 class Service
 {
     // Reflect the type of service either an institute or a 'non institute'
-    const SERVICE_TYPE_INSTITUTE = 'institute';
-    const SERVICE_TYPE_NON_INSTITUTE = 'non-institute';
+    final public const SERVICE_TYPE_INSTITUTE = 'institute';
+    final public const SERVICE_TYPE_NON_INSTITUTE = 'non-institute';
 
     // Has the intake been taken yet?
-    const INTAKE_STATUS_YES = 'yes';
-    const INTAKE_STATUS_NO = 'no';
-    const INTAKE_STATUS_NOT_APPLICABLE = 'not-applicable';
+    final public const INTAKE_STATUS_YES = 'yes';
+    final public const INTAKE_STATUS_NO = 'no';
+    final public const INTAKE_STATUS_NOT_APPLICABLE = 'not-applicable';
 
     // For service type: institute: was the contract signed? Yes/No (or null if non institute)
-    const CONTRACT_SIGNED_YES = 'yes';
-    const CONTRACT_SIGNED_NO = 'no';
+    final public const CONTRACT_SIGNED_YES = 'yes';
+    final public const CONTRACT_SIGNED_NO = 'no';
 
     // For service type: institute: did the SURFconext representative approve (null if non institute)
-    const SURFCONEXT_APPROVED_YES = 'yes';
-    const SURFCONEXT_APPROVED_NO = 'no';
+    final public const SURFCONEXT_APPROVED_YES = 'yes';
+    final public const SURFCONEXT_APPROVED_NO = 'no';
 
     // Production connection status: (not-requested|requested|active)
-    const CONNECTION_STATUS_NOT_REQUESTED = 'not-requested';
-    const CONNECTION_STATUS_REQUESTED = 'requested';
-    const CONNECTION_STATUS_ACTIVE = 'active';
+    final public const CONNECTION_STATUS_NOT_REQUESTED = 'not-requested';
+    final public const CONNECTION_STATUS_REQUESTED = 'requested';
+    final public const CONNECTION_STATUS_ACTIVE = 'active';
 
-    const ENTITY_PUBLISHED_NO = 'no';
-    const ENTITY_PUBLISHED_IN_PROGRESS = 'in-progress';
-    const ENTITY_PUBLISHED_YES = 'yes';
+    final public const ENTITY_PUBLISHED_NO = 'no';
+    final public const ENTITY_PUBLISHED_IN_PROGRESS = 'in-progress';
+    final public const ENTITY_PUBLISHED_YES = 'yes';
 
     /**
      * @var int
@@ -88,36 +88,29 @@ class Service
     private $teamName;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(type="boolean")
      */
-    private $productionEntitiesEnabled = false;
+    private bool $productionEntitiesEnabled = false;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(type="boolean")
      */
-    private $privacyQuestionsEnabled = true;
+    private bool $privacyQuestionsEnabled = true;
 
     /**
-     * @var bool
      * @ORM\Column(type="boolean")
      */
-    private $clientCredentialClientsEnabled = false;
+    private bool $clientCredentialClientsEnabled = false;
 
     /**
-     * @var string
      * @ORM\Column(length=50)
      */
-    private $serviceType = self::SERVICE_TYPE_INSTITUTE;
+    private string $serviceType = self::SERVICE_TYPE_INSTITUTE;
 
     /**
-     * @var string
      * @ORM\Column(length=50)
      */
-    private $intakeStatus = self::INTAKE_STATUS_NO;
+    private string $intakeStatus = self::INTAKE_STATUS_NO;
 
     /**
      * @var string
@@ -132,18 +125,14 @@ class Service
     private $surfconextRepresentativeApproved;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
      * @ORM\ManyToMany(targetEntity="Contact", mappedBy="services", cascade={"persist"}, orphanRemoval=true)
      */
-    private $contacts;
+    private \Doctrine\Common\Collections\ArrayCollection $contacts;
 
     /**
-     * @var PrivacyQuestions
-     *
      * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service", cascade={"remove"}, orphanRemoval=true)
      */
-    private $privacyQuestions;
+    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions $privacyQuestions = null;
 
     /**
      * @var string
@@ -153,18 +142,14 @@ class Service
     private $institutionId;
 
     /**
-     * @var string
-     *
      * @ORM\Column(length=255, nullable=false)
      */
-    private $organizationNameNl;
+    private ?string $organizationNameNl = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(length=255, nullable=false)
      */
-    private $organizationNameEn;
+    private ?string $organizationNameEn = null;
 
     public function __construct()
     {
@@ -182,7 +167,7 @@ class Service
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -214,7 +199,7 @@ class Service
     /**
      * @param string $guid
      */
-    public function setGuid($guid)
+    public function setGuid($guid): void
     {
         $this->guid = $guid;
     }
@@ -222,7 +207,7 @@ class Service
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -230,7 +215,7 @@ class Service
     /**
      * @param bool $enabled
      */
-    public function setProductionEntitiesEnabled($enabled)
+    public function setProductionEntitiesEnabled($enabled): void
     {
         $this->productionEntitiesEnabled = $enabled;
     }
@@ -238,7 +223,7 @@ class Service
     /**
      * @param bool $privacyQuestionsEnabled
      */
-    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
+    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled): void
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
@@ -246,7 +231,7 @@ class Service
     /**
      * @param string $teamName
      */
-    public function setTeamName($teamName)
+    public function setTeamName($teamName): void
     {
         $this->teamName = $teamName;
     }
@@ -259,10 +244,7 @@ class Service
         return $this->privacyQuestions;
     }
 
-    /**
-     * @param PrivacyQuestions $privacyQuestions
-     */
-    public function setPrivacyQuestions(PrivacyQuestions $privacyQuestions)
+    public function setPrivacyQuestions(PrivacyQuestions $privacyQuestions): void
     {
         $this->privacyQuestions = $privacyQuestions;
     }
@@ -288,19 +270,15 @@ class Service
         return $this->clientCredentialClientsEnabled;
     }
 
-    /**
-     * @param bool $clientCredentialClientsEnabled
-     */
     public function setClientCredentialClientsEnabled(bool $clientCredentialClientsEnabled): void
     {
         $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
     }
 
     /**
-     * @param Contact $contact
      * @return Service
      */
-    public function removeContact(Contact $contact)
+    public function removeContact(Contact $contact): static
     {
         $this->contacts->removeElement($contact);
 
@@ -318,7 +296,7 @@ class Service
     /**
      * @param string $serviceType
      */
-    public function setServiceType($serviceType)
+    public function setServiceType($serviceType): void
     {
         $this->serviceType = $serviceType;
     }
@@ -334,7 +312,7 @@ class Service
     /**
      * @param string $intakeStatus
      */
-    public function setIntakeStatus($intakeStatus)
+    public function setIntakeStatus($intakeStatus): void
     {
         $this->intakeStatus = $intakeStatus;
     }
@@ -350,7 +328,7 @@ class Service
     /**
      * @param string $contractSigned
      */
-    public function setContractSigned($contractSigned)
+    public function setContractSigned($contractSigned): void
     {
         $this->contractSigned = $contractSigned;
     }
@@ -366,7 +344,7 @@ class Service
     /**
      * @param string $surfconextRepresentativeApproved
      */
-    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
+    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved): void
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
     }
@@ -379,7 +357,7 @@ class Service
     /**
      * @param string $institutionId
      */
-    public function setInstitutionId($institutionId)
+    public function setInstitutionId($institutionId): void
     {
         $this->institutionId = $institutionId;
     }
@@ -392,9 +370,6 @@ class Service
         return $this->organizationNameNl;
     }
 
-    /**
-     * @param string $organizationNameNl
-     */
     public function setOrganizationNameNl(string $organizationNameNl): void
     {
         $this->organizationNameNl = $organizationNameNl;
@@ -408,9 +383,6 @@ class Service
         return $this->organizationNameEn;
     }
 
-    /**
-     * @param string $organizationNameEn
-     */
     public function setOrganizationNameEn(string $organizationNameEn): void
     {
         $this->organizationNameEn = $organizationNameEn;

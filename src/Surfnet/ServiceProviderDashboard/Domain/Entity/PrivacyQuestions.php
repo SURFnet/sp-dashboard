@@ -69,32 +69,28 @@ class PrivacyQuestions
     private $otherInfo;
 
     /**
-     * @var Service
      *
      * @ORM\OneToOne(targetEntity="Service", inversedBy="privacyQuestions")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $service;
+    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $dpaType;
+    private ?string $dpaType = null;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $privacyStatementUrlNl;
+    private ?string $privacyStatementUrlNl = null;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $privacyStatementUrlEn;
+    private ?string $privacyStatementUrlEn = null;
 
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
@@ -102,7 +98,7 @@ class PrivacyQuestions
     /**
      * @param string $country
      */
-    public function setCountry($country)
+    public function setCountry($country): void
     {
         $this->country = $country;
     }
@@ -158,7 +154,7 @@ class PrivacyQuestions
     /**
      * @param string $whatData
      */
-    public function setWhatData($whatData)
+    public function setWhatData($whatData): void
     {
         $this->whatData = $whatData;
     }
@@ -166,7 +162,7 @@ class PrivacyQuestions
     /**
      * @param string $accessData
      */
-    public function setAccessData($accessData)
+    public function setAccessData($accessData): void
     {
         $this->accessData = $accessData;
     }
@@ -174,7 +170,7 @@ class PrivacyQuestions
     /**
      * @param string $securityMeasures
      */
-    public function setSecurityMeasures($securityMeasures)
+    public function setSecurityMeasures($securityMeasures): void
     {
         $this->securityMeasures = $securityMeasures;
     }
@@ -182,7 +178,7 @@ class PrivacyQuestions
     /**
      * @param string $otherInfo
      */
-    public function setOtherInfo($otherInfo)
+    public function setOtherInfo($otherInfo): void
     {
         $this->otherInfo = $otherInfo;
     }
@@ -220,10 +216,10 @@ class PrivacyQuestions
     public function privacyStatementUrls(): array
     {
         $out = [];
-        if ($this->privacyStatementUrlEn) {
+        if ($this->privacyStatementUrlEn !== '' && $this->privacyStatementUrlEn !== '0') {
             $out['mdui:PrivacyStatementURL:en'] = $this->privacyStatementUrlEn;
         }
-        if ($this->privacyStatementUrlNl) {
+        if ($this->privacyStatementUrlNl !== '' && $this->privacyStatementUrlNl !== '0') {
             $out['mdui:PrivacyStatementURL:nl'] = $this->privacyStatementUrlNl;
         }
         return $out;

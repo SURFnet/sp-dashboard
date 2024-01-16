@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
  */
 class EntityDetail
 {
+    public $organizationUnitNameAttribute;
     /**
      * @param ManageEntity[]|null $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -68,7 +69,7 @@ class EntityDetail
     ) {
     }
 
-    public function isLocalEntity()
+    public function isLocalEntity(): bool
     {
         return !is_null($this->id);
     }
@@ -76,7 +77,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getMetadataUrl()
+    public function getMetadataUrl(): string
     {
         return $this->metadataUrl;
     }
@@ -84,7 +85,7 @@ class EntityDetail
     /**
      * @return array
      */
-    public function getAcsLocations()
+    public function getAcsLocations(): array
     {
         return $this->acsLocations;
     }
@@ -92,7 +93,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
@@ -100,7 +101,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getCertificate()
+    public function getCertificate(): string
     {
         return $this->certificate;
     }
@@ -108,7 +109,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getLogoUrl()
+    public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
     }
@@ -116,7 +117,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getNameNl()
+    public function getNameNl(): string
     {
         return $this->nameNl;
     }
@@ -124,7 +125,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getNameEn()
+    public function getNameEn(): string
     {
         return $this->nameEn;
     }
@@ -132,7 +133,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getDescriptionNl()
+    public function getDescriptionNl(): string
     {
         return $this->descriptionNl;
     }
@@ -140,7 +141,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getDescriptionEn()
+    public function getDescriptionEn(): string
     {
         return $this->descriptionEn;
     }
@@ -148,7 +149,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getApplicationUrl()
+    public function getApplicationUrl(): string
     {
         return $this->applicationUrl;
     }
@@ -156,7 +157,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getEulaUrl()
+    public function getEulaUrl(): string
     {
         return $this->eulaUrl;
     }
@@ -164,7 +165,7 @@ class EntityDetail
     /**
      * @return Contact
      */
-    public function getAdministrativeContact()
+    public function getAdministrativeContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact
     {
         return $this->administrativeContact;
     }
@@ -172,7 +173,7 @@ class EntityDetail
     /**
      * @return Contact
      */
-    public function getTechnicalContact()
+    public function getTechnicalContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact
     {
         return $this->technicalContact;
     }
@@ -180,7 +181,7 @@ class EntityDetail
     /**
      * @return Contact
      */
-    public function getSupportContact()
+    public function getSupportContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact
     {
         return $this->supportContact;
     }
@@ -193,7 +194,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getNameIdFormat()
+    public function getNameIdFormat(): string
     {
         return $this->nameIdFormat;
     }
@@ -201,7 +202,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getOrganizationNameNl()
+    public function getOrganizationNameNl(): string
     {
         return $this->organizationNameNl;
     }
@@ -209,7 +210,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getOrganizationNameEn()
+    public function getOrganizationNameEn(): string
     {
         return $this->organizationNameEn;
     }
@@ -217,7 +218,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameNl()
+    public function getOrganizationDisplayNameNl(): string
     {
         return $this->organizationDisplayNameNl;
     }
@@ -225,7 +226,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getOrganizationDisplayNameEn()
+    public function getOrganizationDisplayNameEn(): string
     {
         return $this->organizationDisplayNameEn;
     }
@@ -233,7 +234,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getOrganizationUrlNl()
+    public function getOrganizationUrlNl(): string
     {
         return $this->organizationUrlNl;
     }
@@ -241,7 +242,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getOrganizationUrlEn()
+    public function getOrganizationUrlEn(): string
     {
         return $this->organizationUrlEn;
     }
@@ -249,7 +250,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getManageId()
+    public function getManageId(): string
     {
         return $this->manageId;
     }
@@ -257,7 +258,7 @@ class EntityDetail
     /**
      * @return EntityActions
      */
-    public function getActions()
+    public function getActions(): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions
     {
         return $this->actions;
     }
@@ -265,7 +266,7 @@ class EntityDetail
     /**
      * @return string
      */
-    public function getProtocol()
+    public function getProtocol(): string
     {
         return $this->protocol;
     }
@@ -273,7 +274,7 @@ class EntityDetail
     /**
      * @return string[]
      */
-    public function getRedirectUris()
+    public function getRedirectUris(): ?array
     {
         return $this->redirectUris;
     }
@@ -286,7 +287,7 @@ class EntityDetail
     /**
      * @return bool
      */
-    public function isPlaygroundEnabled()
+    public function isPlaygroundEnabled(): ?bool
     {
         return $this->playgroundEnabled;
     }
@@ -294,7 +295,7 @@ class EntityDetail
     /**
      * @return int
      */
-    public function getAccessTokenValidity()
+    public function getAccessTokenValidity(): ?int
     {
         return $this->accessTokenValidity;
     }
@@ -302,7 +303,7 @@ class EntityDetail
     /**
      * @return bool
      */
-    public function isPublicClient()
+    public function isPublicClient(): ?bool
     {
         return $this->isPublicClient;
     }

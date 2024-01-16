@@ -38,10 +38,9 @@ class CreateServiceCommandHandler implements CommandHandler
     }
 
     /**
-     * @param CreateServiceCommand $command
      * @throws CreateTeamsException
      */
-    public function handle(CreateServiceCommand $command)
+    public function handle(CreateServiceCommand $command): void
     {
         $name = $command->getName();
         $teamName = strtolower($command->getTeamName());

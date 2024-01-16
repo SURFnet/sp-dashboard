@@ -33,26 +33,21 @@ class ServiceStatusService
     /**
      * Test if the service has filled out privacy questions
      *
-     * @param Service $service
      * @return bool
      */
-    public function hasPrivacyQuestions(Service $service)
+    public function hasPrivacyQuestions(Service $service): bool
     {
-        if ($this->privacyStatusRepository->findByService($service)) {
-            // At some point, the privacy questions were answered (they might be all empty now but there is a record)
-            return true;
-        }
-        return false;
+        // At some point, the privacy questions were answered (they might be all empty now but there is a record)
+        return (bool) $this->privacyStatusRepository->findByService($service);
     }
 
     /**
      * - Status: "No" when no test entity, and no draft on test is present
      * - Status: "In progress" when there is no entity on test but a draft test entity is present
      * - Status: "Yes" when a test entity is published
-     * @param Service $service
      * @return string
      */
-    public function getEntityStatusOnTest(Service $service)
+    public function getEntityStatusOnTest(Service $service): string
     {
         $entities = $this->entityService->getEntitiesForService($service);
 
@@ -71,12 +66,12 @@ class ServiceStatusService
         }
 
         // Was one of the entities published?
-        if (count($publishedList) > 0) {
+        if ($publishedList !== []) {
             return Service::ENTITY_PUBLISHED_YES;
         }
 
         // Was one of the entities drafted?
-        if (count($inProgressList) > 0) {
+        if ($inProgressList !== []) {
             return Service::ENTITY_PUBLISHED_IN_PROGRESS;
         }
 
@@ -89,10 +84,9 @@ class ServiceStatusService
      * - Status: "Not requested" when no production entity, is published or has a publish requested status
      * - Status: "Requested" when there is a least 1 entity on production manage with a publication requested status
      * - Status: "Active" when a production entity is published
-     * @param Service $service
      * @return string
      */
-    public function getConnectionStatus(Service $service)
+    public function getConnectionStatus(Service $service): string
     {
         $entities = $this->entityService->getEntitiesForService($service);
 
@@ -111,12 +105,12 @@ class ServiceStatusService
         }
 
         // Was one of the entities published?
-        if (count($publishedList) > 0) {
+        if ($publishedList !== []) {
             return Service::CONNECTION_STATUS_ACTIVE;
         }
 
         // Was one of the entities requested?
-        if (count($inProgressList) > 0) {
+        if ($inProgressList !== []) {
             return Service::CONNECTION_STATUS_REQUESTED;
         }
 

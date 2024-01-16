@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepositor
 
 class PrivacyQuestionsRepository extends DoctrineEntityRepository implements PrivacyQuestionsRepositoryInterface
 {
-    public function save(PrivacyQuestions $questions)
+    public function save(PrivacyQuestions $questions): void
     {
         $this->_em->persist($questions);
         $this->_em->flush($questions);

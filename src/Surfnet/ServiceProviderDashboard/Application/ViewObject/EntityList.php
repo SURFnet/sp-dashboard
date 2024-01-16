@@ -31,7 +31,7 @@ class EntityList implements IteratorAggregate
     /**
      * @return Entity[]
      */
-    public function getEntities()
+    public function getEntities(): array
     {
         return $this->entities;
     }
@@ -54,9 +54,9 @@ class EntityList implements IteratorAggregate
         return false;
     }
 
-    public function sortEntitiesByEnvironment()
+    public function sortEntitiesByEnvironment(): static
     {
-        $sortEntitiesByEnvironment = function (Entity $first, Entity $second) {
+        $sortEntitiesByEnvironment = function (Entity $first, Entity $second): int {
             $envFirst = $first->getEnvironment();
             $envSecond = $second->getEnvironment();
 

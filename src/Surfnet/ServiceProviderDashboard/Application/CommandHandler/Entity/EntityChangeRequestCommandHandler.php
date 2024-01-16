@@ -32,15 +32,9 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class EntityChangeRequestCommandHandler implements CommandHandler
 {
-    /**
-     * @var string
-     */
-    private $summaryTranslationKey;
+    private readonly string $summaryTranslationKey;
 
-    /**
-     * @var string
-     */
-    private $descriptionTranslationKey;
+    private readonly string $descriptionTranslationKey;
 
     public function __construct(
         private readonly EntityChangeRequestRepository $repository,
@@ -51,7 +45,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         private readonly LoggerInterface $logger,
         private readonly string $issueType
     ) {
-        if (empty($issueType)) {
+        if ($issueType === '' || $issueType === '0') {
             throw new Exception('Please set "jira_issue_type_entity_change_request" in .env');
         }
         $this->summaryTranslationKey = 'entity.change_request.ticket.summary';
@@ -62,7 +56,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
      * Creates an entity change request in Manage
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(PublishProductionCommandInterface $command)
+    public function handle(PublishProductionCommandInterface $command): void
     {
         $entity = $command->getManageEntity();
         if (!$entity->isManageEntity()) {

@@ -70,7 +70,7 @@ class ArpGenerator implements MetadataGenerator
         ];
     }
 
-    private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
+    private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity): void
     {
         $originalAttributes = $entity->getAttributes()->getOriginalAttributes();
         $spDashboardTracked = $this->attributeService->getUrns();

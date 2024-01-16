@@ -22,14 +22,29 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
 class AttributeTypeInformation
 {
+    /**
+     * @var string
+     */
     public $saml20Label;
 
+    /**
+     * @var string
+     */
     public $saml20Info;
 
+    /**
+     * @var string
+     */
     public $oidcngLabel;
 
+    /**
+     * @var string
+     */
     public $oidcngInfo;
 
+    /**
+     * @var string
+     */
     public $language;
 
     private function __construct(

@@ -64,8 +64,6 @@ trait EntityControllerTrait
     }
 
     /**
-     * @param Request $request
-     * @param SaveSamlEntityCommand $command
      *
      * @return Form
      */
@@ -75,7 +73,7 @@ trait EntityControllerTrait
         $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
         try {
             $this->commandBus->handle($metadataCommand);
-        } catch (MetadataFetchException $e) {
+        } catch (MetadataFetchException) {
             $this->addFlash('error', 'entity.edit.metadata.fetch.exception');
         } catch (ParserException $e) {
             $this->addFlash('error', 'entity.edit.metadata.parse.exception');
@@ -84,7 +82,7 @@ trait EntityControllerTrait
             foreach ($e->getParserErrors() as $error) {
                 $this->addFlash('preformatted', $error->message);
             }
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
         }
 
@@ -139,7 +137,7 @@ trait EntityControllerTrait
         }
     }
 
-    private function createPublishEntityCommandFromEntity(?ManageEntity $entity, bool $isEntityChangeRequest)
+    private function createPublishEntityCommandFromEntity(?ManageEntity $entity, bool $isEntityChangeRequest): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand|\Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand|\Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand
     {
         switch (true) {
             case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
@@ -219,7 +217,6 @@ trait EntityControllerTrait
     /**
      * Check if the form was submitted using the given button name.
      *
-     * @param Form $form
      * @param string $expectedButtonName
      * @return bool
      */
@@ -235,7 +232,6 @@ trait EntityControllerTrait
     }
 
     /**
-     * @param Form $form
      * @return bool
      */
     private function isImportAction(Form $form)
@@ -246,7 +242,6 @@ trait EntityControllerTrait
     /**
      * The default action occurs when the user presses ENTER in a form.
      *
-     * @param Form $form
      * @return bool
      */
     private function isDefaultAction(Form $form)
@@ -255,10 +250,9 @@ trait EntityControllerTrait
     }
 
     /**
-     * @param Form $form
      * @return bool
      */
-    private function isPublishAction(Form $form)
+    private function isPublishAction(Form $form): bool
     {
         if ($this->assertUsedSubmitButton($form, 'publishButton')) {
             return true;
@@ -268,7 +262,6 @@ trait EntityControllerTrait
     }
 
     /**
-     * @param Form $form
      * @return bool
      */
     private function isCancelAction(Form $form)

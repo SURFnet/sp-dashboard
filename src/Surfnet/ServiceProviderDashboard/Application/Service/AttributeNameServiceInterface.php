@@ -22,7 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 interface AttributeNameServiceInterface
 {
-    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
+    public const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
     public function getAttributeTypeNames(): array;
 }

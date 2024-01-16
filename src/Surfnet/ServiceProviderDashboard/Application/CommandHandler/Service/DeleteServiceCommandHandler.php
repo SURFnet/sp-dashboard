@@ -42,10 +42,7 @@ class DeleteServiceCommandHandler implements CommandHandler
     ) {
     }
 
-    /**
-     * @param DeleteServiceCommand $command
-     */
-    public function handle(DeleteServiceCommand $command)
+    public function handle(DeleteServiceCommand $command): void
     {
         $serviceId = $command->getId();
         $service = $this->serviceRepository->findById($serviceId);
@@ -63,7 +60,7 @@ class DeleteServiceCommandHandler implements CommandHandler
 
         // Delete the team
         $teamId = $command->getTeamId();
-        if (!empty($teamId)) {
+        if ($teamId !== null && $teamId !== 0) {
             $this->deleteTeamClient->deleteTeam($command->getTeamId());
         }
 
@@ -75,9 +72,8 @@ class DeleteServiceCommandHandler implements CommandHandler
      * Using the deleteCommandFactory, entity delete commands are created
      * that will remove them from the appropriate environment.
      * @param EntityDto[] $entities
-     * @param Contact $contact
      */
-    private function removeEntitiesFrom(array $entities, Contact $contact)
+    private function removeEntitiesFrom(array $entities, Contact $contact): void
     {
         foreach ($entities as $entity) {
             try {

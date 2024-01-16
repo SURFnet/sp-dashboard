@@ -32,7 +32,7 @@ class Service
     ) {
     }
 
-    public static function fromService(DomainService $service, EntityList $entityList, RouterInterface $router)
+    public static function fromService(DomainService $service, EntityList $entityList, RouterInterface $router): self
     {
         return new self(
             $service->getId(),
@@ -47,7 +47,7 @@ class Service
     /**
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -55,7 +55,7 @@ class Service
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -63,7 +63,7 @@ class Service
     /**
      * @return EntityList
      */
-    public function getEntityList()
+    public function getEntityList(): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList
     {
         return $this->entityList;
     }
@@ -79,7 +79,7 @@ class Service
     /**
      * @return bool
      */
-    public function arePrivacyQuestionsEnabled()
+    public function arePrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
     }
@@ -92,7 +92,7 @@ class Service
     /**
      * @return bool
      */
-    public function isProductionEntitiesEnabled()
+    public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled || $this->hasTestEntities();
     }

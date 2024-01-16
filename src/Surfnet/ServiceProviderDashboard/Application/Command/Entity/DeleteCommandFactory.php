@@ -56,17 +56,17 @@ class DeleteCommandFactory
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
     }
 
-    public function buildDeletePublishedTestEntityCommand($manageId, $protocol)
+    public function buildDeletePublishedTestEntityCommand($manageId, $protocol): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand
     {
         return new DeletePublishedTestEntityCommand($manageId, $protocol);
     }
 
-    public function buildDeletePublishedProductionEntityCommand($manageId, $protocol)
+    public function buildDeletePublishedProductionEntityCommand($manageId, $protocol): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand
     {
         return new DeletePublishedProductionEntityCommand($manageId, $protocol);
     }
 
-    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact)
+    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand
     {
         return new RequestDeletePublishedEntityCommand($manageId, $contact);
     }

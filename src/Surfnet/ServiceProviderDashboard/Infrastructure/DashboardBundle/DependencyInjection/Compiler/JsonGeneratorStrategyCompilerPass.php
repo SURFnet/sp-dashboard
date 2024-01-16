@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class JsonGeneratorStrategyCompilerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $contextDefinition = $container->findDefinition(JsonGeneratorStrategy::class);
         // Scrape the service definitions tagged with dashboard.json_generator

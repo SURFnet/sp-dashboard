@@ -87,7 +87,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
         } catch (HttpException|GuzzleException|RuntimeException $e) {
             $this->logger->error(
                 'Unable to change membership role',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new ChangeMembershipRoleException('Unable to change membership role', 0, $e);
         }
@@ -95,7 +95,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
         if ($response->getStatusCode() !== 201) {
             $this->logger->error(
                 'Teams rejected the change to the membership role',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new ChangeMembershipRoleException('Changing the membership role did not succeed');
         }
@@ -121,7 +121,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
         } catch (HttpException|GuzzleException|RuntimeException $e) {
             $this->logger->error(
                 'Unable to send the invite',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new SendInviteException('Unable to send the invite.', 0, $e);
         }
@@ -129,7 +129,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
         if ($response->getStatusCode() !== 201) {
             $this->logger->error(
                 'Teams could not send the invite.',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new SendInviteException('Unable to send the invite.');
         }
@@ -155,7 +155,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
         } catch (HttpException|GuzzleException|RuntimeException $e) {
             $this->logger->error(
                 'Unable to resend the invite',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new ResendInviteException('Unable to resend the invite.', 0, $e);
         }
@@ -163,7 +163,7 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
         if ($response->getReasonPhrase() !== "Created") {
             $this->logger->error(
                 'Teams could not resend the invite.',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new ResendInviteException('Unable to resend the invite.');
         }

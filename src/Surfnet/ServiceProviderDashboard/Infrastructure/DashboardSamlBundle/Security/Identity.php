@@ -22,16 +22,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class Identity implements UserInterface
+class Identity implements UserInterface, \Stringable
 {
-    /**
-     * @var Contact
-     */
-    private $contact;
-
-    public function __construct(Contact $contact)
+    public function __construct(private readonly Contact $contact)
     {
-        $this->contact = $contact;
     }
 
     /**
@@ -46,7 +40,7 @@ class Identity implements UserInterface
      * @param string $teamName
      * @return bool
      */
-    public function isPartOfTeam($teamName)
+    public function isPartOfTeam($teamName): bool
     {
         $services = $this->getContact()->getServices();
         /** @var Service $service */
@@ -61,7 +55,7 @@ class Identity implements UserInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->contact->getDisplayName();
     }

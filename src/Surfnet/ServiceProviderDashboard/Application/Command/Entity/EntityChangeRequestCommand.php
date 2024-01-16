@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class EntityChangeRequestCommand implements PublishProductionCommandInterface, Command
 {
     public function __construct(
-        #[Assert\Type('\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity')]
+        #[Assert\Type(\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity::class)]
         private readonly ManageEntity $manageEntity,
         private readonly Contact $applicant
     ) {

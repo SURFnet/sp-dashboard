@@ -29,11 +29,8 @@ class EntityChangeRequestController extends AbstractController
 {
     use EntityControllerTrait;
 
-    /**
-     * @Route("/entity/change-request/{environment}/{manageId}/{serviceId}", name="entity_published_change_request", methods={"GET", "POST"})
-     */
-    public function changeRequestAction(
-        Request $request,
+    #[Route(path: '/entity/change-request/{environment}/{manageId}/{serviceId}', name: 'entity_published_change_request', methods: ['GET', 'POST'])]
+    public function changeRequest(
         ChangeRequestService $service,
         int $serviceId,
         string $manageId,

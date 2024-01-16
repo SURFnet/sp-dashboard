@@ -37,8 +37,8 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 {
     /**
      * @var string
-     * @Assert\Uuid
      */
+    #[Assert\Uuid]
     private $id;
 
     /**
@@ -46,24 +46,17 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      */
     private $status;
 
-    /**
-     * @var Service
-     */
-    private $service;
+    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
 
     /**
-     * @var bool
      * @deprecated
      */
-    private $archived = false;
+    private bool $archived = false;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"production", "test"}, strict=true)
-     */
-    private $environment = Constants::ENVIRONMENT_TEST;
+    
+    #[Assert\NotBlank]
+    #[Assert\Choice(choices: ['production', 'test'], strict: true)]
+    private string $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * Metadata URL that import last happened from.
@@ -87,8 +80,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     private $pastedMetadata;
 
     /**
-     * @var array
-     *
      * @Assert\All({
      *      @Assert\NotBlank(),
      *      @Assert\Url(
@@ -96,22 +87,17 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      *          message = "url.notSecure"
      *      )
      * })
-     * @Assert\Count(
-     *     min = 1,
-     *     minMessage="At least one ACS location is required",
-     *     max = 10,
-     *     maxMessage = "{{ limit }} ACS locations or less are allowed"
-     * )
      */
-    private $acsLocations;
+    #[Assert\Count(min: 1, minMessage: 'At least one ACS location is required', max: 10, maxMessage: '{{ limit }} ACS locations or less are allowed')]
+    private ?array $acsLocations = null;
 
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @SpDashboardAssert\ValidEntityId()
      * @SpDashboardAssert\UniqueEntityId()
      */
+    #[Assert\NotBlank]
     private $entityId;
 
     /**
@@ -124,99 +110,77 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      *
-     * @Assert\Url()
      * @SpDashboardAssert\ValidLogo()
-     * @Assert\NotBlank()
      */
+    #[Assert\Url]
+    #[Assert\NotBlank]
     private $logoUrl;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameNl;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameEn;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionNl;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionEn;
 
     /**
      * @var string
-     *
-     * @Assert\Url()
      */
+    #[Assert\Url]
     private $applicationUrl;
 
     /**
      * @var string
-     *
-     * @Assert\Url()
      */
+    #[Assert\Url]
     private $eulaUrl;
 
-    /**
-     * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
-     */
-    private $administrativeContact;
+    
+    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
+    private ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact $administrativeContact = null;
 
-    /**
-     * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid()
-     */
-    private $technicalContact;
+    
+    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Valid]
+    private ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact $technicalContact = null;
 
-    /**
-     * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
-     */
-    private $supportContact;
+    
+    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
+    private ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact $supportContact = null;
 
     /**
      * @SpDashboardAssert\ValidAttribute(type="saml20")
      */
-    private $attributes = [];
+    private array $attributes = [];
 
     /**
      * @var string
      */
     private $comments;
 
-    /**
-     * @var string
-     * @Assert\Choice(
-     *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Constants",
-     *         "getValidNameIdFormats"
-     *     },
-     *     strict=true
-     * )
-     */
-    private $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
+    #[Assert\Choice(callback: [\Surfnet\ServiceProviderDashboard\Domain\Entity\Constants::class, 'getValidNameIdFormats'], strict: true)]
+    private string $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string
@@ -242,7 +206,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->getAttribute($property);
     }
 
-    public function setAttribute(string $property, ?Attribute $value)
+    public function setAttribute(string $property, ?Attribute $value): void
     {
         $this->attributes[$property] = $value;
     }
@@ -260,10 +224,9 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param Service $service
      * @return SaveSamlEntityCommand
      */
-    public static function forCreateAction(Service $service)
+    public static function forCreateAction(Service $service): self
     {
         $command = new self();
         $command->service = $service;
@@ -302,7 +265,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param bool $archived
      */
-    public function setArchived($archived)
+    public function setArchived($archived): void
     {
         $this->archived = $archived;
     }
@@ -315,7 +278,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $environment
      */
-    public function setEnvironment($environment)
+    public function setEnvironment($environment): void
     {
         if (!in_array($environment, [
             Constants::ENVIRONMENT_TEST,
@@ -340,7 +303,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $importUrl
      */
-    public function setImportUrl($importUrl)
+    public function setImportUrl($importUrl): void
     {
         $this->importUrl = $importUrl;
     }
@@ -353,7 +316,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $metadataUrl
      */
-    public function setMetadataUrl($metadataUrl)
+    public function setMetadataUrl($metadataUrl): void
     {
         $this->metadataUrl = $metadataUrl;
     }
@@ -369,7 +332,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $pastedMetadata
      */
-    public function setPastedMetadata($pastedMetadata)
+    public function setPastedMetadata($pastedMetadata): void
     {
         $this->pastedMetadata = $pastedMetadata;
     }
@@ -396,7 +359,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $entityId
      */
-    public function setEntityId($entityId)
+    public function setEntityId($entityId): void
     {
         $this->entityId = $entityId;
     }
@@ -412,7 +375,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $certificate
      */
-    public function setCertificate($certificate)
+    public function setCertificate($certificate): void
     {
         $this->certificate = $certificate;
     }
@@ -428,7 +391,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $logoUrl
      */
-    public function setLogoUrl($logoUrl)
+    public function setLogoUrl($logoUrl): void
     {
         $this->logoUrl = $logoUrl;
     }
@@ -441,7 +404,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $nameNl
      */
-    public function setNameNl($nameNl)
+    public function setNameNl($nameNl): void
     {
         $this->nameNl = $nameNl;
     }
@@ -454,7 +417,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $nameEn
      */
-    public function setNameEn($nameEn)
+    public function setNameEn($nameEn): void
     {
         $this->nameEn = $nameEn;
     }
@@ -467,7 +430,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $descriptionNl
      */
-    public function setDescriptionNl($descriptionNl)
+    public function setDescriptionNl($descriptionNl): void
     {
         $this->descriptionNl = $descriptionNl;
     }
@@ -480,7 +443,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $descriptionEn
      */
-    public function setDescriptionEn($descriptionEn)
+    public function setDescriptionEn($descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
     }
@@ -496,7 +459,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $applicationUrl
      */
-    public function setApplicationUrl($applicationUrl)
+    public function setApplicationUrl($applicationUrl): void
     {
         $this->applicationUrl = $applicationUrl;
     }
@@ -512,7 +475,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $eulaUrl
      */
-    public function setEulaUrl($eulaUrl)
+    public function setEulaUrl($eulaUrl): void
     {
         $this->eulaUrl = $eulaUrl;
     }
@@ -522,7 +485,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->administrativeContact;
     }
 
-    public function setAdministrativeContact(?Contact $administrativeContact)
+    public function setAdministrativeContact(?Contact $administrativeContact): void
     {
         $this->administrativeContact = $administrativeContact;
     }
@@ -532,7 +495,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->technicalContact;
     }
 
-    public function setTechnicalContact(?Contact $technicalContact)
+    public function setTechnicalContact(?Contact $technicalContact): void
     {
         $this->technicalContact = $technicalContact;
     }
@@ -542,7 +505,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->supportContact;
     }
 
-    public function setSupportContact(?Contact $supportContact)
+    public function setSupportContact(?Contact $supportContact): void
     {
         $this->supportContact = $supportContact;
     }
@@ -558,7 +521,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $comments
      */
-    public function setComments($comments)
+    public function setComments($comments): void
     {
         $this->comments = $comments;
     }
@@ -574,7 +537,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $nameIdFormat
      */
-    public function setNameIdFormat($nameIdFormat)
+    public function setNameIdFormat($nameIdFormat): void
     {
         $this->nameIdFormat = $nameIdFormat;
     }
@@ -582,30 +545,27 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @return bool
      */
-    public function hasNameIdFormat()
+    public function hasNameIdFormat(): bool
     {
         return !empty($this->nameIdFormat);
     }
 
-    public function isForProduction()
+    public function isForProduction(): bool
     {
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
 
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         $this->status = $status;
     }
 
-    /**
-     * @param Service $service
-     */
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
@@ -621,7 +581,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string $manageId
      */
-    public function setManageId($manageId)
+    public function setManageId($manageId): void
     {
         $this->manageId = $manageId;
     }

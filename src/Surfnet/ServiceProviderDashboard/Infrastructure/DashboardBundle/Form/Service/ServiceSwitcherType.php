@@ -28,14 +28,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceSwitcherType extends AbstractType
 {
-    /**
-     * @var AuthorizationService
-     */
-    private $authorizationService;
-
-    public function __construct(AuthorizationService $authorizationService)
+    public function __construct(private readonly AuthorizationService $authorizationService)
     {
-        $this->authorizationService = $authorizationService;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -62,10 +56,8 @@ class ServiceSwitcherType extends AbstractType
         $builder->add('submit', SubmitType::class, ['attr' => ['class' => 'hidden']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SelectServiceCommand::class
-        ));
+        $resolver->setDefaults(['data_class' => SelectServiceCommand::class]);
     }
 }

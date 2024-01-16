@@ -43,19 +43,13 @@ class ManageEntity
     private const CHANGED_REVISION_NOTE = 'Entity changed';
     private const CHANGE_REQUEST_NOTE = 'Change request';
 
-    /**
-     * @var string
-     */
-    private $status;
+    private string $status = Constants::STATE_PUBLISHED;
 
-    private $comments;
+    private ?string $comments = null;
 
-    private $environment;
+    private ?string $environment = null;
 
-    /**
-     * @var bool
-     */
-    private $readOnly = false;
+    private bool $readOnly = false;
 
     /**
      * @param $data
@@ -63,7 +57,7 @@ class ManageEntity
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public static function fromApiResponse($data)
+    public static function fromApiResponse(array $data): self
     {
         $manageProtocol = self::extractManageProtocol($data);
 
@@ -89,16 +83,8 @@ class ManageEntity
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }
 
-    public function __construct(
-        private ?string $id,
-        private readonly AttributeList $attributes,
-        private readonly MetaData $metaData,
-        private readonly AllowedIdentityProviders $allowedIdentityProviders,
-        private readonly Protocol $protocol,
-        private readonly ?OidcClientInterface $oidcClient = null,
-        private ?Service $service = null
-    ) {
-        $this->status = Constants::STATE_PUBLISHED;
+    public function __construct(private ?string $id, private readonly AttributeList $attributes, private readonly MetaData $metaData, private readonly AllowedIdentityProviders $allowedIdentityProviders, private readonly Protocol $protocol, private readonly ?OidcClientInterface $oidcClient = null, private ?Service $service = null)
+    {
     }
 
     private static function extractManageProtocol(array $data): string
@@ -111,24 +97,24 @@ class ManageEntity
         return $isClientCredentialsClient ? Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT : $manageProtocol;
     }
 
-    public function resetId()
+    public function resetId(): static
     {
         $clone = clone $this;
         $clone->id = null;
         return $clone;
     }
 
-    public function setId(string $id)
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getAttributes()
+    public function getAttributes(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList
     {
         return $this->attributes;
     }
@@ -151,12 +137,12 @@ class ManageEntity
         $this->updateStatus(Constants::STATE_PUBLISHED);
     }
 
-    public function updateStatusToRemovalRequested()
+    public function updateStatusToRemovalRequested(): void
     {
         $this->status = Constants::STATE_REMOVAL_REQUESTED;
     }
 
-    private function updateStatus($newStatus)
+    private function updateStatus(string $newStatus): void
     {
         $this->status = $newStatus;
     }
@@ -166,7 +152,7 @@ class ManageEntity
         return $this->status;
     }
 
-    public function isPublished()
+    public function isPublished(): bool
     {
         return ($this->status === Constants::STATE_PUBLISHED);
     }
@@ -174,7 +160,7 @@ class ManageEntity
     /**
      * @return OidcClientInterface|null
      */
-    public function getOidcClient()
+    public function getOidcClient(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface
     {
         return $this->oidcClient;
     }
@@ -182,7 +168,7 @@ class ManageEntity
     /**
      * @return AllowedIdentityProviders
      */
-    public function getAllowedIdentityProviders()
+    public function getAllowedIdentityProviders(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders
     {
         return $this->allowedIdentityProviders;
     }
@@ -190,29 +176,26 @@ class ManageEntity
     /**
      * @return Protocol
      */
-    public function getProtocol()
+    public function getProtocol(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol
     {
         return $this->protocol;
     }
 
-    public function isOidcngResourceServer()
+    public function isOidcngResourceServer(): bool
     {
-        if ($this->getOidcClient()) {
+        if ($this->getOidcClient() !== null) {
             return $this->getOidcClient() instanceof OidcngResourceServerClient;
         }
 
         return false;
     }
 
-    public function isExcludedFromPushSet()
+    public function isExcludedFromPushSet(): bool
     {
-        if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
-            return false;
-        }
-        return true;
+        return !is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush());
     }
 
-    public function isExcludedFromPush()
+    public function isExcludedFromPush(): bool
     {
         if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
             return false;
@@ -256,12 +239,12 @@ class ManageEntity
         return $this->environment;
     }
 
-    public function isProduction()
+    public function isProduction(): bool
     {
         return $this->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setIsReadOnly()
+    public function setIsReadOnly(): void
     {
         $this->readOnly = true;
     }
@@ -277,16 +260,15 @@ class ManageEntity
         return $this->service;
     }
 
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
 
     /**
      * Merge new data into an existing ManageEntity.
-     * @param ManageEntity $newEntity
      */
-    public function merge(ManageEntity $newEntity)
+    public function merge(ManageEntity $newEntity): void
     {
         $this->service = is_null($newEntity->getService()) ? null : $newEntity->getService();
         $this->metaData->merge($newEntity->getMetaData());
@@ -297,17 +279,17 @@ class ManageEntity
         $this->comments = $newEntity->getComments();
     }
 
-    public function setStatus(string $status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
-    public function updateClientSecret(SecretInterface $secret)
+    public function updateClientSecret(SecretInterface $secret): void
     {
         $this->getOidcClient()->updateClientSecret($secret);
     }
 
-    private function hasOicdClient()
+    private function hasOicdClient(): bool
     {
         $protocol = $this->protocol->getProtocol();
         return $protocol === Constants::TYPE_OPENID_CONNECT_TNG
@@ -333,18 +315,17 @@ class ManageEntity
         if ($this->hasOicdClient()) {
             $data += $this->oidcClient->asArray();
         }
-        $data += $this->protocol->asArray();
-        return $data;
+        return $data + $this->protocol->asArray();
     }
 
-    private function isStatusPublicationRequested()
+    private function isStatusPublicationRequested(): bool
     {
         return $this->getStatus() === Constants::STATE_PUBLICATION_REQUESTED;
     }
 
     public function isRequestedProductionEntity(
         bool $isCopy
-    ) {
+    ): bool {
         return $isCopy || ($this->isStatusPublicationRequested() && $this->isProduction());
     }
 

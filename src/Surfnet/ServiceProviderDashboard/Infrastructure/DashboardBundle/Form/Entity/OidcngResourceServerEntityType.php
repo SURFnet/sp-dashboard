@@ -40,7 +40,7 @@ class OidcngResourceServerEntityType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
 
@@ -173,12 +173,9 @@ class OidcngResourceServerEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SaveOidcngResourceServerEntityCommand::class,
-            'publish_button_label' => 'entity.add.label.publish',
-        ));
+        $resolver->setDefaults(['data_class' => SaveOidcngResourceServerEntityCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
     public function getBlockPrefix()

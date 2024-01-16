@@ -51,14 +51,10 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/entity/create-connection-request/{environment}/{manageId}/{serviceId}",
-     *     name="entity_published_create_connection_request",
-     *     methods={"GET", "POST"})
-     *     )
      * @throws Exception
      */
-    public function connectionRequestFromEntityAction(
+    #[Route(path: '/entity/create-connection-request/{environment}/{manageId}/{serviceId}', name: 'entity_published_create_connection_request', methods: ['GET', 'POST'])]
+    public function connectionRequestFromEntity(
         Request $request,
         int $serviceId,
         string $manageId,
@@ -81,7 +77,7 @@ class EntityCreateConnectionRequestController extends AbstractController
                 'publishedEntity' => $entity
             ];
 
-            if ($this->isCancelAction($form) || !count($command->getConnectionRequests())) {
+            if ($this->isCancelAction($form) || $command->getConnectionRequests() === []) {
                 return $this->render('@Dashboard/EntityPublished/publishedProduction.html.twig', $parameters);
             }
 
@@ -98,13 +94,10 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/entity/create-connection-request-from-overview/{environment}/{manageId}/{serviceId}",
-     *     name="entity_published_create_connection_request_from_overview",
-     *     methods={"GET", "POST"})
      * @throws Exception
      */
-    public function connectionRequestFromOverviewAction(
+    #[Route(path: '/entity/create-connection-request-from-overview/{environment}/{manageId}/{serviceId}', name: 'entity_published_create_connection_request_from_overview', methods: ['GET', 'POST'])]
+    public function connectionRequestFromOverview(
         Request $request,
         int $serviceId,
         string $manageId,
@@ -120,7 +113,7 @@ class EntityCreateConnectionRequestController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($this->isCancelAction($form) || !count($command->getConnectionRequests())) {
+            if ($this->isCancelAction($form) || $command->getConnectionRequests() === []) {
                 return $this->returnToOverview($serviceId);
             }
 
@@ -136,10 +129,8 @@ class EntityCreateConnectionRequestController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/entity/send-connection-request", name="send_connection_request",methods={"GET"})
-     */
-    public function sendConnectionRequestAction(Request $request)
+    #[Route(path: '/entity/send-connection-request', name: 'send_connection_request', methods: ['GET'])]
+    public function sendConnectionRequest(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $parameters = [];
         if ($request->query->has('showOidcPopup')) {
@@ -159,10 +150,8 @@ class EntityCreateConnectionRequestController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/entity/send-connection-request", name="publish_to_production_and_send_connection_request",methods={"GET"})
-     */
-    public function publishedToProductionAndSendConnectionRequest(array $parameters)
+    #[Route(path: '/entity/send-connection-request', name: 'publish_to_production_and_send_connection_request', methods: ['GET'])]
+    public function publishedToProductionAndSendConnectionRequest(array $parameters): \Symfony\Component\HttpFoundation\Response
     {
         return $this->render(
             '@Dashboard/EntityPublished/publishedProductionAndConnectionRequest.html.twig',
@@ -179,7 +168,7 @@ class EntityCreateConnectionRequestController extends AbstractController
         return $this->redirectToRoute('service_overview');
     }
 
-    private function showOidcPopup(?ManageEntity $publishedEntity)
+    private function showOidcPopup(?ManageEntity $publishedEntity): bool
     {
         if (is_null($publishedEntity)) {
             return false;

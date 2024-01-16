@@ -49,7 +49,7 @@ class EntityOidcConfirmation
         }
     }
 
-    public static function fromEntity(ManageEntity $entity)
+    public static function fromEntity(ManageEntity $entity): self
     {
         return new self(
             $entity->getMetaData()->getEntityId(),
@@ -69,7 +69,7 @@ class EntityOidcConfirmation
     /**
      * @return string
      */
-    public function getClientSecret()
+    public function getClientSecret(): string
     {
         return $this->clientSecret;
     }

@@ -25,11 +25,11 @@ class AttributeList implements Comparable
     /**
      * @var Attribute[]
      */
-    private $attributes = [];
+    private array $attributes = [];
 
     private $originalAttributes = [];
 
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data): self
     {
         $list = new self();
 
@@ -46,7 +46,7 @@ class AttributeList implements Comparable
         return $list;
     }
 
-    public function add(Attribute $attribute)
+    public function add(Attribute $attribute): void
     {
         $this->attributes[$attribute->getName()][] = $attribute;
     }
@@ -105,12 +105,12 @@ class AttributeList implements Comparable
         return $this->originalAttributes;
     }
 
-    private function clear()
+    private function clear(): void
     {
         $this->attributes = [];
     }
 
-    public function merge(AttributeList $attributes)
+    public function merge(AttributeList $attributes): void
     {
         $this->originalAttributes = $this->attributes;
         $this->clear();
@@ -149,7 +149,7 @@ class AttributeList implements Comparable
                 'motivation' => $attribute->getMotivation(),
             ];
         }
-        if (!empty($attributes)) {
+        if ($attributes !== []) {
             return [
                 'arp' => [
                     'attributes' => $attributes,

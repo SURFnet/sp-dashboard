@@ -23,7 +23,7 @@ use Webmozart\Assert\Assert;
 
 class Organization implements Comparable
 {
-    public static function fromApiResponse(array $metaDataFields)
+    public static function fromApiResponse(array $metaDataFields): self
     {
         $nameEn = $metaDataFields['OrganizationName:en'] ?? '';
         $displayNameEn = $metaDataFields['OrganizationDisplayName:en'] ?? '';
@@ -82,7 +82,7 @@ class Organization implements Comparable
         return $this->urlNl;
     }
 
-    public function merge(Organization $organization)
+    public function merge(Organization $organization): void
     {
         $this->nameEn = is_null($organization->getNameEn()) ? null : $organization->getNameEn();
         $this->displayNameEn = is_null($organization->getDisplayNameEn()) ? null : $organization->getDisplayNameEn();
@@ -92,12 +92,12 @@ class Organization implements Comparable
         $this->urlNl = is_null($organization->getUrlNl()) ? null : $organization->getUrlNl();
     }
 
-    public function updateNameEn($nameEn)
+    public function updateNameEn(?string $nameEn): void
     {
         $this->nameEn = $nameEn;
     }
 
-    public function updateNameNl($nameNl)
+    public function updateNameNl(?string $nameNl): void
     {
         $this->nameNl = $nameNl;
     }

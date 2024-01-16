@@ -32,29 +32,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class SamlController extends AbstractController
 {
     public function __construct(
-        private LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
         private readonly MetadataFactory $metadataFactory,
-        private PostBinding $postBinding,
-        private IdentityProvider $identityProvider,
-        private ServiceProvider $serviceProvider
+        private readonly PostBinding $postBinding,
+        private readonly IdentityProvider $identityProvider,
+        private readonly ServiceProvider $serviceProvider
     ) {
     }
 
-    /**
-     * @Route("/saml/acs", name="dashboard_saml_consume_assertion", methods={"POST"})
-     * @param Request $request
-     */
-    public function consumeAssertionAction(Request $request)
+    #[Route(path: '/saml/acs', name: 'dashboard_saml_consume_assertion', methods: ['POST'])]
+    public function consumeAssertion() : never
     {
         throw new LogicException(
             'Unreachable statement, should be handled by the SAML firewall'
         );
     }
 
-    /**
-     * @Route("/saml/metadata", name="dashboard_saml_metadata", methods={"GET"})
-     */
-    public function metadataAction()
+    #[Route(path: '/saml/metadata', name: 'dashboard_saml_metadata', methods: ['GET'])]
+    public function metadata(): \Surfnet\SamlBundle\Http\XMLResponse
     {
         return new XMLResponse(
             $this->metadataFactory->generate()

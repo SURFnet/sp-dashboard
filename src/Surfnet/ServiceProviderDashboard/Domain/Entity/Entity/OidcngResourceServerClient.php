@@ -25,12 +25,11 @@ use function is_null;
 
 class OidcngResourceServerClient implements Comparable, OidcClientInterface
 {
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data): self
     {
-        $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $grants = isset($data['data']['metaDataFields']['grants'])
-            ? $data['data']['metaDataFields']['grants'] : [];
+        $clientId = $data['data']['entityid'] ?? '';
+        $clientSecret = $data['data']['metaDataFields']['secret'] ?? '';
+        $grants = $data['data']['metaDataFields']['grants'] ?? [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
@@ -54,7 +53,7 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
@@ -62,7 +61,7 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     /**
      * @return string
      */
-    public function getClientSecret()
+    public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
@@ -75,7 +74,7 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     /**
      * @return array
      */
-    public function getRedirectUris()
+    public function getRedirectUris(): array
     {
         return [];
     }
@@ -83,7 +82,7 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     /**
      * @return bool
      */
-    public function isPublicClient()
+    public function isPublicClient(): bool
     {
         return false;
     }
@@ -99,7 +98,7 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     /**
      * @return array
      */
-    public function getResourceServers()
+    public function getResourceServers(): array
     {
         return [];
     }

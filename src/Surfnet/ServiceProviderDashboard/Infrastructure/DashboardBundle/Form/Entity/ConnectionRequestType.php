@@ -27,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConnectionRequestType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
             'institution',
@@ -57,12 +57,9 @@ class ConnectionRequestType extends AbstractType
         );
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => ConnectionRequest::class,
-            'error_bubbling' => false,
-        ));
+        $resolver->setDefaults(['data_class' => ConnectionRequest::class, 'error_bubbling' => false]);
     }
 
     public function getBlockPrefix()

@@ -33,7 +33,7 @@ class ServiceService
      * Format: [ '<service id>' => '<service display name> [<msp service team id>]' ]
      * @return array
      */
-    public function getServiceNamesById()
+    public function getServiceNamesById(): array
     {
         $options = [];
 
@@ -60,14 +60,14 @@ class ServiceService
      *                               As provided by: AuthorizationService::getAllowedServiceNamesById
      * @return Service[]
      */
-    public function getServicesByAllowedServices(array $allowedServices)
+    public function getServicesByAllowedServices(array $allowedServices): array
     {
         $services = [];
         $serviceIds = array_keys($allowedServices);
 
         foreach ($serviceIds as $serviceId) {
             $service = $this->getServiceById($serviceId);
-            if ($service) {
+            if ($service !== null) {
                 $services[$service->getName()] = $service;
             }
         }

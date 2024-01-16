@@ -25,30 +25,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AclListType extends AbstractType
 {
-    /**
-     * @var EntityAclService
-     */
-    private $entityAclService;
-
-    public function __construct(EntityAclService $entityAclService)
+    public function __construct(private readonly EntityAclService $entityAclService)
     {
-        $this->entityAclService = $entityAclService;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $list = $this->entityAclService->getAvailableIdps();
         $resolver->setDefaults([
             'choices' => $list,
-            'choice_label' => function (IdentityProvider $idp) {
-                return $idp->getName();
-            },
-            'choice_value' => function (IdentityProvider $idp) {
-                return $idp->getManageId();
-            },
-            'choice_name' => function (IdentityProvider $idp) {
-                return $idp->getManageId();
-            },
+            'choice_label' => fn(IdentityProvider $idp) => $idp->getName(),
+            'choice_value' => fn(IdentityProvider $idp) => $idp->getManageId(),
+            'choice_name' => fn(IdentityProvider $idp) => $idp->getManageId(),
             'expanded' => true,
             'multiple' => true,
         ]);

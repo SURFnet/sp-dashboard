@@ -34,26 +34,20 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
-    /**
-     * @var string
-     */
-    private $summaryTranslationKey;
+    private readonly string $summaryTranslationKey;
 
-    /**
-     * @var string
-     */
-    private $descriptionTranslationKey;
+    private readonly string $descriptionTranslationKey;
 
     public function __construct(
-        private PublishEntityRepository $publishClient,
-        private EntityServiceInterface $entityService,
-        private TicketService $ticketService,
-        private FlashBagInterface $flashBag,
-        private MailService $mailService,
-        private LoggerInterface $logger,
-        private string $issueType
+        private readonly PublishEntityRepository $publishClient,
+        private readonly EntityServiceInterface $entityService,
+        private readonly TicketService $ticketService,
+        private readonly FlashBagInterface $flashBag,
+        private readonly MailService $mailService,
+        private readonly LoggerInterface $logger,
+        private readonly string $issueType
     ) {
-        if (empty($issueType)) {
+        if ($issueType === '' || $issueType === '0') {
             throw new Exception('Please set "jira_issue_type_publication_request" in .env');
         }
         $this->summaryTranslationKey = 'entity.publish.request.ticket.summary';
@@ -70,7 +64,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(PublishProductionCommandInterface $command)
+    public function handle(PublishProductionCommandInterface $command): void
     {
         $entity = $command->getManageEntity();
         $pristineEntity = null;
@@ -140,7 +134,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         }
     }
 
-    private function isNewResourceServer(ManageEntity $entity)
+    private function isNewResourceServer(ManageEntity $entity): bool
     {
         $isNewEntity = empty($entity->getId());
         return $isNewEntity

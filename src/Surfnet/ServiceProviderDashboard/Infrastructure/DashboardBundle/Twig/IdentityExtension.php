@@ -33,7 +33,7 @@ class IdentityExtension extends AbstractExtension
         return [
             new Twig_SimpleFunction(
                 'identity',
-                [$this, 'renderIdentity'],
+                $this->renderIdentity(...),
                 ['is_safe' => ['html'], 'needs_environment' => true]
             ),
         ];
@@ -47,7 +47,7 @@ class IdentityExtension extends AbstractExtension
         $token = $this->tokenStorage->getToken();
         $contact = null;
 
-        if ($token) {
+        if ($token !== null) {
             $contact = $token->getUser()->getContact();
         }
 

@@ -129,7 +129,7 @@ class Metadata
      */
     public $organizationUrlNl;
 
-    public function setAttribute(string $property, Attribute $value)
+    public function setAttribute(string $property, Attribute $value): void
     {
         $this->attributes[$property] = $value;
     }

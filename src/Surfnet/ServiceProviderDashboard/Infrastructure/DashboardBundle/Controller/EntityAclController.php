@@ -38,24 +38,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class EntityAclController extends AbstractController
 {
     public function __construct(
-        private CommandBus $commandBus,
-        private EntityService $entityService,
-        private AuthorizationService $authorizationService,
-        private EntityAclService $entityAclService,
-        private EntityDetailFactory $entityDetailFactory
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityAclService $entityAclService,
+        private readonly EntityDetailFactory $entityDetailFactory
     ) {
     }
 
     /**
-     * @Route("/entity/acl/{serviceId}/{id}", name="entity_acl", methods={"GET", "POST"})
      *
-     * @param Request $request
      * @param string $serviceId
-     * @param string $id
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function aclAction(Request $request, $serviceId, $id)
+    #[Route(path: '/entity/acl/{serviceId}/{id}', name: 'entity_acl', methods: ['GET', 'POST'])]
+    public function acl(Request $request, $serviceId, string $id): \Symfony\Component\HttpFoundation\Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);

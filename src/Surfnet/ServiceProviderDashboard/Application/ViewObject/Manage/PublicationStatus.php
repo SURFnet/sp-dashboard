@@ -23,12 +23,12 @@ use Webmozart\Assert\Assert;
 class PublicationStatus
 {
     public function __construct(
-        private string $status = ''
+        private readonly string $status = ''
     ) {
         Assert::stringNotEmpty($status, 'Please set the publication status in .env');
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }

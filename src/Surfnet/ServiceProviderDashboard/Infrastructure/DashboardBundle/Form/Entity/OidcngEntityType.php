@@ -39,22 +39,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OidcngEntityType extends AbstractType
 {
-    /**
-     * @var AttributeTypeFactory
-     */
-    private $attributeTypeFactory;
-
-    /**
-     * @var OidcngResourceServerOptionsFactory
-     */
-    private $oidcngResourceServerOptionsFactory;
-
-    public function __construct(
-        OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory,
-        AttributeTypeFactory $attributeTypeFactory
-    ) {
-        $this->oidcngResourceServerOptionsFactory = $oidcngResourceServerOptionsFactory;
-        $this->attributeTypeFactory = $attributeTypeFactory;
+    public function __construct(private readonly OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory, private readonly AttributeTypeFactory $attributeTypeFactory)
+    {
     }
 
     /**
@@ -64,7 +50,7 @@ class OidcngEntityType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $attributesContainer = $builder->create('attributes', FormType::class, [
             'inherit_data' => true,
@@ -170,9 +156,7 @@ class OidcngEntityType extends AbstractType
                     'attr' => [
                         'data-help' => 'entity.edit.information.grantType',
                     ],
-                    'choice_attr' => function () {
-                        return ['class' => 'decorated'];
-                    },
+                    'choice_attr' => fn(): array => ['class' => 'decorated'],
                 ]
             )
             ->add(
@@ -301,9 +285,7 @@ class OidcngEntityType extends AbstractType
                                     'data-help' => 'entity.edit.information.oidcngResourceServers',
                                     'class' => 'wide'
                                 ],
-                                'choice_attr' => function () {
-                                    return ['class' => 'decorated'];
-                                },
+                                'choice_attr' => fn(): array => ['class' => 'decorated'],
                             ]
                         )
                 );
@@ -367,12 +349,9 @@ class OidcngEntityType extends AbstractType
         return $this->attributeTypeFactory->build($container, Constants::TYPE_OPENID_CONNECT_TNG);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SaveOidcngEntityCommand::class,
-            'publish_button_label' => 'entity.add.label.publish',
-        ));
+        $resolver->setDefaults(['data_class' => SaveOidcngEntityCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
     public function getBlockPrefix()

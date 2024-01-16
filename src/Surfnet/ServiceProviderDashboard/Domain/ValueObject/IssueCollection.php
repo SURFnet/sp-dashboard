@@ -25,7 +25,7 @@ class IssueCollection implements Countable
     /**
      * @var Issue[]
      */
-    private $issues = [];
+    private array $issues = [];
 
     /**
      * @param Issue[] $issues
@@ -40,7 +40,7 @@ class IssueCollection implements Countable
     /**
      * @return Issue|null
      */
-    public function getIssueById($id)
+    public function getIssueById($id): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
     {
         if (array_key_exists($id, $this->issues)) {
             return $this->issues[$id];

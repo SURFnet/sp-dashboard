@@ -34,9 +34,9 @@ class GlobalSiteNotice extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('shouldDisplayGlobalSiteNotice', [$this, 'shouldDisplayGlobalSiteNotice']),
-            new TwigFunction('getGlobalSiteNotice', [$this, 'getGlobalSiteNotice']),
-            new TwigFunction('getAllowedHtmlForNotice', [$this, 'getAllowedHtmlForNotice']),
+            new TwigFunction('shouldDisplayGlobalSiteNotice', $this->shouldDisplayGlobalSiteNotice(...)),
+            new TwigFunction('getGlobalSiteNotice', $this->getGlobalSiteNotice(...)),
+            new TwigFunction('getAllowedHtmlForNotice', $this->getAllowedHtmlForNotice(...)),
         ];
     }
 

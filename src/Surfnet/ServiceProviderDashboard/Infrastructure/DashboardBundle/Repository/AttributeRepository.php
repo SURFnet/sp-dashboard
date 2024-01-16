@@ -26,9 +26,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\NullAttr
 
 class AttributeRepository implements AttributeRepositoryInterface
 {
-    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
+    final public const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
-    private $attributes = [];
+    private array $attributes = [];
 
     public function __construct(private readonly string $attributesFileLocation)
     {

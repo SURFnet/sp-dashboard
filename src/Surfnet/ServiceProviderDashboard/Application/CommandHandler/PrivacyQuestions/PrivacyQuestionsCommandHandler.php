@@ -34,10 +34,9 @@ class PrivacyQuestionsCommandHandler implements CommandHandler
     }
 
     /**
-     * @param PrivacyQuestionsCommand $command
      * @throws EntityNotFoundException
      */
-    public function handle(PrivacyQuestionsCommand $command)
+    public function handle(PrivacyQuestionsCommand $command): void
     {
         $service = $command->getService();
 
@@ -63,7 +62,7 @@ class PrivacyQuestionsCommandHandler implements CommandHandler
         $this->repository->save($questions);
     }
 
-    private function setDataFromCommand(PrivacyQuestionsCommand $command, PrivacyQuestions $questions)
+    private function setDataFromCommand(PrivacyQuestionsCommand $command, PrivacyQuestions $questions): void
     {
         $questions->setService($command->getService());
         $questions->setAccessData($command->getAccessData());

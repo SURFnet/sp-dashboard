@@ -24,7 +24,7 @@ use Psr\Log\LoggerInterface;
 
 class JiraServiceFactory
 {
-    private ArrayConfiguration $config;
+    private readonly ArrayConfiguration $config;
 
     public function __construct(
         string $host,

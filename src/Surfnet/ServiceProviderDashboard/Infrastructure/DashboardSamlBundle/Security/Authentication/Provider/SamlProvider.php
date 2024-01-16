@@ -46,7 +46,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
     /**
      * @var string[]
      */
-    private $administratorTeams;
+    private readonly array $administratorTeams;
 
     public function __construct(
         private readonly ContactRepository $contacts,
@@ -91,11 +91,11 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         try {
             // An exception is thrown when isMemberOf is empty.
             $teamNames = (array)$translatedAssertion->getAttributeValue('isMemberOf');
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             $teamNames = [];
         }
 
-        if (!empty(array_intersect($this->administratorTeams, $teamNames))) {
+        if (array_intersect($this->administratorTeams, $teamNames) !== []) {
             $role = 'ROLE_ADMINISTRATOR';
         }
 
@@ -186,7 +186,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $message = sprintf(
                 'First value of attribute "%s" must be a string, "%s" given',
                 $attribute,
-                is_object($value) ? get_class($value) : gettype($value)
+                get_debug_type($value)
             );
 
             $this->logger->warning($message);

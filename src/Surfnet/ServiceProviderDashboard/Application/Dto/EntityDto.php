@@ -24,35 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class EntityDto
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $entityId;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $state;
-
-    /**
-     * @var Contact
-     */
-    private $contact;
-
-    /**
-     * @var string
-     */
-    private $protocol;
+    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Contact $contact = null;
 
     /**
      * @param string $id
@@ -61,16 +33,11 @@ class EntityDto
      * @param string $state
      * @param string $protocol
      */
-    private function __construct($id, $entityId, $environment, $state, $protocol)
+    private function __construct(private $id, private $entityId, private $environment, private $state, private $protocol)
     {
-        $this->id = $id;
-        $this->entityId = $entityId;
-        $this->environment = $environment;
-        $this->state = $state;
-        $this->protocol = $protocol;
     }
 
-    public static function fromManageTestResult(ManageEntity $manageResponse)
+    public static function fromManageTestResult(ManageEntity $manageResponse): self
     {
         return new self(
             $manageResponse->getId(),
@@ -81,7 +48,7 @@ class EntityDto
         );
     }
 
-    public static function fromManageProductionResult(ManageEntity $manageResponse)
+    public static function fromManageProductionResult(ManageEntity $manageResponse): self
     {
         $state = Constants::STATE_PUBLISHED;
         if ($manageResponse->getMetaData()->getCoin()->getExcludeFromPush()) {
@@ -128,7 +95,7 @@ class EntityDto
         return $this->state;
     }
 
-    public function setContact(Contact $contact)
+    public function setContact(Contact $contact): void
     {
         $this->contact = $contact;
     }

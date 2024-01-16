@@ -30,24 +30,18 @@ class ValidLogoValidator extends ConstraintValidator
     /**
      * The status code used when the download of the logo failed.
      */
-    const STATUS_DOWNLOAD_FAILED = 'validator.logo.download_failed';
+    final public const STATUS_DOWNLOAD_FAILED = 'validator.logo.download_failed';
 
     /**
      * The status code used when an invalid type is requested as logo
      */
-    const STATUS_INVALID_TYPE = 'validator.logo.wrong_type';
+    final public const STATUS_INVALID_TYPE = 'validator.logo.wrong_type';
 
-    /**
-     * @var LogoValidationHelperInterface
-     */
-    private $logoValidationHelper;
-
-    public function __construct(LogoValidationHelperInterface $logoValidationHelper)
+    public function __construct(private readonly LogoValidationHelperInterface $logoValidationHelper)
     {
-        $this->logoValidationHelper = $logoValidationHelper;
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (empty($value)) {
             return;
@@ -56,10 +50,10 @@ class ValidLogoValidator extends ConstraintValidator
         try {
             $this->logoValidationHelper->validateLogo($value);
             $this->getImageSizeValidation($value, $constraint);
-        } catch (LogoNotFoundException $e) {
+        } catch (LogoNotFoundException) {
             $this->context->addViolation(self::STATUS_DOWNLOAD_FAILED);
             return;
-        } catch (LogoInvalidTypeException $e) {
+        } catch (LogoInvalidTypeException) {
             $this->context->addViolation(self::STATUS_INVALID_TYPE);
             return;
         }
@@ -68,16 +62,15 @@ class ValidLogoValidator extends ConstraintValidator
     /**
      * Using getimagesize we can test if PHP can handle the resource as an image
      * @param $value
-     * @param Constraint $constraint
      */
-    private function getImageSizeValidation($value, Constraint $constraint)
+    private function getImageSizeValidation($value, Constraint $constraint): void
     {
         try {
             $imgData = getimagesize($value);
             if ($imgData === false) {
                 $this->context->addViolation($constraint->message);
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->context->addViolation($constraint->message);
         }
     }

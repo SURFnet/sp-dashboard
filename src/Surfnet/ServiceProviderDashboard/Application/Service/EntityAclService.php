@@ -35,10 +35,9 @@ class EntityAclService
     }
 
     /**
-     * @param ManageEntity $entity
      * @return IdentityProvider[]
      */
-    public function getAllowedIdpsFromEntity(ManageEntity $entity)
+    public function getAllowedIdpsFromEntity(ManageEntity $entity): array
     {
         $availableIdps = $this->getAvailableIdps();
 
@@ -71,15 +70,10 @@ class EntityAclService
     /**
      * Sort idp's on name
      *
-     * @param IdentityProvider $a
-     * @param IdentityProvider $b
      * @return int
      */
-    public static function sortOnName(IdentityProvider $a, IdentityProvider $b)
+    public static function sortOnName(IdentityProvider $a, IdentityProvider $b): int
     {
-        if ($a->getName() == $b->getName()) {
-            return 0;
-        }
-        return $a->getName() > $b->getName() ? 1 : -1;
+        return $a->getName() <=> $b->getName();
     }
 }

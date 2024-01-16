@@ -38,11 +38,9 @@ class UpdateEntityAclCommandHandler implements CommandHandler
     }
 
     /**
-     * @param UpdateEntityAclCommand $command
-     *
      * @throws InvalidArgumentException
      */
-    public function handle(UpdateEntityAclCommand $command)
+    public function handle(UpdateEntityAclCommand $command): void
     {
         $this->logger->info(sprintf(
             'Publishing entity "%s" to Manage in test environment to update ACL',
@@ -50,9 +48,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         ));
 
         $entity = $command->getManageEntity();
-        $idps = array_map(function (IdentityProvider $idp) {
-            return $idp->getEntityId();
-        }, $command->getSelected());
+        $idps = array_map(fn(IdentityProvider $idp) => $idp->getEntityId(), $command->getSelected());
         $allowedIdps = new AllowedIdentityProviders($idps, $command->isSelectAll());
         $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {
