@@ -26,53 +26,43 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AuthorizationServiceTest extends MockeryTestCase
 {
-    /** @var ServiceService|MockInterface */
-    private $serviceService;
-
-    /** @var Session|MockInterface */
-    private $session;
-
-    /** @var TokenStorageInterface|MockInterface */
-    private $tokenStorage;
-
-    /** @var AuthorizationService */
-    private $service;
-    /**
-     * @var MockInterface&Config
-     */
-    private $manageConfigTest;
-    /**
-     * @var MockInterface&Config
-     */
-    private $manageConfigProd;
-
+    private ServiceService|MockInterface|m\LegacyMockInterface $serviceService;
+    private Session|m\LegacyMockInterface|MockInterface $session;
+    private m\LegacyMockInterface|TokenStorageInterface|MockInterface $tokenStorage;
+    private AuthorizationService $service;
+    private MockInterface|Config|m\LegacyMockInterface $manageConfigTest;
+    private MockInterface|Config|m\LegacyMockInterface $manageConfigProd;
+    private m\LegacyMockInterface|RequestStack|MockInterface $requestStack;
     public function setUp(): void
     {
         $this->serviceService = m::mock(ServiceService::class);
-        $this->session = m::mock(Session::class);
         $this->tokenStorage = m::mock(TokenStorageInterface::class);
         $this->manageConfigTest = m::mock(Config::class);
         $this->manageConfigProd = m::mock(Config::class);
+        $this->requestStack = m::mock(RequestStack::class);
 
         $token = m::mock(SamlToken::class);
         $token->shouldReceive('hasRole')->with('ROLE_ADMINISTRATOR')->andReturnTrue();
         $token->shouldReceive('getRoleNames')->andReturn(['ROLE_ADMINISTRATOR']);
         $this->tokenStorage->shouldReceive('getToken')
             ->andReturn($token);
-
+        $this->requestStack->shouldReceive('getSession')->andReturn(m::mock(Session::class));
 
         $this->service = new AuthorizationService(
             $this->serviceService,
-            $this->session,
+            $this->requestStack,
             $this->tokenStorage,
             $this->manageConfigTest,
             $this->manageConfigProd
         );
+
+        $this->session = $this->requestStack->getSession();
     }
 
     /**
