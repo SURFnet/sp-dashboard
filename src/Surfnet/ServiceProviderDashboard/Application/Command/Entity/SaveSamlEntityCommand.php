@@ -46,7 +46,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      */
     private $status;
 
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
+    private ?Service $service = null;
 
     /**
      * @deprecated
@@ -179,13 +179,11 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      */
     private $comments;
 
-    #[Assert\Choice(callback: [\Surfnet\ServiceProviderDashboard\Domain\Entity\Constants::class, 'getValidNameIdFormats'], strict: true)]
-    private string $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
+    #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]
+    private ?string $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
 
-    /**
-     * @var string
-     */
-    private $manageId;
+    private ?string $manageId = null;
+    private ?Attribute $organizationUnitAttribute;
 
     public function __construct()
     {
@@ -223,9 +221,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return null;
     }
 
-    /**
-     * @return SaveSamlEntityCommand
-     */
     public static function forCreateAction(Service $service): self
     {
         $command = new self();
@@ -233,18 +228,12 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $command;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -254,18 +243,12 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->service;
     }
 
-    /**
-     * @return bool
-     */
-    public function isArchived()
+    public function isArchived(): bool
     {
         return $this->archived;
     }
 
-    /**
-     * @param bool $archived
-     */
-    public function setArchived($archived): void
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }
@@ -275,10 +258,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->environment;
     }
 
-    /**
-     * @param string $environment
-     */
-    public function setEnvironment($environment): void
+    public function setEnvironment(string $environment): void
     {
         if (!in_array($environment, [
             Constants::ENVIRONMENT_TEST,
@@ -292,18 +272,12 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->environment = $environment;
     }
 
-    /**
-     * @return string
-     */
-    public function getImportUrl()
+    public function getImportUrl(): string
     {
         return $this->importUrl;
     }
 
-    /**
-     * @param string $importUrl
-     */
-    public function setImportUrl($importUrl): void
+    public function setImportUrl(string $importUrl): void
     {
         $this->importUrl = $importUrl;
     }
@@ -313,26 +287,17 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->metadataUrl;
     }
 
-    /**
-     * @param string $metadataUrl
-     */
-    public function setMetadataUrl($metadataUrl): void
+    public function setMetadataUrl(string $metadataUrl): void
     {
         $this->metadataUrl = $metadataUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getPastedMetadata()
+    public function getPastedMetadata(): string
     {
         return $this->pastedMetadata;
     }
 
-    /**
-     * @param string $pastedMetadata
-     */
-    public function setPastedMetadata($pastedMetadata): void
+    public function setPastedMetadata(string $pastedMetadata): void
     {
         $this->pastedMetadata = $pastedMetadata;
     }
@@ -342,9 +307,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->acsLocations = $acsLocations;
     }
 
-    /**
-     * @return array
-     */
     public function getAcsLocations(): ?array
     {
         return $this->acsLocations;
@@ -356,42 +318,27 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->entityId;
     }
 
-    /**
-     * @param string $entityId
-     */
-    public function setEntityId($entityId): void
+    public function setEntityId(string $entityId): void
     {
         $this->entityId = $entityId;
     }
 
-    /**
-     * @return string
-     */
     public function getCertificate(): ?string
     {
         return $this->certificate;
     }
 
-    /**
-     * @param string $certificate
-     */
-    public function setCertificate($certificate): void
+    public function setCertificate(string $certificate): void
     {
         $this->certificate = $certificate;
     }
 
-    /**
-     * @return string
-     */
     public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
     }
 
-    /**
-     * @param string $logoUrl
-     */
-    public function setLogoUrl($logoUrl): void
+    public function setLogoUrl(string $logoUrl): void
     {
         $this->logoUrl = $logoUrl;
     }
@@ -401,10 +348,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->nameNl;
     }
 
-    /**
-     * @param string $nameNl
-     */
-    public function setNameNl($nameNl): void
+    public function setNameNl(string $nameNl): void
     {
         $this->nameNl = $nameNl;
     }
@@ -414,10 +358,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->nameEn;
     }
 
-    /**
-     * @param string $nameEn
-     */
-    public function setNameEn($nameEn): void
+    public function setNameEn(string $nameEn): void
     {
         $this->nameEn = $nameEn;
     }
@@ -427,10 +368,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->descriptionNl;
     }
 
-    /**
-     * @param string $descriptionNl
-     */
-    public function setDescriptionNl($descriptionNl): void
+    public function setDescriptionNl(string $descriptionNl): void
     {
         $this->descriptionNl = $descriptionNl;
     }
@@ -440,42 +378,27 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->descriptionEn;
     }
 
-    /**
-     * @param string $descriptionEn
-     */
-    public function setDescriptionEn($descriptionEn): void
+    public function setDescriptionEn(string $descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
     }
 
-    /**
-     * @return string
-     */
     public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
     }
 
-    /**
-     * @param string $applicationUrl
-     */
-    public function setApplicationUrl($applicationUrl): void
+    public function setApplicationUrl(string $applicationUrl): void
     {
         $this->applicationUrl = $applicationUrl;
     }
 
-    /**
-     * @return string
-     */
     public function getEulaUrl(): ?string
     {
         return $this->eulaUrl;
     }
 
-    /**
-     * @param string $eulaUrl
-     */
-    public function setEulaUrl($eulaUrl): void
+    public function setEulaUrl(string $eulaUrl): void
     {
         $this->eulaUrl = $eulaUrl;
     }
@@ -510,44 +433,29 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->supportContact = $supportContact;
     }
 
-    /**
-     * @return string
-     */
     public function getComments(): ?string
     {
         return $this->comments;
     }
 
-    /**
-     * @param string $comments
-     */
-    public function setComments($comments): void
+    public function setComments(string $comments): void
     {
         $this->comments = $comments;
     }
 
-    /**
-     * @return string
-     */
     public function getNameIdFormat(): ?string
     {
         return $this->nameIdFormat;
     }
 
-    /**
-     * @param string $nameIdFormat
-     */
-    public function setNameIdFormat($nameIdFormat): void
+    public function setNameIdFormat(?string $nameIdFormat): void
     {
         $this->nameIdFormat = $nameIdFormat;
     }
 
-    /**
-     * @return bool
-     */
     public function hasNameIdFormat(): bool
     {
-        return !empty($this->nameIdFormat);
+        return $this->nameIdFormat !== '' && $this->nameIdFormat !== '0';
     }
 
     public function isForProduction(): bool
@@ -570,18 +478,12 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->service = $service;
     }
 
-    /**
-     * @return string
-     */
-    public function getManageId()
+    public function getManageId(): ?string
     {
         return $this->manageId;
     }
 
-    /**
-     * @param string $manageId
-     */
-    public function setManageId($manageId): void
+    public function setManageId(?string $manageId): void
     {
         $this->manageId = $manageId;
     }
