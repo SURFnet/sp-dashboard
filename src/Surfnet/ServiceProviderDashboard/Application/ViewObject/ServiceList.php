@@ -38,7 +38,7 @@ class ServiceList implements IteratorAggregate
         return $this->services;
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->services);
     }

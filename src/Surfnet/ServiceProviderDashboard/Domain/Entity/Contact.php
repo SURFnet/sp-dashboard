@@ -19,34 +19,33 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
- * @ORM\Entity(repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository")
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  * @method string getUserIdentifier()
  */
+#[ORM\Entity(repositoryClass: \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository::class)]
 class Contact
 {
     /**
      * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
-     * @var ArrayCollection<Service>
-     *
-     * @ORM\ManyToMany(targetEntity="Service", inversedBy="contacts")
-     * @ORM\JoinColumn(nullable=false)
+     * @var Collection<Service>
      */
-    private \Doctrine\Common\Collections\ArrayCollection $services;
+    #[ORM\ManyToMany(targetEntity: 'Service', inversedBy: 'contacts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private \Doctrine\Common\Collections\Collection $services;
 
     private array $roles = [];
 
@@ -55,15 +54,9 @@ class Contact
      * @param string $emailAddress
      * @param string $displayName
      */
-    public function __construct(/**
-     * @ORM\Column(length=150)
-     */
-    private $nameId, /**
-     * @ORM\Column(length=255)
-     */
-    private $emailAddress, /**
-     * @ORM\Column(length=255)
-     */
+    public function __construct(#[ORM\Column(length: 150)]
+    private $nameId, #[ORM\Column(length: 255)]
+    private $emailAddress, #[ORM\Column(length: 255)]
     private $displayName)
     {
         $this->services = new ArrayCollection();
@@ -141,9 +134,9 @@ class Contact
     }
 
     /**
-     * @return ArrayCollection<Service>
+     * @return Collection<Service>
      */
-    public function getServices()
+    public function getServices(): \Doctrine\Common\Collections\Collection
     {
         return $this->services;
     }

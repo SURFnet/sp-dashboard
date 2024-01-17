@@ -35,7 +35,7 @@ class EntityPublishedController extends AbstractController
     public function published(): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         /** @var ManageEntity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
+        $entity = $this->get('request_stack')->getSession()->get('published.entity.clone');
 
         // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
@@ -85,10 +85,10 @@ class EntityPublishedController extends AbstractController
     public function oidcConfirmationModal(): \Symfony\Component\HttpFoundation\Response
     {
         /** @var ManageEntity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
+        $entity = $this->get('request_stack')->getSession()->get('published.entity.clone');
 
         // Show the confirmation modal only once in this request
-        $this->get('session')->remove('published.entity.clone');
+        $this->get('request_stack')->getSession()->remove('published.entity.clone');
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 

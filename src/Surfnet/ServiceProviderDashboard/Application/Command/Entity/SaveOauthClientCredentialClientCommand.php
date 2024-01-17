@@ -217,7 +217,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return bool
      */
-    public function isCopy()
+    public function isCopy(): ?bool
     {
         return $this->isCopy;
     }
@@ -230,15 +230,12 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return bool
      */
-    public function isArchived()
+    public function isArchived(): bool
     {
         return $this->archived;
     }
 
-    /**
-     * @param bool $archived
-     */
-    public function setArchived($archived): void
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }
@@ -527,7 +524,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return OidcGrantType
      */
-    public function getGrants()
+    public function getGrants(): array
     {
         return $this->grants;
     }
@@ -535,7 +532,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param OidcGrantType $grants
      */
-    public function setGrants($grants): void
+    public function setGrants(array $grants): void
     {
         $this->grants = $grants;
     }
@@ -543,7 +540,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return string
      */
-    public function getSubjectType()
+    public function getSubjectType(): string
     {
         return $this->subjectType;
     }
@@ -564,7 +561,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return string[]
      */
-    public function getOidcngResourceServers()
+    public function getOidcngResourceServers(): array
     {
         return $this->resourceServers;
     }
@@ -572,7 +569,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string[] $resourceServers
      */
-    public function setOidcngResourceServers($resourceServers): void
+    public function setOidcngResourceServers(array $resourceServers): void
     {
         $this->resourceServers = $resourceServers;
     }

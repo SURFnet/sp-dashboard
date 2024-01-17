@@ -21,73 +21,62 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(
- *     repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository"
- * )
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
+#[ORM\Entity(repositoryClass: \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository::class)]
 class PrivacyQuestions
 {
     /**
      * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", options={"autoincrement":true})
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer', options: ['autoincrement' => true])]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $whatData;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $accessData;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $country;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $securityMeasures;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     private $otherInfo;
 
-    /**
-     *
-     * @ORM\OneToOne(targetEntity="Service", inversedBy="privacyQuestions")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    
+    #[ORM\OneToOne(targetEntity: 'Service', inversedBy: 'privacyQuestions')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $dpaType = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $privacyStatementUrlNl = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $privacyStatementUrlEn = null;
 
     public function setService(Service $service): void
@@ -146,7 +135,7 @@ class PrivacyQuestions
     /**
      * @return Service
      */
-    public function getService()
+    public function getService(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service
     {
         return $this->service;
     }
@@ -188,7 +177,7 @@ class PrivacyQuestions
         $this->dpaType = $dpaType;
     }
 
-    public function getDpaType()
+    public function getDpaType(): ?string
     {
         return $this->dpaType;
     }

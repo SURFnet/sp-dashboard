@@ -61,7 +61,7 @@ class Issue implements JsonSerializable
     /**
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -69,7 +69,7 @@ class Issue implements JsonSerializable
     /**
      * @return string
      */
-    public function getIssueType()
+    public function getIssueType(): string
     {
         return $this->issueType;
     }

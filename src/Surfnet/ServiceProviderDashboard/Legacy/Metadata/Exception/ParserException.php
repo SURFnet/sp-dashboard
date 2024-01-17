@@ -41,7 +41,7 @@ class ParserException extends InvalidArgumentException
     /**
      * @return \LibXMLError[]
      */
-    public function getParserErrors()
+    public function getParserErrors(): array
     {
         return $this->parserErrors;
     }

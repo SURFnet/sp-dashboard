@@ -219,7 +219,7 @@ class EntityMergeService
         return new Logo($command->getLogoUrl(), null, null);
     }
 
-    private function buildRedirectUrls(SaveOidcngEntityCommand $command)
+    private function buildRedirectUrls(SaveOidcngEntityCommand $command): ?array
     {
         $playgroundUrl = $command->getEnvironment() === Constants::ENVIRONMENT_TEST ? $this->playGroundUriTest : $this->playGroundUriProd;
         $urls = $command->getRedirectUrls();

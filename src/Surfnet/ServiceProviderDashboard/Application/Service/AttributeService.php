@@ -42,7 +42,7 @@ class AttributeService implements AttributeServiceInterface
 
     public function getAttributeTypeAttributes(): array
     {
-        if (empty($this->attributes)) {
+        if ($this->attributes === []) {
             $attributes = $this->attributeRepository->findAll();
 
             foreach ($attributes ?? [] as $value) {

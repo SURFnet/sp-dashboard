@@ -29,7 +29,7 @@ class EntityActions
     {
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -37,12 +37,12 @@ class EntityActions
     /**
      * @return int
      */
-    public function getServiceId()
+    public function getServiceId(): int
     {
         return $this->serviceId;
     }
 
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         return $this->environment;
     }

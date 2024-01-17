@@ -166,7 +166,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return bool
      */
-    public function isCopy()
+    public function isCopy(): ?bool
     {
         return $this->isCopy;
     }
@@ -179,15 +179,12 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return bool
      */
-    public function isArchived()
+    public function isArchived(): bool
     {
         return $this->archived;
     }
 
-    /**
-     * @param bool $archived
-     */
-    public function setArchived($archived): void
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }
@@ -233,7 +230,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): ?string
     {
         return $this->entityId;
     }
@@ -417,7 +414,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return array
      */
-    public function getScopes()
+    public function getScopes(): array
     {
         return $this->scopes;
     }

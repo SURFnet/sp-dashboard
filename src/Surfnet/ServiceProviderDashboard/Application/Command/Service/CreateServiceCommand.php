@@ -102,50 +102,32 @@ class CreateServiceCommand implements Command
         $this->name = $name;
     }
 
-    /**
-     * @param bool $enabled
-     */
-    public function setProductionEntitiesEnabled($enabled): void
+    public function setProductionEntitiesEnabled(bool $enabled): void
     {
         $this->productionEntitiesEnabled = $enabled;
     }
 
-    /**
-     * @param bool $privacyQuestionsEnabled
-     */
-    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled): void
+    public function setPrivacyQuestionsEnabled(bool $privacyQuestionsEnabled): void
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
 
-    /**
-     * @param string $serviceType
-     */
-    public function setServiceType($serviceType): void
+    public function setServiceType(string $serviceType): void
     {
         $this->serviceType = $serviceType;
     }
 
-    /**
-     * @param string $intakeStatus
-     */
-    public function setIntakeStatus($intakeStatus): void
+    public function setIntakeStatus(string $intakeStatus): void
     {
         $this->intakeStatus = $intakeStatus;
     }
 
-    /**
-     * @param string $contractSigned
-     */
-    public function setContractSigned($contractSigned): void
+    public function setContractSigned(string $contractSigned): void
     {
         $this->contractSigned = $contractSigned;
     }
 
-    /**
-     * @param string $surfconextRepresentativeApproved
-     */
-    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved): void
+    public function setSurfconextRepresentativeApproved(string $surfconextRepresentativeApproved): void
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
     }
@@ -185,7 +167,7 @@ class CreateServiceCommand implements Command
     /**
      * @return bool
      */
-    public function isProductionEntitiesEnabled()
+    public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled;
     }
@@ -193,7 +175,7 @@ class CreateServiceCommand implements Command
     /**
      * @return bool
      */
-    public function isPrivacyQuestionsEnabled()
+    public function isPrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
     }
@@ -201,7 +183,7 @@ class CreateServiceCommand implements Command
     /**
      * @return string
      */
-    public function getServiceType()
+    public function getServiceType(): string
     {
         return $this->serviceType;
     }
@@ -209,7 +191,7 @@ class CreateServiceCommand implements Command
     /**
      * @return string
      */
-    public function getIntakeStatus()
+    public function getIntakeStatus(): string
     {
         return $this->intakeStatus;
     }
@@ -217,7 +199,7 @@ class CreateServiceCommand implements Command
     /**
      * @return string
      */
-    public function getContractSigned()
+    public function getContractSigned(): string
     {
         return $this->contractSigned;
     }
@@ -225,7 +207,7 @@ class CreateServiceCommand implements Command
     /**
      * @return string
      */
-    public function getSurfconextRepresentativeApproved()
+    public function getSurfconextRepresentativeApproved(): string
     {
         return $this->surfconextRepresentativeApproved;
     }

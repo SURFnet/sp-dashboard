@@ -41,7 +41,7 @@ class AttributeRepository implements AttributeRepositoryInterface
 
     private function getAttributes(): array
     {
-        if (empty($this->attributes)) {
+        if ($this->attributes === []) {
             foreach ($this->load() as $rawAttribute) {
                 $this->attributes[] = Attribute::fromAttribute($rawAttribute);
             }

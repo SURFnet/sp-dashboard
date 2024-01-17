@@ -36,7 +36,7 @@ class EntityList implements IteratorAggregate
         return $this->entities;
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->entities);
     }

@@ -19,16 +19,15 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
- * @ORM\Entity(
- *     repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository"
- * )
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
+#[ORM\Entity(repositoryClass: \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository::class)]
 class Service
 {
     // Reflect the type of service either an institute or a 'non institute'
@@ -59,96 +58,73 @@ class Service
 
     /**
      * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="guid", nullable=true)
      */
+    #[ORM\Column(type: 'guid', nullable: true)]
     private $guid;
 
     /**
      * @var string
-     *
-     * @ORM\Column(length=255)
      */
+    #[ORM\Column(length: 255)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(length=255)
      */
+    #[ORM\Column(length: 255)]
     private $teamName;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $productionEntitiesEnabled = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $privacyQuestionsEnabled = true;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private bool $clientCredentialClientsEnabled = false;
 
-    /**
-     * @ORM\Column(length=50)
-     */
+    #[ORM\Column(length: 50)]
     private string $serviceType = self::SERVICE_TYPE_INSTITUTE;
 
-    /**
-     * @ORM\Column(length=50)
-     */
+    #[ORM\Column(length: 50)]
     private string $intakeStatus = self::INTAKE_STATUS_NO;
 
     /**
      * @var string
-     * @ORM\Column(length=50, nullable=true)
      */
+    #[ORM\Column(length: 50, nullable: true)]
     private $contractSigned;
 
     /**
      * @var string
-     * @ORM\Column(length=50, nullable=true)
      */
+    #[ORM\Column(length: 50, nullable: true)]
     private $surfconextRepresentativeApproved;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Contact", mappedBy="services", cascade={"persist"}, orphanRemoval=true)
-     */
-    private \Doctrine\Common\Collections\ArrayCollection $contacts;
+    #[ORM\ManyToMany(targetEntity: 'Contact', mappedBy: 'services', cascade: ['persist'], orphanRemoval: true)]
+    private \Doctrine\Common\Collections\Collection $contacts;
 
-    /**
-     * @ORM\OneToOne(targetEntity="PrivacyQuestions", mappedBy="service", cascade={"remove"}, orphanRemoval=true)
-     */
+    #[ORM\OneToOne(targetEntity: 'PrivacyQuestions', mappedBy: 'service', cascade: ['remove'], orphanRemoval: true)]
     private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions $privacyQuestions = null;
 
     /**
      * @var string
-     *
-     * @ORM\Column(length=255, nullable=true)
      */
+    #[ORM\Column(length: 255, nullable: true)]
     private $institutionId;
 
-    /**
-     * @ORM\Column(length=255, nullable=false)
-     */
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $organizationNameNl = null;
 
-    /**
-     * @ORM\Column(length=255, nullable=false)
-     */
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $organizationNameEn = null;
 
     public function __construct()
@@ -212,18 +188,12 @@ class Service
         $this->name = $name;
     }
 
-    /**
-     * @param bool $enabled
-     */
-    public function setProductionEntitiesEnabled($enabled): void
+    public function setProductionEntitiesEnabled(bool $enabled): void
     {
         $this->productionEntitiesEnabled = $enabled;
     }
 
-    /**
-     * @param bool $privacyQuestionsEnabled
-     */
-    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled): void
+    public function setPrivacyQuestionsEnabled(bool $privacyQuestionsEnabled): void
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
@@ -239,7 +209,7 @@ class Service
     /**
      * @return PrivacyQuestions
      */
-    public function getPrivacyQuestions()
+    public function getPrivacyQuestions(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions
     {
         return $this->privacyQuestions;
     }
@@ -257,7 +227,7 @@ class Service
     /**
      * @return bool
      */
-    public function isPrivacyQuestionsEnabled()
+    public function isPrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
     }
@@ -288,15 +258,12 @@ class Service
     /**
      * @return string
      */
-    public function getServiceType()
+    public function getServiceType(): string
     {
         return $this->serviceType;
     }
 
-    /**
-     * @param string $serviceType
-     */
-    public function setServiceType($serviceType): void
+    public function setServiceType(string $serviceType): void
     {
         $this->serviceType = $serviceType;
     }
@@ -304,15 +271,12 @@ class Service
     /**
      * @return string
      */
-    public function getIntakeStatus()
+    public function getIntakeStatus(): string
     {
         return $this->intakeStatus;
     }
 
-    /**
-     * @param string $intakeStatus
-     */
-    public function setIntakeStatus($intakeStatus): void
+    public function setIntakeStatus(string $intakeStatus): void
     {
         $this->intakeStatus = $intakeStatus;
     }

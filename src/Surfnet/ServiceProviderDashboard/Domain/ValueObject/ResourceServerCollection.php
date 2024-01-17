@@ -39,7 +39,7 @@ class ResourceServerCollection
     /**
      * @return string[]
      */
-    public function getResourceServers()
+    public function getResourceServers(): array
     {
         return $this->clientsIds;
     }

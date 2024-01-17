@@ -239,7 +239,7 @@ class Entity
     /**
      * @return EntityActions
      */
-    public function getActions()
+    public function getActions(): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions
     {
         return $this->actions;
     }

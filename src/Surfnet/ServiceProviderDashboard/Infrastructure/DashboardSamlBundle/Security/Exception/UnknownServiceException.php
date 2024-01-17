@@ -32,7 +32,7 @@ class UnknownServiceException extends RuntimeException
      *
      * @return array
      */
-    public function getTeamNames()
+    public function getTeamNames(): array
     {
         return $this->teamNames;
     }

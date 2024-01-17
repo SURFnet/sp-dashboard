@@ -35,7 +35,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
  */
 class DeleteCommandFactory
 {
-    public function from(EntityDto $entity)
+    public function from(EntityDto $entity): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand|\Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand|\Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand
     {
         $isPublishedToTest = $entity->getEnvironment() === 'test' && $entity->getState() === 'published';
         $isPublishedProduction = $entity->getEnvironment() === 'production' && $entity->getState() === 'requested';

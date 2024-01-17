@@ -126,7 +126,7 @@ class ContactList implements Comparable
         return $data;
     }
 
-    private function getIndexByType(string $type)
+    private function getIndexByType(string $type): int
     {
         $types = array_flip(self::$supportedContactTypes);
         if (!array_key_exists($type, $types)) {

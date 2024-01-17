@@ -63,7 +63,7 @@ class ValidSSLCertificateValidator extends ConstraintValidator
         }
     }
 
-    private function setCertificateEnvelope($certData)
+    private function setCertificateEnvelope($certData): string
     {
         $certData = $this->stripCertificateEnvelope($certData);
 

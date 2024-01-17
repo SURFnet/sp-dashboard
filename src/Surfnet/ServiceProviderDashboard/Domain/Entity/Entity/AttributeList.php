@@ -27,7 +27,7 @@ class AttributeList implements Comparable
      */
     private array $attributes = [];
 
-    private $originalAttributes = [];
+    private array $originalAttributes = [];
 
     public static function fromApiResponse(array $data): self
     {
@@ -92,7 +92,7 @@ class AttributeList implements Comparable
     /**
      * @return Attribute[]
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }

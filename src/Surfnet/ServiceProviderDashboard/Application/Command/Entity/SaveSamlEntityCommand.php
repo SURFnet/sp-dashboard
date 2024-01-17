@@ -35,16 +35,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SaveSamlEntityCommand implements SaveEntityCommandInterface
 {
-    /**
-     * @var string
-     */
     #[Assert\Uuid]
-    private $id;
+    private ?string $id = null;
 
-    /**
-     * @var string
-     */
-    private $status;
+    private ?string $status = null;
 
     private ?Service $service = null;
 
@@ -60,24 +54,19 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     /**
      * Metadata URL that import last happened from.
-     *
-     * @var string
      * @deprecated
      */
-    private $importUrl;
+    private ?string $importUrl = null;
 
     /**
-     * @var string
-     *
      * @SpDashboardAssert\ValidMetadataUrl()
      */
-    private $metadataUrl;
+    private ?string $metadataUrl = null;
 
     /**
-     * @var string
      * @deprecated
      */
-    private $pastedMetadata;
+    private string $pastedMetadata;
 
     /**
      * @Assert\All({
@@ -88,102 +77,75 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      *      )
      * })
      */
-    #[Assert\Count(min: 1, minMessage: 'At least one ACS location is required', max: 10, maxMessage: '{{ limit }} ACS locations or less are allowed')]
+    #[Assert\Count(min: 1, max: 10, minMessage: 'At least one ACS location is required', maxMessage: '{{ limit }} ACS locations or less are allowed')]
     private ?array $acsLocations = null;
 
     /**
-     * @var string
-     *
      * @SpDashboardAssert\ValidEntityId()
      * @SpDashboardAssert\UniqueEntityId()
      */
     #[Assert\NotBlank]
-    private $entityId;
+    private string $entityId;
 
     /**
-     * @var string
-     *
      * @SpDashboardAssert\ValidSSLCertificate()
      */
-    private $certificate;
+    private string $certificate;
 
     /**
-     * @var string
-     *
      * @SpDashboardAssert\ValidLogo()
      */
     #[Assert\Url]
     #[Assert\NotBlank]
-    private $logoUrl;
+    private ?string $logoUrl = null;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
-    private $nameNl;
+    private ?string $nameNl = null;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
-    private $nameEn;
+    private ?string $nameEn = null;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
     #[Assert\Length(max: 300)]
-    private $descriptionNl;
+    private ?string $descriptionNl = null;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
     #[Assert\Length(max: 300)]
-    private $descriptionEn;
+    private ?string $descriptionEn = null;
 
-    /**
-     * @var string
-     */
     #[Assert\Url]
-    private $applicationUrl;
+    private ?string $applicationUrl = null;
 
-    /**
-     * @var string
-     */
     #[Assert\Url]
-    private $eulaUrl;
+    private ?string $eulaUrl = null;
 
     
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
-    private ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact $administrativeContact = null;
+    private ?Contact $administrativeContact = null;
 
     
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid]
-    private ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact $technicalContact = null;
+    private ?Contact $technicalContact = null;
 
     
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
-    private ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact $supportContact = null;
+    private ?Contact $supportContact = null;
 
     /**
      * @SpDashboardAssert\ValidAttribute(type="saml20")
      */
     private array $attributes = [];
 
-    /**
-     * @var string
-     */
-    private $comments;
+    private ?string $comments = null;
 
     #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]
     private ?string $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     private ?string $manageId = null;
-    private ?Attribute $organizationUnitAttribute;
+    private ?Attribute $organizationUnitAttribute = null;
 
     public function __construct()
     {
@@ -233,7 +195,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->id;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->status;
     }
@@ -277,7 +239,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->importUrl;
     }
 
-    public function setImportUrl(string $importUrl): void
+    public function setImportUrl(?string $importUrl): void
     {
         $this->importUrl = $importUrl;
     }
@@ -388,7 +350,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->applicationUrl;
     }
 
-    public function setApplicationUrl(string $applicationUrl): void
+    public function setApplicationUrl(?string $applicationUrl): void
     {
         $this->applicationUrl = $applicationUrl;
     }
@@ -398,7 +360,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->eulaUrl;
     }
 
-    public function setEulaUrl(string $eulaUrl): void
+    public function setEulaUrl(?string $eulaUrl): void
     {
         $this->eulaUrl = $eulaUrl;
     }
@@ -463,12 +425,12 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setId($id): void
+    public function setId(?string $id): void
     {
         $this->id = $id;
     }
 
-    public function setStatus($status): void
+    public function setStatus(?string $status): void
     {
         $this->status = $status;
     }

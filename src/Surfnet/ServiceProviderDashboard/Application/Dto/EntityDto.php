@@ -100,7 +100,7 @@ class EntityDto
         $this->contact = $contact;
     }
 
-    public function getContact()
+    public function getContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Contact
     {
         return $this->contact;
     }

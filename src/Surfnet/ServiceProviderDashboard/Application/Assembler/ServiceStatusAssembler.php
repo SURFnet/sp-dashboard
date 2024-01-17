@@ -112,7 +112,7 @@ class ServiceStatusAssembler
     /**
      * @return ServiceStatusDto
      */
-    public function getDto()
+    public function getDto(): \Surfnet\ServiceProviderDashboard\Application\Dto\ServiceStatusDto
     {
         return $this->serviceStatusDto;
     }
@@ -177,10 +177,9 @@ class ServiceStatusAssembler
     }
 
     /**
-     * @param array $states
      * @return array
      */
-    private function mapStates($states): array
+    private function mapStates(array $states): array
     {
         $result = [];
         foreach ($states as $name => $value) {
@@ -222,7 +221,7 @@ class ServiceStatusAssembler
     /**
      * @return mixed[]
      */
-    private function getTooltips($mappedStates): array
+    private function getTooltips(array $mappedStates): array
     {
         $tooltips = [];
         foreach ($mappedStates as $state => $status) {
@@ -231,7 +230,7 @@ class ServiceStatusAssembler
         return $tooltips;
     }
 
-    private function getPercentage($mappedStates): float
+    private function getPercentage(array $mappedStates): float
     {
         $total = 0;
         $done = 0;

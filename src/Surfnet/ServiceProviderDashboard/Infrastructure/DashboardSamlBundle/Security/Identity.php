@@ -31,7 +31,7 @@ class Identity implements UserInterface, \Stringable
     /**
      * @return Contact
      */
-    public function getContact()
+    public function getContact(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Contact
     {
         return $this->contact;
     }

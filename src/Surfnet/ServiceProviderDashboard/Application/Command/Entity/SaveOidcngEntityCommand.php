@@ -268,7 +268,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return bool
      */
-    public function isCopy()
+    public function isCopy(): ?bool
     {
         return $this->isCopy;
     }
@@ -281,15 +281,12 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return bool
      */
-    public function isArchived()
+    public function isArchived(): bool
     {
         return $this->archived;
     }
 
-    /**
-     * @param bool $archived
-     */
-    public function setArchived($archived): void
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }
@@ -335,7 +332,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): ?string
     {
         return $this->entityId;
     }
@@ -359,7 +356,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string[]
      */
-    public function getRedirectUrls()
+    public function getRedirectUrls(): ?array
     {
         return $this->redirectUrls;
     }
@@ -591,7 +588,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return int
      */
-    public function getAccessTokenValidity()
+    public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
     }
@@ -623,7 +620,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return OidcGrantType
      */
-    public function getGrants()
+    public function getGrants(): array
     {
         return $this->grants;
     }
@@ -631,7 +628,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param OidcGrantType $grants
      */
-    public function setGrants($grants): void
+    public function setGrants(array $grants): void
     {
         $this->grants = $grants;
     }
@@ -639,7 +636,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string
      */
-    public function getSubjectType()
+    public function getSubjectType(): string
     {
         return $this->subjectType;
     }
@@ -660,7 +657,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @return string[]
      */
-    public function getOidcngResourceServers()
+    public function getOidcngResourceServers(): array
     {
         return $this->resourceServers;
     }
@@ -668,7 +665,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @param string[] $resourceServers
      */
-    public function setOidcngResourceServers($resourceServers): void
+    public function setOidcngResourceServers(array $resourceServers): void
     {
         $this->resourceServers = $resourceServers;
     }

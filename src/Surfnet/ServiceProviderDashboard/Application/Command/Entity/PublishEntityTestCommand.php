@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class PublishEntityTestCommand implements Command
 {
     public function __construct(
-        #[Assert\Type(\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity::class)]
+        #[Assert\Type(ManageEntity::class)]
         private readonly ManageEntity $manageEntity
     ) {
     }

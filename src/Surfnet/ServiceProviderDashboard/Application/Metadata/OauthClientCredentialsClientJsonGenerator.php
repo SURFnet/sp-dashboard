@@ -176,7 +176,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
     private function generateOidcClient(ManageEntity $entity): array
     {
         $metadata = [];
-        if ($entity->getOidcClient() !== null) {
+        if ($entity->getOidcClient() instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface) {
             $secret = $entity->getOidcClient()->getClientSecret();
             if ($secret !== '' && $secret !== '0') {
                 $metadata['secret'] = $secret;
@@ -325,7 +325,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
     {
         $allowedResourceServers = [];
         $client = $entity->getOidcClient();
-        if ($client !== null) {
+        if ($client instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface) {
             $collection = $client->getResourceServers();
             if ($collection) {
                 foreach ($collection as $clientId) {

@@ -75,7 +75,7 @@ class DpaType implements \Stringable
         return self::build($type);
     }
 
-    public static function fromString(string $dpaType)
+    public static function fromString(string $dpaType): self
     {
         return self::build($dpaType);
     }

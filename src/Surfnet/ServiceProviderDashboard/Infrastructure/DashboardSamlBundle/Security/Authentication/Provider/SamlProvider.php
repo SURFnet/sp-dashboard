@@ -81,7 +81,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
 
         try {
             $commonName = $this->getSingleStringValue('commonName', $translatedAssertion);
-        } catch (MissingSamlAttributeException $e) {
+        } catch (MissingSamlAttributeException) {
             $commonName = '';
         }
 

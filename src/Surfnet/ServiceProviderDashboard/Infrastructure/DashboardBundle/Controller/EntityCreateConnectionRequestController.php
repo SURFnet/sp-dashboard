@@ -139,7 +139,7 @@ class EntityCreateConnectionRequestController extends AbstractController
         if ($request->query->has('entityName')) {
             $parameters['entityName'] = $request->query->get('entityName');
         }
-        if ($this->get('session')->has('published.entity.clone')) {
+        if ($this->get('request_stack')->getSession()->has('published.entity.clone')) {
             $entity = $request->getSession()->get('published.entity.clone');
             $parameters['publishedEntity'] = $entity;
         }

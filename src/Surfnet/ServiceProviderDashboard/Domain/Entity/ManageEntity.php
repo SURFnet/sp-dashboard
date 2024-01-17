@@ -147,7 +147,7 @@ class ManageEntity
         $this->status = $newStatus;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -183,7 +183,7 @@ class ManageEntity
 
     public function isOidcngResourceServer(): bool
     {
-        if ($this->getOidcClient() !== null) {
+        if ($this->getOidcClient() instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface) {
             return $this->getOidcClient() instanceof OidcngResourceServerClient;
         }
 
@@ -226,7 +226,7 @@ class ManageEntity
      */
     private function hasComments(): bool
     {
-        return !(empty($this->comments));
+        return $this->comments !== null && $this->comments !== '' && $this->comments !== '0';
     }
 
     public function setEnvironment(string $environment): void

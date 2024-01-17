@@ -43,7 +43,7 @@ class ChooseEntityTypeCommand
         $this->type = $type;
     }
 
-    public function getProtocolChoices()
+    public function getProtocolChoices(): ?array
     {
         return $this->choices;
     }

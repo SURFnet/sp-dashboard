@@ -44,7 +44,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @return string
      */
-    public function getManageEntity()
+    public function getManageEntity(): \Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity
     {
         return $this->manageEntity;
     }
@@ -52,7 +52,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @return IdentityProvider[]
      */
-    public function getSelected()
+    public function getSelected(): array
     {
         return $this->selected;
     }
@@ -68,7 +68,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @return bool
      */
-    public function isSelectAll()
+    public function isSelectAll(): bool
     {
         return $this->selectAll;
     }

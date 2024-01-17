@@ -43,16 +43,18 @@ class EntityEditController extends AbstractController
     }
 
     /**
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    #[Route(path: '/entity/edit/{environment}/{manageId}/{serviceId}', name: 'entity_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, string $environment, string $manageId, int $serviceId): \Symfony\Component\HttpFoundation\Response
+    #[Route(
+        path: '/entity/edit/{environment}/{manageId}/{serviceId}',
+        name: 'entity_edit',
+        methods: ['GET', 'POST']
+    )]
+    public function edit(Request $request, string $environment, string $manageId, int $serviceId): Response
     {
-        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag = $this->get('request_stack')->getSession()->getFlashBag();
         $service = $this->serviceService->getServiceById($serviceId);
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $entityServiceId = $entity->getService()->getId();

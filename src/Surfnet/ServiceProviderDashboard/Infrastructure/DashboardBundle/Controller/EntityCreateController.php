@@ -134,7 +134,7 @@ class EntityCreateController extends AbstractController
     #[Route(path: '/entity/create/{serviceId}/{type}/{targetEnvironment}', name: 'entity_add', methods: ['GET', 'POST'])]
     public function create(Request $request, $serviceId, $targetEnvironment, $type): \Symfony\Component\HttpFoundation\Response
     {
-        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag = $this->get('request_stack')->getSession()->getFlashBag();
         $flashBag->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);
@@ -216,10 +216,18 @@ class EntityCreateController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    #[Route(path: '/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}', defaults: ['manageId' => null, 'targetEnvironment' => 'test', 'sourceEnvironment' => 'test'], name: 'entity_copy', methods: ['GET', 'POST'])]
+    #[Route(
+        path: '/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}',
+        name: 'entity_copy',
+        defaults: [
+            'manageId' => null,
+            'targetEnvironment' => 'test',
+            'sourceEnvironment' => 'test'
+        ],
+        methods: ['GET', 'POST'])]
     public function copy(Request $request, $serviceId, string $manageId, string $targetEnvironment, string $sourceEnvironment): \Symfony\Component\HttpFoundation\Response
     {
-        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag = $request->getSession()->getFlashBag();
         $flashBag->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);

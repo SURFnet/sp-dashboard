@@ -58,12 +58,12 @@ class PrivacyQuestionsController extends AbstractController
         // Test if the questions have already been filled
         if ($service->getPrivacyQuestions() instanceof PrivacyQuestions) {
             return $this->forward(
-                'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::editAction',
+                'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::edit',
                 ['serviceId' => $serviceId]
             );
         }
         return $this->forward(
-            'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::createAction',
+            'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::create',
             ['serviceId' => $serviceId]
         );
     }
@@ -75,6 +75,7 @@ class PrivacyQuestionsController extends AbstractController
      * @param $serviceId
      * @return Response
      */
+
     #[Route(path: '/service/{serviceId}/privacy/create', name: 'privacy_questions_create')]
     public function create(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\Response
     {

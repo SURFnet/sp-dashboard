@@ -36,10 +36,7 @@ class PrivacyQuestionsCommand implements Command
 
     private ?int $mode = null;
     
-    /**
-     * @var Service
-     */
-    private $service;
+    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
 
     /**
      * @var string
@@ -164,7 +161,7 @@ class PrivacyQuestionsCommand implements Command
     /**
      * @return Service
      */
-    public function getService()
+    public function getService(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service
     {
         return $this->service;
     }
@@ -172,7 +169,7 @@ class PrivacyQuestionsCommand implements Command
     /**
      * @return int
      */
-    public function getMode()
+    public function getMode(): ?int
     {
         return $this->mode;
     }

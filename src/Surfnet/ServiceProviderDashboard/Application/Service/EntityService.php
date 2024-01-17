@@ -318,7 +318,7 @@ class EntityService implements EntityServiceInterface
      * As the organization names are tracked on the Service, we update it on the Manage
      * Entity Organization
      */
-    public function updateOrganizationNames(ManageEntity $entity, $orgNameEn, $orgNameNl): void
+    public function updateOrganizationNames(ManageEntity $entity, ?string $orgNameEn, ?string $orgNameNl): void
     {
         $entity->getMetaData()->getOrganization()->updateNameEn($orgNameEn);
         $entity->getMetaData()->getOrganization()->updateNameNl($orgNameNl);

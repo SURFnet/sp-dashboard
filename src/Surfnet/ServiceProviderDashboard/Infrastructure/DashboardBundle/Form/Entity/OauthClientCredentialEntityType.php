@@ -183,7 +183,7 @@ class OauthClientCredentialEntityType extends AbstractType
             $command->getEnvironment()
         );
         // If no resource servers are present, do not render the resource server section.
-        if (!empty($choices)) {
+        if ($choices !== []) {
             $builder
                 ->add(
                     $builder->create('oidcngResourceServers', FormType::class, ['inherit_data' => true])

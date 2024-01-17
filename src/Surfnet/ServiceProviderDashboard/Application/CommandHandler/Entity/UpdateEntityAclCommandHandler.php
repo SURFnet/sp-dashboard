@@ -48,7 +48,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
         ));
 
         $entity = $command->getManageEntity();
-        $idps = array_map(fn(IdentityProvider $idp) => $idp->getEntityId(), $command->getSelected());
+        $idps = array_map(fn(IdentityProvider $idp): string => $idp->getEntityId(), $command->getSelected());
         $allowedIdps = new AllowedIdentityProviders($idps, $command->isSelectAll());
         $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {

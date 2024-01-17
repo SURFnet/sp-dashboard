@@ -99,7 +99,7 @@ class Contact implements \Stringable
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string|array|null
     {
         return $this->email;
     }
@@ -161,6 +161,6 @@ class Contact implements \Stringable
      */
     public function isContactSet(): bool
     {
-        return !(empty($this->firstName) && empty($this->lastName) && empty($this->email) && empty($this->phone));
+        return !(empty($this->firstName) && empty($this->lastName) && ($this->email === '' || $this->email === '0' || $this->email === [] || $this->email === null) && empty($this->phone));
     }
 }

@@ -33,7 +33,7 @@ class IssueService implements TicketRepository
     ) {
     }
 
-    public function createIssue(Ticket $ticket)
+    public function createIssue(Ticket $ticket): \JiraRestApi\Issue\Issue
     {
         $this->logger->info("Creating a Jira issue.");
 
