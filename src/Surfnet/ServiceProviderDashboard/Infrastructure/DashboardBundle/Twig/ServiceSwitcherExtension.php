@@ -21,23 +21,22 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Twig_Environment;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
 
 class ServiceSwitcherExtension extends AbstractExtension
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly AuthorizationService $authorizationService,
         private readonly FormFactoryInterface $formFactory
     ) {
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new Twig_SimpleFunction(
+            new TwigFunction(
                 'service_switcher',
                 $this->render(...),
                 ['is_safe' => ['html'], 'needs_environment' => true]
@@ -45,10 +44,7 @@ class ServiceSwitcherExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function render(Twig_Environment $environment)
+    public function render(Environment $environment): string
     {
         $token = $this->tokenStorage->getToken();
 
