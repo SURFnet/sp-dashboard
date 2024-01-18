@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Voter\ManageEntityAccessGrantedVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
 {
@@ -69,7 +70,7 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
         );
     }
 
-    public function supports()
+    public function supports(): array
     {
         return [
             [
@@ -144,7 +145,7 @@ class ManageEntityAccessGrantedVoterTest extends MockeryTestCase
     private function buildToken(array $roles = [], $isPartOfTeam = true)
     {
         $token = m::mock(TokenInterface::class);
-        $user = m::mock(TokenInterface::class);
+        $user = m::mock(UserInterface::class);
 
         $token
             ->shouldReceive('getUser')
