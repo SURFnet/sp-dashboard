@@ -72,7 +72,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         return new Issue('KEY-27', 'fake-type', Issue::STATUS_OPEN);
     }
 
-    public function findByManageId($manageId): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
+    public function findByManageId($manageId): ?Issue
     {
         $this->loadData();
         if (array_key_exists($manageId, $this->data)) {
@@ -81,7 +81,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function findByManageIdAndIssueType($manageId, $issueType): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
+    public function findByManageIdAndIssueType($manageId, $issueType): ?Issue
     {
         $this->loadData();
         if (array_key_exists($manageId, $this->data)) {
