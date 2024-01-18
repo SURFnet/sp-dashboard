@@ -35,7 +35,7 @@ class DeleteServiceType extends AbstractType
             ->add('cancel', SubmitType::class, ['label'=> 'Cancel', 'attr' => ['class' => 'button']]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_delete_service_type';
     }

@@ -134,7 +134,7 @@ class CreateServiceType extends AbstractType
         $resolver->setDefaults(['data_class' => CreateServiceCommand::class]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_service_type';
     }

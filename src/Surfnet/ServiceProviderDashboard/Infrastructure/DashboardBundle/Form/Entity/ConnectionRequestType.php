@@ -62,7 +62,7 @@ class ConnectionRequestType extends AbstractType
         $resolver->setDefaults(['data_class' => ConnectionRequest::class, 'error_bubbling' => false]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'connection_request';
     }

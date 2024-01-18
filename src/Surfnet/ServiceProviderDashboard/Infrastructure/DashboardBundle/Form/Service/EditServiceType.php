@@ -129,7 +129,7 @@ class EditServiceType extends AbstractType
         );
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_edit_service_type';
     }

@@ -71,7 +71,7 @@ class ContactType extends AbstractType
         $resolver->setDefaults(['data_class' => Contact::class, 'error_bubbling' => false]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_contact_type';
     }

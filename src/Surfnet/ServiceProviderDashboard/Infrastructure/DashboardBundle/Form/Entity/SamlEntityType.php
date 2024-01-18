@@ -301,7 +301,7 @@ class SamlEntityType extends AbstractType
         $resolver->setDefaults(['data_class' => SaveSamlEntityCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_entity_type';
     }

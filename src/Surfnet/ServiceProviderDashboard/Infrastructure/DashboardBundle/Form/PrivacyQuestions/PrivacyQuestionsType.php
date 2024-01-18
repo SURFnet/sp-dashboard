@@ -36,7 +36,7 @@ class PrivacyQuestionsType extends AbstractType
         $resolver->setDefaults(['data_class' => PrivacyQuestionsCommand::class]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_privacy_questions_type';
     }

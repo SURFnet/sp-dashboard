@@ -65,7 +65,7 @@ class ConnectionRequestContainerFromOverviewType extends AbstractType
         $resolver->setDefaults(['data_class' => CreateConnectionRequestCommand::class, 'validation_groups' => false, 'expanded' => true]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'connection_request_container';
     }

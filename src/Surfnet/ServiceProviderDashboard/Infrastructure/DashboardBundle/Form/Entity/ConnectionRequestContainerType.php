@@ -65,7 +65,7 @@ class ConnectionRequestContainerType extends AbstractType
         $resolver->setDefaults(['data_class' => CreateConnectionRequestCommand::class, 'expanded' => true]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'connection_request_container';
     }
