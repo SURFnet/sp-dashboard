@@ -37,20 +37,12 @@ class WysiwygExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * @param string $raw
-     * @return string
-     */
-    public function sanitize($raw)
+    public function sanitize(string $raw): string
     {
         return self::sanitizeWysiwyg($raw);
     }
 
-    /**
-     * @param string $raw
-     * @return string
-     */
-    public static function sanitizeWysiwyg($raw)
+    public static function sanitizeWysiwyg(string $raw): string
     {
         self::initialise();
         return self::$purifier->purify($raw);
