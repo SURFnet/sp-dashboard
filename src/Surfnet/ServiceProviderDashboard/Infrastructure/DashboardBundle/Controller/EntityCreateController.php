@@ -21,7 +21,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -58,11 +59,12 @@ class EntityCreateController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      *
      * @param  int $serviceId
      * @return RedirectResponse|Response|array
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}', defaults: ['targetEnvironment' => 'test'], name: 'entity_type', methods: ['GET', 'POST'])]
     public function type(Request $request, $serviceId, string $targetEnvironment, string $inputId): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
@@ -215,7 +217,7 @@ class EntityCreateController extends AbstractController
 
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      *
      * @param int         $serviceId
      * @param null|string $manageId          set from the entity_copy route
@@ -230,6 +232,7 @@ class EntityCreateController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(
         path: '/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}',
         name: 'entity_copy',

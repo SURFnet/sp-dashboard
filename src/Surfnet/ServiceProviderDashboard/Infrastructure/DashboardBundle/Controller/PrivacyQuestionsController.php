@@ -23,7 +23,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use League\Tactician\CommandBus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
@@ -32,6 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PrivacyQuestionsController extends AbstractController
 {
@@ -43,11 +44,12 @@ class PrivacyQuestionsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      *
      * @param  int $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy', name: 'privacy_questions', methods: ['GET', 'POST'])]
     public function privacy($serviceId): \Symfony\Component\HttpFoundation\Response
     {
@@ -71,12 +73,12 @@ class PrivacyQuestionsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      *
      * @param  $serviceId
      * @return Response
      */
-
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy/create', name: 'privacy_questions_create')]
     public function create(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\Response
     {
@@ -88,11 +90,12 @@ class PrivacyQuestionsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      *
      * @param  $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy/edit', name: 'privacy_questions_edit')]
     public function edit(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\Response
     {

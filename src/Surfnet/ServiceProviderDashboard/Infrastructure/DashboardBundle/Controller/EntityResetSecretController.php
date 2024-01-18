@@ -21,13 +21,14 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -37,11 +38,12 @@ class EntityResetSecretController extends AbstractController
     use EntityControllerTrait;
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/reset-secret/{serviceId}/{manageId}/{environment}', name: 'entity_reset_secret', methods: ['GET', 'POST'])]
     public function reset(int $serviceId, string $manageId, string $environment): \Symfony\Component\HttpFoundation\RedirectResponse
     {

@@ -21,7 +21,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\Api;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Application\Assembler\ServiceStatusAssembler;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -37,7 +38,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ServiceController extends AbstractController
 {
     public function __construct(
-        private readonly CommandBus $commandBus,
         private readonly AuthorizationService $authorizationService,
         private readonly ServiceService $serviceService,
         private readonly ServiceStatusService $serviceStatusService,
@@ -46,11 +46,12 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      *
      * @param  int $id
      * @return JsonResponse
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/api/service/status/{id}', name: 'api_service_status', methods: ['GET', 'POST'])]
     public function status($id): \Symfony\Component\HttpFoundation\JsonResponse
     {

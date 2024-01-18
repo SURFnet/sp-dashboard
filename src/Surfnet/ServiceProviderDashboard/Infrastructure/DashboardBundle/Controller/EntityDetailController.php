@@ -20,7 +20,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -28,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EntityDetailController extends AbstractController
 {
@@ -39,9 +39,10 @@ class EntityDetailController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      * @return                              \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/detail/{serviceId}/{id}/{manageTarget}', name: 'entity_detail', methods: ['GET'], defaults: ['manageTarget' => false])]
     public function detail(string $id, int $serviceId, string $manageTarget): Response
     {

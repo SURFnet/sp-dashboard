@@ -20,21 +20,23 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EntityPublishedController extends AbstractController
 {
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
     #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
-    public function published(): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function published(): \Symfony\Component\HttpFoundation\RedirectResponse|Response
     {
         /**
  * @var ManageEntity $entity
@@ -68,10 +70,11 @@ class EntityPublishedController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_USER')")
+     *
      */
+    #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/change-request', name: 'entity_change_request', methods: ['GET'])]
-    public function changeRequest(): \Symfony\Component\HttpFoundation\Response
+    public function changeRequest(): Response
     {
         return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig');
     }
@@ -84,9 +87,10 @@ class EntityPublishedController extends AbstractController
      * This action is rendered inside a modal window, and is triggered from the
      * entity list action.
      *
-     * @Security("is_granted('ROLE_USER')")
+     *
      */
-    public function oidcConfirmationModal(): \Symfony\Component\HttpFoundation\Response
+    #[IsGranted('ROLE_USER')]
+    public function oidcConfirmationModal(): Response
     {
         /**
  * @var ManageEntity $entity

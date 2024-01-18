@@ -21,7 +21,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\ResendInviteException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\SendInviteException;
@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -52,8 +53,9 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
+     *
      */
+    #[IsGranted('ROLE_ADMINISTRATOR')]
     #[Route(path: '/service/{serviceId}/manageTeam', name: 'service_manage_team', methods: ['GET'])]
     public function manageTeam(int $serviceId): Response
     {
@@ -72,9 +74,10 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
+     *
      * @return                                       RedirectResponse|Response
      */
+    #[IsGranted('ROLE_ADMINISTRATOR')]
     #[Route(path: '/service/{serviceId}/sendInvite/{teamId}', name: 'team_send_invite', methods: ['POST'])]
     public function sendInvite(Request $request, int $serviceId, int $teamId): \Symfony\Component\HttpFoundation\RedirectResponse
     {
@@ -99,8 +102,9 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
+     *
      */
+    #[IsGranted('ROLE_ADMINISTRATOR')]
     #[Route(path: '/service/{serviceId}/resendInvite/{invitationId}', name: 'team_resend_invite', methods: ['GET'])]
     public function resendInvite(int $serviceId, int $invitationId): JsonResponse
     {
@@ -119,8 +123,9 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
+     *
      */
+    #[IsGranted('ROLE_ADMINISTRATOR')]
     #[Route(path: '/teams/changeRole/{memberId}/{newRole}', name: 'team_change_role', methods: ['GET'])]
     public function changeRole(int $memberId, string $newRole): JsonResponse
     {
@@ -137,8 +142,9 @@ class TeamsController extends AbstractController
     }
 
     /**
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
+     *
      */
+    #[IsGranted('ROLE_ADMINISTRATOR')]
     #[Route(path: '/teams/delete/{memberId}', name: 'team_delete_member', methods: ['GET'])]
     public function deleteMember(int $memberId): JsonResponse
     {

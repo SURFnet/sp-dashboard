@@ -7,7 +7,6 @@ return [
     League\Tactician\Bundle\TacticianBundle::class => ['all' => true],
     Nelmio\SecurityBundle\NelmioSecurityBundle::class => ['all' => true],
     OpenConext\MonitorBundle\OpenConextMonitorBundle::class => ['all' => true],
-    Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
     Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle::class => ['all' => true],
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DashboardBundle::class => ['all' => true],
@@ -19,5 +18,5 @@ return [
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
     Lexik\Bundle\TranslationBundle\LexikTranslationBundle::class => ['all' => true],
-    Surfnet\SamlBundle\SurfnetSamlBundle::class => ['all' => true]
+    Surfnet\SamlBundle\SurfnetSamlBundle::class => ['all' => true],
 ];
