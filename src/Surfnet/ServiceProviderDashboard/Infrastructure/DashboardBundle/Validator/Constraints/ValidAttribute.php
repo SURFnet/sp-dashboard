@@ -34,15 +34,12 @@ class ValidAttribute extends Constraint
 
     public $type = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
 
-    /**
-     * @return string
-     */
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return 'valid_attribute';
     }
 
-    public function getDefaultOption()
+    public function getDefaultOption(): ?string
     {
         return 'type';
     }
