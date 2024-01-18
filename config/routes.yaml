@@ -3,7 +3,6 @@ dashboard:
 
 dashboard_saml:
   resource: "@DashboardSamlBundle/Controller/"
-  type:     annotation
   prefix:   /
 
 openconext_monitor:
