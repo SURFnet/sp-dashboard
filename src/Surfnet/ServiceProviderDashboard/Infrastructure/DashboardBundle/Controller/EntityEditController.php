@@ -57,7 +57,7 @@ class EntityEditController extends AbstractController
     )]
     public function edit(Request $request, string $environment, string $manageId, int $serviceId): Response
     {
-        $flashBag = $this->get('request_stack')->getSession()->getFlashBag();
+        $flashBag = $this->container->get('request_stack')->getSession()->getFlashBag();
         $service = $this->serviceService->getServiceById($serviceId);
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $entityServiceId = $entity->getService()->getId();

@@ -78,7 +78,7 @@ class TeamsController extends AbstractController
     #[Route(path: '/service/{serviceId}/sendInvite/{teamId}', name: 'team_send_invite', methods: ['POST'])]
     public function sendInvite(Request $request, int $serviceId, int $teamId): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        $this->get('request_stack')->getSession()->getFlashBag()->clear();
+        $this->container->get('request_stack')->getSession()->getFlashBag()->clear();
         $email = $request->get('email');
         $role = strtoupper((string) $request->get('role'));
         $invite = [

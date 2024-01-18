@@ -114,7 +114,7 @@ class ServiceController extends AbstractController
         /**
  * @var ManageEntity $publishedEntity
 */
-        $publishedEntity = $this->get('request_stack')->getSession()->get('published.entity.clone');
+        $publishedEntity = $this->container->get('request_stack')->getSession()->get('published.entity.clone');
 
         return $this->render(
             '@Dashboard/Service/overview.html.twig',
@@ -135,7 +135,7 @@ class ServiceController extends AbstractController
     #[Route(path: '/service/create', name: 'service_add', methods: ['GET', 'POST'])]
     public function create(Request $request): RedirectResponse|Response
     {
-        $this->get('request_stack')->getSession()->getFlashBag()->clear();
+        $this->container->get('request_stack')->getSession()->getFlashBag()->clear();
         $command = new CreateServiceCommand();
 
         $form = $this->createForm(CreateServiceType::class, $command);
@@ -146,7 +146,7 @@ class ServiceController extends AbstractController
             $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
             try {
                 $this->commandBus->handle($command);
-                $this->get('request_stack')->getSession()->getFlashBag()->add('info', 'service.create.flash.success');
+                $this->container->get('request_stack')->getSession()->getFlashBag()->add('info', 'service.create.flash.success');
                 return $this->redirectToRoute('service_overview');
             } catch (Exception $e) {
                 $this->addFlash('error', $e->getMessage());
@@ -165,7 +165,7 @@ class ServiceController extends AbstractController
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
-        $this->get('request_stack')->getSession()->getFlashBag()->clear();
+        $this->container->get('request_stack')->getSession()->getFlashBag()->clear();
 
         $command = new EditServiceCommand(
             $service->getId(),
@@ -198,7 +198,7 @@ class ServiceController extends AbstractController
             $this->logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
-                $this->get('request_stack')->getSession()->getFlashBag()->add('info', 'service.edit.flash.success');
+                $this->container->get('request_stack')->getSession()->getFlashBag()->add('info', 'service.edit.flash.success');
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
@@ -249,7 +249,7 @@ class ServiceController extends AbstractController
                 $resetCommand = new ResetServiceCommand();
                 $this->commandBus->handle($resetCommand);
 
-                $this->get('request_stack')->getSession()->getFlashBag()->add('info', 'service.delete.flash.success');
+                $this->container->get('request_stack')->getSession()->getFlashBag()->add('info', 'service.delete.flash.success');
             }
 
             return $this->redirectToRoute('service_overview');
@@ -300,7 +300,7 @@ class ServiceController extends AbstractController
         /**
  * @var ManageEntity $publishedEntity
 */
-        $publishedEntity = $this->get('request_stack')->getSession()->get('published.entity.clone');
+        $publishedEntity = $this->container->get('request_stack')->getSession()->get('published.entity.clone');
 
         return $this->render(
             '@Dashboard/Service/overview.html.twig',

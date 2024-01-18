@@ -144,7 +144,7 @@ class EntityCreateController extends AbstractController
     #[Route(path: '/entity/create/{serviceId}/{type}/{targetEnvironment}', name: 'entity_add', methods: ['GET', 'POST'])]
     public function create(Request $request, $serviceId, $targetEnvironment, $type): \Symfony\Component\HttpFoundation\Response
     {
-        $flashBag = $this->get('request_stack')->getSession()->getFlashBag();
+        $flashBag = $this->container->get('request_stack')->getSession()->getFlashBag();
         $flashBag->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);

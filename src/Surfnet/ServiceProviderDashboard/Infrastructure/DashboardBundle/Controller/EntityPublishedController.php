@@ -39,7 +39,7 @@ class EntityPublishedController extends AbstractController
         /**
  * @var ManageEntity $entity
 */
-        $entity = $this->get('request_stack')->getSession()->get('published.entity.clone');
+        $entity = $this->container->get('request_stack')->getSession()->get('published.entity.clone');
 
         // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
@@ -91,10 +91,10 @@ class EntityPublishedController extends AbstractController
         /**
  * @var ManageEntity $entity
 */
-        $entity = $this->get('request_stack')->getSession()->get('published.entity.clone');
+        $entity = $this->container->get('request_stack')->getSession()->get('published.entity.clone');
 
         // Show the confirmation modal only once in this request
-        $this->get('request_stack')->getSession()->remove('published.entity.clone');
+        $this->container->get('request_stack')->getSession()->remove('published.entity.clone');
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 
