@@ -57,7 +57,7 @@ class EntityEditController extends AbstractController
     )]
     public function edit(Request $request, string $environment, string $manageId, int $serviceId): Response
     {
-        $flashBag = $this->container->get('request_stack')->getSession()->getFlashBag();
+        $flashBag = $request->getSession()->getFlashBag();
         $service = $this->serviceService->getServiceById($serviceId);
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $entityServiceId = $entity->getService()->getId();
@@ -95,11 +95,11 @@ class EntityEditController extends AbstractController
                         $environment === Constants::ENVIRONMENT_PRODUCTION;
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $request);
 
                         if ($response instanceof Response) {
                             if ($environment !== Constants::ENVIRONMENT_PRODUCTION) {
-                                $flashBag->add('info', 'entity.edit.metadata.flash.success');
+                                $this->addFlash('info', 'entity.edit.metadata.flash.success');
                             }
                             return $response;
                         }

@@ -61,7 +61,7 @@ class Parser implements ParserInterface
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function parseXml($xml): \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata
+    public function parseXml($xml): Metadata
     {
         $this->validate($xml);
         $xml = simplexml_load_string($xml);

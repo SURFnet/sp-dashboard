@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -138,7 +139,7 @@ class EntityService implements EntityServiceInterface
         return $entity;
     }
 
-    public function getEntityListForService(Service $service): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList
+    public function getEntityListForService(Service $service): EntityList
     {
         $entities = [];
 
@@ -158,7 +159,7 @@ class EntityService implements EntityServiceInterface
             );
         }
 
-        return new ViewObject\EntityList($entities);
+        return new EntityList($entities);
     }
 
     /**

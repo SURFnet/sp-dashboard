@@ -50,7 +50,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         $this->storeData();
     }
 
-    public function findByManageIds(array $manageIds): \Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection
+    public function findByManageIds(array $manageIds): IssueCollection
     {
         $this->loadData();
         $result = [];

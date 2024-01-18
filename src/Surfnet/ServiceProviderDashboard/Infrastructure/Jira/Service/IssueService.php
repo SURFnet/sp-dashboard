@@ -20,6 +20,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service;
 
+use JiraRestApi\Issue\Issue;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\TicketRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
@@ -35,7 +36,7 @@ class IssueService implements TicketRepository
     ) {
     }
 
-    public function createIssue(Ticket $ticket): \JiraRestApi\Issue\Issue
+    public function createIssue(Ticket $ticket): Issue
     {
         $this->logger->info("Creating a Jira issue.");
 

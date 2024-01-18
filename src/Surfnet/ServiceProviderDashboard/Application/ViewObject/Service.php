@@ -63,7 +63,7 @@ class Service
     /**
      * @return EntityList
      */
-    public function getEntityList(): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList
+    public function getEntityList(): EntityList
     {
         return $this->entityList;
     }

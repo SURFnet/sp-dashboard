@@ -60,7 +60,7 @@ class ManageQueryService
         return $this->getClient($environment)->findByTeamName($teamName, $state);
     }
 
-    private function getClient(string $environment): \Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository
+    private function getClient(string $environment): QueryManageRepository
     {
         if (!in_array($environment, $this->validEnvironments)) {
             throw new InvalidArgumentException(

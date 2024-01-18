@@ -22,6 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class SiteNoticeController extends AbstractController
 {
@@ -37,7 +38,7 @@ class SiteNoticeController extends AbstractController
      * This desire to not see the notification is stored both in the
      * session and in cookies.
      */
-    public function showGlobalSiteNotice(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function showGlobalSiteNotice(Request $request): Response
     {
         $cookieString = str_replace('.', '_', 'site_notice.closed.' . $this->noticeDate);
         $cookie = $request->cookies->get($cookieString);

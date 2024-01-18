@@ -51,7 +51,7 @@ class SamlController extends AbstractController
     }
 
     #[Route(path: '/saml/metadata', name: 'dashboard_saml_metadata', methods: ['GET'])]
-    public function metadata(): \Surfnet\SamlBundle\Http\XMLResponse
+    public function metadata(): XMLResponse
     {
         return new XMLResponse(
             $this->metadataFactory->generate()

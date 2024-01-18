@@ -24,6 +24,8 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmati
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -36,12 +38,12 @@ class EntityPublishedController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
     #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
-    public function published(): \Symfony\Component\HttpFoundation\RedirectResponse|Response
+    public function published(Request $request): RedirectResponse|Response
     {
         /**
  * @var ManageEntity $entity
 */
-        $entity = $this->container->get('request_stack')->getSession()->get('published.entity.clone');
+        $entity = $request->getSession()->get('published.entity.clone');
 
         // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
@@ -90,15 +92,13 @@ class EntityPublishedController extends AbstractController
      *
      */
     #[IsGranted('ROLE_USER')]
-    public function oidcConfirmationModal(): Response
+    public function oidcConfirmationModal(Request $request): Response
     {
-        /**
- * @var ManageEntity $entity
-*/
-        $entity = $this->container->get('request_stack')->getSession()->get('published.entity.clone');
+        $entity = $request->getSession()->get('published.entity.clone');
+        assert($entity instanceof ManageEntity);
 
         // Show the confirmation modal only once in this request
-        $this->container->get('request_stack')->getSession()->remove('published.entity.clone');
+        $request->getSession()->remove('published.entity.clone');
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 

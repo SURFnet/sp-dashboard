@@ -51,7 +51,7 @@ class PrivacyQuestionsController extends AbstractController
      */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy', name: 'privacy_questions', methods: ['GET', 'POST'])]
-    public function privacy($serviceId): \Symfony\Component\HttpFoundation\Response
+    public function privacy($serviceId): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -80,7 +80,7 @@ class PrivacyQuestionsController extends AbstractController
      */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy/create', name: 'privacy_questions_create')]
-    public function create(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\Response
+    public function create(Request $request, int $serviceId): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -97,7 +97,7 @@ class PrivacyQuestionsController extends AbstractController
      */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy/edit', name: 'privacy_questions_edit')]
-    public function edit(Request $request, int $serviceId): \Symfony\Component\HttpFoundation\Response
+    public function edit(Request $request, int $serviceId): Response
     {
         $service = $this->serviceService->getServiceById($serviceId);
 

@@ -65,8 +65,8 @@ class EntityCreateController extends AbstractController
      * @return RedirectResponse|Response|array
      */
     #[IsGranted('ROLE_USER')]
-    #[Route(path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}', defaults: ['targetEnvironment' => 'test'], name: 'entity_type', methods: ['GET', 'POST'])]
-    public function type(Request $request, $serviceId, string $targetEnvironment, string $inputId): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    #[Route(path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}', name: 'entity_type', defaults: ['targetEnvironment' => 'test'], methods: ['GET', 'POST'])]
+    public function type(Request $request, $serviceId, string $targetEnvironment, string $inputId): RedirectResponse|Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $choices = $this->protocolChoiceFactory->buildOptions();
@@ -144,10 +144,9 @@ class EntityCreateController extends AbstractController
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
     #[Route(path: '/entity/create/{serviceId}/{type}/{targetEnvironment}', name: 'entity_add', methods: ['GET', 'POST'])]
-    public function create(Request $request, $serviceId, $targetEnvironment, $type): \Symfony\Component\HttpFoundation\Response
+    public function create(Request $request, $serviceId, $targetEnvironment, $type): Response
     {
-        $flashBag = $this->container->get('request_stack')->getSession()->getFlashBag();
-        $flashBag->clear();
+        $request->getSession()->getFlashBag()->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);
         $hasTestEntities = $this->entityService
@@ -184,7 +183,7 @@ class EntityCreateController extends AbstractController
                 if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity(null, $command, false, $flashBag);
+                        $response = $this->publishEntity(null, $command, false, $request);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
@@ -243,7 +242,7 @@ class EntityCreateController extends AbstractController
         ],
         methods: ['GET', 'POST']
     )]
-    public function copy(Request $request, $serviceId, string $manageId, string $targetEnvironment, string $sourceEnvironment): \Symfony\Component\HttpFoundation\Response
+    public function copy(Request $request, $serviceId, string $manageId, string $targetEnvironment, string $sourceEnvironment): Response
     {
         $flashBag = $request->getSession()->getFlashBag();
         $flashBag->clear();
@@ -278,7 +277,7 @@ class EntityCreateController extends AbstractController
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
                         $entity = $entity->resetId();
-                        $response = $this->publishEntity($entity, $command, false, $flashBag);
+                        $response = $this->publishEntity($entity, $command, false, $request);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {

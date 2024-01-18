@@ -130,7 +130,7 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     #[Route(path: '/entity/send-connection-request', name: 'send_connection_request', methods: ['GET'])]
-    public function sendConnectionRequest(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function sendConnectionRequest(Request $request): Response
     {
         $parameters = [];
         if ($request->query->has('showOidcPopup')) {
@@ -139,7 +139,7 @@ class EntityCreateConnectionRequestController extends AbstractController
         if ($request->query->has('entityName')) {
             $parameters['entityName'] = $request->query->get('entityName');
         }
-        if ($this->container->get('request_stack')->getSession()->has('published.entity.clone')) {
+        if ($request->getSession()->has('published.entity.clone')) {
             $entity = $request->getSession()->get('published.entity.clone');
             $parameters['publishedEntity'] = $entity;
         }
@@ -151,7 +151,7 @@ class EntityCreateConnectionRequestController extends AbstractController
     }
 
     #[Route(path: '/entity/send-connection-request', name: 'publish_to_production_and_send_connection_request', methods: ['GET'])]
-    public function publishedToProductionAndSendConnectionRequest(array $parameters): \Symfony\Component\HttpFoundation\Response
+    public function publishedToProductionAndSendConnectionRequest(array $parameters): Response
     {
         return $this->render(
             '@Dashboard/EntityPublished/publishedProductionAndConnectionRequest.html.twig',

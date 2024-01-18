@@ -117,7 +117,7 @@ class ManageEntity
         return $this->id;
     }
 
-    public function getAttributes(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList
+    public function getAttributes(): AttributeList
     {
         return $this->attributes;
     }
@@ -171,7 +171,7 @@ class ManageEntity
     /**
      * @return AllowedIdentityProviders
      */
-    public function getAllowedIdentityProviders(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders
+    public function getAllowedIdentityProviders(): AllowedIdentityProviders
     {
         return $this->allowedIdentityProviders;
     }
@@ -179,7 +179,7 @@ class ManageEntity
     /**
      * @return Protocol
      */
-    public function getProtocol(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol
+    public function getProtocol(): Protocol
     {
         return $this->protocol;
     }

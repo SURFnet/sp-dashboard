@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\ResetOidcSecretC
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InvalidEnvironmentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -45,10 +46,10 @@ class EntityResetSecretController extends AbstractController
      */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/reset-secret/{serviceId}/{manageId}/{environment}', name: 'entity_reset_secret', methods: ['GET', 'POST'])]
-    public function reset(int $serviceId, string $manageId, string $environment): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function reset(Request $request, int $serviceId, string $manageId, string $environment): RedirectResponse
     {
-        $flashBag = $this->container->get('request_stack')->getSession()->getFlashBag();
-        $flashBag->clear();
+        $request->getSession()->getFlashBag()->clear();
+
         $manageEntity = $this->entityService->getManageEntityById($manageId, $environment);
         $entityServiceId = $manageEntity->getService()->getId();
         if ($serviceId !== $entityServiceId) {
@@ -63,11 +64,11 @@ class EntityResetSecretController extends AbstractController
         try {
             $this->commandBus->handle($resetOidcSecretCommand);
         } catch (Exception) {
-            $flashBag->add('error', 'entity.edit.error.publish');
+            $this->addFlash('error', 'entity.edit.error.publish');
         }
         // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
         // page we will be redirecting to in a moment.
-        $this->container->get('request_stack')->getSession()->set('published.entity.clone', clone $manageEntity);
+        $request->getSession()->set('published.entity.clone', clone $manageEntity);
         switch ($manageEntity->getEnvironment()) {
             case Constants::ENVIRONMENT_TEST:
                 $destination = 'entity_published_test';

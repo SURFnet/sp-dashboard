@@ -260,7 +260,7 @@ class EntityDetail
     /**
      * @return EntityActions
      */
-    public function getActions(): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions
+    public function getActions(): EntityActions
     {
         return $this->actions;
     }

@@ -45,7 +45,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @return string
      */
-    public function getManageEntity(): \Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity
+    public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;
     }

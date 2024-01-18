@@ -52,7 +52,7 @@ class WebTestFixtures extends Fixture
      *
      * @return Service
      */
-    private function createService(string $name, string $teamName): \Surfnet\ServiceProviderDashboard\Domain\Entity\Service
+    private function createService(string $name, string $teamName): Service
     {
         $service = new Service();
         $service->setName($name);
@@ -67,7 +67,7 @@ class WebTestFixtures extends Fixture
         return $service;
     }
 
-    private function createPrivacyQuestions(Service $service): \Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions
+    private function createPrivacyQuestions(Service $service): PrivacyQuestions
     {
         $privacyQuestions = new PrivacyQuestions();
         $privacyQuestions->setService($service);

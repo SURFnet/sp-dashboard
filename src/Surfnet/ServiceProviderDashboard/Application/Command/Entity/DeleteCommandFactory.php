@@ -37,7 +37,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
  */
 class DeleteCommandFactory
 {
-    public function from(EntityDto $entity): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand|\Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand|\Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand
+    public function from(EntityDto $entity): DeletePublishedTestEntityCommand|DeletePublishedProductionEntityCommand|RequestDeletePublishedEntityCommand
     {
         $isPublishedToTest = $entity->getEnvironment() === 'test' && $entity->getState() === 'published';
         $isPublishedProduction = $entity->getEnvironment() === 'production' && $entity->getState() === 'requested';
@@ -58,17 +58,17 @@ class DeleteCommandFactory
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
     }
 
-    public function buildDeletePublishedTestEntityCommand($manageId, $protocol): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedTestEntityCommand
+    public function buildDeletePublishedTestEntityCommand($manageId, $protocol): DeletePublishedTestEntityCommand
     {
         return new DeletePublishedTestEntityCommand($manageId, $protocol);
     }
 
-    public function buildDeletePublishedProductionEntityCommand($manageId, $protocol): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeletePublishedProductionEntityCommand
+    public function buildDeletePublishedProductionEntityCommand($manageId, $protocol): DeletePublishedProductionEntityCommand
     {
         return new DeletePublishedProductionEntityCommand($manageId, $protocol);
     }
 
-    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact): \Surfnet\ServiceProviderDashboard\Application\Command\Entity\RequestDeletePublishedEntityCommand
+    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact): RequestDeletePublishedEntityCommand
     {
         return new RequestDeletePublishedEntityCommand($manageId, $contact);
     }

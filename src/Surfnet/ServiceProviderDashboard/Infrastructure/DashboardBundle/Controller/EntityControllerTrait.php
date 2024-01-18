@@ -96,7 +96,7 @@ trait EntityControllerTrait
         ?ManageEntity $entity,
         SaveEntityCommandInterface $saveCommand,
         bool $isPublishedProductionEntity,
-        FlashBagInterface $flashBag
+        Request $request,
     ): RedirectResponse|FormInterface {
         try {
             // Merge the save command data into the ManageEntity
@@ -104,7 +104,7 @@ trait EntityControllerTrait
             $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
             $this->commandBus->handle($publishEntityCommand);
         } catch (Exception $e) {
-            $flashBag->add('error', 'entity.edit.error.publish');
+            $this->addFlash('error', 'entity.edit.error.publish');
             return $this->redirectToRoute('service_overview');
         }
 
@@ -114,7 +114,7 @@ trait EntityControllerTrait
 
         // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
         // page we will be redirecting to in a moment.
-        $this->container->get('request_stack')->getSession()->set('published.entity.clone', clone $entity);
+        $request->getSession()->set('published.entity.clone', clone $entity);
 
         if ($publishEntityCommand instanceof PublishEntityTestCommand) {
             return $this->redirectToRoute('entity_published_test');
@@ -125,7 +125,7 @@ trait EntityControllerTrait
             $parameters = $this->findParametersForRedirect($publishEntityCommand);
             return $this->redirectToRoute($destination, $parameters);
         } catch (InvalidArgumentException $e) {
-            $flashBag->add('error', $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('service_overview');
         }
     }

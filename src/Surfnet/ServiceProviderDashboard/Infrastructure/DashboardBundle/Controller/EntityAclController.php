@@ -52,10 +52,9 @@ class EntityAclController extends AbstractController
      *
      * @param string $serviceId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     #[Route(path: '/entity/acl/{serviceId}/{id}', name: 'entity_acl', methods: ['GET', 'POST'])]
-    public function acl(Request $request, $serviceId, string $id): \Symfony\Component\HttpFoundation\Response
+    public function acl(Request $request, $serviceId, string $id): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);

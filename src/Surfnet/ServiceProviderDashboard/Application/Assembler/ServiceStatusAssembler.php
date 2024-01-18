@@ -86,7 +86,7 @@ class ServiceStatusAssembler
         self::SERVICE_STATUS_INFO => '#d1d2d6',
     ];
 
-    private readonly \Surfnet\ServiceProviderDashboard\Application\Dto\ServiceStatusDto $serviceStatusDto;
+    private readonly ServiceStatusDto $serviceStatusDto;
 
     /**
      * ServiceStatusAssembler constructor.
@@ -115,7 +115,7 @@ class ServiceStatusAssembler
     /**
      * @return ServiceStatusDto
      */
-    public function getDto(): \Surfnet\ServiceProviderDashboard\Application\Dto\ServiceStatusDto
+    public function getDto(): ServiceStatusDto
     {
         return $this->serviceStatusDto;
     }

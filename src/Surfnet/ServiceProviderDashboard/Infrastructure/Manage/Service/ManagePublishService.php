@@ -44,7 +44,7 @@ class ManagePublishService
         $this->getClient($environment)->pushMetadata();
     }
 
-    private function getClient($environment): \Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository
+    private function getClient($environment): PublishEntityRepository
     {
         if (!in_array($environment, $this->validEnvironments)) {
             throw new InvalidArgumentException(

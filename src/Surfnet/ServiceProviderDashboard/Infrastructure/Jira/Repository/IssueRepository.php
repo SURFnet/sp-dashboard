@@ -49,7 +49,7 @@ class IssueRepository implements TicketServiceInterface
         );
     }
 
-    public function findByManageIds(array $manageIds): \Surfnet\ServiceProviderDashboard\Domain\ValueObject\IssueCollection
+    public function findByManageIds(array $manageIds): IssueCollection
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search all CTX: spd-delete-production-entity issues

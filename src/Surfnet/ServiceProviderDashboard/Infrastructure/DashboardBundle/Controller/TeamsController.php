@@ -73,15 +73,11 @@ class TeamsController extends AbstractController
         return $this->render('@Dashboard/Teams/manage.html.twig', $teamInfo);
     }
 
-    /**
-     *
-     * @return                                       RedirectResponse|Response
-     */
     #[IsGranted('ROLE_ADMINISTRATOR')]
     #[Route(path: '/service/{serviceId}/sendInvite/{teamId}', name: 'team_send_invite', methods: ['POST'])]
-    public function sendInvite(Request $request, int $serviceId, int $teamId): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function sendInvite(Request $request, int $serviceId, int $teamId): RedirectResponse
     {
-        $this->container->get('request_stack')->getSession()->getFlashBag()->clear();
+        $request->getSession()->getFlashBag()->clear();
         $email = $request->get('email');
         $role = strtoupper((string) $request->get('role'));
         $invite = [

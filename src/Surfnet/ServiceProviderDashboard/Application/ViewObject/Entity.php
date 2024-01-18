@@ -28,7 +28,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class Entity
 {
-    private readonly \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions $actions;
+    private readonly EntityActions $actions;
 
     /**
      * @param                                          string $id
@@ -241,7 +241,7 @@ class Entity
     /**
      * @return EntityActions
      */
-    public function getActions(): \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions
+    public function getActions(): EntityActions
     {
         return $this->actions;
     }
