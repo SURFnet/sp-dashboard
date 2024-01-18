@@ -118,7 +118,7 @@ services:
       - '@surfnet.manage.client.publish_client.prod_environment'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
-      - '@session.flash_bag'
+      - '@request_stack'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\MailService'
       - '@logger'
       - '%env(jira_issue_type_publication_request)%'
@@ -130,7 +130,7 @@ services:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
     arguments:
       - '@surfnet.manage.publish_service'
-      - '@session.flash_bag'
+      - '@request_stack'
       - '@logger'
     public: true
     tags:

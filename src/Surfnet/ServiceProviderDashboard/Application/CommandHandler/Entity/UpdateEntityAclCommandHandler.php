@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProvide
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UpdateEntityAclCommandHandler implements CommandHandler
@@ -35,7 +36,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
     public function __construct(
         private readonly PublishEntityRepository $publishClient,
         private readonly LoggerInterface $logger,
-        private readonly FlashBagInterface $flashBag
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -65,7 +66,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         }
     }
 }

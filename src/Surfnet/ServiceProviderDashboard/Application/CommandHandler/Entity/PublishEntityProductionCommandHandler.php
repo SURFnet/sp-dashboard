@@ -32,6 +32,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityProductionCommandHandler implements CommandHandler
@@ -44,7 +45,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         private readonly PublishEntityRepository $publishClient,
         private readonly EntityServiceInterface $entityService,
         private readonly TicketService $ticketService,
-        private readonly FlashBagInterface $flashBag,
+        private readonly RequestStack $requestStack,
         private readonly MailService $mailService,
         private readonly LoggerInterface $logger,
         private readonly string $issueType
@@ -111,10 +112,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     ),
                     [$publishResponse]
                 );
-                $this->flashBag->add('error', 'entity.edit.error.publish');
+                $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             }
             if ($this->isNewResourceServer($entity)) {
-                $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+                $this->requestStack->getSession()->getFlashBag()->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
             }
             return;
         } catch (PublishMetadataException $e) {
@@ -125,13 +126,13 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
             $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             return;
         }
     }

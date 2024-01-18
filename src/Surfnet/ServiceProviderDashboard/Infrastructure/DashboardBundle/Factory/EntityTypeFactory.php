@@ -35,6 +35,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\SamlEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -48,7 +49,7 @@ class EntityTypeFactory
     ) {
     }
 
-    public function createCreateForm(string $type, Service $service, string $environment)
+    public function createCreateForm(string $type, Service $service, string $environment): FormInterface
     {
         if ($type === Constants::TYPE_SAML) {
             $command = SaveSamlEntityCommand::forCreateAction($service);

@@ -21,6 +21,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Monolog\Formatter;
 
 use Monolog\Formatter\JsonFormatter as MonologJsonFormatter;
+use Monolog\LogRecord;
 
 /**
  * Formats incoming records into a one-line JSON string. Includes only the channel. level, message, context and extra
@@ -28,7 +29,7 @@ use Monolog\Formatter\JsonFormatter as MonologJsonFormatter;
  */
 class JsonFormatter extends MonologJsonFormatter
 {
-    public function format(array $record): string
+    public function format(array|LogRecord $record): string
     {
         return parent::format($this->mapRecord($record));
     }

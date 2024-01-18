@@ -30,6 +30,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class EntityChangeRequestCommandHandler implements CommandHandler
@@ -42,7 +43,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         private readonly EntityChangeRequestRepository $repository,
         private readonly EntityServiceInterface $entityService,
         private readonly TicketService $ticketService,
-        private readonly FlashBagInterface $flashBag,
+        private readonly RequestStack $requestStack,
         private readonly MailService $mailService,
         private readonly LoggerInterface $logger,
         private readonly string $issueType
@@ -92,7 +93,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     ),
                     [$response]
                 );
-                $this->flashBag->add('error', 'entity.edit.error.publish');
+                $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             }
             return;
         } catch (PublishMetadataException $e) {
@@ -103,7 +104,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
 
@@ -111,7 +112,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
             $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             return;
         }
     }

@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webmozart\Assert\Assert;
 
@@ -43,7 +44,7 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
         private readonly QueryManageRepository $queryClient,
         private readonly string $issueType,
         private readonly TicketService $ticketService,
-        private readonly FlashBagInterface $flashBag,
+        private readonly RequestStack $requestStack,
         private readonly LoggerInterface $logger
     ) {
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in .env');
@@ -70,7 +71,7 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
             $this->logger->info(sprintf('Created Jira issue with key: %s', $issue->getKey()));
         } catch (JiraException $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
-            $this->flashBag->add('error', 'entity.delete.request.failed');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.delete.request.failed');
         }
     }
 }

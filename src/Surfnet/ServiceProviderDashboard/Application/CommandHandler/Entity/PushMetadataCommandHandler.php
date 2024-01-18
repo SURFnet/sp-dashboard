@@ -25,13 +25,14 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PushMetadataCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly ManagePublishService $publishService,
-        private readonly FlashBagInterface $flashBag,
+        private readonly RequestStack $requestStack,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -49,7 +50,7 @@ class PushMetadataCommandHandler implements CommandHandler
             $this->publishService->pushMetadata($command->targetEnvironment());
         } catch (PushMetadataException $e) {
             $this->logger->error(sprintf('Pushing to EngineBlock failed with message: "%s"', $e->getMessage()));
-            $this->flashBag->add('error', 'entity.edit.error.push');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.push');
         }
     }
 }

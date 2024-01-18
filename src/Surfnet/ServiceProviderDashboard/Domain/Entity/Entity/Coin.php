@@ -1,6 +1,6 @@
 <?php
 
-//declare(strict_types = 1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2018 SURFnet B.V.
@@ -61,7 +61,7 @@ class Coin implements Comparable
         private ?string $signatureMethod,
         private ?string $serviceTeamId,
         private ?string $originalMetadataUrl,
-        private ?string $excludeFromPush,
+        private null|string|int $excludeFromPush,
         private ?string $applicationUrl,
         private ?string $eula,
         private ?int $oidcClient
@@ -83,7 +83,7 @@ class Coin implements Comparable
         return $this->originalMetadataUrl;
     }
 
-    public function getExcludeFromPush(): ?string
+    public function getExcludeFromPush(): null|string|int
     {
         return $this->excludeFromPush;
     }
