@@ -19,6 +19,7 @@
   },
   "require": {
     "php": "8.1.*",
+    "ext-simplexml": "*",
     "ext-ctype": "*",
     "ext-intl": "*",
     "ext-curl": "*",
@@ -66,6 +67,7 @@
     "twig/extra-bundle": "^2.12|^3.0",
     "twig/twig": "^3",
     "xemlock/htmlpurifier-html5": "^0.1.10"
+
   },
   "require-dev": {
     "dbrekelmans/bdi": "^1.0",
