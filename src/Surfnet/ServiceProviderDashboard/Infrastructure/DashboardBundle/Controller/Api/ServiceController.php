@@ -1,6 +1,6 @@
 <?php
 
-//declare(strict_types = 1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2018 SURFnet B.V.
@@ -45,15 +45,9 @@ class ServiceController extends AbstractController
     ) {
     }
 
-    /**
-     *
-     *
-     * @param  int $id
-     * @return JsonResponse
-     */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/api/service/status/{id}', name: 'api_service_status', methods: ['GET', 'POST'])]
-    public function status($id): \Symfony\Component\HttpFoundation\JsonResponse
+    public function status(int $id): JsonResponse
     {
         $this->authorizationService->assertServiceIdAllowed($id);
 
@@ -67,10 +61,6 @@ class ServiceController extends AbstractController
 
         $serviceStatus = $serviceStatusAssembler->getDto();
 
-        return new JsonResponse(
-            [
-            'service' => $serviceStatus,
-            ]
-        );
+        return new JsonResponse(['service' => $serviceStatus]);
     }
 }
