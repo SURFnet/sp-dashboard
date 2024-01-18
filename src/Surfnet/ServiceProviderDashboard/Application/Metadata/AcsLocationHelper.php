@@ -36,7 +36,6 @@ class AcsLocationHelper
      * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
      * imports the POST ACS URLs. Other formats are not supported by manage or
      * the dashboard.
-     *
      */
     public static function addAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false): void
     {

@@ -32,14 +32,16 @@ class AclListType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $list = $this->entityAclService->getAvailableIdps();
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'choices' => $list,
             'choice_label' => fn(IdentityProvider $idp): string => $idp->getName(),
             'choice_value' => fn(IdentityProvider $idp): string => $idp->getManageId(),
             'choice_name' => fn(IdentityProvider $idp): string => $idp->getManageId(),
             'expanded' => true,
             'multiple' => true,
-        ]);
+            ]
+        );
     }
 
     public function getParent(): string
