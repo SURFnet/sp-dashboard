@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -58,8 +60,7 @@ class EntityCreateController extends AbstractController
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     *
-     * @param int $serviceId
+     * @param  int $serviceId
      * @return RedirectResponse|Response|array
      */
     #[Route(path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}', defaults: ['targetEnvironment' => 'test'], name: 'entity_type', methods: ['GET', 'POST'])]
@@ -93,22 +94,30 @@ class EntityCreateController extends AbstractController
             }
 
             if (!$manageId) {
-                return $this->redirectToRoute('entity_add', [
+                return $this->redirectToRoute(
+                    'entity_add',
+                    [
                     'serviceId' => $service->getId(),
                     'targetEnvironment' => $environment,
                     'type' => $protocol
-                ]);
+                    ]
+                );
             }
 
-            return $this->redirectToRoute('entity_copy', [
+            return $this->redirectToRoute(
+                'entity_copy',
+                [
                 'serviceId' => $service->getId(),
                 'manageId' => $manageId,
                 'targetEnvironment' => $environment,
                 'sourceEnvironment' => $sourceEnvironment,
-            ]);
+                ]
+            );
         }
 
-        return $this->render('@Dashboard/EntityType/type.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityType/type.html.twig',
+            [
             'form' => $form->createView(),
             'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
@@ -117,11 +126,12 @@ class EntityCreateController extends AbstractController
             'productionEnabled' => $isProductionEnabled,
             'entities' => $entityList->getEntities(),
             'manageId' => $formId,
-        ]);
+            ]
+        );
     }
 
     /**
-     * @param int $serviceId
+     * @param int         $serviceId
      * @param null|string $targetEnvironment
      * @param null|string $type
      *
@@ -141,8 +151,9 @@ class EntityCreateController extends AbstractController
         $hasTestEntities = $this->entityService
             ->getEntityListForService($service)->hasTestEntities();
 
-        if (!$service->isProductionEntitiesEnabled() && !$hasTestEntities &&
-            $targetEnvironment !== Constants::ENVIRONMENT_TEST) {
+        if (!$service->isProductionEntitiesEnabled() && !$hasTestEntities
+            && $targetEnvironment !== Constants::ENVIRONMENT_TEST
+        ) {
             throw $this->createAccessDeniedException(
                 'You do not have access to create entities without publishing to the test environment first'
             );
@@ -193,25 +204,28 @@ class EntityCreateController extends AbstractController
             }
         }
 
-        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityEdit/edit.html.twig',
+            [
             'form' => $form->createView(),
             'type' => $type,
-        ]);
+            ]
+        );
     }
 
 
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param int $serviceId
-     * @param null|string $manageId set from the entity_copy route
+     * @param int         $serviceId
+     * @param null|string $manageId          set from the entity_copy route
      * @param null|string $targetEnvironment set from the entity_copy route
      * @param null|string $sourceEnvironment indicates where the copy command originated from
      *
      * @return RedirectResponse|Response|array
      *
-     * @throws InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
+     * @throws                                       InvalidArgumentException
+     * @throws                                       \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
@@ -224,7 +238,8 @@ class EntityCreateController extends AbstractController
             'targetEnvironment' => 'test',
             'sourceEnvironment' => 'test'
         ],
-        methods: ['GET', 'POST'])]
+        methods: ['GET', 'POST']
+    )]
     public function copy(Request $request, $serviceId, string $manageId, string $targetEnvironment, string $sourceEnvironment): \Symfony\Component\HttpFoundation\Response
     {
         $flashBag = $request->getSession()->getFlashBag();
@@ -289,9 +304,12 @@ class EntityCreateController extends AbstractController
             }
         }
 
-        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityEdit/edit.html.twig',
+            [
             'form' => $form->createView(),
             'type' => $entity->getProtocol()->getProtocol(),
-        ]);
+            ]
+        );
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -41,9 +43,6 @@ class Attribute
         );
     }
 
-    /**
-     * @param string $motivation
-     */
     public function __construct(
         private readonly string $name,
         private readonly string $value,
@@ -77,10 +76,6 @@ class Attribute
         return $this->motivation;
     }
 
-    /**
-     * @param $newSource
-     * @return self
-     */
     public function updateSource(string $newSource): static
     {
         $this->source = $newSource;

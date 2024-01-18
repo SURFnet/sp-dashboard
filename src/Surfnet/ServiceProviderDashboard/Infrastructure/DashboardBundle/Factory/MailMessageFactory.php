@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -45,11 +47,13 @@ class MailMessageFactory
         $message
             ->subject($this->translator->trans('mail.jira.publish_production_failed.subject'))
             ->htmlTemplate('@Dashboard/Mail/jiraPublicationFailed.html.twig')
-            ->context([
+            ->context(
+                [
                 'exception' => $exception,
                 'entityId' => $entity->getMetaData()->getEntityId(),
                 'serviceName' => $entity->getService()->getName(),
-            ]);
+                ]
+            );
 
         return $message;
     }

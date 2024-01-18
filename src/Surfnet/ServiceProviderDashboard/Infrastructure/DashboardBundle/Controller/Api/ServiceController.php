@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -46,7 +48,7 @@ class ServiceController extends AbstractController
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param int $id
+     * @param  int $id
      * @return JsonResponse
      */
     #[Route(path: '/api/service/status/{id}', name: 'api_service_status', methods: ['GET', 'POST'])]
@@ -64,8 +66,10 @@ class ServiceController extends AbstractController
 
         $serviceStatus = $serviceStatusAssembler->getDto();
 
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'service' => $serviceStatus,
-        ]);
+            ]
+        );
     }
 }

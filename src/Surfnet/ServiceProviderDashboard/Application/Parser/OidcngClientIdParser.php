@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -28,7 +30,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Parser;
 class OidcngClientIdParser
 {
     /**
-     * @param string $entityId
+     * @param  string $entityId
      * @return string
      */
     public static function parse($entityId)

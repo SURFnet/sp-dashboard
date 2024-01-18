@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -256,7 +258,8 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
                 Constants::ENVIRONMENT_TEST,
                 Constants::ENVIRONMENT_PRODUCTION,
             ]
-        )) {
+        )
+        ) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
             );

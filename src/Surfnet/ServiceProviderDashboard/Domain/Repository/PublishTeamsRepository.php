@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -44,6 +46,7 @@ interface PublishTeamsRepository
 
     /**
      * Change the membership role for a given id with a given role.
+     *
      * @return mixed
      */
     public function changeMembership(int $id, string $role);
@@ -61,12 +64,14 @@ interface PublishTeamsRepository
         "message": "Please join",
         "language": "ENGLISH"
      }
+     *
      * @return mixed
      */
     public function inviteMember(array $inviteObject);
 
     /**
      * Resends the invite to a member given an id for the member & a message to accompany the invite.
+     *
      * @return mixed
      */
     public function resendInvitation(int $id, string $message);

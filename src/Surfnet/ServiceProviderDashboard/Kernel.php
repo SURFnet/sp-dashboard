@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+//declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -28,9 +28,8 @@ class Kernel extends BaseKernel
     use MicroKernelTrait;
 
     // see https://symfony.com/doc/current/reference/configuration/kernel.html#kernel-project-dir
-//    public function getProjectDir(): string
-//    {
-//        return dirname(__DIR__);
-//    }
-
+    //    public function getProjectDir(): string
+    //    {
+    //        return dirname(__DIR__);
+    //    }
 }

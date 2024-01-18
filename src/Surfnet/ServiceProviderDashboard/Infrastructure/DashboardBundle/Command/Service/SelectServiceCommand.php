@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -22,23 +24,14 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 
 class SelectServiceCommand implements Command
 {
-    /**
-     * @var string
-     */
-    private $selectedServiceId;
+    private string $selectedServiceId;
 
-    /**
-     * @return string
-     */
-    public function getSelectedServiceId()
+    public function getSelectedServiceId(): string
     {
         return $this->selectedServiceId;
     }
 
-    /**
-     * @param string $selectedServiceId
-     */
-    public function setSelectedServiceId($selectedServiceId): void
+    public function setSelectedServiceId(string $selectedServiceId): void
     {
         $this->selectedServiceId = $selectedServiceId;
     }

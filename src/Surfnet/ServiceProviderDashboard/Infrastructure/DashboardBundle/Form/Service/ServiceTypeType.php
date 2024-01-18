@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -27,7 +29,8 @@ class ServiceTypeType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'label' => 'service.form.label.service_type',
             'expanded' => true,
             'multiple' => false,
@@ -36,7 +39,8 @@ class ServiceTypeType extends AbstractType
                 'service.form.label.service_type_non_institute' => Service::SERVICE_TYPE_NON_INSTITUTE,
             ],
             'attr' => ['class' => 'service-status-container contract-signed-toggle'],
-        ]);
+            ]
+        );
     }
 
     public function getParent()

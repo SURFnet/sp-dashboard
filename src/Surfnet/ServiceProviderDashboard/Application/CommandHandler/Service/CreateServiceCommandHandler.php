@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -46,11 +48,15 @@ class CreateServiceCommandHandler implements CommandHandler
         $teamName = strtolower($command->getTeamName());
         $fullTeamName = $this->prefixPart1 . $this->prefixPart2 . $teamName;
 
-        /** create team **/
+        /**
+ * create team
+**/
         $team = $this->createTeamData($name, $teamName, $command->getTeamManagerEmail());
         $this->publishEntityClient->createTeam($team);
 
-        /** create service **/
+        /**
+ * create service
+**/
         $service = new Service();
         $service->setName($name);
         $service->setGuid($command->getGuid());
@@ -75,9 +81,12 @@ class CreateServiceCommandHandler implements CommandHandler
 
         return [
             'name' => $teamName,
-            'description' => $this->translator->trans('teams.create.description', [
+            'description' => $this->translator->trans(
+                'teams.create.description',
+                [
                 '%teamName%' => $name
-            ]),
+                ]
+            ),
             'personalNote' => $this->translator->trans('teams.create.personalNote'),
             'viewable' => false,
             'emails' => $emails,

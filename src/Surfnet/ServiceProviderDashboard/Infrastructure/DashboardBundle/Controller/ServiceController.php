@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -109,21 +111,26 @@ class ServiceController extends AbstractController
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
         // to display the oidc confirmation popup.
-        /** @var ManageEntity $publishedEntity */
+        /**
+ * @var ManageEntity $publishedEntity
+*/
         $publishedEntity = $this->get('request_stack')->getSession()->get('published.entity.clone');
 
-        return $this->render('@Dashboard/Service/overview.html.twig', [
+        return $this->render(
+            '@Dashboard/Service/overview.html.twig',
+            [
             'services' => $serviceList,
             'isAdmin' => false,
             'publishedEntity' => $publishedEntity,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'privacyStatusEntities' => $privacyOK,
-        ]);
+            ]
+        );
     }
 
     /**
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     * @return RedirectResponse|Response
+     * @return                                       RedirectResponse|Response
      */
     #[Route(path: '/service/create', name: 'service_add', methods: ['GET', 'POST'])]
     public function create(Request $request): RedirectResponse|Response
@@ -151,7 +158,7 @@ class ServiceController extends AbstractController
 
     /**
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     * @return RedirectResponse|Response
+     * @return                                       RedirectResponse|Response
      */
     #[Route(path: '/service/{serviceId}/edit', name: 'service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, int $serviceId): RedirectResponse|Response
@@ -206,7 +213,7 @@ class ServiceController extends AbstractController
     /**
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
      *
-     * @param $serviceId
+     * @param  $serviceId
      * @return RedirectResponse|Response
      */
     #[Route(path: '/service/{serviceId}/delete', name: 'service_delete', methods: ['GET', 'POST'])]
@@ -248,11 +255,14 @@ class ServiceController extends AbstractController
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/Service/delete.html.twig', [
+        return $this->render(
+            '@Dashboard/Service/delete.html.twig',
+            [
             'form' => $form->createView(),
             'serviceName' => $service->getName(),
             'entityList' => $this->entityService->getEntityListForService($service),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -287,16 +297,21 @@ class ServiceController extends AbstractController
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
         // to display the oidc confirmation popup.
-        /** @var ManageEntity $publishedEntity */
+        /**
+ * @var ManageEntity $publishedEntity
+*/
         $publishedEntity = $this->get('request_stack')->getSession()->get('published.entity.clone');
 
-        return $this->render('@Dashboard/Service/overview.html.twig', [
+        return $this->render(
+            '@Dashboard/Service/overview.html.twig',
+            [
             'services' => $serviceList,
             'isAdmin' => true,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'publishedEntity' => $publishedEntity,
             'privacyStatusEntities' => $privacyOK,
-        ]);
+            ]
+        );
     }
 
     private function isDeleteAction(FormInterface $form): bool
@@ -307,7 +322,7 @@ class ServiceController extends AbstractController
     /**
      * Check if the form was submitted using the given button name.
      *
-     * @param EditServiceType $form
+     * @param  EditServiceType $form
      * @return bool
      */
     private function assertUsedSubmitButton(FormInterface $form, string $expectedButtonName): bool

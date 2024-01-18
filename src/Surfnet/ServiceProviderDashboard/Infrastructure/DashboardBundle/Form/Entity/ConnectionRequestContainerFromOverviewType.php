@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -48,16 +48,24 @@ class ConnectionRequestContainerFromOverviewType extends AbstractType
                     ]
                 ]
             )
-            ->add('send', SubmitType::class, [
+            ->add(
+                'send',
+                SubmitType::class,
+                [
                 'label' => 'Send',
                 'disabled' => true,
-                'attr' => ['class' => 'button']])
-            ->add('cancel', SubmitType::class, [
+                'attr' => ['class' => 'button']]
+            )
+            ->add(
+                'cancel',
+                SubmitType::class,
+                [
                 'label' => 'Cancel',
                 'attr' => [
                     'class' => 'button'
                 ]
-            ]);
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

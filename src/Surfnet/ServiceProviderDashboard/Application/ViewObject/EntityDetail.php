@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -30,7 +32,7 @@ class EntityDetail
 {
     public $organizationUnitNameAttribute;
     /**
-     * @param ManageEntity[]|null $resourceServers
+     * @param                                          ManageEntity[]|null $resourceServers
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(

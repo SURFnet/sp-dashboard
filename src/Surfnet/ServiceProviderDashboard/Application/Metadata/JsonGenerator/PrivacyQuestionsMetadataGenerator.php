@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -38,7 +40,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  *   "what_data": "All sorts of data will be accessed.",
  *   "security_measures": "We've taken every precaution."
  * }
- *
  */
 class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 {

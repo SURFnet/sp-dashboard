@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -32,7 +34,7 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
      *  - is the curl response code erroneous (>= 400)
      *  - if the content type is correct
      *
-     * @param $url
+     * @param  $url
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */
@@ -69,8 +71,8 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
         }
 
         // Test if the resource is of the correct file type
-        if ($contentType !== LogoValidationHelperInterface::IMAGE_TYPE_PNG &&
-            $contentType !== LogoValidationHelperInterface::IMAGE_TYPE_GIF
+        if ($contentType !== LogoValidationHelperInterface::IMAGE_TYPE_PNG
+            && $contentType !== LogoValidationHelperInterface::IMAGE_TYPE_GIF
         ) {
             $this->logger->info('The logo file type is invalid');
             throw new LogoInvalidTypeException('The logo file type is invalid');

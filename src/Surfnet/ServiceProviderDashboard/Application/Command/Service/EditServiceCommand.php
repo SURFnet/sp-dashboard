@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -57,8 +59,7 @@ class EditServiceCommand implements Command
         private ?string $organizationNameNl,
         #[Assert\NotBlank]
         private ?string $organizationNameEn
-    )
-    {
+    ) {
     }
 
     public function setGuid(string $guid): void

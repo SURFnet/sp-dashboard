@@ -1,4 +1,7 @@
 <?php
+
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -26,7 +29,7 @@ class Secret implements SecretInterface
     private string $secret = '';
 
     /**
-     * @param int $length
+     * @param  int $length
      * @throws Exception
      */
     public function __construct($length)

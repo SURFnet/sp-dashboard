@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -29,11 +31,11 @@ class MetaData implements Comparable
     final public const MAX_ACS_LOCATIONS = 10;
 
      /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
-     * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
-     * @return MetaData
-     * @throws Exception
-     */
+      * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
+      * @SuppressWarnings(PHPMD.NPathComplexity)      - Due to mapping and input validation
+      * @return                                       MetaData
+      * @throws                                       Exception
+      */
     public static function fromApiResponse(array $data): self
     {
         $metaDataFields = $data['data']['metaDataFields'];

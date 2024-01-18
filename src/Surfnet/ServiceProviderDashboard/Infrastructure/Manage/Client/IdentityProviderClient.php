@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -47,9 +49,11 @@ class IdentityProviderClient implements IdentityProviderRepository
     {
         try {
             // Based on the manage config set (prod or test) we retrieve the correct results from the manage idp client.
-            $result = $this->doSearchQuery([
+            $result = $this->doSearchQuery(
+                [
                 "state" => $this->manageConfig->getPublicationStatus()->getStatus(),
-            ]);
+                ]
+            );
 
             $list = [];
             foreach ($result as $manageResult) {

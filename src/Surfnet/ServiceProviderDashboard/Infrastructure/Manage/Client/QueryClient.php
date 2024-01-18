@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -66,10 +68,12 @@ class QueryClient implements QueryManageRepository
     public function findManageIdByEntityId($entityId)
     {
         try {
-            $result = $this->doSearchQuery([
+            $result = $this->doSearchQuery(
+                [
                 'entityid' => $entityId,
                 "REQUESTED_ATTRIBUTES" => ['metaDataFields.name:en'],
-            ]);
+                ]
+            );
 
             if (isset($result[0]['_id'])) {
                 return $result[0]['_id'];
@@ -188,10 +192,12 @@ class QueryClient implements QueryManageRepository
     {
         try {
             // Query manage to get the internal id of every SP entity with given team ID.
-            $searchResults = $this->doSearchQuery([
+            $searchResults = $this->doSearchQuery(
+                [
                 'metaDataFields.coin:service_team_id' => $teamName,
                 'state' => $state
-            ]);
+                ]
+            );
 
             // For each search result, query manage to get the full SP entity data.
             return array_map(
@@ -222,15 +228,17 @@ class QueryClient implements QueryManageRepository
             );
 
             // For each search result, query manage to get the full SP entity data.
-            return array_filter(array_map(
-                function (array $result) {
-                    $entity = $this->findByManageId($result['_id']);
-                    if ($entity !== null) {
-                        return $entity;
-                    }
-                },
-                $searchResults
-            ));
+            return array_filter(
+                array_map(
+                    function (array $result) {
+                        $entity = $this->findByManageId($result['_id']);
+                        if ($entity !== null) {
+                            return $entity;
+                        }
+                    },
+                    $searchResults
+                )
+            );
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
                 sprintf('Unable to find oidcng resource server entities with team ID: "%s"', $teamName),

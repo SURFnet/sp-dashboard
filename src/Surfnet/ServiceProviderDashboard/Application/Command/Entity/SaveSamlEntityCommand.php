@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -31,7 +33,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- *
  */
 class SaveSamlEntityCommand implements SaveEntityCommandInterface
 {
@@ -54,6 +55,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     /**
      * Metadata URL that import last happened from.
+     *
      * @deprecated
      */
     private ?string $importUrl = null;
@@ -222,10 +224,14 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     public function setEnvironment(string $environment): void
     {
-        if (!in_array($environment, [
+        if (!in_array(
+            $environment,
+            [
             Constants::ENVIRONMENT_TEST,
             Constants::ENVIRONMENT_PRODUCTION,
-        ])) {
+            ]
+        )
+        ) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
             );

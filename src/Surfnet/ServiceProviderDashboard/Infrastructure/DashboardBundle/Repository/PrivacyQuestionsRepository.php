@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -34,8 +36,10 @@ class PrivacyQuestionsRepository extends DoctrineEntityRepository implements Pri
 
     public function findByService(Service $service)
     {
-        return parent::findOneBy([
+        return parent::findOneBy(
+            [
             'service' => $service,
-        ]);
+            ]
+        );
     }
 }

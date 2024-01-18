@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -45,17 +47,21 @@ class OidcngEntityType extends AbstractType
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
      *
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $attributesContainer = $builder->create('attributes', FormType::class, [
+        $attributesContainer = $builder->create(
+            'attributes',
+            FormType::class,
+            [
             'inherit_data' => true,
             'attr' => ['class' => 'attributes']
-        ]);
+            ]
+        );
         $this->buildAttributeTypes($attributesContainer);
 
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
@@ -75,7 +81,9 @@ class OidcngEntityType extends AbstractType
                 ]
             );
 
-        /** @var SaveOidcngEntityCommand $command */
+        /**
+ * @var SaveOidcngEntityCommand $command
+*/
         $command = $options['data'];
         $copy = $command->isCopy();
         $manageId = $command->getManageId();

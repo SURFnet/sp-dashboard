@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -36,7 +36,7 @@ class ValidAttributeValidator extends ConstraintValidator
     }
 
     /**
-     * @param array $value
+     * @param array      $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint): void

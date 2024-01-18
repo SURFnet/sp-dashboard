@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -81,7 +83,7 @@ class OidcngClient implements Comparable, OidcClientInterface
     }
 
     /**
-     * @param $key
+     * @param  $key
      * @return string
      */
     private static function getStringOrEmpty(array $data, $key)
@@ -90,7 +92,7 @@ class OidcngClient implements Comparable, OidcClientInterface
     }
 
     /**
-     * @param $key
+     * @param  $key
      * @return string
      */
     private static function getLowercasedStringOrEmpty(array $data, $key): string
@@ -99,7 +101,7 @@ class OidcngClient implements Comparable, OidcClientInterface
     }
 
     /**
-     * @param $key
+     * @param  $key
      * @return array
      */
     private static function getLowercasedArrayOrEmpty(array $data, $key): array
@@ -117,8 +119,8 @@ class OidcngClient implements Comparable, OidcClientInterface
     }
 
      /**
-     * @return string
-     */
+      * @return string
+      */
     public function getClientId(): string
     {
         return $this->clientId;
@@ -210,10 +212,13 @@ class OidcngClient implements Comparable, OidcClientInterface
     {
         $manageResourceServers = $this->resourceServers;
         // Filter out the Manage managed RS servers, from outside the 'home' team.
-        $manageResourceServers = array_filter($manageResourceServers, function (ManageEntity $server) use ($homeTeam): bool {
-            $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
-            return $homeTeam !== $teamName;
-        });
+        $manageResourceServers = array_filter(
+            $manageResourceServers,
+            function (ManageEntity $server) use ($homeTeam): bool {
+                $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
+                return $homeTeam !== $teamName;
+            }
+        );
         $manageRsEntityIds = [];
         // Reduce the manage entities to only their entityId
         foreach ($manageResourceServers as $server) {

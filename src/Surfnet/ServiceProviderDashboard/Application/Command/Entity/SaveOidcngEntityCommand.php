@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -69,7 +71,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private $secret;
 
     /**
-     * @var string[]
+     * @var                                    string[]
      * @Assert\All({
      *     @Assert\NotBlank(),
      *     @SpDashboardAssert\ValidRedirectUrl()
@@ -307,7 +309,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
                 Constants::ENVIRONMENT_TEST,
                 Constants::ENVIRONMENT_PRODUCTION,
             ]
-        )) {
+        )
+        ) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
             );

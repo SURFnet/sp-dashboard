@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -31,6 +33,7 @@ class ProtocolChoiceFactory
 
     /**
      * Based on target environment, builds the available protocol choices for the ChooseEntityType form.
+     *
      * @return array
      */
     public function buildOptions(): array

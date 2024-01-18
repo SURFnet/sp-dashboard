@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -41,10 +43,10 @@ class OauthClientCredentialEntityType extends AbstractType
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
      *
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -65,7 +67,9 @@ class OauthClientCredentialEntityType extends AbstractType
                 ]
             );
 
-        /** @var SaveOidcngEntityCommand $command */
+        /**
+ * @var SaveOidcngEntityCommand $command
+*/
         $command = $options['data'];
         $copy = $command->isCopy();
         $manageId = $command->getManageId();

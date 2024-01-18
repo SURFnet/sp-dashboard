@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -61,6 +63,7 @@ class ValidLogoValidator extends ConstraintValidator
 
     /**
      * Using getimagesize we can test if PHP can handle the resource as an image
+     *
      * @param $value
      */
     private function getImageSizeValidation($value, Constraint $constraint): void

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -52,9 +54,9 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         $entity = $command->getManageEntity();
 
         $protocol = $entity->getProtocol()->getProtocol();
-        if ($protocol !== Constants::TYPE_OPENID_CONNECT_TNG &&
-            $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER &&
-            $protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        if ($protocol !== Constants::TYPE_OPENID_CONNECT_TNG
+            && $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            && $protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
             throw new InvalidArgumentException('Only OIDC TNG and Oauth CC entities can be processed');
         }

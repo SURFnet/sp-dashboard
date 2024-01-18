@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -29,16 +31,15 @@ class UpdateEntityAclCommand implements Command
     public function __construct(
         private readonly ManageEntity $manageEntity,
         /**
-         * @var IdentityProvider[]
+         * @var                                                                                 IdentityProvider[]
          * @Assert\All({
-         *     @Assert\NotBlank(),
-         *     @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider")
+         * @Assert\NotBlank(),
+         * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider")
          * })
          */
         private array $selected,
         private bool $selectAll
-    )
-    {
+    ) {
     }
 
     /**

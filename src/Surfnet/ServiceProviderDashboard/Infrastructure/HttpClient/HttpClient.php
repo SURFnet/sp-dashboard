@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -52,8 +54,8 @@ class HttpClient implements HttpClientInterface
 
     /**
      * @param string $path A URL path, optionally containing printf parameters.
-     * The parameters will be URL encoded and formatted into the path string.
-     * Example: "connections/%d.json"
+     *                     The parameters will be URL encoded and formatted into the path string.
+     *                     Example: "connections/%d.json"
      *
      * @return mixed $data
      *
@@ -71,33 +73,40 @@ class HttpClient implements HttpClientInterface
         );
 
         try {
-            return $this->request('GET', $resource, [
+            return $this->request(
+                'GET',
+                $resource,
+                [
                 'exceptions' => false,
                 'headers' => $headers
-            ], function ($statusCode, $body, $method, $resource, array $headers) {
-                if ($statusCode < 200 || $statusCode >= 300) {
-                    throw new UnreadableResourceException(
-                        sprintf('Resource could not be read (status code %d)', $statusCode)
-                    );
-                }
+                ],
+                function ($statusCode, $body, $method, $resource, array $headers) {
+                    if ($statusCode < 200 || $statusCode >= 300) {
+                        throw new UnreadableResourceException(
+                            sprintf('Resource could not be read (status code %d)', $statusCode)
+                        );
+                    }
 
-                if ((isset($headers['Content-Type'])) &&
-                    ($headers['Content-Type'] === 'application/json')) {
-                    return $this->parseResponse($body, $method, $resource);
-                }
+                    if ((isset($headers['Content-Type']))
+                        && ($headers['Content-Type'] === 'application/json')
+                    ) {
+                        return $this->parseResponse($body, $method, $resource);
+                    }
 
-                if ((isset($headers['Content-Type'])) &&
-                    ($headers['Content-Type'] === 'application/xml')) {
-                    return $body;
+                    if ((isset($headers['Content-Type']))
+                        && ($headers['Content-Type'] === 'application/xml')
+                    ) {
+                        return $body;
+                    }
                 }
-            });
+            );
         } catch (ClientException) {
             return [];
         }
     }
 
     /**
-     * @param mixed $data
+     * @param  mixed $data
      * @return mixed
      *
      * @throws AccessDeniedException
@@ -118,15 +127,19 @@ class HttpClient implements HttpClientInterface
             ['data' => $data]
         );
 
-        return $this->request('POST', $resource, [
+        return $this->request(
+            'POST',
+            $resource,
+            [
             'exceptions' => false,
             'body' => $data,
             'headers' => $headers
-        ]);
+            ]
+        );
     }
 
     /**
-     * @param mixed $data
+     * @param  mixed $data
      * @return mixed
      *
      * @throws AccessDeniedException
@@ -147,11 +160,15 @@ class HttpClient implements HttpClientInterface
             ['data' => $data]
         );
 
-        return $this->request('PUT', $resource, [
+        return $this->request(
+            'PUT',
+            $resource,
+            [
             'exceptions' => false,
             'body' => $data,
             'headers' => $headers
-        ]);
+            ]
+        );
     }
 
     /**
@@ -171,10 +188,14 @@ class HttpClient implements HttpClientInterface
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(sprintf('Deleting data from %s (%s) on path %s', $this->apiName, $this->mode, $resource));
 
-        return $this->request('DELETE', $resource, [
+        return $this->request(
+            'DELETE',
+            $resource,
+            [
             'exceptions' => false,
             'headers' => $headers
-        ]);
+            ]
+        );
     }
 
     /**

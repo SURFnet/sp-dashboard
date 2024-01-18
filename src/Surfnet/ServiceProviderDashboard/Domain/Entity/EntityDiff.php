@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -50,8 +52,8 @@ class EntityDiff
                     // Redirect urls should not be diffed, the complete list should be provided
                     // Grants should not be diffed, the complete list should be provided
                     // But only when the values changed between the two different versions
-                    if ($recursiveDiff !== [] &&
-                        ($key === 'metaDataFields.redirectUrls' || $key === 'metaDataFields.grants')
+                    if ($recursiveDiff !== []
+                        && ($key === 'metaDataFields.redirectUrls' || $key === 'metaDataFields.grants')
                     ) {
                         $recursiveDiff = $value;
                     }

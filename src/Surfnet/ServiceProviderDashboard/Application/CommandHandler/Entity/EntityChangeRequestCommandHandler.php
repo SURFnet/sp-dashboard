@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -54,6 +56,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
 
     /**
      * Creates an entity change request in Manage
+     *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function handle(PublishProductionCommandInterface $command): void

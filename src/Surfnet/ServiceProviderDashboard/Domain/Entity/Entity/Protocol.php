@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -43,8 +45,8 @@ class Protocol implements Comparable
     private $protocol;
 
     /**
-     * @param string $manageProtocol
-     * @return Protocol
+     * @param                                     string $manageProtocol
+     * @return                                    Protocol
      * @SuppressWarnings(PHPMD.UndefinedVariable) - protocolMapping is defined, md does not seem to resolve correctly
      */
     public static function fromApiResponse($manageProtocol): self

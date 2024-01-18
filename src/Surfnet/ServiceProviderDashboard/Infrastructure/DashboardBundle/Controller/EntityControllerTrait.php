@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -95,8 +97,7 @@ trait EntityControllerTrait
         SaveEntityCommandInterface $saveCommand,
         bool $isPublishedProductionEntity,
         FlashBagInterface $flashBag
-    ): RedirectResponse|FormInterface
-    {
+    ): RedirectResponse|FormInterface {
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
@@ -135,8 +136,7 @@ trait EntityControllerTrait
     private function createPublishEntityCommandFromEntity(
         ?ManageEntity $entity,
         bool $isEntityChangeRequest,
-    ): PublishEntityTestCommand|EntityChangeRequestCommand|PublishEntityProductionCommand
-    {
+    ): PublishEntityTestCommand|EntityChangeRequestCommand|PublishEntityProductionCommand {
         switch (true) {
             case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity);
@@ -197,8 +197,9 @@ trait EntityControllerTrait
             case $publishEntityCommand instanceof EntityChangeRequestCommand:
                 return 'entity_change_request';
             case $publishEntityCommand instanceof PublishEntityProductionCommand:
-                if ($publishEntityCommand->getManageEntity()->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED &&
-                    $this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
+                if ($publishEntityCommand->getManageEntity()->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED
+                && $this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)
+                ) {
                     return 'entity_published_create_connection_request';
                 }
                 return 'entity_published_production';

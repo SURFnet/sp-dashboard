@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2020 SURFnet B.V.
  *
@@ -98,7 +100,9 @@ class EntityMergeService
             $secret = new Secret(20);
         }
         if ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            /** @var SaveOidcngEntityCommand  $command */
+            /**
+ * @var SaveOidcngEntityCommand  $command
+*/
             $oidcClient = new OidcngClient(
                 $command->getClientId(),
                 $secret->getSecret(),
@@ -109,14 +113,18 @@ class EntityMergeService
                 $command->getOidcngResourceServers()
             );
         } elseif ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            /** @var SaveOidcngResourceServerEntityCommand  $command */
+            /**
+ * @var SaveOidcngResourceServerEntityCommand  $command
+*/
             $oidcClient = new OidcngResourceServerClient(
                 $command->getClientId(),
                 $secret->getSecret(),
                 []
             );
         } elseif ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
-            /** @var SaveOauthClientCredentialClientCommand $command */
+            /**
+ * @var SaveOauthClientCredentialClientCommand $command
+*/
             $oidcClient = new OauthClientCredentialsClientClient(
                 $command->getClientId(),
                 $command->getAccessTokenValidity(),
@@ -154,8 +162,8 @@ class EntityMergeService
 
         // Oidc TNG resource servers do not track attributes in manage
         // Neither do the Oauth Client Credentials clients
-        if ($command instanceof SaveOidcngResourceServerEntityCommand ||
-            $command instanceof SaveOauthClientCredentialClientCommand
+        if ($command instanceof SaveOidcngResourceServerEntityCommand
+            || $command instanceof SaveOauthClientCredentialClientCommand
         ) {
             return $attributeList;
         }
@@ -163,12 +171,14 @@ class EntityMergeService
         foreach ($this->attributeService->getEntityMergeAttributes() as $entityMergeAttribute) {
             if ($command->getAttribute($entityMergeAttribute->getName())) {
                 $commandAttribute = $command->getAttribute($entityMergeAttribute->getName());
-                $attributeList->add(new Attribute(
-                    $entityMergeAttribute->getUrn(),
-                    '',
-                    'idp',
-                    $commandAttribute->getMotivation()
-                ));
+                $attributeList->add(
+                    new Attribute(
+                        $entityMergeAttribute->getUrn(),
+                        '',
+                        'idp',
+                        $commandAttribute->getMotivation()
+                    )
+                );
             }
         }
         return $attributeList;

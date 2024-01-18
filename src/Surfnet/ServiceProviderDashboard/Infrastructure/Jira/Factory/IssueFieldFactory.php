@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -71,45 +73,56 @@ class IssueFieldFactory
             ->setPriorityNameAsString($this->priority)
             ->addCustomField($this->reporterFieldName, $ticket->getApplicantEmail())
             ->addCustomField($this->entityIdFieldName, $ticket->getEntityId())
-            ->addCustomField($this->manageIdFieldName, $ticket->getManageId())
-        ;
+            ->addCustomField($this->manageIdFieldName, $ticket->getManageId());
 
         return $issueField;
     }
 
     private function translateDescription(Ticket $ticket): string
     {
-        return $this->translator->trans($ticket->getDescriptionTranslationKey(), [
+        return $this->translator->trans(
+            $ticket->getDescriptionTranslationKey(),
+            [
             '%applicant_name%' => $ticket->getApplicantName(),
             '%applicant_email%' =>  $ticket->getApplicantEmail(),
             '%entity_name%' => $ticket->getEntityName()
-        ]);
+            ]
+        );
     }
 
     private function translateConnectionRequestDescriptions(Ticket $ticket): string
     {
         $translation = '';
         $translationKey = 'entity.connection_request.ticket.applicant';
-        $translation .= $this->translator->trans($translationKey, [
+        $translation .= $this->translator->trans(
+            $translationKey,
+            [
             '%applicant_name%' => $ticket->getApplicantName(),
             '%applicant_email%' =>  $ticket->getApplicantEmail(),
-            '%entity_name%' => $ticket->getEntityName()]);
+            '%entity_name%' => $ticket->getEntityName()]
+        );
 
         $translationKey = 'entity.connection_request.ticket.institution';
         foreach ($ticket->getConnectionRequests() ?? [] as $connectionRequest) {
-            $translation .= $this->translator->trans($translationKey, [
+            $translation .= $this->translator->trans(
+                $translationKey,
+                [
                 '%institution_name%' => $connectionRequest->institution,
                 '%contact_name%' => $connectionRequest->name,
                 '%contact_email%' => $connectionRequest->email
-            ]);
+                ]
+            );
         }
         return $translation;
     }
 
     private function translateSummary(Ticket $ticket): string
     {
-        return $this->translator->trans($ticket->getSummaryTranslationKey(), [
+        return $this->translator->trans(
+            $ticket->getSummaryTranslationKey(),
+            [
             '%entity_name%' => $ticket->getEntityName()
-        ]);
+            ]
+        );
     }
 }

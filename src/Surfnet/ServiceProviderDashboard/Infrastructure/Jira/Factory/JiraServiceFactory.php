@@ -32,11 +32,13 @@ class JiraServiceFactory
         private readonly LoggerInterface $logger
     ) {
         // Create a IssueService with a Jira connection built in.
-        $this->config = new ArrayConfiguration([
-            'jiraHost' => $host,
-            'useTokenBasedAuth' => true,
-            'personalAccessToken' => $personalAccessToken,
-        ]);
+        $this->config = new ArrayConfiguration(
+            [
+                'jiraHost' => $host,
+                'useTokenBasedAuth' => true,
+                'personalAccessToken' => $personalAccessToken,
+            ]
+        );
     }
 
     public function buildIssueService(): IssueService

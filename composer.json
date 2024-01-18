@@ -79,6 +79,7 @@
     "phpunit/phpunit": "^9.5",
     "rector/rector": "^0.19.0",
     "sebastian/phpcpd": "^6.0.3",
+    "slevomat/coding-standard": "^8.14",
     "squizlabs/php_codesniffer": "^3.7",
     "symfony/css-selector": "5.4.*",
     "symfony/panther": "^2.0",
@@ -117,6 +118,7 @@
       "@createtestdb"
     ],
     "jest": "./ci/qa/jest",
+    "phpcbf": "./ci/qa/phpcbf",
     "prepare-webtest": "./ci/qa/prepare_webtest",
     "jscpd": "./ci/qa/jscpd",
     "phpcs": "./ci/qa/phpcs",
@@ -147,7 +149,8 @@
     "allow-plugins": {
       "ocramius/package-versions": true,
       "symfony/flex": true,
-      "pestphp/pest-plugin": false
+      "pestphp/pest-plugin": false,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
   "extra": {

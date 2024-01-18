@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -75,10 +77,13 @@ class EntityAclController extends AbstractController
 
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return $this->render('@Dashboard/EntityAcl/acl.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityAcl/acl.html.twig',
+            [
             'form' => $form->createView(),
             'entity' => $viewObject,
             'isAdmin' => $this->authorizationService->isAdministrator(),
-        ]);
+            ]
+        );
     }
 }

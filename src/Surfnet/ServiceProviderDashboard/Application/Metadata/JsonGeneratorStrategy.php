@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -62,7 +64,7 @@ class JsonGeneratorStrategy
     public function generateForExistingEntity(ManageEntity $entity, EntityDiff $differences, string $workflowState, string $updatedPart = ''): array
     {
         return $this->getStrategy($entity->getProtocol()->getProtocol())
-                    ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);
+            ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);
     }
 
     public function generateEntityChangeRequest(ManageEntity $entity, EntityDiff $differences, Contact $contact): array
@@ -72,7 +74,7 @@ class JsonGeneratorStrategy
     }
 
     /**
-     * @param $protocol
+     * @param  $protocol
      * @return GeneratorInterface
      * @throws JsonGeneratorStrategyNotFoundException
      */

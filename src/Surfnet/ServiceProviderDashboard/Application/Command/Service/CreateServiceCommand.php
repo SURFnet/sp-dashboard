@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -35,7 +37,7 @@ class CreateServiceCommand implements Command
     private $guid;
 
     /**
-     * @var string
+     * @var                                string
      * @SpDashboardAssert\UniqueTeamName()
      */
     #[Assert\NotBlank]
@@ -214,6 +216,7 @@ class CreateServiceCommand implements Command
 
     /**
      * New services have no privacy questions answers yet.
+     *
      * @return bool
      */
     public function hasPrivacyQuestionsAnswered(): bool

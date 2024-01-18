@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -43,7 +45,7 @@ class ValidEntityIdValidator extends ConstraintValidator
     }
 
     /**
-     * @param $value
+     * @param  $value
      * @return bool
      */
     private function validateUrn($value): bool
@@ -54,7 +56,7 @@ class ValidEntityIdValidator extends ConstraintValidator
     }
 
     /**
-     * @param $value
+     * @param  $value
      * @return bool
      */
     private function validateUri($value): bool

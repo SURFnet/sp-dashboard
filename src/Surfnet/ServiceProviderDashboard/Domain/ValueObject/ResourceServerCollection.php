@@ -1,4 +1,7 @@
 <?php
+
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -27,13 +30,11 @@ class ResourceServerCollection
     public function __construct(
         /**
          * @Assert\All({
-         *     @Assert\NotBlank
+         * @Assert\NotBlank
          * }, groups={"Default", "production"})
-         *
          */
         private readonly array $clientsIds
-    )
-    {
+    ) {
     }
 
     /**

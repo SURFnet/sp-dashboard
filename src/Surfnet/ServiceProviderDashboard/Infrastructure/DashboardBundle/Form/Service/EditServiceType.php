@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -114,12 +116,16 @@ class EditServiceType extends AbstractType
                         'label' => 'Teams'
                     ]
                 )
-                ->add('teamName', null, [
-                    'label' => 'Team identifier',
-                ])
+                    ->add(
+                        'teamName',
+                        null,
+                        [
+                        'label' => 'Team identifier',
+                        ]
+                    )
             )
-        ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
-        ->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
+            ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
+            ->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

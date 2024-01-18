@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -50,22 +52,26 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
             if (!$entity->isManageEntity()) {
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getId()));
                 $response = $this->client->post(
-                    json_encode($this->generator->generateForNewEntity(
-                        $entity,
-                        $this->manageConfig->getPublicationStatus()->getStatus()
-                    )),
+                    json_encode(
+                        $this->generator->generateForNewEntity(
+                            $entity,
+                            $this->manageConfig->getPublicationStatus()->getStatus()
+                        )
+                    ),
                     '/manage/api/internal/metadata'
                 );
             } else {
                 $diff = $pristineEntity->diff($entity);
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getId()));
 
-                $data = json_encode($this->generator->generateForExistingEntity(
-                    $entity,
-                    $diff,
-                    $this->manageConfig->getPublicationStatus()->getStatus(),
-                    $updatedPart
-                ));
+                $data = json_encode(
+                    $this->generator->generateForExistingEntity(
+                        $entity,
+                        $diff,
+                        $this->manageConfig->getPublicationStatus()->getStatus(),
+                        $updatedPart
+                    )
+                );
 
                 $response = $this->client->put(
                     $data,

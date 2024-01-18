@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -35,6 +37,7 @@ class EntityEditController extends AbstractController
 
     /**
      * Subscribe to the PRE_SUBMIT form event to be able to import the metadata
+     *
      * @return array
      */
     public static function getSubscribedEvents(): array
@@ -119,10 +122,13 @@ class EntityEditController extends AbstractController
             }
         }
 
-        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityEdit/edit.html.twig',
+            [
             'form' => $form->createView(),
             'type' => $entity->getProtocol()->getProtocol(),
-        ]);
+            ]
+        );
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -29,16 +31,16 @@ class Entity
     private readonly \Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions $actions;
 
     /**
-     * @param string $id
-     * @param string $entityId
-     * @param int $serviceId
-     * @param string $name
-     * @param string $contact
-     * @param string $state
-     * @param string $environment
-     * @param string $protocol
-     * @param bool $isReadOnly
-     * @param bool $hasChangeRequests
+     * @param                                          string $id
+     * @param                                          string $entityId
+     * @param                                          int    $serviceId
+     * @param                                          string $name
+     * @param                                          string $contact
+     * @param                                          string $state
+     * @param                                          string $environment
+     * @param                                          string $protocol
+     * @param                                          bool   $isReadOnly
+     * @param                                          bool   $hasChangeRequests
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(

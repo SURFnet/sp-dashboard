@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -35,7 +37,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
     }
 
     /**
-     * @param Service $service
+     * @param  Service $service
      * @return bool
      */
     public function isUnique(Service $service): bool
@@ -45,8 +47,8 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
     }
 
     /**
-     * @param $teamName
-     * @param int|null $id
+     * @param  $teamName
+     * @param  int|null $id
      * @throws InvalidArgumentException
      */
     private function isTeamNameUnique($teamName, $id = null): void
@@ -74,7 +76,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
     }
 
     /**
-     * @param int $id
+     * @param  int $id
      * @return Service|null
      */
     public function findById($id)
@@ -91,9 +93,11 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
      */
     public function findByName($name)
     {
-        $services = parent::findBy([
+        $services = parent::findBy(
+            [
             'name' => $name,
-        ]);
+            ]
+        );
 
         if (empty($services)) {
             return null;
@@ -115,9 +119,11 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
      */
     public function findByTeamNames($teamNames)
     {
-        return parent::findBy([
+        return parent::findBy(
+            [
             'teamName' => $teamNames,
-        ]);
+            ]
+        );
     }
 
     public function delete(Service $service): void
@@ -128,8 +134,10 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
 
     public function findByTeamName(?string $serviceTeamName): ?Service
     {
-        return parent::findOneBy([
+        return parent::findOneBy(
+            [
             'teamName' => $serviceTeamName,
-        ]);
+            ]
+        );
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -130,10 +132,13 @@ class OauthClientCredentialsClientClient implements Comparable, OidcClientInterf
     {
         $manageResourceServers = $this->resourceServers;
         // Filter out the Manage managed RS servers, from outside the 'home' team.
-        $manageResourceServers = array_filter($manageResourceServers, function (ManageEntity $server) use ($homeTeam): bool {
-            $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
-            return $homeTeam !== $teamName;
-        });
+        $manageResourceServers = array_filter(
+            $manageResourceServers,
+            function (ManageEntity $server) use ($homeTeam): bool {
+                $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
+                return $homeTeam !== $teamName;
+            }
+        );
         $manageRsEntityIds = [];
         // Reduce the manage entities to only their entityId
         foreach ($manageResourceServers as $server) {

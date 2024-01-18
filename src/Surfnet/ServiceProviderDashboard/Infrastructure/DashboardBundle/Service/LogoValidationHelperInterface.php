@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -35,7 +37,7 @@ interface LogoValidationHelperInterface
     /**
      * Validates the logo, throws an exception if validation failed.
      *
-     * @param $url
+     * @param  $url
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */

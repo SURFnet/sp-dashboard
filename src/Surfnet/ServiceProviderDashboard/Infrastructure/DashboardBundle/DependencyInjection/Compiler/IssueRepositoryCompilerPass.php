@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -35,9 +37,9 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
     /**
      * Based on the jira_enable_test_mode feature flag, will load the regular or test stand in for the IssueRepository.
      *
-     * @param ContainerBuilder $container
+     * @param                                  ContainerBuilder $container
      * @SuppressWarnings(PHPMD.ElseExpression)
-     * @throws Exception
+     * @throws                                 Exception
      */
     public function process(ContainerBuilder $container): void
     {
@@ -61,14 +63,16 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
     {
         $service = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
         $service->setClass(IssueRepository::class);
-        $service->setArguments([
+        $service->setArguments(
+            [
             $container->getDefinition(JiraServiceFactory::class),
             $container->getDefinition(IssueFieldFactory::class),
             $container->getParameter('env(jira_issue_project_key)'),
             $container->getParameter('env(jira_issue_type)'),
             $container->getParameter('env(jira_issue_manageid_fieldname)'),
             $container->getParameter('env(jira_issue_manageid_field_label)')
-        ]);
+            ]
+        );
         $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);
     }
 
@@ -79,9 +83,11 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
     {
         $service = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
         $service->setClass(DevelopmentIssueRepository::class);
-        $service->setArguments([
+        $service->setArguments(
+            [
             $container->getParameter('env(jira_test_mode_storage_path)')
-        ]);
+            ]
+        );
         $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);
     }
 }

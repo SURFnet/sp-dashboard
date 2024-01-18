@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -114,17 +116,25 @@ class CreateServiceType extends AbstractType
                         'label' => 'Teams'
                     ]
                 )
-                    ->add('teamManagerEmail', TextType::class, [
+                    ->add(
+                        'teamManagerEmail',
+                        TextType::class,
+                        [
                         'label' => 'Email address manager',
                         'required' => true
-                    ])
-                    ->add('teamName', null, [
+                        ]
+                    )
+                    ->add(
+                        'teamName',
+                        null,
+                        [
                         'label' => 'Team identifier',
                         'attr' => [
                             'class' => 'teamName',
                             'readonly' => true,
                         ],
-                    ])
+                        ]
+                    )
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }

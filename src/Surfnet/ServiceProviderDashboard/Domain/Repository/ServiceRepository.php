@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -26,7 +28,6 @@ interface ServiceRepository
 
     /**
      * Is the proposed service entity unique? The id of the service is not taken into account in this test.
-     *
      *
      * @return bool
      */
@@ -64,6 +65,7 @@ interface ServiceRepository
 
     /**
      * Delete a service
+     *
      * @return mixed
      */
     public function delete(Service $service);

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -31,6 +33,7 @@ class ServiceService
      * Retrieve names of all services.
      *
      * Format: [ '<service id>' => '<service display name> [<msp service team id>]' ]
+     *
      * @return array
      */
     public function getServiceNamesById(): array
@@ -56,8 +59,8 @@ class ServiceService
      *
      * Format [ '<service name>' => '<service entity>' ]
      *
-     * @param array $allowedServices The input should be service names keyed by service id.
-     *                               As provided by: AuthorizationService::getAllowedServiceNamesById
+     * @param  array $allowedServices The input should be service names keyed by service id.
+     *                                As provided by: AuthorizationService::getAllowedServiceNamesById
      * @return Service[]
      */
     public function getServicesByAllowedServices(array $allowedServices): array

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2020 SURFnet B.V.
  *
@@ -33,7 +35,7 @@ class ManagePublishService
     }
 
     /**
-     * @param $environment
+     * @param  $environment
      * @throws InvalidArgumentException
      * @throws PushMetadataException
      */

@@ -1,4 +1,7 @@
 <?php
+
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -94,12 +97,12 @@ class EntityTypeFactory
                 return $this->formFactory->create(OidcngEntityType::class, $command, $buildOptions);
             case (Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER):
                 $command = $this
-                    ->saveCommandFactory
-                    ->buildOidcngRsCommandByManageEntity(
-                        $entity,
-                        $environment,
-                        $isCopy
-                    );
+                ->saveCommandFactory
+                ->buildOidcngRsCommandByManageEntity(
+                    $entity,
+                    $environment,
+                    $isCopy
+                );
                 $command->setService($service);
                 return $this->formFactory->create(
                     OidcngResourceServerEntityType::class,

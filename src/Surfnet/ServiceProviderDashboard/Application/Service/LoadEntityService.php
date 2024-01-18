@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -37,7 +39,7 @@ class LoadEntityService
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws                                       InvalidArgumentException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */

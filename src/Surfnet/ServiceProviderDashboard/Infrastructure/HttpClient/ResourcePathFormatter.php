@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -24,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\Runtim
 final class ResourcePathFormatter
 {
     /**
-     * @param string $resourcePathFormat
+     * @param  string $resourcePathFormat
      * @return string
      * @throws RuntimeException
      */
@@ -40,11 +42,13 @@ final class ResourcePathFormatter
         }
 
         if ($resource === '' || $resource === '0') {
-            throw new RuntimeException(sprintf(
-                'Could not construct resource path from format "%s", parameters "%s"',
-                $resourcePathFormat,
-                implode('","', $parameters)
-            ));
+            throw new RuntimeException(
+                sprintf(
+                    'Could not construct resource path from format "%s", parameters "%s"',
+                    $resourcePathFormat,
+                    implode('","', $parameters)
+                )
+            );
         }
 
         return $resource;

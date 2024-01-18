@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -121,10 +123,12 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         $services = $this->services->findByTeamNames($teamNames);
 
         if (empty($services)) {
-            $this->logger->warning(sprintf(
-                'User is member of teams "%s" but no service with that team name found',
-                implode(', ', $teamNames)
-            ));
+            $this->logger->warning(
+                sprintf(
+                    'User is member of teams "%s" but no service with that team name found',
+                    implode(', ', $teamNames)
+                )
+            );
 
             throw new UnknownServiceException(
                 $teamNames,
@@ -173,11 +177,13 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
 
         // see https://www.pivotaltracker.com/story/show/121296389
         if (count($values) > 1) {
-            $this->logger->warning(sprintf(
-                'Found "%d" values for attribute "%s", using first value',
-                count($values),
-                $attribute
-            ));
+            $this->logger->warning(
+                sprintf(
+                    'Found "%d" values for attribute "%s", using first value',
+                    count($values),
+                    $attribute
+                )
+            );
         }
 
         $value = reset($values);

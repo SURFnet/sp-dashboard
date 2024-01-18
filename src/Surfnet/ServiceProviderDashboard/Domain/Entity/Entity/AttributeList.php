@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -55,11 +57,8 @@ class AttributeList implements Comparable
      * Returns the first attribute with a motivation
      *
      * If not a single motivation is present, it returns the first attribute.
-     *
-     * @param $urn
-     * @return Attribute|null
      */
-    public function findByUrn($urn)
+    public function findByUrn(string $urn): ?Attribute
     {
         if (isset($this->attributes[$urn])) {
             if (count($this->attributes[$urn]) > 1) {
@@ -129,7 +128,9 @@ class AttributeList implements Comparable
                     $newMotivation = $attr->getMotivation();
                 }
             }
-            /** @var Attribute $attribute */
+            /**
+ * @var Attribute $attribute
+*/
             foreach ($manageAttribute as $attribute) {
                 $attribute = $attribute->updateMotivation($newMotivation);
                 $this->add($attribute);

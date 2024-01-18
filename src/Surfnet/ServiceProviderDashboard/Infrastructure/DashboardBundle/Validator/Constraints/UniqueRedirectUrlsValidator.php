@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -26,8 +28,8 @@ use Symfony\Component\Validator\ConstraintValidator;
 class UniqueRedirectUrlsValidator extends ConstraintValidator
 {
     /**
-     * @param string $value
-     * @param Constraint $constraint
+     * @param  string     $value
+     * @param  Constraint $constraint
      * @throws Exception
      */
     public function validate($value, Constraint $constraint): void

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -67,7 +69,7 @@ class IssueRepository implements TicketServiceInterface
         return new IssueCollection($collection);
     }
 
-    public function findByManageId($manageId): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
+    public function findByManageId($manageId): ?Issue
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search CTX: spd-delete-production-entity issues with manage id as provided in the $manageId parameter
@@ -87,7 +89,7 @@ class IssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function findByManageIdAndIssueType($manageId, $issueType): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
+    public function findByManageIdAndIssueType($manageId, $issueType): ?Issue
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search CTX: "$issueType" issues with manage id as provided in the $manageId parameter
@@ -107,7 +109,7 @@ class IssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function createIssueFrom(Ticket $ticket): \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
+    public function createIssueFrom(Ticket $ticket): Issue
     {
         $issueField = $this->issueFactory->fromTicket($ticket);
         $issueService = $this->jiraFactory->buildIssueService();

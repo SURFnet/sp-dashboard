@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -35,8 +37,8 @@ class UniqueEntityIdValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $value
-     * @param Constraint $constraint
+     * @param  string     $value
+     * @param  Constraint $constraint
      * @throws Exception
      */
     public function validate($value, Constraint $constraint): void
@@ -49,9 +51,9 @@ class UniqueEntityIdValidator extends ConstraintValidator
 
         $mode = $entityCommand->isForProduction() ? 'production' : 'test';
 
-        if ($entityCommand instanceof SaveOidcngEntityCommand ||
-            $entityCommand instanceof SaveOidcngResourceServerEntityCommand ||
-            $entityCommand instanceof SaveOauthClientCredentialClientCommand
+        if ($entityCommand instanceof SaveOidcngEntityCommand
+            || $entityCommand instanceof SaveOidcngResourceServerEntityCommand
+            || $entityCommand instanceof SaveOauthClientCredentialClientCommand
         ) {
             // Remove the protocol to ensure we can lookup the Oidc TNG entities for existence
             $value = OidcngClientIdParser::parse($value);

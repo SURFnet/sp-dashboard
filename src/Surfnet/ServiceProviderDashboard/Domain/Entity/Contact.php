@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -25,69 +27,37 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
- *
  * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
- * @method string getUserIdentifier()
+ * @method                                    string getUserIdentifier()
  */
 #[ORM\Entity(repositoryClass: \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository::class)]
 class Contact
 {
-    /**
-     * @var int
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    private int $id;
 
     /**
      * @var Collection<Service>
      */
     #[ORM\ManyToMany(targetEntity: 'Service', inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
-    private \Doctrine\Common\Collections\Collection $services;
+    private Collection $services;
 
     private array $roles = [];
 
-    /**
-     * @param string $nameId
-     * @param string $emailAddress
-     * @param string $displayName
-     */
-    public function __construct(#[ORM\Column(length: 150)]
-    private $nameId, #[ORM\Column(length: 255)]
-    private $emailAddress, #[ORM\Column(length: 255)]
-    private $displayName)
-    {
+    public function __construct(
+        #[ORM\Column(length: 150)] private readonly string $nameId,
+        #[ORM\Column(length: 255)] private string          $emailAddress,
+        #[ORM\Column(length: 255)] private string          $displayName
+    ) {
         $this->services = new ArrayCollection();
     }
 
-    /**
-     * @param string $emailAddress
-     *
-     * @return Contact
-     */
-    public function setEmailAddress($emailAddress): void
+    public function setEmailAddress(string $emailAddress): Contact
     {
         $this->emailAddress = $emailAddress;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmailAddress()
-    {
-        return $this->emailAddress;
-    }
-
-    /**
-     * @param string $displayName
-     *
-     * @return Contact
-     */
-    public function setDisplayName($displayName): static
-    {
-        $this->displayName = $displayName;
 
         return $this;
     }
@@ -95,7 +65,19 @@ class Contact
     /**
      * @return string
      */
-    public function getDisplayName()
+    public function getEmailAddress(): string
+    {
+        return $this->emailAddress;
+    }
+
+    public function setDisplayName(string $displayName): static
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getDisplayName(): string
     {
         return $this->displayName;
     }
@@ -105,9 +87,6 @@ class Contact
         return $this->nameId;
     }
 
-    /**
-     * @return Contact
-     */
     public function addService(Service $service): static
     {
         $this->services->add($service);
@@ -115,9 +94,6 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return Contact
-     */
     public function removeService(Service $service): static
     {
         $this->services->removeElement($service);
@@ -125,10 +101,7 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasService(Service $service)
+    public function hasService(Service $service): bool
     {
         return $this->services->contains($service);
     }
@@ -136,7 +109,7 @@ class Contact
     /**
      * @return Collection<Service>
      */
-    public function getServices(): \Doctrine\Common\Collections\Collection
+    public function getServices(): Collection
     {
         return $this->services;
     }

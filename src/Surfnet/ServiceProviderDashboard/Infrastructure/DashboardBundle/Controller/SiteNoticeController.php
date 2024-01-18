@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -41,10 +43,13 @@ class SiteNoticeController extends AbstractController
         $cookie = $request->cookies->get($cookieString);
         $hasBeenClosed = (bool) $cookie;
 
-        return $this->render('@Dashboard/SiteNotice/showGlobalSiteNotice.html.twig', [
+        return $this->render(
+            '@Dashboard/SiteNotice/showGlobalSiteNotice.html.twig',
+            [
             'cookieString' => $cookieString,
             'date' => $this->noticeDate,
             'hasBeenClosed' => $hasBeenClosed,
-        ]);
+            ]
+        );
     }
 }

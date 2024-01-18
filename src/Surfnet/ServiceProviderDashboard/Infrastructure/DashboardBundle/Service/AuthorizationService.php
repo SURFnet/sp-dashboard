@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -229,7 +231,7 @@ class AuthorizationService
      * @return Service
      * @throws ServiceNotFoundException
      */
-    public function changeActiveService($serviceId)
+    public function changeActiveService($serviceId): Service
     {
         $service = $this->serviceService->getServiceById($serviceId);
 

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -231,7 +233,7 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param string $teamName
+     * @param  string $teamName
      * @return array|null
      * @throws QueryServiceProviderException
      */
@@ -249,9 +251,9 @@ class EntityService implements EntityServiceInterface
      * - Tries to match Jira issues that mention one of the manage entity id's
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @param string $teamName
-     * @return array|null
-     * @throws QueryServiceProviderException
+     * @param                                        string $teamName
+     * @return                                       array|null
+     * @throws                                       QueryServiceProviderException
      */
     private function findPublishedProductionEntitiesByTeamName($teamName)
     {
@@ -325,7 +327,7 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param ManageEntity $service
+     * @param  ManageEntity $service
      * @return bool
      */
     private function hasChangeRequests(ManageEntity $entity): bool

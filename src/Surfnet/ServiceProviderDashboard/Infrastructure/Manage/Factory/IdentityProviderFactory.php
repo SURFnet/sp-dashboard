@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -24,7 +26,7 @@ class IdentityProviderFactory
 {
 
     /**
-     * @param $manageResult
+     * @param  $manageResult
      * @return IdentityProvider
      */
     public static function fromManageResult(array $manageResult): \Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider

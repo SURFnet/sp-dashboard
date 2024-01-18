@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -34,15 +36,17 @@ class EntityPublishedController extends AbstractController
     #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
     public function published(): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
-        /** @var ManageEntity $entity */
+        /**
+ * @var ManageEntity $entity
+*/
         $entity = $this->get('request_stack')->getSession()->get('published.entity.clone');
 
         // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
         $protocol = $entity->getProtocol()->getProtocol();
-        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
-            $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            || $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
             if ($this->isGranted('ROLE_ADMINISTRATOR')) {
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
@@ -84,7 +88,9 @@ class EntityPublishedController extends AbstractController
      */
     public function oidcConfirmationModal(): \Symfony\Component\HttpFoundation\Response
     {
-        /** @var ManageEntity $entity */
+        /**
+ * @var ManageEntity $entity
+*/
         $entity = $this->get('request_stack')->getSession()->get('published.entity.clone');
 
         // Show the confirmation modal only once in this request
@@ -92,9 +98,12 @@ class EntityPublishedController extends AbstractController
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 
-        return $this->render('@Dashboard/EntityPublished/oidcConfirmationModal.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityPublished/oidcConfirmationModal.html.twig',
+            [
             'entity' => $viewObject,
             'environment' => $entity->getEnvironment(),
-        ]);
+            ]
+        );
     }
 }

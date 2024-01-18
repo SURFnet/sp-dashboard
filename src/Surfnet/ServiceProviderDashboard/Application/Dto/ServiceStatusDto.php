@@ -1,4 +1,7 @@
 <?php
+
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -21,10 +24,11 @@ class ServiceStatusDto implements \JsonSerializable
 {
     /**
      * ServiceStatusDto constructor.
+     *
      * @param string[] $states
      * @param string[] $labels
      * @param string[] $tooltips
-     * @param int $percentage
+     * @param int      $percentage
      */
     public function __construct(private readonly array $states, private readonly array $labels, private readonly array $tooltips, private readonly array $legend, private $percentage)
     {

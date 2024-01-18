@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -71,7 +73,7 @@ class TeamsController extends AbstractController
 
     /**
      * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     * @return RedirectResponse|Response
+     * @return                                       RedirectResponse|Response
      */
     #[Route(path: '/service/{serviceId}/sendInvite/{teamId}', name: 'team_send_invite', methods: ['POST'])]
     public function sendInvite(Request $request, int $serviceId, int $teamId): \Symfony\Component\HttpFoundation\RedirectResponse

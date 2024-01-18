@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -42,10 +44,12 @@ class UpdateEntityAclCommandHandler implements CommandHandler
      */
     public function handle(UpdateEntityAclCommand $command): void
     {
-        $this->logger->info(sprintf(
-            'Publishing entity "%s" to Manage in test environment to update ACL',
-            $command->getManageEntity()->getId()
-        ));
+        $this->logger->info(
+            sprintf(
+                'Publishing entity "%s" to Manage in test environment to update ACL',
+                $command->getManageEntity()->getId()
+            )
+        );
 
         $entity = $command->getManageEntity();
         $idps = array_map(fn(IdentityProvider $idp): string => $idp->getEntityId(), $command->getSelected());

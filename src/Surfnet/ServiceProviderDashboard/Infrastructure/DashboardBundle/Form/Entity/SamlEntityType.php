@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -42,17 +44,21 @@ class SamlEntityType extends AbstractType
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
      *
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $attributesContainer = $builder->create('attributes', FormType::class, [
+        $attributesContainer = $builder->create(
+            'attributes',
+            FormType::class,
+            [
             'inherit_data' => true,
             'attr' => ['class' => 'attributes']
-        ]);
+            ]
+        );
         $this->buildAttributeTypes($attributesContainer);
 
         $builder

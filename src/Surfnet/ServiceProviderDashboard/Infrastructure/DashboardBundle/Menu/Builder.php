@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -43,7 +45,7 @@ class Builder
     /**
      * @SuppressWarnings(PHPMD.ElseExpression) Using else in this situation is preferable over another less expressive
      *                                         solution
-     * @return ItemInterface
+     * @return                                 ItemInterface
      */
     public function mainMenu(array $options)
     {
@@ -54,10 +56,13 @@ class Builder
         }
 
         if ($this->authorizationService->isAdministrator() && $this->authorizationService->getActiveServiceId()) {
-            $menu->addChild('global.menu.overview', [
+            $menu->addChild(
+                'global.menu.overview',
+                [
                 'route' => 'service_admin_overview',
                 'routeParameters' => ['serviceId' => $this->authorizationService->getActiveServiceId()],
-            ]);
+                ]
+            );
         } else {
             $menu->addChild('global.menu.services', ['route' => 'service_overview']);
         }

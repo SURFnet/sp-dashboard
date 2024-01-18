@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -34,14 +36,16 @@ class ContactRepository extends DoctrineEntityRepository implements ContactRepos
     }
 
     /**
-     * @param string $nameId
+     * @param  string $nameId
      * @return Contact|null
      */
     public function findByNameId($nameId)
     {
-        $contacts = parent::findBy([
+        $contacts = parent::findBy(
+            [
             'nameId' => $nameId,
-        ]);
+            ]
+        );
 
         if (empty($contacts)) {
             return null;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -71,6 +73,7 @@ class DeleteServiceCommandHandler implements CommandHandler
     /**
      * Using the deleteCommandFactory, entity delete commands are created
      * that will remove them from the appropriate environment.
+     *
      * @param EntityDto[] $entities
      */
     private function removeEntitiesFrom(array $entities, Contact $contact): void

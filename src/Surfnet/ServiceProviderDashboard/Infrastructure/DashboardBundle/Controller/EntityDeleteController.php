@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -45,9 +47,9 @@ class EntityDeleteController extends AbstractController
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param int $serviceId
-     * @param string|null $manageId
-     * @param string|null$environment
+     * @param  int         $serviceId
+     * @param  string|null $manageId
+     * @param  string|null $environment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
      * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
@@ -89,20 +91,23 @@ class EntityDeleteController extends AbstractController
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityDelete/delete.html.twig',
+            [
             'form' => $form->createView(),
             'environment' => $environment,
             'status' => $excludeFromPush === "1" ? Constants::STATE_PUBLICATION_REQUESTED : Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
-        ]);
+            ]
+        );
     }
 
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param int $serviceId
-     * @param string|null $manageId
-     * @param string|null $environment
+     * @param  int         $serviceId
+     * @param  string|null $manageId
+     * @param  string|null $environment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
      * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
@@ -139,11 +144,14 @@ class EntityDeleteController extends AbstractController
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityDelete/delete.html.twig',
+            [
             'form' => $form->createView(),
             'environment' => $environment,
             'status' => Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
-        ]);
+            ]
+        );
     }
 }

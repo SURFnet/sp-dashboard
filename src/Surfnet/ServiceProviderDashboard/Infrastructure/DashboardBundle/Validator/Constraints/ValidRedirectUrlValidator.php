@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2020 SURFnet B.V.
  *
@@ -27,8 +29,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class ValidRedirectUrlValidator extends UrlValidator
 {
     /**
-     * @param string $value
-     * @param Constraint $constraint
+     * @param  string     $value
+     * @param  Constraint $constraint
      * @throws Exception
      */
     public function validate($value, Constraint $constraint): void
@@ -71,15 +73,11 @@ class ValidRedirectUrlValidator extends UrlValidator
             $constraint->protocols[] = $parts['scheme'];
             parent::validate($newUrl, $constraint);
         }
-
-        if (is_null($value)) {
-            return;
-        }
     }
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @return string
+     * @return                                       string
      */
     private function buildUrl(array $parts): string
     {

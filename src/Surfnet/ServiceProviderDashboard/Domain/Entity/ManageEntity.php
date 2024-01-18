@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -33,6 +35,7 @@ use function in_array;
  * TODO: All factory logic should be offloaded to Application or Infra layers where the
  * entity is used in a specific context. This particularly applies for the factory
  * methods found in the 'Entity/Entity' namespace.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) This object contains a lot of properties which cannot not be easily
  * simplified.
@@ -52,7 +55,7 @@ class ManageEntity
     private bool $readOnly = false;
 
     /**
-     * @param $data
+     * @param  $data
      * @return ManageEntity
      *
      * @SuppressWarnings(PHPMD.ElseExpression)

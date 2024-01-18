@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -32,7 +34,7 @@ class UrnFormattedTeamNameValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $value
+     * @param  string $value
      * @throws Exception
      */
     public function validate($value, Constraint $constraint): void

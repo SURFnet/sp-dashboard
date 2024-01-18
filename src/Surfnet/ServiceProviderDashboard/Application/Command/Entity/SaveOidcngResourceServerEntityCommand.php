@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -205,7 +207,8 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
                 Constants::ENVIRONMENT_TEST,
                 Constants::ENVIRONMENT_PRODUCTION,
             ]
-        )) {
+        )
+        ) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
             );
@@ -355,8 +358,8 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     }
 
      /**
-     * @return string
-     */
+      * @return string
+      */
     public function getComments(): ?string
     {
         return $this->comments;

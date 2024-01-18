@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -27,7 +29,8 @@ class IntakeStatusType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'label' => 'service.form.label.intake_status',
             'expanded' => true,
             'multiple' => false,
@@ -37,7 +40,8 @@ class IntakeStatusType extends AbstractType
                 'service.form.label.intake_status_not_applicable' => Service::INTAKE_STATUS_NOT_APPLICABLE,
             ],
             'attr' => ['class' => 'service-status-container'],
-        ]);
+            ]
+        );
     }
 
     public function getParent()

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -77,10 +79,12 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     {
         try {
             $response = $this->client->put(
-                json_encode([
+                json_encode(
+                    [
                     "id" => $id,
                     "role" => strtoupper($role),
-                ]),
+                    ]
+                ),
                 '/api/spdashboard/memberships',
                 ['Content-Type' => 'application/json']
             );
@@ -145,10 +149,12 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     {
         try {
             $response = $this->client->put(
-                json_encode([
+                json_encode(
+                    [
                     "id" => $id,
                     "message" => $message,
-                ]),
+                    ]
+                ),
                 '/api/spdashboard/invites',
                 ['Content-Type' => 'application/json']
             );

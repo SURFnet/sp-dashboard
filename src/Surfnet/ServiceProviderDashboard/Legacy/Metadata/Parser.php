@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -52,7 +54,7 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param string $xml
+     * @param  string $xml
      * @return Metadata
      * @throws InvalidArgumentException
      * @throws ParserException

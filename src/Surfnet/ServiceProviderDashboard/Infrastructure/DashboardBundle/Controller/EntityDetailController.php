@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -38,23 +40,28 @@ class EntityDetailController extends AbstractController
 
     /**
      * @Security("is_granted('ROLE_USER')")
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
+     * @return                              \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
     #[Route(path: '/entity/detail/{serviceId}/{id}/{manageTarget}', name: 'entity_detail', methods: ['GET'], defaults: ['manageTarget' => false])]
     public function detail(string $id, int $serviceId, string $manageTarget): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $team = $service->getTeamName();
-        /** @var ManageEntity $entity */
+        /**
+ * @var ManageEntity $entity
+*/
         $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
         if ($entity->getMetaData()->getCoin()->getServiceTeamId() !== $team) {
             $entity->setIsReadOnly();
         }
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return $this->render('@Dashboard/EntityDetail/detail.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityDetail/detail.html.twig',
+            [
             'entity' => $viewObject,
             'isAdmin' => $this->isGranted('ROLE_ADMINISTRATOR'),
-        ]);
+            ]
+        );
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -43,7 +45,7 @@ class PrivacyQuestionsController extends AbstractController
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     * @param int $serviceId
+     * @param  int $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     #[Route(path: '/service/{serviceId}/privacy', name: 'privacy_questions', methods: ['GET', 'POST'])]
@@ -71,8 +73,7 @@ class PrivacyQuestionsController extends AbstractController
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     *
-     * @param $serviceId
+     * @param  $serviceId
      * @return Response
      */
 
@@ -89,8 +90,7 @@ class PrivacyQuestionsController extends AbstractController
     /**
      * @Security("is_granted('ROLE_USER')")
      *
-     *
-     * @param $serviceId
+     * @param  $serviceId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     #[Route(path: '/service/{serviceId}/privacy/edit', name: 'privacy_questions_edit')]

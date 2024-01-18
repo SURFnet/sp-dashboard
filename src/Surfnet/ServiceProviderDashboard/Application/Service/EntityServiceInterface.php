@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -34,20 +36,20 @@ interface EntityServiceInterface
     public function getEntityByIdAndTarget(string $id, string $manageTarget, Service $service): ManageEntity;
 
     /**
-     * @param Service $service
+     * @param  Service $service
      * @return EntityList
      */
     public function getEntityListForService(Service $service);
 
     /**
-     * @param Service $service
+     * @param  Service $service
      * @return EntityDto[]
      */
     public function getEntitiesForService(Service $service);
 
     /**
-     * @param string $manageId
-     * @param string $env
+     * @param  string $manageId
+     * @param  string $env
      * @return ManageEntity|null
      *
      * @throws InvalidArgumentException
@@ -56,8 +58,8 @@ interface EntityServiceInterface
     public function getManageEntityById($manageId, $env = 'test');
 
     /**
-     * @param string $manageId
-     * @param string $env
+     * @param  string $manageId
+     * @param  string $env
      * @return ManageEntity|null
      *
      * @throws InvalidArgumentException

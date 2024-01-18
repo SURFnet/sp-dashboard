@@ -1,5 +1,7 @@
 <?php
 
+//declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -28,22 +30,15 @@ class Identity implements UserInterface, \Stringable
     {
     }
 
-    /**
-     * @return Contact
-     */
-    public function getContact(): \Surfnet\ServiceProviderDashboard\Domain\Entity\Contact
+    public function getContact(): Contact
     {
         return $this->contact;
     }
 
-    /**
-     * @param string $teamName
-     * @return bool
-     */
-    public function isPartOfTeam($teamName): bool
+    public function isPartOfTeam(string $teamName): bool
     {
         $services = $this->getContact()->getServices();
-        /** @var Service $service */
+
         foreach ($services as $service) {
             if ($service->getTeamName() === $teamName) {
                 return true;
@@ -52,25 +47,22 @@ class Identity implements UserInterface, \Stringable
         return false;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->contact->getDisplayName();
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->getContact()->getRoles();
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return '';
     }
 
-    public function getSalt()
+    public function getSalt(): string
     {
         return '';
     }
@@ -79,12 +71,12 @@ class Identity implements UserInterface, \Stringable
     {
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->contact->getNameId();
     }
 
-    public function getUserIdentifier()
+    public function getUserIdentifier(): string
     {
         return $this->getUsername();
     }
