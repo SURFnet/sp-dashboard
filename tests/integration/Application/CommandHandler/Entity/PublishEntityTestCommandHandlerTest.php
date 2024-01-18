@@ -30,51 +30,34 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEn
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityTestCommandHandlerTest extends MockeryTestCase
 {
-    /**
-     * @var PublishEntityTestCommandHandler
-     */
-    private $commandHandler;
+    private PublishEntityTestCommandHandler $commandHandler;
 
-    /**
-     * @var LoggerInterface|Mock
-     */
-    private $logger;
 
-    /**
-     * @var FlashBagInterface|Mock
-     */
-    private $flashBag;
+    private LoggerInterface|Mock|m\LegacyMockInterface|m\MockInterface $logger;
 
-    /**
-     * @var PublishEntityClient
-     */
-    private $client;
+    private RequestStack|m\MockInterface|Mock|m\LegacyMockInterface $requestStack;
 
-    /**
-     * @var m\MockInterface&QueryClient
-     */
-    private $manageClient;
-    /**
-     * @var m\MockInterface&EntityServiceInterface
-     */
-    private $entityService;
+    private PublishEntityClient|m\MockInterface|m\LegacyMockInterface $client;
+
+    private EntityServiceInterface|m\LegacyMockInterface|m\MockInterface $entityService;
 
     public function setUp(): void
     {
         $this->client = m::mock(PublishEntityClient::class);
         $this->logger = m::mock(LoggerInterface::class);
-        $this->flashBag = m::mock(FlashBagInterface::class);
+        $this->requestStack = m::mock(RequestStack::class);
         $this->entityService = m::mock(EntityServiceInterface::class);
 
         $this->commandHandler = new PublishEntityTestCommandHandler(
             $this->client,
             $this->entityService,
             $this->logger,
-            $this->flashBag
+            $this->requestStack
         );
 
         parent::setUp();
@@ -169,8 +152,8 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->with($manageEntity, $manageEntity)
             ->andThrow(PublishMetadataException::class);
 
-        $this->flashBag
-            ->shouldReceive('add')
+        $this->requestStack
+            ->shouldReceive('getSession->getFlashBag->add')
             ->with('error', 'entity.edit.error.publish');
 
         $this->entityService
