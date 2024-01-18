@@ -32,8 +32,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\MissingSamlAttributeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
@@ -197,18 +197,23 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         return $value;
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         return $user;
     }
 
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
         return $class === Identity::class;
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): UserInterface
     {
-        throw new BadMethodCallException('Use `getUser` to load a user by username');
+        throw new UserNotFoundException('Use `getUser` to load a user by username');
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        throw new UserNotFoundException('Use `getUser` to load a user by username');
     }
 }
