@@ -49,7 +49,7 @@ class AttributeType extends AbstractType
         $resolver->setDefaults(['data_class' => Attribute::class, 'error_bubbling' => false]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'attribute';
     }
