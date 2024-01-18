@@ -34,11 +34,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SamlController extends AbstractController
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
         private readonly MetadataFactory $metadataFactory,
-        private readonly PostBinding $postBinding,
-        private readonly IdentityProvider $identityProvider,
-        private readonly ServiceProvider $serviceProvider
     ) {
     }
 
