@@ -32,13 +32,14 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 
 class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 {
     private QueryClient|Mock|m\LegacyMockInterface|m\MockInterface $queryClient;
-    private Mock|FlashBagInterface|m\LegacyMockInterface|m\MockInterface $flashBag;
+    private Mock|RequestStack|m\LegacyMockInterface|m\MockInterface $requestStack;
     private Mock|m\LegacyMockInterface|Logger|m\MockInterface $logger;
     private RequestDeletePublishedEntityCommandHandler $commandHandler;
     private Mock|m\LegacyMockInterface|m\MockInterface|JiraServiceFactory $jiraServiceFactory;
@@ -55,13 +56,13 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
         // the TicketService and IssueFieldFactory is not mocked but included in the test.
         $ticketService = new TicketService($this->issueRepository, $this->logger);
 
-        $this->flashBag = m::mock(FlashBagInterface::class);
+        $this->requestStack = m::mock(RequestStack::class);
 
         $this->commandHandler = new RequestDeletePublishedEntityCommandHandler(
             $this->queryClient,
             'arbitrary-issue-type',
             $ticketService,
-            $this->flashBag,
+            $this->requestStack,
             $this->logger
         );
     }
@@ -152,8 +153,8 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('createIssueFrom')
             ->andThrow(JiraException::class);
 
-        $this->flashBag
-            ->shouldReceive('add')
+        $this->requestStack
+            ->shouldReceive('getSession->getFlashBag->add')
             ->with('error', 'entity.delete.request.failed');
 
         $this->assertNull($this->commandHandler->handle($command));
