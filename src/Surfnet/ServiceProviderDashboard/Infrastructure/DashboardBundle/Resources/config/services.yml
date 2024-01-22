@@ -519,11 +519,6 @@ services:
       - '@logger'
       - ''
 
-  Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\EntityConnectionRequestClient:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
-      - '@logger'
-
   surfnet.manage.http.guzzle.prod_environment:
     class: GuzzleHttp\Client
     factory: [ 'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Factory\ManageClientFactory','createClient' ]
