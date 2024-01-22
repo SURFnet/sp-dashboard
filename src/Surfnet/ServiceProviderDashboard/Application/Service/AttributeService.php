@@ -27,7 +27,6 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityDetailAttribut
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AttributeList;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\Attribute as AttributeDto;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepositoryInterface;
 
 class AttributeService implements AttributeServiceInterface

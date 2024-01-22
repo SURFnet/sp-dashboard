@@ -21,7 +21,6 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory;
 
 use JiraRestApi\Issue\IssueField;
-use JiraRestApi\Issue\IssueType;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webmozart\Assert\Assert;

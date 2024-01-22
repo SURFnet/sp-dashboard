@@ -22,9 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;

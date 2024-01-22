@@ -19,9 +19,7 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security;
 
-use BadMethodCallException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class Identity implements UserInterface, \Stringable

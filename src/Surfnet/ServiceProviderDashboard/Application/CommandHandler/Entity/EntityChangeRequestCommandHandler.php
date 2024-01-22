@@ -31,7 +31,6 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class EntityChangeRequestCommandHandler implements CommandHandler
 {

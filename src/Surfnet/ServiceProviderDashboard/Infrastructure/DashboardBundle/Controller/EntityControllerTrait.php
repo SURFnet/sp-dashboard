@@ -46,7 +46,6 @@ use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * The EntityControllerTrait contains the shared logic of the EntityCreateController and the EntityEditController.
@@ -103,7 +102,7 @@ trait EntityControllerTrait
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
             $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
             $this->commandBus->handle($publishEntityCommand);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->addFlash('error', 'entity.edit.error.publish');
             return $this->redirectToRoute('service_overview');
         }

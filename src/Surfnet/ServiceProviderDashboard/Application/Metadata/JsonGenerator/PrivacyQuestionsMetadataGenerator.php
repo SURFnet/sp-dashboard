@@ -20,7 +20,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use stdClass;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;

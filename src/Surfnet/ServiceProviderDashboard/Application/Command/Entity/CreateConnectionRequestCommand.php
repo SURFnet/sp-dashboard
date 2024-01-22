@@ -20,7 +20,6 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
-use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ConnectionRequestNotUniqueException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;

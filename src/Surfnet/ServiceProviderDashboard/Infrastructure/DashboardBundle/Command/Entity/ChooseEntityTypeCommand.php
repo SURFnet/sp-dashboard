@@ -24,35 +24,17 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class ChooseEntityTypeCommand
 {
-    private ?array $choices = null;
-
     public function __construct(private $type = Constants::TYPE_SAML)
     {
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
-    }
-
-    public function getProtocolChoices(): ?array
-    {
-        return $this->choices;
-    }
-
-    public function setProtocolChoices(array $choices): void
-    {
-        $this->choices = $choices;
     }
 }
