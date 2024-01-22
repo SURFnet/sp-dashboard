@@ -117,8 +117,7 @@ class HttpClient implements HttpClientInterface
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    ): mixed
-    {
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Posting data to %s (%s) on path %s', $this->apiName, $this->mode, $resource),
@@ -148,8 +147,7 @@ class HttpClient implements HttpClientInterface
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    ): mixed
-    {
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Putting data to %s (%s) on path %s', $this->apiName, $this->mode, $resource),
@@ -178,8 +176,7 @@ class HttpClient implements HttpClientInterface
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    ): mixed
-    {
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(sprintf('Deleting data from %s (%s) on path %s', $this->apiName, $this->mode, $resource));
 
