@@ -26,25 +26,25 @@ interface HttpClientInterface
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    );
+    ): mixed;
 
     public function post(
-        $data,
+        mixed $data,
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    );
+    ): mixed;
 
     public function put(
-        $data,
+        mixed $data,
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    );
+    ): mixed;
 
     public function delete(
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    );
+    ): mixed;
 }

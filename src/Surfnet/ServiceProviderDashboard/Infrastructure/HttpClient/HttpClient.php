@@ -1,6 +1,6 @@
 <?php
 
-//declare(strict_types = 1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2021 SURFnet B.V.
@@ -57,15 +57,13 @@ class HttpClient implements HttpClientInterface
      *                     The parameters will be URL encoded and formatted into the path string.
      *                     Example: "connections/%d.json"
      *
-     * @return mixed $data
-     *
      * @throws AccessDeniedException
      * @throws UnreadableResourceException
      * @throws MalformedResponseException
      * @throws RuntimeException
      * @throws GuzzleException
      */
-    public function read(string $path, array $parameters = [], array $headers = ['Content-Type' => 'application/json'])
+    public function read(string $path, array $parameters = [], array $headers = ['Content-Type' => 'application/json']): mixed
     {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
@@ -106,9 +104,6 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @param  mixed $data
-     * @return mixed
-     *
      * @throws AccessDeniedException
      * @throws GuzzleException
      * @throws MalformedResponseException
@@ -116,11 +111,12 @@ class HttpClient implements HttpClientInterface
      * @throws UnreadableResourceException
      */
     public function post(
-        $data,
+        mixed $data,
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    ) {
+    ): mixed
+    {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Posting data to %s (%s) on path %s', $this->apiName, $this->mode, $resource),
@@ -139,9 +135,6 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @param  mixed $data
-     * @return mixed
-     *
      * @throws AccessDeniedException
      * @throws GuzzleException
      * @throws MalformedResponseException
@@ -149,11 +142,12 @@ class HttpClient implements HttpClientInterface
      * @throws UndeleteableResourceException
      */
     public function put(
-        $data,
+        mixed $data,
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    ) {
+    ): mixed
+    {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Putting data to %s (%s) on path %s', $this->apiName, $this->mode, $resource),
@@ -172,8 +166,6 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws AccessDeniedException
      * @throws GuzzleException
      * @throws MalformedResponseException
@@ -184,7 +176,8 @@ class HttpClient implements HttpClientInterface
         string $path,
         array $parameters = [],
         array $headers = ['Content-Type' => 'application/json']
-    ) {
+    ): mixed
+    {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(sprintf('Deleting data from %s (%s) on path %s', $this->apiName, $this->mode, $resource));
 
@@ -199,8 +192,6 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws MalformedResponseException
      * @throws GuzzleException
      * @throws AccessDeniedException
@@ -208,7 +199,7 @@ class HttpClient implements HttpClientInterface
      * @throws UnreadableResourceException
      * @throws Exception
      */
-    private function request(string $method, string $resource, array $options, callable $callBack = null)
+    private function request(string $method, string $resource, array $options, callable $callBack = null): mixed
     {
         $response = $this->httpClient->request($method, $resource, $options);
 
@@ -245,11 +236,9 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws MalformedResponseException
      */
-    private function parseResponse(string $body, string $method, $resource)
+    private function parseResponse(string $body, string $method, $resource): mixed
     {
         try {
             return JsonResponseParser::parse($body);
