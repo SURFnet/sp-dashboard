@@ -44,7 +44,7 @@ class FailureHandler extends SamlBundleFailureHandler
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $this->logger->error(sprintf('Authentication Failed, reason: "%s"', $exception->getMessage()));
-        $responseBody = $this->templating->render('@Twig/Exception/authnFailed.html.twig', ['exception' => $exception]);
+        $responseBody = $this->templating->render('@Dashboard/bundles/TwigBundle/Exception/authnFailed.html.twig', ['exception' => $exception]);
         return new Response($responseBody, Response::HTTP_UNAUTHORIZED);
     }
 }

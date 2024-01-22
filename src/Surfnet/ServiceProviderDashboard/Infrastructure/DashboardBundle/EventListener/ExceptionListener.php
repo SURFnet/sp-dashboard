@@ -29,7 +29,6 @@ use Twig\Environment;
 class ExceptionListener
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
         private readonly Environment $templating,
     ) {
     }
@@ -40,7 +39,7 @@ class ExceptionListener
         $exception = $event->getThrowable();
         if ($exception instanceof UnknownServiceException) {
             $responseBody = $this->templating->render(
-                '@Twig/Exception/unknownService.html.twig',
+                '@Dashboard/bundles/TwigBundle/Exception/unknownService.html.twig',
                 ['teamNames' => $exception->getTeamNames()]
             );
 
