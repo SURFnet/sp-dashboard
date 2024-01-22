@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\MalformedResponseException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\UndeleteableResourceException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\UnknownContentTypeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\UnreadableResourceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidJsonException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
@@ -96,6 +97,7 @@ class HttpClient implements HttpClientInterface
                     ) {
                         return $body;
                     }
+                    throw new UnknownContentTypeException('Unknown content type or not set');
                 }
             );
         } catch (ClientException) {
