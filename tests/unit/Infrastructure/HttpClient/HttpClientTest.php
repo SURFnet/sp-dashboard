@@ -25,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\MalformedResponseException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\UnknownContentTypeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
 
 class HttpClientTest extends TestCase
@@ -44,6 +45,22 @@ class HttpClientTest extends TestCase
         $response = $client->read('/give-me/resource');
 
         $this->assertEquals($data, $response);
+    }
+
+    public function test_exception_when_content_type_is_wrong()
+    {
+        $data = 'My first resource';
+
+        $mockHandler = new MockHandler(
+            [
+                new Response(200, [], json_encode($data))
+            ]
+        );
+        $guzzle = new Client(['handler' => $mockHandler]);
+        $client = new HttpClient($guzzle, new NullLogger());
+
+        $this->expectException(UnknownContentTypeException::class);
+        $client->read( path:'/give-me/resource', headers: ['Content-Type' => 'unknown']);
     }
 
     public function test_malformed_json_causes_a_malformed_response_exception_when_reading()
