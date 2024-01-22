@@ -275,7 +275,7 @@ class WebTestCase extends PantherTestCase
         // autoincrement sequence. That is explicitly reset with the query below.
         // Preferably we'd use $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE); but that does not seem
         // to work with SQLite
-        $em->getConnection()->exec("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
+        $em->getConnection()->executeStatement("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='service';");
 
         $executor->execute($loader->getFixtures());
 
