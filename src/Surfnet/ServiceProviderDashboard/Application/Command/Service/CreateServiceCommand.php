@@ -38,8 +38,8 @@ class CreateServiceCommand implements Command
 
     /**
      * @var                                string
-     * @SpDashboardAssert\UniqueTeamName()
      */
+    #[SpDashboardAssert\UniqueTeamName()]
     #[Assert\NotBlank]
     private $teamName;
 

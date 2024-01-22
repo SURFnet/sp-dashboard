@@ -38,18 +38,12 @@ use function is_null;
  */
 class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterface
 {
-    /**
-     * @var string
-     */
     #[Assert\Uuid]
-    private $id;
+    private ?string $id = null;
 
-    /**
-     * @var string
-     */
-    private $status;
+    private ?string $status = null;
 
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
+    private ?Service $service = null;
 
     private bool $archived = false;
 
@@ -58,24 +52,14 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     #[Assert\Choice(choices: ['production', 'test'], strict: true)]
     private string $environment = Constants::ENVIRONMENT_TEST;
 
-    /**
-     * @var string
-     *
-     * @SpDashboardAssert\ValidClientId()
-     * @SpDashboardAssert\UniqueEntityId()
-     */
+    #[SpDashboardAssert\ValidClientId]
+    #[SpDashboardAssert\UniqueEntityId]
     #[Assert\NotBlank]
-    private $entityId;
+    private ?string $entityId = null;
 
-    /**
-     * @var string
-     */
-    private $secret;
+    private ?string $secret = null;
 
-    /**
-     * @var bool
-     */
-    private $isPublicClient;
+    private ?bool $isPublicClient = null;
 
     /**
      * @var array $grants defaults to Constants::GRANT_TYPE_CLIENT_CREDENTIALS
@@ -90,9 +74,8 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
 
     /**
      * @var string
-     *
-     * @SpDashboardAssert\ValidLogo()
      */
+    #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
     #[Assert\NotBlank]
     private $logoUrl;

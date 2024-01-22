@@ -22,9 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class UrnFormattedTeamName extends Constraint
 {
     public function validatedBy(): string

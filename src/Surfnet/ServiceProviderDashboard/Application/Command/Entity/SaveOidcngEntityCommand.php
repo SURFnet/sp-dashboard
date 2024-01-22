@@ -57,11 +57,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     #[Assert\Choice(choices: ['production', 'test'], strict: true)]
     private string $environment = Constants::ENVIRONMENT_TEST;
 
-    /**
-     *
-     * @SpDashboardAssert\ValidClientId()
-     * @SpDashboardAssert\UniqueEntityId()
-     */
+    #[SpDashboardAssert\ValidClientId()]
+    #[SpDashboardAssert\UniqueEntityId()]
     #[Assert\NotBlank]
     private ?string $entityId = null;
 
@@ -72,12 +69,12 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     /**
      * @var                                    string[]
-     * @Assert\All({
-     *     @Assert\NotBlank(),
-     *     @SpDashboardAssert\ValidRedirectUrl()
-     * })
-     * @SpDashboardAssert\UniqueRedirectUrls()
      */
+    #[Assert\All([
+        new Assert\NotBlank(),
+        new SpDashboardAssert\ValidRedirectUrl()
+        ])]
+    #[SpDashboardAssert\UniqueRedirectUrls()]
     #[Assert\Count(min: 1, max: 1000, minMessage: 'You need to add a minimum of {{ limit }} redirect Url.|You need to add a minimum of {{ limit }} redirect Urls.')]
     private ?array $redirectUrls = null;
 
@@ -99,9 +96,8 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     /**
      * @var string
-     *
-     * @SpDashboardAssert\ValidLogo()
      */
+    #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
     #[Assert\NotBlank]
     private $logoUrl;
@@ -172,9 +168,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     #[Assert\Valid(groups: ['production'])]
     private $supportContact;
 
-    /**
-     * @SpDashboardAssert\ValidAttribute(type="oidcng")
-     */
+    #[SpDashboardAssert\ValidAttribute(type: "oidcng")]
     private array $attributes = [];
 
     /**

@@ -60,9 +60,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      */
     private ?string $importUrl = null;
 
-    /**
-     * @SpDashboardAssert\ValidMetadataUrl()
-     */
+    #[SpDashboardAssert\ValidMetadataUrl()]
     private ?string $metadataUrl = null;
 
     /**
@@ -82,21 +80,15 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     #[Assert\Count(min: 1, max: 10, minMessage: 'At least one ACS location is required', maxMessage: '{{ limit }} ACS locations or less are allowed')]
     private ?array $acsLocations = null;
 
-    /**
-     * @SpDashboardAssert\ValidEntityId()
-     * @SpDashboardAssert\UniqueEntityId()
-     */
+    #[SpDashboardAssert\ValidEntityId()]
+    #[SpDashboardAssert\UniqueEntityId()]
     #[Assert\NotBlank]
     private string $entityId;
 
-    /**
-     * @SpDashboardAssert\ValidSSLCertificate()
-     */
+    #[SpDashboardAssert\ValidSSLCertificate()]
     private string $certificate;
 
-    /**
-     * @SpDashboardAssert\ValidLogo()
-     */
+    #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
     #[Assert\NotBlank]
     private ?string $logoUrl = null;
@@ -136,9 +128,9 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     #[Assert\Valid(groups: ['production'])]
     private ?Contact $supportContact = null;
 
-    /**
-     * @SpDashboardAssert\ValidAttribute(type="saml20")
-     */
+    #[SpDashboardAssert\ValidAttribute(
+        type: 'saml20'
+    )]
     private array $attributes = [];
 
     private ?string $comments = null;

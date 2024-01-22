@@ -55,11 +55,8 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     #[Assert\Choice(choices: ['production', 'test'], strict: true)]
     private string $environment = Constants::ENVIRONMENT_TEST;
 
-    /**
-     *
-     * @SpDashboardAssert\ValidClientId()
-     * @SpDashboardAssert\UniqueEntityId()
-     */
+    #[SpDashboardAssert\ValidClientId]
+    #[SpDashboardAssert\UniqueEntityId]
     #[Assert\NotBlank]
     private ?string $entityId = null;
 

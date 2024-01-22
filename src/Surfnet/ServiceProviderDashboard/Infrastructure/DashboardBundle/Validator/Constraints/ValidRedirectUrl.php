@@ -22,9 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 
 use Symfony\Component\Validator\Constraints\Url;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class ValidRedirectUrl extends Url
 {
     /**

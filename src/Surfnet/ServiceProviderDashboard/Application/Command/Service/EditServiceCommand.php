@@ -38,10 +38,8 @@ class EditServiceCommand implements Command
         private string $guid,
         #[Assert\NotBlank]
         private string $name,
-        /**
-         * @SpDashboardAssert\ExistingTeamName
-         * @SpDashboardAssert\UrnFormattedTeamName
-         */
+        #[SpDashboardAssert\ExistingTeamName]
+        #[SpDashboardAssert\UrnFormattedTeamName]
         #[Assert\NotBlank]
         private string $teamName,
         private bool $productionEntitiesEnabled,

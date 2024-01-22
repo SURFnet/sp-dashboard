@@ -21,18 +21,24 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class ValidAttribute extends Constraint
 {
-    public $messageAttributeNotFound = 'validator.attribute.not_found';
+    #[HasNamedArguments]
+    public function __construct(
+        public string $messageAttributeNotFound = 'validator.attribute.not_found',
+        public string $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set',
+        public array|string $type = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG],
+        array $groups = null,
+        mixed $payload = null,
+    ) {
+        parent::__construct([], $groups, $payload);
+    }
 
-    public $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set';
 
-    public $type = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
 
     public function validatedBy(): string
     {
