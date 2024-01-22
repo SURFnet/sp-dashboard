@@ -469,7 +469,6 @@ services:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
-      - '@logger'
 
   surfnet.manage.client.identity_provider_client.test_environment:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient

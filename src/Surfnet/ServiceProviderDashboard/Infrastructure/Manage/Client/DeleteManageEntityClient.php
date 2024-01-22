@@ -32,11 +32,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterfa
 class DeleteManageEntityClient implements DeleteEntityRepositoryInterface
 {
     public function __construct(
-        private readonly HttpClientInterface $client,
-        private readonly LoggerInterface $logger
+        private readonly HttpClientInterface $client
     ) {
     }
-
 
     /**
      * Delete a manage entity by the internal (manage) id
@@ -47,11 +45,10 @@ class DeleteManageEntityClient implements DeleteEntityRepositoryInterface
      * @param string $manageId
      * @param string $protocol
      *
-     * @return string
      * @throws UnableToDeleteEntityException
      * @throws RuntimeException
      */
-    public function delete($manageId, $protocol)
+    public function delete($manageId, $protocol): string
     {
         try {
             $result = $this->client->delete(
