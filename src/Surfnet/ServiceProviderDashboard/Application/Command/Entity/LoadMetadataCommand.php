@@ -1,6 +1,6 @@
 <?php
 
-//declare(strict_types = 1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2017 SURFnet B.V.
@@ -35,11 +35,6 @@ class LoadMetadataCommand implements Command
         return $this->saveEntityCommand;
     }
 
-    public function getDashboardId(): string
-    {
-        return $this->saveEntityCommand->getId();
-    }
-
     public function isUrlSet(): bool
     {
         return !empty($this->requestData['metadata']['importUrl']);
@@ -50,12 +45,12 @@ class LoadMetadataCommand implements Command
         return !empty($this->requestData['metadata']['pastedMetadata']);
     }
 
-    public function getImportUrl()
+    public function getImportUrl(): mixed
     {
         return $this->requestData['metadata']['importUrl'];
     }
 
-    public function getPastedMetadata()
+    public function getPastedMetadata(): mixed
     {
         return $this->requestData['metadata']['pastedMetadata'];
     }
