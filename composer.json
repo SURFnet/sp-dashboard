@@ -30,6 +30,9 @@
     "ext-mysqli": "*",
     "ext-soap": "*",
     "ext-xml": "*",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-openssl": "*",
     "doctrine/doctrine-bundle": "^2.1.2",
     "doctrine/doctrine-migrations-bundle": "^3.2",
     "doctrine/orm": "^2.7",
@@ -67,7 +70,6 @@
     "twig/extra-bundle": "^2.12|^3.0",
     "twig/twig": "^3",
     "xemlock/htmlpurifier-html5": "^0.1.10"
-
   },
   "require-dev": {
     "dbrekelmans/bdi": "^1.0",
