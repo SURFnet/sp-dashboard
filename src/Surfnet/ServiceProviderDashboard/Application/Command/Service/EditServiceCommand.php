@@ -56,7 +56,7 @@ class EditServiceCommand implements Command
         #[Assert\NotBlank]
         private ?string $organizationNameNl,
         #[Assert\NotBlank]
-        private ?string $organizationNameEn
+        private ?string $organizationNameEn,
     ) {
     }
 

@@ -55,7 +55,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         private readonly ServiceRepository $services,
         private readonly AttributeDictionary $attributeDictionary,
         private readonly LoggerInterface $logger,
-        string $administratorTeams
+        string $administratorTeams,
     ) {
         $teams = explode(",", str_replace('\'', '', $administratorTeams));
         Assert::allStringNotEmpty(

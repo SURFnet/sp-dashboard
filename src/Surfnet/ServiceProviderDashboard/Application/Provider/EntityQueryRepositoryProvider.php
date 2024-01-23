@@ -28,7 +28,7 @@ class EntityQueryRepositoryProvider
 {
     public function __construct(
         private readonly QueryManageRepository $manageTestQueryClient,
-        private readonly QueryManageRepository $manageProductionQueryClient
+        private readonly QueryManageRepository $manageProductionQueryClient,
     ) {
     }
 

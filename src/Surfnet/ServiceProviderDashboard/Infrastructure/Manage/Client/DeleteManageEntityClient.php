@@ -32,7 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterfa
 class DeleteManageEntityClient implements DeleteEntityRepositoryInterface
 {
     public function __construct(
-        private readonly HttpClientInterface $client
+        private readonly HttpClientInterface $client,
     ) {
     }
 

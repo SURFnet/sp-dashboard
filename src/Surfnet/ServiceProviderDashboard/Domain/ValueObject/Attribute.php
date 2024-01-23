@@ -20,7 +20,9 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-class Attribute implements \Stringable
+use Stringable;
+
+class Attribute implements Stringable
 {
     /**
      * @var bool

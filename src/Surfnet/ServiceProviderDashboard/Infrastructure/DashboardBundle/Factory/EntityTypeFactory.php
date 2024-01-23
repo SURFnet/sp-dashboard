@@ -45,7 +45,7 @@ class EntityTypeFactory
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
         private readonly SaveCommandFactoryInterface $saveCommandFactory,
-        private readonly AttributeServiceInterface $attributeService
+        private readonly AttributeServiceInterface $attributeService,
     ) {
     }
 

@@ -39,7 +39,7 @@ class PrivacyQuestionsController extends AbstractController
     public function __construct(
         private readonly CommandBus $commandBus,
         private readonly ServiceService $serviceService,
-        private readonly AuthorizationService $authorizationService
+        private readonly AuthorizationService $authorizationService,
     ) {
     }
 
@@ -111,7 +111,7 @@ class PrivacyQuestionsController extends AbstractController
     private function renderPrivacyQuestionsForm(
         Request $request,
         PrivacyQuestionsCommand $command,
-        int $serviceId
+        int $serviceId,
     ): RedirectResponse|Response {
         $form = $this->createForm(PrivacyQuestionsType::class, $command);
         $form->handleRequest($request);

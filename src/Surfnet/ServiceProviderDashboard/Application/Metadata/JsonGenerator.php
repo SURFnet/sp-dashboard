@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
 
 /**
  * The JsonGenerator is able to generate Manage SAML 2.0 JSON metadata
@@ -40,7 +41,7 @@ class JsonGenerator implements GeneratorInterface
     public function __construct(
         private readonly ArpGenerator $arpMetadataGenerator,
         private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
     ) {
     }
 
@@ -57,7 +58,7 @@ class JsonGenerator implements GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
-        string $updatedPart = ''
+        string $updatedPart = '',
     ): array {
         // the type for entities is always saml because manage is using saml internally
         $data = [
@@ -72,14 +73,14 @@ class JsonGenerator implements GeneratorInterface
     public function generateEntityChangeRequest(
         ManageEntity $entity,
         EntityDiff $differences,
-        ContactEntity $contact
+        ContactEntity $contact,
     ): array {
         $payload = [
             'metaDataId' => $entity->getId(),
             'type' => 'saml20_sp',
             'pathUpdates' => $this->generateForChangeRequest($entity, $differences),
             'auditData' => [
-                'user' => $contact->getEmailAddress()
+                'user' => $contact->getEmailAddress(),
             ],
         ];
 
@@ -114,7 +115,7 @@ class JsonGenerator implements GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
-        string $updatedPart
+        string $updatedPart,
     ): array {
         $metadata = [
             'entityid' => $entity->getMetaData()->getEntityId(),
@@ -210,7 +211,7 @@ class JsonGenerator implements GeneratorInterface
         if ($entity->isManageEntity() && !$entity->isExcludedFromPush()) {
             $metadata['coin:exclude_from_push'] = '0';
         }
-        if ($entity->getMetaData()->getLogo() instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
+        if ($entity->getMetaData()->getLogo() instanceof Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
 
@@ -220,7 +221,9 @@ class JsonGenerator implements GeneratorInterface
     private function generateCertDataMetadata(ManageEntity $entity): array
     {
         $metadata = [];
-        if ($entity->getMetaData()->getCertData() !== null && $entity->getMetaData()->getCertData() !== '' && $entity->getMetaData()->getCertData() !== '0') {
+        if ($entity->getMetaData()->getCertData() !== null
+            && $entity->getMetaData()->getCertData() !== ''
+            && $entity->getMetaData()->getCertData() !== '0') {
             $metadata['certData'] = $this->stripCertificateEnvelope(
                 $entity->getMetaData()->getCertData()
             );

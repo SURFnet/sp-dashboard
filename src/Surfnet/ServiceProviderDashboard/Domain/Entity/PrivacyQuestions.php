@@ -21,12 +21,14 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
-#[ORM\Entity(repositoryClass: \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository::class)]
+#[ORM\Entity(repositoryClass: PrivacyQuestionsRepository::class)]
 class PrivacyQuestions
 {
     /**
@@ -70,7 +72,7 @@ class PrivacyQuestions
     
     #[ORM\OneToOne(targetEntity: 'Service', inversedBy: 'privacyQuestions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
+    private ?Service $service = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $dpaType = null;
@@ -137,7 +139,7 @@ class PrivacyQuestions
     /**
      * @return Service
      */
-    public function getService(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service
+    public function getService(): ?Service
     {
         return $this->service;
     }

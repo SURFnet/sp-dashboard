@@ -26,7 +26,7 @@ use Twig\TwigFilter;
 
 class WysiwygExtension extends AbstractExtension
 {
-    private static ?\HTMLPurifier $purifier = null;
+    private static ?HTMLPurifier $purifier = null;
 
     public function getFilters(): array
     {

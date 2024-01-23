@@ -28,7 +28,7 @@ class ServiceList implements IteratorAggregate
      * @param Service[] $services
      */
     public function __construct(
-        private readonly array $services
+        private readonly array $services,
     ) {
     }
 

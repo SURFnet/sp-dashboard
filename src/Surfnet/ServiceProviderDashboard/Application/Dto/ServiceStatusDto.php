@@ -20,7 +20,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
-class ServiceStatusDto implements \JsonSerializable
+use JsonSerializable;
+
+class ServiceStatusDto implements JsonSerializable
 {
     /**
      * ServiceStatusDto constructor.
@@ -30,8 +32,13 @@ class ServiceStatusDto implements \JsonSerializable
      * @param string[] $tooltips
      * @param int      $percentage
      */
-    public function __construct(private readonly array $states, private readonly array $labels, private readonly array $tooltips, private readonly array $legend, private $percentage)
-    {
+    public function __construct(
+        private readonly array $states,
+        private readonly array $labels,
+        private readonly array $tooltips,
+        private readonly array $legend,
+        private $percentage,
+    ) {
     }
 
     public function jsonSerialize(): mixed

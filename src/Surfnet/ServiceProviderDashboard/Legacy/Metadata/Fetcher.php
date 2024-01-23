@@ -25,6 +25,7 @@ use GuzzleHttp\Exception\ConnectException;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
+use Exception;
 
 class Fetcher implements FetcherInterface
 {
@@ -35,8 +36,11 @@ class Fetcher implements FetcherInterface
     /**
      * Constructor
      */
-    public function __construct(private readonly ClientInterface $guzzle, private readonly LoggerInterface $logger, $timeout)
-    {
+    public function __construct(
+        private readonly ClientInterface $guzzle,
+        private readonly LoggerInterface $logger,
+        $timeout,
+    ) {
         $this->timeout = (int) $timeout;
     }
 
@@ -57,7 +61,7 @@ class Fetcher implements FetcherInterface
             $this->logger->info('Metadata CURL exception', ['e' => $e]);
             $curlError = ' (' . $this->getCurlErrorDescription($e->getMessage()) . ').';
             throw new MetadataFetchException('Failed retrieving the metadata' . $curlError);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->info('Metadata exception', ['e' => $e]);
             throw new MetadataFetchException('Failed retrieving the metadata.');
         }

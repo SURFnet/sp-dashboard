@@ -41,7 +41,7 @@ class Logo implements Comparable
     public function __construct(
         private ?string $url,
         private ?int $width,
-        private ?int $height
+        private ?int $height,
     ) {
     }
 

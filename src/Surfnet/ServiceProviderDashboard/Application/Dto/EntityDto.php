@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 class EntityDto
 {
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Contact $contact = null;
+    private ?Contact $contact = null;
 
     /**
      * @param string $id
@@ -35,8 +35,13 @@ class EntityDto
      * @param string $state
      * @param string $protocol
      */
-    private function __construct(private $id, private $entityId, private $environment, private $state, private $protocol)
-    {
+    private function __construct(
+        private $id,
+        private $entityId,
+        private $environment,
+        private $state,
+        private $protocol,
+    ) {
     }
 
     public static function fromManageTestResult(ManageEntity $manageResponse): self
@@ -102,7 +107,7 @@ class EntityDto
         $this->contact = $contact;
     }
 
-    public function getContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Contact
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }

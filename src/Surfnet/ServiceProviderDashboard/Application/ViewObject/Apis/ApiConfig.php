@@ -25,7 +25,7 @@ class ApiConfig
     public function __construct(
         private readonly ApiConnection $connection,
         private readonly ?PublicationStatus $publicationStatus = null,
-        private readonly string $environment = ''
+        private readonly string $environment = '',
     ) {
     }
 

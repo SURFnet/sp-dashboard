@@ -30,7 +30,7 @@ class RequestDeletePublishedEntityCommand implements Command
         #[Assert\NotBlank]
         #[Assert\Uuid]
         private readonly string $manageId,
-        private readonly Contact $applicant
+        private readonly Contact $applicant,
     ) {
     }
 

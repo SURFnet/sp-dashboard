@@ -48,7 +48,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         private readonly RequestStack $requestStack,
         private readonly MailService $mailService,
         private readonly LoggerInterface $logger,
-        private readonly string $issueType
+        private readonly string $issueType,
     ) {
         if ($issueType === '' || $issueType === '0') {
             throw new Exception('Please set "jira_issue_type_publication_request" in .env');

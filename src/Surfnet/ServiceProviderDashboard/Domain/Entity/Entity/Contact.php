@@ -58,7 +58,7 @@ class Contact
         private readonly ?string $givenName,
         private readonly ?string $surName,
         private readonly ?string $email,
-        private readonly ?string $phone
+        private readonly ?string $phone,
     ) {
     }
 

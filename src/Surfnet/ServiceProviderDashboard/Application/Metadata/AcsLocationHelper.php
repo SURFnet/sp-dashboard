@@ -52,8 +52,11 @@ class AcsLocationHelper
     /**
      * Add empty remaining locations so Manage can delete them
      */
-    public static function addEmptyAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false): void
-    {
+    public static function addEmptyAcsLocationsToMetaData(
+        array $acsLocations,
+        array &$metadata,
+        $addPrefix = false,
+    ): void {
         $prefix = $addPrefix ? 'metaDataFields.' : '';
         $index = count(self::cleanArray($acsLocations));
         while ($index < MetaData::MAX_ACS_LOCATIONS) {

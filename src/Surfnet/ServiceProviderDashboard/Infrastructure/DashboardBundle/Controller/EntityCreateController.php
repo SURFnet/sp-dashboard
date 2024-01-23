@@ -54,20 +54,26 @@ class EntityCreateController extends AbstractController
         private readonly EntityTypeFactory $entityTypeFactory,
         private readonly LoadEntityService $loadEntityService,
         private readonly ProtocolChoiceFactory $protocolChoiceFactory,
-        private readonly EntityMergeService $entityMergeService
+        private readonly EntityMergeService $entityMergeService,
     ) {
     }
 
     /**
-     *
-     *
      * @param  int $serviceId
-     * @return RedirectResponse|Response|array
      */
     #[IsGranted('ROLE_USER')]
-    #[Route(path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}', name: 'entity_type', defaults: ['targetEnvironment' => 'test'], methods: ['GET', 'POST'])]
-    public function type(Request $request, $serviceId, string $targetEnvironment, string $inputId): RedirectResponse|Response
-    {
+    #[Route(
+        path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}',
+        name: 'entity_type',
+        defaults: ['targetEnvironment' => 'test'],
+        methods: ['GET', 'POST']
+    )]
+    public function type(
+        Request $request,
+        $serviceId,
+        string $targetEnvironment,
+        string $inputId,
+    ): RedirectResponse|Response {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $choices = $this->protocolChoiceFactory->buildOptions();
         if (!$service->isClientCredentialClientsEnabled()) {
@@ -101,7 +107,7 @@ class EntityCreateController extends AbstractController
                     [
                     'serviceId' => $service->getId(),
                     'targetEnvironment' => $environment,
-                    'type' => $protocol
+                    'type' => $protocol,
                     ]
                 );
             }
@@ -238,12 +244,17 @@ class EntityCreateController extends AbstractController
         defaults: [
             'manageId' => null,
             'targetEnvironment' => 'test',
-            'sourceEnvironment' => 'test'
+            'sourceEnvironment' => 'test',
         ],
         methods: ['GET', 'POST']
     )]
-    public function copy(Request $request, $serviceId, string $manageId, string $targetEnvironment, string $sourceEnvironment): Response
-    {
+    public function copy(
+        Request $request,
+        $serviceId,
+        string $manageId,
+        string $targetEnvironment,
+        string $sourceEnvironment,
+    ): Response {
         $flashBag = $request->getSession()->getFlashBag();
         $flashBag->clear();
 

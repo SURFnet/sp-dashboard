@@ -32,7 +32,7 @@ class DeleteEntityClient implements DeleteTeamsEntityRepository
 {
     public function __construct(
         private readonly HttpClient $client,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

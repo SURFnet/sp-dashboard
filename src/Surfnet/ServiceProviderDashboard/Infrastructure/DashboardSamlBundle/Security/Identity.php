@@ -21,8 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Se
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Stringable;
 
-class Identity implements UserInterface, \Stringable
+class Identity implements UserInterface, Stringable
 {
     public function __construct(private readonly Contact $contact)
     {

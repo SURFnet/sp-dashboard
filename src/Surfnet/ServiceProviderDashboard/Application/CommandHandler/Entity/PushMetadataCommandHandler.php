@@ -33,7 +33,7 @@ class PushMetadataCommandHandler implements CommandHandler
     public function __construct(
         private readonly ManagePublishService $publishService,
         private readonly RequestStack $requestStack,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

@@ -59,7 +59,7 @@ trait EntityControllerTrait
         private readonly AuthorizationService $authorizationService,
         private readonly EntityTypeFactory $entityTypeFactory,
         private readonly LoadEntityService $loadEntityService,
-        private readonly EntityMergeService $entityMergeService
+        private readonly EntityMergeService $entityMergeService,
     ) {
     }
 
@@ -157,8 +157,9 @@ trait EntityControllerTrait
         return $publishEntityCommand;
     }
 
-    private function allowToRedirectToCreateConnectionRequest(PublishProductionCommandInterface $publishEntityCommand): bool
-    {
+    private function allowToRedirectToCreateConnectionRequest(
+        PublishProductionCommandInterface $publishEntityCommand,
+    ): bool {
         if (!($publishEntityCommand instanceof PublishEntityProductionCommand)) {
             return false;
         }

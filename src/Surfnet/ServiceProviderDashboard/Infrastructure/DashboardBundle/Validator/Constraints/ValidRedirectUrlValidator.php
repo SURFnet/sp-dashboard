@@ -111,7 +111,7 @@ class ValidRedirectUrlValidator extends UrlValidator
 
     private function dropLastAddedErrors(
         ConstraintViolationListInterface $violations,
-        int $numberOfViolationsBeforeExecution
+        int $numberOfViolationsBeforeExecution,
     ): void {
         // Convert the violations to an array for easier manipulation
         $violationsArray = $violations->getIterator()->getArrayCopy();

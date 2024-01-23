@@ -26,7 +26,7 @@ class LoadMetadataCommand implements Command
 {
     public function __construct(
         private readonly SaveSamlEntityCommand $saveEntityCommand,
-        private readonly array $requestData
+        private readonly array $requestData,
     ) {
     }
 

@@ -28,7 +28,7 @@ class AllowedIdentityProviders
 {
     public function __construct(
         private array $providers,
-        private bool $allowAll
+        private bool $allowAll,
     ) {
         Assert::allString($providers);
     }
@@ -66,7 +66,7 @@ class AllowedIdentityProviders
 
     public function merge(?AllowedIdentityProviders $allowedIdPs): void
     {
-        if (!$allowedIdPs instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders) {
+        if (!$allowedIdPs instanceof AllowedIdentityProviders) {
             $this->providers = [];
             $this->allowAll = null;
             return;

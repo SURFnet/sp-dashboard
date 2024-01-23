@@ -29,7 +29,7 @@ class GlobalSiteNotice extends AbstractExtension
     public function __construct(
         private readonly bool $shouldDisplayGlobalSiteNotice,
         private readonly string $allowedHtml,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

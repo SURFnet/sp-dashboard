@@ -49,7 +49,7 @@ class HttpClient implements HttpClientInterface
         private readonly ClientInterface $httpClient,
         private readonly LoggerInterface $logger,
         private readonly string $apiName = self::TEST_API_NAME,
-        private readonly string $mode = self::MODE_TEST
+        private readonly string $mode = self::MODE_TEST,
     ) {
     }
 
@@ -64,8 +64,11 @@ class HttpClient implements HttpClientInterface
      * @throws RuntimeException
      * @throws GuzzleException
      */
-    public function read(string $path, array $parameters = [], array $headers = ['Content-Type' => 'application/json']): mixed
-    {
+    public function read(
+        string $path,
+        array $parameters = [],
+        array $headers = ['Content-Type' => 'application/json'],
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Getting resource %s from %s (%s)', $resource, $this->apiName, $this->mode)
@@ -77,7 +80,7 @@ class HttpClient implements HttpClientInterface
                 $resource,
                 [
                 'exceptions' => false,
-                'headers' => $headers
+                'headers' => $headers,
                 ],
                 function ($statusCode, $body, $method, $resource, array $headers) {
                     if ($statusCode < 200 || $statusCode >= 300) {
@@ -116,7 +119,7 @@ class HttpClient implements HttpClientInterface
         mixed $data,
         string $path,
         array $parameters = [],
-        array $headers = ['Content-Type' => 'application/json']
+        array $headers = ['Content-Type' => 'application/json'],
     ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
@@ -130,7 +133,7 @@ class HttpClient implements HttpClientInterface
             [
             'exceptions' => false,
             'body' => $data,
-            'headers' => $headers
+            'headers' => $headers,
             ]
         );
     }
@@ -146,7 +149,7 @@ class HttpClient implements HttpClientInterface
         mixed $data,
         string $path,
         array $parameters = [],
-        array $headers = ['Content-Type' => 'application/json']
+        array $headers = ['Content-Type' => 'application/json'],
     ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
@@ -160,7 +163,7 @@ class HttpClient implements HttpClientInterface
             [
             'exceptions' => false,
             'body' => $data,
-            'headers' => $headers
+            'headers' => $headers,
             ]
         );
     }
@@ -175,7 +178,7 @@ class HttpClient implements HttpClientInterface
     public function delete(
         string $path,
         array $parameters = [],
-        array $headers = ['Content-Type' => 'application/json']
+        array $headers = ['Content-Type' => 'application/json'],
     ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(sprintf('Deleting data from %s (%s) on path %s', $this->apiName, $this->mode, $resource));
@@ -185,7 +188,7 @@ class HttpClient implements HttpClientInterface
             $resource,
             [
             'exceptions' => false,
-            'headers' => $headers
+            'headers' => $headers,
             ]
         );
     }

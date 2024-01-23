@@ -32,7 +32,7 @@ class IssueService implements TicketRepository
     public function __construct(
         private readonly JiraServiceFactory $factory,
         private readonly IssueFieldFactory $fieldFactory,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

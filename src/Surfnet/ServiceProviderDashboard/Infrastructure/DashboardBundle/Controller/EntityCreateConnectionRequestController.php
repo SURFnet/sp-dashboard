@@ -53,12 +53,16 @@ class EntityCreateConnectionRequestController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route(path: '/entity/create-connection-request/{environment}/{manageId}/{serviceId}', name: 'entity_published_create_connection_request', methods: ['GET', 'POST'])]
+    #[Route(
+        path: '/entity/create-connection-request/{environment}/{manageId}/{serviceId}',
+        name: 'entity_published_create_connection_request',
+        methods: ['GET', 'POST']
+    )]
     public function connectionRequestFromEntity(
         Request $request,
         int $serviceId,
         string $manageId,
-        string $environment
+        string $environment,
     ): Response {
         $this->validateServiceIsAllowed($serviceId, $manageId, $environment);
 
@@ -74,7 +78,7 @@ class EntityCreateConnectionRequestController extends AbstractController
             $parameters = [
                 'entityName' => $entity->getMetaData()->getNameEn(),
                 'showOidcPopup' => $this->showOidcPopup($entity),
-                'publishedEntity' => $entity
+                'publishedEntity' => $entity,
             ];
 
             if ($this->isCancelAction($form) || $command->getConnectionRequests() === []) {
@@ -96,12 +100,16 @@ class EntityCreateConnectionRequestController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route(path: '/entity/create-connection-request-from-overview/{environment}/{manageId}/{serviceId}', name: 'entity_published_create_connection_request_from_overview', methods: ['GET', 'POST'])]
+    #[Route(
+        path: '/entity/create-connection-request-from-overview/{environment}/{manageId}/{serviceId}',
+        name: 'entity_published_create_connection_request_from_overview',
+        methods: ['GET', 'POST']
+    )]
     public function connectionRequestFromOverview(
         Request $request,
         int $serviceId,
         string $manageId,
-        string $environment
+        string $environment,
     ): Response {
         $this->validateServiceIsAllowed($serviceId, $manageId, $environment);
 

@@ -23,13 +23,15 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-#[ORM\Entity(repositoryClass: \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository::class)]
+#[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service
 {
     // Reflect the type of service either an institute or a 'non institute'
@@ -112,10 +114,10 @@ class Service
     private $surfconextRepresentativeApproved;
 
     #[ORM\ManyToMany(targetEntity: 'Contact', mappedBy: 'services', cascade: ['persist'], orphanRemoval: true)]
-    private \Doctrine\Common\Collections\Collection $contacts;
+    private Collection $contacts;
 
     #[ORM\OneToOne(targetEntity: 'PrivacyQuestions', mappedBy: 'service', cascade: ['remove'], orphanRemoval: true)]
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions $privacyQuestions = null;
+    private ?PrivacyQuestions $privacyQuestions = null;
 
     /**
      * @var string
@@ -211,7 +213,7 @@ class Service
     /**
      * @return PrivacyQuestions
      */
-    public function getPrivacyQuestions(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions
+    public function getPrivacyQuestions(): ?PrivacyQuestions
     {
         return $this->privacyQuestions;
     }

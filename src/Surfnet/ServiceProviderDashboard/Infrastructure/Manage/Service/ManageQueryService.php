@@ -31,7 +31,7 @@ class ManageQueryService
 
     public function __construct(
         private readonly QueryManageRepository $testQueryClient,
-        private readonly QueryManageRepository $productionQueryClient
+        private readonly QueryManageRepository $productionQueryClient,
     ) {
     }
 

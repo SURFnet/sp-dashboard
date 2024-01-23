@@ -39,7 +39,7 @@ class Protocol implements Comparable
         self::OIDC10_RP => Constants::TYPE_OPENID_CONNECT_TNG,
         self::OAUTH20_RS => Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
         // CC was already mapped to determine it's entity type
-        Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT => Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT => Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT,
     ];
 
     private $protocol;

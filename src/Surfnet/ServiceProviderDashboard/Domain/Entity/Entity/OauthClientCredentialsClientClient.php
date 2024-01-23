@@ -56,7 +56,7 @@ class OauthClientCredentialsClientClient implements Comparable, OidcClientInterf
         private string $clientId,
         private int $accessTokenValidity,
         private ?string $clientSecret,
-        private array $resourceServers
+        private array $resourceServers,
     ) {
     }
 

@@ -32,7 +32,7 @@ class TicketService implements TicketServiceInterface
 {
     public function __construct(
         private readonly TicketServiceInterface $issueRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -74,7 +74,7 @@ class TicketService implements TicketServiceInterface
         PublishProductionCommandInterface $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue {
         $ticket = $this->createTicketFromManageResponse(
             $command,
@@ -106,7 +106,7 @@ class TicketService implements TicketServiceInterface
         CreateConnectionRequestCommand $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue {
     
         $ticket = Ticket::fromConnectionRequests(
@@ -125,7 +125,7 @@ class TicketService implements TicketServiceInterface
         ManageEntity $entity,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Ticket {
         return Ticket::fromManageResponse(
             $entity,

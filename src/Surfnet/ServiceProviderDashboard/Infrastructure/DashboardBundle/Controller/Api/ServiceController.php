@@ -41,7 +41,7 @@ class ServiceController extends AbstractController
         private readonly AuthorizationService $authorizationService,
         private readonly ServiceService $serviceService,
         private readonly ServiceStatusService $serviceStatusService,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

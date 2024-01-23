@@ -41,7 +41,7 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         private readonly CommandBus $commandBus,
         private readonly AuthorizationService $authorizationService,
         private readonly PublishEntityClient $publishProdEntityClient,
-        private readonly PublishEntityClient $publishTestEntityClient
+        private readonly PublishEntityClient $publishTestEntityClient,
     ) {
     }
 

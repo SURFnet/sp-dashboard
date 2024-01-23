@@ -21,6 +21,7 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Countable;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 
 class IssueCollection implements Countable
 {
@@ -42,7 +43,7 @@ class IssueCollection implements Countable
     /**
      * @return Issue|null
      */
-    public function getIssueById($id): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue
+    public function getIssueById($id): ?Issue
     {
         if (array_key_exists($id, $this->issues)) {
             return $this->issues[$id];

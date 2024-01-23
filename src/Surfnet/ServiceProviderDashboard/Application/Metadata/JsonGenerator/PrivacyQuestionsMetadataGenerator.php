@@ -58,7 +58,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 
         $attributes = [];
 
-        if ($privacyQuestionAnswers instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions && $entity->getService()->isPrivacyQuestionsEnabled()) {
+        if ($privacyQuestionAnswers instanceof PrivacyQuestions && $entity->getService()->isPrivacyQuestionsEnabled()) {
             foreach ($privacyQuestions as $question) {
                 if ($question->id === 'privacyStatementUrl') {
                     $privacyStatements = $privacyQuestionAnswers->privacyStatementUrls();
@@ -102,7 +102,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
         array &$attributes,
         string $getterName,
         PrivacyQuestions $privacyQuestionAnswers,
-        mixed $question
+        mixed $question,
     ): void {
         $answer = $privacyQuestionAnswers->$getterName();
         if (!is_null($answer)) {

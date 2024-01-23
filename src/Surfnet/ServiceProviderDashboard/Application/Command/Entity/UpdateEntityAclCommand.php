@@ -35,10 +35,10 @@ class UpdateEntityAclCommand implements Command
          */
         #[Assert\All([
             new Assert\NotBlank(),
-            new Assert\Type(type: IdentityProvider::class)
+            new Assert\Type(type: IdentityProvider::class),
         ])]
         private array $selected,
-        private bool $selectAll
+        private bool $selectAll,
     ) {
     }
 

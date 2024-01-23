@@ -151,7 +151,7 @@ class PrivacyQuestionsFormBuilder
             SubmitType::class,
             [
                 'label' => 'privacy.form.label.save-button',
-                'attr' => ['class'=>'button']
+                'attr' => ['class'=>'button'],
             ]
         );
     }

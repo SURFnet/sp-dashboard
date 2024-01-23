@@ -30,7 +30,7 @@ class ExistingTeamNameValidator extends ConstraintValidator
     public function __construct(
         private readonly QueryTeamsRepository $queryService,
         private readonly string $defaultStemName,
-        private readonly string $groupName
+        private readonly string $groupName,
     ) {
     }
 

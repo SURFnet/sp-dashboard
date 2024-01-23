@@ -31,7 +31,7 @@ class IdentityProvider
         private readonly string $manageId,
         private readonly string $entityId,
         private ?string $nameNl,
-        private string $nameEn
+        private string $nameEn,
     ) {
         Assert::stringNotEmpty($manageId);
         Assert::stringNotEmpty($entityId);

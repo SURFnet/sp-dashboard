@@ -77,6 +77,6 @@ interface TicketServiceInterface
         PublishProductionCommandInterface $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue;
 }

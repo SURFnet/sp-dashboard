@@ -29,7 +29,7 @@ class PublishEntityTestCommand implements Command
 {
     public function __construct(
         #[Assert\Type(ManageEntity::class)]
-        private readonly ManageEntity $manageEntity
+        private readonly ManageEntity $manageEntity,
     ) {
     }
 

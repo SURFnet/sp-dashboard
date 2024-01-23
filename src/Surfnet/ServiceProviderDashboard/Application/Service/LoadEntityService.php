@@ -33,7 +33,7 @@ class LoadEntityService
 {
     public function __construct(
         private readonly QueryManageRepository $manageTestClient,
-        private readonly QueryManageRepository $manageProductionClient
+        private readonly QueryManageRepository $manageProductionClient,
     ) {
     }
 
@@ -46,7 +46,7 @@ class LoadEntityService
         string $manageId,
         Service $service,
         string $sourceEnvironment,
-        string $environment
+        string $environment,
     ): ManageEntity {
         $manageClient = $this->manageProductionClient;
         if ($sourceEnvironment == 'test') {

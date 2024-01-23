@@ -84,7 +84,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
      * The subject type is comparable to the SAML name id format, that is why the Constants::NAME_ID_FORMAT_DEFAULT
      * (transient) is used to set the default value.
      */
-    #[Assert\Choice(callback: [\Surfnet\ServiceProviderDashboard\Domain\Entity\Constants::class, 'getValidNameIdFormats'], strict: true)]
+    #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]
     private string $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
@@ -128,21 +128,21 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
     private $administrativeContact;
 
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid]
     private $technicalContact;
 
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
     private $supportContact;
 

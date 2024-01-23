@@ -86,8 +86,15 @@ class ManageEntity
         return new self($data['id'], $attributeList, $metaData, $allowedEdentityProviders, $protocol, $oidcClient);
     }
 
-    public function __construct(private ?string $id, private readonly AttributeList $attributes, private readonly MetaData $metaData, private readonly AllowedIdentityProviders $allowedIdentityProviders, private readonly Protocol $protocol, private readonly ?OidcClientInterface $oidcClient = null, private ?Service $service = null)
-    {
+    public function __construct(
+        private ?string $id,
+        private readonly AttributeList $attributes,
+        private readonly MetaData $metaData,
+        private readonly AllowedIdentityProviders $allowedIdentityProviders,
+        private readonly Protocol $protocol,
+        private readonly ?OidcClientInterface $oidcClient = null,
+        private ?Service $service = null,
+    ) {
     }
 
     private static function extractManageProtocol(array $data): string
@@ -163,7 +170,7 @@ class ManageEntity
     /**
      * @return OidcClientInterface|null
      */
-    public function getOidcClient(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface
+    public function getOidcClient(): ?OidcClientInterface
     {
         return $this->oidcClient;
     }
@@ -186,7 +193,7 @@ class ManageEntity
 
     public function isOidcngResourceServer(): bool
     {
-        if ($this->getOidcClient() instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface) {
+        if ($this->getOidcClient() instanceof OidcClientInterface) {
             return $this->getOidcClient() instanceof OidcngResourceServerClient;
         }
 
@@ -327,7 +334,7 @@ class ManageEntity
     }
 
     public function isRequestedProductionEntity(
-        bool $isCopy
+        bool $isCopy,
     ): bool {
         return $isCopy || ($this->isStatusPublicationRequested() && $this->isProduction());
     }

@@ -35,7 +35,7 @@ class AttributeService implements AttributeServiceInterface
 
     public function __construct(
         private readonly AttributeRepositoryInterface $attributeRepository,
-        private readonly string $language
+        private readonly string $language,
     ) {
     }
 
@@ -82,7 +82,7 @@ class AttributeService implements AttributeServiceInterface
 
     public function createEntityDetailAttributes(
         AttributeList $manageAttributes,
-        string $entityType
+        string $entityType,
     ): array {
         $attributes = [];
         foreach ($manageAttributes->getAttributes() as $attribute) {

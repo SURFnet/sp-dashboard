@@ -56,7 +56,7 @@ class SamlEntityType extends AbstractType
             FormType::class,
             [
             'inherit_data' => true,
-            'attr' => ['class' => 'attributes']
+            'attr' => ['class' => 'attributes'],
             ]
         );
         $this->buildAttributeTypes($attributesContainer);

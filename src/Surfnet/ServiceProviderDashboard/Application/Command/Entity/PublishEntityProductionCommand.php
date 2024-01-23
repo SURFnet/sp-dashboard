@@ -30,8 +30,8 @@ class PublishEntityProductionCommand implements PublishProductionCommandInterfac
     private bool $isClientReset = false;
 
     public function __construct(
-        #[Assert\Type(\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity::class)]private readonly ManageEntity $manageEntity,
-        private readonly Contact $applicant
+        #[Assert\Type(ManageEntity::class)]private readonly ManageEntity $manageEntity,
+        private readonly Contact $applicant,
     ) {
     }
 

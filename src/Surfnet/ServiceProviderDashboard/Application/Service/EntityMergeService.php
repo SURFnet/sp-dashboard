@@ -51,7 +51,7 @@ class EntityMergeService
     public function __construct(
         private readonly AttributeServiceInterface $attributeService,
         private readonly string $playGroundUriTest,
-        private readonly string $playGroundUriProd
+        private readonly string $playGroundUriProd,
     ) {
     }
 
@@ -60,7 +60,7 @@ class EntityMergeService
      */
     public function mergeEntityCommand(
         SaveEntityCommandInterface $command,
-        ?ManageEntity $manageEntity = null
+        ?ManageEntity $manageEntity = null,
     ): ManageEntity {
         $metaData = new MetaData(
             $command->getEntityId(),
@@ -145,7 +145,7 @@ class EntityMergeService
         $newEntity->setComments($command->getComments());
         $newEntity->setEnvironment($command->getEnvironment());
         // If no existing ManageEntity is provided, then return the newly created entity
-        if (!$manageEntity instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity) {
+        if (!$manageEntity instanceof ManageEntity) {
             return $newEntity;
         }
         $manageEntity->merge($newEntity);

@@ -28,7 +28,7 @@ class Service
         private readonly bool $privacyQuestionsEnabled,
         private readonly EntityList $entityList,
         private readonly RouterInterface $router,
-        private readonly bool $productionEntitiesEnabled = false
+        private readonly bool $productionEntitiesEnabled = false,
     ) {
     }
 

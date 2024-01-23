@@ -23,8 +23,9 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Valida
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
+use Attribute;
 
-#[\Attribute]
+#[Attribute]
 class ValidAttribute extends Constraint
 {
     #[HasNamedArguments]

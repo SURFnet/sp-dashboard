@@ -35,7 +35,7 @@ class OidcngClient implements Comparable, OidcClientInterface
 {
     final public const FORM_MANAGED_GRANTS = [
         'entity.edit.label.authorization_code' => Constants::GRANT_TYPE_AUTHORIZATION_CODE,
-        'entity.edit.label.implicit' => Constants::GRANT_TYPE_IMPLICIT
+        'entity.edit.label.implicit' => Constants::GRANT_TYPE_IMPLICIT,
     ];
 
     public static function fromApiResponse(array $data): self
@@ -78,7 +78,7 @@ class OidcngClient implements Comparable, OidcClientInterface
         private array $grants,
         private bool $isPublicClient,
         private int $accessTokenValidity,
-        private array $resourceServers
+        private array $resourceServers,
     ) {
     }
 

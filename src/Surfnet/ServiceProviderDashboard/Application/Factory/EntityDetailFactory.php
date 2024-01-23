@@ -31,7 +31,7 @@ class EntityDetailFactory
     public function __construct(
         private readonly AttributeServiceInterface $attributeService,
         private readonly string $playGroundUriTest,
-        private readonly string $playGroundUriProd
+        private readonly string $playGroundUriProd,
     ) {
     }
 

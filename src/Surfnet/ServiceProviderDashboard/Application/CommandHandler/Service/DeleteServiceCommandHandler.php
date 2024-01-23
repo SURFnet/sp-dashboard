@@ -40,7 +40,7 @@ class DeleteServiceCommandHandler implements CommandHandler
         private readonly DeleteCommandFactory $deleteCommandFactory,
         private readonly CommandBus $commandBus,
         private readonly DeleteTeamsEntityRepository $deleteTeamClient,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

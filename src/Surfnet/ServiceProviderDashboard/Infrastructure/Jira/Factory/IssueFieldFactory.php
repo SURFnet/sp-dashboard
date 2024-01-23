@@ -33,7 +33,7 @@ class IssueFieldFactory
         private readonly string $reporterFieldName,
         private readonly string $priority,
         private readonly string $projectKey,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
         Assert::stringNotEmpty(
             $entityIdFieldName,
@@ -84,7 +84,7 @@ class IssueFieldFactory
             [
             '%applicant_name%' => $ticket->getApplicantName(),
             '%applicant_email%' =>  $ticket->getApplicantEmail(),
-            '%entity_name%' => $ticket->getEntityName()
+            '%entity_name%' => $ticket->getEntityName(),
             ]
         );
     }
@@ -108,7 +108,7 @@ class IssueFieldFactory
                 [
                 '%institution_name%' => $connectionRequest->institution,
                 '%contact_name%' => $connectionRequest->name,
-                '%contact_email%' => $connectionRequest->email
+                '%contact_email%' => $connectionRequest->email,
                 ]
             );
         }
@@ -120,7 +120,7 @@ class IssueFieldFactory
         return $this->translator->trans(
             $ticket->getSummaryTranslationKey(),
             [
-            '%entity_name%' => $ticket->getEntityName()
+            '%entity_name%' => $ticket->getEntityName(),
             ]
         );
     }

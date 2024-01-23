@@ -29,7 +29,7 @@ class MailService
 {
     public function __construct(
         private readonly MailMessageFactory $mailFactory,
-        private readonly Mailer $mailer
+        private readonly Mailer $mailer,
     ) {
     }
 

@@ -52,7 +52,7 @@ class AttributeTypeInformation
         string $saml20Info,
         string $oidcngLabel,
         string $oidcngInfo,
-        string $language
+        string $language,
     ) {
         $this->saml20Label = $saml20Label;
         $this->saml20Info = $saml20Info;

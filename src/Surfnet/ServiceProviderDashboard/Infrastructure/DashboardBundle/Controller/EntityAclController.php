@@ -44,7 +44,7 @@ class EntityAclController extends AbstractController
         private readonly EntityService $entityService,
         private readonly AuthorizationService $authorizationService,
         private readonly EntityAclService $entityAclService,
-        private readonly EntityDetailFactory $entityDetailFactory
+        private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
 

@@ -35,7 +35,7 @@ class LoadMetadataCommandHandler implements CommandHandler
     public function __construct(
         private readonly AttributeNameServiceInterface $attributeNameService,
         private readonly FetcherInterface $metadataFetcher,
-        private readonly ParserInterface $metadataParser
+        private readonly ParserInterface $metadataParser,
     ) {
     }
 
@@ -68,15 +68,19 @@ class LoadMetadataCommandHandler implements CommandHandler
         $this->mapAttributes($targetCommand, $metadata);
 
         // By default set the import url as the metadataUrl but only when the metadataUrl is not set yet.
-        if (($targetCommand->getMetadataUrl() === null || $targetCommand->getMetadataUrl() === '' || $targetCommand->getMetadataUrl() === '0') && $command->isUrlSet()) {
+        if (($targetCommand->getMetadataUrl() === null || $targetCommand->getMetadataUrl() === '' || $targetCommand->getMetadataUrl() === '0')
+            && $command->isUrlSet()
+        ) {
             $targetCommand->setMetadataUrl($targetCommand->getImportUrl());
         }
 
         $command->setNameIdFormat($metadata->nameIdFormat);
     }
 
-    private function mapTextFields(SaveSamlEntityCommand $command, \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata $metadata): void
-    {
+    private function mapTextFields(
+        SaveSamlEntityCommand $command,
+        Metadata $metadata,
+    ): void {
         $map = [
             'acsLocations' => ['getAcsLocations', 'setAcsLocations'],
             'entityId' => ['getEntityId', 'setEntityId'],

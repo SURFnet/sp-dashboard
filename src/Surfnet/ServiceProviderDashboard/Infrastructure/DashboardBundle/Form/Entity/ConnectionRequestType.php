@@ -36,7 +36,7 @@ class ConnectionRequestType extends AbstractType
             TextType::class,
             [
                 'required' => true,
-                'attr' => ['class' => 'add-form-input']
+                'attr' => ['class' => 'add-form-input'],
             ]
         );
 
@@ -45,7 +45,7 @@ class ConnectionRequestType extends AbstractType
             TextType::class,
             [
                 'required' => false,
-                'attr' => ['class' => 'add-form-input']
+                'attr' => ['class' => 'add-form-input'],
             ]
         );
 
@@ -54,7 +54,7 @@ class ConnectionRequestType extends AbstractType
             EmailType::class,
             [
                 'required' => true,
-                'attr' => ['class' => 'add-form-input']
+                'attr' => ['class' => 'add-form-input'],
             ]
         );
     }

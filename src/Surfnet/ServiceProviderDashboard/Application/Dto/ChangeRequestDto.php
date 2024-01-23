@@ -28,8 +28,11 @@ use function array_key_exists;
 
 class ChangeRequestDto
 {
-    private function __construct(private readonly string $note, private readonly DateTime $created, private readonly array $pathUpdates)
-    {
+    private function __construct(
+        private readonly string $note,
+        private readonly DateTime $created,
+        private readonly array $pathUpdates,
+    ) {
     }
 
     /**

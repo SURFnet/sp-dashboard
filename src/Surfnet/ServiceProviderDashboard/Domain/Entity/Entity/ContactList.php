@@ -99,7 +99,7 @@ class ContactList implements Comparable
     public function merge(ContactList $contacts): void
     {
         $this->clear();
-        if ($contacts instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ContactList) {
+        if ($contacts instanceof ContactList) {
             $technical = $contacts->findTechnicalContact();
             if ($technical !== null) {
                 $this->add($technical);

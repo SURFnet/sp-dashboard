@@ -48,7 +48,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     private $status;
 
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
+    private ?Service $service = null;
 
     private bool $archived = false;
 
@@ -72,10 +72,15 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     #[Assert\All([
         new Assert\NotBlank(),
-        new SpDashboardAssert\ValidRedirectUrl()
+        new SpDashboardAssert\ValidRedirectUrl(),
         ])]
     #[SpDashboardAssert\UniqueRedirectUrls()]
-    #[Assert\Count(min: 1, max: 1000, minMessage: 'You need to add a minimum of {{ limit }} redirect Url.|You need to add a minimum of {{ limit }} redirect Urls.')]
+    #[Assert\Count(
+        min: 1,
+        max: 1000,
+        minMessage: 'You need to add a minimum of {{ limit }} redirect Url.|
+        You need to add a minimum of {{ limit }} redirect Urls.'
+    )]
     private ?array $redirectUrls = null;
 
     /**
@@ -106,7 +111,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * The subject type is comparable to the SAML name id format, that is why the Constants::NAME_ID_FORMAT_DEFAULT
      * (transient) is used to set the default value.
      */
-    #[Assert\Choice(callback: [\Surfnet\ServiceProviderDashboard\Domain\Entity\Constants::class, 'getValidNameIdFormats'], strict: true)]
+    #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]
     private string $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
@@ -150,21 +155,21 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
     private $administrativeContact;
 
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid]
     private $technicalContact;
 
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
     private $supportContact;
 

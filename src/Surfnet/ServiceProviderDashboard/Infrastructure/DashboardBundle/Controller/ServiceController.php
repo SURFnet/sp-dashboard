@@ -68,7 +68,7 @@ class ServiceController extends AbstractController
         private readonly EntityService $entityService,
         private readonly QueryTeamsRepository $queryClient,
         private readonly LoggerInterface $logger,
-        private readonly string $defaultStemName
+        private readonly string $defaultStemName,
     ) {
     }
 

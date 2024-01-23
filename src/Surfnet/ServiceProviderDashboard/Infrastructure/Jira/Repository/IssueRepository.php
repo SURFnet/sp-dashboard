@@ -39,7 +39,7 @@ class IssueRepository implements TicketServiceInterface
         private $projectKey,
         private $issueType,
         private $manageIdFieldName,
-        private $manageIdFieldLabel
+        private $manageIdFieldLabel,
     ) {
         Assert::stringNotEmpty($projectKey, 'Please set "jira_issue_project_key" in .env');
         Assert::stringNotEmpty($manageIdFieldName, 'Please set "jira_issue_manageid_fieldname" in .env');
@@ -136,7 +136,7 @@ class IssueRepository implements TicketServiceInterface
         PublishProductionCommandInterface $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue {
         // Nothing to do here.
     }

@@ -45,7 +45,7 @@ class RequestDeletePublishedEntityCommandHandler implements CommandHandler
         private readonly string $issueType,
         private readonly TicketService $ticketService,
         private readonly RequestStack $requestStack,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         Assert::stringNotEmpty($issueType, 'Please set "jira_issue_type" in .env');
     }

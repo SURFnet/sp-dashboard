@@ -21,8 +21,9 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Attribute;
 
-#[\Attribute]
+#[Attribute]
 class ValidSSLCertificate extends Constraint
 {
     public $message = 'validator.ssl_certificate.not_valid';

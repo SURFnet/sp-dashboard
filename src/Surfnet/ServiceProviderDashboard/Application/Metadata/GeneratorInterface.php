@@ -47,7 +47,7 @@ interface GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
-        string $updatedPart = ''
+        string $updatedPart = '',
     ): array;
 
     /**

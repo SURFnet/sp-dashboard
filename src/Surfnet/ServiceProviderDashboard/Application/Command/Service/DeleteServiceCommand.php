@@ -28,7 +28,7 @@ class DeleteServiceCommand implements Command
     public function __construct(
         private readonly int $id,
         private readonly Contact $contact,
-        private readonly ?int $teamId
+        private readonly ?int $teamId,
     ) {
     }
 

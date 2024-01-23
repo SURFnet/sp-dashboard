@@ -31,7 +31,7 @@ class ResourceServerCollection
         #[Assert\All([
             new Assert\NotBlank(),
         ], groups: ["Default", "production"])]
-        private readonly array $clientsIds
+        private readonly array $clientsIds,
     ) {
     }
 

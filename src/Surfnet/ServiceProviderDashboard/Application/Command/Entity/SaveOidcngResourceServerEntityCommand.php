@@ -46,7 +46,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private $status;
 
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
+    private ?Service $service = null;
 
     private bool $archived = false;
 
@@ -94,21 +94,21 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
     private $administrativeContact;
 
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid]
     private $technicalContact;
 
     /**
      * @var Contact
      */
-    #[Assert\Type(type: \Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact::class)]
+    #[Assert\Type(type: Contact::class)]
     #[Assert\Valid(groups: ['production'])]
     private $supportContact;
 
@@ -132,8 +132,10 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return SaveOidcngResourceServerEntityCommand
      */
-    public static function forCreateAction(Service $service, bool $isCopy = false): SaveOidcngResourceServerEntityCommand
-    {
+    public static function forCreateAction(
+        Service $service,
+        bool $isCopy = false,
+    ): SaveOidcngResourceServerEntityCommand {
         $command = new self();
         $command->service = $service;
         $command->isCopy = $isCopy;

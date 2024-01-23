@@ -30,7 +30,7 @@ class ManagePublishService
 
     public function __construct(
         private readonly PublishEntityRepository $testClient,
-        private readonly PublishEntityRepository $productionClient
+        private readonly PublishEntityRepository $productionClient,
     ) {
     }
 

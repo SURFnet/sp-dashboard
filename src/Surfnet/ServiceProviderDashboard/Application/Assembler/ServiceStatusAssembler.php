@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function round;
 
 class ServiceStatusAssembler
 {
@@ -94,7 +95,7 @@ class ServiceStatusAssembler
     public function __construct(
         Service $service,
         ServiceStatusService $serviceStatusService,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
         $states = $this->getStates($service, $serviceStatusService);
         $mappedStates = $this->mapStates($states);
@@ -243,7 +244,7 @@ class ServiceStatusAssembler
             }
             $total++;
         }
-        return \round($done/$total*100);
+        return round($done/$total*100);
     }
 
     private function getSanitizedHtmlTranslation(string $key)

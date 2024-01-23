@@ -31,7 +31,7 @@ class ServiceSwitcherExtension extends AbstractExtension
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly FormFactoryInterface $formFactory
+        private readonly FormFactoryInterface $formFactory,
     ) {
     }
 

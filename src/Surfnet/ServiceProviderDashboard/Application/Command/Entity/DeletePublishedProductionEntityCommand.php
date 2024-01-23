@@ -31,7 +31,7 @@ class DeletePublishedProductionEntityCommand implements Command
         private readonly string $manageId,
         #[Assert\NotBlank]
         #[Assert\Uuid]
-        private readonly string $protocol
+        private readonly string $protocol,
     ) {
     }
 

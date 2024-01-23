@@ -67,7 +67,7 @@ class EntityDetail
         private readonly ?bool $playgroundEnabled,
         private readonly ?int $accessTokenValidity,
         private readonly ?bool $isPublicClient,
-        private readonly ?array $resourceServers
+        private readonly ?array $resourceServers,
     ) {
     }
 
@@ -167,7 +167,7 @@ class EntityDetail
     /**
      * @return Contact
      */
-    public function getAdministrativeContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact
+    public function getAdministrativeContact(): ?Contact
     {
         return $this->administrativeContact;
     }
@@ -175,7 +175,7 @@ class EntityDetail
     /**
      * @return Contact
      */
-    public function getTechnicalContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact
+    public function getTechnicalContact(): ?Contact
     {
         return $this->technicalContact;
     }
@@ -183,7 +183,7 @@ class EntityDetail
     /**
      * @return Contact
      */
-    public function getSupportContact(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact
+    public function getSupportContact(): ?Contact
     {
         return $this->supportContact;
     }

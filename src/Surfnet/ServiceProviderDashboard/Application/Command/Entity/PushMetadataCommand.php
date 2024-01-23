@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 class PushMetadataCommand implements Command
 {
     public function __construct(
-        private readonly string $targetEnvironment
+        private readonly string $targetEnvironment,
     ) {
     }
 

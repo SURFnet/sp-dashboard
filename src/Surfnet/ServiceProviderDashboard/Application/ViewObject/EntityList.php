@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 class EntityList implements IteratorAggregate
 {
     public function __construct(
-        private array $entities
+        private array $entities,
     ) {
     }
 

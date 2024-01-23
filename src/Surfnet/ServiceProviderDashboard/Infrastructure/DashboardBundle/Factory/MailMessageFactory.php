@@ -37,7 +37,7 @@ class MailMessageFactory
         private readonly string $sender,
         private readonly string $receiver,
         private readonly string $noReply,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

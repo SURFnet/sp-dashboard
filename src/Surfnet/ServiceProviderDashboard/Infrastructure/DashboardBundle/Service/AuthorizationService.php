@@ -40,7 +40,7 @@ class AuthorizationService
         private readonly RequestStack $requestStack,
         private readonly TokenStorageInterface $tokenStorage,
         ApiConfig $manageTestConfig,
-        ApiConfig $manageProdConfig
+        ApiConfig $manageProdConfig,
     ) {
         $this->manageConfig = [
             'test' => $manageTestConfig,

@@ -32,7 +32,7 @@ class EntityAclService
     public $availableProviders = null;
 
     public function __construct(
-        private readonly IdentityProviderRepository $identityProviderRepository
+        private readonly IdentityProviderRepository $identityProviderRepository,
     ) {
     }
 

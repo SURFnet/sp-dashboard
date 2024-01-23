@@ -22,8 +22,9 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact as ContactEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Stringable;
 
-class Contact implements \Stringable
+class Contact implements Stringable
 {
     /**
      * @var string
@@ -45,9 +46,9 @@ class Contact implements \Stringable
      */
     private $phone;
 
-    public static function from(?ContactEntity $contact): ?\Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact
+    public static function from(?ContactEntity $contact): ?Contact
     {
-        if ($contact instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact) {
+        if ($contact instanceof ContactEntity) {
             $instance = new self;
             $instance->email = $contact->getEmail();
             $instance->firstName = $contact->getGivenName();
@@ -163,6 +164,11 @@ class Contact implements \Stringable
      */
     public function isContactSet(): bool
     {
-        return !(empty($this->firstName) && empty($this->lastName) && ($this->email === '' || $this->email === '0' || $this->email === [] || $this->email === null) && empty($this->phone));
+        return !(
+            empty($this->firstName)
+            && empty($this->lastName)
+            && ($this->email === '' || $this->email === '0' || $this->email === [] || $this->email === null)
+            && empty($this->phone)
+        );
     }
 }

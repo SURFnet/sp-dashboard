@@ -195,13 +195,13 @@ class QueryClient implements QueryManageRepository
             $searchResults = $this->doSearchQuery(
                 [
                 'metaDataFields.coin:service_team_id' => $teamName,
-                'state' => $state
+                'state' => $state,
                 ]
             );
 
             // For each search result, query manage to get the full SP entity data.
             return array_map(
-                fn($result): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity => $this->findByManageIdAndProtocol($result['_id'], $result['type']),
+                fn($result): ?ManageEntity => $this->findByManageIdAndProtocol($result['_id'], $result['type']),
                 $searchResults
             );
         } catch (HttpException $e) {
@@ -219,7 +219,7 @@ class QueryClient implements QueryManageRepository
             // Query manage to get the internal id of every SP entity with given team ID.
             $params = [
                 'metaDataFields.coin:service_team_id' => $teamName,
-                'state' => $state
+                'state' => $state,
             ];
 
             $searchResults = $this->client->post(
@@ -252,7 +252,7 @@ class QueryClient implements QueryManageRepository
     {
         $params = [
             'entityid' => $entityId,
-            'state' => $state
+            'state' => $state,
         ];
 
         $searchResults = $this->client->post(

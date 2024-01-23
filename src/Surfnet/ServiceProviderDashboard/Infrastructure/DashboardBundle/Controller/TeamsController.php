@@ -48,7 +48,7 @@ class TeamsController extends AbstractController
         private readonly PublishEntityClient $publishEntityClient,
         private readonly QueryClient $queryClient,
         private readonly TranslatorInterface $translator,
-        private readonly string $defaultStemName
+        private readonly string $defaultStemName,
     ) {
     }
 
@@ -109,10 +109,10 @@ class TeamsController extends AbstractController
         try {
             $this->publishEntityClient->resendInvitation($invitationId, $message);
             $response = new JsonResponse('ok');
-            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            $response->setStatusCode(Response::HTTP_OK);
         } catch (ResendInviteException $e) {
             $response = new JsonResponse($e->getMessage());
-            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_ACCEPTABLE);
+            $response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
         }
 
         return $response;
@@ -128,10 +128,10 @@ class TeamsController extends AbstractController
         try {
             $this->publishEntityClient->changeMembership($memberId, $newRole);
             $response = new JsonResponse('ok');
-            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            $response->setStatusCode(Response::HTTP_OK);
         } catch (Exception $e) {
             $response = new JsonResponse($e->getMessage());
-            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_ACCEPTABLE);
+            $response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
         }
 
         return $response;
@@ -147,10 +147,10 @@ class TeamsController extends AbstractController
         try {
             $this->deleteEntityClient->deleteMembership($memberId);
             $response = new JsonResponse('success');
-            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            $response->setStatusCode(Response::HTTP_OK);
         } catch (Exception $e) {
             $response = new JsonResponse($e->getMessage());
-            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_ACCEPTABLE);
+            $response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
         }
 
         return $response;

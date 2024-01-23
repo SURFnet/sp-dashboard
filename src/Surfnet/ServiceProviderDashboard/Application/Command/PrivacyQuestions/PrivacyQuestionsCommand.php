@@ -38,7 +38,7 @@ class PrivacyQuestionsCommand implements Command
 
     private ?int $mode = null;
     
-    private ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service $service = null;
+    private ?Service $service = null;
 
     /**
      * @var string
@@ -66,7 +66,7 @@ class PrivacyQuestionsCommand implements Command
     private $otherInfo;
 
     #[Assert\NotBlank]
-    #[Assert\Type(\Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType::class)]
+    #[Assert\Type(DpaType::class)]
     private DpaType $dpaType;
 
     #[Assert\Url]
@@ -163,7 +163,7 @@ class PrivacyQuestionsCommand implements Command
     /**
      * @return Service
      */
-    public function getService(): ?\Surfnet\ServiceProviderDashboard\Domain\Entity\Service
+    public function getService(): ?Service
     {
         return $this->service;
     }

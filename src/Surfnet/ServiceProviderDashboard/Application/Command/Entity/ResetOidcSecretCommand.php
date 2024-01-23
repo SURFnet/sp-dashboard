@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Co
 class ResetOidcSecretCommand implements Command
 {
     public function __construct(
-        private readonly ManageEntity $manageEntity
+        private readonly ManageEntity $manageEntity,
     ) {
     }
 

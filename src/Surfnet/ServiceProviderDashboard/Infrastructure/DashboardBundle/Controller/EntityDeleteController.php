@@ -59,7 +59,7 @@ class EntityDeleteController extends AbstractController
         name: 'entity_delete_published',
         defaults: [
             'manageId' => null,
-            'environment' => 'test'
+            'environment' => 'test',
         ],
         methods: ['GET', 'POST']
     )]
@@ -67,7 +67,7 @@ class EntityDeleteController extends AbstractController
         Request $request,
         $serviceId,
         $manageId,
-        $environment
+        $environment,
     ): RedirectResponse|Response {
         $this->denyAccessUnlessGranted(
             "MANAGE_ENTITY_ACCESS",
@@ -127,7 +127,7 @@ class EntityDeleteController extends AbstractController
         name: 'entity_delete_request',
         defaults: [
             'manageId' => null,
-            'environment' => 'production'
+            'environment' => 'production',
         ],
         methods: ['GET', 'POST']
     )]

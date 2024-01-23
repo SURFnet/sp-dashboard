@@ -29,7 +29,7 @@ class DeletePublishedTestEntityCommand implements Command
         #[Assert\NotBlank]
         #[Assert\Uuid]
         private readonly string $manageId,
-        private readonly string $protocol
+        private readonly string $protocol,
     ) {
     }
 

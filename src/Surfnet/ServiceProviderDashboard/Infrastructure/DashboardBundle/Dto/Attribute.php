@@ -46,7 +46,7 @@ class Attribute implements AttributeInterface
         string $id,
         array $excludeOnEntityType,
         array $translations,
-        array $urns
+        array $urns,
     ) {
         $this->id = $id;
         $this->excludeOnEntityType = $excludeOnEntityType;

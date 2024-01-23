@@ -35,7 +35,7 @@ class EntityChangeRequestController extends AbstractController
         ChangeRequestService $service,
         int $serviceId,
         string $manageId,
-        string $environment
+        string $environment,
     ): Response {
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $entityServiceId = $entity->getService()->getId();

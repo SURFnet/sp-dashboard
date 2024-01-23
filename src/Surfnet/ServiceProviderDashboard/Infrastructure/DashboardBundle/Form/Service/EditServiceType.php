@@ -40,7 +40,7 @@ class EditServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'General information'
+                        'label' => 'General information',
                     ]
                 )
                     ->add('name')
@@ -66,7 +66,7 @@ class EditServiceType extends AbstractType
                         [
                             'required' => false,
                             'label' => 'service.form.label.institution_id',
-                            'attr' => ['class' => 'institution-id-container']
+                            'attr' => ['class' => 'institution-id-container'],
                         ]
                     )
                     ->add(
@@ -99,7 +99,7 @@ class EditServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'Status indicators'
+                        'label' => 'Status indicators',
                     ]
                 )
                     ->add('serviceType', ServiceTypeType::class)
@@ -113,7 +113,7 @@ class EditServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'Teams'
+                        'label' => 'Teams',
                     ]
                 )
                     ->add(

@@ -36,7 +36,7 @@ class IdentityProviderClient implements IdentityProviderRepository
 {
     public function __construct(
         private readonly HttpClient $client,
-        private readonly Config $manageConfig
+        private readonly Config $manageConfig,
     ) {
     }
 

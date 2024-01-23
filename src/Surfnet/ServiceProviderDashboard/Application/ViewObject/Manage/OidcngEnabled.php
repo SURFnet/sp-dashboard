@@ -28,7 +28,7 @@ use Webmozart\Assert\Assert;
 class OidcngEnabled
 {
     public function __construct(
-        private readonly string $enabled = ''
+        private readonly string $enabled = '',
     ) {
         Assert::boolean($enabled, 'Please set the oidcng enabled config value in .env');
     }

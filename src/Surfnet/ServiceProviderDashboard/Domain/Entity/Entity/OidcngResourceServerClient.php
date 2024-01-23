@@ -47,7 +47,7 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     public function __construct(
         private string $clientId,
         private ?string $clientSecret,
-        private array $grants
+        private array $grants,
     ) {
         $this->clientId = strtolower($clientId);
     }

@@ -53,9 +53,8 @@ class Parser implements ParserInterface
         private readonly CertificateParserInterface $certParser,
         private readonly AttributeService $attributeService,
         private readonly string $schemaLocation,
-        private readonly LoggerInterface $logger
-    )
-    {
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -263,9 +262,8 @@ class Parser implements ParserInterface
     private function setMultilingualMetadataProperty(
         Metadata $metadata,
         SimpleXMLElement $element,
-        string $propertyName
-    ): void
-    {
+        string $propertyName,
+    ): void {
         $lang = $element->attributes(static::NS_LANG);
         $lang = $lang['lang'];
 

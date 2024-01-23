@@ -73,7 +73,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         new Assert\Url(
             message: "url.notSecure",
             protocols: ["https"]
-        )
+        ),
     ])]
     #[Assert\Count(min: 1, max: 10, minMessage: 'At least one ACS location is required', maxMessage: '{{ limit }} ACS locations or less are allowed')]
     private ?array $acsLocations = null;

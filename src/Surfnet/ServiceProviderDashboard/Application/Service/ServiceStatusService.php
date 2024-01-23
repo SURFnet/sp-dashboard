@@ -28,7 +28,7 @@ class ServiceStatusService
 {
     public function __construct(
         private readonly PrivacyQuestionsRepository $privacyStatusRepository,
-        private readonly EntityService $entityService
+        private readonly EntityService $entityService,
     ) {
     }
 

@@ -105,7 +105,7 @@ class MetaData implements Comparable
         private readonly ContactList $contacts,
         private readonly Organization $organization,
         private readonly Coin $coin,
-        private readonly Logo $logo
+        private readonly Logo $logo,
     ) {
     }
 

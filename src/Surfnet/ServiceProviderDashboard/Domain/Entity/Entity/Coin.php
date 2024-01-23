@@ -64,7 +64,7 @@ class Coin implements Comparable
         private null|string|int $excludeFromPush,
         private ?string $applicationUrl,
         private ?string $eula,
-        private ?int $oidcClient
+        private ?int $oidcClient,
     ) {
     }
 

@@ -55,7 +55,7 @@ class EntityService implements EntityServiceInterface
         private readonly ApiConfig $prodManageConfig,
         private readonly RouterInterface $router,
         private readonly LoggerInterface $logger,
-        private readonly string $removalStatus
+        private readonly string $removalStatus,
     ) {
     }
 

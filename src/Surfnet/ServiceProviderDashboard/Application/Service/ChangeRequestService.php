@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestReposi
 class ChangeRequestService implements ChangeRequestServiceInterface
 {
     public function __construct(
-        private readonly EntityChangeRequestRepository $repository
+        private readonly EntityChangeRequestRepository $repository,
     ) {
     }
 

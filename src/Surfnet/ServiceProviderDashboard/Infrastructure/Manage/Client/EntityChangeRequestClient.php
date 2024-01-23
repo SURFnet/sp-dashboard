@@ -34,7 +34,7 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
     public function __construct(
         private readonly HttpClientInterface $client,
         private readonly JsonGeneratorStrategy $generator,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use function sprintf;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 
 /**
  * The OidcngResourceServerJsonGenerator generates oauth20-rs resource server entity json
@@ -39,7 +40,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 {
     public function __construct(
         private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
     ) {
     }
 
@@ -55,7 +56,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
-        string $updatedPart = ''
+        string $updatedPart = '',
     ): array {
         return [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $differences, $workflowState),
@@ -68,14 +69,14 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     public function generateEntityChangeRequest(
         ManageEntity $entity,
         EntityDiff $differences,
-        ContactEntity $contact
+        ContactEntity $contact,
     ): array {
         $payload = [
             'metaDataId' => $entity->getId(),
             'type' => 'oauth20_rs',
             'pathUpdates' => $this->generateForChangeRequest($differences),
             'auditData' => [
-                'user' => $contact->getEmailAddress()
+                'user' => $contact->getEmailAddress(),
             ],
         ];
 
@@ -103,7 +104,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     private function generateDataForExistingEntity(
         ManageEntity $entity,
         EntityDiff $differences,
-        string $workflowState
+        string $workflowState,
     ): array {
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
@@ -158,7 +159,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     private function generateOidcClient(ManageEntity $entity): array
     {
         $metadata = [];
-        if ($entity->getOidcClient() instanceof \Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface) {
+        if ($entity->getOidcClient() instanceof OidcClientInterface) {
             $secret = $entity->getOidcClient()->getClientSecret();
             if ($secret !== '' && $secret !== '0') {
                 $metadata['secret'] = $secret;

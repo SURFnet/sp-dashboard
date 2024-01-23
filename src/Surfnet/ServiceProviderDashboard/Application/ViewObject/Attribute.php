@@ -28,13 +28,21 @@ class Attribute
 {
     final public const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
-    public function __construct(private readonly string $id, private readonly string $saml20Label, private readonly string $saml20Info, private readonly string $oidcngLabel, private readonly string $oidcngInfo, private readonly string $name, private readonly array $urns, private readonly array $excludeOnEntityType)
-    {
+    public function __construct(
+        private readonly string $id,
+        private readonly string $saml20Label,
+        private readonly string $saml20Info,
+        private readonly string $oidcngLabel,
+        private readonly string $oidcngInfo,
+        private readonly string $name,
+        private readonly array $urns,
+        private readonly array $excludeOnEntityType,
+    ) {
     }
 
     public static function fromAttribute(
         AttributeDto $attribute,
-        AttributeTypeInformation $information
+        AttributeTypeInformation $information,
     ): Attribute {
 
         return new self(

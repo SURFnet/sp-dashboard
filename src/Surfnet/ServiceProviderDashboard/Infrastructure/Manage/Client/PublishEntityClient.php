@@ -37,7 +37,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         private readonly HttpClientInterface $client,
         private readonly JsonGeneratorStrategy $generator,
         private readonly ApiConfig $manageConfig,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

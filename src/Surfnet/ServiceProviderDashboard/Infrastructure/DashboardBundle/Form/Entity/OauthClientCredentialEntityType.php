@@ -101,7 +101,7 @@ class OauthClientCredentialEntityType extends AbstractType
                         'max' => 86400,
                         'step' => 60,
                         'placeholder' => 3600,
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -199,7 +199,7 @@ class OauthClientCredentialEntityType extends AbstractType
                                 'by_reference' => false,
                                 'attr' => [
                                     'data-help' => 'entity.edit.information.oidcngResourceServers',
-                                    'class' => 'wide'
+                                    'class' => 'wide',
                                 ],
                                 'choice_attr' => fn(): array => ['class' => 'decorated'],
                             ]

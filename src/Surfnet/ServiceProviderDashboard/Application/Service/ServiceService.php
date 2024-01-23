@@ -25,7 +25,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 class ServiceService
 {
     public function __construct(
-        private readonly ServiceRepository $services
+        private readonly ServiceRepository $services,
     ) {
     }
 

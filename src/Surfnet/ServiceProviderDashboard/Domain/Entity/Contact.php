@@ -23,6 +23,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
@@ -30,7 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD.UnusedPrivateField Fields of this class are not yet used, remove this once they are used)
  * @method                                    string getUserIdentifier()
  */
-#[ORM\Entity(repositoryClass: \Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository::class)]
+#[ORM\Entity(repositoryClass: ContactRepository::class)]
 class Contact
 {
     #[ORM\Id]
@@ -50,7 +51,7 @@ class Contact
     public function __construct(
         #[ORM\Column(length: 150)] private readonly string $nameId,
         #[ORM\Column(length: 255)] private string          $emailAddress,
-        #[ORM\Column(length: 255)] private string          $displayName
+        #[ORM\Column(length: 255)] private string          $displayName,
     ) {
         $this->services = new ArrayCollection();
     }

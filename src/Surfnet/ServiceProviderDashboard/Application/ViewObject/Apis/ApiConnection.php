@@ -25,7 +25,7 @@ class ApiConnection
     public function __construct(
         private readonly string $host,
         private readonly string $username,
-        private readonly string $password
+        private readonly string $password,
     ) {
     }
 

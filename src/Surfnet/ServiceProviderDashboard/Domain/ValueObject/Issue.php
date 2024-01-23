@@ -86,7 +86,7 @@ class Issue implements JsonSerializable
         return [
             self::IDENTIFIER_KEY => $this->key,
             self::IDENTIFIER_ISSUE_TYPE => $this->issueType,
-            self::IDENTIFIER_TICKET_STATUS => $this->ticketStatus
+            self::IDENTIFIER_TICKET_STATUS => $this->ticketStatus,
         ];
     }
 }

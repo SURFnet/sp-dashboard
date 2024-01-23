@@ -50,7 +50,7 @@ class Organization implements Comparable
         private ?string $urlEn,
         private ?string $nameNl,
         private ?string $displayNameNl,
-        private ?string $urlNl
+        private ?string $urlNl,
     ) {
     }
 

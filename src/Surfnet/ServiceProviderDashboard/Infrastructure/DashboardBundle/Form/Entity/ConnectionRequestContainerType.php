@@ -43,8 +43,8 @@ class ConnectionRequestContainerType extends AbstractType
                     'allow_delete' => true,
                     'entry_type' => ConnectionRequestType::class,
                     'entry_options' => [
-                        'attr' => ['class' => 'connection-request']
-                    ]
+                        'attr' => ['class' => 'connection-request'],
+                    ],
                 ]
             )
             ->add(
@@ -61,8 +61,8 @@ class ConnectionRequestContainerType extends AbstractType
                 [
                 'label' => 'Skip',
                 'attr' => [
-                    'class' => 'button'
-                ]
+                    'class' => 'button',
+                ],
                 ]
             );
     }

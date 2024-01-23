@@ -62,7 +62,7 @@ class EntityPublishedController extends AbstractController
         $parameters = [
             'entityName' => $entity->getMetaData()->getNameEn(),
             'showOidcPopup' => false,
-            'publishedEntity' => $entity
+            'publishedEntity' => $entity,
         ];
 
         if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {

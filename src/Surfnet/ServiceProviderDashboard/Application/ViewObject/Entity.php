@@ -54,7 +54,7 @@ class Entity
         private $protocol,
         $isReadOnly,
         $hasChangeRequests,
-        private readonly RouterInterface $router
+        private readonly RouterInterface $router,
     ) {
         $this->actions = new EntityActions(
             $this->id,
@@ -73,7 +73,7 @@ class Entity
     public static function fromManageTestResult(
         ManageEntity $result,
         RouterInterface $router,
-        int $serviceId
+        int $serviceId,
     ): self {
         $formattedContact = self::formatManageContact($result);
         $protocol = $result->getProtocol()->getProtocol();
@@ -99,7 +99,7 @@ class Entity
         ManageEntity $result,
         RouterInterface $router,
         int $serviceId,
-        bool $hasChangeRequests
+        bool $hasChangeRequests,
     ): self {
         $formattedContact = self::formatManageContact($result);
 
@@ -233,7 +233,7 @@ class Entity
             [
                 'id' => $this->getId(),
                 'serviceId' => $this->getActions()->getServiceId(),
-                'manageTarget' => $this->getEnvironment()
+                'manageTarget' => $this->getEnvironment(),
             ]
         );
     }

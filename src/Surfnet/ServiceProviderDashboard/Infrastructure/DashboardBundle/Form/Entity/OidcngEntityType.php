@@ -41,8 +41,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OidcngEntityType extends AbstractType
 {
-    public function __construct(private readonly OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory, private readonly AttributeTypeFactory $attributeTypeFactory)
-    {
+    public function __construct(
+        private readonly OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory,
+        private readonly AttributeTypeFactory $attributeTypeFactory,
+    ) {
     }
 
     /**
@@ -59,7 +61,7 @@ class OidcngEntityType extends AbstractType
             FormType::class,
             [
             'inherit_data' => true,
-            'attr' => ['class' => 'attributes']
+            'attr' => ['class' => 'attributes'],
             ]
         );
         $this->buildAttributeTypes($attributesContainer);
@@ -139,7 +141,7 @@ class OidcngEntityType extends AbstractType
                         'max' => 86400,
                         'step' => 60,
                         'placeholder' => 3600,
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -150,7 +152,7 @@ class OidcngEntityType extends AbstractType
                     'attr' => [
                         'required' => false,
                         'data-help' => 'entity.edit.information.isPublicClient',
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -265,7 +267,7 @@ class OidcngEntityType extends AbstractType
                     'attr' => [
                         'class' => 'requested',
                         'data-help' => 'entity.edit.information.enablePlayground',
-                    ]
+                    ],
                 ]
             );
         $builder->add($metadata);
@@ -291,7 +293,7 @@ class OidcngEntityType extends AbstractType
                                 'by_reference' => false,
                                 'attr' => [
                                     'data-help' => 'entity.edit.information.oidcngResourceServers',
-                                    'class' => 'wide'
+                                    'class' => 'wide',
                                 ],
                                 'choice_attr' => fn(): array => ['class' => 'decorated'],
                             ]

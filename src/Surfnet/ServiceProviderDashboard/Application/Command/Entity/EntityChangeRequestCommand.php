@@ -30,7 +30,7 @@ class EntityChangeRequestCommand implements PublishProductionCommandInterface, C
     public function __construct(
         #[Assert\Type(ManageEntity::class)]
         private readonly ManageEntity $manageEntity,
-        private readonly Contact $applicant
+        private readonly Contact $applicant,
     ) {
     }
 

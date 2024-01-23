@@ -22,6 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use function in_array;
+use Stringable;
 
 /**
  * Representation of the different DPA types Data Processing Agreement
@@ -46,7 +47,7 @@ use function in_array;
  *    "info": "Determines what DPA this service has to offer"
  *  }
  */
-class DpaType implements \Stringable
+class DpaType implements Stringable
 {
     private const DPA_TYPE_NOT_APPLICABLE = 'dpa_not_applicable';
     private const DPA_TYPE_MODEL_SURF = 'dpa_model_surf';
@@ -61,7 +62,7 @@ class DpaType implements \Stringable
         'privacy.form.dpaType.choice.through-surf' => self::DPA_TYPE_MODEL_SURF,
         'privacy.form.dpaType.choice.in-surf-agreement' => self::DPA_TYPE_IN_SURF_AGREEMENT,
         'privacy.form.dpaType.choice.dpa-supplied-by-service' => self::DPA_TYPE_SUPPLIED_BY_SERVICE,
-        'privacy.form.dpaType.choice.other' => self::DPA_TYPE_OTHER
+        'privacy.form.dpaType.choice.other' => self::DPA_TYPE_OTHER,
     ];
 
     private function __construct(public readonly string $type)

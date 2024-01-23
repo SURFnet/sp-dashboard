@@ -29,7 +29,7 @@ class UniqueTeamNameValidator extends ConstraintValidator
 {
     public function __construct(
         private readonly QueryTeamsRepository $queryService,
-        private readonly string $urnPrefix
+        private readonly string $urnPrefix,
     ) {
     }
 

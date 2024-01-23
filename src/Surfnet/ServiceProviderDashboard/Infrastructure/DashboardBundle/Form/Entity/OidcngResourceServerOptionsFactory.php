@@ -29,8 +29,12 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\Runtim
 
 class OidcngResourceServerOptionsFactory
 {
-    public function __construct(private readonly QueryManageRepository $testEntityRepository, private readonly QueryManageRepository $productionRepository, private readonly string                $testPublicationState, private readonly string                $productionPublicationState)
-    {
+    public function __construct(
+        private readonly QueryManageRepository $testEntityRepository,
+        private readonly QueryManageRepository $productionRepository,
+        private readonly string                $testPublicationState,
+        private readonly string                $productionPublicationState,
+    ) {
     }
 
 

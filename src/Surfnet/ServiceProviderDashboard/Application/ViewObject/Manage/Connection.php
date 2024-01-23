@@ -27,7 +27,7 @@ class Connection
     public function __construct(
         private readonly string $host,
         private readonly string $username,
-        private readonly string $password
+        private readonly string $password,
     ) {
         Assert::stringNotEmpty($host, 'Please set the manage host in .env');
         Assert::stringNotEmpty($username, 'Please set the manage username in .env');

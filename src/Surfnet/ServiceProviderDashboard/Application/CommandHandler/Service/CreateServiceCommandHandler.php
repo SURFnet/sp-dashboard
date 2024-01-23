@@ -35,7 +35,7 @@ class CreateServiceCommandHandler implements CommandHandler
         private readonly PublishTeamsRepository $publishEntityClient,
         private readonly TranslatorInterface $translator,
         private readonly string $prefixPart1,
-        private readonly string $prefixPart2
+        private readonly string $prefixPart2,
     ) {
     }
 
@@ -84,7 +84,7 @@ class CreateServiceCommandHandler implements CommandHandler
             'description' => $this->translator->trans(
                 'teams.create.description',
                 [
-                '%teamName%' => $name
+                '%teamName%' => $name,
                 ]
             ),
             'personalNote' => $this->translator->trans('teams.create.personalNote'),

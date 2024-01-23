@@ -31,7 +31,7 @@ class PrivacyQuestionsCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly PrivacyQuestionsRepository $repository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

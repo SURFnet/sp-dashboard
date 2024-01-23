@@ -70,7 +70,7 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
             $container->getParameter('env(jira_issue_project_key)'),
             $container->getParameter('env(jira_issue_type)'),
             $container->getParameter('env(jira_issue_manageid_fieldname)'),
-            $container->getParameter('env(jira_issue_manageid_field_label)')
+            $container->getParameter('env(jira_issue_manageid_field_label)'),
             ]
         );
         $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);
@@ -85,7 +85,7 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
         $service->setClass(DevelopmentIssueRepository::class);
         $service->setArguments(
             [
-            $container->getParameter('env(jira_test_mode_storage_path)')
+            $container->getParameter('env(jira_test_mode_storage_path)'),
             ]
         );
         $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);

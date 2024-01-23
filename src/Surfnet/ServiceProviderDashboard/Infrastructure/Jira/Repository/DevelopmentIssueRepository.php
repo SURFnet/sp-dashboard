@@ -67,7 +67,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         PublishProductionCommandInterface $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue {
         return new Issue('KEY-27', 'fake-type', Issue::STATUS_OPEN);
     }
@@ -131,7 +131,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
             json_encode(
                 [
                     'data' => $this->data,
-                    'failIssueCreation' => $this->failIssueCreation
+                    'failIssueCreation' => $this->failIssueCreation,
                 ]
             )
         );

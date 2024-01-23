@@ -34,7 +34,7 @@ class EntityDetailController extends AbstractController
     public function __construct(
         private readonly EntityServiceInterface $entityService,
         private readonly AuthorizationService $authorizationService,
-        private readonly EntityDetailFactory $entityDetailFactory
+        private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
 
