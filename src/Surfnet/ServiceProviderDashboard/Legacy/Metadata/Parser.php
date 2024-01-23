@@ -1,6 +1,6 @@
 <?php
 
-//declare(strict_types = 1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2017 SURFnet B.V.
@@ -49,19 +49,22 @@ class Parser implements ParserInterface
 
     final public const NAMEID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
 
-    public function __construct(private readonly CertificateParserInterface $certParser, private readonly AttributeService $attributeService, private readonly string $schemaLocation, private readonly LoggerInterface $logger)
+    public function __construct(
+        private readonly CertificateParserInterface $certParser,
+        private readonly AttributeService $attributeService,
+        private readonly string $schemaLocation,
+        private readonly LoggerInterface $logger
+    )
     {
     }
 
     /**
-     * @param  string $xml
-     * @return Metadata
      * @throws InvalidArgumentException
      * @throws ParserException
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function parseXml($xml): Metadata
+    public function parseXml(string $xml): Metadata
     {
         $this->validate($xml);
         $xml = simplexml_load_string($xml);
@@ -114,10 +117,7 @@ class Parser implements ParserInterface
         return $metadata;
     }
 
-    /**
-     * @param SimpleXMLElement $descriptor
-     */
-    private function parseNameIdFormat($descriptor, Metadata $metadata): void
+    private function parseNameIdFormat(SimpleXMLElement $descriptor, Metadata $metadata): void
     {
         $metadata->nameIdFormat = self::NAMEID_FORMAT_TRANSIENT;
 
@@ -127,11 +127,9 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param SimpleXMLElement $descriptor
-     *
      * @throws InvalidArgumentException
      */
-    private function parseAssertionConsumerService($descriptor, Metadata $metadata): void
+    private function parseAssertionConsumerService(SimpleXMLElement $descriptor, Metadata $metadata): void
     {
         if (!property_exists($descriptor, 'AssertionConsumerService') || $descriptor->AssertionConsumerService === null) {
             throw new InvalidArgumentException('Invalid metadata XML');
@@ -152,10 +150,7 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param SimpleXMLElement $descriptor
-     */
-    private function parseCertificate(object $descriptor, Metadata $metadata): void
+    private function parseCertificate(SimpleXMLElement $descriptor, Metadata $metadata): void
     {
         foreach ($descriptor->KeyDescriptor->children(self::XMLDSIGNS) as $keyInfo) {
             $metadata->certificate = $this->certParser->parse((string)$keyInfo->X509Data->X509Certificate);
@@ -164,11 +159,9 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param SimpleXMLElement $descriptor
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function parseUi(object $descriptor, Metadata $metadata): void
+    private function parseUi(SimpleXMLElement $descriptor, Metadata $metadata): void
     {
         $ui = $descriptor->Extensions->children(self::SAML2_XML_MDUI_UI_INFO_NS)->UIInfo;
 
@@ -226,10 +219,7 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param SimpleXMLElement $persons
-     */
-    private function parseContactPersons($persons, Metadata $metadata): void
+    private function parseContactPersons(SimpleXMLElement $persons, Metadata $metadata): void
     {
         foreach ($persons as $person) {
             $contact = new Contact();
@@ -255,10 +245,7 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param SimpleXMLElement $organization
-     */
-    private function parseOrganization($organization, Metadata $metadata): void
+    private function parseOrganization(SimpleXMLElement $organization, Metadata $metadata): void
     {
         foreach ($organization->OrganizationName as $element) {
             $this->setMultilingualMetadataProperty($metadata, $element, 'organizationName');
@@ -273,10 +260,11 @@ class Parser implements ParserInterface
         }
     }
 
-    /**
-     * @param SimpleXMLElement $element
-     */
-    private function setMultilingualMetadataProperty(Metadata $metadata, $element, string $propertyName): void
+    private function setMultilingualMetadataProperty(
+        Metadata $metadata,
+        SimpleXMLElement $element,
+        string $propertyName
+    ): void
     {
         $lang = $element->attributes(static::NS_LANG);
         $lang = $lang['lang'];
@@ -285,10 +273,7 @@ class Parser implements ParserInterface
         $metadata->{$propertyNameWithLanguage} = (string)$element;
     }
 
-    /**
-     * @param SimpleXMLElement $descriptor
-     */
-    private function parseAttributes(object $descriptor, Metadata $metadata): void
+    private function parseAttributes(SimpleXMLElement $descriptor, Metadata $metadata): void
     {
         foreach ($descriptor->AttributeConsumingService->RequestedAttribute as $requestedAttribute) {
             $attr = new Attribute();
@@ -306,11 +291,9 @@ class Parser implements ParserInterface
     }
 
     /**
-     * @param string $xml
-     *
      * @throws ParserException
      */
-    private function validate($xml): void
+    private function validate(string $xml): void
     {
         libxml_use_internal_errors(true);
 
@@ -345,14 +328,13 @@ class Parser implements ParserInterface
      * <EntityDescriptor>. In the latter case, the root element MUST
      * be <EntitiesDescriptor>.
      *
-     * @return bool
      */
     private function describesMultipleEntities(SimpleXMLElement $xml): bool
     {
         return $xml->getName() === 'EntitiesDescriptor';
     }
 
-    private function countEntities(SimpleXMLElement $xml)
+    private function countEntities(SimpleXMLElement $xml): int
     {
         return $xml->children(self::NS_MD)->count();
     }
