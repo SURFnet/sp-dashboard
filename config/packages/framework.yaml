@@ -1,5 +1,6 @@
 framework:
     secret: '%env(APP_SECRET)%'
+    handle_all_throwables: true
     csrf_protection: true
     trusted_hosts: ~
     session:
