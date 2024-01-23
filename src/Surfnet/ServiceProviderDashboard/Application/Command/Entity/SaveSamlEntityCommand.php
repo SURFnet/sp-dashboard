@@ -68,15 +68,13 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
      */
     private string $pastedMetadata;
 
-    /**
-     * @Assert\All({
-     *      @Assert\NotBlank(),
-     *      @Assert\Url(
-     *          protocols={"https"},
-     *          message = "url.notSecure"
-     *      )
-     * })
-     */
+    #[Assert\All([
+        new Assert\NotBlank(),
+        new Assert\Url(
+            message: "url.notSecure",
+            protocols: ["https"]
+        )
+    ])]
     #[Assert\Count(min: 1, max: 10, minMessage: 'At least one ACS location is required', maxMessage: '{{ limit }} ACS locations or less are allowed')]
     private ?array $acsLocations = null;
 

@@ -32,19 +32,16 @@ class UpdateEntityAclCommand implements Command
         private readonly ManageEntity $manageEntity,
         /**
          * @var                                                                                 IdentityProvider[]
-         * @Assert\All({
-         * @Assert\NotBlank(),
-         * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider")
-         * })
          */
+        #[Assert\All([
+            new Assert\NotBlank(),
+            new Assert\Type(type: IdentityProvider::class)
+        ])]
         private array $selected,
         private bool $selectAll
     ) {
     }
 
-    /**
-     * @return string
-     */
     public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;

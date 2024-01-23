@@ -28,11 +28,9 @@ class ResourceServerCollection
      * @param string[] $clientsIds
      */
     public function __construct(
-        /**
-         * @Assert\All({
-         * @Assert\NotBlank
-         * }, groups={"Default", "production"})
-         */
+        #[Assert\All([
+            new Assert\NotBlank(),
+        ], groups: ["Default", "production"])]
         private readonly array $clientsIds
     ) {
     }
