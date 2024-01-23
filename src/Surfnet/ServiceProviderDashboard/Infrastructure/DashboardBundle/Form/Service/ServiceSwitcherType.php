@@ -34,11 +34,11 @@ class ServiceSwitcherType extends AbstractType
     {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $list = $this->authorizationService->getAllowedServiceNamesById();
         if (count($list) <= 1) {
-            return '';
+            return;
         }
 
         $selected = $this->authorizationService->getActiveServiceId();
