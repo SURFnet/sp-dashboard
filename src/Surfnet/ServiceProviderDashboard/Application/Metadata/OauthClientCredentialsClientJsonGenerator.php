@@ -39,6 +39,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
  * @SuppressWarnings(PHPMD.ElseExpression)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.LongClassName)
+ * @SuppressWarnings(PHPMD)
  */
 class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
 {

@@ -32,6 +32,9 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class Parser implements ParserInterface
 {
     final public const NS_LANG = 'http://www.w3.org/XML/1998/namespace';

@@ -35,6 +35,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
  * The OidcngResourceServerJsonGenerator generates oauth20-rs resource server entity json
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD)
  */
 class OidcngResourceServerJsonGenerator implements GeneratorInterface
 {

@@ -33,8 +33,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
 /**
  * The JsonGenerator is able to generate Manage SAML 2.0 JSON metadata
  *
- * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD)
  */
 class JsonGenerator implements GeneratorInterface
 {
@@ -88,9 +87,6 @@ class JsonGenerator implements GeneratorInterface
         return $payload;
     }
 
-    /**
-     * @return array
-     */
     private function generateDataForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         // the type for entities is always saml because manage is using saml internally
@@ -234,8 +230,6 @@ class JsonGenerator implements GeneratorInterface
 
     /**
      * Strip header and footer from certificate data.
-     *
-     * @return string
      */
     private function stripCertificateEnvelope(string $certData): string
     {
@@ -245,9 +239,6 @@ class JsonGenerator implements GeneratorInterface
         return trim($certData);
     }
 
-    /**
-     * @return array
-     */
     private function generateAllContactsMetadata(ManageEntity $entity): array
     {
         $metadata = [];
@@ -293,9 +284,6 @@ class JsonGenerator implements GeneratorInterface
         return array_filter($metadata);
     }
 
-    /**
-     * @return array
-     */
     private function generateContactMetadata(string $contactType, int $index, Contact $contact): array
     {
         $metadata = [
@@ -329,8 +317,6 @@ class JsonGenerator implements GeneratorInterface
      * determine the dimensions in those situations.
      *
      * @SuppressWarnings(PHPMD.ErrorControlOperator)
-     *
-     * @return array
      */
     private function generateLogoMetadata(ManageEntity $entity): array
     {
