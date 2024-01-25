@@ -20,14 +20,10 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
-use Webmozart\Assert\Assert;
-
 class ChangeRequestDtoCollection
 {
     public function __construct(private array $changeRequests)
     {
-        Assert::isArray($changeRequests);
-
         foreach ($changeRequests as $id => $changeRequest) {
             $this->changeRequests[$id] = ChangeRequestDto::fromChangeRequest($changeRequest);
         }
