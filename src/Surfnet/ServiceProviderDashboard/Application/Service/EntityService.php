@@ -22,7 +22,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
@@ -36,6 +35,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Uid\Uuid;
 use function sprintf;
 
 /**
@@ -59,9 +59,9 @@ class EntityService implements EntityServiceInterface
     ) {
     }
 
-    public function createEntityUuid()
+    public function createEntityUuid(): string
     {
-        return Uuid::uuid1()->toString();
+        return Uuid::v1()->toRfc4122();
     }
 
     /**

@@ -22,10 +22,10 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFi
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
+use Symfony\Component\Uid\Uuid;
 
 class WebTestFixtures extends Fixture
 {
@@ -57,9 +57,9 @@ class WebTestFixtures extends Fixture
         $service = new Service();
         $service->setName($name);
         $service->setTeamName($teamName);
-        $service->setGuid(Uuid::uuid4());
-        $service->setInstitutionId(Uuid::uuid4());
-        $service->setGuid(Uuid::uuid4());
+        $service->setGuid(Uuid::v4());
+        $service->setInstitutionId(Uuid::v4());
+        $service->setGuid(Uuid::v4());
         $service->setOrganizationNameEn($name);
         $service->setOrganizationNameNl($name);
         $service->setContractSigned('no');

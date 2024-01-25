@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class ServiceCreateTest extends WebTestCase
 {
@@ -50,7 +50,7 @@ class ServiceCreateTest extends WebTestCase
         self::$pantherClient->request('GET', '/service/create');
         $form = self::findBy('form[name="dashboard_bundle_service_type"]');
         self::findBy('#dashboard_bundle_service_type_serviceStatus_serviceType_0')->click();
-        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][guid]"]', Uuid::uuid4()->toString());
+        self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][guid]"]', Uuid::v4()->toRfc4122());
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][name]"]', 'The A Team');
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameNl]"]', 'team-a');
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[general][organizationNameEn]"]', 'team-a');
