@@ -10,6 +10,6 @@ CMD ["/usr/local/sbin/start.sh"]
 FROM ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest as spddev
 COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
 COPY ./conf/10-override-php.ini /usr/local/etc/php/conf.d/
-COPY ./conf/000-default-dev.conf /usr/local/apache2/conf/000-default.conf
+COPY ./conf/000-default.conf /usr/local/apache2/conf/000-default.conf
 RUN mv /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini && \
     /usr/sbin/update-ca-certificates

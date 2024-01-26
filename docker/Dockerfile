@@ -16,4 +16,6 @@ RUN tar -xf /var/www/html/output.tar && \
   mkdir -p /var/www/html/var/sessions && \
   chown -R www-data /var/www/html/var/cache && \
   chown -R www-data /var/www/html/var/log && \
-  chown -R www-data /var/www/html/var/sessions
+  chown -R www-data /var/www/html/var/sessions && \
+  touch /var/www/html/.env
+
