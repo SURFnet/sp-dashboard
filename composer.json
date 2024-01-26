@@ -157,6 +157,23 @@
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
+  "archive": {
+    "exclude": [
+      "*",
+      ".*",
+      "*/Tests/*",
+      "!/assets",
+      "!/bin",
+      "!/config",
+      "!/migrations",
+      "!/public",
+      "!/src",
+      "!/templates",
+      "!/translations",
+      "!/var/cache/prod",
+      "!/vendor"
+    ]
+  },
   "extra": {
     "symfony": {
       "allow-contrib": false,
