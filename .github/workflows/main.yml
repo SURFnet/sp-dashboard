@@ -34,12 +34,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set docker metadata for php fpm container
-        id: metaphpfpm
+      - name: Set docker metadata for the container
+        id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/surfnet/sp-dashboard/spdashboard_php-fpm
+            ghcr.io/surfnet/sp-dashboard/spdashboard
           tags: |
             type=schedule
             type=ref,event=branch
@@ -48,34 +48,11 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
-      - name: Set docker metadata for web container
-        id: metahttpd
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ghcr.io/surfnet/sp-dashboard/spdashboard_web
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Build the php-fpm container and push to GitHub Packages
+      - name: Build the container and push to GitHub Packages
         uses: docker/build-push-action@v4
         with:
           context: .
           file: docker/Dockerfile
           push: true
-          tags: ${{ steps.metaphpfpm.outputs.tags }}
-          target: phpfpm-build
-
-      - name: Build the Apache container and push to GitHub Packages
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: docker/Dockerfile
-          push: true
-          tags: ${{ steps.metahttpd.outputs.tags }}
-          target: httpd-build
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
