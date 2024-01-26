@@ -36,30 +36,13 @@ services:
 #    expose:
 #      - 3306
 
-  php-fpm:
+  php:
     build:
       context: 'docker/'
       dockerfile: Dockerfiledev
-      target: spdphpfpm
+      target: spddev
     volumes:
       - .:/var/www/html/
-    environment:
-      - PHPFPM_PORT=9000
-    networks:
-      spdashboard:
-        aliases: 
-          - spdashboard_php-fpm
-  web:
-    build:
-      context: 'docker/'
-      dockerfile: Dockerfiledev
-      target: spdhttpd
-    depends_on:
-      - php-fpm
-    volumes:
-      - .:/var/www/html/
-    ports: 
-      - "8080:80"
     networks:
       spdashboard:
         aliases: 
