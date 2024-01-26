@@ -28,8 +28,8 @@ class Kernel extends BaseKernel
     use MicroKernelTrait;
 
     // see https://symfony.com/doc/current/reference/configuration/kernel.html#kernel-project-dir
-    //    public function getProjectDir(): string
-    //    {
-    //        return dirname(__DIR__);
-    //    }
+    public function getProjectDir(): string
+    {
+        return dirname(__DIR__, 3);
+    }
 }
