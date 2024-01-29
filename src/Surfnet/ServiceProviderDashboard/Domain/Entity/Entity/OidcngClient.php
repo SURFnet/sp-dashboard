@@ -93,7 +93,6 @@ class OidcngClient implements Comparable, OidcClientInterface
 
     /**
      * @param  $key
-     * @return string
      */
     private static function getLowercasedStringOrEmpty(array $data, $key): string
     {
@@ -102,7 +101,6 @@ class OidcngClient implements Comparable, OidcClientInterface
 
     /**
      * @param  $key
-     * @return array
      */
     private static function getLowercasedArrayOrEmpty(array $data, $key): array
     {
@@ -118,25 +116,16 @@ class OidcngClient implements Comparable, OidcClientInterface
         return $urls;
     }
 
-     /**
-      * @return string
-      */
     public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string
-     */
     public function getClientSecret(): string
     {
         return $this->clientSecret;
     }
 
-    /**
-     * @return array
-     */
     public function getRedirectUris(): array
     {
         return $this->redirectUris;
@@ -147,17 +136,11 @@ class OidcngClient implements Comparable, OidcClientInterface
         return $this->grants;
     }
 
-    /**
-     * @return bool
-     */
     public function isPublicClient(): bool
     {
         return $this->isPublicClient;
     }
 
-    /**
-     * @return int
-     */
     public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
