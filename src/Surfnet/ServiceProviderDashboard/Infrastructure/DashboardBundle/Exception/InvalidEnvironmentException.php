@@ -1,6 +1,6 @@
 <?php
 
-//declare(strict_types = 1);
+
 
 /**
  * Copyright 2019 SURFnet B.V.
