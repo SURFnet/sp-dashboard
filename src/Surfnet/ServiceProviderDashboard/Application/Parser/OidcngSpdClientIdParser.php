@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -34,7 +32,6 @@ class OidcngSpdClientIdParser
 {
     /**
      * @param  string $entityId
-     * @return string
      */
     public static function parse($entityId): string
     {
