@@ -167,9 +167,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     {
     }
 
-    /**
-     * @return SaveOidcngEntityCommand
-     */
     public static function forCreateAction(Service $service, bool $isCopy = false): self
     {
         $command = new self();
@@ -178,17 +175,11 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $command;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): ?string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getStatus(): ?string
     {
         return $this->status;
@@ -199,9 +190,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $this->service;
     }
 
-    /**
-     * @return bool
-     */
     public function isCopy(): ?bool
     {
         return $this->isCopy;
@@ -212,9 +200,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         $this->isCopy = $isCopy;
     }
 
-    /**
-     * @return bool
-     */
     public function isArchived(): bool
     {
         return $this->archived;
@@ -256,41 +241,26 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $this->entityId;
     }
 
-    /**
-     * @param string $entityId
-     */
     public function setEntityId(?string $entityId): void
     {
         $this->entityId = $entityId;
     }
 
-    /**
-     * @return string
-     */
     public function getClientId(): ?string
     {
         return $this->entityId;
     }
 
-    /**
-     * @return string
-     */
     public function getSecret(): ?string
     {
         return $this->secret;
     }
 
-    /**
-     * @param string $secret
-     */
     public function setSecret(?string $secret): void
     {
         $this->secret = $secret;
     }
 
-    /**
-     * @return string
-     */
     public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
@@ -356,9 +326,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         $this->descriptionEn = $descriptionEn;
     }
 
-    /**
-     * @return string
-     */
     public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
@@ -424,9 +391,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         $this->supportContact = $supportContact;
     }
 
-    /**
-     * @return string
-     */
     public function getComments(): ?string
     {
         return $this->comments;
@@ -481,9 +445,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 
-    /**
-     * @return bool
-     */
     public function isPublicClient(): ?bool
     {
         return $this->isPublicClient;
@@ -523,9 +484,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         $this->grants = $grants;
     }
 
-    /**
-     * @return string
-     */
     public function getSubjectType(): string
     {
         return $this->subjectType;
