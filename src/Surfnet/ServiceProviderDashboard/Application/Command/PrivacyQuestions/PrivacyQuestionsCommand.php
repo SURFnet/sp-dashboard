@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -160,17 +158,11 @@ class PrivacyQuestionsCommand implements Command
         return $this->otherInfo;
     }
 
-    /**
-     * @return Service
-     */
     public function getService(): ?Service
     {
         return $this->service;
     }
 
-    /**
-     * @return int
-     */
     public function getMode(): ?int
     {
         return $this->mode;
