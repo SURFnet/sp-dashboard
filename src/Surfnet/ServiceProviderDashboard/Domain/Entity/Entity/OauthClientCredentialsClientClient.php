@@ -60,41 +60,26 @@ class OauthClientCredentialsClientClient implements Comparable, OidcClientInterf
     ) {
     }
 
-    /**
-     * @return string
-     */
     public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string
-     */
     public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
 
-    /**
-     * @return array
-     */
     public function getRedirectUris(): array
     {
         return [];
     }
 
-    /**
-     * @return bool
-     */
     public function isPublicClient(): bool
     {
         return false;
     }
 
-    /**
-     * @return int
-     */
     public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
