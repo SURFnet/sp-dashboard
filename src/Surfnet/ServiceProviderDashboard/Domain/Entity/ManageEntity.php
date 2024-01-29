@@ -55,9 +55,6 @@ class ManageEntity
     private bool $readOnly = false;
 
     /**
-     * @param  $data
-     * @return ManageEntity
-     *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public static function fromApiResponse(array $data): self
@@ -167,25 +164,16 @@ class ManageEntity
         return ($this->status === Constants::STATE_PUBLISHED);
     }
 
-    /**
-     * @return OidcClientInterface|null
-     */
     public function getOidcClient(): ?OidcClientInterface
     {
         return $this->oidcClient;
     }
 
-    /**
-     * @return AllowedIdentityProviders
-     */
     public function getAllowedIdentityProviders(): AllowedIdentityProviders
     {
         return $this->allowedIdentityProviders;
     }
 
-    /**
-     * @return Protocol
-     */
     public function getProtocol(): Protocol
     {
         return $this->protocol;
@@ -223,9 +211,6 @@ class ManageEntity
         $this->comments = $comments;
     }
 
-    /**
-     * @return string
-     */
     public function getComments(): ?string
     {
         return $this->comments;
