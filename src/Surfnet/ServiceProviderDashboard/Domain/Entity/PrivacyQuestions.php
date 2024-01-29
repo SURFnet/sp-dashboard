@@ -31,43 +31,25 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\P
 #[ORM\Entity(repositoryClass: PrivacyQuestionsRepository::class)]
 class PrivacyQuestions
 {
-    /**
-     * @var int
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'integer', options: ['autoincrement' => true])]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'text', nullable: true)]
-    private $whatData;
+    private ?string $whatData = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'text', nullable: true)]
-    private $accessData;
+    private ?string $accessData = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'text', nullable: true)]
-    private $country;
+    private ?string $country = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'text', nullable: true)]
-    private $securityMeasures;
+    private ?string $securityMeasures = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'text', nullable: true)]
-    private $otherInfo;
+    private ?string $otherInfo = null;
 
     
     #[ORM\OneToOne(targetEntity: 'Service', inversedBy: 'privacyQuestions')]
@@ -88,90 +70,57 @@ class PrivacyQuestions
         $this->service = $service;
     }
 
-    /**
-     * @param string $country
-     */
-    public function setCountry($country): void
+    public function setCountry(?string $country): void
     {
         $this->country = $country;
     }
 
-    /**
-     * @return string
-     */
-    public function getWhatData()
+    public function getWhatData(): ?string
     {
         return $this->whatData;
     }
 
-    /**
-     * @return string
-     */
-    public function getAccessData()
+    public function getAccessData(): ?string
     {
         return $this->accessData;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    /**
-     * @return string
-     */
-    public function getSecurityMeasures()
+    public function getSecurityMeasures(): ?string
     {
         return $this->securityMeasures;
     }
 
-    /**
-     * @return string
-     */
-    public function getOtherInfo()
+    public function getOtherInfo(): ?string
     {
         return $this->otherInfo;
     }
 
-    /**
-     * @return Service
-     */
     public function getService(): ?Service
     {
         return $this->service;
     }
 
-    /**
-     * @param string $whatData
-     */
-    public function setWhatData($whatData): void
+    public function setWhatData(?string $whatData): void
     {
         $this->whatData = $whatData;
     }
 
-    /**
-     * @param string $accessData
-     */
-    public function setAccessData($accessData): void
+    public function setAccessData(?string $accessData): void
     {
         $this->accessData = $accessData;
     }
 
-    /**
-     * @param string $securityMeasures
-     */
-    public function setSecurityMeasures($securityMeasures): void
+    public function setSecurityMeasures(?string $securityMeasures): void
     {
         $this->securityMeasures = $securityMeasures;
     }
 
-    /**
-     * @param string $otherInfo
-     */
-    public function setOtherInfo($otherInfo): void
+    public function setOtherInfo(?string $otherInfo): void
     {
         $this->otherInfo = $otherInfo;
     }
