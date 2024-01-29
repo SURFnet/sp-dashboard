@@ -39,11 +39,11 @@ class Issue implements JsonSerializable
 
     public function __construct(string $key, string $issueType, private readonly string $ticketStatus)
     {
-        if (!is_string($key) || ($key === '' || $key === '0')) {
+        if (!is_string($key) || empty($key)) {
             throw new InvalidArgumentException("An invalid issue key is provided, must be a non empty string");
         }
 
-        if (!is_string($issueType) || ($issueType === '' || $issueType === '0')) {
+        if (!is_string($issueType) || empty($issueType)) {
             throw new InvalidArgumentException("An invalid issue type is provided, must be a non empty string");
         }
 

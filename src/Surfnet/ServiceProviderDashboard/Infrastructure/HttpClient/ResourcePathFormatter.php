@@ -41,7 +41,7 @@ final class ResourcePathFormatter
             $resource = vsprintf($resourcePathFormat, array_map('urlencode', $parameters));
         }
 
-        if ($resource === '' || $resource === '0') {
+        if (empty($resource)) {
             throw new RuntimeException(
                 sprintf(
                     'Could not construct resource path from format "%s", parameters "%s"',

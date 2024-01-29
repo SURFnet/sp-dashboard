@@ -30,18 +30,17 @@ class ServiceStatusDto implements JsonSerializable
      * @param string[] $states
      * @param string[] $labels
      * @param string[] $tooltips
-     * @param int      $percentage
      */
     public function __construct(
         private readonly array $states,
         private readonly array $labels,
         private readonly array $tooltips,
         private readonly array $legend,
-        private $percentage,
+        private readonly int   $percentage,
     ) {
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'states' => $this->states,

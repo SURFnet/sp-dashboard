@@ -61,6 +61,6 @@ class IdentityProvider
 
     public function getName(): string
     {
-        return ($this->nameNl === null || $this->nameNl === '' || $this->nameNl === '0' ? $this->nameEn : $this->nameNl);
+        return (empty($this->nameNl) ? $this->nameEn : $this->nameNl);
     }
 }

@@ -50,7 +50,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
         private readonly LoggerInterface $logger,
         private readonly string $issueType,
     ) {
-        if ($issueType === '' || $issueType === '0') {
+        if (empty($issueType)) {
             throw new Exception('Please set "jira_issue_type_publication_request" in .env');
         }
         $this->summaryTranslationKey = 'entity.publish.request.ticket.summary';
@@ -139,7 +139,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
 
     private function isNewResourceServer(ManageEntity $entity): bool
     {
-        $isNewEntity = $entity->getId() === null || $entity->getId() === '' || $entity->getId() === '0';
+        $isNewEntity = empty($entity->getId());
         return $isNewEntity
             &&
             $entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;

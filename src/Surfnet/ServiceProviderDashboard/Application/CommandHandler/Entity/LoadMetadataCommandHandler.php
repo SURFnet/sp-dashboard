@@ -67,10 +67,8 @@ class LoadMetadataCommandHandler implements CommandHandler
         $this->mapContacts($targetCommand, $metadata);
         $this->mapAttributes($targetCommand, $metadata);
 
-        // By default set the import url as the metadataUrl but only when the metadataUrl is not set yet.
-        if (($targetCommand->getMetadataUrl() === null || $targetCommand->getMetadataUrl() === '' || $targetCommand->getMetadataUrl() === '0')
-            && $command->isUrlSet()
-        ) {
+        // By default, set the import url as the metadataUrl but only when the metadataUrl is not set yet.
+        if (empty($targetCommand->getMetadataUrl()) && $command->isUrlSet()) {
             $targetCommand->setMetadataUrl($targetCommand->getImportUrl());
         }
 

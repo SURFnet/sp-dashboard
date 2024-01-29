@@ -47,7 +47,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
         private readonly LoggerInterface $logger,
         private readonly string $issueType,
     ) {
-        if ($issueType === '' || $issueType === '0') {
+        if (empty($issueType)) {
             throw new Exception('Please set "jira_issue_type_entity_change_request" in .env');
         }
         $this->summaryTranslationKey = 'entity.change_request.ticket.summary';

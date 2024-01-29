@@ -80,7 +80,7 @@ class PublishEntityTestCommandHandler implements CommandHandler
 
     private function isNewResourceServer(ManageEntity $entity): bool
     {
-        $isNewEntity = $entity->getId() === null || $entity->getId() === '' || $entity->getId() === '0';
+        $isNewEntity = empty($entity->getId());
         return $isNewEntity
             &&
             $entity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
