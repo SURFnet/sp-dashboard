@@ -18,9 +18,4 @@
             <property name="absoluteLineLimit" value="150"/>
         </properties>
     </rule>
-
-<!--
-    Temporarily disabled because of failures in tests
-    <rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/DeclareStrictTypesSniff.php" />
-    -->
 </ruleset>
