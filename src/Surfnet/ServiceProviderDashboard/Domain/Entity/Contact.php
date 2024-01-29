@@ -63,9 +63,6 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmailAddress(): string
     {
         return $this->emailAddress;
