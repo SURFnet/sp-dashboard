@@ -38,29 +38,15 @@ use Symfony\Component\Form\FormInterface;
 
 class EntityTypeFactoryTest extends MockeryTestCase
 {
-    /**
-     * @var Service
-     */
-    private $service;
+    private m\LegacyMockInterface|Service|m\MockInterface $service;
 
-    /**
-     * @var EntityTypeFactory
-     */
-    private $factory;
+    private EntityTypeFactory $factory;
 
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
+    private FormFactory|m\LegacyMockInterface|m\MockInterface $formFactory;
 
-    /**
-     * @var FormType
-     */
-    private $form;
-    /**
-     * @var SaveCommandFactoryInterface&m\Mock
-     */
-    private $saveCommandFactory;
+    private FormType|FormInterface|m\LegacyMockInterface|m\MockInterface $form;
+
+    private m\LegacyMockInterface|SaveCommandFactoryInterface|m\Mock|m\MockInterface $saveCommandFactory;
 
     protected function setUp(): void
     {
@@ -68,8 +54,8 @@ class EntityTypeFactoryTest extends MockeryTestCase
         $this->saveCommandFactory = m::mock(SaveCommandFactoryInterface::class);
         $this->service = m::mock(Service::class);
         $this->form = m::mock(FormInterface::class);
-        $this->attributeService = m::mock(AttributeServiceInterface::class);
-        $this->factory = new EntityTypeFactory($this->formFactory, $this->saveCommandFactory, $this->attributeService);
+        $attributeService = m::mock(AttributeServiceInterface::class);
+        $this->factory = new EntityTypeFactory($this->formFactory, $this->saveCommandFactory, $attributeService);
     }
 
     public function test_build_create_new_saml_form()

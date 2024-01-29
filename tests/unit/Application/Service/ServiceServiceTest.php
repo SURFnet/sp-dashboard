@@ -26,8 +26,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class ServiceServiceTest extends MockeryTestCase
 {
-    /** @var ServiceRepository|m\MockInterface */
-    private $repository;
+    private m\LegacyMockInterface|ServiceRepository|m\MockInterface $repository;
+
+    private ServiceService $service;
 
     public function setUp(): void
     {

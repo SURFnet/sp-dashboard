@@ -52,9 +52,9 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
     private $publishEntityClient;
 
     /**
-     * @var FlashBagInterface|Mock
+     * @var RequestStack|Mock
      */
-    private $flashBag;
+    private $requestStack;
 
     /**
      * @var LoggerInterface|Mock

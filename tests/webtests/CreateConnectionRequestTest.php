@@ -22,22 +22,25 @@ use Facebook\WebDriver\WebDriverBy;
 
 class CreateConnectionRequestTest extends WebTestCase
 {
+    private string $manageId;
     public function setUp(): void
     {
         parent::setUp();
 
         $this->loadFixtures();
+
+        $this->manageId = '9628d851-abd1-2283-a8f1-a29ba5036174';
+
         $this->registerManageEntity(
             'production',
             'saml20_sp',
-            '9628d851-abd1-2283-a8f1-a29ba5036174',
+            $this->manageId,
             'SURF SP2',
             'https://sp2-surf.com',
             'https://sp2-surf.com/metadata',
             'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
         );
 
-        $this->manageId = '9628d851-abd1-2283-a8f1-a29ba5036174';
         $this->logIn();
 
         $this->switchToService('SURFnet');
@@ -45,13 +48,13 @@ class CreateConnectionRequestTest extends WebTestCase
 
     public function test_it_renders_the_form()
     {
-        self::$pantherClient->request('GET', "/entity/create-connection-request/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
+        self::$pantherClient->request('GET', "/entity/create-connection-request/production/{$this->manageId}/1");
         self::assertOnPage('<h1>Create connection request</h1>');
         self::assertSelectorIsDisabled('#connection_request_container_send');
     }
     public function test_a_connection_request_can_be_created()
     {
-        $crawler = self::$pantherClient->request('GET', "/entity/create-connection-request/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
+        $crawler = self::$pantherClient->request('GET', "/entity/create-connection-request/production/{$this->manageId}/1");
         $form = $crawler->findElement(WebDriverBy::cssSelector('form[name="connection_request_container"]'));
 
         self::assertSelectorIsDisabled('#connection_request_container_send');
@@ -72,7 +75,7 @@ class CreateConnectionRequestTest extends WebTestCase
     }
     public function test_a_connection_request_can_be_validated()
     {
-        $crawler = self::$pantherClient->request('GET', "/entity/create-connection-request/production/9628d851-abd1-2283-a8f1-a29ba5036174/1");
+        $crawler = self::$pantherClient->request('GET', "/entity/create-connection-request/production/{$this->manageId}/1");
 
         // Scenario 1: no institution
         $form = $crawler->findElement(WebDriverBy::cssSelector('form[name="connection_request_container"]'));
