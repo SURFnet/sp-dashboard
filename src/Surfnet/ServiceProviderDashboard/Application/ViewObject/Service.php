@@ -71,7 +71,7 @@ class Service
     /**
      * @return string
      */
-    public function getLink()
+    public function getLink(): string
     {
         return $this->router->generate('select_service', ['service' => $this->getId()]);
     }

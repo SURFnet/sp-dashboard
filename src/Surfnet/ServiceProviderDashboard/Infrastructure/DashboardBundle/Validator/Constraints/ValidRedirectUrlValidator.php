@@ -33,7 +33,7 @@ class ValidRedirectUrlValidator extends UrlValidator
      * @param  Constraint $constraint
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         // This validator is used on a collection of Redirect URLs, Its possible violations are already present.
         $numberOfViolations = $this->context->getViolations()->count();

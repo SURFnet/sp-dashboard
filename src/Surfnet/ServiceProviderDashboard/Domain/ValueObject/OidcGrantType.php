@@ -31,7 +31,7 @@ class OidcGrantType
         Constants::GRANT_TYPE_CLIENT_CREDENTIALS,
     ];
 
-    private string $grantType;
+    private readonly string $grantType;
 
     public function __construct(
         string $grantType = Constants::GRANT_TYPE_AUTHORIZATION_CODE,

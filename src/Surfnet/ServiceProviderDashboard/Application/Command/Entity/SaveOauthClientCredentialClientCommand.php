@@ -181,7 +181,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return string
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -189,7 +189,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->status;
     }
@@ -259,7 +259,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $entityId
      */
-    public function setEntityId($entityId): void
+    public function setEntityId(?string $entityId): void
     {
         $this->entityId = $entityId;
     }
@@ -267,7 +267,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): ?string
     {
         return $this->entityId;
     }
@@ -275,7 +275,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return string
      */
-    public function getSecret()
+    public function getSecret(): ?string
     {
         return $this->secret;
     }
@@ -283,7 +283,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $secret
      */
-    public function setSecret($secret): void
+    public function setSecret(?string $secret): void
     {
         $this->secret = $secret;
     }
@@ -445,12 +445,12 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setId($id): void
+    public function setId(?string $id): void
     {
         $this->id = $id;
     }
 
-    public function setStatus($status): void
+    public function setStatus(?string $status): void
     {
         $this->status = $status;
     }
@@ -484,7 +484,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return bool
      */
-    public function isPublicClient()
+    public function isPublicClient(): ?bool
     {
         return $this->isPublicClient;
     }
@@ -492,7 +492,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param bool $isPublicClient
      */
-    public function setIsPublicClient($isPublicClient): void
+    public function setIsPublicClient(?bool $isPublicClient): void
     {
         $this->isPublicClient = $isPublicClient;
     }

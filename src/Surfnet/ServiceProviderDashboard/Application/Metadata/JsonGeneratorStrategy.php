@@ -82,7 +82,7 @@ class JsonGeneratorStrategy
      * @return GeneratorInterface
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    private function getStrategy($protocol)
+    private function getStrategy(?string $protocol)
     {
         if (!isset($this->strategies[$protocol])) {
             throw new JsonGeneratorStrategyNotFoundException(

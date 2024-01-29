@@ -226,7 +226,7 @@ class ServiceStatusAssembler
         return round($done/$total*100);
     }
 
-    private function getSanitizedHtmlTranslation(string $key)
+    private function getSanitizedHtmlTranslation(string $key): string
     {
         $translated = $this->translator->trans($key);
         return WysiwygExtension::sanitizeWysiwyg($translated);

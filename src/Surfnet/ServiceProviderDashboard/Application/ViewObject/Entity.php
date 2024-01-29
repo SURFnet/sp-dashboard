@@ -31,29 +31,19 @@ class Entity
     private readonly EntityActions $actions;
 
     /**
-     * @param                                          string $id
-     * @param                                          string $entityId
-     * @param                                          int    $serviceId
-     * @param                                          string $name
-     * @param                                          string $contact
-     * @param                                          string $state
-     * @param                                          string $environment
-     * @param                                          string $protocol
-     * @param                                          bool   $isReadOnly
-     * @param                                          bool   $hasChangeRequests
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        private $id,
-        private $entityId,
-        $serviceId,
-        private $name,
-        private $contact,
-        private $state,
-        private $environment,
-        private $protocol,
-        $isReadOnly,
-        $hasChangeRequests,
+        private readonly string          $id,
+        private readonly string          $entityId,
+        int                              $serviceId,
+        private readonly string          $name,
+        private readonly string          $contact,
+        private readonly string          $state,
+        private readonly string          $environment,
+        private readonly string          $protocol,
+        bool                             $isReadOnly,
+        bool                             $hasChangeRequests,
         private readonly RouterInterface $router,
     ) {
         $this->actions = new EntityActions(
@@ -67,9 +57,6 @@ class Entity
         );
     }
 
-    /**
-     * @return Entity
-     */
     public static function fromManageTestResult(
         ManageEntity $result,
         RouterInterface $router,
@@ -92,9 +79,6 @@ class Entity
         );
     }
 
-    /**
-     * @return Entity
-     */
     public static function fromManageProductionResult(
         ManageEntity $result,
         RouterInterface $router,
@@ -128,9 +112,6 @@ class Entity
         );
     }
 
-    /**
-     * @return string
-     */
     private static function formatManageContact(ManageEntity $metadata): string
     {
         $administrative = $metadata->getMetaData()->getContacts()->findAdministrativeContact();
@@ -146,58 +127,37 @@ class Entity
         return '';
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getContact()
+    public function getContact(): string
     {
         return $this->contact;
     }
 
-    /**
-     * @return string
-     */
-    public function getState()
+    public function getState(): string
     {
         return $this->state;
     }
 
-    /**
-     * @return string
-     */
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         return $this->environment;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): string
     {
         return $this->protocol;
     }
@@ -207,26 +167,17 @@ class Entity
         return $this->state == 'published' && $this->environment == 'production';
     }
 
-    /**
-     * @return bool
-     */
     public function isPublished(): bool
     {
         return $this->getState() === 'published';
     }
 
-    /**
-     * @return bool
-     */
     public function isRequested(): bool
     {
         return $this->getState() === 'requested';
     }
 
-    /**
-     * @return string
-     */
-    public function getLink()
+    public function getLink(): string
     {
         return $this->router->generate(
             'entity_detail',
@@ -238,9 +189,6 @@ class Entity
         );
     }
 
-    /**
-     * @return EntityActions
-     */
     public function getActions(): EntityActions
     {
         return $this->actions;
