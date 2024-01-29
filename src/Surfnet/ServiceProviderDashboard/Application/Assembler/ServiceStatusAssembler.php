@@ -89,9 +89,6 @@ class ServiceStatusAssembler
 
     private readonly ServiceStatusDto $serviceStatusDto;
 
-    /**
-     * ServiceStatusAssembler constructor.
-     */
     public function __construct(
         Service $service,
         ServiceStatusService $serviceStatusService,
@@ -113,9 +110,6 @@ class ServiceStatusAssembler
         );
     }
 
-    /**
-     * @return ServiceStatusDto
-     */
     public function getDto(): ServiceStatusDto
     {
         return $this->serviceStatusDto;
@@ -148,9 +142,6 @@ class ServiceStatusAssembler
         ];
     }
 
-    /**
-     * @return array
-     */
     private function getStates(Service $service, ServiceStatusService $serviceStatusService): array
     {
         $states = [];
@@ -180,9 +171,6 @@ class ServiceStatusAssembler
         return $states;
     }
 
-    /**
-     * @return array
-     */
     private function mapStates(array $states): array
     {
         $result = [];
@@ -195,9 +183,6 @@ class ServiceStatusAssembler
         return $result;
     }
 
-    /**
-     * @return array
-     */
     private function getLegend(): array
     {
         $legend = [];
@@ -210,9 +195,6 @@ class ServiceStatusAssembler
         return $legend;
     }
 
-    /**
-     * @return mixed[]
-     */
     private function getLabels(): array
     {
         $labels = [];
@@ -222,9 +204,6 @@ class ServiceStatusAssembler
         return $labels;
     }
 
-    /**
-     * @return mixed[]
-     */
     private function getTooltips(array $mappedStates): array
     {
         $tooltips = [];
