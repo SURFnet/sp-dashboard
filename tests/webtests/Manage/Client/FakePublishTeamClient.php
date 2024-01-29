@@ -32,17 +32,17 @@ class FakePublishTeamClient implements PublishTeamsRepository
         return ['id' => 'ID'];
     }
 
-    public function changeMembership(int $id, string $role)
+    public function changeMembership(int $id, string $role): mixed
     {
         // TODO: Implement changeMembership() method.
     }
 
-    public function inviteMember(array $inviteObject)
+    public function inviteMember(array $inviteObject): mixed
     {
         // TODO: Implement inviteMember() method.
     }
 
-    public function resendInvitation(int $id, string $message)
+    public function resendInvitation(int $id, string $message): mixed
     {
         // TODO: Implement resendInvitation() method.
     }

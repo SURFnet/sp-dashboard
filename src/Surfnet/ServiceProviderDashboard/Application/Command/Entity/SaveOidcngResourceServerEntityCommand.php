@@ -129,9 +129,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private array $scopes = ['openid'];
 
-    /**
-     * @return SaveOidcngResourceServerEntityCommand
-     */
     public static function forCreateAction(
         Service $service,
         bool $isCopy = false,

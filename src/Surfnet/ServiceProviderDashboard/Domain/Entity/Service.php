@@ -228,17 +228,11 @@ class Service
         return $this->productionEntitiesEnabled;
     }
 
-    /**
-     * @return bool
-     */
     public function isPrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
     }
 
-    /**
-     * @return bool
-     */
     public function isClientCredentialClientsEnabled(): bool
     {
         return $this->clientCredentialClientsEnabled;
@@ -249,9 +243,6 @@ class Service
         $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
     }
 
-    /**
-     * @return Service
-     */
     public function removeContact(Contact $contact): static
     {
         $this->contacts->removeElement($contact);
@@ -259,9 +250,6 @@ class Service
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getServiceType(): string
     {
         return $this->serviceType;
@@ -272,9 +260,6 @@ class Service
         $this->serviceType = $serviceType;
     }
 
-    /**
-     * @return string
-     */
     public function getIntakeStatus(): string
     {
         return $this->intakeStatus;
@@ -330,9 +315,6 @@ class Service
         $this->institutionId = $institutionId;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationNameNl(): ?string
     {
         return $this->organizationNameNl;
@@ -343,9 +325,6 @@ class Service
         $this->organizationNameNl = $organizationNameNl;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationNameEn(): string
     {
         return $this->organizationNameEn;

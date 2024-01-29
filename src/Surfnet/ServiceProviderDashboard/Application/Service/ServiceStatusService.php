@@ -34,8 +34,6 @@ class ServiceStatusService
 
     /**
      * Test if the service has filled out privacy questions
-     *
-     * @return bool
      */
     public function hasPrivacyQuestions(Service $service): bool
     {

@@ -38,7 +38,6 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
 
     /**
      * @param  Service $service
-     * @return bool
      */
     public function isUnique(Service $service): bool
     {

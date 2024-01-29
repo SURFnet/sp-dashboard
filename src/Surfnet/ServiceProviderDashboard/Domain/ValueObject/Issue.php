@@ -60,17 +60,11 @@ class Issue implements JsonSerializable
         );
     }
 
-    /**
-     * @return string
-     */
     public function getKey(): string
     {
         return $this->key;
     }
 
-    /**
-     * @return string
-     */
     public function getIssueType(): string
     {
         return $this->issueType;

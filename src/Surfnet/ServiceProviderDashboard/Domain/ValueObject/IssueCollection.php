@@ -40,9 +40,6 @@ class IssueCollection implements Countable
         }
     }
 
-    /**
-     * @return Issue|null
-     */
     public function getIssueById($id): ?Issue
     {
         if (array_key_exists($id, $this->issues)) {
@@ -56,7 +53,6 @@ class IssueCollection implements Countable
      * Count elements of an object
      *
      * @link   https://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
      * </p>
      * <p>
      * The return value is cast to an integer.

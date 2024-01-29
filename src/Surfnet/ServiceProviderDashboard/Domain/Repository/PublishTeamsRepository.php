@@ -39,17 +39,12 @@ interface PublishTeamsRepository
         "invitationMessage": "Please..",
         "language": "DUTCH"
      }
-     *
-     * @return mixed
-     */
-    public function createTeam(array $team);
+    public function createTeam(array $team): mixed;
 
     /**
      * Change the membership role for a given id with a given role.
-     *
-     * @return mixed
      */
-    public function changeMembership(int $id, string $role);
+    public function changeMembership(int $id, string $role): mixed;
 
     /**
      * Invite a new member.  Expects an array with the following structure:
@@ -64,15 +59,11 @@ interface PublishTeamsRepository
         "message": "Please join",
         "language": "ENGLISH"
      }
-     *
-     * @return mixed
      */
-    public function inviteMember(array $inviteObject);
+    public function inviteMember(array $inviteObject): mixed;
 
     /**
      * Resends the invite to a member given an id for the member & a message to accompany the invite.
-     *
-     * @return mixed
      */
-    public function resendInvitation(int $id, string $message);
+    public function resendInvitation(int $id, string $message): mixed;
 }

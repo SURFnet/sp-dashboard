@@ -34,18 +34,13 @@ class Attribute implements Stringable
      */
     private $motivation;
 
-    /**
-     * @return boolean
-     */
-    public function isRequested()
+    public function isRequested(): bool
     {
         return $this->requested;
     }
 
     /**
      * @param bool $requested
-     *
-     * @return $this
      */
     public function setRequested($requested): static
     {
@@ -64,8 +59,6 @@ class Attribute implements Stringable
 
     /**
      * @param string $motivation
-     *
-     * @return $this
      */
     public function setMotivation($motivation): static
     {
@@ -79,9 +72,6 @@ class Attribute implements Stringable
         return trim($this->motivation) !== '' && trim($this->motivation) !== '0';
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         if (!$this->requested) {

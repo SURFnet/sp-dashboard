@@ -28,10 +28,8 @@ interface ServiceRepository
 
     /**
      * Is the proposed service entity unique? The id of the service is not taken into account in this test.
-     *
-     * @return bool
      */
-    public function isUnique(Service $service);
+    public function isUnique(Service $service): bool;
 
     /**
      * @return Service[]
@@ -65,10 +63,8 @@ interface ServiceRepository
 
     /**
      * Delete a service
-     *
-     * @return mixed
      */
-    public function delete(Service $service);
+    public function delete(Service $service): void;
 
     public function findByTeamName(?string $serviceTeamName): ?Service;
 }

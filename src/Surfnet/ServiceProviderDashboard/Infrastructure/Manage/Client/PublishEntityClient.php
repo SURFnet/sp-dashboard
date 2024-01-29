@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -46,7 +44,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $updatedPart = '')
+    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $updatedPart = ''): mixed
     {
         try {
             if (!$entity->isManageEntity()) {
@@ -90,11 +88,9 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws PushMetadataException
      */
-    public function pushMetadata()
+    public function pushMetadata(): mixed
     {
         try {
             $response = $this->client->read(

@@ -69,8 +69,6 @@ class Contact implements Stringable
 
     /**
      * @param string $firstName
-     *
-     * @return Contact
      */
     public function setFirstName($firstName): static
     {
@@ -89,8 +87,6 @@ class Contact implements Stringable
 
     /**
      * @param string $lastName
-     *
-     * @return Contact
      */
     public function setLastName($lastName): static
     {
@@ -99,9 +95,6 @@ class Contact implements Stringable
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string|array|null
     {
         return $this->email;
@@ -109,8 +102,6 @@ class Contact implements Stringable
 
     /**
      * @param string $email
-     *
-     * @return Contact
      */
     public function setEmail($email): static
     {
@@ -131,8 +122,6 @@ class Contact implements Stringable
 
     /**
      * @param string $phone
-     *
-     * @return Contact
      */
     public function setPhone($phone): static
     {
@@ -141,9 +130,6 @@ class Contact implements Stringable
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         $result = $this->firstName . ' ' . $this->lastName .' (' . $this->email;

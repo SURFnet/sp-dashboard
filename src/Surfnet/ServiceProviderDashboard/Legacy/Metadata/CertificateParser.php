@@ -29,8 +29,6 @@ class CertificateParser implements CertificateParserInterface
 {
     /**
      * @param string $certificateString
-     *
-     * @return string
      */
     public function parse($certificateString): string
     {

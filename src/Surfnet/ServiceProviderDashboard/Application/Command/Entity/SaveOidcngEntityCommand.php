@@ -234,9 +234,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return null;
     }
 
-    /**
-     * @return SaveOidcngEntityCommand
-     */
     public static function forCreateAction(Service $service, bool $isCopy = false): self
     {
         $command = new self();

@@ -216,9 +216,6 @@ class ManageEntity
         return $this->comments;
     }
 
-    /**
-     * @return bool
-     */
     private function hasComments(): bool
     {
         return $this->comments !== null && $this->comments !== '' && $this->comments !== '0';

@@ -33,8 +33,6 @@ class ServiceService
      * Retrieve names of all services.
      *
      * Format: [ '<service id>' => '<service display name> [<msp service team id>]' ]
-     *
-     * @return array
      */
     public function getServiceNamesById(): array
     {

@@ -44,7 +44,7 @@ interface QueryManageRepository
      * the entity. If you already know the data type (protocol) of the entity,
      * please use the findByManageIdAndProtocol instead
      */
-    public function findByManageIdAndProtocol(string $manageId, string $protocol) :? ManageEntity;
+    public function findByManageIdAndProtocol(string $manageId, string $protocol): ?ManageEntity;
 
     /**
      * @param string $manageId

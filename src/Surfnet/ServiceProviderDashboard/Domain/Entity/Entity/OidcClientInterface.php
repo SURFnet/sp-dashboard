@@ -43,10 +43,7 @@ interface OidcClientInterface
 
     public function getGrants(): array;
 
-    /**
-     * @return bool
-     */
-    public function isPublicClient();
+    public function isPublicClient(): bool;
 
     public function getAccessTokenValidity(): int;
 

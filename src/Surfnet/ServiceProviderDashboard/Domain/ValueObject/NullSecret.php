@@ -24,9 +24,6 @@ class NullSecret implements SecretInterface
 {
     private string $secret = '';
 
-    /**
-     * @return string
-     */
     public function getSecret(): string
     {
         return $this->secret;

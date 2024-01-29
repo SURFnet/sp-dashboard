@@ -63,9 +63,6 @@ class UpdateEntityAclCommand implements Command
         $this->selected = $idps;
     }
 
-    /**
-     * @return bool
-     */
     public function isSelectAll(): bool
     {
         return $this->selectAll;

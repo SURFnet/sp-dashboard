@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -41,10 +39,9 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     }
 
     /**
-     * @return mixed|null
      * @throws CreateTeamsException
      */
-    public function createTeam(array $team)
+    public function createTeam(array $team): mixed
     {
         try {
             $this->logger->info(sprintf('Creating new team \'%s\' in teams', $team['name']));
@@ -71,11 +68,9 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws ChangeMembershipRoleException
      */
-    public function changeMembership(int $id, string $role)
+    public function changeMembership(int $id, string $role): mixed
     {
         try {
             $response = $this->client->put(
@@ -107,11 +102,9 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws SendInviteException
      */
-    public function inviteMember(array $inviteObject)
+    public function inviteMember(array $inviteObject): mixed
     {
         try {
             // encode inviteObject to JSON, but replace the notation for the emails array from object to array.
@@ -141,11 +134,9 @@ class PublishEntityClient implements PublishTeamsRepositoryInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws ResendInviteException
      */
-    public function resendInvitation(int $id, string $message)
+    public function resendInvitation(int $id, string $message): mixed
     {
         try {
             $response = $this->client->put(

@@ -45,9 +45,6 @@ class Secret implements SecretInterface
         }
     }
 
-    /**
-     * @return string
-     */
     public function getSecret(): string
     {
         return $this->secret;
