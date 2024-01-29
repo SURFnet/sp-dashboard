@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -82,8 +80,12 @@ class EntityTypeFactory
         throw new InvalidArgumentException("invalid form type requested: " . $type);
     }
 
-    public function createEditForm(ManageEntity $entity, Service $service, string $environment, $isCopy = false)
-    {
+    public function createEditForm(
+        ManageEntity $entity,
+        Service $service,
+        string $environment,
+        $isCopy = false
+    ): FormInterface {
         $buildOptions = $entity->isRequestedProductionEntity($isCopy) ?
             $this->requestedBuildOptions($environment) : $this->publishedBuildOptions($environment);
 
