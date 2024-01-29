@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -52,17 +50,11 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
         $this->clientId = strtolower($clientId);
     }
 
-    /**
-     * @return string
-     */
     public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string
-     */
     public function getClientSecret(): ?string
     {
         return $this->clientSecret;
@@ -73,33 +65,21 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
         return $this->grants;
     }
 
-    /**
-     * @return array
-     */
     public function getRedirectUris(): array
     {
         return [];
     }
 
-    /**
-     * @return bool
-     */
     public function isPublicClient(): bool
     {
         return false;
     }
 
-    /**
-     * @return int
-     */
     public function getAccessTokenValidity(): int
     {
         return 0;
     }
 
-    /**
-     * @return array
-     */
     public function getResourceServers(): array
     {
         return [];
