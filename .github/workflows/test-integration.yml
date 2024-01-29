@@ -33,13 +33,13 @@ jobs:
 
       - name: Run yarn
         run: |
-          docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn install
+          docker run -v ${PWD}:/var/www/html -w /var/www/html node:20 yarn install
         env:
           SYMFONY_ENV: dev
 
       - name: Create front end dependencies (yarn encore production)
         run: |
-          docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn run encore production
+          docker run -v ${PWD}:/var/www/html -w /var/www/html node:20 yarn run encore production
         env:
           SYMFONY_ENV: dev
 
