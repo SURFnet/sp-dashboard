@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -38,34 +36,25 @@ class Protocol implements Comparable
         self::SAML20_SP => Constants::TYPE_SAML,
         self::OIDC10_RP => Constants::TYPE_OPENID_CONNECT_TNG,
         self::OAUTH20_RS => Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
-        // CC was already mapped to determine it's entity type
+        // CC was already mapped to determine its entity type
         Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT => Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT,
     ];
 
-    private $protocol;
-
     /**
-     * @param                                     string $manageProtocol
-     * @return                                    Protocol
      * @SuppressWarnings(PHPMD.UndefinedVariable) - protocolMapping is defined, md does not seem to resolve correctly
      */
-    public static function fromApiResponse($manageProtocol): self
+    public static function fromApiResponse(string $manageProtocol): self
     {
         $protocol = self::$protocolMapping[$manageProtocol];
         return new self($protocol);
     }
 
-    public function __construct(?string $protocol)
+    public function __construct(private ?string $protocol)
     {
         Assert::nullOrString($protocol);
-
-        $this->protocol = $protocol;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): ?string
     {
         return $this->protocol;
     }
