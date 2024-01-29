@@ -33,7 +33,6 @@ class MetaData implements Comparable
      /**
       * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
       * @SuppressWarnings(PHPMD.NPathComplexity)      - Due to mapping and input validation
-      * @return                                       MetaData
       * @throws                                       Exception
       */
     public static function fromApiResponse(array $data): self
