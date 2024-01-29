@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -33,9 +31,6 @@ class Fetcher implements FetcherInterface
 
     private static string $curlErrorRegex = '/cURL error (\d+):/';
 
-    /**
-     * Constructor
-     */
     public function __construct(
         private readonly ClientInterface $guzzle,
         private readonly LoggerInterface $logger,
@@ -46,12 +41,9 @@ class Fetcher implements FetcherInterface
 
     /**
      * @param string $url
-     *
-     * @return string
-     *
      * @throws MetadataFetchException
      */
-    public function fetch($url)
+    public function fetch($url): string
     {
         try {
             $guzzleOptions = [ 'timeout' => $this->timeout, 'verify' => false ];
@@ -67,9 +59,6 @@ class Fetcher implements FetcherInterface
         }
     }
 
-    /**
-     * @return string
-     */
     private function getCurlErrorDescription(string $message): string
     {
         $error = '';
