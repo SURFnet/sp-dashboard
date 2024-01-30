@@ -33,6 +33,7 @@
     "ext-simplexml": "*",
     "ext-soap": "*",
     "ext-xml": "*",
+    "cweagans/composer-patches": "^1.7",
     "doctrine/doctrine-bundle": "^2.1.2",
     "doctrine/doctrine-migrations-bundle": "^3.2",
     "doctrine/orm": "^2.7",
@@ -154,7 +155,8 @@
       "ocramius/package-versions": true,
       "symfony/flex": true,
       "pestphp/pest-plugin": false,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "cweagans/composer-patches": true
     }
   },
   "archive": {
@@ -175,6 +177,11 @@
     ]
   },
   "extra": {
+    "patches": {
+      "stfalcon/tinymce-bundle": {
+        "Fix dependency injection issue": "./patches/dependency-injection-for-TinymceBundle.patch"
+      }
+    },
     "symfony": {
       "allow-contrib": false,
       "require": "6.4.*"
