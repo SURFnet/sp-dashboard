@@ -1,4 +1,11 @@
 FROM ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest as build
+ARG APP_VERSION
+ARG GIT_SHA
+ARG GIT_COMMIT_TIME
+ENV OPENCONEXT_APP_VERSION=${APP_VERSION}
+ENV OPENCONEXT_GIT_SHA=${GIT_SHA}
+ENV OPENCONEXT_COMMIT_DATE=${GIT_COMMIT_TIME}
+
 COPY . /var/www/html/ 
 RUN composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev
 RUN yarn install && \
