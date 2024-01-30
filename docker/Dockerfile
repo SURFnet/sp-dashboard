@@ -13,6 +13,12 @@ RUN yarn install && \
 RUN composer archive --file=output 
 
 FROM ghcr.io/openconext/openconext-basecontainers/php82-apache2:latest
+ARG APP_VERSION
+ARG GIT_SHA
+ARG GIT_COMMIT_TIME
+ENV OPENCONEXT_APP_VERSION=${APP_VERSION}
+ENV OPENCONEXT_GIT_SHA=${GIT_SHA}
+ENV OPENCONEXT_COMMIT_DATE=${GIT_COMMIT_TIME}
 COPY --from=build /var/www/html/output.tar /var/www/html/
 COPY ./docker/conf/000-default.conf /etc/apache2/sites-enabled/
 COPY ./docker/conf/zz-docker.conf  /usr/local/etc/php/conf.d/
