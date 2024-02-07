@@ -555,8 +555,7 @@ services:
   Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory:
     arguments:
       - '%env(jira_host)%'
-      - '%env(jira_username)%'
-      - '%env(jira_password)%'
+      - '%env(jira_personal_access_token)%'
       - '@logger'
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclListType:
