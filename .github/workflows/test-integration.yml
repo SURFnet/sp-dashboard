@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Start the docker images for testing
         run: ${DOCKER_COMPOSE} up -d
