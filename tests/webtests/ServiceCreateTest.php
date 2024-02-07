@@ -42,7 +42,7 @@ class ServiceCreateTest extends WebTestCase
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[teams][teamManagerEmail]"]', 'loeki@example.org');
         self::findBy('#dashboard_bundle_service_type_save')->click();
 
-        self::assertOnPage('This is not a valid UUID.');
+        self::assertOnPage('This value is not a valid UUID.');
     }
 
     public function test_empty_institution_id_field_is_allowed()
