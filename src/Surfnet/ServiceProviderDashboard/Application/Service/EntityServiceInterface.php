@@ -36,13 +36,11 @@ interface EntityServiceInterface
     public function getEntityByIdAndTarget(string $id, string $manageTarget, Service $service): ManageEntity;
 
     /**
-     * @param  Service $service
      * @return EntityList
      */
     public function getEntityListForService(Service $service);
 
     /**
-     * @param  Service $service
      * @return EntityDto[]
      */
     public function getEntitiesForService(Service $service);

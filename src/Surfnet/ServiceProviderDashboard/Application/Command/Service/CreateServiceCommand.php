@@ -166,49 +166,31 @@ class CreateServiceCommand implements Command
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled;
     }
 
-    /**
-     * @return bool
-     */
     public function isPrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
     }
 
-    /**
-     * @return string
-     */
     public function getServiceType(): string
     {
         return $this->serviceType;
     }
 
-    /**
-     * @return string
-     */
     public function getIntakeStatus(): string
     {
         return $this->intakeStatus;
     }
 
-    /**
-     * @return string
-     */
     public function getContractSigned(): string
     {
         return $this->contractSigned;
     }
 
-    /**
-     * @return string
-     */
     public function getSurfconextRepresentativeApproved(): string
     {
         return $this->surfconextRepresentativeApproved;
@@ -216,8 +198,6 @@ class CreateServiceCommand implements Command
 
     /**
      * New services have no privacy questions answers yet.
-     *
-     * @return bool
      */
     public function hasPrivacyQuestionsAnswered(): bool
     {

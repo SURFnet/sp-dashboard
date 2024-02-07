@@ -31,7 +31,6 @@ interface TicketServiceInterface
     /**
      * Create a Jira issue from a Ticket VO
      *
-     * @param  Ticket $ticket
      * @return Issue|object
      */
     public function createIssueFrom(Ticket $ticket);
@@ -39,7 +38,6 @@ interface TicketServiceInterface
     /**
      * Create a Jira issue from a connection request
      *
-     * @param  Ticket $ticket
      * @return Issue|object
      */
     public function createIssueFromConnectionRequest(Ticket $ticket);
@@ -47,7 +45,6 @@ interface TicketServiceInterface
     /**
      * Query Jira for issues that have a manageId that matches the provided array of manage id's.
      *
-     * @param  array $manageIds
      * @return IssueCollection
      */
     public function findByManageIds(array $manageIds);

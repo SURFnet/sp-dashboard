@@ -38,9 +38,6 @@ class OidcngResourceServerEntityType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
-     *
-     * @param FormBuilderInterface $builder
-     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

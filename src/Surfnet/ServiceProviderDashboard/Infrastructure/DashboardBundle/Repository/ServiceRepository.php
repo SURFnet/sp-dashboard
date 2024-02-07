@@ -27,18 +27,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository as Serv
 
 class ServiceRepository extends DoctrineEntityRepository implements ServiceRepositoryInterface
 {
-    /**
-     * @param Service $service
-     */
     public function save(Service $service): void
     {
         $this->getEntityManager()->persist($service);
         $this->getEntityManager()->flush($service);
     }
 
-    /**
-     * @param  Service $service
-     */
     public function isUnique(Service $service): bool
     {
         $this->isTeamNameUnique($service->getTeamName(), $service->getId());

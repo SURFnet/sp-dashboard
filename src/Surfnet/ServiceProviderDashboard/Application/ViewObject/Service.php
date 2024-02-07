@@ -44,41 +44,26 @@ class Service
         );
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return EntityList
-     */
     public function getEntityList(): EntityList
     {
         return $this->entityList;
     }
 
-    /**
-     * @return string
-     */
     public function getLink(): string
     {
         return $this->router->generate('select_service', ['service' => $this->getId()]);
     }
 
-    /**
-     * @return bool
-     */
     public function arePrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
@@ -89,9 +74,6 @@ class Service
         return $this->getEntityList()->hasTestEntities();
     }
 
-    /**
-     * @return bool
-     */
     public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled || $this->hasTestEntities();

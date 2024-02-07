@@ -26,9 +26,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository as Cont
 
 class ContactRepository extends DoctrineEntityRepository implements ContactRepositoryInterface
 {
-    /**
-     * @param Contact $contact
-     */
     public function save(Contact $contact): void
     {
         $this->getEntityManager()->persist($contact);

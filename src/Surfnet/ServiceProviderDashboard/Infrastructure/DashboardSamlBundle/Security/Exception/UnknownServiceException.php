@@ -31,8 +31,6 @@ class UnknownServiceException extends RuntimeException
 
     /**
      * Get all team names the user has access to
-     *
-     * @return array
      */
     public function getTeamNames(): array
     {

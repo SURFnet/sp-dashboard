@@ -29,7 +29,6 @@ class ValidEntityIdValidator extends ConstraintValidator
 {
     /**
      * @param string     $value
-     * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint): void
     {
@@ -46,7 +45,6 @@ class ValidEntityIdValidator extends ConstraintValidator
 
     /**
      * @param  $value
-     * @return bool
      */
     private function validateUrn($value): bool
     {
@@ -57,7 +55,6 @@ class ValidEntityIdValidator extends ConstraintValidator
 
     /**
      * @param  $value
-     * @return bool
      */
     private function validateUri($value): bool
     {

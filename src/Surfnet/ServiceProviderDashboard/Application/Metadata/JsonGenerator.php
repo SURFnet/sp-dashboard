@@ -345,9 +345,6 @@ class JsonGenerator implements GeneratorInterface
     }
 
 
-    /**
-     * @return array
-     */
     private function generateAclData(ManageEntity $entity): array
     {
         if ($entity->getAllowedIdentityProviders()->isAllowAll()) {

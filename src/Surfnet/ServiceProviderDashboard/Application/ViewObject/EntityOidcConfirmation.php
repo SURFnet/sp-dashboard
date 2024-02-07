@@ -68,9 +68,6 @@ class EntityOidcConfirmation
         return OidcngClientIdParser::parse($this->entityId);
     }
 
-    /**
-     * @return string
-     */
     public function getClientSecret(): string
     {
         return $this->clientSecret;

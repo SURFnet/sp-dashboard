@@ -27,7 +27,6 @@ final class ResourcePathFormatter
 {
     /**
      * @param  string $resourcePathFormat
-     * @return string
      * @throws RuntimeException
      */
     public static function format($resourcePathFormat, array $parameters): string

@@ -27,7 +27,6 @@ class IdentityProviderFactory
 
     /**
      * @param  $manageResult
-     * @return IdentityProvider
      */
     public static function fromManageResult(array $manageResult): IdentityProvider
     {

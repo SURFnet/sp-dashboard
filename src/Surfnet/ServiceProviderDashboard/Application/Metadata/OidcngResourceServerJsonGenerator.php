@@ -154,9 +154,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return $metadata + $this->generateOidcClient($entity);
     }
 
-    /**
-     * @return array
-     */
     private function generateOidcClient(ManageEntity $entity): array
     {
         $metadata = [];

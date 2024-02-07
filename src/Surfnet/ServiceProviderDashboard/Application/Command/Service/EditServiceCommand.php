@@ -138,33 +138,21 @@ class EditServiceCommand implements Command
         $this->institutionId = $institutionId;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getGuid(): string
     {
         return $this->guid;
     }
 
-    /**
-     * @return string
-     */
     public function getTeamName(): string
     {
         return $this->teamName;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
@@ -210,17 +198,11 @@ class EditServiceCommand implements Command
         return $this->privacyQuestionsAnswered;
     }
 
-    /**
-     * @return bool
-     */
     public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled;
     }
 
-    /**
-     * @return bool
-     */
     public function isPrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;

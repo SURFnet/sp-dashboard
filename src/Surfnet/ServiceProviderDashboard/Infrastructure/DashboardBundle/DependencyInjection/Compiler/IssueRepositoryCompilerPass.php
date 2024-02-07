@@ -37,7 +37,6 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
     /**
      * Based on the jira_enable_test_mode feature flag, will load the regular or test stand in for the IssueRepository.
      *
-     * @param                                  ContainerBuilder $container
      * @SuppressWarnings(PHPMD.ElseExpression)
      * @throws                                 Exception
      */

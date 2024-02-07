@@ -71,8 +71,6 @@ class EntityAclService
 
     /**
      * Sort idp's on name
-     *
-     * @return int
      */
     public static function sortOnName(IdentityProvider $a, IdentityProvider $b): int
     {

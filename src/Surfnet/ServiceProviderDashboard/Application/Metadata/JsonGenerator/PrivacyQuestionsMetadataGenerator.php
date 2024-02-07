@@ -42,9 +42,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  */
 class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 {
-    /**
-     * @var true
-     */
     private bool $addMetaDataPrefix = false;
 
     public function __construct(private readonly AttributesMetadataRepository $repository)

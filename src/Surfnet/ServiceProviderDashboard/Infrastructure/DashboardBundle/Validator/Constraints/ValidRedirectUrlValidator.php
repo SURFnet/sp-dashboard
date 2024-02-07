@@ -30,7 +30,6 @@ class ValidRedirectUrlValidator extends UrlValidator
 {
     /**
      * @param  string     $value
-     * @param  Constraint $constraint
      * @throws Exception
      */
     public function validate(mixed $value, Constraint $constraint): void
@@ -77,7 +76,6 @@ class ValidRedirectUrlValidator extends UrlValidator
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @return                                       string
      */
     private function buildUrl(array $parts): string
     {

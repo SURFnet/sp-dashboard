@@ -43,9 +43,6 @@ class EntityActions
         return $this->id;
     }
 
-    /**
-     * @return int
-     */
     public function getServiceId(): int
     {
         return $this->serviceId;
@@ -64,9 +61,6 @@ class EntityActions
         return !$notEditable;
     }
 
-    /**
-     * @return bool
-     */
     public function allowCopyAction(): bool
     {
         if ($this->readOnly) {
@@ -105,9 +99,6 @@ class EntityActions
         return !$this->isDeleteRequested();
     }
 
-    /**
-     * @return bool
-     */
     public function allowAclAction(): bool
     {
         if ($this->readOnly) {
@@ -119,9 +110,6 @@ class EntityActions
             $this->protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 
-    /**
-     * @return bool
-     */
     public function allowSecretResetAction(): bool
     {
         if ($this->readOnly) {

@@ -38,7 +38,6 @@ class UniqueEntityIdValidator extends ConstraintValidator
 
     /**
      * @param  string     $value
-     * @param  Constraint $constraint
      * @throws Exception
      */
     public function validate($value, Constraint $constraint): void

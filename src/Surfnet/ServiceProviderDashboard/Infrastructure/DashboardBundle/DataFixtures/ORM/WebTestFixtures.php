@@ -48,10 +48,7 @@ class WebTestFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     *
-     * @return Service
-     */
+    
     private function createService(string $name, string $teamName): Service
     {
         $service = new Service();

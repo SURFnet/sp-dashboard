@@ -178,9 +178,6 @@ class OidcngJsonGenerator implements GeneratorInterface
         return $metadata;
     }
 
-    /**
-     * @return array
-     */
     private function generateOidcClient(ManageEntity $entity): array
     {
         $metadata = [];
@@ -279,8 +276,6 @@ class OidcngJsonGenerator implements GeneratorInterface
      * determine the dimensions in those situations.
      *
      * @SuppressWarnings(PHPMD.ErrorControlOperator)
-     *
-     * @return array
      */
     private function generateLogoMetadata(ManageEntity $entity): array
     {

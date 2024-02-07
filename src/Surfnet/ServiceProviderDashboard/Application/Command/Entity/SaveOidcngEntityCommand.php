@@ -276,9 +276,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->isCopy = $isCopy;
     }
 
-    /**
-     * @return bool
-     */
     public function isArchived(): bool
     {
         return $this->archived;
@@ -584,9 +581,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->isPublicClient = $isPublicClient;
     }
 
-    /**
-     * @return int
-     */
     public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
@@ -632,9 +626,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         $this->grants = $grants;
     }
 
-    /**
-     * @return string
-     */
     public function getSubjectType(): string
     {
         return $this->subjectType;

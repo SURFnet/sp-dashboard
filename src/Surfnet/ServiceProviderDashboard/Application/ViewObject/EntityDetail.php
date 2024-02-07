@@ -76,33 +76,21 @@ class EntityDetail
         return !is_null($this->id);
     }
 
-    /**
-     * @return string
-     */
     public function getMetadataUrl(): string
     {
         return $this->metadataUrl;
     }
 
-    /**
-     * @return array
-     */
     public function getAcsLocations(): array
     {
         return $this->acsLocations;
     }
 
-    /**
-     * @return string
-     */
     public function getEntityId(): string
     {
         return $this->entityId;
     }
 
-    /**
-     * @return string
-     */
     public function getCertificate(): string
     {
         return $this->certificate;
@@ -116,49 +104,31 @@ class EntityDetail
         return $this->logoUrl;
     }
 
-    /**
-     * @return string
-     */
     public function getNameNl(): string
     {
         return $this->nameNl;
     }
 
-    /**
-     * @return string
-     */
     public function getNameEn(): string
     {
         return $this->nameEn;
     }
 
-    /**
-     * @return string
-     */
     public function getDescriptionNl(): string
     {
         return $this->descriptionNl;
     }
 
-    /**
-     * @return string
-     */
     public function getDescriptionEn(): string
     {
         return $this->descriptionEn;
     }
 
-    /**
-     * @return string
-     */
     public function getApplicationUrl(): string
     {
         return $this->applicationUrl;
     }
 
-    /**
-     * @return string
-     */
     public function getEulaUrl(): string
     {
         return $this->eulaUrl;
@@ -193,81 +163,51 @@ class EntityDetail
         return $this->attributes;
     }
 
-    /**
-     * @return string
-     */
     public function getNameIdFormat(): string
     {
         return $this->nameIdFormat;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationNameNl(): string
     {
         return $this->organizationNameNl;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationNameEn(): string
     {
         return $this->organizationNameEn;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationDisplayNameNl(): string
     {
         return $this->organizationDisplayNameNl;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationDisplayNameEn(): string
     {
         return $this->organizationDisplayNameEn;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationUrlNl(): string
     {
         return $this->organizationUrlNl;
     }
 
-    /**
-     * @return string
-     */
     public function getOrganizationUrlEn(): string
     {
         return $this->organizationUrlEn;
     }
 
-    /**
-     * @return string
-     */
     public function getManageId(): string
     {
         return $this->manageId;
     }
 
-    /**
-     * @return EntityActions
-     */
     public function getActions(): EntityActions
     {
         return $this->actions;
     }
 
-    /**
-     * @return string
-     */
     public function getProtocol(): string
     {
         return $this->protocol;

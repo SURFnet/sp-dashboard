@@ -174,9 +174,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         $this->isCopy = $isCopy;
     }
 
-    /**
-     * @return bool
-     */
     public function isArchived(): bool
     {
         return $this->archived;
@@ -410,9 +407,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
-    /**
-     * @return array
-     */
     public function getScopes(): array
     {
         return $this->scopes;

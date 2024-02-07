@@ -49,9 +49,6 @@ class AuthorizationService
         ];
     }
 
-    /**
-     * @return bool
-     */
     public function isLoggedIn(): bool
     {
         $token = $this->tokenStorage->getToken();
@@ -64,8 +61,6 @@ class AuthorizationService
 
     /**
      * Is the logged-in user an administrator?
-     *
-     * @return bool
      */
     public function isAdministrator(): bool
     {
@@ -130,8 +125,6 @@ class AuthorizationService
      * Explicitly select a service for users that have access to multiple services.
      *
      * @param string $serviceId
-     *
-     * @return AuthorizationService
      */
     private function setSelectedServiceId($serviceId): static
     {
@@ -162,7 +155,6 @@ class AuthorizationService
      * Get the service selected in the service switcher.
      *
      * @param int $serviceId
-     * @return string
      */
     public function assertServiceIdAllowed($serviceId): void
     {
@@ -185,8 +177,6 @@ class AuthorizationService
 
     /**
      * Get all service names keyed by ID the user has access to.
-     *
-     * @return array
      */
     public function getAllowedServiceNamesById(): array
     {
@@ -228,7 +218,6 @@ class AuthorizationService
 
     /**
      * @param $serviceId
-     * @return Service
      * @throws ServiceNotFoundException
      */
     public function changeActiveService($serviceId): Service
@@ -252,7 +241,6 @@ class AuthorizationService
 
     /**
      * @param string $serviceId
-     * @return bool
      */
     private function hasAccessToService($serviceId): bool
     {
@@ -265,7 +253,6 @@ class AuthorizationService
 
     public function getContact(): Contact
     {
-        /** @var Identity $user */
         return $this->tokenStorage->getToken()->getUser()->getContact();
     }
 }

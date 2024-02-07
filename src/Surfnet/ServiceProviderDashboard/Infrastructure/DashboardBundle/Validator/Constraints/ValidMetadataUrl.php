@@ -26,9 +26,6 @@ use Attribute;
 #[Attribute]
 class ValidMetadataUrl extends Constraint
 {
-    /**
-     * @return string
-     */
     public function validatedBy(): string
     {
         return 'metadata_url';

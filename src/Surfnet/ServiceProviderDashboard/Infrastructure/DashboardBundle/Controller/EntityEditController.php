@@ -37,8 +37,6 @@ class EntityEditController extends AbstractController
 
     /**
      * Subscribe to the PRE_SUBMIT form event to be able to import the metadata
-     *
-     * @return array
      */
     public static function getSubscribedEvents(): array
     {

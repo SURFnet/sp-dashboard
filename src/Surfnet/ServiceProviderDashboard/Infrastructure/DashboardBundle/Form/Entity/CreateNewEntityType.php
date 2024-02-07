@@ -27,10 +27,6 @@ class CreateNewEntityType extends AbstractType
 {
     private $id;
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->id = $builder->getData();

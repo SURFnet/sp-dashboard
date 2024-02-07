@@ -33,8 +33,6 @@ class ProtocolChoiceFactory
 
     /**
      * Based on target environment, builds the available protocol choices for the ChooseEntityType form.
-     *
-     * @return array
      */
     public function buildOptions(): array
     {

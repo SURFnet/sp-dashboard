@@ -26,9 +26,6 @@ use Attribute;
 #[Attribute]
 class ValidClientId extends Constraint
 {
-    /**
-     * @return string
-     */
     public function validatedBy(): string
     {
         return 'valid_client_id';

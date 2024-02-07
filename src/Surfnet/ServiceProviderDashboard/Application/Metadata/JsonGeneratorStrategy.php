@@ -49,7 +49,6 @@ class JsonGeneratorStrategy
     }
 
     /**
-     * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
     public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
@@ -58,7 +57,6 @@ class JsonGeneratorStrategy
     }
 
     /**
-     * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
     public function generateForExistingEntity(

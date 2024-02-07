@@ -45,8 +45,6 @@ class ServiceStatusService
      * - Status: "No" when no test entity, and no draft on test is present
      * - Status: "In progress" when there is no entity on test but a draft test entity is present
      * - Status: "Yes" when a test entity is published
-     *
-     * @return string
      */
     public function getEntityStatusOnTest(Service $service): string
     {
@@ -85,8 +83,6 @@ class ServiceStatusService
      * - Status: "Not requested" when no production entity, is published or has a publish requested status
      * - Status: "Requested" when there is a least 1 entity on production manage with a publication requested status
      * - Status: "Active" when a production entity is published
-     *
-     * @return string
      */
     public function getConnectionStatus(Service $service): string
     {

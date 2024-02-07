@@ -47,7 +47,6 @@ class PrivacyQuestionsController extends AbstractController
      *
      *
      * @param  int $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy', name: 'privacy_questions', methods: ['GET', 'POST'])]
@@ -76,7 +75,6 @@ class PrivacyQuestionsController extends AbstractController
      *
      *
      * @param  $serviceId
-     * @return Response
      */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy/create', name: 'privacy_questions_create')]
@@ -93,7 +91,6 @@ class PrivacyQuestionsController extends AbstractController
      *
      *
      * @param  $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/service/{serviceId}/privacy/edit', name: 'privacy_questions_edit')]

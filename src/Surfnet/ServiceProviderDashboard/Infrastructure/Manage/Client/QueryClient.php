@@ -279,7 +279,6 @@ class QueryClient implements QueryManageRepository
     /**
      * Search for both oidc and saml entities.
      *
-     * @return array|null
      * @throws HttpException
      */
     private function doSearchQuery(array $params): array

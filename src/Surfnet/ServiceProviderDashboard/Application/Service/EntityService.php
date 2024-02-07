@@ -329,7 +329,6 @@ class EntityService implements EntityServiceInterface
 
     /**
      * @param  ManageEntity $service
-     * @return bool
      */
     private function hasChangeRequests(ManageEntity $entity): bool
     {
