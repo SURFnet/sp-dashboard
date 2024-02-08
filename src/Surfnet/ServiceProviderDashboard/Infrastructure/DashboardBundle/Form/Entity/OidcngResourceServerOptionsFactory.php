@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -36,7 +34,6 @@ class OidcngResourceServerOptionsFactory
         private readonly string                $productionPublicationState,
     ) {
     }
-
 
     /**
      * @throws InvalidEnvironmentException

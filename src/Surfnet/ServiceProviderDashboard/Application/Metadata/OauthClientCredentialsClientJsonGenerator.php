@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -307,7 +305,6 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
                     'allowedall' => true,
                 ];
             }
-
 
             foreach ($acl->getAllowedIdentityProviders() as $entityId) {
                 $providers[] = [

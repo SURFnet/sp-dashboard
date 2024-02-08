@@ -238,7 +238,6 @@ class AuthorizationService
         $this->setSelectedServiceId(null);
     }
 
-
     /**
      * @param string $serviceId
      */

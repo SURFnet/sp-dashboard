@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -42,7 +40,6 @@ class OauthClientCredentialsClientClient implements Comparable, OidcClientInterf
         Assert::string($clientSecret);
         Assert::integer($accessTokenValidity);
         Assert::isArray($resourceServers);
-
 
         return new self(
             $clientId,

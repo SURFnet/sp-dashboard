@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2019 SURFnet B.V.
  *

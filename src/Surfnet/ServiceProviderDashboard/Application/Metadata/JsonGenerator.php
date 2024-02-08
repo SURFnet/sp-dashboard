@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -343,7 +341,6 @@ class JsonGenerator implements GeneratorInterface
         }
         return $metadata;
     }
-
 
     private function generateAclData(ManageEntity $entity): array
     {

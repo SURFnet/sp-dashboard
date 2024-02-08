@@ -39,8 +39,6 @@ class ValidAttribute extends Constraint
         parent::__construct([], $groups, $payload);
     }
 
-
-
     public function validatedBy(): string
     {
         return 'valid_attribute';

@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -371,7 +369,6 @@ class OidcngJsonGenerator implements GeneratorInterface
             unset($metadata[$fieldName]);
         }
     }
-
 
     private function generateArp(array $metadata, ManageEntity $entity): array
     {

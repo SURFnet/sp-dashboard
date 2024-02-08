@@ -57,7 +57,6 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
         $error = curl_error($ch);
         curl_close($ch);
 
-
         $this->logger->debug(sprintf('Curl returned a "%d" HTTP response code', $responseCode));
         $this->logger->debug(sprintf('Downloaded a file with content type: "%s"', $contentType));
 

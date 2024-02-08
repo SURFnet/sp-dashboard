@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -349,7 +347,6 @@ class OidcngEntityType extends AbstractType
             ->add('publishButton', SubmitType::class, ['label'=> $options['publish_button_label'], 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
-
 
     private function buildAttributeTypes(FormBuilderInterface $container): FormBuilderInterface
     {

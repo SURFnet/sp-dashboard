@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -77,7 +75,6 @@ class ServiceStatusService
         // No published or drafted entities discovered, state "No"
         return Service::ENTITY_PUBLISHED_NO;
     }
-
 
     /**
      * - Status: "Not requested" when no production entity, is published or has a publish requested status

@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -30,7 +28,6 @@ interface QueryManageRepository
      * @return string
      */
     public function findManageIdByEntityId($entityId);
-
 
     /**
      * @param string $manageId

@@ -36,7 +36,6 @@ class DeleteEntityClient implements DeleteTeamsEntityRepository
     ) {
     }
 
-
     /**
      * Delete a team by the internal id
      *

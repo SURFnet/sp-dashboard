@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -269,7 +267,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     {
         return $this->acsLocations;
     }
-
 
     public function getEntityId(): ?string
     {
