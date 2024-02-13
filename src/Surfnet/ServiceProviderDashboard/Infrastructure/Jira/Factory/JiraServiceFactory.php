@@ -24,26 +24,22 @@ use Psr\Log\LoggerInterface;
 
 class JiraServiceFactory
 {
-    /**
-     * @var ArrayConfiguration
-     */
-    private $config;
+    private ArrayConfiguration $config;
 
     public function __construct(
         string $host,
-        string $username,
-        string $password,
+        string $personalAccessToken,
         private readonly LoggerInterface $logger
     ) {
         // Create a IssueService with a Jira connection built in.
         $this->config = new ArrayConfiguration([
             'jiraHost' => $host,
-            'jiraUser' => $username,
-            'jiraPassword' => $password
+            'useTokenBasedAuth' => true,
+            'personalAccessToken' => $personalAccessToken,
         ]);
     }
 
-    public function buildIssueService()
+    public function buildIssueService(): IssueService
     {
         return new IssueService($this->config, $this->logger);
     }
