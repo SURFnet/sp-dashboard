@@ -29,9 +29,11 @@ class JiraServiceFactoryTest extends TestCase
     public function test_build_issue_service()
     {
         $hostname = 'https://jira.example.com/';
-        $username = 'user';
-        $password = 'secret';
-        $factory = new JiraServiceFactory($hostname, $username, $password, m::mock(Logger::class));
+        $token = 'secret';
+        $factory = new JiraServiceFactory(
+            host: $hostname,
+            personalAccessToken: $token,
+            logger: m::mock(Logger::class));
 
         $issueService = $factory->buildIssueService();
 
