@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -23,7 +25,7 @@ use Webmozart\Assert\Assert;
 
 class Contact
 {
-    public static function from(array $contactData)
+    public static function from(array $contactData): self
     {
         $type = $contactData['contactType'];
         $givenName = $contactData['givenName'] ?? '';
@@ -40,7 +42,7 @@ class Contact
         return new self($type, $givenName, $surName, $email, $phone);
     }
 
-    public static function fromContact(ContactVO $contact, string $type)
+    public static function fromContact(ContactVO $contact, string $type): self
     {
         return new self(
             $type,
@@ -56,7 +58,7 @@ class Contact
         private readonly ?string $givenName,
         private readonly ?string $surName,
         private readonly ?string $email,
-        private readonly ?string $phone
+        private readonly ?string $phone,
     ) {
     }
 

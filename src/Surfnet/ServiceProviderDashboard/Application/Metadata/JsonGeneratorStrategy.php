@@ -32,7 +32,7 @@ class JsonGeneratorStrategy
     /**
      * @var GeneratorInterface[] $strategies Keyed on the supported entity types
      */
-    private $strategies;
+    private ?array $strategies = null;
 
     /**
      * Add a strategy
@@ -40,30 +40,31 @@ class JsonGeneratorStrategy
      * Called from JsonGeneratorStrategyCompilerPass during compile time
      *
      * @param string $identifier
-     * @param GeneratorInterface $generator
      */
-    public function addStrategy($identifier, GeneratorInterface $generator)
+    public function addStrategy($identifier, GeneratorInterface $generator): void
     {
         $this->strategies[$identifier] = $generator;
     }
 
     /**
-     * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForNewEntity(ManageEntity $entity, string $workflowState)
+    public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         return $this->getStrategy($entity->getProtocol()->getProtocol())->generateForNewEntity($entity, $workflowState);
     }
 
     /**
-     * @return array
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    public function generateForExistingEntity(ManageEntity $entity, EntityDiff $differences, string $workflowState, string $updatedPart = '')
-    {
+    public function generateForExistingEntity(
+        ManageEntity $entity,
+        EntityDiff $differences,
+        string $workflowState,
+        string $updatedPart = '',
+    ): array {
         return $this->getStrategy($entity->getProtocol()->getProtocol())
-                    ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);
+            ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);
     }
 
     public function generateEntityChangeRequest(ManageEntity $entity, EntityDiff $differences, Contact $contact): array
@@ -73,11 +74,11 @@ class JsonGeneratorStrategy
     }
 
     /**
-     * @param $protocol
+     * @param  $protocol
      * @return GeneratorInterface
      * @throws JsonGeneratorStrategyNotFoundException
      */
-    private function getStrategy($protocol)
+    private function getStrategy(?string $protocol)
     {
         if (!isset($this->strategies[$protocol])) {
             throw new JsonGeneratorStrategyNotFoundException(

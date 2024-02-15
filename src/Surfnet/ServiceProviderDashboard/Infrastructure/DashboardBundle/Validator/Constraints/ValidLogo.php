@@ -19,10 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Attribute;
 
-/**
- * @Annotation
- */
+#[Attribute]
 class ValidLogo extends Constraint
 {
     public $message = 'validator.logo.not_an_image';

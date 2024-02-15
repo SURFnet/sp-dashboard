@@ -25,20 +25,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PrivacyQuestionsType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builderHelper = new PrivacyQuestionsFormBuilder();
         $builderHelper->buildForm($builder);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => PrivacyQuestionsCommand::class,
-        ));
+        $resolver->setDefaults(['data_class' => PrivacyQuestionsCommand::class]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_privacy_questions_type';
     }

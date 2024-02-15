@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -27,7 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestReposi
 class ChangeRequestService implements ChangeRequestServiceInterface
 {
     public function __construct(
-        private readonly EntityChangeRequestRepository $repository
+        private readonly EntityChangeRequestRepository $repository,
     ) {
     }
 

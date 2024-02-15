@@ -18,48 +18,49 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EntityDetailController extends AbstractController
 {
     public function __construct(
         private readonly EntityServiceInterface $entityService,
         private readonly AuthorizationService $authorizationService,
-        private readonly EntityDetailFactory $entityDetailFactory
+        private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
 
     /**
-     * @Route("/entity/detail/{serviceId}/{id}/{manageTarget}",
-     *     name="entity_detail",
-     *     methods={"GET"},
-     *     defaults={"manageTarget" = false
-     *     })
-     * @Security("is_granted('ROLE_USER')")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
+     * @return                              \Symfony\Component\HttpFoundation\RedirectResponse|array
      */
-    public function detailAction(string $id, int $serviceId, string $manageTarget): Response
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/entity/detail/{serviceId}/{id}/{manageTarget}', name: 'entity_detail', methods: ['GET'], defaults: ['manageTarget' => false])]
+    public function detail(string $id, int $serviceId, string $manageTarget): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $team = $service->getTeamName();
-        /** @var ManageEntity $entity */
+        /**
+ * @var ManageEntity $entity
+*/
         $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
         if ($entity->getMetaData()->getCoin()->getServiceTeamId() !== $team) {
             $entity->setIsReadOnly();
         }
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return $this->render('@Dashboard/EntityDetail/detail.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityDetail/detail.html.twig',
+            [
             'entity' => $viewObject,
             'isAdmin' => $this->isGranted('ROLE_ADMINISTRATOR'),
-        ]);
+            ]
+        );
     }
 }

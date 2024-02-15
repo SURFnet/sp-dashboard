@@ -29,17 +29,16 @@ use function is_bool;
 
 class IssueRepositoryCompilerPass implements CompilerPassInterface
 {
-    const ENABLE_TEST_MODE_FEATURE_FLAG = 'jira_enable_test_mode';
-    const JIRA_REPOSITORY_ISSUE_SERVICE = 'surfnet.dashboard.repository.issue';
+    final public const ENABLE_TEST_MODE_FEATURE_FLAG = 'jira_enable_test_mode';
+    final public const JIRA_REPOSITORY_ISSUE_SERVICE = 'surfnet.dashboard.repository.issue';
 
     /**
      * Based on the jira_enable_test_mode feature flag, will load the regular or test stand in for the IssueRepository.
      *
-     * @param ContainerBuilder $container
      * @SuppressWarnings(PHPMD.ElseExpression)
-     * @throws Exception
+     * @throws                                 Exception
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $enableJiraTestMode = $container->getParameter(self::ENABLE_TEST_MODE_FEATURE_FLAG);
         $hasDefinition = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
@@ -56,34 +55,36 @@ class IssueRepositoryCompilerPass implements CompilerPassInterface
 
     /**
      * Configure the 'real' Jira repository
-     * @param ContainerBuilder $container
      */
-    private function configureService(ContainerBuilder $container)
+    private function configureService(ContainerBuilder $container): void
     {
         $service = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
         $service->setClass(IssueRepository::class);
-        $service->setArguments([
+        $service->setArguments(
+            [
             $container->getDefinition(JiraServiceFactory::class),
             $container->getDefinition(IssueFieldFactory::class),
             $container->getParameter('env(jira_issue_project_key)'),
             $container->getParameter('env(jira_issue_type)'),
             $container->getParameter('env(jira_issue_manageid_fieldname)'),
-            $container->getParameter('env(jira_issue_manageid_field_label)')
-        ]);
+            $container->getParameter('env(jira_issue_manageid_field_label)'),
+            ]
+        );
         $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);
     }
 
     /**
      * Configure the test stand-in Jira repository
-     * @param ContainerBuilder $container
      */
-    private function configureServiceInTestMode(ContainerBuilder $container)
+    private function configureServiceInTestMode(ContainerBuilder $container): void
     {
         $service = $container->getDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE);
         $service->setClass(DevelopmentIssueRepository::class);
-        $service->setArguments([
-            $container->getParameter('env(jira_test_mode_storage_path)')
-        ]);
+        $service->setArguments(
+            [
+            $container->getParameter('env(jira_test_mode_storage_path)'),
+            ]
+        );
         $container->setDefinition(self::JIRA_REPOSITORY_ISSUE_SERVICE, $service);
     }
 }

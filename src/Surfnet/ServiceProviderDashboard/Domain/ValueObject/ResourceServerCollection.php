@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -22,26 +23,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ResourceServerCollection
 {
     /**
-     * @Assert\All({
-     *     @Assert\NotBlank
-     * }, groups={"Default", "production"})
-     *
-     * @var string[]
-     */
-    private $clientsIds;
-
-    /**
      * @param string[] $clientsIds
      */
-    public function __construct(array $clientsIds)
-    {
-        $this->clientsIds = $clientsIds;
+    public function __construct(
+        #[Assert\All([
+            new Assert\NotBlank(),
+        ], groups: ["Default", "production"])]
+        private readonly array $clientsIds,
+    ) {
     }
 
     /**
      * @return string[]
      */
-    public function getResourceServers()
+    public function getResourceServers(): array
     {
         return $this->clientsIds;
     }

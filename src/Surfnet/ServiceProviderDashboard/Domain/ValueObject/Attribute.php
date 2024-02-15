@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -18,7 +20,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-class Attribute
+use Stringable;
+
+class Attribute implements Stringable
 {
     /**
      * @var bool
@@ -30,20 +34,15 @@ class Attribute
      */
     private $motivation;
 
-    /**
-     * @return boolean
-     */
-    public function isRequested()
+    public function isRequested(): bool
     {
         return $this->requested;
     }
 
     /**
      * @param bool $requested
-     *
-     * @return $this
      */
-    public function setRequested($requested)
+    public function setRequested($requested): static
     {
         $this->requested = $requested;
 
@@ -60,25 +59,20 @@ class Attribute
 
     /**
      * @param string $motivation
-     *
-     * @return $this
      */
-    public function setMotivation($motivation)
+    public function setMotivation($motivation): static
     {
         $this->motivation = $motivation;
 
         return $this;
     }
 
-    public function hasMotivation()
+    public function hasMotivation(): bool
     {
-        return !empty(trim($this->motivation));
+        return trim($this->motivation) !== '' && trim($this->motivation) !== '0';
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         if (!$this->requested) {
             return '-';

@@ -24,7 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -35,26 +35,25 @@ class EntityEditController extends AbstractController
 
     /**
      * Subscribe to the PRE_SUBMIT form event to be able to import the metadata
-     * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            FormEvents::PRE_SUBMIT => 'onPreSubmit',
-        );
+        return [FormEvents::PRE_SUBMIT => 'onPreSubmit'];
     }
 
     /**
-     * @Route("/entity/edit/{environment}/{manageId}/{serviceId}", name="entity_edit", methods={"GET", "POST"})
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function editAction(Request $request, string $environment, string $manageId, int $serviceId)
+    #[Route(
+        path: '/entity/edit/{environment}/{manageId}/{serviceId}',
+        name: 'entity_edit',
+        methods: ['GET', 'POST']
+    )]
+    public function edit(Request $request, string $environment, string $manageId, int $serviceId): Response
     {
-        $flashBag = $this->get('session')->getFlashBag();
+        $flashBag = $request->getSession()->getFlashBag();
         $service = $this->serviceService->getServiceById($serviceId);
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $entityServiceId = $entity->getService()->getId();
@@ -92,11 +91,11 @@ class EntityEditController extends AbstractController
                         $environment === Constants::ENVIRONMENT_PRODUCTION;
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $flashBag);
+                        $response = $this->publishEntity($entity, $command, $isProductionEntityEdit, $request);
 
                         if ($response instanceof Response) {
                             if ($environment !== Constants::ENVIRONMENT_PRODUCTION) {
-                                $flashBag->add('info', 'entity.edit.metadata.flash.success');
+                                $this->addFlash('info', 'entity.edit.metadata.flash.success');
                             }
                             return $response;
                         }
@@ -114,15 +113,18 @@ class EntityEditController extends AbstractController
 
                     return $this->redirectToRoute('service_overview');
                 }
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
             }
         }
 
-        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityEdit/edit.html.twig',
+            [
             'form' => $form->createView(),
             'type' => $entity->getProtocol()->getProtocol(),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -135,9 +137,6 @@ class EntityEditController extends AbstractController
     private function requestFromCreateAction(Request $request): bool
     {
         $requestUri = $request->headers->get('referer', false);
-        if ($requestUri && preg_match('/\/entity\/create/', $requestUri)) {
-            return true;
-        }
-        return false;
+        return $requestUri && preg_match('/\/entity\/create/', $requestUri);
     }
 }

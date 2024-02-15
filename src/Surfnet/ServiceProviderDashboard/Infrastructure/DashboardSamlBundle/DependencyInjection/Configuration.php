@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -27,7 +29,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('dashboard_saml');
         $rootNode = $treeBuilder->getRootNode();
@@ -37,10 +39,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param NodeBuilder $childNodes
-     */
-    private function appendSessionConfiguration(NodeBuilder $childNodes)
+    private function appendSessionConfiguration(NodeBuilder $childNodes): void
     {
         $childNodes
             ->scalarNode('administrator_teams')
@@ -57,9 +56,7 @@ class Configuration implements ConfigurationInterface
                         ->example('3600 -> 1 hour * 60 minutes * 60 seconds')
                         ->validate()
                             ->ifTrue(
-                                function ($lifetime) {
-                                    return !is_int($lifetime);
-                                }
+                                fn($lifetime): bool => !is_int($lifetime)
                             )
                             ->thenInvalid('max_absolute_lifetime must be an integer')
                         ->end()
@@ -74,9 +71,7 @@ class Configuration implements ConfigurationInterface
                         ->example('600 -> 10 minutes * 60 seconds')
                         ->validate()
                             ->ifTrue(
-                                function ($lifetime) {
-                                    return !is_int($lifetime);
-                                }
+                                fn($lifetime): bool => !is_int($lifetime)
                             )
                             ->thenInvalid('max_relative_lifetime must be an integer')
                         ->end()

@@ -27,15 +27,15 @@ class UrnFormattedTeamNameValidator extends ConstraintValidator
 {
     public function __construct(
         private readonly string $defaultStemName,
-        private readonly string $groupName
+        private readonly string $groupName,
     ) {
     }
 
     /**
-     * @param string $value
+     * @param  string $value
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $teamName = $value;
         $hasDefaultStemName = strpos($teamName, $this->defaultStemName);

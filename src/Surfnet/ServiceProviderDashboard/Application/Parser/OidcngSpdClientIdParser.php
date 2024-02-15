@@ -31,10 +31,9 @@ namespace Surfnet\ServiceProviderDashboard\Application\Parser;
 class OidcngSpdClientIdParser
 {
     /**
-     * @param string $entityId
-     * @return string
+     * @param  string $entityId
      */
-    public static function parse($entityId)
+    public static function parse($entityId): string
     {
         $clientIdFormat = "https://%s";
 

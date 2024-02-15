@@ -31,24 +31,21 @@ use function strtolower;
 
 class OidcngClient implements Comparable, OidcClientInterface
 {
-    const FORM_MANAGED_GRANTS = [
+    final public const FORM_MANAGED_GRANTS = [
         'entity.edit.label.authorization_code' => Constants::GRANT_TYPE_AUTHORIZATION_CODE,
-        'entity.edit.label.implicit' => Constants::GRANT_TYPE_IMPLICIT
+        'entity.edit.label.implicit' => Constants::GRANT_TYPE_IMPLICIT,
     ];
 
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data): self
     {
         $clientId = self::getLowercasedStringOrEmpty($data['data'], 'entityid');
         $clientSecret = self::getStringOrEmpty($data['data']['metaDataFields'], 'secret');
         $redirectUris = self::getLowercasedArrayOrEmpty($data['data']['metaDataFields'], 'redirectUrls');
 
-        $grantType = isset($data['data']['metaDataFields']['grants'])
-            ? $data['data']['metaDataFields']['grants'] : [];
-        $isPublicClient = isset($data['data']['metaDataFields']['isPublicClient'])
-            ? $data['data']['metaDataFields']['isPublicClient'] : true;
-        $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
-            ? $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
-        $resourceServers = isset($data['resourceServers']) ? $data['resourceServers'] : [];
+        $grantType = $data['data']['metaDataFields']['grants'] ?? [];
+        $isPublicClient = $data['data']['metaDataFields']['isPublicClient'] ?? true;
+        $accessTokenValidity = $data['data']['metaDataFields']['accessTokenValidity'] ?? 3600;
+        $resourceServers = $data['resourceServers'] ?? [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
@@ -79,69 +76,55 @@ class OidcngClient implements Comparable, OidcClientInterface
         private array $grants,
         private bool $isPublicClient,
         private int $accessTokenValidity,
-        private array $resourceServers
+        private array $resourceServers,
     ) {
     }
 
     /**
-     * @param array $data
-     * @param $key
+     * @param  $key
      * @return string
      */
     private static function getStringOrEmpty(array $data, $key)
     {
-        return isset($data[$key]) ? $data[$key] : '';
+        return $data[$key] ?? '';
     }
 
     /**
-     * @param array $data
-     * @param $key
-     * @return string
+     * @param  $key
      */
-    private static function getLowercasedStringOrEmpty(array $data, $key)
+    private static function getLowercasedStringOrEmpty(array $data, $key): string
     {
-        return isset($data[$key]) ? strtolower($data[$key]) : '';
+        return isset($data[$key]) ? strtolower((string) $data[$key]) : '';
     }
 
     /**
-     * @param array $data
-     * @param $key
-     * @return array
+     * @param  $key
      */
-    private static function getLowercasedArrayOrEmpty(array $data, $key)
+    private static function getLowercasedArrayOrEmpty(array $data, $key): array
     {
         $urls = [];
         if (isset($data[$key])) {
             foreach ($data[$key] as $url) {
-                $protocolSlashes = strpos($url, '://');
-                $hostname = strpos($url, '/', $protocolSlashes + 3);
-                $lowercased = strtolower(substr($url, 0, $hostname));
-                $urls[] = $lowercased . substr($url, $hostname);
+                $protocolSlashes = strpos((string) $url, '://');
+                $hostname = strpos((string) $url, '/', $protocolSlashes + 3);
+                $lowercased = strtolower(substr((string) $url, 0, $hostname));
+                $urls[] = $lowercased . substr((string) $url, $hostname);
             }
         }
         return $urls;
     }
 
-     /**
-     * @return string
-     */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientSecret()
+    public function getClientSecret(): string
     {
         return $this->clientSecret;
     }
 
-    /**
-     * @return array
-     */
-    public function getRedirectUris()
+    public function getRedirectUris(): array
     {
         return $this->redirectUris;
     }
@@ -151,23 +134,17 @@ class OidcngClient implements Comparable, OidcClientInterface
         return $this->grants;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublicClient()
+    public function isPublicClient(): bool
     {
         return $this->isPublicClient;
     }
 
-    /**
-     * @return int
-     */
     public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
     }
 
-    public function getResourceServers()
+    public function getResourceServers(): array
     {
         return $this->resourceServers;
     }
@@ -212,14 +189,17 @@ class OidcngClient implements Comparable, OidcClientInterface
      * The team name is used to distinguish between Manage selected RS's (possibly outside of own team)
      * and the ones configured in SPD.
      */
-    private function mergeResourceServers(array $clientResourceServers, string $homeTeam)
+    private function mergeResourceServers(array $clientResourceServers, string $homeTeam): void
     {
         $manageResourceServers = $this->resourceServers;
         // Filter out the Manage managed RS servers, from outside the 'home' team.
-        $manageResourceServers = array_filter($manageResourceServers, function (ManageEntity $server) use ($homeTeam) {
-            $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
-            return $homeTeam !== $teamName;
-        });
+        $manageResourceServers = array_filter(
+            $manageResourceServers,
+            function (ManageEntity $server) use ($homeTeam): bool {
+                $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
+                return $homeTeam !== $teamName;
+            }
+        );
         $manageRsEntityIds = [];
         // Reduce the manage entities to only their entityId
         foreach ($manageResourceServers as $server) {
@@ -232,9 +212,8 @@ class OidcngClient implements Comparable, OidcClientInterface
 
     /**
      * Remove the form managed grants from the Manage grants, and reset them with the grants selected on the form
-     * @param array $formGrants
      */
-    private function mergeGrants(array $formGrants)
+    private function mergeGrants(array $formGrants): void
     {
         $manageGrants = $this->grants;
         $manageGrants = array_diff($manageGrants, self::FORM_MANAGED_GRANTS);

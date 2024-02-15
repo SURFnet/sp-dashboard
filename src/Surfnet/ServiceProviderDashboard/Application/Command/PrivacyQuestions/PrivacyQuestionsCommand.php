@@ -30,19 +30,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class PrivacyQuestionsCommand implements Command
 {
-    const MODE_CREATE = 0;
+    final public const MODE_CREATE = 0;
 
-    const MODE_EDIT = 1;
+    final public const MODE_EDIT = 1;
 
-    /**
-     * @var int
-     */
-    private $mode;
+    private ?int $mode = null;
     
-    /**
-     * @var Service
-     */
-    private $service;
+    private ?Service $service = null;
 
     /**
      * @var string
@@ -69,26 +63,20 @@ class PrivacyQuestionsCommand implements Command
      */
     private $otherInfo;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type("Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType")
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type(DpaType::class)]
     private DpaType $dpaType;
 
-    /**
-     * @Assert\Url()
-     */
+    #[Assert\Url]
     public ?string $privacyStatementUrlNl = '';
 
-    /**
-     * @Assert\Url()
-     */
+    #[Assert\Url]
     public ?string $privacyStatementUrlEn = '';
 
     /**
      * @param string $whatData
      */
-    public function setWhatData($whatData)
+    public function setWhatData($whatData): void
     {
         $this->whatData = $whatData;
     }
@@ -96,7 +84,7 @@ class PrivacyQuestionsCommand implements Command
     /**
      * @param string $accessData
      */
-    public function setAccessData($accessData)
+    public function setAccessData($accessData): void
     {
         $this->accessData = $accessData;
     }
@@ -104,7 +92,7 @@ class PrivacyQuestionsCommand implements Command
     /**
      * @param string $country
      */
-    public function setCountry($country)
+    public function setCountry($country): void
     {
         $this->country = $country;
     }
@@ -112,7 +100,7 @@ class PrivacyQuestionsCommand implements Command
     /**
      * @param string $securityMeasures
      */
-    public function setSecurityMeasures($securityMeasures)
+    public function setSecurityMeasures($securityMeasures): void
     {
         $this->securityMeasures = $securityMeasures;
     }
@@ -120,12 +108,12 @@ class PrivacyQuestionsCommand implements Command
     /**
      * @param string $otherInfo
      */
-    public function setOtherInfo($otherInfo)
+    public function setOtherInfo($otherInfo): void
     {
         $this->otherInfo = $otherInfo;
     }
 
-    public function setDpaType(string $dpaType)
+    public function setDpaType(string $dpaType): void
     {
         $this->dpaType = DpaType::fromString($dpaType);
     }
@@ -170,18 +158,12 @@ class PrivacyQuestionsCommand implements Command
         return $this->otherInfo;
     }
 
-    /**
-     * @return Service
-     */
-    public function getService()
+    public function getService(): ?Service
     {
         return $this->service;
     }
 
-    /**
-     * @return int
-     */
-    public function getMode()
+    public function getMode(): ?int
     {
         return $this->mode;
     }
@@ -191,7 +173,7 @@ class PrivacyQuestionsCommand implements Command
         return $this->dpaType;
     }
 
-    public static function fromService(Service $service)
+    public static function fromService(Service $service): self
     {
         $command = new self;
         $command->mode = self::MODE_CREATE;
@@ -200,7 +182,7 @@ class PrivacyQuestionsCommand implements Command
         return $command;
     }
 
-    public static function fromQuestions(PrivacyQuestions $questions)
+    public static function fromQuestions(PrivacyQuestions $questions): self
     {
         $command = new self;
         $command->mode = self::MODE_EDIT;

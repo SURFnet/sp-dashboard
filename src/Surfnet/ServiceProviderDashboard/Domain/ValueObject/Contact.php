@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -20,35 +22,33 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact as ContactEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Stringable;
 
-class Contact
+class Contact implements Stringable
 {
     /**
-     * @Assert\NotBlank(groups={"Default", "production"})
      * @var string
      */
+    #[Assert\NotBlank(groups: ['Default', 'production'])]
     private $firstName;
 
     /**
-     * @Assert\NotBlank(groups={"Default", "production"})
      * @var string
      */
+    #[Assert\NotBlank(groups: ['Default', 'production'])]
     private $lastName;
 
-    /**
-     * @Assert\NotBlank(groups={"Default", "production"})
-     * @var string
-     */
-    private $email;
+    #[Assert\NotBlank(groups: ['Default', 'production'])]
+    private string|null|array $email = null;
 
     /**
      * @var string
      */
     private $phone;
 
-    public static function from(?ContactEntity $contact)
+    public static function from(?ContactEntity $contact): ?Contact
     {
-        if ($contact) {
+        if ($contact instanceof ContactEntity) {
             $instance = new self;
             $instance->email = $contact->getEmail();
             $instance->firstName = $contact->getGivenName();
@@ -69,10 +69,8 @@ class Contact
 
     /**
      * @param string $firstName
-     *
-     * @return Contact
      */
-    public function setFirstName($firstName)
+    public function setFirstName($firstName): static
     {
         $this->firstName = $firstName;
 
@@ -89,30 +87,23 @@ class Contact
 
     /**
      * @param string $lastName
-     *
-     * @return Contact
      */
-    public function setLastName($lastName)
+    public function setLastName($lastName): static
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string|array|null
     {
         return $this->email;
     }
 
     /**
      * @param string $email
-     *
-     * @return Contact
      */
-    public function setEmail($email)
+    public function setEmail($email): static
     {
         // Managa adds a mailto: prefix to the contact email address in the
         // metadata XML, we strip it as a workaround.
@@ -131,20 +122,15 @@ class Contact
 
     /**
      * @param string $phone
-     *
-     * @return Contact
      */
-    public function setPhone($phone)
+    public function setPhone($phone): static
     {
         $this->phone = $phone;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         $result = $this->firstName . ' ' . $this->lastName .' (' . $this->email;
 
@@ -152,9 +138,7 @@ class Contact
             $result .= ' / ' . $this->phone;
         }
 
-        $result .= ')';
-
-        return $result;
+        return $result . ')';
     }
 
     /**
@@ -166,6 +150,9 @@ class Contact
      */
     public function isContactSet(): bool
     {
-        return !(empty($this->firstName) && empty($this->lastName) && empty($this->email) && empty($this->phone));
+        return !(empty($this->firstName)
+            && empty($this->lastName)
+            && empty($this->email)
+            && empty($this->phone));
     }
 }

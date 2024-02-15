@@ -24,14 +24,11 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 
 class SelectServiceCommandHandler implements CommandHandler
 {
-    public function __construct(private AuthorizationService $service)
+    public function __construct(private readonly AuthorizationService $service)
     {
     }
 
-    /**
-     * @param SelectServiceCommand $command
-     */
-    public function handle(SelectServiceCommand $command)
+    public function handle(SelectServiceCommand $command): void
     {
         $this->service->changeActiveService($command->getSelectedServiceId());
     }

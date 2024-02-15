@@ -20,7 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
@@ -32,12 +31,12 @@ class LoadEntityService
 {
     public function __construct(
         private readonly QueryManageRepository $manageTestClient,
-        private readonly QueryManageRepository $manageProductionClient
+        private readonly QueryManageRepository $manageProductionClient,
     ) {
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws                                       InvalidArgumentException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
@@ -45,7 +44,7 @@ class LoadEntityService
         string $manageId,
         Service $service,
         string $sourceEnvironment,
-        string $environment
+        string $environment,
     ): ManageEntity {
         $manageClient = $this->manageProductionClient;
         if ($sourceEnvironment == 'test') {

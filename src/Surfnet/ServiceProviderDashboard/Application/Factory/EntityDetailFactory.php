@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -31,7 +31,7 @@ class EntityDetailFactory
     public function __construct(
         private readonly AttributeServiceInterface $attributeService,
         private readonly string $playGroundUriTest,
-        private readonly string $playGroundUriProd
+        private readonly string $playGroundUriProd,
     ) {
     }
 
@@ -58,8 +58,8 @@ class EntityDetailFactory
         $redirectUris = null;
         $playgroundEnabled = null;
         $resourceServers = null;
-        if ($manageEntity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $manageEntity->getProtocol()->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        if ($manageEntity->getProtocol()->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG
+            || $manageEntity->getProtocol()->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
             $grants = $manageEntity->getOidcClient()->getGrants();
             $isPublicClient = $manageEntity->getOidcClient()->isPublicClient();

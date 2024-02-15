@@ -20,8 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use League\Tactician\CommandBus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Routing\Attribute\Route;
+
 use Surfnet\ServiceProviderDashboard\Application\Command\PrivacyQuestions\PrivacyQuestionsCommand;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
@@ -30,24 +30,25 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PrivacyQuestionsController extends AbstractController
 {
     public function __construct(
         private readonly CommandBus $commandBus,
         private readonly ServiceService $serviceService,
-        private readonly AuthorizationService $authorizationService
+        private readonly AuthorizationService $authorizationService,
     ) {
     }
 
     /**
-     * @Route("/service/{serviceId}/privacy", name="privacy_questions", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_USER')")
      *
-     * @param int $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     *
+     * @param  int $serviceId
      */
-    public function privacyAction($serviceId)
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/service/{serviceId}/privacy', name: 'privacy_questions', methods: ['GET', 'POST'])]
+    public function privacy($serviceId): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -58,26 +59,24 @@ class PrivacyQuestionsController extends AbstractController
         // Test if the questions have already been filled
         if ($service->getPrivacyQuestions() instanceof PrivacyQuestions) {
             return $this->forward(
-                'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::editAction',
+                'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::edit',
                 ['serviceId' => $serviceId]
             );
         }
         return $this->forward(
-            'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::createAction',
+            'Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\PrivacyQuestionsController::create',
             ['serviceId' => $serviceId]
         );
     }
 
     /**
-     * @Route("/service/{serviceId}/privacy/create", name="privacy_questions_create")
-     * @Security("is_granted('ROLE_USER')")
      *
-     * @param Request $request
      *
-     * @param $serviceId
-     * @return Response
+     * @param  $serviceId
      */
-    public function createAction(Request $request, $serviceId)
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/service/{serviceId}/privacy/create', name: 'privacy_questions_create')]
+    public function create(Request $request, int $serviceId): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -87,15 +86,13 @@ class PrivacyQuestionsController extends AbstractController
     }
 
     /**
-     * @Route("/service/{serviceId}/privacy/edit", name="privacy_questions_edit")
-     * @Security("is_granted('ROLE_USER')")
      *
-     * @param Request $request
      *
-     * @param $serviceId
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @param  $serviceId
      */
-    public function editAction(Request $request, $serviceId)
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/service/{serviceId}/privacy/edit', name: 'privacy_questions_edit')]
+    public function edit(Request $request, int $serviceId): Response
     {
         $service = $this->serviceService->getServiceById($serviceId);
 
@@ -109,7 +106,7 @@ class PrivacyQuestionsController extends AbstractController
     private function renderPrivacyQuestionsForm(
         Request $request,
         PrivacyQuestionsCommand $command,
-        int $serviceId
+        int $serviceId,
     ): RedirectResponse|Response {
         $form = $this->createForm(PrivacyQuestionsType::class, $command);
         $form->handleRequest($request);
@@ -124,8 +121,6 @@ class PrivacyQuestionsController extends AbstractController
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/Privacy/form.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render('@Dashboard/Privacy/form.html.twig', ['form' => $form->createView()]);
     }
 }

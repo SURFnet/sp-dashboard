@@ -31,197 +31,111 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- *
  */
 class SaveSamlEntityCommand implements SaveEntityCommandInterface
 {
-    /**
-     * @var string
-     * @Assert\Uuid
-     */
-    private $id;
+    #[Assert\Uuid]
+    private ?string $id = null;
+
+    private ?string $status = null;
+
+    private ?Service $service = null;
 
     /**
-     * @var string
-     */
-    private $status;
-
-    /**
-     * @var Service
-     */
-    private $service;
-
-    /**
-     * @var bool
      * @deprecated
      */
-    private $archived = false;
+    private bool $archived = false;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"production", "test"}, strict=true)
-     */
-    private $environment = Constants::ENVIRONMENT_TEST;
+    
+    #[Assert\NotBlank]
+    #[Assert\Choice(choices: ['production', 'test'], strict: true)]
+    private string $environment = Constants::ENVIRONMENT_TEST;
 
     /**
      * Metadata URL that import last happened from.
      *
-     * @var string
      * @deprecated
      */
-    private $importUrl;
+    private ?string $importUrl = null;
+
+    #[SpDashboardAssert\ValidMetadataUrl()]
+    private ?string $metadataUrl = null;
 
     /**
-     * @var string
-     *
-     * @SpDashboardAssert\ValidMetadataUrl()
-     */
-    private $metadataUrl;
-
-    /**
-     * @var string
      * @deprecated
      */
-    private $pastedMetadata;
+    private string $pastedMetadata;
 
-    /**
-     * @var array
-     *
-     * @Assert\All({
-     *      @Assert\NotBlank(),
-     *      @Assert\Url(
-     *          protocols={"https"},
-     *          message = "url.notSecure"
-     *      )
-     * })
-     * @Assert\Count(
-     *     min = 1,
-     *     minMessage="At least one ACS location is required",
-     *     max = 10,
-     *     maxMessage = "{{ limit }} ACS locations or less are allowed"
-     * )
-     */
-    private $acsLocations;
+    #[Assert\All([
+        new Assert\NotBlank(),
+        new Assert\Url(
+            message: "url.notSecure",
+            protocols: ["https"]
+        ),
+    ])]
+    #[Assert\Count(min: 1, max: 10, minMessage: 'At least one ACS location is required', maxMessage: '{{ limit }} ACS locations or less are allowed')]
+    private ?array $acsLocations = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @SpDashboardAssert\ValidEntityId()
-     * @SpDashboardAssert\UniqueEntityId()
-     */
-    private $entityId;
+    #[SpDashboardAssert\ValidEntityId()]
+    #[SpDashboardAssert\UniqueEntityId()]
+    #[Assert\NotBlank]
+    private string $entityId;
 
-    /**
-     * @var string
-     *
-     * @SpDashboardAssert\ValidSSLCertificate()
-     */
-    private $certificate;
+    #[SpDashboardAssert\ValidSSLCertificate()]
+    private string $certificate;
 
-    /**
-     * @var string
-     *
-     * @Assert\Url()
-     * @SpDashboardAssert\ValidLogo()
-     * @Assert\NotBlank()
-     */
-    private $logoUrl;
+    #[SpDashboardAssert\ValidLogo()]
+    #[Assert\Url]
+    #[Assert\NotBlank]
+    private ?string $logoUrl = null;
 
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     */
-    private $nameNl;
+    #[Assert\NotBlank]
+    private ?string $nameNl = null;
 
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     */
-    private $nameEn;
+    #[Assert\NotBlank]
+    private ?string $nameEn = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
-     */
-    private $descriptionNl;
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
+    private ?string $descriptionNl = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
-     */
-    private $descriptionEn;
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
+    private ?string $descriptionEn = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\Url()
-     */
-    private $applicationUrl;
+    #[Assert\Url]
+    private ?string $applicationUrl = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\Url()
-     */
-    private $eulaUrl;
+    #[Assert\Url]
+    private ?string $eulaUrl = null;
 
-    /**
-     * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
-     */
-    private $administrativeContact;
+    
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
+    private ?Contact $administrativeContact = null;
 
-    /**
-     * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid()
-     */
-    private $technicalContact;
+    
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid]
+    private ?Contact $technicalContact = null;
 
-    /**
-     * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
-     */
-    private $supportContact;
+    
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
+    private ?Contact $supportContact = null;
 
-    /**
-     * @SpDashboardAssert\ValidAttribute(type="saml20")
-     */
-    private $attributes = [];
+    #[SpDashboardAssert\ValidAttribute(
+        type: 'saml20'
+    )]
+    private array $attributes = [];
 
-    /**
-     * @var string
-     */
-    private $comments;
+    private ?string $comments = null;
 
-    /**
-     * @var string
-     * @Assert\Choice(
-     *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Constants",
-     *         "getValidNameIdFormats"
-     *     },
-     *     strict=true
-     * )
-     */
-    private $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
+    #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]
+    private ?string $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
 
-    /**
-     * @var string
-     */
-    private $manageId;
+    private ?string $manageId = null;
+    private ?Attribute $organizationUnitAttribute = null;
 
     public function __construct()
     {
@@ -242,7 +156,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->getAttribute($property);
     }
 
-    public function setAttribute(string $property, ?Attribute $value)
+    public function setAttribute(string $property, ?Attribute $value): void
     {
         $this->attributes[$property] = $value;
     }
@@ -259,29 +173,19 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return null;
     }
 
-    /**
-     * @param Service $service
-     * @return SaveSamlEntityCommand
-     */
-    public static function forCreateAction(Service $service)
+    public static function forCreateAction(Service $service): self
     {
         $command = new self();
         $command->service = $service;
         return $command;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->status;
     }
@@ -291,18 +195,12 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->service;
     }
 
-    /**
-     * @return bool
-     */
-    public function isArchived()
+    public function isArchived(): bool
     {
         return $this->archived;
     }
 
-    /**
-     * @param bool $archived
-     */
-    public function setArchived($archived)
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }
@@ -312,15 +210,16 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->environment;
     }
 
-    /**
-     * @param string $environment
-     */
-    public function setEnvironment($environment)
+    public function setEnvironment(string $environment): void
     {
-        if (!in_array($environment, [
+        if (!in_array(
+            $environment,
+            [
             Constants::ENVIRONMENT_TEST,
             Constants::ENVIRONMENT_PRODUCTION,
-        ])) {
+            ]
+        )
+        ) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
             );
@@ -329,18 +228,12 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->environment = $environment;
     }
 
-    /**
-     * @return string
-     */
-    public function getImportUrl()
+    public function getImportUrl(): string
     {
         return $this->importUrl;
     }
 
-    /**
-     * @param string $importUrl
-     */
-    public function setImportUrl($importUrl)
+    public function setImportUrl(?string $importUrl): void
     {
         $this->importUrl = $importUrl;
     }
@@ -350,26 +243,17 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->metadataUrl;
     }
 
-    /**
-     * @param string $metadataUrl
-     */
-    public function setMetadataUrl($metadataUrl)
+    public function setMetadataUrl(string $metadataUrl): void
     {
         $this->metadataUrl = $metadataUrl;
     }
 
-    /**
-     * @return string
-     */
-    public function getPastedMetadata()
+    public function getPastedMetadata(): string
     {
         return $this->pastedMetadata;
     }
 
-    /**
-     * @param string $pastedMetadata
-     */
-    public function setPastedMetadata($pastedMetadata)
+    public function setPastedMetadata(string $pastedMetadata): void
     {
         $this->pastedMetadata = $pastedMetadata;
     }
@@ -379,56 +263,37 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         $this->acsLocations = $acsLocations;
     }
 
-    /**
-     * @return array
-     */
     public function getAcsLocations(): ?array
     {
         return $this->acsLocations;
     }
-
 
     public function getEntityId(): ?string
     {
         return $this->entityId;
     }
 
-    /**
-     * @param string $entityId
-     */
-    public function setEntityId($entityId)
+    public function setEntityId(string $entityId): void
     {
         $this->entityId = $entityId;
     }
 
-    /**
-     * @return string
-     */
     public function getCertificate(): ?string
     {
         return $this->certificate;
     }
 
-    /**
-     * @param string $certificate
-     */
-    public function setCertificate($certificate)
+    public function setCertificate(string $certificate): void
     {
         $this->certificate = $certificate;
     }
 
-    /**
-     * @return string
-     */
     public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
     }
 
-    /**
-     * @param string $logoUrl
-     */
-    public function setLogoUrl($logoUrl)
+    public function setLogoUrl(string $logoUrl): void
     {
         $this->logoUrl = $logoUrl;
     }
@@ -438,10 +303,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->nameNl;
     }
 
-    /**
-     * @param string $nameNl
-     */
-    public function setNameNl($nameNl)
+    public function setNameNl(string $nameNl): void
     {
         $this->nameNl = $nameNl;
     }
@@ -451,10 +313,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->nameEn;
     }
 
-    /**
-     * @param string $nameEn
-     */
-    public function setNameEn($nameEn)
+    public function setNameEn(string $nameEn): void
     {
         $this->nameEn = $nameEn;
     }
@@ -464,10 +323,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->descriptionNl;
     }
 
-    /**
-     * @param string $descriptionNl
-     */
-    public function setDescriptionNl($descriptionNl)
+    public function setDescriptionNl(string $descriptionNl): void
     {
         $this->descriptionNl = $descriptionNl;
     }
@@ -477,42 +333,27 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->descriptionEn;
     }
 
-    /**
-     * @param string $descriptionEn
-     */
-    public function setDescriptionEn($descriptionEn)
+    public function setDescriptionEn(string $descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
     }
 
-    /**
-     * @return string
-     */
     public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
     }
 
-    /**
-     * @param string $applicationUrl
-     */
-    public function setApplicationUrl($applicationUrl)
+    public function setApplicationUrl(?string $applicationUrl): void
     {
         $this->applicationUrl = $applicationUrl;
     }
 
-    /**
-     * @return string
-     */
     public function getEulaUrl(): ?string
     {
         return $this->eulaUrl;
     }
 
-    /**
-     * @param string $eulaUrl
-     */
-    public function setEulaUrl($eulaUrl)
+    public function setEulaUrl(?string $eulaUrl): void
     {
         $this->eulaUrl = $eulaUrl;
     }
@@ -522,7 +363,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->administrativeContact;
     }
 
-    public function setAdministrativeContact(?Contact $administrativeContact)
+    public function setAdministrativeContact(?Contact $administrativeContact): void
     {
         $this->administrativeContact = $administrativeContact;
     }
@@ -532,7 +373,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->technicalContact;
     }
 
-    public function setTechnicalContact(?Contact $technicalContact)
+    public function setTechnicalContact(?Contact $technicalContact): void
     {
         $this->technicalContact = $technicalContact;
     }
@@ -542,86 +383,62 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->supportContact;
     }
 
-    public function setSupportContact(?Contact $supportContact)
+    public function setSupportContact(?Contact $supportContact): void
     {
         $this->supportContact = $supportContact;
     }
 
-    /**
-     * @return string
-     */
     public function getComments(): ?string
     {
         return $this->comments;
     }
 
-    /**
-     * @param string $comments
-     */
-    public function setComments($comments)
+    public function setComments(string $comments): void
     {
         $this->comments = $comments;
     }
 
-    /**
-     * @return string
-     */
     public function getNameIdFormat(): ?string
     {
         return $this->nameIdFormat;
     }
 
-    /**
-     * @param string $nameIdFormat
-     */
-    public function setNameIdFormat($nameIdFormat)
+    public function setNameIdFormat(?string $nameIdFormat): void
     {
         $this->nameIdFormat = $nameIdFormat;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasNameIdFormat()
+    public function hasNameIdFormat(): bool
     {
-        return !empty($this->nameIdFormat);
+        return $this->nameIdFormat !== '' && $this->nameIdFormat !== '0';
     }
 
-    public function isForProduction()
+    public function isForProduction(): bool
     {
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setId($id)
+    public function setId(?string $id): void
     {
         $this->id = $id;
     }
 
-    public function setStatus($status)
+    public function setStatus(?string $status): void
     {
         $this->status = $status;
     }
 
-    /**
-     * @param Service $service
-     */
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
 
-    /**
-     * @return string
-     */
-    public function getManageId()
+    public function getManageId(): ?string
     {
         return $this->manageId;
     }
 
-    /**
-     * @param string $manageId
-     */
-    public function setManageId($manageId)
+    public function setManageId(?string $manageId): void
     {
         $this->manageId = $manageId;
     }

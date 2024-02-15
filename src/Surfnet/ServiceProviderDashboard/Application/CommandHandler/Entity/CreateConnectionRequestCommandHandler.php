@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -26,35 +26,15 @@ use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 
 class CreateConnectionRequestCommandHandler implements CommandHandler
 {
-    /**
-     * @var TicketService
-     */
-    private $ticketService;
+    private string $summaryTranslationKey = 'entity.connection_request.ticket.summary';
 
-    /**
-     * @var string
-     */
-    private $issueType;
+    private string $summaryTranslationDescription = 'entity.connection_request.ticket.description';
 
-    /**
-     * @var string
-     */
-    private $summaryTranslationKey;
-
-    /**
-     * @var string
-     */
-    private $summaryTranslationDescription;
-
-    public function __construct(TicketService $ticketService, string $issueType)
+    public function __construct(private readonly TicketService $ticketService, private readonly string $issueType)
     {
-        $this->ticketService = $ticketService;
-        $this->issueType = $issueType;
-        $this->summaryTranslationKey = 'entity.connection_request.ticket.summary';
-        $this->summaryTranslationDescription = 'entity.connection_request.ticket.description';
     }
 
-    public function handle(CreateConnectionRequestCommand $command)
+    public function handle(CreateConnectionRequestCommand $command): void
     {
         $this->ticketService->createJiraTicketForConnectionRequests(
             $command,

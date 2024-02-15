@@ -26,9 +26,8 @@ class ValidSSLCertificateValidator extends ConstraintValidator
 
     /**
      * @param mixed      $value
-     * @param Constraint $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (null === $value || '' === $value) {
             return;
@@ -47,7 +46,7 @@ class ValidSSLCertificateValidator extends ConstraintValidator
         openssl_x509_export($value, $cert, false);
 
         $matches = [];
-        if (!preg_match('~Public-Key: \((\d+) bit\)~', $cert, $matches)) {
+        if (!preg_match('~Public-Key: \((\d+) bit\)~', (string) $cert, $matches)) {
             $this->context->addViolation('validator.ssl_certificate.unknown_key_length');
 
             return;
@@ -56,32 +55,29 @@ class ValidSSLCertificateValidator extends ConstraintValidator
         if ($matches[1] < 2048) {
             $this->context->addViolation(
                 'validator.ssl_certificate.wrong_key_length',
-                array(
-                    '%length%' => $matches[1]
-                )
+                ['%length%' => $matches[1]]
             );
 
             return;
         }
     }
 
-    private function setCertificateEnvelope($certData)
+    private function setCertificateEnvelope($certData): string
     {
         $certData = $this->stripCertificateEnvelope($certData);
-        $certData = $this->addCertificateEnvelope($certData);
 
-        return $certData;
+        return $this->addCertificateEnvelope($certData);
     }
 
-    private function stripCertificateEnvelope($certData)
+    private function stripCertificateEnvelope($certData): string
     {
-        $certData = str_replace('-----BEGIN CERTIFICATE-----', '', $certData);
+        $certData = str_replace('-----BEGIN CERTIFICATE-----', '', (string) $certData);
         $certData = str_replace('-----END CERTIFICATE-----', '', $certData);
 
         return trim($certData);
     }
 
-    private function addCertificateEnvelope($certData)
+    private function addCertificateEnvelope(string $certData): string
     {
         return "-----BEGIN CERTIFICATE-----" . PHP_EOL . $certData . PHP_EOL . "-----END CERTIFICATE-----";
     }

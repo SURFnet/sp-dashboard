@@ -25,39 +25,28 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataComm
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PushMetadataException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Service\ManagePublishService;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PushMetadataCommandHandlerTest extends MockeryTestCase
 {
-    /**
-     * @var m\MockInterface&ManagePublishService
-     */
-    private $publishService;
+    private ManagePublishService|m\LegacyMockInterface|m\MockInterface $publishService;
 
-    /**
-     * @var m\MockInterface&LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface|m\LegacyMockInterface|m\MockInterface $logger;
 
-    /**
-     * @var m\MockInterface&FlashBagInterface
-     */
-    private $flashBag;
+    private RequestStack|m\MockInterface|FlashBagInterface|m\LegacyMockInterface $requestStack;
 
-    /**
-     * @var PushMetadataCommandHandler
-     */
-    private $commandHandler;
+    private PushMetadataCommandHandler $commandHandler;
 
     public function setUp(): void
     {
         $this->publishService = m::mock(ManagePublishService::class);
         $this->logger = m::mock(LoggerInterface::class);
-        $this->flashBag = m::mock(FlashBagInterface::class);
+        $this->requestStack = m::mock(RequestStack::class);
 
         $this->commandHandler = new PushMetadataCommandHandler(
             $this->publishService,
-            $this->flashBag,
+            $this->requestStack,
             $this->logger
         );
     }
@@ -79,7 +68,7 @@ class PushMetadataCommandHandlerTest extends MockeryTestCase
 
         $this->logger->shouldReceive('info')->with('Pushing metadata to EngineBlock using the production environment.');
         $this->logger->shouldReceive('error')->with('Pushing to EngineBlock failed with message: "Foobar"');
-        $this->flashBag->shouldReceive('add')->with('error', 'entity.edit.error.push');
+        $this->requestStack ->shouldReceive('getSession->getFlashBag->add')->with('error', 'entity.edit.error.push');
 
         $this->assertNull($this->commandHandler->handle(new PushMetadataCommand('production')));
     }

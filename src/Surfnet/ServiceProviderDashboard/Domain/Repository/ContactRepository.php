@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -22,9 +24,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 
 interface ContactRepository
 {
-    /**
-     * @param Contact $contact
-     */
     public function save(Contact $contact);
 
     /**

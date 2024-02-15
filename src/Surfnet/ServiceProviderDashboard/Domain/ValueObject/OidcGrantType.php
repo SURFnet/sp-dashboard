@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,22 +25,17 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class OidcGrantType
 {
-    private static $validGrantTypes = [
+    private static array $validGrantTypes = [
         Constants::GRANT_TYPE_AUTHORIZATION_CODE,
         Constants::GRANT_TYPE_IMPLICIT,
         Constants::GRANT_TYPE_CLIENT_CREDENTIALS,
     ];
 
-    /**
-     * @var string
-     */
-    private $grantType;
+    private readonly string $grantType;
 
-    /**
-     * @param string $grantType
-     */
-    public function __construct($grantType = Constants::GRANT_TYPE_AUTHORIZATION_CODE)
-    {
+    public function __construct(
+        string $grantType = Constants::GRANT_TYPE_AUTHORIZATION_CODE,
+    ) {
         if (!in_array($grantType, self::$validGrantTypes)) {
             throw new InvalidArgumentException("invalid grant type");
         }
@@ -45,10 +43,7 @@ class OidcGrantType
         $this->grantType = $grantType;
     }
 
-    /**
-     * @return string
-     */
-    public function getGrantType()
+    public function getGrantType(): string
     {
         return $this->grantType;
     }

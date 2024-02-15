@@ -26,27 +26,25 @@ use Exception;
 
 class MetaData implements Comparable
 {
-    const MAX_ACS_LOCATIONS = 10;
+    final public const MAX_ACS_LOCATIONS = 10;
 
      /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
-     * @SuppressWarnings(PHPMD.NPathComplexity) - Due to mapping and input validation
-     * @param array $data
-     * @return MetaData
-     * @throws Exception
-     */
-    public static function fromApiResponse(array $data)
+      * @SuppressWarnings(PHPMD.CyclomaticComplexity) - Due to mapping and input validation
+      * @SuppressWarnings(PHPMD.NPathComplexity)      - Due to mapping and input validation
+      * @throws                                       Exception
+      */
+    public static function fromApiResponse(array $data): self
     {
         $metaDataFields = $data['data']['metaDataFields'];
-        $entityId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $metaDataUrl = isset($data['data']['metadataurl']) ? $data['data']['metadataurl'] : '';
+        $entityId = $data['data']['entityid'] ?? '';
+        $metaDataUrl = $data['data']['metadataurl'] ?? '';
         $acsLocations = self::getAcsLocationsFromMetaDataFields($metaDataFields);
-        $nameIdFormat = isset($metaDataFields['NameIDFormat']) ? $metaDataFields['NameIDFormat'] : '';
-        $certData = isset($metaDataFields['certData']) ? $metaDataFields['certData'] : '';
-        $descriptionEn = isset($metaDataFields['description:en']) ? $metaDataFields['description:en'] : '';
-        $descriptionNl = isset($metaDataFields['description:nl']) ? $metaDataFields['description:nl'] : '';
-        $nameEn = isset($metaDataFields['name:en']) ? $metaDataFields['name:en'] : '';
-        $nameNl = isset($metaDataFields['name:nl']) ? $metaDataFields['name:nl'] : '';
+        $nameIdFormat = $metaDataFields['NameIDFormat'] ?? '';
+        $certData = $metaDataFields['certData'] ?? '';
+        $descriptionEn = $metaDataFields['description:en'] ?? '';
+        $descriptionNl = $metaDataFields['description:nl'] ?? '';
+        $nameEn = $metaDataFields['name:en'] ?? '';
+        $nameNl = $metaDataFields['name:nl'] ?? '';
 
         Assert::string($entityId);
         Assert::string($metaDataUrl);
@@ -101,10 +99,10 @@ class MetaData implements Comparable
         private ?string $descriptionNl,
         private ?string $nameEn,
         private ?string $nameNl,
-        private ContactList $contacts,
-        private Organization $organization,
-        private Coin $coin,
-        private Logo $logo
+        private readonly ContactList $contacts,
+        private readonly Organization $organization,
+        private readonly Coin $coin,
+        private readonly Logo $logo,
     ) {
     }
 
@@ -113,7 +111,7 @@ class MetaData implements Comparable
         return $this->entityId;
     }
 
-    public function resetOidcNgEntitId()
+    public function resetOidcNgEntitId(): void
     {
         $this->entityId = OidcngSpdClientIdParser::parse($this->entityId);
     }
@@ -182,7 +180,7 @@ class MetaData implements Comparable
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function merge(MetaData $metaData)
+    public function merge(MetaData $metaData): void
     {
         $this->entityId = is_null($metaData->getEntityId()) ? null : $metaData->getEntityId();
         $this->metaDataUrl = is_null($metaData->getMetaDataUrl()) ? null : $metaData->getMetaDataUrl();
@@ -241,8 +239,7 @@ class MetaData implements Comparable
         $data += $this->coin->asArray();
         $data += $this->contacts->asArray();
         $data += $this->logo->asArray();
-        $data += $this->organization->asArray();
 
-        return $data;
+        return $data + $this->organization->asArray();
     }
 }

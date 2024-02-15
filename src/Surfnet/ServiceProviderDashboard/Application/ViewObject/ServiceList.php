@@ -26,19 +26,19 @@ class ServiceList implements IteratorAggregate
      * @param Service[] $services
      */
     public function __construct(
-        private readonly array $services
+        private readonly array $services,
     ) {
     }
 
     /**
      * @return Service[]
      */
-    public function getServices()
+    public function getServices(): array
     {
         return $this->services;
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->services);
     }

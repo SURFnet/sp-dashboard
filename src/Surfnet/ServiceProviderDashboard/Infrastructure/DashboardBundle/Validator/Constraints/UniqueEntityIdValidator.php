@@ -35,11 +35,10 @@ class UniqueEntityIdValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $value
-     * @param Constraint $constraint
+     * @param  string     $value
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $entityCommand = $this->context->getRoot()->getData();
 
@@ -49,9 +48,9 @@ class UniqueEntityIdValidator extends ConstraintValidator
 
         $mode = $entityCommand->isForProduction() ? 'production' : 'test';
 
-        if ($entityCommand instanceof SaveOidcngEntityCommand ||
-            $entityCommand instanceof SaveOidcngResourceServerEntityCommand ||
-            $entityCommand instanceof SaveOauthClientCredentialClientCommand
+        if ($entityCommand instanceof SaveOidcngEntityCommand
+            || $entityCommand instanceof SaveOidcngResourceServerEntityCommand
+            || $entityCommand instanceof SaveOauthClientCredentialClientCommand
         ) {
             // Remove the protocol to ensure we can lookup the Oidc TNG entities for existence
             $value = OidcngClientIdParser::parse($value);
@@ -59,7 +58,7 @@ class UniqueEntityIdValidator extends ConstraintValidator
 
         try {
             $manageId = $this->queryService->findManageIdByEntityId($mode, $value);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->context->addViolation('validator.entity_id.registry_failure');
             return;
         }

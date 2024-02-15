@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -31,11 +33,11 @@ class DeletePublishedTestEntityCommandHandler implements CommandHandler
     public function __construct(
         private readonly DeleteManageEntityRepository $deleteEntityRepository,
         private readonly PublishEntityRepository $publishClient,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
-    public function handle(DeletePublishedTestEntityCommand $command)
+    public function handle(DeletePublishedTestEntityCommand $command): void
     {
         $this->logger->info(
             sprintf(

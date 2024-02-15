@@ -20,9 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcngClient;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -35,24 +33,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OauthClientCredentialEntityType extends AbstractType
 {
-    /**
-     * @var OidcngResourceServerOptionsFactory
-     */
-    private $oidcngResourceServerOptionsFactory;
-
-    public function __construct(OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory)
+    public function __construct(private readonly OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory)
     {
-        $this->oidcngResourceServerOptionsFactory = $oidcngResourceServerOptionsFactory;
     }
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
-     *
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
 
@@ -71,7 +60,9 @@ class OauthClientCredentialEntityType extends AbstractType
                 ]
             );
 
-        /** @var SaveOidcngEntityCommand $command */
+        /**
+ * @var SaveOidcngEntityCommand $command
+*/
         $command = $options['data'];
         $copy = $command->isCopy();
         $manageId = $command->getManageId();
@@ -105,7 +96,7 @@ class OauthClientCredentialEntityType extends AbstractType
                         'max' => 86400,
                         'step' => 60,
                         'placeholder' => 3600,
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -189,7 +180,7 @@ class OauthClientCredentialEntityType extends AbstractType
             $command->getEnvironment()
         );
         // If no resource servers are present, do not render the resource server section.
-        if (!empty($choices)) {
+        if ($choices !== []) {
             $builder
                 ->add(
                     $builder->create('oidcngResourceServers', FormType::class, ['inherit_data' => true])
@@ -203,11 +194,9 @@ class OauthClientCredentialEntityType extends AbstractType
                                 'by_reference' => false,
                                 'attr' => [
                                     'data-help' => 'entity.edit.information.oidcngResourceServers',
-                                    'class' => 'wide'
+                                    'class' => 'wide',
                                 ],
-                                'choice_attr' => function () {
-                                    return ['class' => 'decorated'];
-                                },
+                                'choice_attr' => fn(): array => ['class' => 'decorated'],
                             ]
                         )
                 );
@@ -264,15 +253,12 @@ class OauthClientCredentialEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SaveOauthClientCredentialClientCommand::class,
-            'publish_button_label' => 'entity.add.label.publish',
-        ));
+        $resolver->setDefaults(['data_class' => SaveOauthClientCredentialClientCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_entity_type';
     }

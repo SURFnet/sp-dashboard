@@ -19,170 +19,106 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository;
 
 /**
- * @ORM\Entity(
- *     repositoryClass="Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository"
- * )
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
+#[ORM\Entity(repositoryClass: PrivacyQuestionsRepository::class)]
 class PrivacyQuestions
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", options={"autoincrement":true})
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer', options: ['autoincrement' => true])]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private int $id;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $whatData;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $whatData = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $accessData;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $accessData = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $country;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $country = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $securityMeasures;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $securityMeasures = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $otherInfo;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $otherInfo = null;
 
-    /**
-     * @var Service
-     *
-     * @ORM\OneToOne(targetEntity="Service", inversedBy="privacyQuestions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $service;
+    
+    #[ORM\OneToOne(targetEntity: 'Service', inversedBy: 'privacyQuestions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Service $service = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $dpaType;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $dpaType = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $privacyStatementUrlNl;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $privacyStatementUrlNl = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $privacyStatementUrlEn;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $privacyStatementUrlEn = null;
 
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
 
-    /**
-     * @param string $country
-     */
-    public function setCountry($country)
+    public function setCountry(?string $country): void
     {
         $this->country = $country;
     }
 
-    /**
-     * @return string
-     */
-    public function getWhatData()
+    public function getWhatData(): ?string
     {
         return $this->whatData;
     }
 
-    /**
-     * @return string
-     */
-    public function getAccessData()
+    public function getAccessData(): ?string
     {
         return $this->accessData;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    /**
-     * @return string
-     */
-    public function getSecurityMeasures()
+    public function getSecurityMeasures(): ?string
     {
         return $this->securityMeasures;
     }
 
-    /**
-     * @return string
-     */
-    public function getOtherInfo()
+    public function getOtherInfo(): ?string
     {
         return $this->otherInfo;
     }
 
-    /**
-     * @return Service
-     */
-    public function getService()
+    public function getService(): ?Service
     {
         return $this->service;
     }
 
-    /**
-     * @param string $whatData
-     */
-    public function setWhatData($whatData)
+    public function setWhatData(?string $whatData): void
     {
         $this->whatData = $whatData;
     }
 
-    /**
-     * @param string $accessData
-     */
-    public function setAccessData($accessData)
+    public function setAccessData(?string $accessData): void
     {
         $this->accessData = $accessData;
     }
 
-    /**
-     * @param string $securityMeasures
-     */
-    public function setSecurityMeasures($securityMeasures)
+    public function setSecurityMeasures(?string $securityMeasures): void
     {
         $this->securityMeasures = $securityMeasures;
     }
 
-    /**
-     * @param string $otherInfo
-     */
-    public function setOtherInfo($otherInfo)
+    public function setOtherInfo(?string $otherInfo): void
     {
         $this->otherInfo = $otherInfo;
     }
@@ -192,7 +128,7 @@ class PrivacyQuestions
         $this->dpaType = $dpaType;
     }
 
-    public function getDpaType()
+    public function getDpaType(): ?string
     {
         return $this->dpaType;
     }
@@ -220,10 +156,10 @@ class PrivacyQuestions
     public function privacyStatementUrls(): array
     {
         $out = [];
-        if ($this->privacyStatementUrlEn) {
+        if ($this->privacyStatementUrlEn !== '' && $this->privacyStatementUrlEn !== '0') {
             $out['mdui:PrivacyStatementURL:en'] = $this->privacyStatementUrlEn;
         }
-        if ($this->privacyStatementUrlNl) {
+        if ($this->privacyStatementUrlNl !== '' && $this->privacyStatementUrlNl !== '0') {
             $out['mdui:PrivacyStatementURL:nl'] = $this->privacyStatementUrlNl;
         }
         return $out;

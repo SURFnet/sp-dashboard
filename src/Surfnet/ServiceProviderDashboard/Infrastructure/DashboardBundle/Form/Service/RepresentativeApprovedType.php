@@ -25,9 +25,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RepresentativeApprovedType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'label' => 'service.form.label.representative_approved',
             'expanded' => true,
             'multiple' => false,
@@ -36,7 +37,8 @@ class RepresentativeApprovedType extends AbstractType
                 'service.form.label.representative_approved_yes' => Service::SURFCONEXT_APPROVED_YES,
             ],
             'attr' => ['class' => 'service-status-container representative-signed-container'],
-        ]);
+            ]
+        );
     }
 
     public function getParent()

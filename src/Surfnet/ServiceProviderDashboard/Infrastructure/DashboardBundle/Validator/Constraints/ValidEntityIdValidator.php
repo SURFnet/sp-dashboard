@@ -27,9 +27,8 @@ class ValidEntityIdValidator extends ConstraintValidator
 {
     /**
      * @param string     $value
-     * @param Constraint $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (empty($value)) {
             $this->context->addViolation('validator.entity_id.empty');
@@ -43,26 +42,24 @@ class ValidEntityIdValidator extends ConstraintValidator
     }
 
     /**
-     * @param $value
-     * @return bool
+     * @param  $value
      */
-    private function validateUrn($value)
+    private function validateUrn($value): bool
     {
         $regex = "/^urn:[a-z0-9][a-z0-9-]{0,31}:[a-z0-9()+,\-.:=@;\$_!*'%\/?#]+$/i";
-        $match = preg_match($regex, $value);
+        $match = preg_match($regex, (string) $value);
         return (bool)$match;
     }
 
     /**
-     * @param $value
-     * @return bool
+     * @param  $value
      */
-    private function validateUri($value)
+    private function validateUri($value): bool
     {
         $parser = new UrlParser($value);
         try {
             $parser->parse();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
         return true;

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -22,7 +22,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\CreateConnectionRequestCommand;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConnectionRequestContainerFromOverviewType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -44,32 +43,36 @@ class ConnectionRequestContainerFromOverviewType extends AbstractType
                     'allow_delete' => true,
                     'entry_type' => ConnectionRequestType::class,
                     'entry_options' => [
-                        'attr' => ['class' => 'connection-request']
-                    ]
+                        'attr' => ['class' => 'connection-request'],
+                    ],
                 ]
             )
-            ->add('send', SubmitType::class, [
+            ->add(
+                'send',
+                SubmitType::class,
+                [
                 'label' => 'Send',
                 'disabled' => true,
-                'attr' => ['class' => 'button']])
-            ->add('cancel', SubmitType::class, [
+                'attr' => ['class' => 'button']]
+            )
+            ->add(
+                'cancel',
+                SubmitType::class,
+                [
                 'label' => 'Cancel',
                 'attr' => [
-                    'class' => 'button'
+                    'class' => 'button',
+                ],
                 ]
-            ]);
+            );
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => CreateConnectionRequestCommand::class,
-            'validation_groups' => false,
-            'expanded' => true,
-        ));
+        $resolver->setDefaults(['data_class' => CreateConnectionRequestCommand::class, 'validation_groups' => false, 'expanded' => true]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'connection_request_container';
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -25,7 +27,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class DashboardBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new IssueRepositoryCompilerPass());
         $container->addCompilerPass(new JsonGeneratorStrategyCompilerPass());

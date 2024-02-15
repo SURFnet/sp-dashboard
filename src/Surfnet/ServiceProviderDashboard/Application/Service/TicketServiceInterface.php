@@ -29,7 +29,6 @@ interface TicketServiceInterface
     /**
      * Create a Jira issue from a Ticket VO
      *
-     * @param Ticket $ticket
      * @return Issue|object
      */
     public function createIssueFrom(Ticket $ticket);
@@ -37,7 +36,6 @@ interface TicketServiceInterface
     /**
      * Create a Jira issue from a connection request
      *
-     * @param Ticket $ticket
      * @return Issue|object
      */
     public function createIssueFromConnectionRequest(Ticket $ticket);
@@ -45,13 +43,12 @@ interface TicketServiceInterface
     /**
      * Query Jira for issues that have a manageId that matches the provided array of manage id's.
      *
-     * @param array $manageIds
      * @return IssueCollection
      */
     public function findByManageIds(array $manageIds);
 
     /**
-     * @param int $id
+     * @param  int $id
      * @return Issue|null
      */
     public function findByManageId($id);
@@ -59,8 +56,8 @@ interface TicketServiceInterface
     /**
      * Find a Jira issue by issue type and manage id.
      *
-     * @param string $manageId
-     * @param string $issueType
+     * @param  string $manageId
+     * @param  string $issueType
      * @return mixed
      */
     public function findByManageIdAndIssueType($manageId, $issueType);
@@ -75,6 +72,6 @@ interface TicketServiceInterface
         PublishProductionCommandInterface $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue;
 }

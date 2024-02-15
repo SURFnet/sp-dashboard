@@ -27,21 +27,19 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use function sprintf;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 
 /**
  * The OidcngResourceServerJsonGenerator generates oauth20-rs resource server entity json
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD)
  */
 class OidcngResourceServerJsonGenerator implements GeneratorInterface
 {
-    /**
-     * @param PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator
-     * @param SpDashboardMetadataGenerator $spDashboardMetadataGenerator
-     */
     public function __construct(
         private readonly PrivacyQuestionsMetadataGenerator $privacyQuestionsMetadataGenerator,
-        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator
+        private readonly SpDashboardMetadataGenerator $spDashboardMetadataGenerator,
     ) {
     }
 
@@ -57,7 +55,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
-        string $updatedPart = ''
+        string $updatedPart = '',
     ): array {
         return [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $differences, $workflowState),
@@ -70,14 +68,14 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     public function generateEntityChangeRequest(
         ManageEntity $entity,
         EntityDiff $differences,
-        ContactEntity $contact
+        ContactEntity $contact,
     ): array {
         $payload = [
             'metaDataId' => $entity->getId(),
             'type' => 'oauth20_rs',
             'pathUpdates' => $this->generateForChangeRequest($differences),
             'auditData' => [
-                'user' => $contact->getEmailAddress()
+                'user' => $contact->getEmailAddress(),
             ],
         ];
 
@@ -86,7 +84,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return $payload;
     }
 
-    private function generateDataForNewEntity(ManageEntity $entity, $workflowState)
+    private function generateDataForNewEntity(ManageEntity $entity, string $workflowState): array
     {
         // the type for entities is always oidc10-rp because manage is using saml internally
         $metadata = [
@@ -105,7 +103,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
     private function generateDataForExistingEntity(
         ManageEntity $entity,
         EntityDiff $differences,
-        string $workflowState
+        string $workflowState,
     ): array {
         $metadata = [
             'entityid' => OidcngClientIdParser::parse($entity->getMetaData()->getEntityId()),
@@ -151,21 +149,15 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
         $this->setExcludeFromPush($metadata, $entity);
 
-        $metadata += $this->generateOidcClient($entity);
-
-        return $metadata;
+        return $metadata + $this->generateOidcClient($entity);
     }
 
-    /**
-     * @param ManageEntity $entity
-     * @return array
-     */
-    private function generateOidcClient(ManageEntity $entity)
+    private function generateOidcClient(ManageEntity $entity): array
     {
         $metadata = [];
-        if ($entity->getOidcClient()) {
+        if ($entity->getOidcClient() instanceof OidcClientInterface) {
             $secret = $entity->getOidcClient()->getClientSecret();
-            if ($secret) {
+            if ($secret !== '' && $secret !== '0') {
                 $metadata['secret'] = $secret;
             }
         }
@@ -180,7 +172,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         $contacts = $entity->getMetaData()->getContacts();
 
         if ($contacts) {
-            if ($contacts->findSupportContact()) {
+            if ($contacts->findSupportContact() !== null) {
                 $metadata += $this->generateContactMetadata(
                     'support',
                     $index++,
@@ -188,7 +180,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
                 );
             }
 
-            if ($contacts->findAdministrativeContact()) {
+            if ($contacts->findAdministrativeContact() !== null) {
                 $metadata += $this->generateContactMetadata(
                     'administrative',
                     $index++,
@@ -196,7 +188,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
                 );
             }
 
-            if ($contacts->findTechnicalContact()) {
+            if ($contacts->findTechnicalContact() !== null) {
                 $metadata += $this->generateContactMetadata(
                     'technical',
                     $index++,
@@ -220,36 +212,36 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
         return array_filter($metadata);
     }
 
-    private function generateContactMetadata($contactType, $index, Contact $contact): array
+    private function generateContactMetadata(string $contactType, int $index, Contact $contact): array
     {
         $metadata = [
             sprintf('contacts:%d:contactType', $index) => $contactType,
         ];
 
-        if (!empty($contact->getGivenName())) {
+        if ($contact->getGivenName() !== null && $contact->getGivenName() !== '' && $contact->getGivenName() !== '0') {
             $metadata[sprintf('contacts:%d:givenName', $index)] = $contact->getGivenName();
         }
 
-        if (!empty($contact->getSurName())) {
+        if ($contact->getSurName() !== null && $contact->getSurName() !== '' && $contact->getSurName() !== '0') {
             $metadata[sprintf('contacts:%d:surName', $index)] = $contact->getSurName();
         }
 
-        if (!empty($contact->getEmail())) {
+        if ($contact->getEmail() !== null && $contact->getEmail() !== '' && $contact->getEmail() !== '0') {
             $metadata[sprintf('contacts:%d:emailAddress', $index)] = $contact->getEmail();
         }
 
-        if (!empty($contact->getPhone())) {
+        if ($contact->getPhone() !== null && $contact->getPhone() !== '' && $contact->getPhone() !== '0') {
             $metadata[sprintf('contacts:%d:telephoneNumber', $index)] = $contact->getPhone();
         }
 
         return $metadata;
     }
 
-    private function setExcludeFromPush(&$metadata, ManageEntity $entity, $flatten = false): void
+    private function setExcludeFromPush(array &$metadata, ManageEntity $entity, bool $flatten = false): void
     {
         $fieldName = 'coin:exclude_from_push';
         if ($flatten) {
-            $fieldName = sprintf('metaDataFields.coin:exclude_from_push');
+            $fieldName = 'metaDataFields.coin:exclude_from_push';
         }
 
         // Scenario 1: When publishing to production, the coin:exclude_from_push must be present and set to '1'.

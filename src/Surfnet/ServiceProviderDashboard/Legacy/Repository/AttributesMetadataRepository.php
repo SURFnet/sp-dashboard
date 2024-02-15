@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -23,14 +25,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
 
 class AttributesMetadataRepository implements AttributesMetadataRepositoryInterface
 {
-    private $rootDir;
-
     /**
      * @param string $rootDir
      */
-    public function __construct($rootDir)
+    public function __construct(private $rootDir)
     {
-        $this->rootDir = $rootDir;
     }
 
     /**
@@ -66,7 +65,7 @@ class AttributesMetadataRepository implements AttributesMetadataRepositoryInterf
     /**
      * @return string[]
      */
-    public function findAllAttributeUrns()
+    public function findAllAttributeUrns(): array
     {
         $names = [];
         foreach ($this->findAll() as $definition) {

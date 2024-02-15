@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -21,38 +24,17 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 
 class ChooseEntityTypeCommand
 {
-    /**
-     * @var array
-     */
-    private $choices;
-
     public function __construct(private $type = Constants::TYPE_SAML)
     {
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
-    }
-
-    public function getProtocolChoices()
-    {
-        return $this->choices;
-    }
-
-    public function setProtocolChoices(array $choices)
-    {
-        $this->choices = $choices;
     }
 }

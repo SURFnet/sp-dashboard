@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -27,17 +27,26 @@ class Attribute implements AttributeInterface
      */
     public $id;
 
+    /**
+     * @var mixed[]
+     */
     public $excludeOnEntityType = [];
 
+    /**
+     * @var mixed[]
+     */
     public $translations = [];
 
+    /**
+     * @var mixed[]
+     */
     public $urns = [];
 
     private function __construct(
         string $id,
         array $excludeOnEntityType,
         array $translations,
-        array $urns
+        array $urns,
     ) {
         $this->id = $id;
         $this->excludeOnEntityType = $excludeOnEntityType;

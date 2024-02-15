@@ -31,12 +31,12 @@ class EntityOidcConfirmation
     public function __construct(
         private readonly string $entityId,
         private readonly string $clientSecret,
-        string $protocol
+        string $protocol,
     ) {
         $supportedProtocols = [
             Constants::TYPE_OPENID_CONNECT_TNG,
             Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
-            Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+            Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT,
         ];
 
         if (!in_array($protocol, $supportedProtocols)) {
@@ -49,7 +49,7 @@ class EntityOidcConfirmation
         }
     }
 
-    public static function fromEntity(ManageEntity $entity)
+    public static function fromEntity(ManageEntity $entity): self
     {
         return new self(
             $entity->getMetaData()->getEntityId(),
@@ -66,10 +66,7 @@ class EntityOidcConfirmation
         return OidcngClientIdParser::parse($this->entityId);
     }
 
-    /**
-     * @return string
-     */
-    public function getClientSecret()
+    public function getClientSecret(): string
     {
         return $this->clientSecret;
     }

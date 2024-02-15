@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -23,7 +25,7 @@ class ApiConfig
     public function __construct(
         private readonly ApiConnection $connection,
         private readonly ?PublicationStatus $publicationStatus = null,
-        private readonly string $environment = ''
+        private readonly string $environment = '',
     ) {
     }
 

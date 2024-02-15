@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -21,27 +23,23 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Surfnet\ServiceProviderDashboard\Application\Service\ChangeRequestService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityActions;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class EntityChangeRequestController extends AbstractController
 {
     use EntityControllerTrait;
 
-    /**
-     * @Route("/entity/change-request/{environment}/{manageId}/{serviceId}", name="entity_published_change_request", methods={"GET", "POST"})
-     */
-    public function changeRequestAction(
-        Request $request,
+    #[Route(path: '/entity/change-request/{environment}/{manageId}/{serviceId}', name: 'entity_published_change_request', methods: ['GET', 'POST'])]
+    public function changeRequest(
         ChangeRequestService $service,
         int $serviceId,
         string $manageId,
-        string $environment
+        string $environment,
     ): Response {
         $entity = $this->entityService->getManageEntityById($manageId, $environment);
         $entityServiceId = $entity->getService()->getId();
-        // Verify the Entity Service Id is one of the logged in users services
+        // Verify the Entity Service Id is one of the logged-in users services
         $this->authorizationService->assertServiceIdAllowed($entityServiceId);
         // Don't trust the url provided service id, check it against the Service Id associated with the entity
         if ($entityServiceId !== $serviceId) {

@@ -30,7 +30,7 @@ class PrivacyQuestionsFormBuilder
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function buildForm(FormBuilderInterface $builder)
+    public function buildForm(FormBuilderInterface $builder): void
     {
         $builder->add(
             'whatData',
@@ -99,11 +99,9 @@ class PrivacyQuestionsFormBuilder
                     'class' => 'dpa-types',
                     'rows' => 8,
                 ],
-                'choice_attr' => function ($choice) {
-                    return [
-                        'help' => $choice,
-                    ];
-                },
+                'choice_attr' => fn($choice): array => [
+                    'help' => $choice,
+                ],
             ]
         );
 
@@ -151,7 +149,7 @@ class PrivacyQuestionsFormBuilder
             SubmitType::class,
             [
                 'label' => 'privacy.form.label.save-button',
-                'attr' => ['class'=>'button']
+                'attr' => ['class'=>'button'],
             ]
         );
     }

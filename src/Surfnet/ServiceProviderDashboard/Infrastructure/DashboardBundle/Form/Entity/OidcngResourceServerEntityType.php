@@ -35,12 +35,9 @@ class OidcngResourceServerEntityType extends AbstractType
 {
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
-     *
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
 
@@ -57,7 +54,9 @@ class OidcngResourceServerEntityType extends AbstractType
                 ]
             );
 
-        /** @var SaveOidcngResourceServerEntityCommand $command */
+        /**
+ * @var SaveOidcngResourceServerEntityCommand $command
+*/
         $command = $options['data'];
 
         $manageId = $command->getManageId();
@@ -173,15 +172,12 @@ class OidcngResourceServerEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SaveOidcngResourceServerEntityCommand::class,
-            'publish_button_label' => 'entity.add.label.publish',
-        ));
+        $resolver->setDefaults(['data_class' => SaveOidcngResourceServerEntityCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_entity_type';
     }

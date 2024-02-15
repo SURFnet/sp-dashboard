@@ -18,31 +18,37 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityOidcConfirmation;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EntityPublishedController extends AbstractController
 {
     /**
-     * @Route("/entity/published/production", name="entity_published_production", methods={"GET"})
-     * @Route("/entity/published/test", name="entity_published_test", methods={"GET"})
-     * @Security("is_granted('ROLE_USER')")
+     *
      */
-    public function publishedAction()
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/entity/published/production', name: 'entity_published_production', methods: ['GET'])]
+    #[Route(path: '/entity/published/test', name: 'entity_published_test', methods: ['GET'])]
+    public function published(Request $request): RedirectResponse|Response
     {
-        /** @var ManageEntity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
+        /**
+ * @var ManageEntity $entity
+*/
+        $entity = $request->getSession()->get('published.entity.clone');
 
         // Redirects OIDC published entity confirmations to the entity list page and shows a
         // confirmation dialog in a modal window that renders the oidcConfirmationModalAction
         $protocol = $entity->getProtocol()->getProtocol();
-        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG ||
-            $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
-            $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        if ($protocol === Constants::TYPE_OPENID_CONNECT_TNG
+            || $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            || $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
             if ($this->isGranted('ROLE_ADMINISTRATOR')) {
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $entity->getService()->getId()]);
@@ -54,7 +60,7 @@ class EntityPublishedController extends AbstractController
         $parameters = [
             'entityName' => $entity->getMetaData()->getNameEn(),
             'showOidcPopup' => false,
-            'publishedEntity' => $entity
+            'publishedEntity' => $entity,
         ];
 
         if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
@@ -64,10 +70,11 @@ class EntityPublishedController extends AbstractController
     }
 
     /**
-     * @Route("/entity/change-request", name="entity_change_request", methods={"GET"})
-     * @Security("is_granted('ROLE_USER')")
+     *
      */
-    public function changeRequestAction()
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/entity/change-request', name: 'entity_change_request', methods: ['GET'])]
+    public function changeRequest(): Response
     {
         return $this->render('@Dashboard/EntityPublished/changeRequested.html.twig');
     }
@@ -80,21 +87,25 @@ class EntityPublishedController extends AbstractController
      * This action is rendered inside a modal window, and is triggered from the
      * entity list action.
      *
-     * @Security("is_granted('ROLE_USER')")
+     *
      */
-    public function oidcConfirmationModalAction()
+    #[IsGranted('ROLE_USER')]
+    public function oidcConfirmationModal(Request $request): Response
     {
-        /** @var ManageEntity $entity */
-        $entity = $this->get('session')->get('published.entity.clone');
+        $entity = $request->getSession()->get('published.entity.clone');
+        assert($entity instanceof ManageEntity);
 
         // Show the confirmation modal only once in this request
-        $this->get('session')->remove('published.entity.clone');
+        $request->getSession()->remove('published.entity.clone');
 
         $viewObject = EntityOidcConfirmation::fromEntity($entity);
 
-        return $this->render('@Dashboard/EntityPublished/oidcConfirmationModal.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityPublished/oidcConfirmationModal.html.twig',
+            [
             'entity' => $viewObject,
             'environment' => $entity->getEnvironment(),
-        ]);
+            ]
+        );
     }
 }

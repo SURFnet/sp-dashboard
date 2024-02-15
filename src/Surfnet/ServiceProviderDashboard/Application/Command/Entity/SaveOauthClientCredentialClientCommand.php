@@ -36,157 +36,112 @@ use function is_null;
  */
 class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterface
 {
-    /**
-     * @var string
-     * @Assert\Uuid
-     */
-    private $id;
+    #[Assert\Uuid]
+    private ?string $id = null;
 
-    /**
-     * @var string
-     */
-    private $status;
+    private ?string $status = null;
 
-    /**
-     * @var Service
-     */
-    private $service;
+    private ?Service $service = null;
 
-    /**
-     * @var bool
-     */
-    private $archived = false;
+    private bool $archived = false;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"production", "test"}, strict=true)
-     */
-    private $environment = Constants::ENVIRONMENT_TEST;
+    
+    #[Assert\NotBlank]
+    #[Assert\Choice(choices: ['production', 'test'], strict: true)]
+    private string $environment = Constants::ENVIRONMENT_TEST;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @SpDashboardAssert\ValidClientId()
-     * @SpDashboardAssert\UniqueEntityId()
-     */
-    private $entityId;
+    #[SpDashboardAssert\ValidClientId]
+    #[SpDashboardAssert\UniqueEntityId]
+    #[Assert\NotBlank]
+    private ?string $entityId = null;
 
-    /**
-     * @var string
-     */
-    private $secret;
+    private ?string $secret = null;
 
-    /**
-     * @var bool
-     */
-    private $isPublicClient;
+    private ?bool $isPublicClient = null;
 
     /**
      * @var array $grants defaults to Constants::GRANT_TYPE_CLIENT_CREDENTIALS
-     *
-     * @Assert\NotBlank()
      */
-    private $grants = [Constants::GRANT_TYPE_CLIENT_CREDENTIALS];
+    #[Assert\NotBlank]
+    private array $grants = [Constants::GRANT_TYPE_CLIENT_CREDENTIALS];
 
-    /**
-     * @var int
-     * @Assert\NotBlank
-     * @Assert\LessThanOrEqual(86400)
-     * @Assert\GreaterThanOrEqual(3600)
-     */
-    private $accessTokenValidity = 3600;
+    #[Assert\NotBlank]
+    #[Assert\LessThanOrEqual(86400)]
+    #[Assert\GreaterThanOrEqual(3600)]
+    private int $accessTokenValidity = 3600;
 
     /**
      * @var string
-     *
-     * @Assert\Url()
-     * @SpDashboardAssert\ValidLogo()
-     * @Assert\NotBlank()
      */
+    #[SpDashboardAssert\ValidLogo()]
+    #[Assert\Url]
+    #[Assert\NotBlank]
     private $logoUrl;
 
     /**
      * The subject type is comparable to the SAML name id format, that is why the Constants::NAME_ID_FORMAT_DEFAULT
      * (transient) is used to set the default value.
-     *
-     * @var string
-     * @Assert\Choice(
-     *     callback={
-     *         "Surfnet\ServiceProviderDashboard\Domain\Entity\Constants",
-     *         "getValidNameIdFormats"
-     *     },
-     *     strict=true
-     * )
      */
-    private $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
+    #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]
+    private string $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameNl;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameEn;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionNl;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionEn;
 
     /**
      * @var string
-     *
-     * @Assert\Url()
      */
+    #[Assert\Url]
     private $applicationUrl;
 
     /**
      * @var string
-     *
-     * @Assert\Url()
      */
+    #[Assert\Url]
     private $eulaUrl;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
      */
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
     private $administrativeContact;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid()
      */
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid]
     private $technicalContact;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
      */
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
     private $supportContact;
 
     /**
@@ -202,21 +157,15 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @var string[]
      */
-    private $resourceServers = [];
+    private array $resourceServers = [];
 
-    /** @var bool */
-    private $isCopy;
+    private ?bool $isCopy = null;
 
     public function __construct()
     {
     }
 
-    /**
-     * @param Service $service
-     * @param bool $isCopy
-     * @return SaveOidcngEntityCommand
-     */
-    public static function forCreateAction(Service $service, bool $isCopy = false)
+    public static function forCreateAction(Service $service, bool $isCopy = false): self
     {
         $command = new self();
         $command->service = $service;
@@ -224,18 +173,12 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $command;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->status;
     }
@@ -245,34 +188,22 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $this->service;
     }
 
-    /**
-     * @return bool
-     */
-    public function isCopy()
+    public function isCopy(): ?bool
     {
         return $this->isCopy;
     }
 
-    /**
-     * @param bool $isCopy
-     */
-    public function setIsCopy(bool $isCopy)
+    public function setIsCopy(bool $isCopy): void
     {
         $this->isCopy = $isCopy;
     }
 
-    /**
-     * @return bool
-     */
-    public function isArchived()
+    public function isArchived(): bool
     {
         return $this->archived;
     }
 
-    /**
-     * @param bool $archived
-     */
-    public function setArchived($archived)
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }
@@ -285,7 +216,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $environment
      */
-    public function setEnvironment($environment)
+    public function setEnvironment($environment): void
     {
         if (!in_array(
             $environment,
@@ -293,7 +224,8 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
                 Constants::ENVIRONMENT_TEST,
                 Constants::ENVIRONMENT_PRODUCTION,
             ]
-        )) {
+        )
+        ) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
             );
@@ -307,41 +239,26 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $this->entityId;
     }
 
-    /**
-     * @param string $entityId
-     */
-    public function setEntityId($entityId)
+    public function setEntityId(?string $entityId): void
     {
         $this->entityId = $entityId;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientId()
+    public function getClientId(): ?string
     {
         return $this->entityId;
     }
 
-    /**
-     * @return string
-     */
-    public function getSecret()
+    public function getSecret(): ?string
     {
         return $this->secret;
     }
 
-    /**
-     * @param string $secret
-     */
-    public function setSecret($secret)
+    public function setSecret(?string $secret): void
     {
         $this->secret = $secret;
     }
 
-    /**
-     * @return string
-     */
     public function getLogoUrl(): ?string
     {
         return $this->logoUrl;
@@ -350,7 +267,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $logoUrl
      */
-    public function setLogoUrl($logoUrl)
+    public function setLogoUrl($logoUrl): void
     {
         $this->logoUrl = $logoUrl;
     }
@@ -363,7 +280,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $nameNl
      */
-    public function setNameNl($nameNl)
+    public function setNameNl($nameNl): void
     {
         $this->nameNl = $nameNl;
     }
@@ -376,7 +293,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $nameEn
      */
-    public function setNameEn($nameEn)
+    public function setNameEn($nameEn): void
     {
         $this->nameEn = $nameEn;
     }
@@ -389,7 +306,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $descriptionNl
      */
-    public function setDescriptionNl($descriptionNl)
+    public function setDescriptionNl($descriptionNl): void
     {
         $this->descriptionNl = $descriptionNl;
     }
@@ -402,14 +319,11 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $descriptionEn
      */
-    public function setDescriptionEn($descriptionEn)
+    public function setDescriptionEn($descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
     }
 
-    /**
-     * @return string
-     */
     public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
@@ -418,7 +332,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $applicationUrl
      */
-    public function setApplicationUrl($applicationUrl)
+    public function setApplicationUrl($applicationUrl): void
     {
         $this->applicationUrl = $applicationUrl;
     }
@@ -431,7 +345,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $eulaUrl
      */
-    public function setEulaUrl($eulaUrl)
+    public function setEulaUrl($eulaUrl): void
     {
         $this->eulaUrl = $eulaUrl;
     }
@@ -444,7 +358,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param Contact $administrativeContact
      */
-    public function setAdministrativeContact($administrativeContact)
+    public function setAdministrativeContact($administrativeContact): void
     {
         $this->administrativeContact = $administrativeContact;
     }
@@ -457,7 +371,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param Contact $technicalContact
      */
-    public function setTechnicalContact($technicalContact)
+    public function setTechnicalContact($technicalContact): void
     {
         $this->technicalContact = $technicalContact;
     }
@@ -470,14 +384,11 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param Contact $supportContact
      */
-    public function setSupportContact($supportContact)
+    public function setSupportContact($supportContact): void
     {
         $this->supportContact = $supportContact;
     }
 
-    /**
-     * @return string
-     */
     public function getComments(): ?string
     {
         return $this->comments;
@@ -486,30 +397,27 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $comments
      */
-    public function setComments($comments)
+    public function setComments($comments): void
     {
         $this->comments = $comments;
     }
 
-    public function isForProduction()
+    public function isForProduction(): bool
     {
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setId($id)
+    public function setId(?string $id): void
     {
         $this->id = $id;
     }
 
-    public function setStatus($status)
+    public function setStatus(?string $status): void
     {
         $this->status = $status;
     }
 
-    /**
-     * @param Service $service
-     */
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
@@ -525,7 +433,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $manageId
      */
-    public function setManageId($manageId)
+    public function setManageId($manageId): void
     {
         $this->manageId = $manageId;
     }
@@ -535,10 +443,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublicClient()
+    public function isPublicClient(): ?bool
     {
         return $this->isPublicClient;
     }
@@ -546,7 +451,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param bool $isPublicClient
      */
-    public function setIsPublicClient($isPublicClient)
+    public function setIsPublicClient(?bool $isPublicClient): void
     {
         $this->isPublicClient = $isPublicClient;
     }
@@ -556,7 +461,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return $this->accessTokenValidity;
     }
 
-    public function setAccessTokenValidity(int $accessTokenValidity)
+    public function setAccessTokenValidity(int $accessTokenValidity): void
     {
         $this->accessTokenValidity = (int) $accessTokenValidity;
     }
@@ -564,7 +469,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return OidcGrantType
      */
-    public function getGrants()
+    public function getGrants(): array
     {
         return $this->grants;
     }
@@ -572,15 +477,12 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param OidcGrantType $grants
      */
-    public function setGrants($grants)
+    public function setGrants(array $grants): void
     {
         $this->grants = $grants;
     }
 
-    /**
-     * @return string
-     */
-    public function getSubjectType()
+    public function getSubjectType(): string
     {
         return $this->subjectType;
     }
@@ -588,7 +490,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string $subjectType
      */
-    public function setSubjectType($subjectType)
+    public function setSubjectType($subjectType): void
     {
         $this->subjectType = $subjectType;
         // If the SubjectType is not set in the draft, we set the default value (transient) as requested in:
@@ -601,7 +503,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @return string[]
      */
-    public function getOidcngResourceServers()
+    public function getOidcngResourceServers(): array
     {
         return $this->resourceServers;
     }
@@ -609,7 +511,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @param string[] $resourceServers
      */
-    public function setOidcngResourceServers($resourceServers)
+    public function setOidcngResourceServers(array $resourceServers): void
     {
         $this->resourceServers = $resourceServers;
     }

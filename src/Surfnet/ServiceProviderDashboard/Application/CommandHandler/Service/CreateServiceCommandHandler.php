@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -33,25 +35,28 @@ class CreateServiceCommandHandler implements CommandHandler
         private readonly PublishTeamsRepository $publishEntityClient,
         private readonly TranslatorInterface $translator,
         private readonly string $prefixPart1,
-        private readonly string $prefixPart2
+        private readonly string $prefixPart2,
     ) {
     }
 
     /**
-     * @param CreateServiceCommand $command
      * @throws CreateTeamsException
      */
-    public function handle(CreateServiceCommand $command)
+    public function handle(CreateServiceCommand $command): void
     {
         $name = $command->getName();
         $teamName = strtolower($command->getTeamName());
         $fullTeamName = $this->prefixPart1 . $this->prefixPart2 . $teamName;
 
-        /** create team **/
+        /**
+ * create team
+**/
         $team = $this->createTeamData($name, $teamName, $command->getTeamManagerEmail());
         $this->publishEntityClient->createTeam($team);
 
-        /** create service **/
+        /**
+ * create service
+**/
         $service = new Service();
         $service->setName($name);
         $service->setGuid($command->getGuid());
@@ -76,9 +81,12 @@ class CreateServiceCommandHandler implements CommandHandler
 
         return [
             'name' => $teamName,
-            'description' => $this->translator->trans('teams.create.description', [
-                '%teamName%' => $name
-            ]),
+            'description' => $this->translator->trans(
+                'teams.create.description',
+                [
+                '%teamName%' => $name,
+                ]
+            ),
             'personalNote' => $this->translator->trans('teams.create.personalNote'),
             'viewable' => false,
             'emails' => $emails,

@@ -39,23 +39,22 @@ class ResetOidcSecretCommandHandler implements CommandHandler
         private readonly CommandBus $commandBus,
         private readonly AuthorizationService $authorizationService,
         private readonly PublishEntityClient $publishProdEntityClient,
-        private readonly PublishEntityClient $publishTestEntityClient
+        private readonly PublishEntityClient $publishTestEntityClient,
     ) {
     }
 
     /**
-     * @param ResetOidcSecretCommand $command
      * @throws InvalidArgumentException
      * @throws QueryServiceProviderException
      */
-    public function handle(ResetOidcSecretCommand $command)
+    public function handle(ResetOidcSecretCommand $command): void
     {
         $entity = $command->getManageEntity();
 
         $protocol = $entity->getProtocol()->getProtocol();
-        if ($protocol !== Constants::TYPE_OPENID_CONNECT_TNG &&
-            $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER &&
-            $protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        if ($protocol !== Constants::TYPE_OPENID_CONNECT_TNG
+            && $protocol !== Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER
+            && $protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
         ) {
             throw new InvalidArgumentException('Only OIDC TNG and Oauth CC entities can be processed');
         }
@@ -68,7 +67,7 @@ class ResetOidcSecretCommandHandler implements CommandHandler
             $publishCommand = new PublishEntityProductionCommand($entity, $this->authorizationService->getContact());
             $publishCommand->markPublishClientReset();
             $this->commandBus->handle($publishCommand);
-        } else if ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
+        } elseif ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
             $publishCommand = new PublishEntityTestCommand($entity);
             $this->commandBus->handle($publishCommand);
         }

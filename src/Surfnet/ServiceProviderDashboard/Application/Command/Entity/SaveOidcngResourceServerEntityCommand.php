@@ -35,8 +35,8 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
 {
     /**
      * @var string
-     * @Assert\Uuid
      */
+    #[Assert\Uuid]
     private $id;
 
     /**
@@ -44,32 +44,19 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private $status;
 
-    /**
-     * @var Service
-     */
-    private $service;
+    private ?Service $service = null;
 
-    /**
-     * @var bool
-     */
-    private $archived = false;
+    private bool $archived = false;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"production", "test"}, strict=true)
-     */
-    private $environment = Constants::ENVIRONMENT_TEST;
+    
+    #[Assert\NotBlank]
+    #[Assert\Choice(choices: ['production', 'test'], strict: true)]
+    private string $environment = Constants::ENVIRONMENT_TEST;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     * @SpDashboardAssert\ValidClientId()
-     * @SpDashboardAssert\UniqueEntityId()
-     */
-    private $entityId;
+    #[SpDashboardAssert\ValidClientId]
+    #[SpDashboardAssert\UniqueEntityId]
+    #[Assert\NotBlank]
+    private ?string $entityId = null;
 
     /**
      * @var string
@@ -78,54 +65,49 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameNl;
 
     /**
      * @var string
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank]
     private $nameEn;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionNl;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     * @Assert\Length(max = 300)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private $descriptionEn;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
      */
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
     private $administrativeContact;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid()
      */
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid]
     private $technicalContact;
 
     /**
      * @var Contact
-     *
-     * @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact")
-     * @Assert\Valid(groups={"production"})
      */
+    #[Assert\Type(type: Contact::class)]
+    #[Assert\Valid(groups: ['production'])]
     private $supportContact;
 
     /**
@@ -138,21 +120,17 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
      */
     private $manageId;
 
-    /** @var bool */
-    private $isCopy;
+    private ?bool $isCopy = null;
 
     /**
      * @var string[]
      */
-    private $scopes = ['openid'];
+    private array $scopes = ['openid'];
 
-    /**
-     * @param Service $service
-     * @param bool $isCopy
-     * @return SaveOidcngResourceServerEntityCommand
-     */
-    public static function forCreateAction(Service $service, bool $isCopy = false): SaveOidcngResourceServerEntityCommand
-    {
+    public static function forCreateAction(
+        Service $service,
+        bool $isCopy = false,
+    ): SaveOidcngResourceServerEntityCommand {
         $command = new self();
         $command->service = $service;
         $command->isCopy = $isCopy;
@@ -184,31 +162,22 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return bool
      */
-    public function isCopy()
+    public function isCopy(): ?bool
     {
         return $this->isCopy;
     }
 
-    /**
-     * @param bool $isCopy
-     */
-    public function setIsCopy(bool $isCopy)
+    public function setIsCopy(bool $isCopy): void
     {
         $this->isCopy = $isCopy;
     }
 
-    /**
-     * @return bool
-     */
-    public function isArchived()
+    public function isArchived(): bool
     {
         return $this->archived;
     }
 
-    /**
-     * @param bool $archived
-     */
-    public function setArchived($archived)
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }
@@ -221,7 +190,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $environment
      */
-    public function setEnvironment($environment)
+    public function setEnvironment($environment): void
     {
         if (!in_array(
             $environment,
@@ -229,7 +198,8 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
                 Constants::ENVIRONMENT_TEST,
                 Constants::ENVIRONMENT_PRODUCTION,
             ]
-        )) {
+        )
+        ) {
             throw new InvalidArgumentException(
                 "Unknown environment '{$environment}'"
             );
@@ -246,7 +216,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $entityId
      */
-    public function setEntityId($entityId)
+    public function setEntityId($entityId): void
     {
         $this->entityId = strtolower($entityId);
     }
@@ -254,7 +224,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): ?string
     {
         return $this->entityId;
     }
@@ -270,7 +240,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $secret
      */
-    public function setSecret($secret)
+    public function setSecret($secret): void
     {
         $this->secret = $secret;
     }
@@ -283,7 +253,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $nameNl
      */
-    public function setNameNl($nameNl)
+    public function setNameNl($nameNl): void
     {
         $this->nameNl = $nameNl;
     }
@@ -296,7 +266,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $nameEn
      */
-    public function setNameEn($nameEn)
+    public function setNameEn($nameEn): void
     {
         $this->nameEn = $nameEn;
     }
@@ -309,7 +279,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $descriptionNl
      */
-    public function setDescriptionNl($descriptionNl)
+    public function setDescriptionNl($descriptionNl): void
     {
         $this->descriptionNl = $descriptionNl;
     }
@@ -325,7 +295,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $descriptionEn
      */
-    public function setDescriptionEn($descriptionEn)
+    public function setDescriptionEn($descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
     }
@@ -341,7 +311,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param Contact $administrativeContact
      */
-    public function setAdministrativeContact($administrativeContact)
+    public function setAdministrativeContact($administrativeContact): void
     {
         $this->administrativeContact = $administrativeContact;
     }
@@ -357,7 +327,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param Contact $technicalContact
      */
-    public function setTechnicalContact($technicalContact)
+    public function setTechnicalContact($technicalContact): void
     {
         $this->technicalContact = $technicalContact;
     }
@@ -373,14 +343,14 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param Contact $supportContact
      */
-    public function setSupportContact($supportContact)
+    public function setSupportContact($supportContact): void
     {
         $this->supportContact = $supportContact;
     }
 
      /**
-     * @return string
-     */
+      * @return string
+      */
     public function getComments(): ?string
     {
         return $this->comments;
@@ -389,30 +359,27 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $comments
      */
-    public function setComments($comments)
+    public function setComments($comments): void
     {
         $this->comments = $comments;
     }
 
-    public function isForProduction()
+    public function isForProduction(): bool
     {
         return $this->environment === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
 
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         $this->status = $status;
     }
 
-    /**
-     * @param Service $service
-     */
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
@@ -428,7 +395,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @param string $manageId
      */
-    public function setManageId($manageId)
+    public function setManageId($manageId): void
     {
         $this->manageId = $manageId;
     }
@@ -438,10 +405,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER;
     }
 
-    /**
-     * @return array
-     */
-    public function getScopes()
+    public function getScopes(): array
     {
         return $this->scopes;
     }

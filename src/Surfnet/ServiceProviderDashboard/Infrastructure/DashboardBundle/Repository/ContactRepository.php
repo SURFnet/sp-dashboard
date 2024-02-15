@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -24,24 +26,23 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository as Cont
 
 class ContactRepository extends DoctrineEntityRepository implements ContactRepositoryInterface
 {
-    /**
-     * @param Contact $contact
-     */
-    public function save(Contact $contact)
+    public function save(Contact $contact): void
     {
         $this->getEntityManager()->persist($contact);
         $this->getEntityManager()->flush($contact);
     }
 
     /**
-     * @param string $nameId
+     * @param  string $nameId
      * @return Contact|null
      */
     public function findByNameId($nameId)
     {
-        $contacts = parent::findBy([
+        $contacts = parent::findBy(
+            [
             'nameId' => $nameId,
-        ]);
+            ]
+        );
 
         if (empty($contacts)) {
             return null;

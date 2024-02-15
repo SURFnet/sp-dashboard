@@ -32,8 +32,8 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\MissingSamlAttributeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
@@ -46,14 +46,14 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
     /**
      * @var string[]
      */
-    private $administratorTeams;
+    private readonly array $administratorTeams;
 
     public function __construct(
         private readonly ContactRepository $contacts,
         private readonly ServiceRepository $services,
         private readonly AttributeDictionary $attributeDictionary,
         private readonly LoggerInterface $logger,
-        string $administratorTeams
+        string $administratorTeams,
     ) {
         $teams = explode(",", str_replace('\'', '', $administratorTeams));
         Assert::allStringNotEmpty(
@@ -81,7 +81,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
 
         try {
             $commonName = $this->getSingleStringValue('commonName', $translatedAssertion);
-        } catch (MissingSamlAttributeException $e) {
+        } catch (MissingSamlAttributeException) {
             $commonName = '';
         }
 
@@ -91,11 +91,11 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         try {
             // An exception is thrown when isMemberOf is empty.
             $teamNames = (array)$translatedAssertion->getAttributeValue('isMemberOf');
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             $teamNames = [];
         }
 
-        if (!empty(array_intersect($this->administratorTeams, $teamNames))) {
+        if (array_intersect($this->administratorTeams, $teamNames) !== []) {
             $role = 'ROLE_ADMINISTRATOR';
         }
 
@@ -121,10 +121,12 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         $services = $this->services->findByTeamNames($teamNames);
 
         if (empty($services)) {
-            $this->logger->warning(sprintf(
-                'User is member of teams "%s" but no service with that team name found',
-                implode(', ', $teamNames)
-            ));
+            $this->logger->warning(
+                sprintf(
+                    'User is member of teams "%s" but no service with that team name found',
+                    implode(', ', $teamNames)
+                )
+            );
 
             throw new UnknownServiceException(
                 $teamNames,
@@ -173,11 +175,13 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
 
         // see https://www.pivotaltracker.com/story/show/121296389
         if (count($values) > 1) {
-            $this->logger->warning(sprintf(
-                'Found "%d" values for attribute "%s", using first value',
-                count($values),
-                $attribute
-            ));
+            $this->logger->warning(
+                sprintf(
+                    'Found "%d" values for attribute "%s", using first value',
+                    count($values),
+                    $attribute
+                )
+            );
         }
 
         $value = reset($values);
@@ -186,7 +190,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $message = sprintf(
                 'First value of attribute "%s" must be a string, "%s" given',
                 $attribute,
-                is_object($value) ? get_class($value) : gettype($value)
+                get_debug_type($value)
             );
 
             $this->logger->warning($message);
@@ -197,18 +201,23 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         return $value;
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         return $user;
     }
 
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
         return $class === Identity::class;
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): UserInterface
     {
-        throw new BadMethodCallException('Use `getUser` to load a user by username');
+        throw new UserNotFoundException('Use `getUser` to load a user by username');
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        throw new UserNotFoundException('Use `getUser` to load a user by username');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -23,7 +25,7 @@ class ApiConnection
     public function __construct(
         private readonly string $host,
         private readonly string $username,
-        private readonly string $password
+        private readonly string $password,
     ) {
     }
 

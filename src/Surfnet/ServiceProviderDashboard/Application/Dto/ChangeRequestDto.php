@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -26,23 +28,11 @@ use function array_key_exists;
 
 class ChangeRequestDto
 {
-    /**
-     * @var string
-     */
-    private $note;
-
-    /**
-     * @var datetime
-     */
-    private $created;
-
-    private $pathUpdates = [];
-
-    private function __construct(string $note, DateTime $created, array $pathUpdates)
-    {
-        $this->note = $note;
-        $this->created = $created;
-        $this->pathUpdates = $pathUpdates;
+    private function __construct(
+        private readonly string $note,
+        private readonly DateTime $created,
+        private readonly array $pathUpdates,
+    ) {
     }
 
     /**
@@ -57,7 +47,7 @@ class ChangeRequestDto
 
         try {
             $created = new DateTime($changeRequest['created']);
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new InvalidDateTimeException();
         }
         $note = $changeRequest['note'] ?? '';
@@ -67,7 +57,7 @@ class ChangeRequestDto
         return new self($note, $created, $changeRequest['pathUpdates']);
     }
 
-    private static function flattenArp(&$changeRequest)
+    private static function flattenArp(array &$changeRequest): void
     {
         if (array_key_exists('arp', $changeRequest['pathUpdates'])) {
             $arp = $changeRequest['pathUpdates']['arp'];

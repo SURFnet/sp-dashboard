@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -23,13 +23,13 @@ class EntityMergeAttribute
 {
     public function __construct(
         private readonly string $name,
-        private readonly string $urn
+        private readonly string $urn,
     ) {
     }
 
     public static function fromAttribute(
         $name,
-        $urn
+        $urn,
     ): EntityMergeAttribute {
         return new self(
             $name,

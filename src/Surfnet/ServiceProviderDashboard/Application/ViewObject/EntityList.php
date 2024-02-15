@@ -24,19 +24,19 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 class EntityList implements IteratorAggregate
 {
     public function __construct(
-        private array $entities
+        private array $entities,
     ) {
     }
 
     /**
      * @return Entity[]
      */
-    public function getEntities()
+    public function getEntities(): array
     {
         return $this->entities;
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->entities);
     }
@@ -54,9 +54,9 @@ class EntityList implements IteratorAggregate
         return false;
     }
 
-    public function sortEntitiesByEnvironment()
+    public function sortEntitiesByEnvironment(): static
     {
-        $sortEntitiesByEnvironment = function (Entity $first, Entity $second) {
+        $sortEntitiesByEnvironment = function (Entity $first, Entity $second): int {
             $envFirst = $first->getEnvironment();
             $envSecond = $second->getEnvironment();
 

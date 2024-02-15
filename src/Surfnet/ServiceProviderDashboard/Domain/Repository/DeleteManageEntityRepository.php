@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -20,7 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 interface DeleteManageEntityRepository
 {
-    const RESULT_SUCCESS = 'success';
+    public const RESULT_SUCCESS = 'success';
 
     /**
      * Delete an entity from manage identified by the manage id

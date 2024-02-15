@@ -19,7 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityMergeService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
@@ -34,7 +34,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -51,30 +52,26 @@ class EntityCreateController extends AbstractController
         private readonly EntityTypeFactory $entityTypeFactory,
         private readonly LoadEntityService $loadEntityService,
         private readonly ProtocolChoiceFactory $protocolChoiceFactory,
-        private readonly EntityMergeService $entityMergeService
+        private readonly EntityMergeService $entityMergeService,
     ) {
     }
 
     /**
-     * @Route(
-     *     "/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}",
-     *     defaults={
-     *          "targetEnvironment" = "test",
-     *     },
-     *     name="entity_type",
-     *     methods={"GET", "POST"}
-     * )
-     * @Security("is_granted('ROLE_USER')")
-     *
-     * @param Request $request
-     *
-     * @param int $serviceId
-     * @param string $targetEnvironment
-     * @param string $inputId
-     * @return RedirectResponse|Response|array
+     * @param  int $serviceId
      */
-    public function typeAction(Request $request, $serviceId, string $targetEnvironment, string $inputId)
-    {
+    #[IsGranted('ROLE_USER')]
+    #[Route(
+        path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}',
+        name: 'entity_type',
+        defaults: ['targetEnvironment' => 'test'],
+        methods: ['GET', 'POST']
+    )]
+    public function type(
+        Request $request,
+        $serviceId,
+        string $targetEnvironment,
+        string $inputId,
+    ): RedirectResponse|Response {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $choices = $this->protocolChoiceFactory->buildOptions();
         if (!$service->isClientCredentialClientsEnabled()) {
@@ -97,28 +94,36 @@ class EntityCreateController extends AbstractController
             $sourceEnvironment = null;
 
             if ($withTemplate === 'yes') {
-                $template = explode('/', $request->get($formId . '_entityid/value'));
+                $template = explode('/', (string) $request->get($formId . '_entityid/value'));
                 $manageId = $template[0];
                 $sourceEnvironment = $template[1];
             }
 
             if (!$manageId) {
-                return $this->redirectToRoute('entity_add', [
+                return $this->redirectToRoute(
+                    'entity_add',
+                    [
                     'serviceId' => $service->getId(),
                     'targetEnvironment' => $environment,
-                    'type' => $protocol
-                ]);
+                    'type' => $protocol,
+                    ]
+                );
             }
 
-            return $this->redirectToRoute('entity_copy', [
+            return $this->redirectToRoute(
+                'entity_copy',
+                [
                 'serviceId' => $service->getId(),
                 'manageId' => $manageId,
                 'targetEnvironment' => $environment,
                 'sourceEnvironment' => $sourceEnvironment,
-            ]);
+                ]
+            );
         }
 
-        return $this->render('@Dashboard/EntityType/type.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityType/type.html.twig',
+            [
             'form' => $form->createView(),
             'serviceId' => $service->getId(),
             'environment' => $targetEnvironment,
@@ -127,13 +132,12 @@ class EntityCreateController extends AbstractController
             'productionEnabled' => $isProductionEnabled,
             'entities' => $entityList->getEntities(),
             'manageId' => $formId,
-        ]);
+            ]
+        );
     }
 
     /**
-     * @Route("/entity/create/{serviceId}/{type}/{targetEnvironment}", name="entity_add", methods={"GET","POST"})
-     * @param Request $request
-     * @param int $serviceId
+     * @param int         $serviceId
      * @param null|string $targetEnvironment
      * @param null|string $type
      *
@@ -143,17 +147,18 @@ class EntityCreateController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function createAction(Request $request, $serviceId, $targetEnvironment, $type)
+    #[Route(path: '/entity/create/{serviceId}/{type}/{targetEnvironment}', name: 'entity_add', methods: ['GET', 'POST'])]
+    public function create(Request $request, $serviceId, $targetEnvironment, $type): Response
     {
-        $flashBag = $this->get('session')->getFlashBag();
-        $flashBag->clear();
+        $request->getSession()->getFlashBag()->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);
         $hasTestEntities = $this->entityService
             ->getEntityListForService($service)->hasTestEntities();
 
-        if (!$service->isProductionEntitiesEnabled() && !$hasTestEntities &&
-            $targetEnvironment !== Constants::ENVIRONMENT_TEST) {
+        if (!$service->isProductionEntitiesEnabled() && !$hasTestEntities
+            && $targetEnvironment !== Constants::ENVIRONMENT_TEST
+        ) {
             throw $this->createAccessDeniedException(
                 'You do not have access to create entities without publishing to the test environment first'
             );
@@ -182,7 +187,7 @@ class EntityCreateController extends AbstractController
                 if ($this->isPublishAction($form)) {
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
-                        $response = $this->publishEntity(null, $command, false, $flashBag);
+                        $response = $this->publishEntity(null, $command, false, $request);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
@@ -199,46 +204,55 @@ class EntityCreateController extends AbstractController
 
                     return $this->redirectToRoute('service_overview');
                 }
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
             }
         }
 
-        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityEdit/edit.html.twig',
+            [
             'form' => $form->createView(),
             'type' => $type,
-        ]);
+            ]
+        );
     }
 
-
     /**
-     * @Route("/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}",
-     *      defaults={
-     *          "manageId" = null,
-     *          "targetEnvironment" = "test",
-     *          "sourceEnvironment" = "test"
-     *      },
-     *      name="entity_copy",
-     *      methods={"GET", "POST"}
-     * )
-     * @Security("is_granted('ROLE_USER')")
      *
-     * @param int $serviceId
-     * @param null|string $manageId set from the entity_copy route
+     *
+     * @param int         $serviceId
+     * @param null|string $manageId          set from the entity_copy route
      * @param null|string $targetEnvironment set from the entity_copy route
      * @param null|string $sourceEnvironment indicates where the copy command originated from
      *
      * @return RedirectResponse|Response|array
      *
-     * @throws InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
+     * @throws                                       InvalidArgumentException
+     * @throws                                       \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function copyAction(Request $request, $serviceId, $manageId, $targetEnvironment, $sourceEnvironment)
-    {
-        $flashBag = $this->get('session')->getFlashBag();
+    #[IsGranted('ROLE_USER')]
+    #[Route(
+        path: '/entity/copy/{serviceId}/{manageId}/{targetEnvironment}/{sourceEnvironment}',
+        name: 'entity_copy',
+        defaults: [
+            'manageId' => null,
+            'targetEnvironment' => 'test',
+            'sourceEnvironment' => 'test',
+        ],
+        methods: ['GET', 'POST']
+    )]
+    public function copy(
+        Request $request,
+        $serviceId,
+        string $manageId,
+        string $targetEnvironment,
+        string $sourceEnvironment,
+    ): Response {
+        $flashBag = $request->getSession()->getFlashBag();
         $flashBag->clear();
 
         $service = $this->authorizationService->changeActiveService($serviceId);
@@ -271,7 +285,7 @@ class EntityCreateController extends AbstractController
                     // Only trigger form validation on publish
                     if ($form->isValid()) {
                         $entity = $entity->resetId();
-                        $response = $this->publishEntity($entity, $command, false, $flashBag);
+                        $response = $this->publishEntity($entity, $command, false, $request);
 
                         // When a response is returned, publishing was a success
                         if ($response instanceof Response) {
@@ -295,14 +309,17 @@ class EntityCreateController extends AbstractController
 
                     return $this->redirectToRoute('service_overview');
                 }
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
             }
         }
 
-        return $this->render('@Dashboard/EntityEdit/edit.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityEdit/edit.html.twig',
+            [
             'form' => $form->createView(),
             'type' => $entity->getProtocol()->getProtocol(),
-        ]);
+            ]
+        );
     }
 }

@@ -18,38 +18,32 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Twig_Environment;
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class IdentityExtension extends Twig_Extension
+class IdentityExtension extends AbstractExtension
 {
     public function __construct(private readonly TokenStorageInterface $tokenStorage)
     {
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new Twig_SimpleFunction(
+            new TwigFunction(
                 'identity',
-                [$this, 'renderIdentity'],
+                $this->renderIdentity(...),
                 ['is_safe' => ['html'], 'needs_environment' => true]
             ),
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function renderIdentity(Twig_Environment $environment)
+    public function renderIdentity(Environment $environment): string
     {
         $token = $this->tokenStorage->getToken();
-        $contact = null;
 
-        if ($token) {
-            $contact = $token->getUser()->getContact();
-        }
+        $contact = $token?->getUser()->getContact();
 
         if (!$contact) {
             return '';

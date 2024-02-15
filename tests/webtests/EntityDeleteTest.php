@@ -18,15 +18,17 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
+
 class EntityDeleteTest extends WebTestCase
 {
+    private TicketServiceInterface $ticketService;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures();
         $this->logIn();
-        $this->service = $this->getServiceRepository()->findByName('SURFnet');
         $this->ticketService = self::getContainer()->get('surfnet.dashboard.repository.issue');
         $this->switchToService('SURFnet');
     }
@@ -107,7 +109,7 @@ class EntityDeleteTest extends WebTestCase
         $this->ticketService->shouldFailCreateIssue();
 
         $crawler = self::$pantherClient->request('GET', "/entity/delete/request/1/a8e7cffd-0409-45c7-a37a-000000000000");
-        $pageTitle = $crawler->filter('h1');
+        $pageTitle = $crawler->filter('.page-container h1');
         $this->assertEquals('Delete entity', $pageTitle->text());
 
         $form = $crawler->filter('.page-container')

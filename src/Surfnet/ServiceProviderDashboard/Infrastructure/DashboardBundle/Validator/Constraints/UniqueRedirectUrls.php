@@ -19,10 +19,9 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Attribute;
 
-/**
- * @Annotation
- */
+#[Attribute]
 class UniqueRedirectUrls extends Constraint
 {
     /**

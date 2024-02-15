@@ -34,41 +34,28 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\SaveCommandFactoryInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 
 class EntityTypeFactoryTest extends MockeryTestCase
 {
-    /**
-     * @var Service
-     */
-    private $service;
+    private m\LegacyMockInterface|Service|m\MockInterface $service;
 
-    /**
-     * @var EntityTypeFactory
-     */
-    private $factory;
+    private EntityTypeFactory $factory;
 
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
+    private FormFactory|m\LegacyMockInterface|m\MockInterface $formFactory;
 
-    /**
-     * @var FormType
-     */
-    private $form;
-    /**
-     * @var SaveCommandFactoryInterface&m\Mock
-     */
-    private $saveCommandFactory;
+    private FormType|FormInterface|m\LegacyMockInterface|m\MockInterface $form;
+
+    private m\LegacyMockInterface|SaveCommandFactoryInterface|m\Mock|m\MockInterface $saveCommandFactory;
 
     protected function setUp(): void
     {
         $this->formFactory = m::mock(FormFactory::class);
         $this->saveCommandFactory = m::mock(SaveCommandFactoryInterface::class);
         $this->service = m::mock(Service::class);
-        $this->form = m::mock(FormType::class);
-        $this->attributeService = m::mock(AttributeServiceInterface::class);
-        $this->factory = new EntityTypeFactory($this->formFactory, $this->saveCommandFactory, $this->attributeService);
+        $this->form = m::mock(FormInterface::class);
+        $attributeService = m::mock(AttributeServiceInterface::class);
+        $this->factory = new EntityTypeFactory($this->formFactory, $this->saveCommandFactory, $attributeService);
     }
 
     public function test_build_create_new_saml_form()
@@ -99,7 +86,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
             Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertInstanceOf(FormType::class, $form);
+        $this->assertInstanceOf(FormInterface::class, $form);
     }
 
     public function test_build_create_new_saml_form_from_entity()
@@ -130,7 +117,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
             Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertInstanceOf(FormType::class, $form);
+        $this->assertInstanceOf(FormInterface::class, $form);
     }
 
     public function test_build_create_new_oidcng_form()
@@ -161,7 +148,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
             Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertInstanceOf(FormType::class, $form);
+        $this->assertInstanceOf(FormInterface::class, $form);
     }
 
 
@@ -193,7 +180,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
             Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertInstanceOf(FormType::class, $form);
+        $this->assertInstanceOf(FormInterface::class, $form);
     }
 
     public function test_build_create_new_oauth20_rs_form()
@@ -224,7 +211,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
             Constants::ENVIRONMENT_PRODUCTION
         );
 
-        $this->assertInstanceOf(FormType::class, $form);
+        $this->assertInstanceOf(FormInterface::class, $form);
     }
 
     /**
@@ -286,7 +273,7 @@ class EntityTypeFactoryTest extends MockeryTestCase
             $isCopy
         );
 
-        $this->assertInstanceOf(FormType::class, $form);
+        $this->assertInstanceOf(FormInterface::class, $form);
     }
 
     public static function providePublishOrChangeOptions(): array

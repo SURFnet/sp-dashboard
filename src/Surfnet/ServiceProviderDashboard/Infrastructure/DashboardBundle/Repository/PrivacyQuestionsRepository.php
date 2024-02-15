@@ -26,7 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PrivacyQuestionsRepositor
 
 class PrivacyQuestionsRepository extends DoctrineEntityRepository implements PrivacyQuestionsRepositoryInterface
 {
-    public function save(PrivacyQuestions $questions)
+    public function save(PrivacyQuestions $questions): void
     {
         $this->_em->persist($questions);
         $this->_em->flush($questions);
@@ -34,8 +34,10 @@ class PrivacyQuestionsRepository extends DoctrineEntityRepository implements Pri
 
     public function findByService(Service $service)
     {
-        return parent::findOneBy([
+        return parent::findOneBy(
+            [
             'service' => $service,
-        ]);
+            ]
+        );
     }
 }

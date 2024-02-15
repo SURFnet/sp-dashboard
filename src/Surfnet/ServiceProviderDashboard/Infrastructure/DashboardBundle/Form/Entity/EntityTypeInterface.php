@@ -26,5 +26,5 @@ interface EntityTypeInterface extends FormInterface
     /**
      * @return Command
      */
-    public function getData();
+    public function getData(): mixed;
 }

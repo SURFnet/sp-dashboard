@@ -29,15 +29,14 @@ class PrivacyQuestionsCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly PrivacyQuestionsRepository $repository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     /**
-     * @param PrivacyQuestionsCommand $command
      * @throws EntityNotFoundException
      */
-    public function handle(PrivacyQuestionsCommand $command)
+    public function handle(PrivacyQuestionsCommand $command): void
     {
         $service = $command->getService();
 
@@ -63,7 +62,7 @@ class PrivacyQuestionsCommandHandler implements CommandHandler
         $this->repository->save($questions);
     }
 
-    private function setDataFromCommand(PrivacyQuestionsCommand $command, PrivacyQuestions $questions)
+    private function setDataFromCommand(PrivacyQuestionsCommand $command, PrivacyQuestions $questions): void
     {
         $questions->setService($command->getService());
         $questions->setAccessData($command->getAccessData());

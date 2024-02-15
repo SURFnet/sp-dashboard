@@ -49,7 +49,7 @@ class EntityMergeService
     public function __construct(
         private readonly AttributeServiceInterface $attributeService,
         private readonly string $playGroundUriTest,
-        private readonly string $playGroundUriProd
+        private readonly string $playGroundUriProd,
     ) {
     }
 
@@ -58,7 +58,7 @@ class EntityMergeService
      */
     public function mergeEntityCommand(
         SaveEntityCommandInterface $command,
-        ?ManageEntity $manageEntity = null
+        ?ManageEntity $manageEntity = null,
     ): ManageEntity {
         $metaData = new MetaData(
             $command->getEntityId(),
@@ -98,7 +98,9 @@ class EntityMergeService
             $secret = new Secret(20);
         }
         if ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG) {
-            /** @var SaveOidcngEntityCommand  $command */
+            /**
+ * @var SaveOidcngEntityCommand  $command
+*/
             $oidcClient = new OidcngClient(
                 $command->getClientId(),
                 $secret->getSecret(),
@@ -109,14 +111,18 @@ class EntityMergeService
                 $command->getOidcngResourceServers()
             );
         } elseif ($protocol->getProtocol() === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER) {
-            /** @var SaveOidcngResourceServerEntityCommand  $command */
+            /**
+ * @var SaveOidcngResourceServerEntityCommand  $command
+*/
             $oidcClient = new OidcngResourceServerClient(
                 $command->getClientId(),
                 $secret->getSecret(),
                 []
             );
         } elseif ($protocol->getProtocol() === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT) {
-            /** @var SaveOauthClientCredentialClientCommand $command */
+            /**
+ * @var SaveOauthClientCredentialClientCommand $command
+*/
             $oidcClient = new OauthClientCredentialsClientClient(
                 $command->getClientId(),
                 $command->getAccessTokenValidity(),
@@ -137,7 +143,7 @@ class EntityMergeService
         $newEntity->setComments($command->getComments());
         $newEntity->setEnvironment($command->getEnvironment());
         // If no existing ManageEntity is provided, then return the newly created entity
-        if (!$manageEntity) {
+        if (!$manageEntity instanceof ManageEntity) {
             return $newEntity;
         }
         $manageEntity->merge($newEntity);
@@ -154,8 +160,8 @@ class EntityMergeService
 
         // Oidc TNG resource servers do not track attributes in manage
         // Neither do the Oauth Client Credentials clients
-        if ($command instanceof SaveOidcngResourceServerEntityCommand ||
-            $command instanceof SaveOauthClientCredentialClientCommand
+        if ($command instanceof SaveOidcngResourceServerEntityCommand
+            || $command instanceof SaveOauthClientCredentialClientCommand
         ) {
             return $attributeList;
         }
@@ -163,12 +169,14 @@ class EntityMergeService
         foreach ($this->attributeService->getEntityMergeAttributes() as $entityMergeAttribute) {
             if ($command->getAttribute($entityMergeAttribute->getName())) {
                 $commandAttribute = $command->getAttribute($entityMergeAttribute->getName());
-                $attributeList->add(new Attribute(
-                    $entityMergeAttribute->getUrn(),
-                    '',
-                    'idp',
-                    $commandAttribute->getMotivation()
-                ));
+                $attributeList->add(
+                    new Attribute(
+                        $entityMergeAttribute->getUrn(),
+                        '',
+                        'idp',
+                        $commandAttribute->getMotivation()
+                    )
+                );
             }
         }
         return $attributeList;
@@ -219,23 +227,19 @@ class EntityMergeService
         return new Logo($command->getLogoUrl(), null, null);
     }
 
-    private function buildRedirectUrls(SaveOidcngEntityCommand $command)
+    private function buildRedirectUrls(SaveOidcngEntityCommand $command): ?array
     {
         $playgroundUrl = $command->getEnvironment() === Constants::ENVIRONMENT_TEST ? $this->playGroundUriTest : $this->playGroundUriProd;
         $urls = $command->getRedirectUrls();
         // Add the playground URL if requested in the form (checkbox was checked)
-        if ($command->isEnablePlayground()) {
-            if (!in_array($playgroundUrl, $urls)) {
-                $urls[] = $playgroundUrl;
-            }
+        if ($command->isEnablePlayground() && !in_array($playgroundUrl, $urls)) {
+            $urls[] = $playgroundUrl;
         }
         // Test if we should remove the playground URL (checkbox unchecked, but url remained in set)
-        if (!$command->isEnablePlayground()) {
-            if (in_array($playgroundUrl, $urls)) {
-                foreach ($urls as $key => $url) {
-                    if ($url === $playgroundUrl) {
-                        unset($urls[$key]);
-                    }
+        if (!$command->isEnablePlayground() && in_array($playgroundUrl, $urls)) {
+            foreach ($urls as $key => $url) {
+                if ($url === $playgroundUrl) {
+                    unset($urls[$key]);
                 }
             }
         }

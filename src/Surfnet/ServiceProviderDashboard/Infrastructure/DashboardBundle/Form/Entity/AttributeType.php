@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -27,7 +29,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AttributeType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('requested', CheckboxType::class, ['attr' => ['class' => 'requested']]);
         $builder->add(
@@ -44,15 +46,12 @@ class AttributeType extends AbstractType
         );
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Attribute::class,
-            'error_bubbling' => false,
-        ));
+        $resolver->setDefaults(['data_class' => Attribute::class, 'error_bubbling' => false]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'attribute';
     }

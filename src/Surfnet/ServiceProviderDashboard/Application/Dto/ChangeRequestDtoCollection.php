@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -18,18 +20,14 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
-use Webmozart\Assert\Assert;
-
 class ChangeRequestDtoCollection
 {
     public function __construct(private array $changeRequests)
     {
-        Assert::isArray($changeRequests);
-
         foreach ($changeRequests as $id => $changeRequest) {
             $this->changeRequests[$id] = ChangeRequestDto::fromChangeRequest($changeRequest);
         }
-        usort($this->changeRequests, [ChangeRequestDtoComparer::class, 'compareCreatedDescending']);
+        usort($this->changeRequests, ChangeRequestDtoComparer::compareCreatedDescending(...));
     }
 
     public function getChangeRequests(): array

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -26,7 +28,7 @@ class AllowedIdentityProviders
 {
     public function __construct(
         private array $providers,
-        private bool $allowAll
+        private bool $allowAll,
     ) {
         Assert::allString($providers);
     }
@@ -64,7 +66,7 @@ class AllowedIdentityProviders
 
     public function merge(?AllowedIdentityProviders $allowedIdPs): void
     {
-        if ($allowedIdPs === null) {
+        if (!$allowedIdPs instanceof AllowedIdentityProviders) {
             $this->providers = [];
             $this->allowAll = null;
             return;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -24,7 +26,7 @@ use function is_null;
 
 class Coin implements Comparable
 {
-    public static function fromApiResponse(array $metaDataFields)
+    public static function fromApiResponse(array $metaDataFields): self
     {
         $signatureMethod = $metaDataFields['coin:signature_method'] ?? '';
         $serviceTeamId = $metaDataFields['coin:service_team_id'] ?? '';
@@ -59,44 +61,44 @@ class Coin implements Comparable
         private ?string $signatureMethod,
         private ?string $serviceTeamId,
         private ?string $originalMetadataUrl,
-        private ?string $excludeFromPush,
+        private null|string|int $excludeFromPush,
         private ?string $applicationUrl,
         private ?string $eula,
-        private ?int $oidcClient
+        private ?int $oidcClient,
     ) {
     }
 
-    public function getSignatureMethod()
+    public function getSignatureMethod(): ?string
     {
         return $this->signatureMethod;
     }
 
-    public function getServiceTeamId()
+    public function getServiceTeamId(): ?string
     {
         return $this->serviceTeamId;
     }
 
-    public function getOriginalMetadataUrl()
+    public function getOriginalMetadataUrl(): ?string
     {
         return $this->originalMetadataUrl;
     }
 
-    public function getExcludeFromPush()
+    public function getExcludeFromPush(): null|string|int
     {
         return $this->excludeFromPush;
     }
 
-    public function getApplicationUrl()
+    public function getApplicationUrl(): ?string
     {
         return $this->applicationUrl;
     }
 
-    public function getEula()
+    public function getEula(): ?string
     {
         return $this->eula;
     }
 
-    public function getOidcClient()
+    public function getOidcClient(): ?int
     {
         return $this->oidcClient;
     }
@@ -105,7 +107,7 @@ class Coin implements Comparable
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function merge(Coin $coin)
+    public function merge(Coin $coin): void
     {
         // Overwrite the current data with that from the new Coin data
         $this->signatureMethod = is_null($coin->getSignatureMethod()) ? null : $coin->getSignatureMethod();

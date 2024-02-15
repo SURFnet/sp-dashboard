@@ -19,7 +19,6 @@
 namespace Application\CommandHandler\Entity;
 
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
-use JiraRestApi\Issue\Issue;
 use JiraRestApi\JiraException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -33,44 +32,18 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\IssueRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Service\IssueService;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 
 class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 {
-    /**
-     * @var TicketService|Mock
-     */
-    private $ticketService;
-
-    /**
-     * @var QueryClient|Mock
-     */
-    private $queryClient;
-
-    /**
-     * @var FlashBagInterface|Mock
-     */
-    private $flashBag;
-
-    /**
-     * @var Logger|Mock
-     */
-    private $logger;
-
-    /**
-     * @var RequestDeletePublishedEntityCommandHandler
-     */
-    private $commandHandler;
-
-    /**
-     * @var JiraServiceFactory|Mock
-     */
-    private $jiraServiceFactory;
-
-    /**
-     * @var IssueRepository|Mock
-     */
-    private $issueRepository;
+    private QueryClient|Mock|m\LegacyMockInterface|m\MockInterface $queryClient;
+    private Mock|RequestStack|m\LegacyMockInterface|m\MockInterface $requestStack;
+    private Mock|m\LegacyMockInterface|Logger|m\MockInterface $logger;
+    private RequestDeletePublishedEntityCommandHandler $commandHandler;
+    private Mock|m\LegacyMockInterface|m\MockInterface|JiraServiceFactory $jiraServiceFactory;
+    private IssueRepository|m\MockInterface|Mock|m\LegacyMockInterface $issueRepository;
 
     public function setUp(): void
     {
@@ -81,15 +54,15 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
 
         // As part of the integration test,
         // the TicketService and IssueFieldFactory is not mocked but included in the test.
-        $this->ticketService = new TicketService($this->issueRepository, $this->logger);
+        $ticketService = new TicketService($this->issueRepository, $this->logger);
 
-        $this->flashBag = m::mock(FlashBagInterface::class);
+        $this->requestStack = m::mock(RequestStack::class);
 
         $this->commandHandler = new RequestDeletePublishedEntityCommandHandler(
             $this->queryClient,
             'arbitrary-issue-type',
-            $this->ticketService,
-            $this->flashBag,
+            $ticketService,
+            $this->requestStack,
             $this->logger
         );
     }
@@ -180,8 +153,8 @@ class RequestDeletePublishedEntityCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('createIssueFrom')
             ->andThrow(JiraException::class);
 
-        $this->flashBag
-            ->shouldReceive('add')
+        $this->requestStack
+            ->shouldReceive('getSession->getFlashBag->add')
             ->with('error', 'entity.delete.request.failed');
 
         $this->assertNull($this->commandHandler->handle($command));

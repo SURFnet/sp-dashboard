@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -17,52 +18,27 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Dto;
 
-class ServiceStatusDto implements \JsonSerializable
+use JsonSerializable;
+
+class ServiceStatusDto implements JsonSerializable
 {
     /**
-     * @var string[]
-     */
-    private $states;
-    /**
-     * @var array
-     */
-    private $labels;
-    /**
-     * @var array
-     */
-    private $tooltips;
-    /**
-     * @var array
-     */
-    private $legend;
-    /**
-     * @var int
-     */
-    private $percentage;
-
-    /**
      * ServiceStatusDto constructor.
+     *
      * @param string[] $states
      * @param string[] $labels
      * @param string[] $tooltips
-     * @param array $legend
-     * @param int $percentage
      */
     public function __construct(
-        array $states,
-        array $labels,
-        array $tooltips,
-        array $legend,
-        $percentage
+        private readonly array $states,
+        private readonly array $labels,
+        private readonly array $tooltips,
+        private readonly array $legend,
+        private readonly int   $percentage,
     ) {
-        $this->states = $states;
-        $this->labels = $labels;
-        $this->tooltips = $tooltips;
-        $this->legend = $legend;
-        $this->percentage = $percentage;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'states' => $this->states,

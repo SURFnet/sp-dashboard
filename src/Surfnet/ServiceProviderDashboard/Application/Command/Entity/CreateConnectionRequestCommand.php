@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
-use Exception;
 use Surfnet\ServiceProviderDashboard\Application\Exception\ConnectionRequestNotUniqueException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -31,22 +30,10 @@ class CreateConnectionRequestCommand implements CreateConnectionRequestCommandIn
     /**
      * @var ConnectionRequest[]
      */
-    private $connectionRequests = [];
+    private array $connectionRequests = [];
 
-    /**
-     * @var ManageEntity
-     */
-    private $manageEntity;
-
-    /**
-     * @var Contact
-     */
-    private $applicant;
-
-    public function __construct(ManageEntity $manageEntity, Contact $applicant)
+    public function __construct(private readonly ManageEntity $manageEntity, private readonly Contact $applicant)
     {
-        $this->manageEntity = $manageEntity;
-        $this->applicant = $applicant;
     }
 
     /**

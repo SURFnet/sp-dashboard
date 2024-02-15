@@ -26,7 +26,6 @@ interface PrivacyQuestionsRepository
     public function save(PrivacyQuestions $questions);
 
     /**
-     * @param Service $service
      * @return null|PrivacyQuestions
      */
     public function findByService(Service $service);

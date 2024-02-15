@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -32,11 +34,11 @@ class DeletePublishedProductionEntityCommandHandler implements CommandHandler
 {
     public function __construct(
         private readonly DeleteManageEntityRepository $deleteEntityRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
-    public function handle(DeletePublishedProductionEntityCommand $command)
+    public function handle(DeletePublishedProductionEntityCommand $command): void
     {
         $this->logger->info(
             sprintf(

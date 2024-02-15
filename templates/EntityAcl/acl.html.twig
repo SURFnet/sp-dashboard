@@ -13,7 +13,7 @@
 
     <div class="fieldset card">
 
-        {% for type, messages in app.session.flashbag.all %}
+        {% for type, messages in app.flashes %}
             {% for message in messages %}
                 <div class="message {{ type }}">{{ message|trans }}</div>
             {% endfor %}

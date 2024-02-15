@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,14 +21,15 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller\Api;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Application\Assembler\ServiceStatusAssembler;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -34,31 +37,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ServiceController extends AbstractController
 {
-    /**
-     * @param CommandBus $commandBus
-     * @param AuthorizationService $authorizationService
-     * @param ServiceService $serviceService
-     * @param ServiceStatusService $serviceStatusService
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
-        private CommandBus $commandBus,
         private readonly AuthorizationService $authorizationService,
         private readonly ServiceService $serviceService,
         private readonly ServiceStatusService $serviceStatusService,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
-    /**
-     * @Route("/api/service/status/{id}", name="api_service_status", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_USER')")
-     *
-     * @param int $id
-     *
-     * @return JsonResponse
-     */
-    public function statusAction($id)
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/api/service/status/{id}', name: 'api_service_status', methods: ['GET', 'POST'])]
+    public function status(int $id): JsonResponse
     {
         $this->authorizationService->assertServiceIdAllowed($id);
 
@@ -72,8 +61,6 @@ class ServiceController extends AbstractController
 
         $serviceStatus = $serviceStatusAssembler->getDto();
 
-        return new JsonResponse([
-            'service' => $serviceStatus,
-        ]);
+        return new JsonResponse(['service' => $serviceStatus]);
     }
 }

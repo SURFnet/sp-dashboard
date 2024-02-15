@@ -23,69 +23,43 @@ use GuzzleHttp\Exception\ConnectException;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\FetcherInterface;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
+use Exception;
 
 class Fetcher implements FetcherInterface
 {
-    /**
-     * @var ClientInterface
-     */
-    private $guzzle;
+    private readonly int $timeout;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private static string $curlErrorRegex = '/cURL error (\d+):/';
 
-    /**
-     * @var int
-     */
-    private $timeout;
-
-    private static $curlErrorRegex = '/cURL error (\d+):/';
-
-    /**
-     * Constructor
-     *
-     * @param ClientInterface $guzzle
-     * @param LoggerInterface $logger
-     */
-    public function __construct(ClientInterface $guzzle, LoggerInterface $logger, $timeout)
-    {
-        $this->guzzle = $guzzle;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly ClientInterface $guzzle,
+        private readonly LoggerInterface $logger,
+        $timeout,
+    ) {
         $this->timeout = (int) $timeout;
     }
 
     /**
      * @param string $url
-     *
-     * @return string
-     *
      * @throws MetadataFetchException
      */
-    public function fetch($url)
+    public function fetch($url): string
     {
         try {
             $guzzleOptions = [ 'timeout' => $this->timeout, 'verify' => false ];
             $response = $this->guzzle->request('GET', $url, $guzzleOptions);
-            $responseXml = $response->getBody()->getContents();
-            return $responseXml;
+            return $response->getBody()->getContents();
         } catch (ConnectException $e) {
-            $this->logger->info('Metadata CURL exception', array('e' => $e));
+            $this->logger->info('Metadata CURL exception', ['e' => $e]);
             $curlError = ' (' . $this->getCurlErrorDescription($e->getMessage()) . ').';
             throw new MetadataFetchException('Failed retrieving the metadata' . $curlError);
-        } catch (\Exception $e) {
-            $this->logger->info('Metadata exception', array('e' => $e));
+        } catch (Exception $e) {
+            $this->logger->info('Metadata exception', ['e' => $e]);
             throw new MetadataFetchException('Failed retrieving the metadata.');
         }
     }
 
-    /**
-     * @param string $message
-     *
-     * @return string
-     */
-    private function getCurlErrorDescription($message)
+    private function getCurlErrorDescription(string $message): string
     {
         $error = '';
         $errorNumber = $this->extractErrorNumber($message);
@@ -98,17 +72,17 @@ class Fetcher implements FetcherInterface
                 break;
         }
 
-        if (!empty($error)) {
+        if ($error !== '' && $error !== '0') {
             $error .= ' - ';
         }
 
         return $error . 'message:' . $message;
     }
 
-    private function extractErrorNumber($message)
+    private function extractErrorNumber(string $message)
     {
         $matches = [];
-        preg_match(self::$curlErrorRegex, $message, $matches);
+        preg_match(self::$curlErrorRegex, (string) $message, $matches);
         if (is_numeric($matches[1])) {
             return $matches[1];
         }

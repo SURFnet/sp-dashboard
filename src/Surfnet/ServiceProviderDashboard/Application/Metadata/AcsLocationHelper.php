@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -36,9 +38,8 @@ class AcsLocationHelper
      * When importing XML metadata (Legacy\Metadata\Parser) the dashboard only
      * imports the POST ACS URLs. Other formats are not supported by manage or
      * the dashboard.
-     *
      */
-    public static function addAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false)
+    public static function addAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false): void
     {
         $prefix = $addPrefix ? 'metaDataFields.' : '';
         $locations = self::cleanArray($acsLocations);
@@ -51,8 +52,11 @@ class AcsLocationHelper
     /**
      * Add empty remaining locations so Manage can delete them
      */
-    public static function addEmptyAcsLocationsToMetaData(array $acsLocations, array &$metadata, $addPrefix = false)
-    {
+    public static function addEmptyAcsLocationsToMetaData(
+        array $acsLocations,
+        array &$metadata,
+        $addPrefix = false,
+    ): void {
         $prefix = $addPrefix ? 'metaDataFields.' : '';
         $index = count(self::cleanArray($acsLocations));
         while ($index < MetaData::MAX_ACS_LOCATIONS) {

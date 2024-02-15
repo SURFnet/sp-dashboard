@@ -20,19 +20,20 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Exception;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Application\Dto\EntityDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Uid\Uuid;
 use function sprintf;
 
 /**
@@ -44,7 +45,7 @@ class EntityService implements EntityServiceInterface
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        private EntityQueryRepositoryProvider $queryRepositoryProvider,
+        private readonly EntityQueryRepositoryProvider $queryRepositoryProvider,
         private readonly TicketServiceInterface $ticketService,
         private readonly ServiceService $serviceService,
         private readonly ChangeRequestService $changeRequestService,
@@ -52,13 +53,13 @@ class EntityService implements EntityServiceInterface
         private readonly ApiConfig $prodManageConfig,
         private readonly RouterInterface $router,
         private readonly LoggerInterface $logger,
-        private readonly string $removalStatus
+        private readonly string $removalStatus,
     ) {
     }
 
-    public function createEntityUuid()
+    public function createEntityUuid(): string
     {
-        return Uuid::uuid1()->toString();
+        return Uuid::v1()->toRfc4122();
     }
 
     /**
@@ -136,7 +137,7 @@ class EntityService implements EntityServiceInterface
         return $entity;
     }
 
-    public function getEntityListForService(Service $service)
+    public function getEntityListForService(Service $service): EntityList
     {
         $entities = [];
 
@@ -156,10 +157,13 @@ class EntityService implements EntityServiceInterface
             );
         }
 
-        return new ViewObject\EntityList($entities);
+        return new EntityList($entities);
     }
 
-    public function getEntitiesForService(Service $service)
+    /**
+     * @return mixed[]
+     */
+    public function getEntitiesForService(Service $service): array
     {
         $entities = [];
 
@@ -228,7 +232,7 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param string $teamName
+     * @param  string $teamName
      * @return array|null
      * @throws QueryServiceProviderException
      */
@@ -246,9 +250,9 @@ class EntityService implements EntityServiceInterface
      * - Tries to match Jira issues that mention one of the manage entity id's
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @param string $teamName
-     * @return array|null
-     * @throws QueryServiceProviderException
+     * @param                                        string $teamName
+     * @return                                       array|null
+     * @throws                                       QueryServiceProviderException
      */
     private function findPublishedProductionEntitiesByTeamName($teamName)
     {
@@ -292,7 +296,6 @@ class EntityService implements EntityServiceInterface
     }
 
     /**
-     * @param ManageEntity $entity
      * @return Issue|null
      */
     private function findIssueBy(ManageEntity $entity)
@@ -316,15 +319,14 @@ class EntityService implements EntityServiceInterface
      * As the organization names are tracked on the Service, we update it on the Manage
      * Entity Organization
      */
-    public function updateOrganizationNames(ManageEntity $entity, $orgNameEn, $orgNameNl)
+    public function updateOrganizationNames(ManageEntity $entity, ?string $orgNameEn, ?string $orgNameNl): void
     {
         $entity->getMetaData()->getOrganization()->updateNameEn($orgNameEn);
         $entity->getMetaData()->getOrganization()->updateNameNl($orgNameNl);
     }
 
     /**
-     * @param ManageEntity $service
-     * @return bool
+     * @param  ManageEntity $service
      */
     private function hasChangeRequests(ManageEntity $entity): bool
     {
@@ -333,6 +335,6 @@ class EntityService implements EntityServiceInterface
             $entity->getProtocol()
         );
 
-        return count($changes->getChangeRequests()) > 0;
+        return $changes->getChangeRequests() !== [];
     }
 }

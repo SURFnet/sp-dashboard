@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -22,7 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 interface AttributeNameServiceInterface
 {
-    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
+    public const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
     public function getAttributeTypeNames(): array;
 }

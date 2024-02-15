@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -27,7 +29,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('dashboard');
         $rootNode = $treeBuilder->getRootNode();
@@ -37,10 +39,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param NodeBuilder $childNodes
-     */
-    private function appendManageConfiguration(NodeBuilder $childNodes)
+    private function appendManageConfiguration(NodeBuilder $childNodes): void
     {
         $childNodes
             ->arrayNode('manage')

@@ -26,11 +26,10 @@ use Symfony\Component\Validator\ConstraintValidator;
 class UniqueRedirectUrlsValidator extends ConstraintValidator
 {
     /**
-     * @param string $value
-     * @param Constraint $constraint
+     * @param  string     $value
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         /**
          * @var SaveOidcngEntityCommand $entityCommand

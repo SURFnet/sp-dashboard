@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -25,36 +28,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AclListType extends AbstractType
 {
-    /**
-     * @var EntityAclService
-     */
-    private $entityAclService;
-
-    public function __construct(EntityAclService $entityAclService)
+    public function __construct(private readonly EntityAclService $entityAclService)
     {
-        $this->entityAclService = $entityAclService;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $list = $this->entityAclService->getAvailableIdps();
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'choices' => $list,
-            'choice_label' => function (IdentityProvider $idp) {
-                return $idp->getName();
-            },
-            'choice_value' => function (IdentityProvider $idp) {
-                return $idp->getManageId();
-            },
-            'choice_name' => function (IdentityProvider $idp) {
-                return $idp->getManageId();
-            },
+            'choice_label' => fn(IdentityProvider $idp): string => $idp->getName(),
+            'choice_value' => fn(IdentityProvider $idp): string => $idp->getManageId(),
+            'choice_name' => fn(IdentityProvider $idp): string => $idp->getManageId(),
             'expanded' => true,
             'multiple' => true,
-        ]);
+            ]
+        );
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }

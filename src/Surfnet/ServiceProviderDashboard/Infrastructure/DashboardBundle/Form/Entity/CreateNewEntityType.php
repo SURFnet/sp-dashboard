@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,16 +27,12 @@ class CreateNewEntityType extends AbstractType
 {
     private $id;
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->id = $builder->getData();
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_choose_entity_type_' . $this->id;
     }

@@ -1,0 +1,157 @@
+From 24ce0a40629e9db4e015f666702f93eaf3009d7d Mon Sep 17 00:00:00 2001
+From: john <john.quairia@gmail.com>
+Date: Mon, 11 Dec 2023 11:04:09 +0100
+Subject: [PATCH] chore: update to sf7
+
+---
+ Resources/config/service.xml                |  7 ++-
+ Twig/Extension/StfalconTinymceExtension.php | 54 +++++++--------------
+ composer.json                               |  6 +--
+ 3 files changed, 24 insertions(+), 43 deletions(-)
+
+diff --git a/Resources/config/service.xml b/Resources/config/service.xml
+index 5ecbce11..879fadec 100644
+--- a/Resources/config/service.xml
++++ b/Resources/config/service.xml
+@@ -9,11 +9,10 @@
+     </parameters>
+ 
+     <services>
+-        <!-- T W I G   H E L P E R S -->
++	<!-- T W I G   H E L P E R S -->
++	<defaults autowire="true" autoconfigure="true"/>
+         <service id="twig.extension.stfalcon_tinymce" class="%stfalcon_tinymce.twig.extension.class%">
+-            <argument type="service" id="service_container" />
+-            <argument type="service" id="assets.packages" />
+             <tag name="twig.extension" alias="stfalcon_tinymce" />
+         </service>
+     </services>
+-</container>
+\ No newline at end of file
++</container>
+diff --git a/Twig/Extension/StfalconTinymceExtension.php b/Twig/Extension/StfalconTinymceExtension.php
+index b8856e08..4325ffca 100644
+--- a/Twig/Extension/StfalconTinymceExtension.php
++++ b/Twig/Extension/StfalconTinymceExtension.php
+@@ -4,7 +4,9 @@
+ 
+ use Stfalcon\Bundle\TinymceBundle\Helper\LocaleHelper;
+ use Symfony\Component\Asset\Packages;
+-use Symfony\Component\DependencyInjection\ContainerInterface;
++use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
++use Symfony\Component\HttpFoundation\RequestStack;
++use Twig\Environment;
+ use Twig\Extension\AbstractExtension;
+ use Twig\TwigFunction;
+ 
+@@ -15,10 +17,9 @@
+  */
+ class StfalconTinymceExtension extends AbstractExtension
+ {
+-    /**
+-     * @var ContainerInterface $container
+-     */
+-    protected $container;
++    private Environment $twig;
++    private ParameterBagInterface $parameterBag;
++    private RequestStack $requestStack;
+ 
+     /**
+      * Asset Base Url.
+@@ -27,43 +28,24 @@ class StfalconTinymceExtension extends AbstractExtension
+      *
+      * @var string
+      */
+-    protected $baseUrl;
++    protected ?string $baseUrl = null;
+ 
+     /**
+      * @var Packages
+      */
+-    private $packages;
++    private Packages $packages;
+ 
+     /**
+-     * @param ContainerInterface $container
+-     * @param Packages           $packages
++     * @param ParameterBagInterface $parameterBag
++     * @param Environment           $twig
++     * @param Packages              $packages
+      */
+-    public function __construct(ContainerInterface $container, Packages $packages)
++    public function __construct(ParameterBagInterface $parameterBag, Environment $twig, Packages $packages, RequestStack $requestStack)
+     {
+-        $this->container = $container;
++        $this->twig = $twig;
+         $this->packages = $packages;
+-    }
+-
+-    /**
+-     * @param string $id The service identifier
+-     *
+-     * @return object The associated service
+-     */
+-    public function getService($id)
+-    {
+-        return $this->container->get($id);
+-    }
+-
+-    /**
+-     * Get parameters from the service container.
+-     *
+-     * @param string $name
+-     *
+-     * @return mixed
+-     */
+-    public function getParameter($name)
+-    {
+-        return $this->container->getParameter($name);
++        $this->parameterBag = $parameterBag;
++        $this->requestStack = $requestStack;
+     }
+ 
+     /**
+@@ -91,7 +73,7 @@ public function getFunctions(): array
+      */
+     public function tinymceInit($options = []): string
+     {
+-        $config = $this->getParameter('stfalcon_tinymce.config');
++        $config = $this->parameterBag->get('stfalcon_tinymce.config');
+         $config = array_merge_recursive($config, $options);
+ 
+         $this->baseUrl = $config['base_url'] ?? null;
+@@ -134,7 +116,7 @@ public function tinymceInit($options = []): string
+         // If the language is not set in the config...
+         if (!isset($config['language']) || empty($config['language'])) {
+             // get it from the request
+-            $config['language'] = $this->container->get('request_stack')->getCurrentRequest()->getLocale();
++            $config['language'] = $this->requestStack->getCurrentRequest()->getLocale();
+         }
+ 
+         $config['language'] = LocaleHelper::getLanguage($config['language']);
+@@ -187,7 +169,7 @@ public function tinymceInit($options = []): string
+             \json_encode($config)
+         );
+ 
+-        return $this->getService('twig')->render(
++        return $this->twig->render(
+             '@StfalconTinymce/Script/init.html.twig',
+             [
+                 'tinymce_config' => $tinymceConfiguration,
+diff --git a/composer.json b/composer.json
+index bccac9d5..a05d59db 100644
+--- a/composer.json
++++ b/composer.json
+@@ -25,9 +25,9 @@
+         "issues": "https://github.com/stfalcon/TinymceBundle/issues"
+     },
+     "require": {
+-        "php": "^7.2.5|^8.0",
+-        "symfony/framework-bundle": "^5.0|^6.0",
+-        "twig/twig": "^2.12|^3.0"
++        "php": "^7.2.5 || >=8.0",
++        "symfony/framework-bundle": "^5.0 || ^6.0 || ^7.0",
++        "twig/twig": "^2.12 || ^3.0"
+     },
+     "autoload": {
+         "psr-0": {

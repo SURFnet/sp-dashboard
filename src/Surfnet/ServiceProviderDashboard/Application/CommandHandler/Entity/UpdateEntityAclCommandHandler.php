@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProvide
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UpdateEntityAclCommandHandler implements CommandHandler
@@ -33,26 +34,24 @@ class UpdateEntityAclCommandHandler implements CommandHandler
     public function __construct(
         private readonly PublishEntityRepository $publishClient,
         private readonly LoggerInterface $logger,
-        private readonly FlashBagInterface $flashBag
+        private readonly RequestStack $requestStack,
     ) {
     }
 
     /**
-     * @param UpdateEntityAclCommand $command
-     *
      * @throws InvalidArgumentException
      */
-    public function handle(UpdateEntityAclCommand $command)
+    public function handle(UpdateEntityAclCommand $command): void
     {
-        $this->logger->info(sprintf(
-            'Publishing entity "%s" to Manage in test environment to update ACL',
-            $command->getManageEntity()->getId()
-        ));
+        $this->logger->info(
+            sprintf(
+                'Publishing entity "%s" to Manage in test environment to update ACL',
+                $command->getManageEntity()->getId()
+            )
+        );
 
         $entity = $command->getManageEntity();
-        $idps = array_map(function (IdentityProvider $idp) {
-            return $idp->getEntityId();
-        }, $command->getSelected());
+        $idps = array_map(fn(IdentityProvider $idp): string => $idp->getEntityId(), $command->getSelected());
         $allowedIdps = new AllowedIdentityProviders($idps, $command->isSelectAll());
         $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {
@@ -65,7 +64,7 @@ class UpdateEntityAclCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         }
     }
 }

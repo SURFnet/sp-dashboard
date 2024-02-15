@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -70,7 +72,7 @@ class ArpGenerator implements MetadataGenerator
         ];
     }
 
-    private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity)
+    private function addManageOnlyAttributes(array &$attributes, ManageEntity $entity): void
     {
         $originalAttributes = $entity->getAttributes()->getOriginalAttributes();
         $spDashboardTracked = $this->attributeService->getUrns();
@@ -82,7 +84,7 @@ class ArpGenerator implements MetadataGenerator
                 $attributes[$urn][] = [
                     'source' => $attribute->getSource(),
                     'value' => $attribute->getValue(),
-                    'motivation' => $attribute->getMotivation()
+                    'motivation' => $attribute->getMotivation(),
                 ];
             }
         }

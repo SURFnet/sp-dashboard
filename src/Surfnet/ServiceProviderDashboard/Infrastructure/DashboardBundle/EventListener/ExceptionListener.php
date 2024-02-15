@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2023 SURFnet B.V.
@@ -29,8 +29,7 @@ use Twig\Environment;
 class ExceptionListener
 {
     public function __construct(
-        private LoggerInterface $logger,
-        private Environment $templating,
+        private readonly Environment $templating,
     ) {
     }
 
@@ -40,7 +39,7 @@ class ExceptionListener
         $exception = $event->getThrowable();
         if ($exception instanceof UnknownServiceException) {
             $responseBody = $this->templating->render(
-                '@Twig/Exception/unknownService.html.twig',
+                '@Dashboard/bundles/TwigBundle/Exception/unknownService.html.twig',
                 ['teamNames' => $exception->getTeamNames()]
             );
 

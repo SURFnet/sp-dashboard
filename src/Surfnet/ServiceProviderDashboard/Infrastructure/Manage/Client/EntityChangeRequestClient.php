@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -32,7 +34,7 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
     public function __construct(
         private readonly HttpClientInterface $client,
         private readonly JsonGeneratorStrategy $generator,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 

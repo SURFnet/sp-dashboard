@@ -25,17 +25,17 @@ interface LogoValidationHelperInterface
     /**
      * Valid type: PNG
      */
-    const IMAGE_TYPE_PNG = 'image/png';
+    public const IMAGE_TYPE_PNG = 'image/png';
 
     /**
      * Valid type: GIF
      */
-    const IMAGE_TYPE_GIF = 'image/gif';
+    public const IMAGE_TYPE_GIF = 'image/gif';
 
     /**
      * Validates the logo, throws an exception if validation failed.
      *
-     * @param $url
+     * @param  $url
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */

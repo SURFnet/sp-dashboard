@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -26,25 +28,15 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 
 class EditServiceCommandHandler implements CommandHandler
 {
-    /**
-     * @var ServiceRepository
-     */
-    private $serviceRepository;
-
-    /**
-     * @param ServiceRepository $serviceRepository
-     */
-    public function __construct(ServiceRepository $serviceRepository)
+    public function __construct(private readonly ServiceRepository $serviceRepository)
     {
-        $this->serviceRepository = $serviceRepository;
     }
 
     /**
-     * @param EditServiceCommand $command
      * @throws InvalidArgumentException
      * @throws EntityNotFoundException
      */
-    public function handle(EditServiceCommand $command)
+    public function handle(EditServiceCommand $command): void
     {
         $service = $this->serviceRepository->findById($command->getId());
 

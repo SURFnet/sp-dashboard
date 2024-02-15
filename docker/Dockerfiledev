@@ -7,20 +7,8 @@ COPY ./conf/start.sh /usr/local/sbin/start.sh
 COPY ./conf/spdup.sh /usr/local/sbin/spdup.sh
 CMD ["/usr/local/sbin/start.sh"]
 
-FROM ghcr.io/openconext/openconext-containers/openconext-phpfpm-dev:81 AS spdphpfpm
-WORKDIR /var/www/html/
-COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+FROM ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest as spddev
 COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
-COPY ./conf/10-override-php.ini /usr/local/etc/php/conf.d/
-RUN mv /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
-
-RUN /usr/sbin/update-ca-certificates && \
-    rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ && \
-    apk --update --no-cache add yarn
-
-CMD ["/usr/local/sbin/php-fpm" , "-F"]
-
-FROM ghcr.io/openconext/openconext-containers/openconext-httpd:latest AS spdhttpd
-COPY ./conf/000-default-dev.conf /usr/local/apache2/conf/000-default.conf
-EXPOSE 80
-CMD ["httpd", "-D", "FOREGROUND"]
+COPY ./conf/zz-docker.conf /usr/local/etc/php/conf.d/
+COPY ./conf/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+RUN   /usr/sbin/update-ca-certificates

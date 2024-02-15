@@ -29,6 +29,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFact
 use Webmozart\Assert\Assert;
 use function array_key_exists;
 
+/**
+ * This file is a fake implementation that will be used by a compiler pass in test mode
+ */
 class IssueRepository implements TicketServiceInterface
 {
     public function __construct(
@@ -37,7 +40,7 @@ class IssueRepository implements TicketServiceInterface
         private $projectKey,
         private $issueType,
         private $manageIdFieldName,
-        private $manageIdFieldLabel
+        private $manageIdFieldLabel,
     ) {
         Assert::stringNotEmpty($projectKey, 'Please set "jira_issue_project_key" in .env');
         Assert::stringNotEmpty($manageIdFieldName, 'Please set "jira_issue_manageid_fieldname" in .env');
@@ -47,7 +50,7 @@ class IssueRepository implements TicketServiceInterface
         );
     }
 
-    public function findByManageIds(array $manageIds)
+    public function findByManageIds(array $manageIds): IssueCollection
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search all CTX: spd-delete-production-entity issues
@@ -67,7 +70,7 @@ class IssueRepository implements TicketServiceInterface
         return new IssueCollection($collection);
     }
 
-    public function findByManageId($manageId)
+    public function findByManageId($manageId): ?Issue
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search CTX: spd-delete-production-entity issues with manage id as provided in the $manageId parameter
@@ -87,7 +90,7 @@ class IssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function findByManageIdAndIssueType($manageId, $issueType)
+    public function findByManageIdAndIssueType($manageId, $issueType): ?Issue
     {
         $issueService = $this->jiraFactory->buildIssueService();
         // Search CTX: "$issueType" issues with manage id as provided in the $manageId parameter
@@ -107,7 +110,7 @@ class IssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function createIssueFrom(Ticket $ticket)
+    public function createIssueFrom(Ticket $ticket): Issue
     {
         $issueField = $this->issueFactory->fromTicket($ticket);
         $issueService = $this->jiraFactory->buildIssueService();
@@ -123,7 +126,7 @@ class IssueRepository implements TicketServiceInterface
         return new Issue($issue->key, $ticket->getIssueType(), Issue::STATUS_OPEN);
     }
 
-    public function delete($issueKey)
+    public function delete($issueKey): void
     {
         $issueService = $this->jiraFactory->buildIssueService();
         $issueService->deleteIssue($issueKey);
@@ -134,8 +137,9 @@ class IssueRepository implements TicketServiceInterface
         PublishProductionCommandInterface $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue {
-        // Nothing to do here.
+
+        return new Issue('fake', 'fake', 'fake');
     }
 }

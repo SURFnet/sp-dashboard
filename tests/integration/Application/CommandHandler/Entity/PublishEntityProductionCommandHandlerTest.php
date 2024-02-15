@@ -35,6 +35,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
@@ -51,9 +52,9 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
     private $publishEntityClient;
 
     /**
-     * @var FlashBagInterface|Mock
+     * @var RequestStack|Mock
      */
-    private $flashBag;
+    private $requestStack;
 
     /**
      * @var LoggerInterface|Mock
@@ -80,7 +81,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->publishEntityClient = m::mock(PublishEntityRepository::class);
         $this->entityService = m::mock(EntityServiceInterface::class);
         $this->ticketService = m::mock(TicketService::class);
-        $this->flashBag = m::mock(FlashBagInterface::class);
+        $this->requestStack = m::mock(RequestStack::class);
         $this->logger = m::mock(LoggerInterface::class);
 
         $this->mailService = m::mock(MailService::class);
@@ -89,7 +90,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             $this->publishEntityClient,
             $this->entityService,
             $this->ticketService,
-            $this->flashBag,
+            $this->requestStack,
             $this->mailService,
             $this->logger,
             'customIssueType'
@@ -249,8 +250,8 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('critical')
             ->once();
 
-        $this->flashBag
-            ->shouldReceive('add')
+        $this->requestStack
+            ->shouldReceive('getSession->getFlashBag->add')
             ->with('error', 'entity.edit.error.publish');
         $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
 

@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -28,11 +29,11 @@ class MailService
 {
     public function __construct(
         private readonly MailMessageFactory $mailFactory,
-        private readonly Mailer $mailer
+        private readonly Mailer $mailer,
     ) {
     }
 
-    public function sendErrorReport(ManageEntity $entity, Exception $exception)
+    public function sendErrorReport(ManageEntity $entity, Exception $exception): void
     {
         $message = $this->mailFactory->buildJiraIssueFailedMessage($exception, $entity);
         $this->mailer->send($message);

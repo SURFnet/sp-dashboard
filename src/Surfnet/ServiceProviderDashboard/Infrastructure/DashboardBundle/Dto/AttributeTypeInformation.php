@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -22,14 +22,29 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto;
 
 class AttributeTypeInformation
 {
+    /**
+     * @var string
+     */
     public $saml20Label;
 
+    /**
+     * @var string
+     */
     public $saml20Info;
 
+    /**
+     * @var string
+     */
     public $oidcngLabel;
 
+    /**
+     * @var string
+     */
     public $oidcngInfo;
 
+    /**
+     * @var string
+     */
     public $language;
 
     private function __construct(
@@ -37,7 +52,7 @@ class AttributeTypeInformation
         string $saml20Info,
         string $oidcngLabel,
         string $oidcngInfo,
-        string $language
+        string $language,
     ) {
         $this->saml20Label = $saml20Label;
         $this->saml20Info = $saml20Info;

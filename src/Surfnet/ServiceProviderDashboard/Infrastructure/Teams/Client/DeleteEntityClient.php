@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -30,10 +32,9 @@ class DeleteEntityClient implements DeleteTeamsEntityRepository
 {
     public function __construct(
         private readonly HttpClient $client,
-        private LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
-
 
     /**
      * Delete a team by the internal id

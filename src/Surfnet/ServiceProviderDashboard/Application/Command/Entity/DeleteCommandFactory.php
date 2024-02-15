@@ -35,8 +35,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
  */
 class DeleteCommandFactory
 {
-    public function from(EntityDto $entity)
-    {
+    public function from(
+        EntityDto $entity,
+    ): DeletePublishedTestEntityCommand|DeletePublishedProductionEntityCommand|RequestDeletePublishedEntityCommand {
         $isPublishedToTest = $entity->getEnvironment() === 'test' && $entity->getState() === 'published';
         $isPublishedProduction = $entity->getEnvironment() === 'production' && $entity->getState() === 'requested';
         $isRequestDelete = $entity->getEnvironment() === 'production' && $entity->getState() === 'published';
@@ -56,18 +57,22 @@ class DeleteCommandFactory
         throw new InvalidArgumentException('This entity state/environment combination is not supported for deleting');
     }
 
-    public function buildDeletePublishedTestEntityCommand($manageId, $protocol)
+    public function buildDeletePublishedTestEntityCommand($manageId, $protocol): DeletePublishedTestEntityCommand
     {
         return new DeletePublishedTestEntityCommand($manageId, $protocol);
     }
 
-    public function buildDeletePublishedProductionEntityCommand($manageId, $protocol)
-    {
+    public function buildDeletePublishedProductionEntityCommand(
+        $manageId,
+        $protocol,
+    ): DeletePublishedProductionEntityCommand {
         return new DeletePublishedProductionEntityCommand($manageId, $protocol);
     }
 
-    public function buildRequestDeletePublishedEntityCommand($manageId, Contact $contact)
-    {
+    public function buildRequestDeletePublishedEntityCommand(
+        $manageId,
+        Contact $contact,
+    ): RequestDeletePublishedEntityCommand {
         return new RequestDeletePublishedEntityCommand($manageId, $contact);
     }
 }

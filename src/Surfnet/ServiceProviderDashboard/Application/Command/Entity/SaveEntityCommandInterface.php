@@ -24,10 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 
 interface SaveEntityCommandInterface extends Command
 {
-    /**
-     * @return bool
-     */
-    public function isForProduction();
+    public function isForProduction(): bool;
 
     /**
      * @return string

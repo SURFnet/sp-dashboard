@@ -25,15 +25,11 @@ interface PublishEntityRepository
     /**
      * Publishes the Entity to a Service registry (like Manage, ..) This action might also result in the
      * sending of a mail message to a service desk who in turn can publish the entity in the registry.
-     *
-     * @return mixed
      */
-    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = '');
+    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = ''): mixed;
 
     /**
      * Push the metadata from Manage to Engineblock
-     *
-     * @return mixed
      */
-    public function pushMetadata();
+    public function pushMetadata(): mixed;
 }

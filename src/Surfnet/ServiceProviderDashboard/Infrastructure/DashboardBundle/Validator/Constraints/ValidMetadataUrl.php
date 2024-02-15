@@ -19,16 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Attribute;
 
-/**
- * @Annotation
- */
+#[Attribute]
 class ValidMetadataUrl extends Constraint
 {
-    /**
-     * @return string
-     */
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return 'metadata_url';
     }

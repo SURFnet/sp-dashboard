@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -31,10 +33,8 @@ class DeleteManageEntityClient implements DeleteEntityRepositoryInterface
 {
     public function __construct(
         private readonly HttpClientInterface $client,
-        private LoggerInterface $logger
     ) {
     }
-
 
     /**
      * Delete a manage entity by the internal (manage) id
@@ -45,11 +45,10 @@ class DeleteManageEntityClient implements DeleteEntityRepositoryInterface
      * @param string $manageId
      * @param string $protocol
      *
-     * @return string
      * @throws UnableToDeleteEntityException
      * @throws RuntimeException
      */
-    public function delete($manageId, $protocol)
+    public function delete($manageId, $protocol): string
     {
         try {
             $result = $this->client->delete(

@@ -1,7 +1,4 @@
 security:
-
-    enable_authenticator_manager: true
-
     role_hierarchy:
         ROLE_ADMINISTRATOR: ROLE_USER
 

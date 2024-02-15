@@ -23,25 +23,19 @@ use JsonSerializable;
 
 class Issue implements JsonSerializable
 {
-    const IDENTIFIER_KEY = 'key';
-    const IDENTIFIER_ISSUE_TYPE = 'issueType';
-    const IDENTIFIER_TICKET_STATUS = 'ticketStatus';
+    final public const IDENTIFIER_KEY = 'key';
+    final public const IDENTIFIER_ISSUE_TYPE = 'issueType';
+    final public const IDENTIFIER_TICKET_STATUS = 'ticketStatus';
 
-    const STATUS_CLOSED = 'CLOSED';
-    const STATUS_RESOLVED = 'RESOLVED';
-    const STATUS_OPEN = 'To Do';
+    final public const STATUS_CLOSED = 'CLOSED';
+    final public const STATUS_RESOLVED = 'RESOLVED';
+    final public const STATUS_OPEN = 'To Do';
 
-    private $key;
+    private readonly string $key;
 
-    private $issueType;
+    private readonly string $issueType;
 
-    private $ticketStatus;
-
-    /**
-     * @param string $key
-     * @param string $issueType
-     */
-    public function __construct(string $key, string $issueType, string $status)
+    public function __construct(string $key, string $issueType, private readonly string $ticketStatus)
     {
         if (!is_string($key) || empty($key)) {
             throw new InvalidArgumentException("An invalid issue key is provided, must be a non empty string");
@@ -52,11 +46,10 @@ class Issue implements JsonSerializable
         }
 
         $this->key = $key;
-        $this->ticketStatus = $status;
         $this->issueType = $issueType;
     }
 
-    public static function fromSerializedData($issueData)
+    public static function fromSerializedData(array $issueData): self
     {
         return new self(
             $issueData[self::IDENTIFIER_KEY],
@@ -65,18 +58,12 @@ class Issue implements JsonSerializable
         );
     }
 
-    /**
-     * @return string
-     */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    /**
-     * @return string
-     */
-    public function getIssueType()
+    public function getIssueType(): string
     {
         return $this->issueType;
     }
@@ -91,7 +78,7 @@ class Issue implements JsonSerializable
         return [
             self::IDENTIFIER_KEY => $this->key,
             self::IDENTIFIER_ISSUE_TYPE => $this->issueType,
-            self::IDENTIFIER_TICKET_STATUS => $this->ticketStatus
+            self::IDENTIFIER_TICKET_STATUS => $this->ticketStatus,
         ];
     }
 }

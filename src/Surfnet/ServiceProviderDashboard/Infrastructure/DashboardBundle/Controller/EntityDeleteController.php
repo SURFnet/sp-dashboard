@@ -19,17 +19,20 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use League\Tactician\CommandBus;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\DeleteCommandFactory;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\DeleteEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EntityDeleteController extends AbstractController
 {
@@ -38,32 +41,32 @@ class EntityDeleteController extends AbstractController
         private readonly EntityService $entityService,
         private readonly DeleteCommandFactory $commandFactory,
         private readonly AuthorizationService $authorizationService,
-        private readonly ServiceService $serviceService
     ) {
     }
 
     /**
-     * @Route(
-     *     "/entity/delete/published/{serviceId}/{manageId}/{environment}",
-     *     name="entity_delete_published",
-     *     methods={"GET", "POST"},
-     *     defaults={
-     *          "manageId": null,
-     *          "environment": "test",
-     *     }
-     * )
-     * @Security("is_granted('ROLE_USER')")
-     * @param Request $request
-     *
-     * @param int $serviceId
-     * @param string|null $manageId
-     * @param string|null$environment
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
-     * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
+     * @param  int         $serviceId
+     * @param  string|null $manageId
+     * @param  string|null $environment
+     * @throws InvalidArgumentException
+     * @throws QueryServiceProviderException
      */
-    public function deletePublishedAction(Request $request, $serviceId, $manageId, $environment)
-    {
+    #[IsGranted('ROLE_USER')]
+    #[Route(
+        path: '/entity/delete/published/{serviceId}/{manageId}/{environment}',
+        name: 'entity_delete_published',
+        defaults: [
+            'manageId' => null,
+            'environment' => 'test',
+        ],
+        methods: ['GET', 'POST']
+    )]
+    public function deletePublished(
+        Request $request,
+        $serviceId,
+        $manageId,
+        $environment,
+    ): RedirectResponse|Response {
         $this->denyAccessUnlessGranted(
             "MANAGE_ENTITY_ACCESS",
             ['manageId' => $manageId, 'environment' => $environment]
@@ -98,35 +101,35 @@ class EntityDeleteController extends AbstractController
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityDelete/delete.html.twig',
+            [
             'form' => $form->createView(),
             'environment' => $environment,
             'status' => $excludeFromPush === "1" ? Constants::STATE_PUBLICATION_REQUESTED : Constants::STATE_PUBLISHED,
             'entityName' => $nameEn,
-        ]);
+            ]
+        );
     }
 
     /**
-     * @Route(
-     *     "/entity/delete/request/{serviceId}/{manageId}/{environment}",
-     *     name="entity_delete_request",
-     *     methods={"GET", "POST"},
-     *     defaults={
-     *          "manageId": null,
-     *          "environment": "production"
-     *     }
-     * )
-     * @Security("is_granted('ROLE_USER')")
-     *
-     * @param Request $request
-     * @param int $serviceId
-     * @param string|null $manageId
-     * @param string|null $environment
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|array
-     * @throws \Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException
-     * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
+     * @param  int         $serviceId
+     * @param  string|null $manageId
+     * @param  string|null $environment
+     * @throws InvalidArgumentException
+     * @throws QueryServiceProviderException
      */
-    public function deleteRequestAction(Request $request, $serviceId, $manageId, $environment)
+    #[IsGranted('ROLE_USER')]
+    #[Route(
+        path: '/entity/delete/request/{serviceId}/{manageId}/{environment}',
+        name: 'entity_delete_request',
+        defaults: [
+            'manageId' => null,
+            'environment' => 'production',
+        ],
+        methods: ['GET', 'POST']
+    )]
+    public function deleteRequest(Request $request, $serviceId, $manageId, $environment): RedirectResponse|Response
     {
         $this->denyAccessUnlessGranted(
             "MANAGE_ENTITY_ACCESS",
@@ -157,11 +160,14 @@ class EntityDeleteController extends AbstractController
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/EntityDelete/delete.html.twig', [
-            'form' => $form->createView(),
-            'environment' => $environment,
-            'status' => Constants::STATE_PUBLISHED,
-            'entityName' => $nameEn,
-        ]);
+        return $this->render(
+            '@Dashboard/EntityDelete/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'environment' => $environment,
+                'status' => Constants::STATE_PUBLISHED,
+                'entityName' => $nameEn,
+            ]
+        );
     }
 }

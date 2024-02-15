@@ -25,31 +25,24 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository as Serv
 
 class ServiceRepository extends DoctrineEntityRepository implements ServiceRepositoryInterface
 {
-    /**
-     * @param Service $service
-     */
-    public function save(Service $service)
+    public function save(Service $service): void
     {
         $this->getEntityManager()->persist($service);
         $this->getEntityManager()->flush($service);
     }
 
-    /**
-     * @param Service $service
-     * @return bool
-     */
-    public function isUnique(Service $service)
+    public function isUnique(Service $service): bool
     {
         $this->isTeamNameUnique($service->getTeamName(), $service->getId());
         return true;
     }
 
     /**
-     * @param $teamName
-     * @param int|null $id
+     * @param  $teamName
+     * @param  int|null $id
      * @throws InvalidArgumentException
      */
-    private function isTeamNameUnique($teamName, $id = null)
+    private function isTeamNameUnique($teamName, $id = null): void
     {
         $qb = $this->createQueryBuilder('s')
             ->where('s.teamName = :teamname')
@@ -74,7 +67,7 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
     }
 
     /**
-     * @param int $id
+     * @param  int $id
      * @return Service|null
      */
     public function findById($id)
@@ -91,9 +84,11 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
      */
     public function findByName($name)
     {
-        $services = parent::findBy([
+        $services = parent::findBy(
+            [
             'name' => $name,
-        ]);
+            ]
+        );
 
         if (empty($services)) {
             return null;
@@ -115,12 +110,14 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
      */
     public function findByTeamNames($teamNames)
     {
-        return parent::findBy([
+        return parent::findBy(
+            [
             'teamName' => $teamNames,
-        ]);
+            ]
+        );
     }
 
-    public function delete(Service $service)
+    public function delete(Service $service): void
     {
         $this->getEntityManager()->remove($service);
         $this->getEntityManager()->flush($service);
@@ -128,8 +125,10 @@ class ServiceRepository extends DoctrineEntityRepository implements ServiceRepos
 
     public function findByTeamName(?string $serviceTeamName): ?Service
     {
-        return parent::findOneBy([
+        return parent::findOneBy(
+            [
             'teamName' => $serviceTeamName,
-        ]);
+            ]
+        );
     }
 }

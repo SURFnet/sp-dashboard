@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -20,7 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 interface DeleteTeamsEntityRepository
 {
-    const RESULT_SUCCESS = 'success';
+    public const RESULT_SUCCESS = 'success';
 
     /**
      * Delete a team from teams identified by the teams id

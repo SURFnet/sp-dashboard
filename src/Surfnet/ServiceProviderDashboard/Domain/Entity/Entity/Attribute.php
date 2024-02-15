@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,8 +27,8 @@ class Attribute
     public static function fromApiResponse($attributeName, array $attributeData): Attribute
     {
         $value = $attributeData['value'];
-        $source = isset($attributeData['source']) ? $attributeData['source'] : '';
-        $motivation = isset($attributeData['motivation']) ? $attributeData['motivation'] : '';
+        $source = $attributeData['source'] ?? '';
+        $motivation = $attributeData['motivation'] ?? '';
 
         Assert::stringNotEmpty($attributeName, 'The attribute name must be non-empty string');
         Assert::stringNotEmpty($value, 'The attribute value must be non-empty string');
@@ -41,17 +43,11 @@ class Attribute
         );
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     * @param string $source
-     * @param string $motivation
-     */
     public function __construct(
         private readonly string $name,
         private readonly string $value,
         private string $source,
-        private ?string $motivation
+        private ?string $motivation,
     ) {
     }
 
@@ -80,11 +76,7 @@ class Attribute
         return $this->motivation;
     }
 
-    /**
-     * @param $newSource
-     * @return self
-     */
-    public function updateSource($newSource)
+    public function updateSource(string $newSource): static
     {
         $this->source = $newSource;
         return clone $this;

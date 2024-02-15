@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -24,17 +26,21 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AuthorizationService
 {
+    /**
+     * @var array<string, \Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig>
+     */
+    public $manageConfig;
     public function __construct(
         private readonly ServiceService $serviceService,
-        private readonly Session $session,
+        private readonly RequestStack $requestStack,
         private readonly TokenStorageInterface $tokenStorage,
         ApiConfig $manageTestConfig,
-        ApiConfig $manageProdConfig
+        ApiConfig $manageProdConfig,
     ) {
         $this->manageConfig = [
             'test' => $manageTestConfig,
@@ -43,13 +49,10 @@ class AuthorizationService
         ];
     }
 
-    /**
-     * @return bool
-     */
-    public function isLoggedIn()
+    public function isLoggedIn(): bool
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token) {
+        if ($token === null) {
             return false;
         }
 
@@ -58,10 +61,8 @@ class AuthorizationService
 
     /**
      * Is the logged-in user an administrator?
-     *
-     * @return bool
      */
-    public function isAdministrator()
+    public function isAdministrator(): bool
     {
         if (!$this->isLoggedIn()) {
             return false;
@@ -87,7 +88,7 @@ class AuthorizationService
     public function getActiveServiceId()
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token) {
+        if ($token === null) {
             throw new RuntimeException(
                 'No authentication token found in session'
             );
@@ -124,12 +125,10 @@ class AuthorizationService
      * Explicitly select a service for users that have access to multiple services.
      *
      * @param string $serviceId
-     *
-     * @return AuthorizationService
      */
-    private function setSelectedServiceId($serviceId)
+    private function setSelectedServiceId($serviceId): static
     {
-        $this->session->set('selected_service_id', $serviceId);
+        $this->requestStack->getSession()->set('selected_service_id', $serviceId);
 
         return $this;
     }
@@ -141,7 +140,7 @@ class AuthorizationService
      */
     public function getSelectedServiceId()
     {
-        $serviceId = $this->session->get('selected_service_id');
+        $serviceId = $this->requestStack->getSession()->get('selected_service_id');
 
         if ($serviceId && !$this->hasAccessToService($serviceId)) {
             throw new RuntimeException(
@@ -156,9 +155,8 @@ class AuthorizationService
      * Get the service selected in the service switcher.
      *
      * @param int $serviceId
-     * @return string
      */
-    public function assertServiceIdAllowed($serviceId)
+    public function assertServiceIdAllowed($serviceId): void
     {
         if ($serviceId && !$this->hasAccessToService($serviceId)) {
             throw new RuntimeException(
@@ -174,18 +172,16 @@ class AuthorizationService
      */
     public function hasSelectedServiceId()
     {
-        return $this->session->has('selected_service_id');
+        return $this->requestStack->getSession()->has('selected_service_id');
     }
 
     /**
      * Get all service names keyed by ID the user has access to.
-     *
-     * @return array
      */
-    public function getAllowedServiceNamesById()
+    public function getAllowedServiceNamesById(): array
     {
         $token = $this->tokenStorage->getToken();
-        if (!$token) {
+        if ($token === null) {
             throw new RuntimeException(
                 'No authentication token found in session'
             );
@@ -207,7 +203,7 @@ class AuthorizationService
 
         return array_filter(
             $serviceNames,
-            function ($id) use ($contact) {
+            function ($id) use ($contact): bool {
                 foreach ($contact->getServices() as $service) {
                     if ($service->getId() === $id) {
                         return true;
@@ -222,10 +218,9 @@ class AuthorizationService
 
     /**
      * @param $serviceId
-     * @return Service
      * @throws ServiceNotFoundException
      */
-    public function changeActiveService($serviceId)
+    public function changeActiveService($serviceId): Service
     {
         $service = $this->serviceService->getServiceById($serviceId);
 
@@ -238,17 +233,15 @@ class AuthorizationService
         return $service;
     }
 
-    public function resetService()
+    public function resetService(): void
     {
         $this->setSelectedServiceId(null);
     }
 
-
     /**
      * @param string $serviceId
-     * @return bool
      */
-    private function hasAccessToService($serviceId)
+    private function hasAccessToService($serviceId): bool
     {
         $allowedServiceIds = array_keys(
             $this->getAllowedServiceNamesById()
@@ -259,7 +252,6 @@ class AuthorizationService
 
     public function getContact(): Contact
     {
-        /** @var Identity $user */
         return $this->tokenStorage->getToken()->getUser()->getContact();
     }
 }

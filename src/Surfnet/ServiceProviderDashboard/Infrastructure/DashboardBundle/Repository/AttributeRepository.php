@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -26,9 +26,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Dto\NullAttr
 
 class AttributeRepository implements AttributeRepositoryInterface
 {
-    const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
+    final public const ATTRIBUTE_NAME_SUFFIX = 'Attribute';
 
-    private $attributes = [];
+    private array $attributes = [];
 
     public function __construct(private readonly string $attributesFileLocation)
     {
@@ -41,7 +41,7 @@ class AttributeRepository implements AttributeRepositoryInterface
 
     private function getAttributes(): array
     {
-        if (empty($this->attributes)) {
+        if ($this->attributes === []) {
             foreach ($this->load() as $rawAttribute) {
                 $this->attributes[] = Attribute::fromAttribute($rawAttribute);
             }

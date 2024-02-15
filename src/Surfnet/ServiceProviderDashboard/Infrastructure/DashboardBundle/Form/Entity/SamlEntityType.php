@@ -36,29 +36,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SamlEntityType extends AbstractType
 {
-    /**
-     * @var AttributeTypeFactory
-     */
-    private $attributeTypeFactory;
-
-    public function __construct(AttributeTypeFactory $attributeTypeFactory)
+    public function __construct(private readonly AttributeTypeFactory $attributeTypeFactory)
     {
-        $this->attributeTypeFactory = $attributeTypeFactory;
     }
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
-     *
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $attributesContainer = $builder->create('attributes', FormType::class, [
+        $attributesContainer = $builder->create(
+            'attributes',
+            FormType::class,
+            [
             'inherit_data' => true,
-            'attr' => ['class' => 'attributes']
-        ]);
+            'attr' => ['class' => 'attributes'],
+            ]
+        );
         $this->buildAttributeTypes($attributesContainer);
 
         $builder
@@ -302,15 +297,12 @@ class SamlEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SaveSamlEntityCommand::class,
-            'publish_button_label' => 'entity.add.label.publish',
-        ));
+        $resolver->setDefaults(['data_class' => SaveSamlEntityCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_entity_type';
     }

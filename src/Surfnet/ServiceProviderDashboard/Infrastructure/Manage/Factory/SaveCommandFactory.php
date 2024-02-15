@@ -39,13 +39,13 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
     public function __construct(
         private readonly AttributeServiceInterface $attributeService,
         private readonly string $playGroundUriTest,
-        private readonly string $playGroundUriProd
+        private readonly string $playGroundUriProd,
     ) {
     }
 
     public function buildSamlCommandByManageEntity(
         ManageEntity $manageEntity,
-        string $environment
+        string $environment,
     ): SaveSamlEntityCommand {
         $command = new SaveSamlEntityCommand();
         $metaData = $manageEntity->getMetaData();
@@ -82,8 +82,11 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         return $command;
     }
 
-    public function buildOidcngCommandByManageEntity(ManageEntity $manageEntity, string $environment, bool $isCopy = false): SaveOidcngEntityCommand
-    {
+    public function buildOidcngCommandByManageEntity(
+        ManageEntity $manageEntity,
+        string $environment,
+        bool $isCopy = false,
+    ): SaveOidcngEntityCommand {
         $command = new SaveOidcngEntityCommand();
         $metaData = $manageEntity->getMetaData();
         $coins = $manageEntity->getMetaData()->getCoin();
@@ -140,7 +143,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
     public function buildOidcngRsCommandByManageEntity(
         ManageEntity $manageEntity,
         string $environment,
-        bool $isCopy = false
+        bool $isCopy = false,
     ): SaveOidcngResourceServerEntityCommand {
         $command = new SaveOidcngResourceServerEntityCommand();
         $metaData = $manageEntity->getMetaData();
@@ -169,7 +172,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
     public function buildOauthCccCommandByManageEntity(
         ManageEntity $manageEntity,
         string $environment,
-        bool $isCopy = false
+        bool $isCopy = false,
     ): SaveOauthClientCredentialClientCommand {
         $command = new SaveOauthClientCredentialClientCommand();
         $metaData = $manageEntity->getMetaData();
@@ -214,12 +217,12 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         return $command;
     }
 
-    private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList)
+    private function setAttributes(SaveEntityCommandInterface $command, AttributeList $attributeList): void
     {
         foreach ($this->attributeService->getAttributeTypeAttributes() as $attributeDefinition) {
             $urn = $attributeDefinition->getUrns();
             $manageAttribute = $attributeList->findByUrn(reset($urn));
-            if (!$manageAttribute) {
+            if ($manageAttribute === null) {
                 continue;
             }
 
@@ -231,8 +234,11 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         }
     }
 
-    private function setRedirectUris(SaveEntityCommandInterface $command, ManageEntity $manageEntity, string $environment)
-    {
+    private function setRedirectUris(
+        SaveEntityCommandInterface $command,
+        ManageEntity $manageEntity,
+        string $environment,
+    ): void {
         $redirectUris = $manageEntity->getOidcClient()->getRedirectUris();
         $playGroundUri = ($environment === Constants::ENVIRONMENT_PRODUCTION ? $this->playGroundUriProd : $this->playGroundUriTest);
         if (in_array($playGroundUri, $redirectUris)) {

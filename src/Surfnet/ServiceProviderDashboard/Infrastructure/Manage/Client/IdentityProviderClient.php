@@ -34,7 +34,7 @@ class IdentityProviderClient implements IdentityProviderRepository
 {
     public function __construct(
         private readonly HttpClient $client,
-        private readonly Config $manageConfig
+        private readonly Config $manageConfig,
     ) {
     }
 
@@ -47,9 +47,11 @@ class IdentityProviderClient implements IdentityProviderRepository
     {
         try {
             // Based on the manage config set (prod or test) we retrieve the correct results from the manage idp client.
-            $result = $this->doSearchQuery([
+            $result = $this->doSearchQuery(
+                [
                 "state" => $this->manageConfig->getPublicationStatus()->getStatus(),
-            ]);
+                ]
+            );
 
             $list = [];
             foreach ($result as $manageResult) {
@@ -66,7 +68,6 @@ class IdentityProviderClient implements IdentityProviderRepository
     }
 
     /**
-     * @param array $params
      * @return array|null
      * @throws HttpException
      */

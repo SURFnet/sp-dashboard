@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2021 SURFnet B.V.
  *
@@ -26,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\AccessDeniedException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\MalformedResponseException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\UndeleteableResourceException;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\UnknownContentTypeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\UnreadableResourceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidJsonException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\RuntimeException;
@@ -36,8 +39,8 @@ use function strtolower;
  */
 class HttpClient implements HttpClientInterface
 {
-    const TEST_API_NAME = 'testApi';
-    const MODE_TEST = 'test';
+    final public const TEST_API_NAME = 'testApi';
+    final public const MODE_TEST = 'test';
 
     /**
      * @param string $mode The mode is used mainly for logging purposes, stating which environment was targeted.
@@ -46,16 +49,14 @@ class HttpClient implements HttpClientInterface
         private readonly ClientInterface $httpClient,
         private readonly LoggerInterface $logger,
         private readonly string $apiName = self::TEST_API_NAME,
-        private readonly string $mode = self::MODE_TEST
+        private readonly string $mode = self::MODE_TEST,
     ) {
     }
 
     /**
      * @param string $path A URL path, optionally containing printf parameters.
-     * The parameters will be URL encoded and formatted into the path string.
-     * Example: "connections/%d.json"
-     *
-     * @return mixed $data
+     *                     The parameters will be URL encoded and formatted into the path string.
+     *                     Example: "connections/%d.json"
      *
      * @throws AccessDeniedException
      * @throws UnreadableResourceException
@@ -63,43 +64,51 @@ class HttpClient implements HttpClientInterface
      * @throws RuntimeException
      * @throws GuzzleException
      */
-    public function read(string $path, array $parameters = [], array $headers = ['Content-Type' => 'application/json'])
-    {
+    public function read(
+        string $path,
+        array $parameters = [],
+        array $headers = ['Content-Type' => 'application/json'],
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Getting resource %s from %s (%s)', $resource, $this->apiName, $this->mode)
         );
 
         try {
-            return $this->request('GET', $resource, [
+            return $this->request(
+                'GET',
+                $resource,
+                [
                 'exceptions' => false,
-                'headers' => $headers
-            ], function ($statusCode, $body, $method, $resource, $headers) {
-                if ($statusCode < 200 || $statusCode >= 300) {
-                    throw new UnreadableResourceException(
-                        sprintf('Resource could not be read (status code %d)', $statusCode)
-                    );
-                }
+                'headers' => $headers,
+                ],
+                function ($statusCode, $body, $method, $resource, array $headers) {
+                    if ($statusCode < 200 || $statusCode >= 300) {
+                        throw new UnreadableResourceException(
+                            sprintf('Resource could not be read (status code %d)', $statusCode)
+                        );
+                    }
 
-                if ((isset($headers['Content-Type'])) &&
-                    ($headers['Content-Type'] === 'application/json')) {
-                    return $this->parseResponse($body, $method, $resource);
-                }
+                    if ((isset($headers['Content-Type']))
+                        && ($headers['Content-Type'] === 'application/json')
+                    ) {
+                        return $this->parseResponse($body, $method, $resource);
+                    }
 
-                if ((isset($headers['Content-Type'])) &&
-                    ($headers['Content-Type'] === 'application/xml')) {
-                    return $body;
+                    if ((isset($headers['Content-Type']))
+                        && ($headers['Content-Type'] === 'application/xml')
+                    ) {
+                        return $body;
+                    }
+                    throw new UnknownContentTypeException('Unknown content type or not set');
                 }
-            });
-        } catch (ClientException $e) {
+            );
+        } catch (ClientException) {
             return [];
         }
     }
 
     /**
-     * @param mixed $data
-     * @return mixed
-     *
      * @throws AccessDeniedException
      * @throws GuzzleException
      * @throws MalformedResponseException
@@ -107,28 +116,29 @@ class HttpClient implements HttpClientInterface
      * @throws UnreadableResourceException
      */
     public function post(
-        $data,
+        mixed $data,
         string $path,
         array $parameters = [],
-        array $headers = ['Content-Type' => 'application/json']
-    ) {
+        array $headers = ['Content-Type' => 'application/json'],
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Posting data to %s (%s) on path %s', $this->apiName, $this->mode, $resource),
             ['data' => $data]
         );
 
-        return $this->request('POST', $resource, [
+        return $this->request(
+            'POST',
+            $resource,
+            [
             'exceptions' => false,
             'body' => $data,
-            'headers' => $headers
-        ]);
+            'headers' => $headers,
+            ]
+        );
     }
 
     /**
-     * @param mixed $data
-     * @return mixed
-     *
      * @throws AccessDeniedException
      * @throws GuzzleException
      * @throws MalformedResponseException
@@ -136,27 +146,29 @@ class HttpClient implements HttpClientInterface
      * @throws UndeleteableResourceException
      */
     public function put(
-        $data,
+        mixed $data,
         string $path,
         array $parameters = [],
-        array $headers = ['Content-Type' => 'application/json']
-    ) {
+        array $headers = ['Content-Type' => 'application/json'],
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(
             sprintf('Putting data to %s (%s) on path %s', $this->apiName, $this->mode, $resource),
             ['data' => $data]
         );
 
-        return $this->request('PUT', $resource, [
+        return $this->request(
+            'PUT',
+            $resource,
+            [
             'exceptions' => false,
             'body' => $data,
-            'headers' => $headers
-        ]);
+            'headers' => $headers,
+            ]
+        );
     }
 
     /**
-     * @return mixed
-     *
      * @throws AccessDeniedException
      * @throws GuzzleException
      * @throws MalformedResponseException
@@ -166,20 +178,22 @@ class HttpClient implements HttpClientInterface
     public function delete(
         string $path,
         array $parameters = [],
-        array $headers = ['Content-Type' => 'application/json']
-    ) {
+        array $headers = ['Content-Type' => 'application/json'],
+    ): mixed {
         $resource = ResourcePathFormatter::format($path, $parameters);
         $this->logger->debug(sprintf('Deleting data from %s (%s) on path %s', $this->apiName, $this->mode, $resource));
 
-        return $this->request('DELETE', $resource, [
+        return $this->request(
+            'DELETE',
+            $resource,
+            [
             'exceptions' => false,
-            'headers' => $headers
-        ]);
+            'headers' => $headers,
+            ]
+        );
     }
 
     /**
-     * @return mixed
-     *
      * @throws MalformedResponseException
      * @throws GuzzleException
      * @throws AccessDeniedException
@@ -187,7 +201,7 @@ class HttpClient implements HttpClientInterface
      * @throws UnreadableResourceException
      * @throws Exception
      */
-    private function request(string $method, string $resource, array $options, callable $callBack = null)
+    private function request(string $method, string $resource, array $options, callable $callBack = null): mixed
     {
         $response = $this->httpClient->request($method, $resource, $options);
 
@@ -213,7 +227,7 @@ class HttpClient implements HttpClientInterface
                 throw $this->getResourceException($method, $statusCode);
             }
 
-            if (!empty($body)) {
+            if ($body !== '' && $body !== '0') {
                 return $this->parseResponse($body, $method, $resource);
             }
 
@@ -224,15 +238,13 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws MalformedResponseException
      */
-    private function parseResponse(string $body, string $method, $resource)
+    private function parseResponse(string $body, string $method, $resource): mixed
     {
         try {
             return JsonResponseParser::parse($body);
-        } catch (InvalidJsonException $e) {
+        } catch (InvalidJsonException) {
             throw new MalformedResponseException(
                 sprintf('Cannot %s resource "%s": malformed JSON returned', strtolower($method), $resource)
             );

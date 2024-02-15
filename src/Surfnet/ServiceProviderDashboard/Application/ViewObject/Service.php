@@ -28,11 +28,11 @@ class Service
         private readonly bool $privacyQuestionsEnabled,
         private readonly EntityList $entityList,
         private readonly RouterInterface $router,
-        private readonly bool $productionEntitiesEnabled = false
+        private readonly bool $productionEntitiesEnabled = false,
     ) {
     }
 
-    public static function fromService(DomainService $service, EntityList $entityList, RouterInterface $router)
+    public static function fromService(DomainService $service, EntityList $entityList, RouterInterface $router): self
     {
         return new self(
             $service->getId(),
@@ -44,42 +44,27 @@ class Service
         );
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return EntityList
-     */
-    public function getEntityList()
+    public function getEntityList(): EntityList
     {
         return $this->entityList;
     }
 
-    /**
-     * @return string
-     */
-    public function getLink()
+    public function getLink(): string
     {
         return $this->router->generate('select_service', ['service' => $this->getId()]);
     }
 
-    /**
-     * @return bool
-     */
-    public function arePrivacyQuestionsEnabled()
+    public function arePrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
     }
@@ -89,10 +74,7 @@ class Service
         return $this->getEntityList()->hasTestEntities();
     }
 
-    /**
-     * @return bool
-     */
-    public function isProductionEntitiesEnabled()
+    public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled || $this->hasTestEntities();
     }

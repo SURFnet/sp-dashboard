@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 
-use stdClass;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataRepository;
@@ -38,13 +37,9 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\AttributesMetadataReposit
  *   "what_data": "All sorts of data will be accessed.",
  *   "security_measures": "We've taken every precaution."
  * }
- *
  */
 class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 {
-    /**
-     * @var true
-     */
     private bool $addMetaDataPrefix = false;
 
     public function __construct(private readonly AttributesMetadataRepository $repository)
@@ -58,7 +53,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
 
         $attributes = [];
 
-        if ($privacyQuestionAnswers !== null && $entity->getService()->isPrivacyQuestionsEnabled()) {
+        if ($privacyQuestionAnswers instanceof PrivacyQuestions && $entity->getService()->isPrivacyQuestionsEnabled()) {
             foreach ($privacyQuestions as $question) {
                 if ($question->id === 'privacyStatementUrl') {
                     $privacyStatements = $privacyQuestionAnswers->privacyStatementUrls();
@@ -90,7 +85,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
         $this->addMetaDataPrefix = true;
     }
 
-    private function buildKey(string $urn)
+    private function buildKey(string $urn): string
     {
         if ($this->addMetaDataPrefix) {
             return 'metaDataFields.' . $urn;
@@ -102,7 +97,7 @@ class PrivacyQuestionsMetadataGenerator implements MetadataGenerator
         array &$attributes,
         string $getterName,
         PrivacyQuestions $privacyQuestionAnswers,
-        mixed $question
+        mixed $question,
     ): void {
         $answer = $privacyQuestionAnswers->$getterName();
         if (!is_null($answer)) {

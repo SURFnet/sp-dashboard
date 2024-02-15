@@ -25,11 +25,11 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\Runtim
 
 class ManageQueryService
 {
-    private $validEnvironments = ['test', 'production'];
+    private array $validEnvironments = ['test', 'production'];
 
     public function __construct(
         private readonly QueryManageRepository $testQueryClient,
-        private readonly QueryManageRepository $productionQueryClient
+        private readonly QueryManageRepository $productionQueryClient,
     ) {
     }
 
@@ -58,7 +58,7 @@ class ManageQueryService
         return $this->getClient($environment)->findByTeamName($teamName, $state);
     }
 
-    private function getClient($environment)
+    private function getClient(string $environment): QueryManageRepository
     {
         if (!in_array($environment, $this->validEnvironments)) {
             throw new InvalidArgumentException(

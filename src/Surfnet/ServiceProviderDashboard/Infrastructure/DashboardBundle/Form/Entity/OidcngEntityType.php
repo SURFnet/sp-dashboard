@@ -39,37 +39,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OidcngEntityType extends AbstractType
 {
-    /**
-     * @var AttributeTypeFactory
-     */
-    private $attributeTypeFactory;
-
-    /**
-     * @var OidcngResourceServerOptionsFactory
-     */
-    private $oidcngResourceServerOptionsFactory;
-
     public function __construct(
-        OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory,
-        AttributeTypeFactory $attributeTypeFactory
+        private readonly OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory,
+        private readonly AttributeTypeFactory $attributeTypeFactory,
     ) {
-        $this->oidcngResourceServerOptionsFactory = $oidcngResourceServerOptionsFactory;
-        $this->attributeTypeFactory = $attributeTypeFactory;
     }
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable) - for the nameIdFormat choice_attr callback parameters
-     *
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)   - for the nameIdFormat choice_attr callback parameters
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $attributesContainer = $builder->create('attributes', FormType::class, [
+        $attributesContainer = $builder->create(
+            'attributes',
+            FormType::class,
+            [
             'inherit_data' => true,
-            'attr' => ['class' => 'attributes']
-        ]);
+            'attr' => ['class' => 'attributes'],
+            ]
+        );
         $this->buildAttributeTypes($attributesContainer);
 
         $metadata = $builder->create('metadata', FormType::class, ['inherit_data' => true]);
@@ -89,7 +78,9 @@ class OidcngEntityType extends AbstractType
                 ]
             );
 
-        /** @var SaveOidcngEntityCommand $command */
+        /**
+ * @var SaveOidcngEntityCommand $command
+*/
         $command = $options['data'];
         $copy = $command->isCopy();
         $manageId = $command->getManageId();
@@ -145,7 +136,7 @@ class OidcngEntityType extends AbstractType
                         'max' => 86400,
                         'step' => 60,
                         'placeholder' => 3600,
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -156,7 +147,7 @@ class OidcngEntityType extends AbstractType
                     'attr' => [
                         'required' => false,
                         'data-help' => 'entity.edit.information.isPublicClient',
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -170,9 +161,7 @@ class OidcngEntityType extends AbstractType
                     'attr' => [
                         'data-help' => 'entity.edit.information.grantType',
                     ],
-                    'choice_attr' => function () {
-                        return ['class' => 'decorated'];
-                    },
+                    'choice_attr' => fn(): array => ['class' => 'decorated'],
                 ]
             )
             ->add(
@@ -273,7 +262,7 @@ class OidcngEntityType extends AbstractType
                     'attr' => [
                         'class' => 'requested',
                         'data-help' => 'entity.edit.information.enablePlayground',
-                    ]
+                    ],
                 ]
             );
         $builder->add($metadata);
@@ -285,7 +274,7 @@ class OidcngEntityType extends AbstractType
         );
 
         // If no resource servers are present, do not render the resource server section.
-        if (!empty($choices)) {
+        if ($choices !== []) {
             $builder
                 ->add(
                     $builder->create('oidcngResourceServers', FormType::class, ['inherit_data' => true])
@@ -299,11 +288,9 @@ class OidcngEntityType extends AbstractType
                                 'by_reference' => false,
                                 'attr' => [
                                     'data-help' => 'entity.edit.information.oidcngResourceServers',
-                                    'class' => 'wide'
+                                    'class' => 'wide',
                                 ],
-                                'choice_attr' => function () {
-                                    return ['class' => 'decorated'];
-                                },
+                                'choice_attr' => fn(): array => ['class' => 'decorated'],
                             ]
                         )
                 );
@@ -361,21 +348,17 @@ class OidcngEntityType extends AbstractType
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-
     private function buildAttributeTypes(FormBuilderInterface $container): FormBuilderInterface
     {
         return $this->attributeTypeFactory->build($container, Constants::TYPE_OPENID_CONNECT_TNG);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => SaveOidcngEntityCommand::class,
-            'publish_button_label' => 'entity.add.label.publish',
-        ));
+        $resolver->setDefaults(['data_class' => SaveOidcngEntityCommand::class, 'publish_button_label' => 'entity.add.label.publish']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_entity_type';
     }

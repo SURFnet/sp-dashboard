@@ -22,10 +22,5 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
 
 interface ParserInterface
 {
-    /**
-     * @param string $xml
-     *
-     * @return Metadata
-     */
-    public function parseXml($xml);
+    public function parseXml(string $xml): Metadata;
 }

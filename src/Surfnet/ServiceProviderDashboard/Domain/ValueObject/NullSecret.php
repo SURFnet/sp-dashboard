@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2020 SURFnet B.V.
  *
@@ -19,14 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 class NullSecret implements SecretInterface
 {
-    /**
-     * @var string
-     */
-    private $secret = '';
+    private string $secret = '';
 
-    /**
-     * @return string
-     */
     public function getSecret(): string
     {
         return $this->secret;

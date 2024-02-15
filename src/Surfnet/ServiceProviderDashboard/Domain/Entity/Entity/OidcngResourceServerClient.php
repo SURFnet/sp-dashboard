@@ -25,12 +25,11 @@ use function is_null;
 
 class OidcngResourceServerClient implements Comparable, OidcClientInterface
 {
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data): self
     {
-        $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $clientSecret = isset($data['data']['metaDataFields']['secret']) ? $data['data']['metaDataFields']['secret'] : '';
-        $grants = isset($data['data']['metaDataFields']['grants'])
-            ? $data['data']['metaDataFields']['grants'] : [];
+        $clientId = $data['data']['entityid'] ?? '';
+        $clientSecret = $data['data']['metaDataFields']['secret'] ?? '';
+        $grants = $data['data']['metaDataFields']['grants'] ?? [];
 
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
@@ -46,23 +45,17 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
     public function __construct(
         private string $clientId,
         private ?string $clientSecret,
-        private array $grants
+        private array $grants,
     ) {
         $this->clientId = strtolower($clientId);
     }
 
-    /**
-     * @return string
-     */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientSecret()
+    public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
@@ -72,34 +65,22 @@ class OidcngResourceServerClient implements Comparable, OidcClientInterface
         return $this->grants;
     }
 
-    /**
-     * @return array
-     */
-    public function getRedirectUris()
+    public function getRedirectUris(): array
     {
         return [];
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublicClient()
+    public function isPublicClient(): bool
     {
         return false;
     }
 
-    /**
-     * @return int
-     */
     public function getAccessTokenValidity(): int
     {
         return 0;
     }
 
-    /**
-     * @return array
-     */
-    public function getResourceServers()
+    public function getResourceServers(): array
     {
         return [];
     }

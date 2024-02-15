@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -21,18 +22,12 @@ use Exception;
 
 class Secret implements SecretInterface
 {
-    /**
-     * @var string
-     */
-    private static $allowedChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    private static string $allowedChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    private string $secret = '';
 
     /**
-     * @var string
-     */
-    private $secret = '';
-
-    /**
-     * @param int $length
+     * @param  int $length
      * @throws Exception
      */
     public function __construct($length)
@@ -48,9 +43,6 @@ class Secret implements SecretInterface
         }
     }
 
-    /**
-     * @return string
-     */
     public function getSecret(): string
     {
         return $this->secret;

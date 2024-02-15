@@ -25,7 +25,7 @@ Use `docker-compose up -d` to create and build the development environment.
 An entry in your hostsfile is still required for things to work. An example entry would look like:
 
 ```
-127.0.0.1 welcome.vm.openconext.org static.vm.openconext.org mujina-sp.vm.openconext.org mujina-idp.vm.openconext.org engine-api.vm.openconext.org oidc.vm.openconext.org manage.vm.openconext.org spdashboard.vm.openconext.org
+127.0.0.1 welcome.vm.openconext.org static.vm.openconext.org mujina-sp.vm.openconext.org mujina-idp.vm.openconext.org engine-api.vm.openconext.org oidc.vm.openconext.org manage.vm.openconext.org spdashboard.vm.openconext.org engine.vm.openconext.org teams.vm.openconext.org
 ```
 
 Is your host system on an ARM based archetecture CPU, and are you running a docker solution in a VM? Chances are 
@@ -37,10 +37,13 @@ might aid in that area.
 
 ## Getting started
 
-First, run `composer install`. This will install all PHP dependencies, including the development dependencies.
-
 In order to start the development environment, run `docker-compose up -d`. This will build and start the container that is
-used in development to run the application. 
+used in development to run the application.
+
+Then start the command line in the container with `docker exec -it sp-dashboard-php-fpm-1 sh`. This will start a shell
+
+Run `composer install`. This will install all PHP dependencies, including the development dependencies.
+Run `yarn install`. This will install all js dependencies, including the development dependencies.
 
 Install database migrations
 ```
@@ -54,7 +57,7 @@ front controller is used automatically, so you don't have to include `/app_dev.p
 
 ### Running the tests
 
-`ant test` will run the full suite of tests and static analysis.
+`composer check` will run the full suite of tests and static analysis.
 
 Cypress tests only run locally for now.  Use `npm run cy:open` to run them.  Please ensure the accessibility tests succeed when making changes in the frontend.
 

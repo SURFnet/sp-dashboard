@@ -37,7 +37,7 @@ class Ticket
         private readonly string $descriptionTranslationKey,
         private readonly string $applicantName,
         private readonly string $applicantEmail,
-        private readonly ?string $issueType
+        private readonly ?string $issueType,
     ) {
     }
 
@@ -46,7 +46,7 @@ class Ticket
         Applicant $applicant,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ) : Ticket {
         $entityId = $entity->getMetaData()->getEntityId();
         $nameEn = $entity->getMetaData()->getNameEn();
@@ -69,7 +69,7 @@ class Ticket
         array $connectionRequests,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Ticket {
         $entityId = $entity->getMetaData()->getEntityId();
         $nameEn = $entity->getMetaData()->getNameEn();

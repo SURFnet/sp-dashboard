@@ -23,7 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 class ServiceService
 {
     public function __construct(
-        private readonly ServiceRepository $services
+        private readonly ServiceRepository $services,
     ) {
     }
 
@@ -31,9 +31,8 @@ class ServiceService
      * Retrieve names of all services.
      *
      * Format: [ '<service id>' => '<service display name> [<msp service team id>]' ]
-     * @return array
      */
-    public function getServiceNamesById()
+    public function getServiceNamesById(): array
     {
         $options = [];
 
@@ -56,18 +55,18 @@ class ServiceService
      *
      * Format [ '<service name>' => '<service entity>' ]
      *
-     * @param array $allowedServices The input should be service names keyed by service id.
-     *                               As provided by: AuthorizationService::getAllowedServiceNamesById
+     * @param  array $allowedServices The input should be service names keyed by service id.
+     *                                As provided by: AuthorizationService::getAllowedServiceNamesById
      * @return Service[]
      */
-    public function getServicesByAllowedServices(array $allowedServices)
+    public function getServicesByAllowedServices(array $allowedServices): array
     {
         $services = [];
         $serviceIds = array_keys($allowedServices);
 
         foreach ($serviceIds as $serviceId) {
             $service = $this->getServiceById($serviceId);
-            if ($service) {
+            if ($service !== null) {
                 $services[$service->getName()] = $service;
             }
         }

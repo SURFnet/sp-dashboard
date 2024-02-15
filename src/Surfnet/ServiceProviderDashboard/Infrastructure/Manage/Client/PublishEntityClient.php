@@ -35,7 +35,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         private readonly HttpClientInterface $client,
         private readonly JsonGeneratorStrategy $generator,
         private readonly ApiConfig $manageConfig,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -44,28 +44,32 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $updatedPart = '')
+    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $updatedPart = ''): mixed
     {
         try {
             if (!$entity->isManageEntity()) {
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getId()));
                 $response = $this->client->post(
-                    json_encode($this->generator->generateForNewEntity(
-                        $entity,
-                        $this->manageConfig->getPublicationStatus()->getStatus()
-                    )),
+                    json_encode(
+                        $this->generator->generateForNewEntity(
+                            $entity,
+                            $this->manageConfig->getPublicationStatus()->getStatus()
+                        )
+                    ),
                     '/manage/api/internal/metadata'
                 );
             } else {
                 $diff = $pristineEntity->diff($entity);
                 $this->logger->info(sprintf('Updating existing \'%s\' entity in manage', $entity->getId()));
 
-                $data = json_encode($this->generator->generateForExistingEntity(
-                    $entity,
-                    $diff,
-                    $this->manageConfig->getPublicationStatus()->getStatus(),
-                    $updatedPart
-                ));
+                $data = json_encode(
+                    $this->generator->generateForExistingEntity(
+                        $entity,
+                        $diff,
+                        $this->manageConfig->getPublicationStatus()->getStatus(),
+                        $updatedPart
+                    )
+                );
 
                 $response = $this->client->put(
                     $data,
@@ -84,11 +88,9 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
     }
 
     /**
-     * @return mixed
-     *
      * @throws PushMetadataException
      */
-    public function pushMetadata()
+    public function pushMetadata(): mixed
     {
         try {
             $response = $this->client->read(
@@ -99,7 +101,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         } catch (HttpException $e) {
             $this->logger->error(
                 'Unable to push to Engineblock',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new PushMetadataException('Unable to push the metadata to Engineblock', 0, $e);
         }
@@ -107,7 +109,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
         if ($response['status'] != "OK") {
             $this->logger->error(
                 'Manage rejected the push to Engineblock',
-                (isset($response)) ? $response : []
+                $response ?? []
             );
             throw new PushMetadataException('Pushing did not succeed.');
         }

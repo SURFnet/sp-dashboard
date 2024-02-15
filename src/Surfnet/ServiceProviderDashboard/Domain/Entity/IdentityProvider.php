@@ -22,17 +22,11 @@ use Webmozart\Assert\Assert;
 
 class IdentityProvider
 {
-    /**
-     * @param string $manageId
-     * @param string $entityId
-     * @param string $nameNl
-     * @param string $nameEn
-     */
     public function __construct(
         private readonly string $manageId,
         private readonly string $entityId,
         private ?string $nameNl,
-        private string $nameEn
+        private string $nameEn,
     ) {
         Assert::stringNotEmpty($manageId);
         Assert::stringNotEmpty($entityId);
@@ -43,42 +37,27 @@ class IdentityProvider
         $this->nameEn = (string) $nameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getManageId()
+    public function getManageId(): string
     {
         return $this->manageId;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameNl()
+    public function getNameNl(): ?string
     {
         return $this->nameNl;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameEn()
+    public function getNameEn(): string
     {
         return $this->nameEn;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return (empty($this->nameNl) ? $this->nameEn : $this->nameNl);
     }

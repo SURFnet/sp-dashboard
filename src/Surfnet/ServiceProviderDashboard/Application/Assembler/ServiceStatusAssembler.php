@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -22,32 +23,31 @@ use Surfnet\ServiceProviderDashboard\Application\Service\ServiceStatusService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\WysiwygExtension;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function round;
 
 class ServiceStatusAssembler
 {
     /**
      * The different status types used
      */
-    const SERVICE_STATE_INTAKE_CONDUCTED = 'intake-conducted';
-    const SERVICE_STATE_ENTITY_ON_TEST = 'entity-on-test';
-    const SERVICE_STATE_REPRESENTATIVE_APPROVED = 'representative-approved';
-    const SERVICE_STATE_CONTRACT_SIGNED = 'contract-signed';
-    const SERVICE_STATE_PRIVACY_QUESTIONS = 'privacy-questions';
-    const SERVICE_STATE_PRODUCTION_CONNECTION = 'production-connection';
+    final public const SERVICE_STATE_INTAKE_CONDUCTED = 'intake-conducted';
+    final public const SERVICE_STATE_ENTITY_ON_TEST = 'entity-on-test';
+    final public const SERVICE_STATE_REPRESENTATIVE_APPROVED = 'representative-approved';
+    final public const SERVICE_STATE_CONTRACT_SIGNED = 'contract-signed';
+    final public const SERVICE_STATE_PRIVACY_QUESTIONS = 'privacy-questions';
+    final public const SERVICE_STATE_PRODUCTION_CONNECTION = 'production-connection';
 
     /**
      * The possible states used in the mapping
      */
-    const SERVICE_STATUS_SUCCESS = 'success';
-    const SERVICE_STATUS_INFO = 'info';
-    const SERVICE_STATUS_IN_PROGRESS = 'in-progress';
+    final public const SERVICE_STATUS_SUCCESS = 'success';
+    final public const SERVICE_STATUS_INFO = 'info';
+    final public const SERVICE_STATUS_IN_PROGRESS = 'in-progress';
 
     /**
      * The mapping of the different states
-     *
-     * @var array
      */
-    private $stateMapping = [
+    private array $stateMapping = [
         self::SERVICE_STATE_INTAKE_CONDUCTED => [
             Service::INTAKE_STATUS_YES => self::SERVICE_STATUS_SUCCESS,
             Service::INTAKE_STATUS_NO => self::SERVICE_STATUS_INFO,
@@ -78,30 +78,19 @@ class ServiceStatusAssembler
 
     /**
      * The mapping of the legend
-     *
-     * @var array
      */
-    private $legend = [
+    private array $legend = [
         self::SERVICE_STATUS_SUCCESS => '#67a979',
         self::SERVICE_STATUS_IN_PROGRESS => '#f6aa61',
         self::SERVICE_STATUS_INFO => '#d1d2d6',
     ];
 
-    /**
-     * @var ServiceStatusDto
-     */
-    private $serviceStatusDto;
+    private readonly ServiceStatusDto $serviceStatusDto;
 
-    /**
-     * ServiceStatusAssembler constructor.
-     * @param Service $service
-     * @param ServiceStatusService $serviceStatusService
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         Service $service,
         ServiceStatusService $serviceStatusService,
-        private TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
         $states = $this->getStates($service, $serviceStatusService);
         $mappedStates = $this->mapStates($states);
@@ -119,10 +108,7 @@ class ServiceStatusAssembler
         );
     }
 
-    /**
-     * @return ServiceStatusDto
-     */
-    public function getDto()
+    public function getDto(): ServiceStatusDto
     {
         return $this->serviceStatusDto;
     }
@@ -130,7 +116,7 @@ class ServiceStatusAssembler
     /**
      * @return string[]
      */
-    private static function states()
+    private function states(): array
     {
         return [
             self::SERVICE_STATE_INTAKE_CONDUCTED,
@@ -145,7 +131,7 @@ class ServiceStatusAssembler
     /**
      * @return string[]
      */
-    private static function status()
+    private function status(): array
     {
         return [
             self::SERVICE_STATUS_INFO,
@@ -154,12 +140,7 @@ class ServiceStatusAssembler
         ];
     }
 
-    /**
-     * @param Service $service
-     * @param ServiceStatusService $serviceStatusService
-     * @return array
-     */
-    private function getStates(Service $service, ServiceStatusService $serviceStatusService)
+    private function getStates(Service $service, ServiceStatusService $serviceStatusService): array
     {
         $states = [];
         $type = $service->getServiceType();
@@ -188,11 +169,7 @@ class ServiceStatusAssembler
         return $states;
     }
 
-    /**
-     * @param array $states
-     * @return array
-     */
-    private function mapStates($states)
+    private function mapStates(array $states): array
     {
         $result = [];
         foreach ($states as $name => $value) {
@@ -204,13 +181,10 @@ class ServiceStatusAssembler
         return $result;
     }
 
-    /**
-     * @return array
-     */
-    private function getLegend()
+    private function getLegend(): array
     {
         $legend = [];
-        foreach (self::status() as $name) {
+        foreach ($this->status() as $name) {
             $legend[$name] = [
                 'label' => $this->translator->trans('service.overview.legend.'.$name),
                 'color' => $this->legend[$name],
@@ -219,16 +193,16 @@ class ServiceStatusAssembler
         return $legend;
     }
 
-    private function getLabels()
+    private function getLabels(): array
     {
         $labels = [];
-        foreach (self::states() as $state) {
+        foreach ($this->states() as $state) {
             $labels[$state] = $this->getSanitizedHtmlTranslation('service.overview.progress.label.' . $state);
         }
         return $labels;
     }
 
-    private function getTooltips($mappedStates)
+    private function getTooltips(array $mappedStates): array
     {
         $tooltips = [];
         foreach ($mappedStates as $state => $status) {
@@ -237,7 +211,7 @@ class ServiceStatusAssembler
         return $tooltips;
     }
 
-    private function getPercentage($mappedStates)
+    private function getPercentage(array $mappedStates): float
     {
         $total = 0;
         $done = 0;
@@ -247,13 +221,12 @@ class ServiceStatusAssembler
             }
             $total++;
         }
-        return \round($done/$total*100);
+        return round($done/$total*100);
     }
 
-    private function getSanitizedHtmlTranslation($key)
+    private function getSanitizedHtmlTranslation(string $key): string
     {
         $translated = $this->translator->trans($key);
-        $sanitized = WysiwygExtension::sanitizeWysiwyg($translated);
-        return $sanitized;
+        return WysiwygExtension::sanitizeWysiwyg($translated);
     }
 }

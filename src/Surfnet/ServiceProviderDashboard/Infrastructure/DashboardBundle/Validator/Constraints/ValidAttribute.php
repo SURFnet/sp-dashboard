@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -21,28 +21,30 @@ declare(strict_types=1);
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Symfony\Component\Validator\Attribute\HasNamedArguments;
 use Symfony\Component\Validator\Constraint;
+use Attribute;
 
-/**
- * @Annotation
- */
+#[Attribute]
 class ValidAttribute extends Constraint
 {
-    public $messageAttributeNotFound = 'validator.attribute.not_found';
+    #[HasNamedArguments]
+    public function __construct(
+        public string $messageAttributeNotFound = 'validator.attribute.not_found',
+        public string $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set',
+        public array|string $type = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG],
+        array $groups = null,
+        mixed $payload = null,
+    ) {
+        parent::__construct([], $groups, $payload);
+    }
 
-    public $messageAttributeMotivationNotSet = 'validator.attribute.motivation_not_set';
-
-    public $type = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
-
-    /**
-     * @return string
-     */
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return 'valid_attribute';
     }
 
-    public function getDefaultOption()
+    public function getDefaultOption(): ?string
     {
         return 'type';
     }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -25,20 +25,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ConnectionRequest
 {
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $institution;
 
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $name;
 
     /**
-     * @Assert\NotBlank()
      * @var string
      */
+    #[Assert\NotBlank]
     public $email;
 }

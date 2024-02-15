@@ -30,28 +30,23 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
-    /**
-     * @var string
-     */
-    private $summaryTranslationKey;
+    private readonly string $summaryTranslationKey;
 
-    /**
-     * @var string
-     */
-    private $descriptionTranslationKey;
+    private readonly string $descriptionTranslationKey;
 
     public function __construct(
-        private PublishEntityRepository $publishClient,
-        private EntityServiceInterface $entityService,
-        private TicketService $ticketService,
-        private FlashBagInterface $flashBag,
-        private MailService $mailService,
-        private LoggerInterface $logger,
-        private string $issueType
+        private readonly PublishEntityRepository $publishClient,
+        private readonly EntityServiceInterface $entityService,
+        private readonly TicketService $ticketService,
+        private readonly RequestStack $requestStack,
+        private readonly MailService $mailService,
+        private readonly LoggerInterface $logger,
+        private readonly string $issueType,
     ) {
         if (empty($issueType)) {
             throw new Exception('Please set "jira_issue_type_publication_request" in .env');
@@ -70,7 +65,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(PublishProductionCommandInterface $command)
+    public function handle(PublishProductionCommandInterface $command): void
     {
         $entity = $command->getManageEntity();
         $pristineEntity = null;
@@ -115,10 +110,10 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     ),
                     [$publishResponse]
                 );
-                $this->flashBag->add('error', 'entity.edit.error.publish');
+                $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             }
             if ($this->isNewResourceServer($entity)) {
-                $this->flashBag->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+                $this->requestStack->getSession()->getFlashBag()->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
             }
             return;
         } catch (PublishMetadataException $e) {
@@ -129,18 +124,18 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
             $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             return;
         }
     }
 
-    private function isNewResourceServer(ManageEntity $entity)
+    private function isNewResourceServer(ManageEntity $entity): bool
     {
         $isNewEntity = empty($entity->getId());
         return $isNewEntity

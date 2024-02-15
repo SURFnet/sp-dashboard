@@ -25,7 +25,6 @@ interface TicketRepository
     /**
      * TODO set the required parameters to build an issue.
      *
-     * @param Ticket $ticket
      * @return Ticket
      */
     public function createIssue(Ticket $ticket);

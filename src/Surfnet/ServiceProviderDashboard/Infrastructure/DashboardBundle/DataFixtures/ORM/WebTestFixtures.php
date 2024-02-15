@@ -20,14 +20,14 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFi
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Ramsey\Uuid\Uuid;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\DpaType;
+use Symfony\Component\Uid\Uuid;
 
 class WebTestFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $service = $this->createService('SURFnet', 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl');
         $service->setProductionEntitiesEnabled(false);
@@ -46,20 +46,15 @@ class WebTestFixtures extends Fixture
         $manager->flush();
     }
 
-    /**
-     * @param string $name
-     * @param string $teamName
-     *
-     * @return Service
-     */
-    private function createService($name, $teamName)
+    
+    private function createService(string $name, string $teamName): Service
     {
         $service = new Service();
         $service->setName($name);
         $service->setTeamName($teamName);
-        $service->setGuid(Uuid::uuid4());
-        $service->setInstitutionId(Uuid::uuid4());
-        $service->setGuid(Uuid::uuid4());
+        $service->setGuid(Uuid::v4());
+        $service->setInstitutionId(Uuid::v4());
+        $service->setGuid(Uuid::v4());
         $service->setOrganizationNameEn($name);
         $service->setOrganizationNameNl($name);
         $service->setContractSigned('no');
@@ -67,7 +62,7 @@ class WebTestFixtures extends Fixture
         return $service;
     }
 
-    private function createPrivacyQuestions(Service $service)
+    private function createPrivacyQuestions(Service $service): PrivacyQuestions
     {
         $privacyQuestions = new PrivacyQuestions();
         $privacyQuestions->setService($service);

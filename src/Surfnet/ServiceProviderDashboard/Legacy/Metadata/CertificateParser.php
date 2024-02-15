@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -27,14 +29,12 @@ class CertificateParser implements CertificateParserInterface
 {
     /**
      * @param string $certificateString
-     *
-     * @return string
      */
-    public function parse($certificateString)
+    public function parse($certificateString): string
     {
         $certificateString = str_replace('-----BEGIN CERTIFICATE-----', '', $certificateString);
         $certificateString = str_replace('-----END CERTIFICATE-----', '', $certificateString);
-        $certificateString = str_replace(array("\n", "\r", " ", "\t"), '', $certificateString);
+        $certificateString = str_replace(["\n", "\r", " ", "\t"], '', $certificateString);
         $certificateString = chunk_split($certificateString, 64, PHP_EOL);
 
         return "-----BEGIN CERTIFICATE-----" . PHP_EOL . $certificateString . "-----END CERTIFICATE-----";

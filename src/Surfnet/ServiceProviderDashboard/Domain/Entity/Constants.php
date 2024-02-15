@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2020 SURFnet B.V.
  *
@@ -20,33 +22,33 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 
 class Constants
 {
-    const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
+    final public const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
 
     // When adding valid name id formats, don't forget to add them to self::getValidNameIdFormats()
-    const NAME_ID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
-    const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
-    const NAME_ID_FORMAT_UNSPECIFIED = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
+    final public const NAME_ID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
+    final public const NAME_ID_FORMAT_PERSISTENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent';
+    final public const NAME_ID_FORMAT_UNSPECIFIED = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
 
-    const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
-    const GRANT_TYPE_IMPLICIT = 'implicit';
-    const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
+    final public const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
+    final public const GRANT_TYPE_IMPLICIT = 'implicit';
+    final public const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
 
-    const ENVIRONMENT_TEST = 'test';
-    const ENVIRONMENT_PRODUCTION = 'production';
+    final public const ENVIRONMENT_TEST = 'test';
+    final public const ENVIRONMENT_PRODUCTION = 'production';
 
-    const STATE_DRAFT = 'draft';
-    const STATE_PUBLISHED = 'published';
-    const STATE_PUBLICATION_REQUESTED = 'requested';
-    const STATE_REMOVAL_REQUESTED = 'removal requested';
+    final public const STATE_DRAFT = 'draft';
+    final public const STATE_PUBLISHED = 'published';
+    final public const STATE_PUBLICATION_REQUESTED = 'requested';
+    final public const STATE_REMOVAL_REQUESTED = 'removal requested';
 
-    const TYPE_SAML = 'saml20';
-    const TYPE_OPENID_CONNECT_TNG = 'oidcng';
-    const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oauth20_rs';
-    const TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT = 'oauth20_ccc';
+    final public const TYPE_SAML = 'saml20';
+    final public const TYPE_OPENID_CONNECT_TNG = 'oidcng';
+    final public const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oauth20_rs';
+    final public const TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT = 'oauth20_ccc';
 
-    const OIDC_SECRET_LENGTH = 20;
+    final public const OIDC_SECRET_LENGTH = 20;
 
-    public static function getValidNameIdFormats()
+    public static function getValidNameIdFormats(): array
     {
         return [
             Constants::NAME_ID_FORMAT_TRANSIENT,

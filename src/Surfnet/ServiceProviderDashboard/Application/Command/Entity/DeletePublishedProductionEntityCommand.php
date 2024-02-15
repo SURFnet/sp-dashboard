@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -29,7 +31,7 @@ class DeletePublishedProductionEntityCommand implements Command
         private readonly string $manageId,
         #[Assert\NotBlank]
         #[Assert\Uuid]
-        private readonly string $protocol
+        private readonly string $protocol,
     ) {
     }
 

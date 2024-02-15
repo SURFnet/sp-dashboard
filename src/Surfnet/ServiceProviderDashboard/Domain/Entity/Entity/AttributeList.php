@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,11 +27,11 @@ class AttributeList implements Comparable
     /**
      * @var Attribute[]
      */
-    private $attributes = [];
+    private array $attributes = [];
 
-    private $originalAttributes = [];
+    private array $originalAttributes = [];
 
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data): self
     {
         $list = new self();
 
@@ -46,7 +48,7 @@ class AttributeList implements Comparable
         return $list;
     }
 
-    public function add(Attribute $attribute)
+    public function add(Attribute $attribute): void
     {
         $this->attributes[$attribute->getName()][] = $attribute;
     }
@@ -55,11 +57,8 @@ class AttributeList implements Comparable
      * Returns the first attribute with a motivation
      *
      * If not a single motivation is present, it returns the first attribute.
-     *
-     * @param $urn
-     * @return Attribute|null
      */
-    public function findByUrn($urn)
+    public function findByUrn(string $urn): ?Attribute
     {
         if (isset($this->attributes[$urn])) {
             if (count($this->attributes[$urn]) > 1) {
@@ -92,7 +91,7 @@ class AttributeList implements Comparable
     /**
      * @return Attribute[]
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
@@ -105,12 +104,12 @@ class AttributeList implements Comparable
         return $this->originalAttributes;
     }
 
-    private function clear()
+    private function clear(): void
     {
         $this->attributes = [];
     }
 
-    public function merge(AttributeList $attributes)
+    public function merge(AttributeList $attributes): void
     {
         $this->originalAttributes = $this->attributes;
         $this->clear();
@@ -129,7 +128,9 @@ class AttributeList implements Comparable
                     $newMotivation = $attr->getMotivation();
                 }
             }
-            /** @var Attribute $attribute */
+            /**
+ * @var Attribute $attribute
+*/
             foreach ($manageAttribute as $attribute) {
                 $attribute = $attribute->updateMotivation($newMotivation);
                 $this->add($attribute);
@@ -149,7 +150,7 @@ class AttributeList implements Comparable
                 'motivation' => $attribute->getMotivation(),
             ];
         }
-        if (!empty($attributes)) {
+        if ($attributes !== []) {
             return [
                 'arp' => [
                     'attributes' => $attributes,

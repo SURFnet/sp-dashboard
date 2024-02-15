@@ -28,24 +28,24 @@ interface SaveCommandFactoryInterface
 {
     public function buildSamlCommandByManageEntity(
         ManageEntity $manageEntity,
-        string $environment
+        string $environment,
     ): SaveSamlEntityCommand;
 
     public function buildOidcngCommandByManageEntity(
         ManageEntity $manageEntity,
         string $environment,
-        bool $isCopy = false
+        bool $isCopy = false,
     ): SaveOidcngEntityCommand;
 
     public function buildOauthCccCommandByManageEntity(
         ManageEntity $manageEntity,
         string $environment,
-        bool $isCopy = false
+        bool $isCopy = false,
     ): SaveOauthClientCredentialClientCommand;
 
     public function buildOidcngRsCommandByManageEntity(
         ManageEntity $manageEntity,
         string $environment,
-        bool $isCopy = false
+        bool $isCopy = false,
     ): SaveOidcngResourceServerEntityCommand;
 }

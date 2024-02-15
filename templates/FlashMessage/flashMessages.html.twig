@@ -1,4 +1,4 @@
-{% set flashes = app.session.flashbag.all %}
+{% set flashes = app.flashes %}
 {% if flashes is not empty %}
     {% for type, messages in flashes %}
         {% for message in messages %}

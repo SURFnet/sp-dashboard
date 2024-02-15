@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2022 SURFnet B.V.
@@ -36,10 +36,9 @@ class ValidAttributeValidator extends ConstraintValidator
     }
 
     /**
-     * @param array $value
-     * @param Constraint $constraint
+     * @param array      $value
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         foreach ($value ?? [] as $name => $attribute) {
             if (!isset($attribute)) {

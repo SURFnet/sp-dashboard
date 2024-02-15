@@ -17,39 +17,25 @@
  */
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security;
 
-use BadMethodCallException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Stringable;
 
-class Identity implements UserInterface
+class Identity implements UserInterface, Stringable
 {
-    /**
-     * @var Contact
-     */
-    private $contact;
-
-    public function __construct(Contact $contact)
+    public function __construct(private readonly Contact $contact)
     {
-        $this->contact = $contact;
     }
 
-    /**
-     * @return Contact
-     */
-    public function getContact()
+    public function getContact(): Contact
     {
         return $this->contact;
     }
 
-    /**
-     * @param string $teamName
-     * @return bool
-     */
-    public function isPartOfTeam($teamName)
+    public function isPartOfTeam(string $teamName): bool
     {
         $services = $this->getContact()->getServices();
-        /** @var Service $service */
+
         foreach ($services as $service) {
             if ($service->getTeamName() === $teamName) {
                 return true;
@@ -58,25 +44,22 @@ class Identity implements UserInterface
         return false;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->contact->getDisplayName();
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->getContact()->getRoles();
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return '';
     }
 
-    public function getSalt()
+    public function getSalt(): string
     {
         return '';
     }
@@ -85,12 +68,12 @@ class Identity implements UserInterface
     {
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->contact->getNameId();
     }
 
-    public function getUserIdentifier()
+    public function getUserIdentifier(): string
     {
         return $this->getUsername();
     }

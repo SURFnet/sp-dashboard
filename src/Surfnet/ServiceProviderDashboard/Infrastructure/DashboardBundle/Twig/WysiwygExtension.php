@@ -24,42 +24,31 @@ use Twig\TwigFilter;
 
 class WysiwygExtension extends AbstractExtension
 {
-    /**
-     * @var HTMLPurifier
-     */
-    private static $purifier = null;
+    private static ?HTMLPurifier $purifier = null;
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter(
                 'wysiwyg',
-                [$this, 'sanitize'],
+                $this->sanitize(...),
                 ['is_safe' => ['html']]
             ),
         ];
     }
 
-    /**
-     * @param string $raw
-     * @return string
-     */
-    public function sanitize($raw)
+    public function sanitize(string $raw): string
     {
         return self::sanitizeWysiwyg($raw);
     }
 
-    /**
-     * @param string $raw
-     * @return string
-     */
-    public static function sanitizeWysiwyg($raw)
+    public static function sanitizeWysiwyg(string $raw): string
     {
         self::initialise();
         return self::$purifier->purify($raw);
     }
 
-    private static function initialise()
+    private static function initialise(): void
     {
         if (!is_null(self::$purifier)) {
             return;

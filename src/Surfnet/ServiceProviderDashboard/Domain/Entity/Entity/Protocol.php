@@ -26,49 +26,40 @@ use Webmozart\Assert\Assert;
 
 class Protocol implements Comparable
 {
-    const SAML20_SP = 'saml20_sp';
+    final public const SAML20_SP = 'saml20_sp';
 
-    const OIDC10_RP = 'oidc10_rp';
+    final public const OIDC10_RP = 'oidc10_rp';
 
-    const OAUTH20_RS = 'oauth20_rs';
+    final public const OAUTH20_RS = 'oauth20_rs';
 
-    private static $protocolMapping = [
+    private static array $protocolMapping = [
         self::SAML20_SP => Constants::TYPE_SAML,
         self::OIDC10_RP => Constants::TYPE_OPENID_CONNECT_TNG,
         self::OAUTH20_RS => Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER,
-        // CC was already mapped to determine it's entity type
-        Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT => Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT
+        // CC was already mapped to determine its entity type
+        Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT => Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT,
     ];
 
-    private $protocol;
-
     /**
-     * @param string $manageProtocol
-     * @return Protocol
      * @SuppressWarnings(PHPMD.UndefinedVariable) - protocolMapping is defined, md does not seem to resolve correctly
      */
-    public static function fromApiResponse($manageProtocol)
+    public static function fromApiResponse(string $manageProtocol): self
     {
         $protocol = self::$protocolMapping[$manageProtocol];
         return new self($protocol);
     }
 
-    public function __construct(?string $protocol)
+    public function __construct(private ?string $protocol)
     {
         Assert::nullOrString($protocol);
-
-        $this->protocol = $protocol;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): ?string
     {
         return $this->protocol;
     }
 
-    public function merge(Protocol $protocol)
+    public function merge(Protocol $protocol): void
     {
         $this->protocol = is_null($protocol->getProtocol()) ? null : $protocol->getProtocol();
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -19,7 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 class Grants
 {
-    private $grants = [];
+    private array $grants = [];
 
     public function addGrant(OidcGrantType $grant): void
     {

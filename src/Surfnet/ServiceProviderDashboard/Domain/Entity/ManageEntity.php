@@ -33,6 +33,7 @@ use function in_array;
  * TODO: All factory logic should be offloaded to Application or Infra layers where the
  * entity is used in a specific context. This particularly applies for the factory
  * methods found in the 'Entity/Entity' namespace.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity) This object contains a lot of properties which cannot not be easily
  * simplified.
@@ -43,27 +44,18 @@ class ManageEntity
     private const CHANGED_REVISION_NOTE = 'Entity changed';
     private const CHANGE_REQUEST_NOTE = 'Change request';
 
-    /**
-     * @var string
-     */
-    private $status;
+    private string $status = Constants::STATE_PUBLISHED;
 
-    private $comments;
+    private ?string $comments = null;
 
-    private $environment;
+    private ?string $environment = null;
 
-    /**
-     * @var bool
-     */
-    private $readOnly = false;
+    private bool $readOnly = false;
 
     /**
-     * @param $data
-     * @return ManageEntity
-     *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public static function fromApiResponse($data)
+    public static function fromApiResponse(array $data): self
     {
         $manageProtocol = self::extractManageProtocol($data);
 
@@ -96,9 +88,8 @@ class ManageEntity
         private readonly AllowedIdentityProviders $allowedIdentityProviders,
         private readonly Protocol $protocol,
         private readonly ?OidcClientInterface $oidcClient = null,
-        private ?Service $service = null
+        private ?Service $service = null,
     ) {
-        $this->status = Constants::STATE_PUBLISHED;
     }
 
     private static function extractManageProtocol(array $data): string
@@ -111,24 +102,24 @@ class ManageEntity
         return $isClientCredentialsClient ? Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT : $manageProtocol;
     }
 
-    public function resetId()
+    public function resetId(): static
     {
         $clone = clone $this;
         $clone->id = null;
         return $clone;
     }
 
-    public function setId(string $id)
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
 
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getAttributes()
+    public function getAttributes(): AttributeList
     {
         return $this->attributes;
     }
@@ -151,68 +142,56 @@ class ManageEntity
         $this->updateStatus(Constants::STATE_PUBLISHED);
     }
 
-    public function updateStatusToRemovalRequested()
+    public function updateStatusToRemovalRequested(): void
     {
         $this->status = Constants::STATE_REMOVAL_REQUESTED;
     }
 
-    private function updateStatus($newStatus)
+    private function updateStatus(string $newStatus): void
     {
         $this->status = $newStatus;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function isPublished()
+    public function isPublished(): bool
     {
         return ($this->status === Constants::STATE_PUBLISHED);
     }
 
-    /**
-     * @return OidcClientInterface|null
-     */
-    public function getOidcClient()
+    public function getOidcClient(): ?OidcClientInterface
     {
         return $this->oidcClient;
     }
 
-    /**
-     * @return AllowedIdentityProviders
-     */
-    public function getAllowedIdentityProviders()
+    public function getAllowedIdentityProviders(): AllowedIdentityProviders
     {
         return $this->allowedIdentityProviders;
     }
 
-    /**
-     * @return Protocol
-     */
-    public function getProtocol()
+    public function getProtocol(): Protocol
     {
         return $this->protocol;
     }
 
-    public function isOidcngResourceServer()
+    public function isOidcngResourceServer(): bool
     {
-        if ($this->getOidcClient()) {
+        if ($this->getOidcClient() instanceof OidcClientInterface) {
             return $this->getOidcClient() instanceof OidcngResourceServerClient;
         }
 
         return false;
     }
 
-    public function isExcludedFromPushSet()
+    public function isExcludedFromPushSet(): bool
     {
-        if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
-            return false;
-        }
-        return true;
+        return !is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush());
     }
 
-    public function isExcludedFromPush()
+    public function isExcludedFromPush(): bool
     {
         if (is_null($this->getMetaData()?->getCoin()?->getExcludeFromPush())) {
             return false;
@@ -230,20 +209,14 @@ class ManageEntity
         $this->comments = $comments;
     }
 
-    /**
-     * @return string
-     */
     public function getComments(): ?string
     {
         return $this->comments;
     }
 
-    /**
-     * @return bool
-     */
     private function hasComments(): bool
     {
-        return !(empty($this->comments));
+        return $this->comments !== null && $this->comments !== '' && $this->comments !== '0';
     }
 
     public function setEnvironment(string $environment): void
@@ -256,12 +229,12 @@ class ManageEntity
         return $this->environment;
     }
 
-    public function isProduction()
+    public function isProduction(): bool
     {
         return $this->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function setIsReadOnly()
+    public function setIsReadOnly(): void
     {
         $this->readOnly = true;
     }
@@ -277,16 +250,15 @@ class ManageEntity
         return $this->service;
     }
 
-    public function setService(Service $service)
+    public function setService(Service $service): void
     {
         $this->service = $service;
     }
 
     /**
      * Merge new data into an existing ManageEntity.
-     * @param ManageEntity $newEntity
      */
-    public function merge(ManageEntity $newEntity)
+    public function merge(ManageEntity $newEntity): void
     {
         $this->service = is_null($newEntity->getService()) ? null : $newEntity->getService();
         $this->metaData->merge($newEntity->getMetaData());
@@ -297,17 +269,17 @@ class ManageEntity
         $this->comments = $newEntity->getComments();
     }
 
-    public function setStatus(string $status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
-    public function updateClientSecret(SecretInterface $secret)
+    public function updateClientSecret(SecretInterface $secret): void
     {
         $this->getOidcClient()->updateClientSecret($secret);
     }
 
-    private function hasOicdClient()
+    private function hasOicdClient(): bool
     {
         $protocol = $this->protocol->getProtocol();
         return $protocol === Constants::TYPE_OPENID_CONNECT_TNG
@@ -333,18 +305,17 @@ class ManageEntity
         if ($this->hasOicdClient()) {
             $data += $this->oidcClient->asArray();
         }
-        $data += $this->protocol->asArray();
-        return $data;
+        return $data + $this->protocol->asArray();
     }
 
-    private function isStatusPublicationRequested()
+    private function isStatusPublicationRequested(): bool
     {
         return $this->getStatus() === Constants::STATE_PUBLICATION_REQUESTED;
     }
 
     public function isRequestedProductionEntity(
-        bool $isCopy
-    ) {
+        bool $isCopy,
+    ): bool {
         return $isCopy || ($this->isStatusPublicationRequested() && $this->isProduction());
     }
 

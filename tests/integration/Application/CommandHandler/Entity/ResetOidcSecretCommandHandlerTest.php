@@ -136,7 +136,7 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
             ->andReturn($environment);
         $manageEntity
             ->shouldReceive('isProduction')
-            ->andReturn($status === Constants::ENVIRONMENT_PRODUCTION);
+            ->andReturn($environment === Constants::ENVIRONMENT_PRODUCTION);
         $manageEntity
             ->shouldReceive('getProtocol->getProtocol')
             ->andReturn($protocol);

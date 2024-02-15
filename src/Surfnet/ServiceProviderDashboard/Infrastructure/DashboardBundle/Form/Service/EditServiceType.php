@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -29,7 +31,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditServiceType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -38,7 +40,7 @@ class EditServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'General information'
+                        'label' => 'General information',
                     ]
                 )
                     ->add('name')
@@ -64,7 +66,7 @@ class EditServiceType extends AbstractType
                         [
                             'required' => false,
                             'label' => 'service.form.label.institution_id',
-                            'attr' => ['class' => 'institution-id-container']
+                            'attr' => ['class' => 'institution-id-container'],
                         ]
                     )
                     ->add(
@@ -97,7 +99,7 @@ class EditServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'Status indicators'
+                        'label' => 'Status indicators',
                     ]
                 )
                     ->add('serviceType', ServiceTypeType::class)
@@ -111,27 +113,29 @@ class EditServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'Teams'
+                        'label' => 'Teams',
                     ]
                 )
-                ->add('teamName', null, [
-                    'label' => 'Team identifier',
-                ])
+                    ->add(
+                        'teamName',
+                        null,
+                        [
+                        'label' => 'Team identifier',
+                        ]
+                    )
             )
-        ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
-        ->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
+            ->add('save', SubmitType::class, ['attr' => ['class' => 'button']])
+            ->add('delete', SubmitType::class, ['attr' => ['class' => 'button btn-danger']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
-            array(
-                'data_class' => EditServiceCommand::class,
-            )
+            ['data_class' => EditServiceCommand::class]
         );
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_edit_service_type';
     }

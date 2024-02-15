@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2023 SURFnet B.V.
  *
@@ -20,6 +22,7 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use function in_array;
+use Stringable;
 
 /**
  * Representation of the different DPA types Data Processing Agreement
@@ -44,7 +47,7 @@ use function in_array;
  *    "info": "Determines what DPA this service has to offer"
  *  }
  */
-class DpaType
+class DpaType implements Stringable
 {
     private const DPA_TYPE_NOT_APPLICABLE = 'dpa_not_applicable';
     private const DPA_TYPE_MODEL_SURF = 'dpa_model_surf';
@@ -52,14 +55,14 @@ class DpaType
     private const DPA_TYPE_SUPPLIED_BY_SERVICE = 'dpa_supplied_by_service';
     private const DPA_TYPE_OTHER = 'other';
 
-    public const DEFAULT = self::DPA_TYPE_SUPPLIED_BY_SERVICE;
+    final public const DEFAULT = self::DPA_TYPE_SUPPLIED_BY_SERVICE;
 
     private static array $allowedDpaTypes = [
         'privacy.form.dpaType.choice.dpa-not-applicable' => self::DPA_TYPE_NOT_APPLICABLE,
         'privacy.form.dpaType.choice.through-surf' => self::DPA_TYPE_MODEL_SURF,
         'privacy.form.dpaType.choice.in-surf-agreement' => self::DPA_TYPE_IN_SURF_AGREEMENT,
         'privacy.form.dpaType.choice.dpa-supplied-by-service' => self::DPA_TYPE_SUPPLIED_BY_SERVICE,
-        'privacy.form.dpaType.choice.other' => self::DPA_TYPE_OTHER
+        'privacy.form.dpaType.choice.other' => self::DPA_TYPE_OTHER,
     ];
 
     private function __construct(public readonly string $type)
@@ -75,12 +78,12 @@ class DpaType
         return self::build($type);
     }
 
-    public static function fromString(string $dpaType)
+    public static function fromString(string $dpaType): self
     {
         return self::build($dpaType);
     }
 
-    public static function build(string $type)
+    public static function build(string $type): self
     {
         if (in_array($type, self::$allowedDpaTypes, true)) {
             return new self($type);
@@ -89,7 +92,7 @@ class DpaType
         return new self(self::DEFAULT);
     }
 
-    public static function choices()
+    public static function choices(): array
     {
         return self::$allowedDpaTypes;
     }

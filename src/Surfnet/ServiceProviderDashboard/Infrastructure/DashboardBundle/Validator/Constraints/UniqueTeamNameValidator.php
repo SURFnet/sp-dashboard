@@ -27,25 +27,25 @@ class UniqueTeamNameValidator extends ConstraintValidator
 {
     public function __construct(
         private readonly QueryTeamsRepository $queryService,
-        private readonly string $urnPrefix
+        private readonly string $urnPrefix,
     ) {
     }
 
     /**
-     * @param string $value
+     * @param  string $value
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         try {
             $result = $this->queryService->findTeamByUrn($this->urnPrefix . $value);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->context->addViolation('validator.team_name.registry_failure');
             return;
         }
 
         // Prevent creating services with existing team name in Teams.
-        if (!empty($result)) {
+        if ($result !== null && $result !== []) {
             $this->context->addViolation('validator.team_name.already_exists');
         }
     }

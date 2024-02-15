@@ -21,7 +21,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Exception;
 use League\Tactician\CommandBus;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\CreateServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\DeleteServiceCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Service\EditServiceCommand;
@@ -42,15 +41,15 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\DeleteServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\EditServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceSwitcherType;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Service\ServiceType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use function reset;
 
 /**
@@ -67,21 +66,19 @@ class ServiceController extends AbstractController
         private readonly EntityService $entityService,
         private readonly QueryTeamsRepository $queryClient,
         private readonly LoggerInterface $logger,
-        private readonly string $defaultStemName
+        private readonly string $defaultStemName,
     ) {
     }
 
-    /**
-     * @Route("/", name="service_overview", methods={"GET"})
-     * @Security("is_granted('ROLE_USER')")
-     */
-    public function overviewAction()
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/', name: 'service_overview', methods: ['GET'])]
+    public function overview(Request $request): RedirectResponse|Response
     {
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
         $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
         $this->authorizationService->resetService();
 
-        if (empty($services)) {
+        if ($services === []) {
             return $this->redirectToRoute('service_add');
         }
         // If only one service is available and you are admin, select that one
@@ -93,7 +90,7 @@ class ServiceController extends AbstractController
             );
         }
 
-        // If more than one service and you are admin, the show the: select a service from the switcher message
+        // If more than one service, and you are admin, the show the: select a service from the switcher message
         if ($this->isGranted('ROLE_ADMINISTRATOR') && count($services) > 1) {
             return $this->render("@Dashboard/Service/admin_overview.html.twig");
         }
@@ -109,63 +106,55 @@ class ServiceController extends AbstractController
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
         // to display the oidc confirmation popup.
-        /** @var ManageEntity $publishedEntity */
-        $publishedEntity = $this->get('session')->get('published.entity.clone');
+        /**
+         * @var ManageEntity $publishedEntity
+         */
+        $publishedEntity = $request->getSession()->get('published.entity.clone');
 
-        return $this->render('@Dashboard/Service/overview.html.twig', [
+        return $this->render(
+            '@Dashboard/Service/overview.html.twig',
+            [
             'services' => $serviceList,
             'isAdmin' => false,
             'publishedEntity' => $publishedEntity,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'privacyStatusEntities' => $privacyOK,
-        ]);
+            ]
+        );
     }
 
-    /**
-     * @Route("/service/create", name="service_add", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     *
-     * @return RedirectResponse|Response
-     */
-    public function createAction(Request $request)
+    #[IsGranted('ROLE_ADMINISTRATOR')]
+    #[Route(path: '/service/create', name: 'service_add', methods: ['GET', 'POST'])]
+    public function create(Request $request): RedirectResponse|Response
     {
-        $this->get('session')->getFlashBag()->clear();
+        $request->getSession()->getFlashBag()->clear();
         $command = new CreateServiceCommand();
 
         $form = $this->createForm(CreateServiceType::class, $command);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
-
-                try {
-                    $this->commandBus->handle($command);
-                    $this->get('session')->getFlashBag()->add('info', 'service.create.flash.success');
-                    return $this->redirectToRoute('service_overview');
-                } catch (Exception $e) {
-                    $this->addFlash('error', $e->getMessage());
-                }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->logger->info(sprintf('Save new Service, service was created by: %s', '@todo'), (array) $command);
+            try {
+                $this->commandBus->handle($command);
+                $this->addFlash('info', 'service.create.flash.success');
+                return $this->redirectToRoute('service_overview');
+            } catch (Exception $e) {
+                $this->addFlash('error', $e->getMessage());
             }
         }
 
-        return $this->render('@Dashboard/Service/create.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render('@Dashboard/Service/create.html.twig', ['form' => $form->createView()]);
     }
 
-    /**
-     * @Route("/service/{serviceId}/edit", name="service_edit", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     *
-     * @return RedirectResponse|Response
-     */
-    public function editAction(Request $request, int $serviceId)
+    #[IsGranted('ROLE_ADMINISTRATOR')]
+    #[Route(path: '/service/{serviceId}/edit', name: 'service_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, int $serviceId): RedirectResponse|Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
-        $this->get('session')->getFlashBag()->clear();
+        $request->getSession()->getFlashBag()->clear();
 
         $command = new EditServiceCommand(
             $service->getId(),
@@ -198,29 +187,24 @@ class ServiceController extends AbstractController
             $this->logger->info(sprintf('Service was edited by: "%s"', '@todo'), (array)$command);
             try {
                 $this->commandBus->handle($command);
-                $this->get('session')->getFlashBag()->add('info', 'service.edit.flash.success');
+                $this->addFlash('info', 'service.edit.flash.success');
                 return $this->redirectToRoute('service_admin_overview', ['serviceId' => $serviceId]);
             } catch (InvalidArgumentException $e) {
                 $this->addFlash('error', $e->getMessage());
-            } catch (EntityNotFoundException $e) {
+            } catch (EntityNotFoundException) {
                 $this->addFlash('error', 'The Service could not be found while handling the request');
             }
         }
 
-        return $this->render('@Dashboard/Service/edit.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return $this->render('@Dashboard/Service/edit.html.twig', ['form' => $form->createView()]);
     }
 
     /**
-     * @Route("/service/{serviceId}/delete", name="service_delete", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     *
-     * @param Request $request
-     * @param $serviceId
-     * @return RedirectResponse|Response
+     * @param  $serviceId
      */
-    public function deleteAction(Request $request, $serviceId)
+    #[IsGranted('ROLE_ADMINISTRATOR')]
+    #[Route(path: '/service/{serviceId}/delete', name: 'service_delete', methods: ['GET', 'POST'])]
+    public function delete(Request $request, $serviceId): RedirectResponse|Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
 
@@ -252,24 +236,25 @@ class ServiceController extends AbstractController
                 $resetCommand = new ResetServiceCommand();
                 $this->commandBus->handle($resetCommand);
 
-                $this->get('session')->getFlashBag()->add('info', 'service.delete.flash.success');
+                $this->addFlash('info', 'service.delete.flash.success');
             }
 
             return $this->redirectToRoute('service_overview');
         }
 
-        return $this->render('@Dashboard/Service/delete.html.twig', [
-            'form' => $form->createView(),
-            'serviceName' => $service->getName(),
-            'entityList' => $this->entityService->getEntityListForService($service),
-        ]);
+        return $this->render(
+            '@Dashboard/Service/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'serviceName' => $service->getName(),
+                'entityList' => $this->entityService->getEntityListForService($service),
+            ]
+        );
     }
 
-    /**
-     * @Route("/service/select", name="select_service", methods={"GET", "POST"})
-     * @Security("is_granted('ROLE_USER')")
-     */
-    public function selectAction(Request $request)
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/service/select', name: 'select_service', methods: ['GET', 'POST'])]
+    public function select(Request $request): RedirectResponse
     {
         $command = new SelectServiceCommand();
         $form = $this->createForm(ServiceSwitcherType::class, $command);
@@ -284,11 +269,9 @@ class ServiceController extends AbstractController
         return $this->redirectToRoute('service_admin_overview', ['serviceId' => $command->getSelectedServiceId()]);
     }
 
-    /**
-     * @Route("/service/{serviceId}", name="service_admin_overview", methods={"GET"})
-     * @Security("is_granted('ROLE_ADMINISTRATOR')")
-     */
-    public function adminOverviewAction($serviceId)
+    #[IsGranted('ROLE_ADMINISTRATOR')]
+    #[Route(path: '/service/{serviceId}', name: 'service_admin_overview', methods: ['GET'])]
+    public function adminOverview(Request $request, $serviceId): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entityList = $this->entityService->getEntityListForService($service);
@@ -297,16 +280,21 @@ class ServiceController extends AbstractController
 
         // Try to get a published entity from the session, if there is one, we just published an entity and might need
         // to display the oidc confirmation popup.
-        /** @var ManageEntity $publishedEntity */
-        $publishedEntity = $this->get('session')->get('published.entity.clone');
+        /**
+         * @var ManageEntity $publishedEntity
+         */
+        $publishedEntity = $request->getSession()->get('published.entity.clone');
 
-        return $this->render('@Dashboard/Service/overview.html.twig', [
+        return $this->render(
+            '@Dashboard/Service/overview.html.twig',
+            [
             'services' => $serviceList,
             'isAdmin' => true,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'publishedEntity' => $publishedEntity,
             'privacyStatusEntities' => $privacyOK,
-        ]);
+            ]
+        );
     }
 
     private function isDeleteAction(FormInterface $form): bool
@@ -316,12 +304,8 @@ class ServiceController extends AbstractController
 
     /**
      * Check if the form was submitted using the given button name.
-     *
-     * @param EditServiceType $form
-     * @param string $expectedButtonName
-     * @return bool
      */
-    private function assertUsedSubmitButton(FormInterface $form, $expectedButtonName)
+    private function assertUsedSubmitButton(FormInterface $form, string $expectedButtonName): bool
     {
         $button = $form->getClickedButton();
 
@@ -332,9 +316,9 @@ class ServiceController extends AbstractController
         return $button->getName() === $expectedButtonName;
     }
 
-    private function showOidcPopup(?ManageEntity $publishedEntity)
+    private function showOidcPopup(?ManageEntity $publishedEntity): bool
     {
-        if (is_null($publishedEntity)) {
+        if ($publishedEntity === null) {
             return false;
         }
         $protocol = $publishedEntity->getProtocol()->getProtocol();
@@ -342,6 +326,6 @@ class ServiceController extends AbstractController
             $protocol === Constants::TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER ||
             $protocol === Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
 
-        return $publishedEntity && $protocolUsesSecret && $publishedEntity->getOidcClient()->getClientSecret();
+        return $protocolUsesSecret && $publishedEntity->getOidcClient()->getClientSecret();
     }
 }

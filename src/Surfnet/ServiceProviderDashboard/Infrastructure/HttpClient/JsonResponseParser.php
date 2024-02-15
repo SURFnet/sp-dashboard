@@ -26,9 +26,9 @@ final class JsonResponseParser
      * Function to provide functionality common to Guzzle 5 Response's json method,
      * without config options as they are not needed.
      *
-     * @param string $json
-     * @return mixed
-     * @throws InvalidJsonException
+     * @param                                     string $json
+     * @return                                    mixed
+     * @throws                                    InvalidJsonException
      * @SuppressWarnings(PHPMD.UndefinedVariable) - jsonErrors is defined, md does not seem to resolve correctly
      */
     public static function parse($json)

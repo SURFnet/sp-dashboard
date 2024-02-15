@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# Make sure every command returns an error if tests fail
+set -e
+
 cd $(dirname $0)/../../
 
 # PHPUnit Bridge should always be used in Symfony applications. (https://symfony.com/doc/current/components/phpunit_bridge.html)

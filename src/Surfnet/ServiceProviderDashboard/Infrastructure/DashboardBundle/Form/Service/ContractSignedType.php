@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,9 +27,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContractSignedType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'label' => 'service.form.label.contract_signed',
             'expanded' => true,
             'multiple' => false,
@@ -36,7 +39,8 @@ class ContractSignedType extends AbstractType
                 'service.form.label.contract_signed_yes' => Service::CONTRACT_SIGNED_YES,
             ],
             'attr' => ['class' => 'service-status-container contract-signed-container'],
-        ]);
+            ]
+        );
     }
 
     public function getParent()

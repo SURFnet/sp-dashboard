@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -25,72 +27,28 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
  */
 class EntityActions
 {
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var int
-     */
-    private $serviceId;
-
-    /**
-     * @var string
-     */
-    private $status;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $protocol;
-
-    /**
-     * @var bool
-     */
-    private $readOnly;
-    /**
-     * @var bool
-     */
-    private $changeRequest;
-
     public function __construct(
-        string $id,
-        int $serviceId,
-        string $status,
-        string $environment,
-        string $protocol,
-        bool $isReadOnly,
-        bool $changeRequest
+        private readonly string $id,
+        private readonly int $serviceId,
+        private string $status,
+        private readonly string $environment,
+        private string $protocol,
+        private readonly bool $readOnly,
+        private readonly bool $changeRequest,
     ) {
-        $this->id = $id;
-        $this->serviceId = $serviceId;
-        $this->status = $status;
-        $this->environment = $environment;
-        $this->protocol = $protocol;
-        $this->readOnly = $isReadOnly;
-        $this->changeRequest = $changeRequest;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return int
-     */
-    public function getServiceId()
+    public function getServiceId(): int
     {
         return $this->serviceId;
     }
 
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         return $this->environment;
     }
@@ -100,17 +58,10 @@ class EntityActions
         $notEditable =
             $this->readOnly
             || $this->status === Constants::STATE_REMOVAL_REQUESTED;
-
-        if ($notEditable) {
-            return false;
-        }
-        return true;
+        return !$notEditable;
     }
 
-    /**
-     * @return bool
-     */
-    public function allowCopyAction()
+    public function allowCopyAction(): bool
     {
         if ($this->readOnly) {
             return false;
@@ -124,7 +75,7 @@ class EntityActions
         return $isPublishedTestEntity || $isPublishedProdEntity;
     }
 
-    public function allowCopyToProductionAction()
+    public function allowCopyToProductionAction(): bool
     {
         if ($this->readOnly) {
             return false;
@@ -132,7 +83,7 @@ class EntityActions
         return $this->status == Constants::STATE_PUBLISHED && $this->environment == Constants::ENVIRONMENT_TEST;
     }
 
-    public function allowCloneAction()
+    public function allowCloneAction(): bool
     {
         if ($this->readOnly) {
             return false;
@@ -140,7 +91,7 @@ class EntityActions
         return $this->status == Constants::STATE_PUBLISHED && $this->environment == Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function allowDeleteAction()
+    public function allowDeleteAction(): bool
     {
         if ($this->readOnly) {
             return false;
@@ -148,10 +99,7 @@ class EntityActions
         return !$this->isDeleteRequested();
     }
 
-    /**
-     * @return bool
-     */
-    public function allowAclAction()
+    public function allowAclAction(): bool
     {
         if ($this->readOnly) {
             return false;
@@ -162,10 +110,7 @@ class EntityActions
             $this->protocol !== Constants::TYPE_OAUTH_CLIENT_CREDENTIAL_CLIENT;
     }
 
-    /**
-     * @return bool
-     */
-    public function allowSecretResetAction()
+    public function allowSecretResetAction(): bool
     {
         if ($this->readOnly) {
             return false;
@@ -200,22 +145,22 @@ class EntityActions
         return $meetsProtocolRequirement && $this->status == Constants::STATE_PUBLISHED;
     }
 
-    public function isPublishedToProduction()
+    public function isPublishedToProduction(): bool
     {
         return $this->status == Constants::STATE_PUBLISHED && $this->environment == Constants::ENVIRONMENT_PRODUCTION;
     }
 
-    public function isPublished()
+    public function isPublished(): bool
     {
         return $this->status === Constants::STATE_PUBLISHED;
     }
 
-    public function isRequested()
+    public function isRequested(): bool
     {
         return $this->status === Constants::STATE_PUBLICATION_REQUESTED;
     }
 
-    public function isDeleteRequested()
+    public function isDeleteRequested(): bool
     {
         return $this->status === Constants::STATE_REMOVAL_REQUESTED;
     }

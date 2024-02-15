@@ -28,15 +28,15 @@ class ExistingTeamNameValidator extends ConstraintValidator
     public function __construct(
         private readonly QueryTeamsRepository $queryService,
         private readonly string $defaultStemName,
-        private readonly string $groupName
+        private readonly string $groupName,
     ) {
     }
 
     /**
-     * @param string $value
+     * @param  string $value
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         $teamName = $value;
         try {
@@ -53,13 +53,13 @@ class ExistingTeamNameValidator extends ConstraintValidator
             }
 
             $result = $this->queryService->findTeamByUrn($teamName);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $this->context->addViolation('validator.team_name.registry_failure');
             return;
         }
 
         // Prevent creating services with existing team name in Teams.
-        if (empty($result)) {
+        if ($result === null || $result === []) {
             $this->context->addViolation('validator.team_name.does_not_exist');
         }
     }

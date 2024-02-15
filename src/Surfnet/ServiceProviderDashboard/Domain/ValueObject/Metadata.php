@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 /**
  * Copyright 2017 SURFnet B.V.
@@ -129,7 +129,7 @@ class Metadata
      */
     public $organizationUrlNl;
 
-    public function setAttribute(string $property, Attribute $value)
+    public function setAttribute(string $property, Attribute $value): void
     {
         $this->attributes[$property] = $value;
     }

@@ -26,33 +26,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateEntityAclCommand implements Command
 {
-    private $manageEntity;
-
-    /**
-     * @var IdentityProvider[]
-     * @Assert\All({
-     *     @Assert\NotBlank(),
-     *     @Assert\Type(type="Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider")
-     * })
-     */
-    private $selected;
-
-    /**
-     * @var bool
-     */
-    private $selectAll = false;
-
-    public function __construct(ManageEntity $entity, array $selectedIdps, bool $selectAll)
-    {
-        $this->manageEntity = $entity;
-        $this->selected = $selectedIdps;
-        $this->selectAll = $selectAll;
+    public function __construct(
+        private readonly ManageEntity $manageEntity,
+        /**
+         * @var                                                                                 IdentityProvider[]
+         */
+        #[Assert\All([
+            new Assert\NotBlank(),
+            new Assert\Type(type: IdentityProvider::class),
+        ])]
+        private array $selected,
+        private bool $selectAll,
+    ) {
     }
 
-    /**
-     * @return string
-     */
-    public function getManageEntity()
+    public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;
     }
@@ -60,7 +48,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @return IdentityProvider[]
      */
-    public function getSelected()
+    public function getSelected(): array
     {
         return $this->selected;
     }
@@ -68,15 +56,12 @@ class UpdateEntityAclCommand implements Command
     /**
      * @param IdentityProvider[] $idps
      */
-    public function setSelected(array $idps)
+    public function setSelected(array $idps): void
     {
         $this->selected = $idps;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSelectAll()
+    public function isSelectAll(): bool
     {
         return $this->selectAll;
     }
@@ -84,7 +69,7 @@ class UpdateEntityAclCommand implements Command
     /**
      * @param bool $selectAll
      */
-    public function setSelectAll($selectAll)
+    public function setSelectAll($selectAll): void
     {
         $this->selectAll = (bool)$selectAll;
     }

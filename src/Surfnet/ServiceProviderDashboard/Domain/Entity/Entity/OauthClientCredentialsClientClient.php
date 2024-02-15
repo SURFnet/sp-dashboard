@@ -29,19 +29,17 @@ use function is_null;
 
 class OauthClientCredentialsClientClient implements Comparable, OidcClientInterface
 {
-    public static function fromApiResponse(array $data)
+    public static function fromApiResponse(array $data): self
     {
-        $clientId = isset($data['data']['entityid']) ? $data['data']['entityid'] : '';
-        $clientSecret = isset($data['data']['metaDataFields']['secret']) ?
-            $data['data']['metaDataFields']['secret'] : '';
-        $resourceServers = isset($data['resourceServers']) ? $data['resourceServers'] : [];
+        $clientId = $data['data']['entityid'] ?? '';
+        $clientSecret = $data['data']['metaDataFields']['secret'] ?? '';
+        $resourceServers = $data['resourceServers'] ?? [];
         $accessTokenValidity = isset($data['data']['metaDataFields']['accessTokenValidity'])
             ? (int) $data['data']['metaDataFields']['accessTokenValidity'] : 3600;
         Assert::stringNotEmpty($clientId);
         Assert::string($clientSecret);
         Assert::integer($accessTokenValidity);
         Assert::isArray($resourceServers);
-
 
         return new self(
             $clientId,
@@ -55,51 +53,36 @@ class OauthClientCredentialsClientClient implements Comparable, OidcClientInterf
         private string $clientId,
         private int $accessTokenValidity,
         private ?string $clientSecret,
-        private array $resourceServers
+        private array $resourceServers,
     ) {
     }
 
-    /**
-     * @return string
-     */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientSecret()
+    public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
 
-    /**
-     * @return array
-     */
-    public function getRedirectUris()
+    public function getRedirectUris(): array
     {
         return [];
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublicClient()
+    public function isPublicClient(): bool
     {
         return false;
     }
 
-    /**
-     * @return int
-     */
     public function getAccessTokenValidity(): int
     {
         return $this->accessTokenValidity;
     }
 
-    public function getResourceServers()
+    public function getResourceServers(): array
     {
         return $this->resourceServers;
     }
@@ -127,14 +110,17 @@ class OauthClientCredentialsClientClient implements Comparable, OidcClientInterf
         $this->mergeResourceServers($client->getResourceServers(), $homeTeam);
     }
 
-    private function mergeResourceServers(array $clientResourceServers, string $homeTeam)
+    private function mergeResourceServers(array $clientResourceServers, string $homeTeam): void
     {
         $manageResourceServers = $this->resourceServers;
         // Filter out the Manage managed RS servers, from outside the 'home' team.
-        $manageResourceServers = array_filter($manageResourceServers, function (ManageEntity $server) use ($homeTeam) {
-            $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
-            return $homeTeam !== $teamName;
-        });
+        $manageResourceServers = array_filter(
+            $manageResourceServers,
+            function (ManageEntity $server) use ($homeTeam): bool {
+                $teamName = $server->getMetaData()->getCoin()->getServiceTeamId();
+                return $homeTeam !== $teamName;
+            }
+        );
         $manageRsEntityIds = [];
         // Reduce the manage entities to only their entityId
         foreach ($manageResourceServers as $server) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -26,7 +28,7 @@ class DeleteServiceCommand implements Command
     public function __construct(
         private readonly int $id,
         private readonly Contact $contact,
-        private readonly ?int $teamId
+        private readonly ?int $teamId,
     ) {
     }
 

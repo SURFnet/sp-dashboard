@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -28,170 +30,62 @@ use Symfony\Component\Validator\Constraints as Assert;
 class EditServiceCommand implements Command
 {
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     * @Assert\Uuid(strict=false)
-     */
-    private $guid;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     * @SpDashboardAssert\ExistingTeamName
-     * @SpDashboardAssert\UrnFormattedTeamName
-     */
-    private $teamName;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $name;
-
-    /**
-     * @var bool
-     */
-    private $productionEntitiesEnabled = true;
-
-    /**
-     * @var bool
-     */
-    private $privacyQuestionsEnabled = true;
-
-    /**
-     * @var bool
-     */
-    private $clientCredentialClientsEnabled = false;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $serviceType;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $intakeStatus;
-
-    /**
-     * @var string
-     */
-    private $contractSigned;
-
-    /**
-     * @var string
-     */
-    private $surfconextRepresentativeApproved;
-
-    /**
-     * @var string
-     */
-    private $privacyQuestionsAnswered;
-
-    /**
-     * @var string
-     */
-    private $institutionId;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationNameNl;
-
-    /**
-     * @var string
-     * @Assert\NotBlank
-     */
-    private $organizationNameEn;
-
-    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
      */
     public function __construct(
-        int $id,
-        string $guid,
-        string $name,
-        string $teamName,
-        bool $productionEntitiesEnabled,
-        bool $privacyQuestionsEnabled,
-        bool $clientCredentialClientsEnabled,
-        ?string $serviceType,
-        ?string $intakeStatus,
-        ?string $contractSigned,
-        ?string $surfconextRepresentativeApproved,
-        ?string $privacyQuestionsAnswered,
-        ?string $institutionId,
-        ?string $organizationNameNl,
-        ?string $organizationNameEn
+        private int $id,
+        #[Assert\Uuid(strict: false)]
+        private string $guid,
+        #[Assert\NotBlank]
+        private string $name,
+        #[SpDashboardAssert\ExistingTeamName]
+        #[SpDashboardAssert\UrnFormattedTeamName]
+        #[Assert\NotBlank]
+        private string $teamName,
+        private bool $productionEntitiesEnabled,
+        private bool $privacyQuestionsEnabled,
+        private bool $clientCredentialClientsEnabled,
+        #[Assert\NotBlank]
+        private ?string $serviceType,
+        #[Assert\NotBlank]
+        private ?string $intakeStatus,
+        private ?string $contractSigned,
+        private ?string $surfconextRepresentativeApproved,
+        private ?string $privacyQuestionsAnswered,
+        private ?string $institutionId,
+        #[Assert\NotBlank]
+        private ?string $organizationNameNl,
+        #[Assert\NotBlank]
+        private ?string $organizationNameEn,
     ) {
-        $this->id = $id;
-        $this->guid = $guid;
-        $this->name = $name;
-        $this->teamName = $teamName;
-        $this->productionEntitiesEnabled = $productionEntitiesEnabled;
-        $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
-        $this->clientCredentialClientsEnabled = $clientCredentialClientsEnabled;
-        $this->serviceType = $serviceType;
-        $this->intakeStatus = $intakeStatus;
-        $this->contractSigned = $contractSigned;
-        $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
-        $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
-        $this->institutionId = $institutionId;
-        $this->organizationNameEn = $organizationNameEn;
-        $this->organizationNameNl = $organizationNameNl;
     }
 
-    /**
-     * @param string $guid
-     */
-    public function setGuid($guid)
+    public function setGuid(string $guid): void
     {
         $this->guid = $guid;
     }
 
-    /**
-     * @param string $teamName
-     */
-    public function setTeamName($teamName)
+    public function setTeamName(string $teamName): void
     {
         $this->teamName = $teamName;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @param bool $enabled
-     */
-    public function setProductionEntitiesEnabled($enabled)
+    public function setProductionEntitiesEnabled(bool $enabled): void
     {
         $this->productionEntitiesEnabled = $enabled;
     }
 
-    /**
-     * @param bool $privacyQuestionsEnabled
-     */
-    public function setPrivacyQuestionsEnabled($privacyQuestionsEnabled)
+    public function setPrivacyQuestionsEnabled(bool $privacyQuestionsEnabled): void
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -199,7 +93,7 @@ class EditServiceCommand implements Command
     /**
      * @param string $serviceType
      */
-    public function setServiceType($serviceType)
+    public function setServiceType(?string $serviceType): void
     {
         $this->serviceType = $serviceType;
     }
@@ -207,7 +101,7 @@ class EditServiceCommand implements Command
     /**
      * @param string $intakeStatus
      */
-    public function setIntakeStatus($intakeStatus)
+    public function setIntakeStatus(?string $intakeStatus): void
     {
         $this->intakeStatus = $intakeStatus;
     }
@@ -215,7 +109,7 @@ class EditServiceCommand implements Command
     /**
      * @param string $contractSigned
      */
-    public function setContractSigned($contractSigned)
+    public function setContractSigned(?string $contractSigned): void
     {
         $this->contractSigned = $contractSigned;
     }
@@ -223,7 +117,7 @@ class EditServiceCommand implements Command
     /**
      * @param string $surfconextRepresentativeApproved
      */
-    public function setSurfconextRepresentativeApproved($surfconextRepresentativeApproved)
+    public function setSurfconextRepresentativeApproved(?string $surfconextRepresentativeApproved): void
     {
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
     }
@@ -231,7 +125,7 @@ class EditServiceCommand implements Command
     /**
      * @param bool $privacyQuestionsAnswered
      */
-    public function setPrivacyQuestionsAnswered($privacyQuestionsAnswered)
+    public function setPrivacyQuestionsAnswered(?string $privacyQuestionsAnswered): void
     {
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
     }
@@ -239,39 +133,27 @@ class EditServiceCommand implements Command
     /**
      * @param string $institutionId
      */
-    public function setInstitutionId($institutionId)
+    public function setInstitutionId(?string $institutionId): void
     {
         $this->institutionId = $institutionId;
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getGuid()
+    public function getGuid(): string
     {
         return $this->guid;
     }
 
-    /**
-     * @return string
-     */
-    public function getTeamName()
+    public function getTeamName(): string
     {
         return $this->teamName;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -279,7 +161,7 @@ class EditServiceCommand implements Command
     /**
      * @return string
      */
-    public function getServiceType()
+    public function getServiceType(): ?string
     {
         return $this->serviceType;
     }
@@ -287,7 +169,7 @@ class EditServiceCommand implements Command
     /**
      * @return string
      */
-    public function getIntakeStatus()
+    public function getIntakeStatus(): ?string
     {
         return $this->intakeStatus;
     }
@@ -295,7 +177,7 @@ class EditServiceCommand implements Command
     /**
      * @return string
      */
-    public function getContractSigned()
+    public function getContractSigned(): ?string
     {
         return $this->contractSigned;
     }
@@ -303,7 +185,7 @@ class EditServiceCommand implements Command
     /**
      * @return string
      */
-    public function getSurfconextRepresentativeApproved()
+    public function getSurfconextRepresentativeApproved(): ?string
     {
         return $this->surfconextRepresentativeApproved;
     }
@@ -311,23 +193,17 @@ class EditServiceCommand implements Command
     /**
      * @return bool
      */
-    public function isPrivacyQuestionsAnswered()
+    public function isPrivacyQuestionsAnswered(): ?string
     {
         return $this->privacyQuestionsAnswered;
     }
 
-    /**
-     * @return bool
-     */
-    public function isProductionEntitiesEnabled()
+    public function isProductionEntitiesEnabled(): bool
     {
         return $this->productionEntitiesEnabled;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPrivacyQuestionsEnabled()
+    public function isPrivacyQuestionsEnabled(): bool
     {
         return $this->privacyQuestionsEnabled;
     }
@@ -335,7 +211,7 @@ class EditServiceCommand implements Command
     /**
      * @return string
      */
-    public function getInstitutionId()
+    public function getInstitutionId(): ?string
     {
         return $this->institutionId;
     }
@@ -348,9 +224,6 @@ class EditServiceCommand implements Command
         return $this->organizationNameNl;
     }
 
-    /**
-     * @param string $organizationNameNl
-     */
     public function setOrganizationNameNl(string $organizationNameNl): void
     {
         $this->organizationNameNl = $organizationNameNl;
@@ -364,9 +237,6 @@ class EditServiceCommand implements Command
         return $this->organizationNameEn;
     }
 
-    /**
-     * @param string $organizationNameEn
-     */
     public function setOrganizationNameEn(string $organizationNameEn): void
     {
         $this->organizationNameEn = $organizationNameEn;

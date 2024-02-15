@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -25,24 +27,24 @@ class Connection
     public function __construct(
         private readonly string $host,
         private readonly string $username,
-        private readonly string $password
+        private readonly string $password,
     ) {
         Assert::stringNotEmpty($host, 'Please set the manage host in .env');
         Assert::stringNotEmpty($username, 'Please set the manage username in .env');
         Assert::stringNotEmpty($password, 'Please set the manage password in .env');
     }
 
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }

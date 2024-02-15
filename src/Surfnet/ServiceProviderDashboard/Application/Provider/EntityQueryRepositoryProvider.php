@@ -26,20 +26,17 @@ class EntityQueryRepositoryProvider
 {
     public function __construct(
         private readonly QueryManageRepository $manageTestQueryClient,
-        private readonly QueryManageRepository $manageProductionQueryClient
+        private readonly QueryManageRepository $manageProductionQueryClient,
     ) {
     }
 
     public function fromEnvironment(string $environment): QueryManageRepository
     {
-        switch ($environment) {
-            case Constants::ENVIRONMENT_TEST:
-                return $this->manageTestQueryClient;
-            case Constants::ENVIRONMENT_PRODUCTION:
-                return $this->manageProductionQueryClient;
-            default:
-                throw new InvalidArgumentException(sprintf('Unsupported environment "%s" requested.', $environment));
-        }
+        return match ($environment) {
+            Constants::ENVIRONMENT_TEST => $this->manageTestQueryClient,
+            Constants::ENVIRONMENT_PRODUCTION => $this->manageProductionQueryClient,
+            default => throw new InvalidArgumentException(sprintf('Unsupported environment "%s" requested.', $environment)),
+        };
     }
 
     public function getManageTestQueryClient(): QueryManageRepository

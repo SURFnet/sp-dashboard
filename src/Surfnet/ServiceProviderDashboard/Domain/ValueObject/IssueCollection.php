@@ -19,13 +19,14 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Countable;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 
 class IssueCollection implements Countable
 {
     /**
      * @var Issue[]
      */
-    private $issues = [];
+    private array $issues = [];
 
     /**
      * @param Issue[] $issues
@@ -37,10 +38,7 @@ class IssueCollection implements Countable
         }
     }
 
-    /**
-     * @return Issue|null
-     */
-    public function getIssueById($id)
+    public function getIssueById($id): ?Issue
     {
         if (array_key_exists($id, $this->issues)) {
             return $this->issues[$id];
@@ -51,12 +49,12 @@ class IssueCollection implements Countable
 
     /**
      * Count elements of an object
-     * @link https://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
+     *
+     * @link   https://php.net/manual/en/countable.count.php
      * </p>
      * <p>
      * The return value is cast to an integer.
-     * @since 5.1.0
+     * @since  5.1.0
      */
     public function count(): int
     {

@@ -10,14 +10,13 @@ jobs:
     timeout-minutes: 30
     env:
       DOCKER_COMPOSE: docker-compose -f docker-compose.yml -f docker-compose-ci.yml
-      DOCKER_COMPOSE_PHP_FPM: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php-fpm
+      DOCKER_COMPOSE_PHP: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T php
       DOCKER_COMPOSE_OPENCONEXT: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T openconext
       DOCKER_COMPOSE_CYPRESS: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T cypress
 
     steps:
-
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Start the docker images for testing
         run: ${DOCKER_COMPOSE} up -d
@@ -27,35 +26,35 @@ jobs:
 
       - name: Run composer
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} /usr/local/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
+          ${DOCKER_COMPOSE_PHP} /usr/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
         env:
           SYMFONY_ENV: dev
 
       - name: Run yarn
         run: |
-          docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn install
+          ${DOCKER_COMPOSE_PHP} yarn install
         env:
           SYMFONY_ENV: dev
 
       - name: Create front end dependencies (yarn encore production)
         run: |
-          docker run -v ${PWD}:/var/www/html -w /var/www/html node:14 yarn run encore production
+          ${DOCKER_COMPOSE_PHP} yarn run encore production
         env:
           SYMFONY_ENV: dev
 
       - name: Get the database up and running
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} bin/console doctrine:migrations:migrate
+          ${DOCKER_COMPOSE_PHP} bin/console doctrine:migrations:migrate
         env:
           SYMFONY_ENV: dev
 
       - name: Remove leftover files
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} /bin/rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/ 
+          ${DOCKER_COMPOSE_PHP} /bin/rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/
 
       - name: Make the log and cache dir writable
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} chmod 777 /var/www/html/var/ -R
+          ${DOCKER_COMPOSE_PHP} chmod 777 /var/www/html/var/ -R
 
       - name: Wait until the spdashboard is accessable
         run: |
@@ -63,19 +62,18 @@ jobs:
 
       - name: Run Copy Paste Detector
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer jscpd'
+          ${DOCKER_COMPOSE_PHP} sh -c 'composer jscpd'
         continue-on-error: true
 
       - name: Run CI tests
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer check'
+          ${DOCKER_COMPOSE_PHP} sh -c 'composer check'
 
       - name: Run JS tests
         run: |
-          ${DOCKER_COMPOSE_PHP_FPM} sh -c 'composer jest'
+          ${DOCKER_COMPOSE_PHP} sh -c 'composer jest'
 
       - name: Run Cypress tests
         run: |
           ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome -C ./ci/qa/cypress.config.ts
         continue-on-error: true
-

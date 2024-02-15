@@ -118,7 +118,7 @@ services:
       - '@surfnet.manage.client.publish_client.prod_environment'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
-      - '@session.flash_bag'
+      - '@request_stack'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\MailService'
       - '@logger'
       - '%env(jira_issue_type_publication_request)%'
@@ -130,7 +130,7 @@ services:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PushMetadataCommandHandler
     arguments:
       - '@surfnet.manage.publish_service'
-      - '@session.flash_bag'
+      - '@request_stack'
       - '@logger'
     public: true
     tags:
@@ -244,7 +244,7 @@ services:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService
     arguments:
       $serviceService: '@Surfnet\ServiceProviderDashboard\Application\Service\ServiceService'
-      $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+      $requestStack: '@request_stack'
       $tokenStorage: '@security.token_storage'
       $manageTestConfig: "@surfnet.manage.configuration.test"
       $manageProdConfig: "@surfnet.manage.configuration.production"
@@ -393,9 +393,6 @@ services:
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
 
-  Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory:
-    class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Manage\ConfigFactory
-
   Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory:
     class: Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfigFactory
 
@@ -472,7 +469,6 @@ services:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\DeleteManageEntityClient
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Infrastructure\Manage\ManageClient'
-      - '@logger'
 
   surfnet.manage.client.identity_provider_client.test_environment:
     class: Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\IdentityProviderClient
@@ -521,11 +517,6 @@ services:
       - '@surfnet.teams.http.guzzle'
       - '@logger'
       - ''
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Client\EntityConnectionRequestClient:
-    arguments:
-      - '@Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFactory'
-      - '@logger'
 
   surfnet.manage.http.guzzle.prod_environment:
     class: GuzzleHttp\Client

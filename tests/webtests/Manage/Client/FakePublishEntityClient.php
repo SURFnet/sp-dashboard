@@ -45,7 +45,7 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
         $this->pushOk = false;
     }
 
-    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = '')
+    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = ''): mixed
     {
         $entityId = $entity->getMetaData()->getEntityId();
         $publishResponses = $this->read();
@@ -55,7 +55,7 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
         return json_decode($publishResponses[$entityId], true);
     }
 
-    public function pushMetadata()
+    public function pushMetadata(): mixed
     {
         $response = $this->pushOk ? '{"status":"OK"}' : '{"status":"400"}';
         return json_decode($response, true);
@@ -66,7 +66,7 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
         return json_decode(file_get_contents($this->path), true);
     }
 
-    private function write(array $data)
+    private function write(array $data): void
     {
         file_put_contents($this->path, json_encode($data));
     }

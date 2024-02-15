@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -27,14 +29,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConnectionRequestType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
             'institution',
             TextType::class,
             [
                 'required' => true,
-                'attr' => ['class' => 'add-form-input']
+                'attr' => ['class' => 'add-form-input'],
             ]
         );
 
@@ -43,7 +45,7 @@ class ConnectionRequestType extends AbstractType
             TextType::class,
             [
                 'required' => false,
-                'attr' => ['class' => 'add-form-input']
+                'attr' => ['class' => 'add-form-input'],
             ]
         );
 
@@ -52,20 +54,17 @@ class ConnectionRequestType extends AbstractType
             EmailType::class,
             [
                 'required' => true,
-                'attr' => ['class' => 'add-form-input']
+                'attr' => ['class' => 'add-form-input'],
             ]
         );
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => ConnectionRequest::class,
-            'error_bubbling' => false,
-        ));
+        $resolver->setDefaults(['data_class' => ConnectionRequest::class, 'error_bubbling' => false]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'connection_request';
     }

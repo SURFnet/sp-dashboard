@@ -22,19 +22,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 
 interface ServiceRepository
 {
-    /**
-     * @param Service $service
-     */
     public function save(Service $service);
 
     /**
      * Is the proposed service entity unique? The id of the service is not taken into account in this test.
-     *
-     * @param Service $service
-     *
-     * @return bool
      */
-    public function isUnique(Service $service);
+    public function isUnique(Service $service): bool;
 
     /**
      * @return Service[]
@@ -68,10 +61,8 @@ interface ServiceRepository
 
     /**
      * Delete a service
-     * @param Service $service
-     * @return mixed
      */
-    public function delete(Service $service);
+    public function delete(Service $service): void;
 
     public function findByTeamName(?string $serviceTeamName): ?Service;
 }

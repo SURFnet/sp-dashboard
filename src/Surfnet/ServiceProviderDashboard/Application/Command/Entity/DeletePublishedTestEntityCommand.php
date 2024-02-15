@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2018 SURFnet B.V.
  *
@@ -27,7 +29,7 @@ class DeletePublishedTestEntityCommand implements Command
         #[Assert\NotBlank]
         #[Assert\Uuid]
         private readonly string $manageId,
-        private readonly string $protocol
+        private readonly string $protocol,
     ) {
     }
 

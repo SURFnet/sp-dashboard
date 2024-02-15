@@ -6,11 +6,7 @@ services:
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Controller\SamlController:
         arguments:
-            - '@logger'
             - '@surfnet_saml.metadata_factory'
-            - '@surfnet_saml.http.post_binding'
-            - '@surfnet_saml.remote.idp'
-            - '@surfnet_saml.hosted.service_provider'
         tags:
             - controller.service_arguments
         calls:

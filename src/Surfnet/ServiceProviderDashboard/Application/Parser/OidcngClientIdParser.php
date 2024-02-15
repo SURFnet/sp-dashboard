@@ -28,7 +28,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Parser;
 class OidcngClientIdParser
 {
     /**
-     * @param string $entityId
+     * @param  string $entityId
      * @return string
      */
     public static function parse($entityId)
@@ -44,7 +44,7 @@ class OidcngClientIdParser
         $clientId = str_replace($parts['scheme'].'://', '', $entityId);
 
         // If a trailing slash is present, stripit!
-        if (substr($clientId, -1) === '/') {
+        if (str_ends_with($clientId, '/')) {
             $clientId = substr($clientId, 0, -1);
         }
 

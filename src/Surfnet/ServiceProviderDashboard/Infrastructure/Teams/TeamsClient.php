@@ -26,9 +26,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClientInterfa
 final class TeamsClient extends HttpClient implements HttpClientInterface
 {
     /**
-     * @param ClientInterface $httpClient
-     * @param LoggerInterface $logger
-     * @param string $mode The mode is used mainly for logging purposes, stating which environment was targeted.
+     * @param string          $mode       The mode is used mainly for logging purposes, stating which environment was targeted.
      */
     public function __construct(ClientInterface $httpClient, LoggerInterface $logger, string $mode = self::MODE_TEST)
     {

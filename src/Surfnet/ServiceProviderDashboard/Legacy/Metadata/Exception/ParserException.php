@@ -28,12 +28,12 @@ class ParserException extends InvalidArgumentException
     /**
      * @var \LibXMLError[]
      */
-    private $parserErrors = [];
+    private array $parserErrors = [];
 
     /**
      * @param \LibXMLError[] $errors
      */
-    public function setParserErrors(array $errors)
+    public function setParserErrors(array $errors): void
     {
         $this->parserErrors = $errors;
     }
@@ -41,7 +41,7 @@ class ParserException extends InvalidArgumentException
     /**
      * @return \LibXMLError[]
      */
-    public function getParserErrors()
+    public function getParserErrors(): array
     {
         return $this->parserErrors;
     }

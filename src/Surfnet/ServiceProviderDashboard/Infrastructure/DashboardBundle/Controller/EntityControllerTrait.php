@@ -22,7 +22,6 @@ use Exception;
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\EntityChangeRequestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\LoadMetadataCommand;
-use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionAfterClientResetCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityProductionCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishEntityTestCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PublishProductionCommandInterface;
@@ -42,10 +41,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\MetadataFetchException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * The EntityControllerTrait contains the shared logic of the EntityCreateController and the EntityEditController.
@@ -59,23 +57,17 @@ trait EntityControllerTrait
         private readonly AuthorizationService $authorizationService,
         private readonly EntityTypeFactory $entityTypeFactory,
         private readonly LoadEntityService $loadEntityService,
-        private readonly EntityMergeService $entityMergeService
+        private readonly EntityMergeService $entityMergeService,
     ) {
     }
 
-    /**
-     * @param Request $request
-     * @param SaveSamlEntityCommand $command
-     *
-     * @return Form
-     */
-    private function handleImport(Request $request, SaveSamlEntityCommand $command): Form
+    private function handleImport(Request $request, SaveSamlEntityCommand $command): FormInterface
     {
         // Handle an import action based on the posted xml or import url.
         $metadataCommand = new LoadMetadataCommand($command, $request->get('dashboard_bundle_entity_type'));
         try {
             $this->commandBus->handle($metadataCommand);
-        } catch (MetadataFetchException $e) {
+        } catch (MetadataFetchException) {
             $this->addFlash('error', 'entity.edit.metadata.fetch.exception');
         } catch (ParserException $e) {
             $this->addFlash('error', 'entity.edit.metadata.parse.exception');
@@ -84,7 +76,7 @@ trait EntityControllerTrait
             foreach ($e->getParserErrors() as $error) {
                 $this->addFlash('preformatted', $error->message);
             }
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             $this->addFlash('error', 'entity.edit.metadata.invalid.exception');
         }
 
@@ -97,23 +89,19 @@ trait EntityControllerTrait
         return $form;
     }
 
-    /**
-     * @return RedirectResponse|Form
-     * @throws InvalidArgumentException
-     */
     private function publishEntity(
         ?ManageEntity $entity,
         SaveEntityCommandInterface $saveCommand,
         bool $isPublishedProductionEntity,
-        FlashBagInterface $flashBag
-    ) {
+        Request $request,
+    ): RedirectResponse|FormInterface {
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
             $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
             $this->commandBus->handle($publishEntityCommand);
-        } catch (Exception $e) {
-            $flashBag->add('error', 'entity.edit.error.publish');
+        } catch (Exception) {
+            $this->addFlash('error', 'entity.edit.error.publish');
             return $this->redirectToRoute('service_overview');
         }
 
@@ -123,7 +111,7 @@ trait EntityControllerTrait
 
         // A clone is saved in session temporarily, to be able to report which entity was removed on the reporting
         // page we will be redirecting to in a moment.
-        $this->get('session')->set('published.entity.clone', clone $entity);
+        $request->getSession()->set('published.entity.clone', clone $entity);
 
         if ($publishEntityCommand instanceof PublishEntityTestCommand) {
             return $this->redirectToRoute('entity_published_test');
@@ -134,13 +122,18 @@ trait EntityControllerTrait
             $parameters = $this->findParametersForRedirect($publishEntityCommand);
             return $this->redirectToRoute($destination, $parameters);
         } catch (InvalidArgumentException $e) {
-            $flashBag->add('error', $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('service_overview');
         }
     }
 
-    private function createPublishEntityCommandFromEntity(?ManageEntity $entity, bool $isEntityChangeRequest)
-    {
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function createPublishEntityCommandFromEntity(
+        ?ManageEntity $entity,
+        bool $isEntityChangeRequest,
+    ): PublishEntityTestCommand|EntityChangeRequestCommand|PublishEntityProductionCommand {
         switch (true) {
             case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
                 $publishEntityCommand = new PublishEntityTestCommand($entity);
@@ -163,7 +156,7 @@ trait EntityControllerTrait
     }
 
     private function allowToRedirectToCreateConnectionRequest(
-        PublishProductionCommandInterface $publishEntityCommand
+        PublishProductionCommandInterface $publishEntityCommand,
     ): bool {
         if (!($publishEntityCommand instanceof PublishEntityProductionCommand)) {
             return false;
@@ -183,9 +176,8 @@ trait EntityControllerTrait
         return $entityActions->allowCreateConnectionRequestAction();
     }
 
-    private function findParametersForRedirect(
-        PublishProductionCommandInterface $publishEntityCommand
-    ): array {
+    private function findParametersForRedirect(PublishProductionCommandInterface $publishEntityCommand): array
+    {
         if ($this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
             $manageEntity = $publishEntityCommand->getManageEntity();
             return [
@@ -197,15 +189,15 @@ trait EntityControllerTrait
         return [];
     }
 
-    private function findDestinationForRedirect(
-        PublishProductionCommandInterface $publishEntityCommand
-    ): string {
+    private function findDestinationForRedirect(PublishProductionCommandInterface $publishEntityCommand): string
+    {
         switch (true) {
             case $publishEntityCommand instanceof EntityChangeRequestCommand:
                 return 'entity_change_request';
             case $publishEntityCommand instanceof PublishEntityProductionCommand:
-                if ($publishEntityCommand->getManageEntity()->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED &&
-                    $this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)) {
+                if ($publishEntityCommand->getManageEntity()->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED
+                && $this->allowToRedirectToCreateConnectionRequest($publishEntityCommand)
+                ) {
                     return 'entity_published_create_connection_request';
                 }
                 return 'entity_published_production';
@@ -218,12 +210,8 @@ trait EntityControllerTrait
 
     /**
      * Check if the form was submitted using the given button name.
-     *
-     * @param Form $form
-     * @param string $expectedButtonName
-     * @return bool
      */
-    private function assertUsedSubmitButton(Form $form, $expectedButtonName): bool
+    private function assertUsedSubmitButton(FormInterface $form, string $expectedButtonName): bool
     {
         $button = $form->getClickedButton();
 
@@ -234,31 +222,20 @@ trait EntityControllerTrait
         return $button->getName() === $expectedButtonName;
     }
 
-    /**
-     * @param Form $form
-     * @return bool
-     */
-    private function isImportAction(Form $form)
+    private function isImportAction(FormInterface $form): bool
     {
         return $this->assertUsedSubmitButton($form, 'importButton');
     }
 
     /**
      * The default action occurs when the user presses ENTER in a form.
-     *
-     * @param Form $form
-     * @return bool
      */
-    private function isDefaultAction(Form $form)
+    private function isDefaultAction(FormInterface$form): bool
     {
         return $this->assertUsedSubmitButton($form, 'default');
     }
 
-    /**
-     * @param Form $form
-     * @return bool
-     */
-    private function isPublishAction(Form $form)
+    private function isPublishAction(FormInterface$form): bool
     {
         if ($this->assertUsedSubmitButton($form, 'publishButton')) {
             return true;
@@ -267,11 +244,7 @@ trait EntityControllerTrait
         return !$form->has('save') && $this->isDefaultAction($form);
     }
 
-    /**
-     * @param Form $form
-     * @return bool
-     */
-    private function isCancelAction(Form $form)
+    private function isCancelAction(FormInterface$form): bool
     {
         return $this->assertUsedSubmitButton($form, 'cancel');
     }

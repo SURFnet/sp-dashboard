@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -26,108 +28,40 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class Entity
 {
-    /**
-     * @var string
-     */
-    private $id;
+    private readonly EntityActions $actions;
 
     /**
-     * @var string
-     */
-    private $entityId;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $contact;
-
-    /**
-     * @var string
-     */
-    private $state;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $protocol;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var EntityActions
-     */
-    private $actions;
-
-    /**
-     * @param string $id
-     * @param string $entityId
-     * @param int $serviceId
-     * @param string $name
-     * @param string $contact
-     * @param string $state
-     * @param string $environment
-     * @param string $protocol
-     * @param bool $isReadOnly
-     * @param bool $hasChangeRequests
-     * @param RouterInterface $router
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        $id,
-        $entityId,
-        $serviceId,
-        $name,
-        $contact,
-        $state,
-        $environment,
-        $protocol,
-        $isReadOnly,
-        $hasChangeRequests,
-        RouterInterface $router
+        private readonly string          $id,
+        private readonly string          $entityId,
+        int                              $serviceId,
+        private readonly string          $name,
+        private readonly string          $contact,
+        private readonly string          $state,
+        private readonly string          $environment,
+        private readonly string          $protocol,
+        bool                             $isReadOnly,
+        bool                             $hasChangeRequests,
+        private readonly RouterInterface $router,
     ) {
-        $this->id = $id;
-        $this->entityId = $entityId;
-        $this->name = $name;
-        $this->contact = $contact;
-        $this->state = $state;
-        $this->environment = $environment;
-        $this->protocol = $protocol;
-        $this->router = $router;
         $this->actions = new EntityActions(
-            $id,
+            $this->id,
             $serviceId,
-            $state,
-            $environment,
-            $protocol,
+            $this->state,
+            $this->environment,
+            $this->protocol,
             $isReadOnly,
             $hasChangeRequests
         );
     }
 
-    /**
-     * @param ManageEntity $result
-     * @param RouterInterface $router
-     * @param int $serviceId
-     * @return Entity
-     */
     public static function fromManageTestResult(
         ManageEntity $result,
         RouterInterface $router,
-        int $serviceId
-    ) {
+        int $serviceId,
+    ): self {
         $formattedContact = self::formatManageContact($result);
         $protocol = $result->getProtocol()->getProtocol();
         return new self(
@@ -145,19 +79,12 @@ class Entity
         );
     }
 
-    /**
-     * @param ManageEntity $result
-     * @param RouterInterface $router
-     * @param int $serviceId
-     * @param bool $hasChangeRequests
-     * @return Entity
-     */
     public static function fromManageProductionResult(
         ManageEntity $result,
         RouterInterface $router,
         int $serviceId,
-        bool $hasChangeRequests
-    ) {
+        bool $hasChangeRequests,
+    ): self {
         $formattedContact = self::formatManageContact($result);
 
         // As long as the coin:exclude_from_push metadata is present, allow modifications to the entity by
@@ -185,13 +112,10 @@ class Entity
         );
     }
 
-    /**
-     * @return string
-     */
-    private static function formatManageContact(ManageEntity $metadata)
+    private static function formatManageContact(ManageEntity $metadata): string
     {
         $administrative = $metadata->getMetaData()->getContacts()->findAdministrativeContact();
-        if ($administrative) {
+        if ($administrative !== null) {
             return sprintf(
                 '%s %s (%s)',
                 $administrative->getGivenName(),
@@ -203,102 +127,69 @@ class Entity
         return '';
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getContact()
+    public function getContact(): string
     {
         return $this->contact;
     }
 
-    /**
-     * @return string
-     */
-    public function getState()
+    public function getState(): string
     {
         return $this->state;
     }
 
-    /**
-     * @return string
-     */
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         return $this->environment;
     }
 
-    /**
-     * @return string
-     */
-    public function getProtocol()
+    public function getProtocol(): string
     {
         return $this->protocol;
     }
 
-    public function isPublishedToProduction()
+    public function isPublishedToProduction(): bool
     {
         return $this->state == 'published' && $this->environment == 'production';
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublished()
+    public function isPublished(): bool
     {
         return $this->getState() === 'published';
     }
 
-    /**
-     * @return bool
-     */
-    public function isRequested()
+    public function isRequested(): bool
     {
         return $this->getState() === 'requested';
     }
 
-    /**
-     * @return string
-     */
-    public function getLink()
+    public function getLink(): string
     {
         return $this->router->generate(
             'entity_detail',
             [
                 'id' => $this->getId(),
                 'serviceId' => $this->getActions()->getServiceId(),
-                'manageTarget' => $this->getEnvironment()
+                'manageTarget' => $this->getEnvironment(),
             ]
         );
     }
 
-    /**
-     * @return EntityActions
-     */
-    public function getActions()
+    public function getActions(): EntityActions
     {
         return $this->actions;
     }

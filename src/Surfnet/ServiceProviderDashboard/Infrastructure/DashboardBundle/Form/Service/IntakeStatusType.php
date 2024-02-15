@@ -25,9 +25,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IntakeStatusType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'label' => 'service.form.label.intake_status',
             'expanded' => true,
             'multiple' => false,
@@ -37,7 +38,8 @@ class IntakeStatusType extends AbstractType
                 'service.form.label.intake_status_not_applicable' => Service::INTAKE_STATUS_NOT_APPLICABLE,
             ],
             'attr' => ['class' => 'service-status-container'],
-        ]);
+            ]
+        );
     }
 
     public function getParent()

@@ -19,16 +19,12 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Attribute;
 
-/**
- * @Annotation
- */
+#[Attribute]
 class ValidClientId extends Constraint
 {
-    /**
-     * @return string
-     */
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return 'valid_client_id';
     }

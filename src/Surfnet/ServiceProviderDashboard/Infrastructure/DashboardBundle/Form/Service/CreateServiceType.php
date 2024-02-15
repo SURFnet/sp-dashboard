@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -27,9 +29,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class CreateServiceType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -38,7 +43,7 @@ class CreateServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'General information'
+                        'label' => 'General information',
                     ]
                 )
                     ->add('name')
@@ -64,7 +69,7 @@ class CreateServiceType extends AbstractType
                         [
                             'required' => false,
                             'label' => 'service.form.label.institution_id',
-                            'attr' => ['class' => 'institution-id-container']
+                            'attr' => ['class' => 'institution-id-container'],
                         ]
                     )
                     ->add(
@@ -97,7 +102,7 @@ class CreateServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'Status indicators'
+                        'label' => 'Status indicators',
                     ]
                 )
                     ->add('serviceType', ServiceTypeType::class)
@@ -111,32 +116,38 @@ class CreateServiceType extends AbstractType
                     FormType::class,
                     [
                         'inherit_data' => true,
-                        'label' => 'Teams'
+                        'label' => 'Teams',
                     ]
                 )
-                    ->add('teamManagerEmail', TextType::class, [
+                    ->add(
+                        'teamManagerEmail',
+                        TextType::class,
+                        [
                         'label' => 'Email address manager',
-                        'required' => true
-                    ])
-                    ->add('teamName', null, [
+                        'required' => true,
+                        ]
+                    )
+                    ->add(
+                        'teamName',
+                        null,
+                        [
                         'label' => 'Team identifier',
                         'attr' => [
                             'class' => 'teamName',
                             'readonly' => true,
                         ],
-                    ])
+                        ]
+                    )
             )
             ->add('save', SubmitType::class, ['attr' => ['class' => 'button']]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => CreateServiceCommand::class,
-        ));
+        $resolver->setDefaults(['data_class' => CreateServiceCommand::class]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_service_type';
     }

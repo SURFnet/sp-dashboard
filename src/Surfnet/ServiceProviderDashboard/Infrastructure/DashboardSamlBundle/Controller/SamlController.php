@@ -27,34 +27,25 @@ use Surfnet\SamlBundle\Http\XMLResponse;
 use Surfnet\SamlBundle\Metadata\MetadataFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class SamlController extends AbstractController
 {
     public function __construct(
-        private LoggerInterface $logger,
         private readonly MetadataFactory $metadataFactory,
-        private PostBinding $postBinding,
-        private IdentityProvider $identityProvider,
-        private ServiceProvider $serviceProvider
     ) {
     }
 
-    /**
-     * @Route("/saml/acs", name="dashboard_saml_consume_assertion", methods={"POST"})
-     * @param Request $request
-     */
-    public function consumeAssertionAction(Request $request)
+    #[Route(path: '/saml/acs', name: 'dashboard_saml_consume_assertion', methods: ['POST'])]
+    public function consumeAssertion() : never
     {
         throw new LogicException(
             'Unreachable statement, should be handled by the SAML firewall'
         );
     }
 
-    /**
-     * @Route("/saml/metadata", name="dashboard_saml_metadata", methods={"GET"})
-     */
-    public function metadataAction()
+    #[Route(path: '/saml/metadata', name: 'dashboard_saml_metadata', methods: ['GET'])]
+    public function metadata(): XMLResponse
     {
         return new XMLResponse(
             $this->metadataFactory->generate()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2022 SURFnet B.V.
  *
@@ -28,28 +30,22 @@ use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class EntityChangeRequestCommandHandler implements CommandHandler
 {
-    /**
-     * @var string
-     */
-    private $summaryTranslationKey;
+    private readonly string $summaryTranslationKey;
 
-    /**
-     * @var string
-     */
-    private $descriptionTranslationKey;
+    private readonly string $descriptionTranslationKey;
 
     public function __construct(
         private readonly EntityChangeRequestRepository $repository,
         private readonly EntityServiceInterface $entityService,
         private readonly TicketService $ticketService,
-        private readonly FlashBagInterface $flashBag,
+        private readonly RequestStack $requestStack,
         private readonly MailService $mailService,
         private readonly LoggerInterface $logger,
-        private readonly string $issueType
+        private readonly string $issueType,
     ) {
         if (empty($issueType)) {
             throw new Exception('Please set "jira_issue_type_entity_change_request" in .env');
@@ -60,9 +56,10 @@ class EntityChangeRequestCommandHandler implements CommandHandler
 
     /**
      * Creates an entity change request in Manage
+     *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function handle(PublishProductionCommandInterface $command)
+    public function handle(PublishProductionCommandInterface $command): void
     {
         $entity = $command->getManageEntity();
         if (!$entity->isManageEntity()) {
@@ -95,7 +92,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     ),
                     [$response]
                 );
-                $this->flashBag->add('error', 'entity.edit.error.publish');
+                $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             }
             return;
         } catch (PublishMetadataException $e) {
@@ -106,7 +103,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
 
@@ -114,7 +111,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
             $this->mailService->sendErrorReport($entity, $e);
 
             // Customer is presented an error message with the invitation to try again at a later stage
-            $this->flashBag->add('error', 'entity.edit.error.publish');
+            $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             return;
         }
     }

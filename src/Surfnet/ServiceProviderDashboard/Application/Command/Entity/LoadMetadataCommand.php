@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -24,44 +26,36 @@ class LoadMetadataCommand implements Command
 {
     public function __construct(
         private readonly SaveSamlEntityCommand $saveEntityCommand,
-        private readonly array $requestData
+        private readonly array $requestData,
     ) {
     }
 
-    /**
-     * @return SaveSamlEntityCommand
-     */
-    public function getSaveEntityCommand()
+    public function getSaveEntityCommand(): SaveSamlEntityCommand
     {
         return $this->saveEntityCommand;
     }
 
-    public function getDashboardId()
-    {
-        return $this->saveEntityCommand->getId();
-    }
-
-    public function isUrlSet()
+    public function isUrlSet(): bool
     {
         return !empty($this->requestData['metadata']['importUrl']);
     }
 
-    public function isXmlSet()
+    public function isXmlSet(): bool
     {
         return !empty($this->requestData['metadata']['pastedMetadata']);
     }
 
-    public function getImportUrl()
+    public function getImportUrl(): mixed
     {
         return $this->requestData['metadata']['importUrl'];
     }
 
-    public function getPastedMetadata()
+    public function getPastedMetadata(): mixed
     {
         return $this->requestData['metadata']['pastedMetadata'];
     }
 
-    public function setNameIdFormat($nameIdFormat)
+    public function setNameIdFormat(?string $nameIdFormat): void
     {
         $this->saveEntityCommand->setNameIdFormat($nameIdFormat);
     }

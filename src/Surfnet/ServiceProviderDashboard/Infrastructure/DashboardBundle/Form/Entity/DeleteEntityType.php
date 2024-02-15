@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2017 SURFnet B.V.
  *
@@ -24,18 +26,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DeleteEntityType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('delete', SubmitType::class, ['label' => 'Delete', 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['label' => 'Cancel', 'attr' => ['class' => 'button']]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'dashboard_bundle_delete_entity_type';
     }

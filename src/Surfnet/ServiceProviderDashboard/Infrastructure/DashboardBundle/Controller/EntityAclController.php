@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -30,7 +32,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\Auth
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -38,24 +40,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class EntityAclController extends AbstractController
 {
     public function __construct(
-        private CommandBus $commandBus,
-        private EntityService $entityService,
-        private AuthorizationService $authorizationService,
-        private EntityAclService $entityAclService,
-        private EntityDetailFactory $entityDetailFactory
+        private readonly CommandBus $commandBus,
+        private readonly EntityService $entityService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly EntityAclService $entityAclService,
+        private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
 
     /**
-     * @Route("/entity/acl/{serviceId}/{id}", name="entity_acl", methods={"GET", "POST"})
      *
-     * @param Request $request
      * @param string $serviceId
-     * @param string $id
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function aclAction(Request $request, $serviceId, $id)
+    #[Route(path: '/entity/acl/{serviceId}/{id}', name: 'entity_acl', methods: ['GET', 'POST'])]
+    public function acl(Request $request, $serviceId, string $id): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
@@ -77,10 +76,13 @@ class EntityAclController extends AbstractController
 
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
 
-        return $this->render('@Dashboard/EntityAcl/acl.html.twig', [
+        return $this->render(
+            '@Dashboard/EntityAcl/acl.html.twig',
+            [
             'form' => $form->createView(),
             'entity' => $viewObject,
             'isAdmin' => $this->authorizationService->isAdministrator(),
-        ]);
+            ]
+        );
     }
 }

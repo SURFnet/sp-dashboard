@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Copyright 2019 SURFnet B.V.
  *
@@ -41,14 +43,14 @@ class DevelopmentIssueRepository implements TicketServiceInterface
     {
     }
 
-    public function shouldFailCreateIssue()
+    public function shouldFailCreateIssue(): void
     {
         $this->loadData();
         $this->failIssueCreation = true;
         $this->storeData();
     }
 
-    public function findByManageIds(array $manageIds)
+    public function findByManageIds(array $manageIds): IssueCollection
     {
         $this->loadData();
         $result = [];
@@ -65,12 +67,12 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         PublishProductionCommandInterface $command,
         string $issueType,
         string $summaryTranslationKey,
-        string $descriptionTranslationKey
+        string $descriptionTranslationKey,
     ): Issue {
         return new Issue('KEY-27', 'fake-type', Issue::STATUS_OPEN);
     }
 
-    public function findByManageId($manageId)
+    public function findByManageId($manageId): ?Issue
     {
         $this->loadData();
         if (array_key_exists($manageId, $this->data)) {
@@ -79,7 +81,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         return null;
     }
 
-    public function findByManageIdAndIssueType($manageId, $issueType)
+    public function findByManageIdAndIssueType($manageId, $issueType): ?Issue
     {
         $this->loadData();
         if (array_key_exists($manageId, $this->data)) {
@@ -115,27 +117,27 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         return $issue;
     }
 
-    public function delete($issueKey)
+    public function delete($issueKey): void
     {
         $this->loadData();
         unset($this->data[$issueKey]);
         $this->storeData();
     }
 
-    private function storeData()
+    private function storeData(): void
     {
         file_put_contents(
             $this->filePath,
             json_encode(
                 [
                     'data' => $this->data,
-                    'failIssueCreation' => $this->failIssueCreation
+                    'failIssueCreation' => $this->failIssueCreation,
                 ]
             )
         );
     }
 
-    private function loadData()
+    private function loadData(): void
     {
         if (!is_file($this->filePath)) {
             file_put_contents($this->filePath, '{}');
@@ -157,7 +159,10 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         $this->data = $this->loadIssues($rawData['data']);
     }
 
-    private function loadIssues(array $rawData)
+    /**
+     * @return mixed[]
+     */
+    private function loadIssues(array $rawData): array
     {
         $output = [];
         foreach ($rawData as $issueData) {
