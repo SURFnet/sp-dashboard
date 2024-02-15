@@ -29,6 +29,9 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Factory\JiraServiceFact
 use Webmozart\Assert\Assert;
 use function array_key_exists;
 
+/**
+ * This file is a fake implementation that will be used by a compiler pass in test mode
+ */
 class IssueRepository implements TicketServiceInterface
 {
     public function __construct(
