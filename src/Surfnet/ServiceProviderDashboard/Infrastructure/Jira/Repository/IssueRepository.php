@@ -136,6 +136,7 @@ class IssueRepository implements TicketServiceInterface
         string $summaryTranslationKey,
         string $descriptionTranslationKey,
     ): Issue {
-        // Nothing to do here.
+
+        return new Issue('fake', 'fake', 'fake');
     }
 }

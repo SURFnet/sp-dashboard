@@ -115,6 +115,7 @@
       "@cvalidate",
       "@attrsc",
       "@attrdc",
+      "@phpstan",
       "@test-db",
       "@test"
     ],
@@ -127,6 +128,7 @@
     "prepare-webtest": "./ci/qa/prepare_webtest",
     "jscpd": "./ci/qa/jscpd",
     "phpcs": "./ci/qa/phpcs",
+    "phpstan": "./ci/qa/phpstan",
     "phpcs_tests": "./ci/qa/phpcs_tests",
     "phpmd": "./ci/qa/phpmd",
     "docheader": "./ci/qa/docheader",
