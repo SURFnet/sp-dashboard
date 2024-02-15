@@ -1,3 +1,12 @@
+## 6.0.0
+Make the project Symfony 6 and PHP 8.2 compatible. Many changes were made to achieve this goal.
+- Return types where possible
+- Strict and strong typing where possible
+- PHPstan added to QA
+
+## 5.2.1
+- Changed jira from username / password login to token
+
 ## 5.2.0
  - Collection widgets now allow editing #602
  - Improve client reset behavior #607
