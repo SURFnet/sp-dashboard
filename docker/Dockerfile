@@ -22,7 +22,7 @@ ENV OPENCONEXT_GIT_SHA=${GIT_SHA}
 ENV OPENCONEXT_COMMIT_DATE=${GIT_COMMIT_TIME}
 COPY --from=build /var/www/html/output.tar /var/www/html/
 COPY ./docker/conf/000-default.conf /etc/apache2/sites-enabled/
-COPY ./docker/conf/zz-docker.conf  /usr/local/etc/php/conf.d/
+COPY ./docker/conf/zz-docker.ini  /usr/local/etc/php/conf.d/
 
 RUN tar -xf /var/www/html/output.tar && \
   rm -rf /var/www/html/output.tar && \
