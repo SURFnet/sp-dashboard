@@ -109,7 +109,6 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $this->assertEquals('dpa_in_surf_agreement', $metadata['coin:privacy:dpa_type']); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
     }
 
-
     public function test_it_retuns_empty_array_when_disabled()
     {
         $entity = m::mock(ManageEntity::class)->makePartial();
