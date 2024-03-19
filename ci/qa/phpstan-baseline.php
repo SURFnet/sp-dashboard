@@ -4637,11 +4637,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$certificate of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Entity\\\\SaveSamlEntityCommand\\:\\:setCertificate\\(\\) expects string, string\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$descriptionEn of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Entity\\\\SaveOauthClientCredentialClientCommand\\:\\:setDescriptionEn\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
