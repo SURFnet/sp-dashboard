@@ -153,13 +153,16 @@ class PrivacyQuestions
         $this->privacyStatementUrlEn = $privacyStatementUrlEn;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function privacyStatementUrls(): array
     {
         $out = [];
-        if ($this->privacyStatementUrlEn !== '' && $this->privacyStatementUrlEn !== '0') {
+        if ($this->privacyStatementUrlEn !== '0' && $this->privacyStatementUrlEn !== null) {
             $out['mdui:PrivacyStatementURL:en'] = $this->privacyStatementUrlEn;
         }
-        if ($this->privacyStatementUrlNl !== '' && $this->privacyStatementUrlNl !== '0') {
+        if ($this->privacyStatementUrlNl !== '0' && $this->privacyStatementUrlNl !== null) {
             $out['mdui:PrivacyStatementURL:nl'] = $this->privacyStatementUrlNl;
         }
         return $out;

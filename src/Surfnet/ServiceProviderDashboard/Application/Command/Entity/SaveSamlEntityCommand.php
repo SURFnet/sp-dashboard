@@ -82,7 +82,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     private string $entityId;
 
     #[SpDashboardAssert\ValidSSLCertificate()]
-    private string $certificate;
+    private ?string $certificate = null;
 
     #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
@@ -243,7 +243,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->metadataUrl;
     }
 
-    public function setMetadataUrl(string $metadataUrl): void
+    public function setMetadataUrl(?string $metadataUrl): void
     {
         $this->metadataUrl = $metadataUrl;
     }
@@ -283,7 +283,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->certificate;
     }
 
-    public function setCertificate(string $certificate): void
+    public function setCertificate(?string $certificate): void
     {
         $this->certificate = $certificate;
     }

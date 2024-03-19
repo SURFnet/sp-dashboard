@@ -2632,11 +2632,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/ManageEntity.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\PrivacyQuestions\\:\\:privacyStatementUrls\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/PrivacyQuestions.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\$targetEntity of attribute class Doctrine\\\\ORM\\\\Mapping\\\\OneToOne constructor expects class\\-string\\|null, string given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/PrivacyQuestions.php',
@@ -4642,11 +4637,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$certificate of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Entity\\\\SaveSamlEntityCommand\\:\\:setCertificate\\(\\) expects string, string\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$descriptionEn of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Entity\\\\SaveOauthClientCredentialClientCommand\\:\\:setDescriptionEn\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
@@ -4738,11 +4728,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$manageId of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Entity\\\\SaveOidcngResourceServerEntityCommand\\:\\:setManageId\\(\\) expects string, string\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$metadataUrl of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Entity\\\\SaveSamlEntityCommand\\:\\:setMetadataUrl\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
 ];
