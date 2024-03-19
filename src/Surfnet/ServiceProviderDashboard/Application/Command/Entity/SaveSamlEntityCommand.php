@@ -243,7 +243,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         return $this->metadataUrl;
     }
 
-    public function setMetadataUrl(string $metadataUrl): void
+    public function setMetadataUrl(?string $metadataUrl): void
     {
         $this->metadataUrl = $metadataUrl;
     }

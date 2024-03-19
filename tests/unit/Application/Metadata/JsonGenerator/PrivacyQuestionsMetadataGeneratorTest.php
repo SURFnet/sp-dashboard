@@ -71,6 +71,45 @@ class PrivacyQuestionsMetadataGeneratorTest extends MockeryTestCase
         $this->assertEquals('dpa_in_surf_agreement', $metadata['coin:privacy:dpa_type']); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
     }
 
+    public function test_nullable_privacy_statements_are_ignored()
+    {
+        $entity = m::mock(ManageEntity::class)->makePartial();
+        $service = m::mock(Service::class)->makePartial();
+        $privacyQuestions = new PrivacyQuestions();
+
+        $service->setPrivacyQuestionsEnabled(true);
+
+        $privacyQuestions->setWhatData('What data');
+        $privacyQuestions->setOtherInfo('Other information');
+        $privacyQuestions->setCountry('Country');
+        $privacyQuestions->setAccessData('Access data');
+        $privacyQuestions->setSecurityMeasures('Measures');
+        $privacyQuestions->setPrivacyStatementUrlEn(null);
+        $privacyQuestions->setPrivacyStatementUrlNl(null);
+        $privacyQuestions->setDpaType('dpa_in_surf_agreement'); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
+
+        $service->setPrivacyQuestions($privacyQuestions);
+        $entity->setService($service);
+
+        $factory = new PrivacyQuestionsMetadataGenerator(
+            new AttributesMetadataRepository(__DIR__ . '/../../../../../assets/Resources')
+        );
+
+        $metadata = $factory->build($entity);
+
+        $this->assertCount(6, $metadata);
+
+        $this->assertEquals('What data', $metadata['coin:privacy:what_data']);
+        $this->assertEquals('Access data', $metadata['coin:privacy:access_data']);
+        $this->assertEquals('Country', $metadata['coin:privacy:country']);
+        $this->assertEquals('Measures', $metadata['coin:privacy:security_measures']);
+        $this->assertEquals('Other information', $metadata['coin:privacy:other_info']);
+        $this->assertFalse(isset($metadata['mdui:PrivacyStatementURL:en']));
+        $this->assertFalse(isset($metadata['mdui:PrivacyStatementURL:nl']));
+        $this->assertEquals('dpa_in_surf_agreement', $metadata['coin:privacy:dpa_type']); // DpaType::DPA_TYPE_IN_SURF_AGREEMENT
+    }
+
+
     public function test_it_retuns_empty_array_when_disabled()
     {
         $entity = m::mock(ManageEntity::class)->makePartial();
