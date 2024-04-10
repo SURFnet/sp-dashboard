@@ -454,8 +454,8 @@ privacy.information.privacyStatementUrlNl: Privacy statement URL in Dutch
 privacy.information.privacyStatementUrlEn: Privacy statement URL in English
 privacy.edit.flash.success: Your changes were saved!
 privacy.information.dpaType.dpa_not_applicable: The service is not a processor according to GDPR
-privacy.information.dpaType.dpa_model_surf: Agreements are dealt with through SURF
-privacy.information.dpaType.dpa_in_surf_agreement: We are open to signing the SURF model contract/we have signed the SURF model contract
+privacy.information.dpaType.dpa_model_surf: We are open to signing the SURF model contract/we have signed the SURF model contract 
+privacy.information.dpaType.dpa_in_surf_agreement: Agreements are dealt with through SURF
 privacy.information.dpaType.dpa_supplied_by_service: We have arranged the  company's data processing agreement.
 privacy.information.dpaType.other: None of the above. You can  elaborate on this in question 7.
 service.admin_overview.introduction.html: "Please use the service switcher to manage the entities of one of the services."
