@@ -1,3 +1,11 @@
+## 6.0.2
+- Fix the mixup of DPA_TYPE_MODEL_SURF and DPA_TYPE_IN_SURF_AGREEMENT #614
+- Security upgrades
+
+## 6.0.1
+- Hotfix for nullable types #625
+- Security upgrades
+
 ## 6.0.0
 Make the project Symfony 6 and PHP 8.2 compatible. Many changes were made to achieve this goal.
 - Return types where possible
