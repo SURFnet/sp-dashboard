@@ -68,7 +68,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
         $command->setPrivacyQuestionsEnabled(false);
-        $command->setProductionEntitiesEnabled(false);
 
         $command->setPrivacyQuestionsAnswered('yes');
         $command->setServiceType('institution');
@@ -86,7 +85,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
                 $this->assertEquals('Foobar', $arg->getName());
                 $this->assertEquals('team-foobar', $arg->getTeamName());
                 $this->assertEquals('30dd879c-ee2f-11db-8314-0800200c9a66', $arg->getGuid());
-                $this->assertEquals(false, $arg->isPrivacyQuestionsEnabled());
                 $this->assertEquals('no', $arg->getContractSigned());
                 $this->assertEquals('no', $arg->getSurfconextRepresentativeApproved());
                 $this->assertEquals('not-applicable', $arg->getIntakeStatus());
