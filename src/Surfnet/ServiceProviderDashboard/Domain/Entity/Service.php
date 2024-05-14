@@ -21,12 +21,9 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\PrivacyQuestions;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 
 /**
- * @package Surfnet\ServiceProviderDashboard\Entity
- *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
@@ -83,9 +80,6 @@ class Service
      */
     #[ORM\Column(length: 255)]
     private $teamName;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $productionEntitiesEnabled = false;
 
     #[ORM\Column(type: 'boolean')]
     private bool $privacyQuestionsEnabled = true;
@@ -190,11 +184,6 @@ class Service
         $this->name = $name;
     }
 
-    public function setProductionEntitiesEnabled(bool $enabled): void
-    {
-        $this->productionEntitiesEnabled = $enabled;
-    }
-
     public function setPrivacyQuestionsEnabled(bool $privacyQuestionsEnabled): void
     {
         $this->privacyQuestionsEnabled = $privacyQuestionsEnabled;
@@ -219,11 +208,6 @@ class Service
     public function setPrivacyQuestions(PrivacyQuestions $privacyQuestions): void
     {
         $this->privacyQuestions = $privacyQuestions;
-    }
-
-    public function isProductionEntitiesEnabled(): bool
-    {
-        return $this->productionEntitiesEnabled;
     }
 
     public function isPrivacyQuestionsEnabled(): bool
