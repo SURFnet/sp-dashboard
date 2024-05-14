@@ -28,7 +28,6 @@ class Service
         private readonly bool $privacyQuestionsEnabled,
         private readonly EntityList $entityList,
         private readonly RouterInterface $router,
-        private readonly bool $productionEntitiesEnabled = false,
     ) {
     }
 
@@ -40,7 +39,6 @@ class Service
             $service->isPrivacyQuestionsEnabled(),
             $entityList,
             $router,
-            $service->isProductionEntitiesEnabled()
         );
     }
 
@@ -72,10 +70,5 @@ class Service
     public function hasTestEntities() : bool
     {
         return $this->getEntityList()->hasTestEntities();
-    }
-
-    public function isProductionEntitiesEnabled(): bool
-    {
-        return $this->productionEntitiesEnabled || $this->hasTestEntities();
     }
 }
