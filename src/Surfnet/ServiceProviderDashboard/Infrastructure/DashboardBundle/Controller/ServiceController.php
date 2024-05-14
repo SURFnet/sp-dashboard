@@ -161,7 +161,6 @@ class ServiceController extends AbstractController
             $service->getGuid(),
             $service->getName(),
             $service->getTeamName(),
-            $service->isProductionEntitiesEnabled(),
             $service->isPrivacyQuestionsEnabled(),
             $service->isClientCredentialClientsEnabled(),
             $service->getServiceType(),

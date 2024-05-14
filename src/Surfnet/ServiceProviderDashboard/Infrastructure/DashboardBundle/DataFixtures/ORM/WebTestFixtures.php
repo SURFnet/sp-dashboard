@@ -30,11 +30,9 @@ class WebTestFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $service = $this->createService('SURFnet', 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl');
-        $service->setProductionEntitiesEnabled(false);
         $manager->persist($service);
 
         $service =  $this->createService('Ibuildings B.V.', 'urn:collab:group:vm.openconext.org:demo:openconext:org:ibuildings.nl');
-        $service->setProductionEntitiesEnabled(true);
         $service->setPrivacyQuestionsEnabled(true);
         $service->setClientCredentialClientsEnabled(true);
         $manager->persist($service);

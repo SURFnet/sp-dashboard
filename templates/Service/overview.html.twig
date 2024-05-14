@@ -21,9 +21,7 @@
                 {% set testId = "add-for-test-" ~ shortName %}
                 {% set productionId = "add-for-production-" ~ shortName %}
                 <input type="checkbox" id="{{ testId }}" name="{{ testId }}" />
-                {% if service.isProductionEntitiesEnabled %}
-                    <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
-                {% endif %}
+                <input type="checkbox" id="{{ productionId }}" name="{{ productionId }}" />
                 <div class="service-status-container">
                     <h2 class="service-status-title">{{ service.name }}</h2>
                     <ul class="service-status-title-actions">
@@ -114,7 +112,6 @@
                                     <td colspan="5" class="no-entities-production">{{ 'service.overview.entitylist.empty'|trans }}</td>
                                 </tr>
                             {% endif %}
-                            {% if service.isProductionEntitiesEnabled %}
                                 <tr class="service-status-entities-table-add-entity">
                                     <td colspan="5">
                                         <label for="{{ productionId }}" class="link">
@@ -122,7 +119,6 @@
                                         </label>
                                     </td>
                                 </tr>
-                            {% endif %}
                         </table>
 
                         {# Test entities #}
@@ -182,9 +178,7 @@
                     </section>
                 </div>
                 <div class="blocker">
-                    {% if service.isProductionEntitiesEnabled %}
-                        <div class="modal add-entity-modal" role="dialog" aria-label="{{ 'entity.list.add_to_production'|trans ~ ' for ' ~ shortName }}" data-for="{{ productionId }}">{{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\EntityCreateController::type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
-                    {% endif %}
+                    <div class="modal add-entity-modal" role="dialog" aria-label="{{ 'entity.list.add_to_production'|trans ~ ' for ' ~ shortName }}" data-for="{{ productionId }}">{{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\EntityCreateController::type', {serviceId: service.id, targetEnvironment: "production", inputId: productionId })) }}</div>
                     <div class="modal add-entity-modal" role="dialog" aria-label="{{ 'entity.list.add_to_test'|trans ~ ' for ' ~ shortName }}" data-for="{{ testId }}">{{ render(controller('Surfnet\\ServiceProviderDashboard\\Infrastructure\\DashboardBundle\\Controller\\EntityCreateController::type', {serviceId: service.id, targetEnvironment: "test", inputId: testId})) }}</div>
                 </div>
                 <p class="service-status-back-to-top">
