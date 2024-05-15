@@ -1,0 +1,65 @@
+---
+
+version: "3.4"
+
+services:
+  openconext:
+    build:
+      context: 'docker/'
+      dockerfile: Dockerfiledev
+      target: openconext
+    extra_hosts:
+      engine-api.vm.openconext.org: 127.0.0.2
+      engine.vm.openconext.org: 127.0.0.1
+      manage.vm.openconext.org: 127.0.0.1
+      voot.vm.openconext.org: 127.0.0.1
+      connect.vm.openconext.org: 127.0.0.1
+      test.openconext.org: 127.0.0.1
+      teams.vm.openconext.org: 127.0.0.1
+      ansible-test-ga: 127.0.0.1
+    privileged: true
+    networks:
+      spdashboard:
+        aliases:
+          - db.vm.openconext.org
+          - engine.vm.openconext.org
+          - manage.vm.openconext.org
+          - teams.vm.openconext.org
+          - spdashboard.vm.openconext.org
+          - mujina-idp.vm.openconext.org
+    volumes:
+      - spdashboard_mysql:/var/lib/mysql
+      - spdashboard_mongo:/var/lib/mongo
+    ports:
+      - "443:443"
+      - "3306:3306"
+
+  php:
+    build:
+      context: 'docker/'
+      dockerfile: Dockerfiledev
+      target: spddev
+    volumes:
+      - .:/var/www/html/
+    networks:
+      spdashboard:
+        aliases: 
+          - spdashboard_web
+
+  test-browser:
+    image: selenium/standalone-chrome:latest
+    hostname: test-browser
+    ports:
+      - "5900:5900"
+      - "4444:4444"
+    privileged: true
+    shm_size: 2g
+    networks:
+      spdashboard:
+
+networks:
+  spdashboard:
+
+volumes:
+  spdashboard_mysql:
+  spdashboard_mongo:
