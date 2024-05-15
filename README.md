@@ -14,18 +14,18 @@ their services. This can be both SAML 2.0, OpenID Connect Relying Parties and Oa
 
 ## Prerequisites
 
-- [PHP](https://secure.php.net/manual/en/install.php) (8.1)
+- [PHP](https://secure.php.net/manual/en/install.php) (8.2)
 - [Composer](https://getcomposer.org/doc/00-intro.md)
 - [Apache Ant](https://ant.apache.org/manual/install.html)
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-Use `docker-compose up -d` to create and build the development environment.
+Use `docker compose up -d` to create and build the development environment.
 
 An entry in your hostsfile is still required for things to work. An example entry would look like:
 
 ```
-127.0.0.1 welcome.vm.openconext.org static.vm.openconext.org mujina-sp.vm.openconext.org mujina-idp.vm.openconext.org engine-api.vm.openconext.org oidc.vm.openconext.org manage.vm.openconext.org spdashboard.vm.openconext.org engine.vm.openconext.org teams.vm.openconext.org
+127.0.0.1 welcome.dev.openconext.local static.dev.openconext.local mujina-sp.dev.openconext.local mujina-idp.dev.openconext.local engine-api.dev.openconext.local oidc.dev.openconext.local manage.dev.openconext.local spdashboard.dev.openconext.local engine.dev.openconext.local teams.dev.openconext.local
 ```
 
 Is your host system on an ARM based archetecture CPU, and are you running a docker solution in a VM? Chances are 
@@ -37,23 +37,34 @@ might aid in that area.
 
 ## Getting started
 
-In order to start the development environment, run `docker-compose up -d`. This will build and start the container that is
-used in development to run the application.
+This setup includes the OpenConext environment from the [Devconf](https://github.com/OpenConext/OpenConext-devconf) project. You need to checkout this project in the same directory as the sp-dashboard appcode. You will have:
 
-Then start the command line in the container with `docker exec -it sp-dashboard-php-fpm-1 sh`. This will start a shell
+dir/
+  - sp-dashboard/
+  - OpenConext-devconf/
+
+In order to start the development environment, run `docker compose --profile teams up -d`. This will start the container that is
+used in development to run the application. 
+
+You can then bootstrap the environment. It will ensure that a complete working OpenConext setup is running:
+```
+sh ../OpenConext-devconf/core/scripts/init.sh
+```
+
+Then start the command line in the container with `docker compose exec -ti spdashboard bash`. This will start a shell
 
 Run `composer install`. This will install all PHP dependencies, including the development dependencies.
 Run `yarn install`. This will install all js dependencies, including the development dependencies.
 
 Install database migrations
 ```
-$ docker exec sp-dashboard-php-fpm-1 /var/www/html/bin/console doctrine:migrations:migrate
+$ docker compose exec spdashboard /var/www/html/bin/console doctrine:migrations:migrate
 ```
 
 The application is now up and running and can be accessed at
-[https://spdashboard.vm.openconext.org/](https://spdashboard.vm.openconext.org). Note that in development the `app_dev.php`
+[https://spdashboard.dev.openconext.local/](https://spdashboard.dev.openconext.local). Note that in development the `app_dev.php`
 front controller is used automatically, so you don't have to include `/app_dev.php/` in the URLs.
-* To view mails caught by Mailcatcher, visit [spdashboard.vm.openconext.org:1080](https://spdashboard.vm.openconext.org:1080/)
+* To view mails caught by Mailcatcher, visit [spdashboard.dev.openconext.local:1080](https://spdashboard.dev.openconext.local:1080/)
 
 ### Running the tests
 
