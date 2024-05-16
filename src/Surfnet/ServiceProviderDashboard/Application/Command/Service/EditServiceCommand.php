@@ -50,7 +50,7 @@ class EditServiceCommand implements Command
         private ?string $intakeStatus,
         private ?string $contractSigned,
         private ?string $surfconextRepresentativeApproved,
-        private ?string $privacyQuestionsAnswered,
+        private bool $privacyQuestionsAnswered,
         private ?string $institutionId,
         #[Assert\NotBlank]
         private ?string $organizationNameNl,
@@ -116,10 +116,7 @@ class EditServiceCommand implements Command
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
     }
 
-    /**
-     * @param bool $privacyQuestionsAnswered
-     */
-    public function setPrivacyQuestionsAnswered(?string $privacyQuestionsAnswered): void
+    public function setPrivacyQuestionsAnswered(bool $privacyQuestionsAnswered): void
     {
         $this->privacyQuestionsAnswered = $privacyQuestionsAnswered;
     }
@@ -187,7 +184,7 @@ class EditServiceCommand implements Command
     /**
      * @return bool
      */
-    public function isPrivacyQuestionsAnswered(): ?string
+    public function isPrivacyQuestionsAnswered(): bool
     {
         return $this->privacyQuestionsAnswered;
     }
