@@ -307,16 +307,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Command/PrivacyQuestions/PrivacyQuestionsCommand.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @param for parameter \\$privacyQuestionsAnswered with type bool is incompatible with native type string\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Command/Service/EditServiceCommand.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type bool is incompatible with native type string\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Command/Service/EditServiceCommand.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Entity/EntityChangeRequestCommandHandler.php',
@@ -3443,11 +3433,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Offset \'teamId\' does not exist on array\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#12 \\$privacyQuestionsAnswered of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\Service\\\\EditServiceCommand constructor expects string\\|null, bool given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
 ];

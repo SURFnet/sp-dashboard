@@ -53,7 +53,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             'Foobar',
             'team-foobar',
             false,
-            false,
             true,
             'institution',
             'not-applicable',
@@ -62,14 +61,14 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             true,
             '123',
             'Foobar Inc',
-            'Foobar Inc'
+            'Foobar Inc',
         );
         $command->setName('Foobar');
         $command->setTeamName('team-foobar');
         $command->setGuid('30dd879c-ee2f-11db-8314-0800200c9a66');
         $command->setPrivacyQuestionsEnabled(false);
 
-        $command->setPrivacyQuestionsAnswered('yes');
+        $command->setPrivacyQuestionsAnswered(true);
         $command->setServiceType('institution');
         $command->setIntakeStatus('not-applicable');
         $command->setSurfconextRepresentativeApproved('no');
@@ -80,7 +79,7 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
 
         $this->repository
             ->shouldReceive('save')
-            ->with(m::on(function ($arg) {
+            ->with(m::on(function (Service $arg) {
                 $this->assertEquals(1, $arg->getId());
                 $this->assertEquals('Foobar', $arg->getName());
                 $this->assertEquals('team-foobar', $arg->getTeamName());
@@ -123,8 +122,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             '123',
             'Foobar Inc',
             'Foobar Inc',
-            'Foobar Inc',
-            'Foobar Inc'
         );
 
         $this->repository->shouldReceive('findById')->andReturn(null)->once();
@@ -154,8 +151,6 @@ class EditServiceCommandHandlerTest extends MockeryTestCase
             '123',
             'Foobar Inc',
             'Foobar Inc',
-            'Foobar Inc',
-            'Foobar Inc'
         );
 
         $mockEntity = m::mock(Service::class)->makePartial();
