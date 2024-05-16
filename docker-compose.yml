@@ -5,10 +5,14 @@ services:
     spdashboard:
       image:  ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest
       environment:
-      - APP_ENV=dev
+        - APP_ENV=dev
+        - APP_DEBUG=true
       volumes:
         - ../OpenConext-devconf/core/:/config
         - ./:/var/www/html/
+        - ./docker/conf/zz-docker.conf:/usr/local/etc/php/conf.d/zz-docker.ini
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
       networks:
         coreconextdev:
       hostname: spdashboard.docker

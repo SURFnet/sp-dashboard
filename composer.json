@@ -18,7 +18,7 @@
     }
   },
   "require": {
-    "php": "8.1.*",
+    "php": "^8.2",
     "ext-ctype": "*",
     "ext-curl": "*",
     "ext-dom": "*",
@@ -28,11 +28,11 @@
     "ext-json": "*",
     "ext-libxml": "*",
     "ext-mbstring": "*",
-    "ext-mysqli": "*",
     "ext-openssl": "*",
     "ext-simplexml": "*",
     "ext-soap": "*",
     "ext-xml": "*",
+    "ext-zip": "*",
     "cweagans/composer-patches": "^1.7",
     "doctrine/doctrine-bundle": "^2.1.2",
     "doctrine/doctrine-migrations-bundle": "^3.2",
