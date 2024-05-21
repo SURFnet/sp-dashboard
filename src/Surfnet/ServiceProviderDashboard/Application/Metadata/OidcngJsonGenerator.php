@@ -90,7 +90,7 @@ class OidcngJsonGenerator implements GeneratorInterface
             $entity->getComments(),
             $contact->getDisplayName(),
             $contact->getEmailAddress(),
-            $jiraTicketNumber
+            $jiraTicketNumber,
         );
 
         return $payload;

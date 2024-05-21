@@ -43,7 +43,7 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         ManageEntity $entity,
         ?ManageEntity $pristineEntity,
         Contact $contact,
-        JiraTicketNumber $jiraTicketNumber
+        JiraTicketNumber $jiraTicketNumber,
     ): array {
         $this->logger->info(sprintf('Creating entity change request in manage for entity "%s"', $entity->getId()));
 

@@ -34,7 +34,7 @@ interface EntityChangeRequestRepository
         ManageEntity $entity,
         ?ManageEntity $pristineEntity,
         Contact $contact,
-        JiraTicketNumber $jiraTicketNumber
+        JiraTicketNumber $jiraTicketNumber,
     ): array;
 
     /**
