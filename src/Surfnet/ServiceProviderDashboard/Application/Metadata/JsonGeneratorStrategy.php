@@ -72,7 +72,7 @@ class JsonGeneratorStrategy
         ManageEntity $entity,
         EntityDiff $differences,
         Contact $contact,
-        JiraTicketNumber $jiraTicketNumber
+        JiraTicketNumber $jiraTicketNumber,
     ): array {
         return $this
             ->getStrategy($entity->getProtocol()->getProtocol())
@@ -80,7 +80,7 @@ class JsonGeneratorStrategy
                 $entity,
                 $differences,
                 $contact,
-                $jiraTicketNumber
+                $jiraTicketNumber,
             );
     }
 

@@ -50,7 +50,7 @@ class ChangeRequestRevisionNote implements Stringable
             $this->emailAddress,
             $dateTime->format(DateTimeImmutable::ATOM),
             (string) $this->ticketNumber,
-            $this->comments
+            $this->comments,
         );
     }
 }
