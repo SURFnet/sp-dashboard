@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -108,8 +109,10 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
-            // Remove the now orphaned Jira ticket (change request was not saved but the jira ticket was)
-            $this->ticketService->delete($ticket->getKey());
+            if (isset($ticket)) {
+                // Remove the now orphaned Jira ticket (change request was not saved but the jira ticket was)
+                $this->ticketService->delete($ticket->getKey());
+            }
             $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);

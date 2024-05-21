@@ -71,5 +71,4 @@ interface TicketServiceInterface
         string $summaryTranslationKey,
         string $descriptionTranslationKey,
     ): Issue;
-
 }

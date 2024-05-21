@@ -487,7 +487,8 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $contact = m::mock(Contact::class);
         $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
-        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
+        $contact->shouldReceive('getDisplayName')->andReturn('A.F.Th. van der Heijden');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact, 'CHR-5421');
 
         $this->assertIsArray($data);
         $this->assertEquals('manageId', $data['metaDataId']);

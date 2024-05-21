@@ -20,7 +20,6 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
-
 use DateTimeImmutable;
 use Stringable;
 use const PHP_EOL;
