@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGener
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -488,7 +489,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $contact = m::mock(Contact::class);
         $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
         $contact->shouldReceive('getDisplayName')->andReturn('A.F.Th. van der Heijden');
-        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact, 'CHR-5421');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact, new JiraTicketNumber('CHR-5421'));
 
         $this->assertIsArray($data);
         $this->assertEquals('manageId', $data['metaDataId']);

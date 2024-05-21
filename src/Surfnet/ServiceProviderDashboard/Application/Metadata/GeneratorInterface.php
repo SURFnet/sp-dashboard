@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -58,6 +59,6 @@ interface GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         Contact $contact,
-        string $jiraTicketNumber,
+        JiraTicketNumber $jiraTicketNumber,
     ): array;
 }

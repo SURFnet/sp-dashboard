@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ChangeRequestRevisionNote;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use function sprintf;
@@ -93,7 +94,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         ContactEntity $contact,
-        string $jiraTicketNumber,
+        JiraTicketNumber $jiraTicketNumber,
     ): array {
         $payload = [
             'metaDataId' => $entity->getId(),

@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 
 /**
- * Copyright 2018 SURFnet B.V.
+ * Copyright 2024 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class ChangeRequestRevisionNote implements Stringable
         private ?string $comments,
         private string $commonName,
         private string $emailAddress,
-        private string $ticketNumber,
+        private JiraTicketNumber $ticketNumber,
     ) {
     }
 
@@ -48,7 +48,7 @@ class ChangeRequestRevisionNote implements Stringable
             $this->commonName,
             $this->emailAddress,
             $dateTime->format(DateTimeImmutable::ATOM),
-            $this->ticketNumber,
+            (string) $this->ticketNumber,
             $this->comments
         );
     }

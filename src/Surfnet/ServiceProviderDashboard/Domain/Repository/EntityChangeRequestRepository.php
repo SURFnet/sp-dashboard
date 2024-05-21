@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
@@ -33,7 +34,7 @@ interface EntityChangeRequestRepository
         ManageEntity $entity,
         ?ManageEntity $pristineEntity,
         Contact $contact,
-        string $jiraTicketNumber
+        JiraTicketNumber $jiraTicketNumber
     ): array;
 
     /**
