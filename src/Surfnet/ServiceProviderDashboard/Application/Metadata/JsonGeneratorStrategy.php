@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Application\Metadata;
 use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -71,7 +72,7 @@ class JsonGeneratorStrategy
         ManageEntity $entity,
         EntityDiff $differences,
         Contact $contact,
-        string $jiraTicketNumber
+        JiraTicketNumber $jiraTicketNumber
     ): array {
         return $this
             ->getStrategy($entity->getProtocol()->getProtocol())

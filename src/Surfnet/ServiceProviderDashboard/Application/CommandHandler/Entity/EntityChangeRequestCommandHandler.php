@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\EntityNotFoundExcepti
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -85,7 +86,7 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                 $entity,
                 $pristineEntity,
                 $command->getApplicant(),
-                $ticket->getKey()
+                new JiraTicketNumber($ticket->getKey()),
             );
             if (!array_key_exists('id', $response)) {
                 $this->logger->error(

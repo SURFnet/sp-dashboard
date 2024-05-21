@@ -23,6 +23,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
@@ -42,7 +43,7 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
         ManageEntity $entity,
         ?ManageEntity $pristineEntity,
         Contact $contact,
-        string $jiraTicketNumber
+        JiraTicketNumber $jiraTicketNumber
     ): array {
         $this->logger->info(sprintf('Creating entity change request in manage for entity "%s"', $entity->getId()));
 

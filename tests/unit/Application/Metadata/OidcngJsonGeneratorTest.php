@@ -26,6 +26,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\OidcngJsonGenerator;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use function file_get_contents;
@@ -280,7 +281,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $contact = m::mock(Contact::class);
         $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
         $contact->shouldReceive('getDisplayName')->andReturn('A.F.Th. van der Heijden');
-        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact, 'CHR-7432');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact, new JiraTicketNumber('CHR-7432'));
 
         $this->assertIsArray($data);
         $this->assertEquals('manageId', $data['metaDataId']);

@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestRepository;
@@ -29,7 +30,7 @@ class FakeEntityChangeRequestClient implements EntityChangeRequestRepository
         ManageEntity $entity,
         ?ManageEntity $pristineEntity,
         Contact $contact,
-        string $jiraTicketNumber
+        JiraTicketNumber $jiraTicketNumber
     ): array {
         return ['id' => 'the-entity-id-uuid'];
     }
