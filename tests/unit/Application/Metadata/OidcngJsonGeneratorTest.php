@@ -279,13 +279,16 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $diff = $entity->diff($changedEntity);
         $contact = m::mock(Contact::class);
         $contact->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
-        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact);
+        $contact->shouldReceive('getDisplayName')->andReturn('A.F.Th. van der Heijden');
+        $data = $generator->generateEntityChangeRequest($entity, $diff, $contact, 'CHR-7432');
 
         $this->assertIsArray($data);
         $this->assertEquals('manageId', $data['metaDataId']);
         $this->assertEquals('oidc10_rp', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
         $this->assertCount(4, $data['pathUpdates']);
+        $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com" via the SPdashboard', $data['note']);
+        $this->assertStringContainsString('revisionnote', $data['note']);
     }
 
     private function createManageEntity(
