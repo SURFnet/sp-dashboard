@@ -496,6 +496,9 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('saml20_sp', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
         $this->assertCount(4, $data['pathUpdates']);
+        $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com"', $data['note']);
+        $this->assertStringContainsString('CHR-5421', $data['note']);
+        $this->assertStringContainsString('revisionnote', $data['note']);
     }
 
     private function createManageEntity(

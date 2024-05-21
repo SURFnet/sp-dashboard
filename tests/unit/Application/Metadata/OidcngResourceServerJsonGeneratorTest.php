@@ -157,7 +157,8 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('oauth20_rs', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
         $this->assertCount(4, $data['pathUpdates']);
-        $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com" via the SPdashboard', $data['note']);
+        $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com"', $data['note']);
+        $this->assertStringContainsString('CHR-1956', $data['note']);
         $this->assertStringContainsString('revisionnote', $data['note']);
     }
 
