@@ -26,9 +26,10 @@ use const PHP_EOL;
 
 class ChangeRequestRevisionNote implements Stringable
 {
-    private static string $template =
-        'Change request by user %s with email address "%s" via the SPdashboard on %s (%s) ' . PHP_EOL .
-        'Comment from user: "%s"';
+    private const REVISION_NOTE_FORMAT =
+        'Change request by user %s with email address "%s"' . PHP_EOL .
+        'Via the SPdashboard on %s (%s) ' . PHP_EOL .
+        'Comment: "%s"';
     public function __construct(
         private ?string $comments,
         private string $commonName,
@@ -44,7 +45,7 @@ class ChangeRequestRevisionNote implements Stringable
             $this->comments = 'No comment provided';
         }
         return sprintf(
-            self::$template,
+            self::REVISION_NOTE_FORMAT,
             $this->commonName,
             $this->emailAddress,
             $dateTime->format(DateTimeImmutable::ATOM),

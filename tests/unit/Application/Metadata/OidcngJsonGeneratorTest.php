@@ -288,7 +288,8 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('oidc10_rp', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
         $this->assertCount(4, $data['pathUpdates']);
-        $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com" via the SPdashboard', $data['note']);
+        $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com', $data['note']);
+        $this->assertStringContainsString('CHR-7432', $data['note']);
         $this->assertStringContainsString('revisionnote', $data['note']);
     }
 
