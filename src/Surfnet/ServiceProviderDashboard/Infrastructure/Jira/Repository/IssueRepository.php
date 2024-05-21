@@ -126,7 +126,7 @@ class IssueRepository implements TicketServiceInterface
         return new Issue($issue->key, $ticket->getIssueType(), Issue::STATUS_OPEN);
     }
 
-    public function delete($issueKey): void
+    public function delete(string $issueKey): void
     {
         $issueService = $this->jiraFactory->buildIssueService();
         $issueService->deleteIssue($issueKey);

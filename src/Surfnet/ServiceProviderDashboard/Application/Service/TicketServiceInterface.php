@@ -62,10 +62,7 @@ interface TicketServiceInterface
      */
     public function findByManageIdAndIssueType($manageId, $issueType);
 
-    /**
-     * @param string $issueKey
-     */
-    public function delete($issueKey);
+    public function delete(string $issueKey);
 
     public function createJiraTicket(
         ManageEntity $entity,
@@ -74,4 +71,5 @@ interface TicketServiceInterface
         string $summaryTranslationKey,
         string $descriptionTranslationKey,
     ): Issue;
+
 }

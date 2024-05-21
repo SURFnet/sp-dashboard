@@ -95,6 +95,8 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     ),
                     [$response]
                 );
+                // Remove the now orphaned Jira ticket (change request was not saved but the jira ticket was)
+                $this->ticketService->delete($ticket->getKey());
                 $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
             }
             return;
@@ -106,6 +108,8 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     $e->getMessage()
                 )
             );
+            // Remove the now orphaned Jira ticket (change request was not saved but the jira ticket was)
+            $this->ticketService->delete($ticket->getKey());
             $this->requestStack->getSession()->getFlashBag()->add('error', 'entity.edit.error.publish');
         } catch (Exception $e) {
             $this->logger->critical('Unable to create the Jira issue.', [$e->getMessage()]);
