@@ -56,8 +56,6 @@ class EntityChangeRequestCommandHandler implements CommandHandler
 
     /**
      * Creates an entity change request in Manage
-     *
-     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function handle(PublishProductionCommandInterface $command): void
     {
@@ -73,17 +71,22 @@ class EntityChangeRequestCommandHandler implements CommandHandler
                     $entity->getMetaData()->getNameEn()
                 )
             );
-
-            $response = $this->repository->openChangeRequest($entity, $pristineEntity, $command->getApplicant());
-            if (array_key_exists('id', $response)) {
-                $this->ticketService->createJiraTicket(
-                    $entity,
-                    $command,
-                    $this->issueType,
-                    $this->summaryTranslationKey,
-                    $this->descriptionTranslationKey
-                );
-            } else {
+            // Create the Jira ticket (we need the ticket id for the revision notes in manage later on)
+            $ticket = $this->ticketService->createJiraTicket(
+                $entity,
+                $command,
+                $this->issueType,
+                $this->summaryTranslationKey,
+                $this->descriptionTranslationKey
+            );
+            // Now save the requested changes in Manage
+            $response = $this->repository->openChangeRequest(
+                $entity,
+                $pristineEntity,
+                $command->getApplicant(),
+                $ticket->getKey()
+            );
+            if (!array_key_exists('id', $response)) {
                 $this->logger->error(
                     sprintf(
                         'Creating an entity change request in Manage failed for: "%s". Message: "%s"',

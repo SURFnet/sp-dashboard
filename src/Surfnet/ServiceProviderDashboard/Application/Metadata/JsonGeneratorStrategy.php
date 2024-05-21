@@ -67,10 +67,20 @@ class JsonGeneratorStrategy
             ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);
     }
 
-    public function generateEntityChangeRequest(ManageEntity $entity, EntityDiff $differences, Contact $contact): array
-    {
-        return $this->getStrategy($entity->getProtocol()->getProtocol())
-            ->generateEntityChangeRequest($entity, $differences, $contact);
+    public function generateEntityChangeRequest(
+        ManageEntity $entity,
+        EntityDiff $differences,
+        Contact $contact,
+        string $jiraTicketNumber
+    ): array {
+        return $this
+            ->getStrategy($entity->getProtocol()->getProtocol())
+            ->generateEntityChangeRequest(
+                $entity,
+                $differences,
+                $contact,
+                $jiraTicketNumber
+            );
     }
 
     /**

@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQ
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ChangeRequestRevisionNote;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -92,6 +93,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         ContactEntity $contact,
+        string $jiraTicketNumber,
     ): array {
         $payload = [
             'metaDataId' => $entity->getId(),
@@ -102,7 +104,13 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
             ],
         ];
 
-        $payload['note'] = $entity->getRevisionNote();
+        $payload['note'] = (string) new ChangeRequestRevisionNote(
+            $entity->getComments(),
+            $contact->getDisplayName(),
+            $contact->getEmailAddress(),
+            $jiraTicketNumber
+        );
+
 
         return $payload;
     }

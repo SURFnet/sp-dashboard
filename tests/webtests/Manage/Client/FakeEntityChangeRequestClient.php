@@ -25,8 +25,12 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\EntityChangeRequestReposi
 
 class FakeEntityChangeRequestClient implements EntityChangeRequestRepository
 {
-    public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity, Contact $contact): array
-    {
+    public function openChangeRequest(
+        ManageEntity $entity,
+        ?ManageEntity $pristineEntity,
+        Contact $contact,
+        string $jiraTicketNumber
+    ): array {
         return ['id' => 'the-entity-id-uuid'];
     }
 

@@ -29,7 +29,12 @@ interface EntityChangeRequestRepository
     /**
      * Open an entity change request in manage
      */
-    public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity, Contact $contact): array;
+    public function openChangeRequest(
+        ManageEntity $entity,
+        ?ManageEntity $pristineEntity,
+        Contact $contact,
+        string $jiraTicketNumber
+    ): array;
 
     /**
      * Get outstanding change request from manage
