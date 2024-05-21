@@ -117,7 +117,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         return $issue;
     }
 
-    public function delete($issueKey): void
+    public function delete(string $issueKey): void
     {
         $this->loadData();
         unset($this->data[$issueKey]);
