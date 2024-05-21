@@ -38,12 +38,18 @@ class EntityChangeRequestClient implements EntityChangeRequestRepository
     ) {
     }
 
-    public function openChangeRequest(ManageEntity $entity, ?ManageEntity $pristineEntity, Contact $contact): array
-    {
+    public function openChangeRequest(
+        ManageEntity $entity,
+        ?ManageEntity $pristineEntity,
+        Contact $contact,
+        string $jiraTicketNumber
+    ): array {
         $this->logger->info(sprintf('Creating entity change request in manage for entity "%s"', $entity->getId()));
 
         $diff = $pristineEntity->diff($entity);
-        $payload = json_encode($this->generator->generateEntityChangeRequest($entity, $diff, $contact));
+        $payload = json_encode(
+            $this->generator->generateEntityChangeRequest($entity, $diff, $contact, $jiraTicketNumber)
+        );
         $response = $this->client->post(
             $payload,
             '/manage/api/internal/change-requests'

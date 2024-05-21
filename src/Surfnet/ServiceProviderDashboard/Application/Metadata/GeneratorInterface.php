@@ -54,5 +54,10 @@ interface GeneratorInterface
      * This should only be applied on published production entities. But should work
      * on other publication states too.
      */
-    public function generateEntityChangeRequest(ManageEntity $entity, EntityDiff $differences, Contact $contact): array;
+    public function generateEntityChangeRequest(
+        ManageEntity $entity,
+        EntityDiff $differences,
+        Contact $contact,
+        string $jiraTicketNumber,
+    ): array;
 }
