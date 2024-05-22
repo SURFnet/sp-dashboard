@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use function array_key_exists;
 
 class PublishEntityTestCommandHandler implements CommandHandler
 {
@@ -60,9 +61,11 @@ class PublishEntityTestCommandHandler implements CommandHandler
             );
 
             $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
-
-            if (array_key_exists('id', $publishResponse) && $this->isNewResourceServer($entity)) {
-                $this->requestStack->getSession()->getFlashBag()->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+            if (array_key_exists('id', $publishResponse)) {
+                $entity->setId($publishResponse['id']);
+                if ($this->isNewResourceServer($entity)) {
+                    $this->requestStack->getSession()->getFlashBag()->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
+                }
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(
