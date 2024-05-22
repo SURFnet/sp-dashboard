@@ -48,13 +48,25 @@ class EntityAclController extends AbstractController
     ) {
     }
 
-    /**
-     *
-     * @param string $serviceId
-     *
-     */
+    #[Route(path: '/entity/idps/{serviceId}/{id}', name: 'entity_acl_idps', methods: ['GET', 'POST'])]
+    public function idps(Request $request, string $serviceId, string $id): Response
+    {
+        $service = $this->authorizationService->changeActiveService($serviceId);
+        $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
+        $viewObject = $this->entityDetailFactory->buildFrom($entity);
+        $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
+
+        return $this->render(
+            '@Dashboard/EntityAcl/idps.html.twig',
+            [
+                'entity' => $viewObject,
+                'isAdmin' => $this->authorizationService->isAdministrator(),
+            ]
+        );
+    }
+
     #[Route(path: '/entity/acl/{serviceId}/{id}', name: 'entity_acl', methods: ['GET', 'POST'])]
-    public function acl(Request $request, $serviceId, string $id): Response
+    public function acl(Request $request, string $serviceId, string $id): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);

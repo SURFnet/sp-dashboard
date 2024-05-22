@@ -98,6 +98,7 @@ trait EntityControllerTrait
         try {
             // Merge the save command data into the ManageEntity
             $entity = $this->entityMergeService->mergeEntityCommand($saveCommand, $entity);
+            $isNewEntity = is_null($entity->getId());
             $publishEntityCommand = $this->createPublishEntityCommandFromEntity($entity, $isPublishedProductionEntity);
             $this->commandBus->handle($publishEntityCommand);
         } catch (Exception) {
@@ -114,7 +115,16 @@ trait EntityControllerTrait
         $request->getSession()->set('published.entity.clone', clone $entity);
 
         if ($publishEntityCommand instanceof PublishEntityTestCommand) {
-            return $this->redirectToRoute('entity_published_test');
+            if (!$isNewEntity) {
+                return $this->redirectToRoute('entity_published_test');
+            }
+            $this->addFlash('info', 'entity.create.info.publish');
+            return $this->redirectToRoute('entity_acl_idps',
+                [
+                    'serviceId' => $entity->getService()->getId(),
+                    'id' => $publishEntityCommand->getManageEntity()->getId(),
+                ]
+            );
         }
 
         try {

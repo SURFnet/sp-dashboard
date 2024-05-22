@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+    <h1>{% block page_heading %}{{ 'entity.idps.title'|trans }}{%endblock%}</h1>
+
+
+    <div class="fieldset card action">
+        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}
+    </div>
+
+    <div class="fieldset card">
+        <h2>{{ ('entity.idps.info.title')|trans }}</h2>
+        <div class="wysiwyg">{{ ('entity.idps.info.html')|trans|wysiwyg }}</div>
+    </div>
+
+    <div class="fieldset card">
+        <h2>
+            {{ 'entity.idps.test-idps.title'|trans }}
+        </h2>
+        {{ 'entity.idps.info.html'|trans|wysiwyg }}
+
+        <div id="idps-container">
+            LIST of Idps
+        </div>
+    </div>
+
+    <div class="fieldset card">
+        <h2>
+            {{ 'entity.idps.institution-idps.title'|trans }}
+        </h2>
+        {{ 'entity.idps.institution-idps.html'|trans|wysiwyg }}
+
+        <div id="idps-container">
+            LIST of Idps
+        </div>
+    </div>
+
+
+{% endblock %}
