@@ -123,7 +123,7 @@ class WebTestCase extends PantherTestCase
         self::$pantherClient = self::$pantherClients[0] = Client::createSeleniumClient(
             'http://test-browser:4444/wd/hub',
             $capabilities,
-            'https://spdashboard.vm.openconext.org'
+            'https://spdashboard.dev.openconext.local'
         );
         ServerExtension::registerClient(self::$pantherClient);
         // you can avoid having to use Closure::bind if you use PantherTestCaseTrait directly
@@ -304,7 +304,7 @@ class WebTestCase extends PantherTestCase
 
     protected function logIn(Service $service = null, Service $secondService = null)
     {
-        $crawler = self::$pantherClient->request('GET', 'https://spdashboard.vm.openconext.org');
+        $crawler = self::$pantherClient->request('GET', 'https://spdashboard.dev.openconext.local');
 
         $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
         $this->fillFormField($form, '#username', 'John Doe');
@@ -339,7 +339,7 @@ class WebTestCase extends PantherTestCase
     {
         $service = $this->getServiceRepository()->findByName($serviceName);
 
-        $crawler = self::$pantherClient->request('GET', 'https://spdashboard.vm.openconext.org');
+        $crawler = self::$pantherClient->request('GET', 'https://spdashboard.dev.openconext.local');
 
         // Select the service drop down
         $crawler->filter('.service-switcher form')->click();
