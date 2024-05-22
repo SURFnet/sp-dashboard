@@ -21,3 +21,15 @@ services:
           condition: service_healthy
         mariadb:
           condition: service_healthy
+
+    test-browser:
+      image: selenium/standalone-chrome:latest
+      hostname: test-browser
+      ports:
+        - "5900:5900"
+        - "4444:4444"
+      privileged: true
+      shm_size: 2g
+      networks:
+        coreconextdev:
+
