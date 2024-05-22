@@ -28,10 +28,10 @@
       },
       "enabled": true
     },
-    "entityid": "https://engine.dev.support.surfconext.nl/authentication/sp/metadata/1430",
+    "entityid": "https://engine.dev.openconext.local/authentication/sp/metadata/1430",
     "metaDataFields": {
       "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-      "AssertionConsumerService:0:Location": "https://engine.dev.support.surfconext.nl/authentication/sp/consume-assertion",
+      "AssertionConsumerService:0:Location": "https://engine.dev.openconext.local/authentication/sp/consume-assertion",
       "AssertionConsumerService:0:index": "0",
       "certData": "MIIDuDCCAqCgAwIBAgIJAPdqJ9JQKN6vMA0GCSqGSIb3DQEBBQUAMEYxDzANBgNVBAMTBkVuZ2luZTERMA8GA1UECxMIU2VydmljZXMxEzARBgNVBAoTCk9wZW5Db25leHQxCzAJBgNVBAYTAk5MMB4XDTE1MDQwMjE0MDE1NFoXDTI1MDQwMTE0MDE1NFowRjEPMA0GA1UEAxMGRW5naW5lMREwDwYDVQQLEwhTZXJ2aWNlczETMBEGA1UEChMKT3BlbkNvbmV4dDELMAkGA1UEBhMCTkwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCeVodghQwFR0pItxGaJ3LXHA+ZLy1w/TMaGDcJaszAZRWRkL/6djwbabR7TB45QN6dfKOFGzobQxG1Oksky3gz4Pki1BSzi/DwsjWCw+Yi40cYpYeg/XM0tvHKVorlsx/7Thm5WuC7rwytujr/lV7f6lavf/ApnLHnOORU2h0ZWctJiestapMaC5mc40msruWWp04axmrYICmTmGhEy7w0qO4/HLKjXtWbJh71GWtJeLzG5Hj04X44wI+D9PUJs9U3SYh9SCFZwq0v+oYeqajiX0JPzB+8aVOPmOOM5WqoT8OCddOM/TlsL/0PcxByGHsgJuWbWMI1PKlK3omR764PAgMBAAGjgagwgaUwHQYDVR0OBBYEFLowmsUCD2CrHU0lich1DMkNppmLMHYGA1UdIwRvMG2AFLowmsUCD2CrHU0lich1DMkNppmLoUqkSDBGMQ8wDQYDVQQDEwZFbmdpbmUxETAPBgNVBAsTCFNlcnZpY2VzMRMwEQYDVQQKEwpPcGVuQ29uZXh0MQswCQYDVQQGEwJOTIIJAPdqJ9JQKN6vMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAIF9tGG1C9HOSTQJA5qL13y5Ad8G57bJjBfTjp/dw308zwagsdTeFQIgsP4tdQqPMwYmBImcTx6vUNdiwlIol7TBCPGuqQAHD0lgTkChCzWezobIPxjitlkTUZGHqn4Kpq+mFelX9x4BElmxdLj0RQV3c3BhoW0VvJvBkqVKWkZ0HcUTQMlMrQEOq6D32jGh0LPCQN7Ke6ir0Ix5knb7oegND49fbLSxpdo5vSuxQd+Zn6nI1/VLWtWpdeHMKhiw2+/ArR9YM3cY8UwFQOj9Y6wI6gPCGh/q1qv2HnngmnPrNzZik8XucGcf1Wm2zE4UIVYKW31T52mqRVDKRk8F3Eo=",
       "contacts:0:contactType": "technical",
@@ -56,7 +56,7 @@
       "coin:service_team_id": "urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl",
       "coin:eula": "https://eulaurl",
       "coin:application_url": "https://appurl",
-      "coin:original_metadata_url": "https://engine.dev.support.surfconext.nl/authentication/sp/metadata",
+      "coin:original_metadata_url": "https://engine.dev.openconext.local/authentication/sp/metadata",
       "logo:0:url": "http://www.example.org/logo.png"
     },
     "metadataurl": "http://www.example.org/metadata",

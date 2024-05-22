@@ -63,12 +63,12 @@ class EntityCopyTest extends WebTestCase
         $form = $crawler->selectButton('Publish')->form();
 
         $this->assertEquals(
-            'https://engine.dev.support.surfconext.nl/authentication/sp/consume-assertion',
+            'https://engine.dev.openconext.local/authentication/sp/consume-assertion',
             $form->get('dashboard_bundle_entity_type[metadata][acsLocations][0]')->getValue()
         );
 
         $this->assertEquals(
-            'https://engine.dev.support.surfconext.nl/authentication/sp/metadata/1430',
+            'https://engine.dev.openconext.local/authentication/sp/metadata/1430',
             $form->get('dashboard_bundle_entity_type[metadata][entityId]')->getValue()
         );
 
@@ -123,7 +123,7 @@ class EntityCopyTest extends WebTestCase
         );
 
         $this->assertEquals(
-            'https://engine.dev.support.surfconext.nl/authentication/sp/metadata',
+            'https://engine.dev.openconext.local/authentication/sp/metadata',
             $form->get('dashboard_bundle_entity_type[metadata][importUrl]')->getValue()
         );
 

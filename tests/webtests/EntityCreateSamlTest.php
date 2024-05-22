@@ -381,7 +381,7 @@ class EntityCreateSamlTest extends WebTestCase
                 __DIR__ . '/fixtures/publish/valid.cer'
             ),
             'dashboard_bundle_entity_type[metadata][logoUrl]' =>
-                'https://spdasboard.vm.openconext.org/images/surfconext-logo.png',
+                'https://spdasboarddev.openconext.local/images/surfconext-logo.png',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][lastName]' => 'Doe',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][email]' => 'john@doe.com',

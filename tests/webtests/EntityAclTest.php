@@ -53,7 +53,7 @@ class EntityAclTest extends WebTestCase
             'saml20_idp',
             '0c3febd2-3f67-4b8a-b90d-ce56a3b0abb4',
             'OpenConext Engine',
-            'https://engine.dev.support.surfconext.nl/authentication/idp/metadata'
+            'https://engine.dev.openconext.local/authentication/idp/metadata'
         );
 
         $this->logIn();
