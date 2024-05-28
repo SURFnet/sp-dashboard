@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2017 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +18,10 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Domain\Exception;
 
-use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityId;
+use RuntimeException;
 
-interface IdentityProviderRepository
+class InvalidEntityIdException extends RuntimeException
 {
-    /**
-     * @return IdentityProvider[]
-     */
-    public function findAll();
-
-    public function findByEntityId(EntityId $entityId): ?IdentityProvider;
 }

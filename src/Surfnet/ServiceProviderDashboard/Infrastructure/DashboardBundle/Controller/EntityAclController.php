@@ -26,6 +26,8 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclC
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\TestIdpService;
+use Surfnet\ServiceProviderDashboard\Application\Service\TestIdpServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -44,6 +46,7 @@ class EntityAclController extends AbstractController
         private readonly EntityService $entityService,
         private readonly AuthorizationService $authorizationService,
         private readonly EntityAclService $entityAclService,
+        private readonly TestIdpServiceInterface $testIdpService,
         private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
@@ -54,12 +57,13 @@ class EntityAclController extends AbstractController
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
         $viewObject = $this->entityDetailFactory->buildFrom($entity);
-        $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
+        $testEntities = $this->testIdpService->loadTestIdps();
 
         return $this->render(
             '@Dashboard/EntityAcl/idps.html.twig',
             [
                 'entity' => $viewObject,
+                'testEntities' => $testEntities,
                 'isAdmin' => $this->authorizationService->isAdministrator(),
             ]
         );
