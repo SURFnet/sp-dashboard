@@ -28,7 +28,7 @@ class AllowedIdentityProviders
 {
     public function __construct(
         private array $providers,
-        private bool $allowAll,
+        private ?bool $allowAll,
     ) {
         Assert::allString($providers);
     }

@@ -1,8 +1,11 @@
+{% form_theme form 'form/fields.html.twig' %}
+
 {% extends 'base.html.twig' %}
 
 {% block body_container %}
     <h1>{% block page_heading %}{{ 'entity.idps.title'|trans }}{%endblock%}</h1>
 
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
 
     <div class="fieldset card action">
         {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}
@@ -17,23 +20,28 @@
         <h2>
             {{ 'entity.idps.test-idps.title'|trans }}
         </h2>
-        {{ 'entity.idps.info.html'|trans|wysiwyg }}
 
-        <div id="idps-container">
-            {% for idp in testEntities %}
-                {{ idp.entityId }} | {{ idp.getNameEn }}
-            {% endfor %}
+        <p>{{ 'entity.idps.info.html'|trans|wysiwyg }}</p>
+
+        <div class="idps-container">
+            {{ form_widget(form.testEntities) }}
         </div>
+
     </div>
 
     <div class="fieldset card">
         <h2>
             {{ 'entity.idps.institution-idps.title'|trans }}
         </h2>
-        {{ 'entity.idps.institution-idps.html'|trans|wysiwyg }}
 
-        <div id="idps-container">
-            LIST of Idps
+        <p>{{ 'entity.idps.institution-idps.html'|trans|wysiwyg }}</p>
+
+        <div class="idps-container">
+            {{ form_widget(form.institutionEntities) }}
+        </div>
+
+        <div class="button-wrapper">
+            {{ form_end(form) }}
         </div>
     </div>
 
