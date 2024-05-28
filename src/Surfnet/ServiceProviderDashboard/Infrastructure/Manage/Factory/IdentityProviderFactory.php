@@ -19,20 +19,21 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use function array_key_exists;
 
 class IdentityProviderFactory
 {
-
-    /**
-     * @param  $manageResult
-     */
     public static function fromManageResult(array $manageResult): IdentityProvider
     {
+        if (!array_key_exists('name:nl', $manageResult['data']['metaDataFields'])) {
+            // If the dutch name is not set, set the English name instead.
+            $manageResult['data']['metaDataFields']['name:nl'] = $manageResult['data']['metaDataFields']['name:en'];
+        }
         return new IdentityProvider(
             $manageResult['_id'],
             $manageResult['data']['entityid'],
             $manageResult['data']['metaDataFields']['name:nl'],
-            $manageResult['data']['metaDataFields']['name:en']
+            $manageResult['data']['metaDataFields']['name:en'],
         );
     }
 }
