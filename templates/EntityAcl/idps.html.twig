@@ -20,7 +20,9 @@
         {{ 'entity.idps.info.html'|trans|wysiwyg }}
 
         <div id="idps-container">
-            LIST of Idps
+            {% for idp in testEntities %}
+                {{ idp.entityId }} | {{ idp.getNameEn }}
+            {% endfor %}
         </div>
     </div>
 

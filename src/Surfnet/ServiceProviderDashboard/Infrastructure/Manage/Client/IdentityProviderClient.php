@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryIdentityProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
@@ -77,5 +78,29 @@ class IdentityProviderClient implements IdentityProviderRepository
             json_encode($params),
             '/manage/api/internal/search/saml20_idp'
         );
+    }
+
+    public function findByEntityId(EntityId $entityId): ?IdentityProvider
+    {
+        try {
+            // Based on the manage config set (prod or test) we retrieve the correct results from the manage idp client.
+            $result = $this->doSearchQuery(
+                [
+                    "entityid" => (string) $entityId,
+                    "REQUESTED_ATTRIBUTES" => ['metaDataFields.name:en'],
+                ]
+            );
+
+            if (!empty($result)) {
+                return IdentityProviderFactory::fromManageResult($result[0]);
+            }
+        } catch (HttpException $e) {
+            throw new QueryIdentityProviderException(
+                sprintf('Unable to find identity provider %s: %s', $entityId, $e->getMessage()),
+                0,
+                $e
+            );
+        }
+        return null;
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
- * Copyright 2019 SURFnet B.V.
+ * Copyright 2024 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +18,24 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
+namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use ArrayIterator;
+use IteratorAggregate;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityId;
+use Traversable;
 
-interface IdentityProviderRepository
+class TestIdpCollection implements IteratorAggregate
 {
-    /**
-     * @return IdentityProvider[]
-     */
-    public function findAll();
+    private array $idps;
 
-    public function findByEntityId(EntityId $entityId): ?IdentityProvider;
+    public function add(IdentityProvider $identityProvider): void
+    {
+        $this->idps[] = $identityProvider;
+    }
+
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->idps);
+    }
 }
