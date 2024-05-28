@@ -7,11 +7,16 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'data-parsley-validate': ''}}) }}
 
-    <div class="fieldset card action">
-        {% include '@Dashboard/EntityActions/actionsForDetail.html.twig' with {entity: entity.actions} %}
-    </div>
-
     <div class="fieldset card">
+
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="message {{ type }}">{{ message|trans }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        {{ form_errors(form) }}
+
         <h2>{{ ('entity.idps.info.title')|trans }}</h2>
         <div class="wysiwyg">{{ ('entity.idps.info.html')|trans|wysiwyg }}</div>
     </div>

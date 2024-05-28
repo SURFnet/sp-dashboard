@@ -50,7 +50,6 @@ class EntityAclController extends AbstractController
         private readonly EntityService $entityService,
         private readonly AuthorizationService $authorizationService,
         private readonly EntityAclService $entityAclService,
-        private readonly IdpServiceInterface $idpService,
         private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
@@ -74,14 +73,14 @@ class EntityAclController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commandBus->handle($command);
             $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
+
+            return $this->redirectToRoute('entity_published_test');
         }
 
-        $viewObject = $this->entityDetailFactory->buildFrom($entity);
         return $this->render(
             '@Dashboard/EntityAcl/idps.html.twig',
             [
                 'form' => $form->createView(),
-                'entity' => $viewObject,
                 'isAdmin' => $this->authorizationService->isAdministrator(),
             ]
         );
