@@ -24,17 +24,28 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 
 class IdpCollection
 {
+
+    private array $testEntities;
+    private array $institutionEntities;
+
     public function __construct(
-        private TestIdpCollection $testEntities,
+        /** @var EntityId[] */
+        array $testEntities,
         /** @var IdentityProvider[] */
-        private array $institutionEntities,
+        array $allEntities,
     ) {
+        foreach ($allEntities as $idp) {
+            if (array_key_exists($idp->getEntityId(), $testEntities)) {
+                $this->testEntities[] = $idp;
+                continue;
+            }
+            $this->institutionEntities[] = $idp;
+        }
     }
 
     public function testEntities(): array
     {
-        $items = $this->testEntities->getIterator()->getArrayCopy();
-        return $items;
+        return $this->testEntities;
     }
 
     public function institutionEntities(): array

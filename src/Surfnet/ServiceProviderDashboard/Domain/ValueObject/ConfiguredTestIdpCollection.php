@@ -39,7 +39,7 @@ class ConfiguredTestIdpCollection
                     'Please review the configured test IdP config entries. Only non empty strings are allowed'
                 );
             }
-            $this->entityIds[] = new EntityId($entityId);
+            $this->entityIds[$entityId] = new EntityId($entityId);
         }
     }
     /**

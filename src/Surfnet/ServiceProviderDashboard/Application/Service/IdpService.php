@@ -21,7 +21,6 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
@@ -37,25 +36,11 @@ class IdpService implements IdpServiceInterface
     ) {
     }
 
-    private function loadTestIdps(): TestIdpCollection
-    {
-        $collection = new TestIdpCollection();
-        foreach ($this->testIdps->testEntities() as $testIdp) {
-            $idp = $this->idpRepository->findByEntityId($testIdp);
-            if ($idp === null) {
-                $this->logger->notice(sprintf('Unable to load test IdP: %s. EntityId not found in Manage', $testIdp));
-                continue;
-            }
-            $collection->add($idp);
-        }
-        return $collection;
-    }
-
     public function createCollection(): IdpCollection
     {
-        $testIdps = $this->loadTestIdps();
-        $institutionEntities = $this->entityAclService->getAvailableIdps();
+        $testEntities = $this->testIdps->testEntities();
+        $allEntities = $this->entityAclService->getAvailableIdps();
 
-        return new IdpCollection($testIdps, $institutionEntities);
+        return new IdpCollection($testEntities, $allEntities);
     }
 }
