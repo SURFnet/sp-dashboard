@@ -21,7 +21,6 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Exception\InvalidEntityIdException;
-use function is_array;
 
 class ConfiguredTestIdpCollection
 {

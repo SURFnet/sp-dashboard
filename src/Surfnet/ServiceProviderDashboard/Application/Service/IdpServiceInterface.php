@@ -20,9 +20,9 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TestIdpCollection;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
 
-interface TestIdpServiceInterface
+interface IdpServiceInterface
 {
-    public function loadTestIdps(): TestIdpCollection;
+    public function createCollection(): IdpCollection;
 }
