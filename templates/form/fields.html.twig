@@ -180,21 +180,29 @@
 {# Use a table to display the list of idp's for the entity acl's. #}
 {% block acl_list_widget %}
     {% apply spaceless %}
-        <table {{ block('widget_container_attributes') }}>
+        <table class="aclList" {{ block('widget_container_attributes') }}>
             <tr>
-                <th>&nbsp;</th>
-                <th>{{ 'entity.acl.name.title'|trans }}</th>
+                <th class="coll1">&nbsp;</th>
+                <th class="coll2">{{ 'entity.acl.name.title'|trans }}</th>
                 <th>{{ 'entity.acl.entity-id.title'|trans }}</th>
             </tr>
             {% for name, choice in form.vars.choices %}
                 <tr>
-                    <td>{{ form_widget(form[name]) }}</td>
-                    <td>{{ form_label(form[name]) }}</td>
+                    <td class="coll1">{{ form_widget(form[name]) }}</td>
+                    <td class="coll2">{{ form_label(form[name]) }}</td>
                     <td>{{ choice.data.entityId }}</td>
                 </tr>
             {% endfor %}
         </table>
     {% endapply %}
+{% endblock %}
+
+{% block test_idp_list_widget %}
+    {{ block('acl_list_widget') }}
+{% endblock %}
+
+{% block institution_idp_list_widget %}
+    {{ block('acl_list_widget') }}
 {% endblock %}
 
 {%- block number_widget -%}

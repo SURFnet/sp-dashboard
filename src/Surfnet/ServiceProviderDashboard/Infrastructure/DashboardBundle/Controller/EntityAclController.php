@@ -23,13 +23,17 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use League\Tactician\CommandBus;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\PushMetadataCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityAclCommand;
+use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityIdpsCommand;
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
+use Surfnet\ServiceProviderDashboard\Application\Service\IdpServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\TestIdpService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TestIdpServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\IdpEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +50,7 @@ class EntityAclController extends AbstractController
         private readonly EntityService $entityService,
         private readonly AuthorizationService $authorizationService,
         private readonly EntityAclService $entityAclService,
-        private readonly TestIdpServiceInterface $testIdpService,
+        private readonly IdpServiceInterface $idpService,
         private readonly EntityDetailFactory $entityDetailFactory,
     ) {
     }
@@ -56,14 +60,28 @@ class EntityAclController extends AbstractController
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
-        $viewObject = $this->entityDetailFactory->buildFrom($entity);
-        $testEntities = $this->testIdpService->loadTestIdps();
+        $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
 
+        $command = new UpdateEntityIdpsCommand(
+            $entity,
+            $selectedIdps,
+            $selectedIdps,
+        );
+
+        $form = $this->createForm(IdpEntityType::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->commandBus->handle($command);
+            $this->commandBus->handle(new PushMetadataCommand(Constants::ENVIRONMENT_TEST));
+        }
+
+        $viewObject = $this->entityDetailFactory->buildFrom($entity);
         return $this->render(
             '@Dashboard/EntityAcl/idps.html.twig',
             [
+                'form' => $form->createView(),
                 'entity' => $viewObject,
-                'testEntities' => $testEntities,
                 'isAdmin' => $this->authorizationService->isAdministrator(),
             ]
         );

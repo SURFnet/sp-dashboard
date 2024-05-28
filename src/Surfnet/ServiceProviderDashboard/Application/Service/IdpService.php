@@ -21,20 +21,23 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TestIdpCollection;
 
-class TestIdpService implements TestIdpServiceInterface
+class IdpService implements IdpServiceInterface
 {
     public function __construct(
         private readonly ConfiguredTestIdpCollection $testIdps,
         private readonly IdentityProviderRepository $idpRepository,
+        private readonly EntityAclService $entityAclService,
         private readonly LoggerInterface $logger,
     ) {
     }
 
-    public function loadTestIdps(): TestIdpCollection
+    private function loadTestIdps(): TestIdpCollection
     {
         $collection = new TestIdpCollection();
         foreach ($this->testIdps->testEntities() as $testIdp) {
@@ -46,5 +49,13 @@ class TestIdpService implements TestIdpServiceInterface
             $collection->add($idp);
         }
         return $collection;
+    }
+
+    public function createCollection(): IdpCollection
+    {
+        $testIdps = $this->loadTestIdps();
+        $institutionEntities = $this->entityAclService->getAvailableIdps();
+
+        return new IdpCollection($testIdps, $institutionEntities);
     }
 }
