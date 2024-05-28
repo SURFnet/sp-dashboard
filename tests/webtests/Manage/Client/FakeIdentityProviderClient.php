@@ -18,8 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
+use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProviderFactory;
 use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\ClientResult;
 
@@ -45,5 +47,16 @@ class FakeIdentityProviderClient implements IdentityProviderRepository
             $list[] = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
         }
         return $list;
+    }
+
+    public function findByEntityId(EntityId $entityId): ?IdentityProvider
+    {
+        foreach ($this->entities as $manageResult) {
+            $entity = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
+            if ($entity->getEntityId() === (string) $entityId) {
+                return $entity;
+            }
+        }
+        return null;
     }
 }

@@ -249,6 +249,10 @@ services:
       $manageTestConfig: "@surfnet.manage.configuration.test"
       $manageProdConfig: "@surfnet.manage.configuration.production"
 
+  Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection:
+    arguments:
+      $entityIds: "%env(json:test_idp_entity_ids)%"
+
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Twig\ServiceSwitcherExtension:
     tags: [ twig.extension ]
 
@@ -642,3 +646,10 @@ services:
 
   Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator:
     - '@Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository'
+
+  Surfnet\ServiceProviderDashboard\Application\Service\TestIdpServiceInterface:
+    class: Surfnet\ServiceProviderDashboard\Application\Service\TestIdpService
+    arguments:
+      $idpRepository: '@surfnet.manage.client.identity_provider_client.test_environment'
+      $testIdps: '@Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection'
+      $logger: '@logger'
