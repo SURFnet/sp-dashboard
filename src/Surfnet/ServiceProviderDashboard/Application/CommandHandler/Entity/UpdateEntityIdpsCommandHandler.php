@@ -20,13 +20,13 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityIdpsCommand;
 use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\AllowedIdentityProviders;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
-use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class UpdateEntityIdpsCommandHandler implements CommandHandler
@@ -59,7 +59,7 @@ class UpdateEntityIdpsCommandHandler implements CommandHandler
         $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {
             $this->publishClient->publish($entity, $entity, 'ACL');
-        } catch (PublishMetadataException $e) {
+        } catch (Exception $e) {
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
