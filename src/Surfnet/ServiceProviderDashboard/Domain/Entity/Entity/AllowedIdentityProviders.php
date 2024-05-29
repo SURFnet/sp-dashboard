@@ -28,7 +28,7 @@ class AllowedIdentityProviders
 {
     public function __construct(
         private array $providers,
-        private ?bool $allowAll,
+        private bool $allowAll,
     ) {
         Assert::allString($providers);
     }
@@ -68,7 +68,7 @@ class AllowedIdentityProviders
     {
         if (!$allowedIdPs instanceof AllowedIdentityProviders) {
             $this->providers = [];
-            $this->allowAll = null;
+            $this->allowAll = true;
             return;
         }
         $this->providers = is_null($allowedIdPs->getAllowedIdentityProviders()) ?

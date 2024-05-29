@@ -119,7 +119,8 @@ trait EntityControllerTrait
                 return $this->redirectToRoute('entity_published_test');
             }
             $this->addFlash('info', 'entity.create.info.publish');
-            return $this->redirectToRoute('entity_acl_idps',
+            return $this->redirectToRoute(
+                'entity_acl_idps',
                 [
                     'serviceId' => $entity->getService()->getId(),
                     'id' => $publishEntityCommand->getManageEntity()->getId(),
