@@ -29,7 +29,6 @@ class UpdateEntityIdpsCommand implements Command
 {
     public function __construct(
         public readonly ManageEntity $manageEntity,
-
         /**
          * @var IdentityProvider[]
          */
@@ -38,7 +37,6 @@ class UpdateEntityIdpsCommand implements Command
             new Assert\Type(type: IdentityProvider::class),
         ])]
         public array $testEntities,
-
         /**
          * @var IdentityProvider[]
          */
