@@ -20,19 +20,14 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
-use Psr\Log\LoggerInterface;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TestIdpCollection;
 
 class IdpService implements IdpServiceInterface
 {
     public function __construct(
         private readonly ConfiguredTestIdpCollection $testIdps,
-        private readonly IdentityProviderRepository $idpRepository,
         private readonly EntityAclService $entityAclService,
-        private readonly LoggerInterface $logger,
     ) {
     }
 

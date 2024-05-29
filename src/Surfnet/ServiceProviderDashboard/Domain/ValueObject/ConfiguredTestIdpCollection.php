@@ -24,10 +24,13 @@ use Surfnet\ServiceProviderDashboard\Domain\Exception\InvalidEntityIdException;
 
 class ConfiguredTestIdpCollection
 {
+    /** @var EntityId[] */
     private array $entityIds;
 
+    /** @param string[]|null $entityIds */
     public function __construct(?array $entityIds)
     {
+        $this->entityIds = [];
         if ($entityIds === null) {
             throw new InvalidEntityIdException(
                 'Please review the configured test IdP config entries. No Idps were provided.'

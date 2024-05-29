@@ -667,6 +667,4 @@ services:
     class: Surfnet\ServiceProviderDashboard\Application\Service\IdpService
     arguments:
       $entityAclService: '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
-      $idpRepository: '@surfnet.manage.client.identity_provider_client.test_environment'
       $testIdps: '@Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection'
-      $logger: '@logger'

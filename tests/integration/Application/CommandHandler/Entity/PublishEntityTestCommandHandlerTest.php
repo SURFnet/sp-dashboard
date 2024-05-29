@@ -101,6 +101,7 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->andReturn(true);
         $manageEntity->shouldReceive('getId')
             ->andReturn('uuid');
+        $manageEntity->shouldReceive('setId');
         $manageEntity
             ->shouldReceive('getEnvironment')
             ->andReturn('test');

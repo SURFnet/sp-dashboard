@@ -63,7 +63,7 @@ class UpdateEntityIdpsCommandHandler implements CommandHandler
             $this->logger->error(
                 sprintf(
                     'Publishing to Manage failed for: "%s". Message: "%s"',
-                    $entity->getMetaData()->getNameEn(),
+                    $entity->getMetaData()?->getNameEn(),
                     $e->getMessage()
                 )
             );
