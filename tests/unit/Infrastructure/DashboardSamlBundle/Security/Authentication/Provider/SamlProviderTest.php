@@ -69,6 +69,15 @@ class SamlProviderTest extends TestCase
         );
     }
 
+    public function test_surfconext_responsible_teams_validation_accepts_valid_teams()
+    {
+        $provider = $this->buildProvider("'urn:collab:foo:team.foobar.com'", "'urn:collab:foo:team.foobar.com', 'urn:collab:foo:team.foobar2.com'");
+        self::assertInstanceOf(
+            SamlProvider::class,
+            $provider
+        );
+    }
+
     public function test_administrator_teams_validation_rejects_invalid_teams()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -76,8 +85,22 @@ class SamlProviderTest extends TestCase
         $this->buildProvider(",345345,true,false,foo,bar");
     }
 
-    private function buildProvider($administratorTeams)
+    public function test_surfconext_responsible_teams_rejects_invalid_teams()
     {
-        return new SamlProvider($this->contactRepo, $this->serviceRepo, $this->attributeDictionary, $this->logger, $administratorTeams);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('All entries in the `surfconext_responsible_authorization` config parameter should be string.');
+        $this->buildProvider("'urn:collab:foo:team.foobar.com'", ",345345,true,false,foo,bar");
+    }
+
+    private function buildProvider(string $administratorTeams, string $surfConextResponsible = "'defualt")
+    {
+        return new SamlProvider(
+            $this->contactRepo,
+            $this->serviceRepo,
+            $this->attributeDictionary,
+            $this->logger,
+            $administratorTeams,
+            $surfConextResponsible
+        );
     }
 }
