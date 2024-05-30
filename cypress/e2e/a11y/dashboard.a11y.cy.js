@@ -3,7 +3,7 @@ import {terminalLog} from '../../functions/terminalLog';
 context('SPD verify a11y of dashboard', () => {
     beforeEach(() => {
         cy.login();
-        cy.visit('https://spdashboard.vm.openconext.org');
+        cy.visit('https://spdashboard.dev.openconext.local');
     });
 
     it('contains no a11y problems on load', () => {

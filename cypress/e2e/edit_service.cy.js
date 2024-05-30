@@ -10,7 +10,7 @@ context('Edit another service', () => {
 
     // Als ingelogde gebruiker van dienst X kan ik geen edits doen in dienst Y (door het raden van de url van een andere service bijvoorbeeld)
     it('is not possible to edit another service', () => {
-        cy.visit('https://spdashboard.vm.openconext.org/service/3', { failOnStatusCode: false });
+        cy.visit('https://spdashboard.dev.openconext.local/service/3', { failOnStatusCode: false });
         cy.contains('Unable to find service');
     });
 
