@@ -37,7 +37,7 @@ Cypress.Commands.add('clickSubmit', () => {
 });
 
 Cypress.Commands.add('selectService', (serviceId = 1) => {
-    cy.visit(`https://spdashboard.vm.openconext.org/service/${serviceId}`);
+    cy.visit(`https://spdashboard.dev.openconext.local/service/${serviceId}`);
 });
 
 Cypress.Commands.add('checkCorrectTextValue', (label, value) => {

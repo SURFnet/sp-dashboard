@@ -36,7 +36,7 @@ Cypress.Commands.add('createEntity', (entityId, team, name, attributes, environm
     };
     metadataTemplate = stringTemplateParser(JSON.stringify(metadataTemplate), templateVariables);
 
-    fetch('https://manage.vm.openconext.org/manage/api/internal/metadata', {
+    fetch('https://manage.dev.openconext.local/manage/api/internal/metadata', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
 
     const protocols = ['saml20_sp', 'oidc10_rp', 'oauth20_rs'];
 
-    let searchUri = 'https://manage.vm.openconext.org/manage/api/internal/search/${type}'
+    let searchUri = 'https://manage.dev.openconext.local/manage/api/internal/search/${type}'
 
     const searchBody = '{"metaDataFields.coin:service_team_id": "' + teamName.toString() +'"}';
 
@@ -78,7 +78,7 @@ Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
         .then(data => {
             for (const entityIndex in data) {
                 const entityId = data[entityIndex]['_id'];
-                const deleteUri = 'https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}';
+                const deleteUri = 'https://manage.dev.openconext.local/manage/api/internal/metadata/${type}/${entityId}';
                 let uri = deleteUri.toString().replace('${entityId}', entityId);
                 uri = uri.toString().replace('${type}', entityType);
 
@@ -106,7 +106,7 @@ Cypress.Commands.add('removeEntitiesForTeam', (teamName) => {
 });
 
 Cypress.Commands.add('deleteEntity', (entityType = '', entityId = '') => {
-    const deleteUri = 'https://manage.vm.openconext.org/manage/api/internal/metadata/${type}/${entityId}';
+    const deleteUri = 'https://manage.dev.openconext.local/manage/api/internal/metadata/${type}/${entityId}';
     let uri = deleteUri.toString().replace('${entityId}', entityId);
     uri.toString().replace('${type}', entityType);
 
@@ -127,13 +127,13 @@ Cypress.Commands.add('deleteEntity', (entityType = '', entityId = '') => {
         });
 });
 
-Cypress.Commands.add('loginToManage', (url = 'https://manage.vm.openconext.org') => {
+Cypress.Commands.add('loginToManage', (url = 'https://manage.dev.openconext.local') => {
     cy.visit(url);
     cy.wait(300);
     cy.checkForManage();
 });
 
-Cypress.Commands.add('loginToManageAndSelectTiffanyAching', (url = 'https://manage.vm.openconext.org') => {
+Cypress.Commands.add('loginToManageAndSelectTiffanyAching', (url = 'https://manage.dev.openconext.local') => {
     cy.loginToManage(url);
     cy.get('.search-input').type('Tiffany Aching');
     cy.get('.matched').contains('Tiffany Aching').click();

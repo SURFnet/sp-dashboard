@@ -15,8 +15,8 @@
       {"name" : "http://idp.harderwijk.edu.nl"}
     ],
     "allowedResourceServers" : [
-      {"name" : "voot.vm.openconext.org"},
-      {"name" : "foot.vm.openconext.org"}
+      {"name" : "voot.dev.openconext.local"},
+      {"name" : "foot.dev.openconext.local"}
     ],
     "allowedall" : false,
     "arp" : {
@@ -31,7 +31,7 @@
       },
       "enabled" : true
     },
-    "entityid" : "teams.vm.openconext.org",
+    "entityid" : "teams.dev.openconext.local",
     "metaDataFields" : {
       "OrganizationName:en" : "OpenConext",
       "description:en" : "OAuth client to access VOOT for group information",

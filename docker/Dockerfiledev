@@ -8,7 +8,7 @@ COPY ./conf/spdup.sh /usr/local/sbin/spdup.sh
 CMD ["/usr/local/sbin/start.sh"]
 
 FROM ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest as spddev
-COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.vm.openconext.org.pem /usr/local/share/ca-certificates/star.vm.openconext.org.pem
+COPY --from=openconext /etc/pki/ca-trust/source/anchors/star.dev.openconext.local.pem /usr/local/share/ca-certificates/star.dev.openconext.local.pem
 COPY ./conf/zz-docker.conf /usr/local/etc/php/conf.d/
 COPY ./conf/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 RUN   /usr/sbin/update-ca-certificates

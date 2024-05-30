@@ -34,13 +34,13 @@ Cypress.Commands.add('checkForConsent', () => {
 });
 
 Cypress.Commands.add('login', (username = 'Tiffany', pass = 'Aching') => {
-    cy.origin('https://mujina-idp.vm.openconext.org', {args: {username, pass}}, ({username, pass}) => {
+    cy.origin('https://mujina-idp.dev.openconext.local', {args: {username, pass}}, ({username, pass}) => {
         cy.visit('/login');
         cy.get('#username').type(username);
         cy.get('#password').type(pass);
         cy.get('.login-form').submit();
     });
-    const url = 'https://spdashboard.vm.openconext.org';
+    const url = 'https://spdashboard.dev.openconext.local';
     cy.wait(400);
     cy.visit({
         url: url,
