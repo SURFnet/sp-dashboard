@@ -49,6 +49,10 @@ class DashboardSamlExtension extends Extension
             $config['administrator_teams']
         );
         $container->setParameter(
+            'surfnet.dashboard.security.authentication.surfconext_responsible_authorization',
+            $config['surfconext_responsible_authorization']
+        );
+        $container->setParameter(
             'surfnet.dashboard.security.authentication.session.maximum_absolute_lifetime_in_seconds',
             $config['session_lifetimes']['max_absolute_lifetime']
         );

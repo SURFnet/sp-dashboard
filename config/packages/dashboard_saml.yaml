@@ -3,3 +3,4 @@ dashboard_saml:
     max_absolute_lifetime: "%env(int:session_max_absolute_lifetime)%"
     max_relative_lifetime: "%env(int:session_max_relative_lifetime)%"
   administrator_teams: "%env(administrator_teams)%"
+  surfconext_responsible_authorization: "%env(surfconext_responsible_authorization)%"
