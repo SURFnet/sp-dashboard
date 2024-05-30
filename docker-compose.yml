@@ -4,9 +4,6 @@ include:
 services:
     spdashboard:
       image:  ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest
-      environment:
-        - APP_ENV=dev
-        - APP_DEBUG=true
       volumes:
         - ../OpenConext-devconf/core/:/config
         - ./:/var/www/html/

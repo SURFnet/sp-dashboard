@@ -2,7 +2,7 @@
   "version": 1,
   "type": "saml20_sp",
   "data": {
-    "entityid": "https://spdashboard.vm.openconext.org/saml/metadata",
+    "entityid": "https://spdashboard.dev.openconext.local/saml/metadata",
     "state": "prodaccepted",
     "allowedall": true,
     "arp": {
@@ -15,12 +15,12 @@
       "OrganizationName:en" : "OpenConext",
       "coin:no_consent_required" : true,
       "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-      "AssertionConsumerService:0:Location": "https://spdashboard.vm.openconext.org/saml/acs",
+      "AssertionConsumerService:0:Location": "https://spdashboard.dev.openconext.local/saml/acs",
       "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
       "coin:signature_method": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
     },
     "allowedEntities": [],
-    "metadataurl": "https://spd.vm.openconext.org/saml/metadata",
+    "metadataurl": "https://spd.dev.openconext.local/saml/metadata",
     "type": "saml20-sp",
     "revisionnote": "Initial import"
   }

@@ -9,7 +9,7 @@ context('Edit ARP', () => {
     cy.loginToManageAndSelectTiffanyAching();
     cy.goToArpTab();
     cy.addSurfCrmId();
-    cy.visit('https://spdashboard.vm.openconext.org/service/2');
+    cy.visit('https://spdashboard.dev.openconext.local/service/2');
     cy.editEntity();
     cy.addPersonalCodeAttribute();
     cy.addComment('testing editing an attribute');

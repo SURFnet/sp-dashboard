@@ -327,7 +327,14 @@ class WebTestCase extends PantherTestCase
             $isMemberOf->sendKeys($secondTeamName);
         }
         self::findBy('.button')->click();
-        return self::$pantherClient->refreshCrawler();
+        $crawler = self::$pantherClient->refreshCrawler();
+
+        // Do we have a consent screen?
+        if ($crawler->filter('.page__title')->count() > 0 && $crawler->filter('.page__title')->getText() === 'Review your information that will be shared.') {
+            $crawler->filter('.cta_consent_ok')->click();
+        }
+
+        return $crawler;
     }
 
     /**
