@@ -36,6 +36,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
+use function in_array;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -53,7 +54,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         private readonly ContactRepository $contacts,
         private readonly ServiceRepository $services,
         private readonly AttributeDictionary $attributeDictionary,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface  $logger,
         string $administratorTeams,
         string $surfConextResponsibleAuthorization,
     ) {
