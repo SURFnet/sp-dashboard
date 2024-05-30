@@ -18,7 +18,6 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
-use BadMethodCallException;
 use Psr\Log\LoggerInterface;
 use SAML2\Assertion;
 use Surfnet\SamlBundle\Exception\RuntimeException;
@@ -48,12 +47,15 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
      */
     private readonly array $administratorTeams;
 
+    private readonly string $surfConextResponsibleAuthorization;
+
     public function __construct(
         private readonly ContactRepository $contacts,
         private readonly ServiceRepository $services,
         private readonly AttributeDictionary $attributeDictionary,
         private readonly LoggerInterface $logger,
         string $administratorTeams,
+        string $surfConextResponsibleAuthorization,
     ) {
         $teams = explode(",", str_replace('\'', '', $administratorTeams));
         Assert::allStringNotEmpty(
@@ -61,6 +63,12 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             'All entries in the `administrator_teams` config parameter should be string.'
         );
         $this->administratorTeams = $teams;
+
+        Assert::stringNotEmpty(
+            $surfConextResponsibleAuthorization,
+            'The `surfconext_responsible_authorization` config parameter should be a non empty string.'
+        );
+        $this->surfConextResponsibleAuthorization = $surfConextResponsibleAuthorization;
     }
 
     public function getNameId(Assertion $assertion): string
@@ -95,8 +103,19 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $teamNames = [];
         }
 
+        try {
+            // An exception is thrown when isMemberOf is empty.
+            $surfAuthorizations = (array) $translatedAssertion->getAttributeValue('surf-autorisaties');
+        } catch (RuntimeException) {
+            $surfAuthorizations = [];
+        }
+
         if (array_intersect($this->administratorTeams, $teamNames) !== []) {
             $role = 'ROLE_ADMINISTRATOR';
+        }
+
+        if (in_array($this->surfConextResponsibleAuthorization, $surfAuthorizations)) {
+            $role = 'ROLE_SURFCONEXT_RESPONSIBLE';
         }
 
         $contact = $this->contacts->findByNameId($nameId);
@@ -109,6 +128,11 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         }
 
         if ($role === 'ROLE_USER') {
+            $this->assignServicesToContact($contact, $teamNames);
+            $this->contacts->save($contact);
+        }
+
+        if ($role === 'ROLE_SURFCONEXT_RESPONSIBLE') {
             $this->assignServicesToContact($contact, $teamNames);
             $this->contacts->save($contact);
         }
