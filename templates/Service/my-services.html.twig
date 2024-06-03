@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body_container %}
+    <main>
+        {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
+
+        <h1 id="main" class="service-title">
+            {{ 'service.connections.title.main'|trans({"%serviceName%": service.name}) }}
+        </h1>
+        <article class="fieldset card service-connections">
+            <aside class="filters">
+                <div class="header"><h2>{{ 'service.connections.title.filters'|trans }}</h2></div>
+                <div>
+                    <div class="totals">Todo</div>
+                </div>
+            </aside>
+            <div class="sps">
+                <div class="header"><h2>{{ 'service.connections.title.content'|trans }}</h2></div><div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Vendor</th>
+                            <th scope="col" class="idp">Dummy IdP</th>
+                            <th scope="col" class="idp">EduID</th>
+                            <th scope="col" class="idp">DIY IdP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="name">10voordeleraar-loa1</td>
+                        <td class="vendor">10voordeleraar-loa1</td>
+                        <td class="idp"><i class="fa fa-times not-connected"><span class="hidden">{{ 'service.connections.not-connected'|trans }}</span></i></td>
+                        <td class="idp"><i class="fa fa-check connected"><span class="hidden">{{ 'service.connections.connected'|trans }}</span></i></td>
+                        <td class="idp"><i class="fa fa-check connected"><span class="hidden">{{ 'service.connections.connected'|trans }}</span></i></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </main>
+{% endblock %}
