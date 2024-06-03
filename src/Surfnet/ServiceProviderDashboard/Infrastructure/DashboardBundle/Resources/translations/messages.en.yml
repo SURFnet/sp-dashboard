@@ -522,6 +522,7 @@ service.overview.action.privacyQuestions: Privacy questions
 service.overview.action.serviceEdit: Edit service
 service.overview.action.serviceDelete: Delete service
 service.overview.action.serviceManageTeam: Member management
+service.overview.action.connections: Manage connections
 service.overview.graph.title: "%name% status summary"
 service.overview.graph.noscript: "Service overview graphp no script"
 service.overview.privacy.notification.title: "Privacy questions status"
@@ -560,6 +561,12 @@ service.overview.progress.tooltip.privacy-questions.info.html: "Are the privacy 
 service.overview.progress.tooltip.production-connection.info.html: "Is a production connection active?"
 service.overview.progress.tooltip.production-connection.in-progress.html: "The deployment to the production environment is in progress"
 service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
+
+service.connections.title.main: "%serviceName% connections"
+service.connections.title.filters: Filters
+service.connections.title.content: Connection status
+service.connections.connected: Not connected
+service.connections.not-connected: Connected
 
 teams.management.close: Close
 teams.management.title: User management

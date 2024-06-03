@@ -50,6 +50,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use function in_array;
 use function reset;
 
 /**
@@ -77,7 +78,7 @@ class ServiceController extends AbstractController
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
         $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
         $this->authorizationService->resetService();
-
+        $isSurfConnextResponsible = in_array('ROLE_SURFCONEXT_RESPONSIBLE', $this->getUser()->getRoles());
         if ($services === []) {
             return $this->redirectToRoute('service_add');
         }
@@ -116,6 +117,7 @@ class ServiceController extends AbstractController
             [
             'services' => $serviceList,
             'isAdmin' => false,
+            'isSurfconextResponsible' => $isSurfConnextResponsible,
             'publishedEntity' => $publishedEntity,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
             'privacyStatusEntities' => $privacyOK,

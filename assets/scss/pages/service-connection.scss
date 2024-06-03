@@ -1,0 +1,38 @@
+.service-connections {
+  display: flex;
+  aside.filters {
+    margin-right: 32px;
+    width: 230px;
+    flex-basis: 230px;
+    flex-shrink: 0;
+  }
+  div.sps {
+    flex: 1 1;
+    flex-basis: 400px;
+
+    td {
+      padding: 15px 10px;
+
+      i.connected {
+        color: $dark-green;
+      }
+      i.not-connected {
+        color: $red;
+      }
+
+      &.idp {
+        width: 3rem;
+      }
+    }
+    th {
+      border-bottom: 1xp solid $black;
+      padding: 11px 10px;
+      font-size: .875rem;
+      font-weight: 600;
+    }
+
+    td.name {
+      color: $blue
+    }
+  }
+}
