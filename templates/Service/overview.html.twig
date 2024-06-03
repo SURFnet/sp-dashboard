@@ -54,6 +54,17 @@
                                 </a>
                             </li>
                         {% endif %}
+                        {% if isSurfconextResponsible %}
+                            <li class="service-status-title-action-item">
+                                <a
+                                        class="button admin title service-status-title-button"
+                                        href="{{ path('service_connections', {'serviceId': service.id}) }}"
+                                >
+                                    <i class="fa fa-globe" aria-hidden="true"></i>
+                                    {{ 'service.overview.action.connections'|trans }}
+                                </a>
+                            </li>
+                        {% endif %}
                         {% if service.arePrivacyQuestionsEnabled %}
                             <li class="service-status-title-action-item">
                                 <a
