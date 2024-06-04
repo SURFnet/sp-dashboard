@@ -8,6 +8,6 @@ services:
     working_dir: /e2e
     entrypoint: cypress open --project .
     networks:
-      coreconextdev:
+      spdashboard:
     volumes:
       - .:/e2e
