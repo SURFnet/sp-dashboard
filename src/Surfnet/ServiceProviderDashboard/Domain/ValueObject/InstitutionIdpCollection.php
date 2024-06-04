@@ -18,15 +18,25 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Service;
+namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionIdpCollection;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 
-interface IdpServiceInterface
+class InstitutionIdpCollection
 {
-    public function createCollection(): IdpCollection;
+    /**
+     * @param IdentityProvider[] $institutionEntities
+     */
+    public function __construct(
+        private array $institutionEntities,
+    ) {
+    }
 
-    public function findInstitutionIdps(InstitutionId $institutionId): InstitutionIdpCollection;
+    /**
+     * @return IdentityProvider[]
+     */
+    public function institutionEntities(): array
+    {
+        return $this->institutionEntities;
+    }
 }

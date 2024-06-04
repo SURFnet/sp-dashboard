@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% set columnCount = testIdps|length + 2 %}
+
 {% block body_container %}
     <main>
         {% include "@Dashboard/FlashMessage/flashMessages.html.twig" %}
@@ -21,19 +23,28 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Vendor</th>
-                            <th scope="col" class="idp">Dummy IdP</th>
-                            <th scope="col" class="idp">EduID</th>
-                            <th scope="col" class="idp">DIY IdP</th>
+                            {% for idp in  testIdps %}
+                                <th scope="col" class="idp" title="{{ idp.entityId }}">{{ idp.name }}</th>
+                            {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
+
+                    {% if entities is empty %}
+                        <tr>
+                            <td colspan="{{ columnCount }}">{{ 'service.connections.table.no-results'|trans }}</td>
+                        </tr>
+                    {% else %}
+                    {% for sp in  entities %}
                     <tr>
-                        <td class="name">10voordeleraar-loa1</td>
-                        <td class="vendor">10voordeleraar-loa1</td>
-                        <td class="idp"><i class="fa fa-times not-connected"><span class="hidden">{{ 'service.connections.not-connected'|trans }}</span></i></td>
-                        <td class="idp"><i class="fa fa-check connected"><span class="hidden">{{ 'service.connections.connected'|trans }}</span></i></td>
-                        <td class="idp"><i class="fa fa-check connected"><span class="hidden">{{ 'service.connections.connected'|trans }}</span></i></td>
+                        <td class="name">{{ sp.entityName }}</td>
+                        <td class="vendor">{{ sp.vendorName }}</td>
+                            {% for connected in  sp.listConnected %}
+                            <td class="idp"><i class="fa fa-{{ (connected ? 'check' : 'times')|trans }} {{ (not connected) ? 'not-' : '' }}connected"><span class="hidden">{{ (connected ? 'service.connections.connected' : 'service.connections.not-connected')|trans }}</span></i></td>
+                            {% endfor %}
                     </tr>
+                    {% endfor %}
+                    {% endif %}
                     </tbody>
                 </table>
             </div>

@@ -18,16 +18,19 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class MyServicesController extends AbstractController
+class ServiceConnectionsController extends AbstractController
 {
     public function __construct(
         private readonly AuthorizationService $authorizationService,
+        private readonly ServiceConnectionService $serviceConnectionService,
     ) {
     }
 
@@ -39,10 +42,15 @@ class MyServicesController extends AbstractController
     )]
     public function myServices(int $serviceId)
     {
+        $institutionId = new InstitutionId('1123-3423-abefg-13532');
         $service = $this->authorizationService->changeActiveService($serviceId);
+        $testIdps = $this->serviceConnectionService->listTestIdps($institutionId);
+        $entities = $this->serviceConnectionService->find($service, $institutionId);
         return $this->render(
             '@Dashboard/Service/my-services.html.twig',
             [
+                'testIdps' => $testIdps,
+                'entities' => $entities,
                 'service' => $service,
             ]
         );

@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 
 interface IdentityProviderRepository
 {
@@ -26,4 +27,9 @@ interface IdentityProviderRepository
      * @return IdentityProvider[]
      */
     public function findAll();
+
+    /**
+     * @return array<string, IdentityProvider>
+     */
+    public function findByInstitutionId(InstitutionId $institutionId): array;
 }

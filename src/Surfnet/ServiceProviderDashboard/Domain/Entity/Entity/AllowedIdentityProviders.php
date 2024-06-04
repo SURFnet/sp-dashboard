@@ -49,6 +49,9 @@ class AllowedIdentityProviders
         return new self($providers, $allowAll);
     }
 
+    /**
+     * @return string[]
+     */
     public function getAllowedIdentityProviders(): array
     {
         return $this->providers;

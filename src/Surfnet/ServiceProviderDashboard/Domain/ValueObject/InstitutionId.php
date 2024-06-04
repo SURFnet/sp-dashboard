@@ -18,15 +18,19 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Application\Service;
+namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionIdpCollection;
+use Stringable;
 
-interface IdpServiceInterface
+class InstitutionId implements Stringable
 {
-    public function createCollection(): IdpCollection;
+    public function __construct(
+        public string $institutionId,
+    ) {
+    }
 
-    public function findInstitutionIdps(InstitutionId $institutionId): InstitutionIdpCollection;
+    public function __toString(): string
+    {
+        return $this->institutionId;
+    }
 }

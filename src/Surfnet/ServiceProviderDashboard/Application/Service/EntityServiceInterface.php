@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentExcept
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 
 interface EntityServiceInterface
 {
@@ -62,4 +63,11 @@ interface EntityServiceInterface
      * @throws \Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException
      */
     public function getPristineManageEntityById($manageId, $env = 'test');
+
+    /**
+     * @param  string $teamName
+     * @return ManageEntity[]|null
+     * @throws QueryServiceProviderException
+     */
+    public function findPublishedTestEntitiesByTeamName(string $teamName): ?array;
 }
