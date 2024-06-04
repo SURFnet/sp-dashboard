@@ -85,22 +85,16 @@ class SamlProviderTest extends TestCase
         $this->buildProvider(",345345,true,false,foo,bar");
     }
 
-    public function test_surfconext_responsible_teams_rejects_invalid_teams()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The `surfconext_responsible_authorization` config parameter should be a non empty string.');
-        $this->buildProvider("'urn:collab:foo:team.foobar.com'", "");
-    }
-
-    private function buildProvider(string $administratorTeams, string $surfConextResponsible = "'defualt")
+    private function buildProvider(string $administratorTeams, $surfConextResponsible = "defualt")
     {
         return new SamlProvider(
             $this->contactRepo,
             $this->serviceRepo,
             $this->attributeDictionary,
             $this->logger,
+            'surf-autorisaties',
+            $surfConextResponsible,
             $administratorTeams,
-            $surfConextResponsible
         );
     }
 }

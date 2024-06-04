@@ -23,7 +23,9 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ContactRepository;
+use function in_array;
 
 /**
  * @package Surfnet\ServiceProviderDashboard\Entity
@@ -48,12 +50,36 @@ class Contact
 
     private array $roles = [];
 
+    /**
+     * Optionally set: the institution id found in the
+     * 'surf-autorisaties' attribute during login.
+     *
+     * This enables us to find IdPs that are marked to be explicitly for a
+     * given institution.
+     */
+    private ?InstitutionId $institutionId = null;
+
     public function __construct(
         #[ORM\Column(length: 150)] private readonly string $nameId,
         #[ORM\Column(length: 255)] private string          $emailAddress,
         #[ORM\Column(length: 255)] private string          $displayName,
     ) {
         $this->services = new ArrayCollection();
+    }
+
+    public function isSurfConextResponsible()
+    {
+        return in_array('ROLE_SURFCONEXT_RESPONSIBLE', $this->roles);
+    }
+
+    public function setInstitutionId(string $institutionId)
+    {
+        $this->institutionId = new InstitutionId($institutionId);
+    }
+
+    public function getInstitutionId(): ?InstitutionId
+    {
+        return $this->institutionId;
     }
 
     public function setEmailAddress(string $emailAddress): Contact

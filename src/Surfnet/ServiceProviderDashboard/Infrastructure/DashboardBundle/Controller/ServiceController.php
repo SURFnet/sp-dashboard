@@ -78,7 +78,7 @@ class ServiceController extends AbstractController
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
         $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
         $this->authorizationService->resetService();
-        $isSurfConnextResponsible = in_array('ROLE_SURFCONEXT_RESPONSIBLE', $this->getUser()->getRoles());
+        $isSurfConnextResponsible = $this->getUser()->getContact()->isSurfConextResponsible();
         if ($services === []) {
             return $this->redirectToRoute('service_add');
         }
@@ -292,6 +292,7 @@ class ServiceController extends AbstractController
             'services' => $serviceList,
             'isAdmin' => true,
             'showOidcPopup' => $this->showOidcPopup($publishedEntity),
+            'isSurfconextResponsible' => true,
             'publishedEntity' => $publishedEntity,
             'privacyStatusEntities' => $privacyOK,
             ]

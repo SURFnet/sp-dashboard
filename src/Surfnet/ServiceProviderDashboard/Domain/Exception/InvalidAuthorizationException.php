@@ -22,6 +22,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\Exception;
 
 use RuntimeException;
 
-class InvalidEntityIdException extends RuntimeException
+class InvalidAuthorizationException extends RuntimeException
 {
 }

@@ -21,8 +21,9 @@ services:
             - '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
             - '@surfnet_saml.saml.attribute_dictionary'
             - '@logger'
-            - '%surfnet.dashboard.security.authentication.administrator_teams%'
+            - '%surfnet.dashboard.security.authentication.authorization_attribute_name%'
             - '%surfnet.dashboard.security.authentication.surfconext_responsible_authorization%'
+            - '%surfnet.dashboard.security.authentication.administrator_teams%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider:
         alias: surfnet_saml.saml_provider

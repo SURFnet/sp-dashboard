@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InstitutionIdNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -42,7 +43,12 @@ class ServiceConnectionsController extends AbstractController
     )]
     public function myServices(int $serviceId)
     {
-        $institutionId = new InstitutionId('1123-3423-abefg-13532');
+        $institutionId = $this->getUser()->getContact()->getInstitutionId();
+        if ($institutionId === null) {
+            throw new InstitutionIdNotFoundException(
+                'ROLE_SURFCONEXT_RESPONSIBLE is granted, but no institution_id was provided in the assertion'
+            );
+        }
         $service = $this->authorizationService->changeActiveService($serviceId);
         $testIdps = $this->serviceConnectionService->listTestIdps($institutionId);
         $entities = $this->serviceConnectionService->find($service, $institutionId);

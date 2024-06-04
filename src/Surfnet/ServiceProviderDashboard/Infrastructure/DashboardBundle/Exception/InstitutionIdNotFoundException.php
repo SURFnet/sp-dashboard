@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 /**
  * Copyright 2024 SURFnet B.V.
  *
@@ -18,10 +16,10 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\Exception;
+namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception;
 
-use RuntimeException;
+use Exception;
 
-class InvalidEntityIdException extends RuntimeException
+class InstitutionIdNotFoundException extends Exception
 {
 }
