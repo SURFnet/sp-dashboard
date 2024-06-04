@@ -19,6 +19,7 @@ declare(strict_types = 1);
  */
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityConnection;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
@@ -30,12 +31,14 @@ class ServiceConnectionService
 {
     public function __construct(
         private readonly IdpService $testIdps,
-        private readonly EntityService $entityService, private readonly IdpServiceInterface $idpService,
+        private readonly EntityService $entityService,
+        private readonly IdpServiceInterface $idpService,
     ) {
     }
 
     /**
      * @return array<string, EntityConnection>
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity): Adding type check/safety hints caused a higher complexity
      */
     public function find(Service $service, InstitutionId $institutionId): array
     {
@@ -46,18 +49,37 @@ class ServiceConnectionService
         foreach ($testIdps as $entity) {
             $testIdpsIndexed[$entity->getEntityId()] = $entity;
         }
-        $entities = $this->entityService->findPublishedTestEntitiesByTeamName($service->getTeamName());
-
         $list = [];
+        $entities = $this->entityService->findPublishedTestEntitiesByTeamName($service->getTeamName());
+        if ($entities === null) {
+            return $list;
+        }
         $allowedProtocols = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
         foreach ($entities as $entity) {
             if (!in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
                 // Skipping irrelevant entity types
                 continue;
             }
+            $metadata = $entity->getMetaData();
+            if ($metadata === null) {
+                throw new RuntimeException(
+                    sprintf(
+                        'No metadata available on entity with manage id: %s',
+                        $entity->getId()
+                    )
+                );
+            }
+            if ($metadata->getNameEn() === null) {
+                throw new RuntimeException(
+                    sprintf(
+                        'No name:en available for entity with manage id: %s',
+                        $entity->getId()
+                    )
+                );
+            }
             if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
                 $list[$entity->getId()] = new EntityConnection(
-                    $entity->getMetaData()->getNameEn(),
+                    $metadata->getNameEn(),
                     $service->getOrganizationNameEn(),
                     $testIdpsIndexed,
                     $testIdpsIndexed,
@@ -72,7 +94,7 @@ class ServiceConnectionService
             }
 
             $list[$entity->getId()] = new EntityConnection(
-                $entity->getMetaData()->getNameEn(),
+                $metadata->getNameEn(),
                 $service->getOrganizationNameEn(),
                 $testIdpsIndexed,
                 $connectedIdps,

@@ -79,6 +79,10 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         return $this->attributeDictionary->translate($assertion)->getNameID();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     public function getUser(Assertion $assertion): UserInterface
     {
         $translatedAssertion = $this->attributeDictionary->translate($assertion);
@@ -96,9 +100,6 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $commonName = '';
         }
 
-        // Default to the ROLE_USER role for services.
-        $role = 'ROLE_USER';
-
         try {
             // An exception is thrown when isMemberOf is empty.
             $teamNames = (array)$translatedAssertion->getAttributeValue('isMemberOf');
@@ -114,13 +115,15 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $surfAuthorizations = null;
         }
 
+        // Default to the ROLE_USER role for services.
+        $role = 'ROLE_USER';
         if ($surfAuthorizations && $surfAuthorizations->isSurfConextResponsible()) {
             $role = 'ROLE_SURFCONEXT_RESPONSIBLE';
         }
-
         if (array_intersect($this->administratorTeams, $teamNames) !== []) {
             $role = 'ROLE_ADMINISTRATOR';
         }
+
         $contact = $this->contacts->findByNameId($nameId);
         if ($contact === null) {
             $contact = new Contact($nameId, $email, $commonName);
