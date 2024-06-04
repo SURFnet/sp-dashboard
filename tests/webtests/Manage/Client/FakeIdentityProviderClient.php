@@ -18,12 +18,11 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
-use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityId;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProviderFactory;
-use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\ClientResult;
 
 class FakeIdentityProviderClient implements IdentityProviderRepository
 {
@@ -58,5 +57,19 @@ class FakeIdentityProviderClient implements IdentityProviderRepository
             }
         }
         return null;
+    }
+
+    /**
+     * In this fake implementation, all IdP's are considered
+     * institutional IdPs
+     * @return IdentityProvider[]
+     */
+    public function findByInstitutionId(InstitutionId $institutionId): array
+    {
+        $list = [];
+        foreach ($this->entities as $manageResult) {
+            $list[] = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
+        }
+        return $list;
     }
 }

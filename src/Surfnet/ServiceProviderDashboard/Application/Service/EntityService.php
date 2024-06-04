@@ -258,6 +258,10 @@ class EntityService implements EntityServiceInterface
             ->getManageProductionQueryClient()
             ->findByTeamName($teamName, $this->prodManageConfig->getPublicationStatus()->getStatus());
 
+        if ($entities === null) {
+            return null;
+        }
+
         // Try to find the tickets in Jira that match the manageIds. If Jira is down or otherwise unavailable, the
         // entities are returned without updating their status. This might result in a 're request for delete'
         try {

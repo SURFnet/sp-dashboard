@@ -54,8 +54,10 @@ class IdentityProviderClient implements IdentityProviderRepository
                 "state" => $this->manageConfig->getPublicationStatus()->getStatus(),
                 ]
             );
-
             $list = [];
+            if ($result === null) {
+                return $list;
+            }
             foreach ($result as $manageResult) {
                 $list[] = IdentityProviderFactory::fromManageResult($manageResult);
             }
@@ -79,6 +81,9 @@ class IdentityProviderClient implements IdentityProviderRepository
             );
 
             $list = [];
+            if ($result === null) {
+                return $list;
+            }
             foreach ($result as $manageResult) {
                 $result = IdentityProviderFactory::fromManageResult($manageResult);
                 $list[$result->getEntityId()] = $result;

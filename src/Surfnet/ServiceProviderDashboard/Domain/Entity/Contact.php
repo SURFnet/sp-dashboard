@@ -67,12 +67,12 @@ class Contact
         $this->services = new ArrayCollection();
     }
 
-    public function isSurfConextResponsible()
+    public function isSurfConextResponsible(): bool
     {
         return in_array('ROLE_SURFCONEXT_RESPONSIBLE', $this->roles);
     }
 
-    public function setInstitutionId(string $institutionId)
+    public function setInstitutionId(string $institutionId): void
     {
         $this->institutionId = new InstitutionId($institutionId);
     }
