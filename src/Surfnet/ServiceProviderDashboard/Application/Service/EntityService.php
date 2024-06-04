@@ -233,10 +233,10 @@ class EntityService implements EntityServiceInterface
 
     /**
      * @param  string $teamName
-     * @return array|null
+     * @return ManageEntity[]|null
      * @throws QueryServiceProviderException
      */
-    private function findPublishedTestEntitiesByTeamName($teamName)
+    public function findPublishedTestEntitiesByTeamName(string $teamName): ?array
     {
         return $this->queryRepositoryProvider
             ->getManageTestQueryClient()

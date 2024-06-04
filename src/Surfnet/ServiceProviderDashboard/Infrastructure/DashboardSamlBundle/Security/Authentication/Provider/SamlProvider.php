@@ -135,6 +135,9 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         }
 
         if ($role === 'ROLE_SURFCONEXT_RESPONSIBLE') {
+            $contact->assignRole($role);
+            $role = 'ROLE_USER';
+            $contact->assignRole($role);
             $this->assignServicesToContact($contact, $teamNames);
             $this->contacts->save($contact);
         }

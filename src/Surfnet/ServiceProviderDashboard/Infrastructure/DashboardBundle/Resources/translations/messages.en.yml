@@ -567,6 +567,7 @@ service.connections.title.filters: Filters
 service.connections.title.content: Connection status
 service.connections.connected: Not connected
 service.connections.not-connected: Connected
+service.connections.table.no-results: No entities found
 
 teams.management.close: Close
 teams.management.title: User management

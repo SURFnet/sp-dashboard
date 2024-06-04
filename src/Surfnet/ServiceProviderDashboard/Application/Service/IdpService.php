@@ -20,14 +20,18 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionIdpCollection;
 
 class IdpService implements IdpServiceInterface
 {
     public function __construct(
         private readonly ConfiguredTestIdpCollection $testIdps,
         private readonly EntityAclService $entityAclService,
+        private readonly IdentityProviderRepository $identityProviderRepository,
     ) {
     }
 
@@ -37,5 +41,10 @@ class IdpService implements IdpServiceInterface
         $allEntities = $this->entityAclService->getAvailableIdps();
 
         return new IdpCollection($testEntities, $allEntities);
+    }
+
+    public function findInstitutionIdps(InstitutionId $institutionId): InstitutionIdpCollection
+    {
+        return new InstitutionIdpCollection($this->identityProviderRepository->findByInstitutionId($institutionId));
     }
 }

@@ -346,6 +346,11 @@ services:
   Surfnet\ServiceProviderDashboard\Application\Service\ServiceService:
     class: Surfnet\ServiceProviderDashboard\Application\Service\ServiceService
 
+  Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService:
+    arguments:
+      $testIdps: '@Surfnet\ServiceProviderDashboard\Application\Service\IdpServiceInterface'
+      $entityService: '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
+
   Surfnet\ServiceProviderDashboard\Application\Service\EntityService:
     arguments:
       - '@Surfnet\ServiceProviderDashboard\Application\Provider\EntityQueryRepositoryProvider'
@@ -668,3 +673,4 @@ services:
     arguments:
       $entityAclService: '@Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService'
       $testIdps: '@Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection'
+      $identityProviderRepository: '@surfnet.manage.client.identity_provider_client.test_environment'
