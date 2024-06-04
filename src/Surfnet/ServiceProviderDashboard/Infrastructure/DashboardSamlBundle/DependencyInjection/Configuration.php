@@ -51,7 +51,10 @@ class Configuration implements ConfigurationInterface
                 ->isRequired()
             ->end()
             ->scalarNode('authorization_attribute_name')
-                ->info('The authorization attribute name should refer to a  multivalue SAML attribute that contain the urn:mace:surfnet.nl:surfnet.nl:sab:organizationCode and urn:mace:surfnet.nl:surfnet.nl:sab:role values.')
+                ->info(
+                    'The authorization attribute name should refer to a  multivalue SAML attribute that contain the ' .
+                    'urn:mace:surfnet.nl:surfnet.nl:sab:organizationCode and urn:mace:surfnet.nl:surfnet.nl:sab:role values.'
+                )
                 ->isRequired()
             ->end()
             ->arrayNode('session_lifetimes')

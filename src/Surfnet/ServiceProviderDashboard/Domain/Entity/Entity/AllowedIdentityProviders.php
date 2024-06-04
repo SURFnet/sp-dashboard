@@ -74,8 +74,7 @@ class AllowedIdentityProviders
             $this->allowAll = true;
             return;
         }
-        $this->providers = is_null($allowedIdPs->getAllowedIdentityProviders()) ?
-            null : $allowedIdPs->getAllowedIdentityProviders();
+        $this->providers = $allowedIdPs->getAllowedIdentityProviders();
         $this->allowAll = is_null($allowedIdPs->isAllowAll()) ? null : $allowedIdPs->isAllowAll();
     }
 

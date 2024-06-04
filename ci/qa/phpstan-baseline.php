@@ -1673,7 +1673,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Argument of an invalid type array\\|null supplied for foreach, only iterables are supported\\.$#',
-	'count' => 4,
+	'count' => 2,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
 ];
 $ignoreErrors[] = [
@@ -1723,11 +1723,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\EntityService\\:\\:findPublishedProductionEntitiesByTeamName\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\EntityService\\:\\:findPublishedTestEntitiesByTeamName\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
 ];
@@ -2062,11 +2057,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Contact.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to function is_null\\(\\) with array will always evaluate to false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Entity/AllowedIdentityProviders.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to function is_null\\(\\) with bool will always evaluate to false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Entity/AllowedIdentityProviders.php',
@@ -2078,11 +2068,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\AllowedIdentityProviders\\:\\:fromApiResponse\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Entity/AllowedIdentityProviders.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\AllowedIdentityProviders\\:\\:getAllowedIdentityProviders\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Entity/AllowedIdentityProviders.php',
 ];
@@ -2862,6 +2847,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/Secret.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\ValueObject\\\\SurfAuthorizations\\:\\:__construct\\(\\) has parameter \\$authorizations with no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/SurfAuthorizations.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Cannot call method getEntityId\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/Ticket.php',
@@ -3397,6 +3387,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/PrivacyQuestionsController.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Cannot call method getContact\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\ServiceConnectionsController\\:\\:myServices\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
@@ -3408,6 +3408,11 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot call method getClientSecret\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\OidcClientInterface\\|null\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot call method getContact\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceController.php',
 ];
@@ -4345,11 +4350,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Manage\\\\Client\\\\EntityChangeRequestClient\\:\\:openChangeRequest\\(\\) should return array but returns mixed\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/EntityChangeRequestClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Argument of an invalid type array\\|null supplied for foreach, only iterables are supported\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/IdentityProviderClient.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Manage\\\\Client\\\\IdentityProviderClient\\:\\:doSearchQuery\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#',

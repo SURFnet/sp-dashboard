@@ -38,7 +38,7 @@ class EntityConnection
     public function listConnected(): array
     {
         $list = [];
-        foreach ($this->availableIdps as $entityId => $availableIdp) {
+        foreach (array_keys($this->availableIdps) as $entityId) {
             $list[$entityId] = false;
             if (array_key_exists($entityId, $this->connectedIdps)) {
                 $list[$entityId] = true;
