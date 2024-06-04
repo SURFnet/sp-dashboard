@@ -18,7 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider;
 
-use BadMethodCallException;
+use Exception;
 use Psr\Log\LoggerInterface;
 use SAML2\Assertion;
 use Surfnet\SamlBundle\Exception\RuntimeException;
@@ -29,6 +29,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\SurfAuthorizations;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\MissingSamlAttributeException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Exception\UnknownServiceException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
@@ -37,7 +38,6 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
-use function in_array;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -56,8 +56,9 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         private readonly ServiceRepository $services,
         private readonly AttributeDictionary $attributeDictionary,
         private readonly LoggerInterface  $logger,
-        string $administratorTeams,
+        private string $surfAuthorizationsAttributeName,
         string $surfConextResponsibleAuthorization,
+        string $administratorTeams,
     ) {
         $teams = explode(",", str_replace('\'', '', $administratorTeams));
         Assert::allStringNotEmpty(
@@ -107,21 +108,20 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
 
         try {
             // An exception is thrown when isMemberOf is empty.
-            $surfAuthorizations = (array) $translatedAssertion->getAttributeValue('surf-autorisaties');
-        } catch (RuntimeException) {
-            $surfAuthorizations = [];
+            $authorizations = (array) $translatedAssertion->getAttributeValue($this->surfAuthorizationsAttributeName, []);
+            $surfAuthorizations = new SurfAuthorizations($authorizations, $this->surfConextResponsibleAuthorization);
+        } catch (Exception) {
+            $surfAuthorizations = null;
+        }
+
+        if ($surfAuthorizations && $surfAuthorizations->isSurfConextResponsible()) {
+            $role = 'ROLE_SURFCONEXT_RESPONSIBLE';
         }
 
         if (array_intersect($this->administratorTeams, $teamNames) !== []) {
             $role = 'ROLE_ADMINISTRATOR';
         }
-
-        if (in_array($this->surfConextResponsibleAuthorization, $surfAuthorizations)) {
-            $role = 'ROLE_SURFCONEXT_RESPONSIBLE';
-        }
-
         $contact = $this->contacts->findByNameId($nameId);
-
         if ($contact === null) {
             $contact = new Contact($nameId, $email, $commonName);
         } elseif ($contact->getEmailAddress() !== $email || $contact->getDisplayName() !== $commonName) {
@@ -129,18 +129,18 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $contact->setDisplayName($commonName);
         }
 
+        if ($surfAuthorizations) {
+            $contact->setInstitutionId($surfAuthorizations->getOrganizationCode());
+            if ($surfAuthorizations->isSurfConextResponsible()) {
+                $contact->assignRole('ROLE_SURFCONEXT_RESPONSIBLE');
+            }
+        }
+
         if ($role === 'ROLE_USER') {
             $this->assignServicesToContact($contact, $teamNames);
             $this->contacts->save($contact);
         }
 
-        if ($role === 'ROLE_SURFCONEXT_RESPONSIBLE') {
-            $contact->assignRole($role);
-            $role = 'ROLE_USER';
-            $contact->assignRole($role);
-            $this->assignServicesToContact($contact, $teamNames);
-            $this->contacts->save($contact);
-        }
         $contact->assignRole($role);
         return new Identity($contact);
     }
