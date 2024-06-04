@@ -22,6 +22,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Co
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityId;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryIdentityProviderException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\HttpClient;
@@ -62,6 +63,30 @@ class IdentityProviderClient implements IdentityProviderRepository
         } catch (HttpException $e) {
             throw new QueryIdentityProviderException(
                 sprintf('Unable to find identity providers: %s', $e->getMessage()),
+                0,
+                $e
+            );
+        }
+    }
+
+    public function findByInstitutionId(InstitutionId $institutionId): array
+    {
+        try {
+            $result = $this->doSearchQuery(
+                [
+                    'metaDataFields.coin:institution_id' => (string) $institutionId,
+                ]
+            );
+
+            $list = [];
+            foreach ($result as $manageResult) {
+                $result = IdentityProviderFactory::fromManageResult($manageResult);
+                $list[$result->getEntityId()] = $result;
+            }
+            return $list;
+        } catch (HttpException $e) {
+            throw new QueryIdentityProviderException(
+                sprintf('Unable to find identity providers by institution id: %s', $e->getMessage()),
                 0,
                 $e
             );
