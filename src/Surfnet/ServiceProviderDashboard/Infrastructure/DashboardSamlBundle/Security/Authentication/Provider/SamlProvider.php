@@ -38,6 +38,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
+use function array_intersect;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -79,10 +80,6 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         return $this->attributeDictionary->translate($assertion)->getNameID();
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     */
     public function getUser(Assertion $assertion): UserInterface
     {
         $translatedAssertion = $this->attributeDictionary->translate($assertion);
@@ -93,35 +90,10 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         } catch (MissingSamlAttributeException $e) {
             throw new BadCredentialsException($e->getMessage());
         }
-
         try {
             $commonName = $this->getSingleStringValue('commonName', $translatedAssertion);
         } catch (MissingSamlAttributeException) {
             $commonName = '';
-        }
-
-        try {
-            // An exception is thrown when isMemberOf is empty.
-            $teamNames = (array)$translatedAssertion->getAttributeValue('isMemberOf');
-        } catch (RuntimeException) {
-            $teamNames = [];
-        }
-
-        try {
-            // An exception is thrown when isMemberOf is empty.
-            $authorizations = (array) $translatedAssertion->getAttributeValue($this->surfAuthorizationsAttributeName, []);
-            $surfAuthorizations = new SurfAuthorizations($authorizations, $this->surfConextResponsibleAuthorization);
-        } catch (Exception) {
-            $surfAuthorizations = null;
-        }
-
-        // Default to the ROLE_USER role for services.
-        $role = 'ROLE_USER';
-        if ($surfAuthorizations && $surfAuthorizations->isSurfConextResponsible()) {
-            $role = 'ROLE_SURFCONEXT_RESPONSIBLE';
-        }
-        if (array_intersect($this->administratorTeams, $teamNames) !== []) {
-            $role = 'ROLE_ADMINISTRATOR';
         }
 
         $contact = $this->contacts->findByNameId($nameId);
@@ -131,21 +103,46 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $contact->setEmailAddress($email);
             $contact->setDisplayName($commonName);
         }
+        $this->assignRoles($contact, $translatedAssertion);
 
-        if ($surfAuthorizations) {
-            $contact->setInstitutionId($surfAuthorizations->getOrganizationCode());
-            if ($surfAuthorizations->isSurfConextResponsible()) {
-                $contact->assignRole('ROLE_SURFCONEXT_RESPONSIBLE');
-            }
+        return new Identity($contact);
+    }
+
+    private function assignRoles(
+        Contact $contact,
+        AssertionAdapter $translatedAssertion,
+    ): void {
+        try {
+            // An exception is thrown when isMemberOf is empty.
+            $teamNames = (array)$translatedAssertion->getAttributeValue('isMemberOf');
+        } catch (RuntimeException) {
+            $teamNames = [];
+        }
+
+        try {
+            // An exception is thrown when isMemberOf is empty.
+            $authorizationsData = (array) $translatedAssertion->getAttributeValue($this->surfAuthorizationsAttributeName, []);
+            $authorizations = new SurfAuthorizations($authorizationsData, $this->surfConextResponsibleAuthorization);
+        } catch (Exception) {
+            $authorizations = null;
+        }
+        // Default to the ROLE_USER role for services.
+        $role = 'ROLE_USER';
+        if ($authorizations && $authorizations->isSurfConextResponsible()) {
+            $contact->setInstitutionId($authorizations->getOrganizationCode());
+            $contact->assignRole('ROLE_SURFCONEXT_RESPONSIBLE');
+        }
+
+        if (array_intersect($this->administratorTeams, $teamNames) !== []) {
+            $role = 'ROLE_ADMINISTRATOR';
+            $contact->assignRole($role);
         }
 
         if ($role === 'ROLE_USER') {
             $this->assignServicesToContact($contact, $teamNames);
             $this->contacts->save($contact);
+            $contact->assignRole($role);
         }
-
-        $contact->assignRole($role);
-        return new Identity($contact);
     }
 
     private function assignServicesToContact(Contact $contact, array $teamNames): void
