@@ -9,71 +9,75 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 30
     env:
-      DOCKER_COMPOSE: docker-compose -f docker-compose-openconext.yml -f docker-compose-ci.yml
-      DOCKER_COMPOSE_PHP: docker-compose -f docker-compose-openconext.yml -f docker-compose-ci.yml exec -T php
-      DOCKER_COMPOSE_OPENCONEXT: docker-compose -f docker-compose-openconext.yml -f docker-compose-ci.yml exec -T openconext
+      DOCKER_COMPOSE: docker-compose -f docker-compose.yml -f docker-compose-ci.yml
+      DOCKER_COMPOSE_PHP: docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T spdashboard
       DOCKER_COMPOSE_CYPRESS: docker-compose -f docker-compose-openconext.yml -f docker-compose-ci.yml exec -T cypress
 
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+        with:
+          path: spdashboard
+
+      - name: Checkout openconext-devconf
+        uses: actions/checkout@v4
+        with: 
+          path: OpenConext-devconf
 
       - name: Start the docker images for testing
+        working-directory: spdashboard
         run: ${DOCKER_COMPOSE} up -d
 
       - name: Import the certificate on the Cypress docker machine
+        working-directory: spdashboard
         run: ${DOCKER_COMPOSE_CYPRESS} sh /e2e/docker/conf/cypress_import_cert.sh
 
       - name: Run composer
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} /usr/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
         env:
           SYMFONY_ENV: dev
 
       - name: Run yarn
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} yarn install
         env:
           SYMFONY_ENV: dev
 
       - name: Create front end dependencies (yarn encore production)
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} yarn run encore production
         env:
           SYMFONY_ENV: dev
 
       - name: Get the database up and running
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} bin/console doctrine:migrations:migrate
         env:
           SYMFONY_ENV: dev
 
-      - name: Remove leftover files
-        run: |
-          ${DOCKER_COMPOSE_PHP} /bin/rm -rf /tmp/sp-dashboard/ /tmp/sp-dashboard-sessions/
-
-      - name: Make the log and cache dir writable
-        run: |
-          ${DOCKER_COMPOSE_PHP} chmod 777 /var/www/html/var/ -R
-
-      - name: Wait until the spdashboard is accessable
-        run: |
-          ${DOCKER_COMPOSE_OPENCONEXT} sh /usr/local/sbin/spdup.sh
-
       - name: Run Copy Paste Detector
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} sh -c 'composer jscpd'
         continue-on-error: true
 
       - name: Run CI tests
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} sh -c 'composer check'
 
       - name: Run JS tests
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} sh -c 'composer jest'
 
       - name: Run Cypress tests
+        working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_CYPRESS} cypress run --browser chrome -C ./ci/qa/cypress.config.ts
         continue-on-error: true
