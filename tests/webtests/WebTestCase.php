@@ -310,7 +310,7 @@ class WebTestCase extends PantherTestCase
         $this->fillFormField($form, '#username', 'John Doe');
         $this->fillFormField($form, '#password', 'secret');
         // By default, log in using an admin team (see .env.test > administrator_teams)
-        $teamName = 'urn:collab:admin.org:example.org';
+        $teamName = 'urn:collab:group:dev.openconext.local:dev:openconext:local:spd_admin';
         if ($service) {
             $teamName = $service->getTeamName();
         }
