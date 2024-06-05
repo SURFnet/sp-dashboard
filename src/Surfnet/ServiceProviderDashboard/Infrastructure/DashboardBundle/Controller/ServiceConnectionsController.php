@@ -19,6 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InstitutionIdNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -43,13 +45,8 @@ class ServiceConnectionsController extends AbstractController
     )]
     public function myServices(int $serviceId)
     {
-        $institutionId = $this->getUser()->getContact()->getInstitutionId();
-        if ($institutionId === null) {
-            throw new InstitutionIdNotFoundException(
-                'ROLE_SURFCONEXT_RESPONSIBLE is granted, but no institution_id was provided in the assertion'
-            );
-        }
         $service = $this->authorizationService->changeActiveService($serviceId);
+        $institutionId = $this->retrieveInstitutionId($service, $this->getUser()->getContact());
         $testIdps = $this->serviceConnectionService->listTestIdps($institutionId);
         $entities = $this->serviceConnectionService->find($service, $institutionId);
         return $this->render(
@@ -60,5 +57,24 @@ class ServiceConnectionsController extends AbstractController
                 'service' => $service,
             ]
         );
+    }
+
+    private function retrieveInstitutionId(
+        Service $service,
+        Contact $user
+    ): InstitutionId {
+        // The InstitutionId from the assertion is leading (if set)
+        $id = $user->getInstitutionId();
+        if ($id === null) {
+            // Fall back on the institution id that might be configured on the Service (ORM) entity
+            $id = $service->getInstitutionId();
+        }
+        if ($id === null) {
+            throw new InstitutionIdNotFoundException(
+                'ROLE_SURFCONEXT_RESPONSIBLE is granted, but no institution_id was provided in the assertion ' .
+                'nor was it present in the Service entity'
+            );
+        }
+        return new InstitutionId($id);
     }
 }
