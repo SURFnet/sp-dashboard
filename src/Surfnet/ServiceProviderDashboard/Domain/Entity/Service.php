@@ -291,15 +291,12 @@ class Service
         $this->surfconextRepresentativeApproved = $surfconextRepresentativeApproved;
     }
 
-    public function getInstitutionId()
+    public function getInstitutionId(): ?string
     {
         return $this->institutionId;
     }
 
-    /**
-     * @param string $institutionId
-     */
-    public function setInstitutionId($institutionId): void
+    public function setInstitutionId(?string $institutionId): void
     {
         $this->institutionId = $institutionId;
     }
