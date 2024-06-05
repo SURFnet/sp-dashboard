@@ -29,6 +29,13 @@ jobs:
         working-directory: spdashboard
         run: ${DOCKER_COMPOSE} up -d
 
+      - name: Bootstrap the openconext environment
+        working-directory: spdashboard
+        run: bash ../OpenConext-devconf/core/scripts/init.sh
+
+      - name: Instantiate the env file
+        run: cp spdashboard/.env.dist spdashboard/.env
+
       - name: Import the certificate on the Cypress docker machine
         working-directory: spdashboard
         run: ${DOCKER_COMPOSE_CYPRESS} sh /e2e/docker/conf/cypress_import_cert.sh
@@ -37,29 +44,23 @@ jobs:
         working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} /usr/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
-        env:
-          SYMFONY_ENV: dev
 
       - name: Run yarn
         working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} yarn install
-        env:
-          SYMFONY_ENV: dev
 
       - name: Create front end dependencies (yarn encore production)
         working-directory: spdashboard
         run: |
           ${DOCKER_COMPOSE_PHP} yarn run encore production
-        env:
-          SYMFONY_ENV: dev
 
       - name: Get the database up and running
         working-directory: spdashboard
         run: |
-          ${DOCKER_COMPOSE_PHP} bin/console doctrine:migrations:migrate
+          ${DOCKER_COMPOSE_PHP} bin/console doctrine:schema:create
         env:
-          SYMFONY_ENV: dev
+          APP_ENV: test
 
       - name: Run Copy Paste Detector
         working-directory: spdashboard
