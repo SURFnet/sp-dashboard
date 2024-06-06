@@ -66,9 +66,12 @@ class Builder
         } else {
             $menu->addChild('global.menu.services', ['route' => 'service_overview']);
         }
+        if ($this->authorizationService->isSurfConextResponsible() || $this->authorizationService->isAdministrator()) {
+            $menu->addChild('global.menu.connections', ['route' => 'service_connections']);
+
+        }
         if ($this->authorizationService->isAdministrator()) {
             $menu->addChild('global.menu.new-service', ['route' => 'service_add']);
-
             $menu->addChild('global.menu.translations', ['route' => 'lexik_translation_overview']);
         }
 

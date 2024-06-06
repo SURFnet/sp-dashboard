@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 
 interface QueryManageRepository
 {
@@ -57,6 +58,7 @@ interface QueryManageRepository
      * @return ManageEntity[]|null
      */
     public function findByTeamName($teamName, $state);
+    public function findByInstitutionId(InstitutionId $institutionId, string $state): ?array;
 
     /**
      * The entity Id or client Id for RP's should also be unique, and can be used to search a SP/RP with.

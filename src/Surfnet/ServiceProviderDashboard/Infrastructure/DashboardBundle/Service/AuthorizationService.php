@@ -72,6 +72,16 @@ class AuthorizationService
         return in_array('ROLE_ADMINISTRATOR', $roles);
     }
 
+    public function isSurfConextResponsible()
+    {
+        if (!$this->isLoggedIn()) {
+            return false;
+        }
+
+        $roles = $this->tokenStorage->getToken()->getRoleNames();
+        return in_array('ROLE_SURFCONEXT_RESPONSIBLE', $roles);
+    }
+
     /**
      * Get the service the user is currently working on.
      *
@@ -254,4 +264,5 @@ class AuthorizationService
     {
         return $this->tokenStorage->getToken()->getUser()->getContact();
     }
+
 }

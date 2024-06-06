@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
@@ -205,6 +206,35 @@ class QueryClient implements QueryManageRepository
         } catch (HttpException $e) {
             throw new QueryServiceProviderException(
                 sprintf('Unable to find entities with team ID: "%s"', $teamName),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @return ManageEntity[]|null
+     * @throws QueryServiceProviderException
+     */
+    public function findByInstitutionId(InstitutionId $institutionId, string $state): ?array
+    {
+        try {
+            // Query manage to get the internal id of every SP entity with given team ID.
+            $searchResults = $this->doSearchQuery(
+                [
+                    'metaDataFields.coin:institution_id' => (string) $institutionId,
+                    'state' => $state,
+                ]
+            );
+
+            // For each search result, query manage to get the full SP entity data.
+            return array_map(
+                fn($result): ?ManageEntity => $this->findByManageIdAndProtocol($result['_id'], $result['type']),
+                $searchResults
+            );
+        } catch (HttpException $e) {
+            throw new QueryServiceProviderException(
+                sprintf('Unable to find entities with coin:institution_id: "%s"', $institutionId),
                 0,
                 $e
             );

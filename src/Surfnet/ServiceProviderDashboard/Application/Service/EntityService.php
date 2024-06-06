@@ -30,6 +30,7 @@ use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityList;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Issue;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\QueryServiceProviderException;
 use Symfony\Component\Routing\RouterInterface;
@@ -239,6 +240,14 @@ class EntityService implements EntityServiceInterface
         return $this->queryRepositoryProvider
             ->getManageTestQueryClient()
             ->findByTeamName($teamName, $this->testManageConfig->getPublicationStatus()->getStatus());
+    }
+
+
+    public function findPublishedTestEntitiesByInstitutionId(InstitutionId $institutionId)
+    {
+        return $this->queryRepositoryProvider
+            ->getManageTestQueryClient()
+            ->findByInstitutionId($institutionId, $this->testManageConfig->getPublicationStatus()->getStatus());
     }
 
     /**
