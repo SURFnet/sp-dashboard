@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService;
+use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
@@ -34,47 +35,27 @@ class ServiceConnectionsController extends AbstractController
     public function __construct(
         private readonly AuthorizationService $authorizationService,
         private readonly ServiceConnectionService $serviceConnectionService,
+        private readonly ServiceService $serviceService,
     ) {
     }
 
     #[IsGranted(new Expression('is_granted("ROLE_ADMINISTRATOR") or is_granted("ROLE_SURFCONEXT_RESPONSIBLE")'))]
     #[Route(
-        path: '/connections/{serviceId}',
+        path: '/connections',
         name: 'service_connections',
         methods: ['GET', 'POST']
     )]
-    public function myServices(int $serviceId)
+    public function myServices()
     {
-        $service = $this->authorizationService->changeActiveService($serviceId);
-        $institutionId = $this->retrieveInstitutionId($service, $this->getUser()->getContact());
-        $testIdps = $this->serviceConnectionService->listTestIdps($institutionId);
-        $entities = $this->serviceConnectionService->find($service, $institutionId);
+        $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
+        $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
+        $entities = $this->serviceConnectionService->find($services);
         return $this->render(
             '@Dashboard/Service/my-services.html.twig',
             [
-                'testIdps' => $testIdps,
-                'entities' => $entities,
-                'service' => $service,
+                'testIdps' => $entities->getIdps(),
+                'entities' => $entities->getEntityConnections(),
             ]
         );
-    }
-
-    private function retrieveInstitutionId(
-        Service $service,
-        Contact $user
-    ): InstitutionId {
-        // The InstitutionId from the assertion is leading (if set)
-        $id = $user->getInstitutionId();
-        if ($id === null) {
-            // Fall back on the institution id that might be configured on the Service (ORM) entity
-            $id = $service->getInstitutionId();
-        }
-        if ($id === null) {
-            throw new InstitutionIdNotFoundException(
-                'ROLE_SURFCONEXT_RESPONSIBLE is granted, but no institution_id was provided in the assertion ' .
-                'nor was it present in the Service entity'
-            );
-        }
-        return new InstitutionId($id);
     }
 }

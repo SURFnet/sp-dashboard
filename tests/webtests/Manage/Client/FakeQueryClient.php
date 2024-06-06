@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use function array_key_exists;
 
 class FakeQueryClient implements QueryManageRepository
@@ -100,6 +101,20 @@ class FakeQueryClient implements QueryManageRepository
             $result = $entity->getEntityResult();
             if (isset($result['data']['metaDataFields']['coin:service_team_id'])
                 && $result['data']['metaDataFields']['coin:service_team_id'] === $teamName) {
+                $searchResults[] = ManageEntity::fromApiResponse($result);
+            }
+        }
+        return $searchResults;
+    }
+
+    public function findByInstitutionId(InstitutionId $institutionId, string $state): ?array
+    {
+        $this->load();
+        $searchResults = [];
+        foreach ($this->entities as $entity) {
+            $result = $entity->getEntityResult();
+            if (isset($result['data']['metaDataFields']['coin:institution_id'])
+                && $result['data']['metaDataFields']['coin:institution_id'] === (string) $institutionId) {
                 $searchResults[] = ManageEntity::fromApiResponse($result);
             }
         }
