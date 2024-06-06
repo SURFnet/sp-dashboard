@@ -44,6 +44,7 @@ use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use function in_array;
 
 /**
  * The EntityControllerTrait contains the shared logic of the EntityCreateController and the EntityEditController.
@@ -119,13 +120,18 @@ trait EntityControllerTrait
                 return $this->redirectToRoute('entity_published_test');
             }
             $this->addFlash('info', 'entity.create.info.publish');
-            return $this->redirectToRoute(
-                'entity_acl_idps',
-                [
-                    'serviceId' => $entity->getService()->getId(),
-                    'id' => $publishEntityCommand->getManageEntity()->getId(),
-                ]
-            );
+            $entityTypeWithIdpConnection = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
+            $protocol = $publishEntityCommand->getManageEntity()->getProtocol()->getProtocol();
+            if (in_array($protocol, $entityTypeWithIdpConnection)) {
+                return $this->redirectToRoute(
+                    'entity_acl_idps',
+                    [
+                        'serviceId' => $entity->getService()->getId(),
+                        'id' => $publishEntityCommand->getManageEntity()->getId(),
+                    ]
+                );
+            }
+            return $this->redirectToRoute('entity_published_test');
         }
 
         try {

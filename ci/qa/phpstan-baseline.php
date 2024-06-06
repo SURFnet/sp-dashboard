@@ -1772,16 +1772,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/LoadEntityService.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\ServiceConnectionService\\:\\:find\\(\\) has parameter \\$services with no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/ServiceConnectionService.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @param references unknown parameter\\: \\$service$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/ServiceConnectionService.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\ServiceService\\:\\:getServiceNamesById\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/ServiceService.php',
