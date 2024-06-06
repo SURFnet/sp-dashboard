@@ -507,11 +507,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/EditServiceCommandHandler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$institutionId of method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:setInstitutionId\\(\\) expects string, string\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/EditServiceCommandHandler.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$intakeStatus of method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:setIntakeStatus\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/CommandHandler/Service/EditServiceCommandHandler.php',
@@ -1047,6 +1042,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Right side of && is always true\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Argument of an invalid type Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\Attribute supplied for foreach, only iterables are supported\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator/ArpGenerator.php',
@@ -1532,6 +1532,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngResourceServerJsonGenerator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Right side of && is always true\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngResourceServerJsonGenerator.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\AttributeNameService\\:\\:getAttributeTypeNames\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/AttributeNameService.php',
@@ -1727,6 +1732,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\EntityService\\:\\:findPublishedTestEntitiesByInstitutionId\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @param references unknown parameter\\: \\$service$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
@@ -1900,6 +1910,21 @@ $ignoreErrors[] = [
 	'message' => '#^Parameter \\#8 \\$protocol of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\Entity constructor expects string, string\\|null given\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/Entity.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityConnectionCollection\\:\\:addIdpList\\(\\) has parameter \\$idps with no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/EntityConnectionCollection.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityConnectionCollection\\:\\:getEntityConnections\\(\\) return type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/EntityConnectionCollection.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityConnectionCollection\\:\\:\\$idpList type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/EntityConnectionCollection.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#',
@@ -2617,11 +2642,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/PrivacyQuestions.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:getInstitutionId\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:getOrganizationNameEn\\(\\) should return string but returns string\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
@@ -2638,6 +2658,11 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:\\$contacts with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:\\$institutionId \\(string\\) does not accept string\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
 ];
@@ -2750,6 +2775,11 @@ $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\PublishTeamsRepository\\:\\:inviteMember\\(\\) has parameter \\$inviteObject with no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Repository/PublishTeamsRepository.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\QueryManageRepository\\:\\:findByInstitutionId\\(\\) return type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Repository/QueryManageRepository.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Repository\\\\QueryManageRepository\\:\\:findOidcngResourceServersByTeamName\\(\\) return type has no value type specified in iterable type array\\.$#',
@@ -3387,11 +3417,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/PrivacyQuestionsController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getContact\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\ServiceConnectionsController\\:\\:myServices\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
@@ -3828,7 +3853,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot call method getRoleNames\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/AuthorizationService.php',
 ];
 $ignoreErrors[] = [
@@ -3853,6 +3878,11 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\AuthorizationService\\:\\:getSelectedServiceId\\(\\) should return string but returns mixed\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/AuthorizationService.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\AuthorizationService\\:\\:isSurfConextResponsible\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/AuthorizationService.php',
 ];
@@ -4403,6 +4433,11 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Manage\\\\Client\\\\QueryClient\\:\\:doSearchQuery\\(\\) return type has no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/QueryClient.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Manage\\\\Client\\\\QueryClient\\:\\:findByInstitutionId\\(\\) should return array\\<Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\ManageEntity\\>\\|null but returns array\\<Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\ManageEntity\\|null\\>\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Client/QueryClient.php',
 ];

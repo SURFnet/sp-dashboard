@@ -68,7 +68,6 @@ class Builder
         }
         if ($this->authorizationService->isSurfConextResponsible() || $this->authorizationService->isAdministrator()) {
             $menu->addChild('global.menu.connections', ['route' => 'service_connections']);
-
         }
         if ($this->authorizationService->isAdministrator()) {
             $menu->addChild('global.menu.new-service', ['route' => 'service_add']);

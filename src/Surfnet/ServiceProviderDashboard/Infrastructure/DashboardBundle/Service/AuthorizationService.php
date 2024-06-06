@@ -264,5 +264,4 @@ class AuthorizationService
     {
         return $this->tokenStorage->getToken()->getUser()->getContact();
     }
-
 }
