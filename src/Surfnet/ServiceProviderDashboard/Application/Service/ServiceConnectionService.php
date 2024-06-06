@@ -20,28 +20,27 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
 use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityConnection;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityConnectionCollection;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InstitutionIdNotFoundException;
-use function in_array;
 
 class ServiceConnectionService
 {
     public function __construct(
-        private readonly IdpService          $testIdps,
-        private readonly EntityService       $entityService,
-        private readonly IdpServiceInterface $idpService, private readonly ServiceService $serviceService,
+        private readonly IdpService $testIdps,
+        private readonly EntityService $entityService,
+        private readonly IdpServiceInterface $idpService,
     ) {
     }
 
     /**
-     * @param array<string, Service> $service
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @param array<Service> $services
+     * @return EntityConnectionCollection
      */
     public function find(array $services): EntityConnectionCollection
     {
@@ -51,8 +50,10 @@ class ServiceConnectionService
         $collection = new EntityConnectionCollection();
         $this->addIdpList($services, $collection);
 
-
         foreach ($services as $service) {
+            if ($service->getInstitutionId() === null) {
+                continue;
+            }
             $institutionId = new InstitutionId($service->getInstitutionId());
             // First create an indexed list of the test entities
             $testIdpsIndexed = [];
@@ -64,7 +65,8 @@ class ServiceConnectionService
             $list = [];
             $entities = $this->entityService->findPublishedTestEntitiesByInstitutionId($institutionId);
             if ($entities === null) {
-                return $list;
+                $collection->addEntityConnections($list);
+                continue;
             }
             $allowedProtocols = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
             foreach ($entities as $entity) {
@@ -125,25 +127,6 @@ class ServiceConnectionService
         $institutionEntities = $this->idpService->findInstitutionIdps($institutionId);
         $testEntities =  $this->testIdps->createCollection()->testEntities();
         return $testEntities + $institutionEntities->institutionEntities();
-    }
-
-    private function retrieveInstitutionId(
-        Service $service,
-        Contact $user
-    ): InstitutionId {
-        // The InstitutionId from the assertion is leading (if set)
-        $id = $user->getInstitutionId();
-        if ($id === null) {
-            // Fall back on the institution id that might be configured on the Service (ORM) entity
-            $id = $service->getInstitutionId();
-        }
-        if ($id === null) {
-            throw new InstitutionIdNotFoundException(
-                'ROLE_SURFCONEXT_RESPONSIBLE is granted, but no institution_id was provided in the assertion ' .
-                'nor was it present in the Service entity'
-            );
-        }
-        return new InstitutionId($id);
     }
 
     /**
