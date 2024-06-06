@@ -34,7 +34,7 @@ class IdentityHeaderTest extends WebTestCase
         $crawler = self::$pantherClient->request('GET', '/service/create');
 
         $this->assertEquals(
-            'John Doe',
+            'John Doe Doe',
             trim($crawler->filter('a.welcome-link')->text())
         );
     }

@@ -62,10 +62,10 @@ class PublishEntityTestCommandHandler implements CommandHandler
 
             $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
             if (array_key_exists('id', $publishResponse)) {
-                $entity->setId($publishResponse['id']);
                 if ($this->isNewResourceServer($entity)) {
                     $this->requestStack->getSession()->getFlashBag()->add('wysiwyg', 'entity.list.oidcng_connection.info.html');
                 }
+                $entity->setId($publishResponse['id']);
             }
         } catch (PublishMetadataException $e) {
             $this->logger->error(
