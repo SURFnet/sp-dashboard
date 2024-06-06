@@ -38,7 +38,6 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
-use function array_intersect;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -238,11 +237,6 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
     public function supportsClass(string $class): bool
     {
         return $class === Identity::class;
-    }
-
-    public function loadUserByUsername(string $username): UserInterface
-    {
-        throw new UserNotFoundException('Use `getUser` to load a user by username');
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface
