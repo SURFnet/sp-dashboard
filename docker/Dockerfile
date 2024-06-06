@@ -8,7 +8,7 @@ ENV OPENCONEXT_COMMIT_DATE=${GIT_COMMIT_TIME}
 
 
 COPY . /var/www/html/ 
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev
+RUN COMPOSER_ALLOW_SUPERUSER=1 APP_ENV=prod composer install -n --prefer-dist -o --ignore-platform-reqs --no-dev
 RUN yarn install && \
   yarn run encore production
 RUN composer archive --file=output 
