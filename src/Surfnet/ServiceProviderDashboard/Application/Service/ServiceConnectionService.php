@@ -32,114 +32,134 @@ class ServiceConnectionService
     public function __construct(
         private readonly IdpService $testIdps,
         private readonly EntityService $entityService,
-        private readonly IdpServiceInterface $idpService,
     ) {
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @param array<Service> $services
      * @return EntityConnectionCollection
      */
-    public function find(array $services): EntityConnectionCollection
+    public function findByServices(array $services): EntityConnectionCollection
     {
         if (empty($services)) {
             throw new RuntimeException('No service provided');
         }
         $collection = new EntityConnectionCollection();
-        $this->addIdpList($services, $collection);
+        $this->addIdpList($collection);
 
         foreach ($services as $service) {
             if ($service->getInstitutionId() === null) {
                 continue;
             }
+
             $institutionId = new InstitutionId($service->getInstitutionId());
-            // First create an indexed list of the test entities
-            $testIdpsIndexed = [];
-            $testIdps = $this->listTestIdps($institutionId);
-
-            foreach ($testIdps as $entity) {
-                $testIdpsIndexed[$entity->getEntityId()] = $entity;
-            }
-            $list = [];
-            $entities = $this->entityService->findPublishedTestEntitiesByInstitutionId($institutionId);
-            if ($entities === null) {
-                $collection->addEntityConnections($list);
-                continue;
-            }
-            $allowedProtocols = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
-            foreach ($entities as $entity) {
-                if (!in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
-                    // Skipping irrelevant entity types
-                    continue;
-                }
-                $metadata = $entity->getMetaData();
-                if ($metadata === null) {
-                    throw new RuntimeException(
-                        sprintf(
-                            'No metadata available on entity with manage id: %s',
-                            $entity->getId()
-                        )
-                    );
-                }
-                if ($metadata->getNameEn() === null) {
-                    throw new RuntimeException(
-                        sprintf(
-                            'No name:en available for entity with manage id: %s',
-                            $entity->getId()
-                        )
-                    );
-                }
-                if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
-                    $list[$entity->getId()] = new EntityConnection(
-                        $metadata->getNameEn(),
-                        $service->getOrganizationNameEn(),
-                        $testIdpsIndexed,
-                        $testIdpsIndexed,
-                    );
-                    continue;
-                }
-                $connectedIdps = [];
-                foreach ($entity->getAllowedIdentityProviders()->getAllowedIdentityProviders() as $identityProvider) {
-                    if (array_key_exists($identityProvider, $testIdpsIndexed)) {
-                        $connectedIdps[$identityProvider] = $testIdpsIndexed[$identityProvider];
-                    }
-                }
-
-                $list[$entity->getId()] = new EntityConnection(
-                    $metadata->getNameEn(),
-                    $service->getOrganizationNameEn(),
-                    $testIdpsIndexed,
-                    $connectedIdps,
-                );
-            }
-            $collection->addEntityConnections($list);
+            $this->addEntitiesToCollection(
+                $collection,
+                $institutionId,
+                $service,
+                $this->getTestIdpsIndexed(),
+            );
         }
+        return $collection;
+    }
+
+    public function findByInstitutionId(InstitutionId $institutionId, Service $service): EntityConnectionCollection
+    {
+        $collection = new EntityConnectionCollection();
+        $this->addIdpList($collection);
+        $this->addEntitiesToCollection(
+            $collection,
+            $institutionId,
+            $service,
+            $this->getTestIdpsIndexed(),
+        );
         return $collection;
     }
 
     /**
      * @return IdentityProvider[]
      */
-    private function listTestIdps(InstitutionId $institutionId)
+    private function listTestIdps()
     {
-        $institutionEntities = $this->idpService->findInstitutionIdps($institutionId);
-        $testEntities =  $this->testIdps->createCollection()->testEntities();
-        return $testEntities + $institutionEntities->institutionEntities();
+        return $this->testIdps->createCollection()->testEntities();
     }
 
-    /**
-     * @param array<Service> $services
-     */
-    private function addIdpList(array $services, EntityConnectionCollection $collection): void
+    private function addIdpList(EntityConnectionCollection $collection): void
     {
-        foreach ($services as $service) {
-            $institutionId = $service->getInstitutionId();
-            if ($institutionId === null) {
+        $collection->addIdpList($this->listTestIdps());
+    }
+
+    private function addEntitiesToCollection(
+        EntityConnectionCollection $collection,
+        InstitutionId $institutionId,
+        Service $service,
+        array $testIdpsIndexed
+    ): void {
+        $list = [];
+        $entities = $this->entityService->findPublishedTestEntitiesByInstitutionId($institutionId);
+        if ($entities === null) {
+            $collection->addEntityConnections($list);
+            return;
+        }
+        $allowedProtocols = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
+        foreach ($entities as $entity) {
+            if (!in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
+                // Skipping irrelevant entity types
                 continue;
             }
-            $collection->addIdpList($this->listTestIdps(new InstitutionId($institutionId)));
+            $metadata = $entity->getMetaData();
+            if ($metadata === null) {
+                throw new RuntimeException(
+                    sprintf(
+                        'No metadata available on entity with manage id: %s',
+                        $entity->getId()
+                    )
+                );
+            }
+            if ($metadata->getNameEn() === null) {
+                throw new RuntimeException(
+                    sprintf(
+                        'No name:en available for entity with manage id: %s',
+                        $entity->getId()
+                    )
+                );
+            }
+            if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
+                $list[$entity->getId()] = new EntityConnection(
+                    $metadata->getNameEn(),
+                    $service->getOrganizationNameEn(),
+                    $testIdpsIndexed,
+                    $testIdpsIndexed,
+                );
+                continue;
+            }
+            $connectedIdps = [];
+            foreach ($entity->getAllowedIdentityProviders()->getAllowedIdentityProviders() as $identityProvider) {
+                if (array_key_exists($identityProvider, $testIdpsIndexed)) {
+                    $connectedIdps[$identityProvider] = $testIdpsIndexed[$identityProvider];
+                }
+            }
+
+            $list[$entity->getId()] = new EntityConnection(
+                $metadata->getNameEn(),
+                $service->getOrganizationNameEn(),
+                $testIdpsIndexed,
+                $connectedIdps,
+            );
         }
+        $collection->addEntityConnections($list);
+    }
+
+    private function getTestIdpsIndexed(): array
+    {
+        // First create an indexed list of the test entities
+        $testIdpsIndexed = [];
+        $testIdps = $this->listTestIdps();
+
+        foreach ($testIdps as $entity) {
+            $testIdpsIndexed[$entity->getEntityId()] = $entity;
+        }
+
+        return $testIdpsIndexed;
     }
 }

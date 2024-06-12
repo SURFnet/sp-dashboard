@@ -18,10 +18,9 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InstitutionIdNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -49,7 +48,26 @@ class ServiceConnectionsController extends AbstractController
     {
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
         $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
-        $entities = $this->serviceConnectionService->find($services);
+        $serviceCount = count($services);
+        if ($serviceCount > 1) {
+            $entities = $this->serviceConnectionService->findByServices($services);
+        }
+        if ($serviceCount === 1) {
+            $service = reset($services);
+            $institutionId = $this->getUser()->getContact()->getInstitutionId();
+            if ($institutionId === null) {
+                throw new InstitutionIdNotFoundException('Institution id not found on Contact');
+            }
+            $entities = $this->serviceConnectionService->findByInstitutionId(
+                new InstitutionId($institutionId),
+                $service
+            );
+        }
+
+        if (!isset($entities)) {
+            throw new RuntimeException('The Institution SP entities could not be read.');
+        }
+
         return $this->render(
             '@Dashboard/Service/my-services.html.twig',
             [
