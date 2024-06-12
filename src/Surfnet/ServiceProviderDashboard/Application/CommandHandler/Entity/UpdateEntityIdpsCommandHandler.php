@@ -51,7 +51,7 @@ class UpdateEntityIdpsCommandHandler implements CommandHandler
         $entity = $command->manageEntity;
         $idps = array_map(fn(IdentityProvider $idp): string => $idp->getEntityId(), $selectedEntities);
         $allowedAll = false;
-        if (empty($idps)) {
+        if ($idps === []) {
             $allowedAll = true;
         }
 
