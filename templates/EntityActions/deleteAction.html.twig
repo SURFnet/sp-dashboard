@@ -7,7 +7,7 @@
         {% endif %}
     {% endset %}
     <li>
-        <a href="{{ deletePath }}">
+        <a data-testid="delete" href="{{ deletePath }}">
             <i class="fa fa-trash" aria-hidden="true"></i>
             {{ 'entity.list.action.delete'|trans }}
         </a>

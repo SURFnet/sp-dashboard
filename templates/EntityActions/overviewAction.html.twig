@@ -4,7 +4,7 @@
     {% else %}
         {% set overviewHref = path('service_overview') %}
     {% endif %}
-    <a href="{{ overviewHref }}">
+    <a data-testid="overview" href="{{ overviewHref }}">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
         {{ 'entity.list.action.back'|trans }}
     </a>
