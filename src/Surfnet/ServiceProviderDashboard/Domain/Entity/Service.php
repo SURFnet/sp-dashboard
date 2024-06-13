@@ -66,7 +66,7 @@ class Service
     private $id;
 
     #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', name: 'createdAt')]
     private DateTime $createdAt;
 
     /**
