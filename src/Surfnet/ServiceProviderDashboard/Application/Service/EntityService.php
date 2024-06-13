@@ -81,9 +81,7 @@ class EntityService implements EntityServiceInterface
                     $service->getOrganizationNameNl()
                 );
                 $issue = $this->findIssueBy($entity);
-                $shouldUseTicketStatus = $entity->getStatus() !== Constants::STATE_PUBLISHED &&
-                    $entity->getStatus() !== Constants::STATE_PUBLICATION_REQUESTED;
-                if ($issue && $shouldUseTicketStatus) {
+                if ($issue && $issue->getIssueType() === $this->removalStatus && !$issue->isClosedOrResolved()) {
                     $entity->updateStatusToRemovalRequested();
                 }
                 return $entity;

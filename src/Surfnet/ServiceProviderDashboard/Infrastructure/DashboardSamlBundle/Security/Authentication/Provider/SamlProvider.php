@@ -76,6 +76,9 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         return $this->attributeDictionary->translate($assertion)->getNameID();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD) // this suppression is fixed in PR: https://github.com/SURFnet/sp-dashboard/pull/634
+     */
     public function getUser(Assertion $assertion): UserInterface
     {
         $translatedAssertion = $this->attributeDictionary->translate($assertion);

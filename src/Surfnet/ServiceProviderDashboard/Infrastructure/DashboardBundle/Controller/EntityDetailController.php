@@ -36,19 +36,12 @@ class EntityDetailController extends AbstractController
     ) {
     }
 
-    /**
-     *
-     * @return                              \Symfony\Component\HttpFoundation\RedirectResponse|array
-     */
     #[IsGranted('ROLE_USER')]
     #[Route(path: '/entity/detail/{serviceId}/{id}/{manageTarget}', name: 'entity_detail', methods: ['GET'], defaults: ['manageTarget' => false])]
     public function detail(string $id, int $serviceId, string $manageTarget): Response
     {
         $service = $this->authorizationService->changeActiveService($serviceId);
         $team = $service->getTeamName();
-        /**
- * @var ManageEntity $entity
-*/
         $entity = $this->entityService->getEntityByIdAndTarget($id, $manageTarget, $service);
         if ($entity->getMetaData()->getCoin()->getServiceTeamId() !== $team) {
             $entity->setIsReadOnly();

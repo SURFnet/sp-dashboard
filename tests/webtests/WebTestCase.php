@@ -35,9 +35,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepositor
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryTeamsRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Ticket;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\Jira\Repository\DevelopmentIssueRepository;
 use Surfnet\ServiceProviderDashboard\Webtests\Debug\DebugFile;
 use Surfnet\ServiceProviderDashboard\Webtests\Manage\Client\FakeTeamsQueryClient;
 use Symfony\Component\BrowserKit\AbstractBrowser;
@@ -83,6 +85,8 @@ class WebTestCase extends PantherTestCase
 
     /** @var QueryTeamsRepository&FakeTeamsQueryClient */
     protected $teamsQueryClient;
+
+    protected DevelopmentIssueRepository $jiraIssueRepository;
 
     public static function setUpBeforeClass(): void
     {
@@ -156,6 +160,8 @@ class WebTestCase extends PantherTestCase
         $this->teamsQueryClient = self::getContainer()
             ->get('Surfnet\ServiceProviderDashboard\Infrastructure\Teams\Client\QueryClient');
         $this->teamsQueryClient->reset();
+        $this->jiraIssueRepository = self::getContainer()
+            ->get('surfnet.dashboard.repository.issue');
     }
 
     protected function registerManageEntity(
@@ -199,6 +205,21 @@ class WebTestCase extends PantherTestCase
             default:
                 throw new RuntimeException('Unsupported environment');
         }
+    }
+
+    protected function createjiraTicket(string $entityId, string $issueType)
+    {
+        $ticket = new Ticket(
+            $entityId,
+            $entityId,
+            'Name',
+            'TranslationKey',
+            'DescriptionTransKey',
+            'John Doe',
+            'jdoe@example.com',
+            $issueType
+        );
+        $this->jiraIssueRepository->createIssueFrom($ticket);
     }
 
     private function registerSp(

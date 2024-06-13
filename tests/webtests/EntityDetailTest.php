@@ -21,6 +21,37 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 class EntityDetailTest extends WebTestCase
 {
 
+    public function test_render_details_of_removal_requested_manage_entity()
+    {
+        $this->loadFixtures();
+        $this->logIn();
+        $entityId = '9729d851-cfdd-4283-a8f1-a29ba5036261';
+        $this->registerManageEntity(
+            'production',
+            'saml20_sp',
+            $entityId,
+            'SP3',
+            'https://sp1-entityid.example.com',
+            'https://sp1-entityid.example.com/metadata',
+            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+        );
+
+        $issueType = 'spd-delete-production-entity';
+        $this->createjiraTicket($entityId, $issueType);
+
+        $this->switchToService('SURFnet');
+
+        $crawler = self::$pantherClient->request('GET', sprintf('/entity/detail/1/%s/production', $entityId));
+
+        self::assertOnPage("Entity details");
+        // Only the back to overview link should be on the actions toolbar
+        $toolbar = $crawler->filter('.fieldset.card.action');
+        $actions = $toolbar->filter('a[data-testid]');
+        $this->assertCount(1, $actions);
+        $this->assertEquals('Back to overview', $actions->first()->getText());
+    }
+
+
     public function test_render_details_of_manage_entity()
     {
         $this->loadFixtures();

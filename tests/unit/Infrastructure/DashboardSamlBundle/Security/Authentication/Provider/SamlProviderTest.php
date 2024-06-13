@@ -88,8 +88,8 @@ class SamlProviderTest extends TestCase
     public function test_surfconext_responsible_teams_rejects_invalid_teams()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('All entries in the `surfconext_responsible_authorization` config parameter should be string.');
-        $this->buildProvider("'urn:collab:foo:team.foobar.com'", ",345345,true,false,foo,bar");
+        $this->expectExceptionMessage('The `surfconext_responsible_authorization` config parameter should be a non empty string.');
+        $this->buildProvider("'urn:collab:foo:team.foobar.com'", "");
     }
 
     private function buildProvider(string $administratorTeams, string $surfConextResponsible = "'defualt")

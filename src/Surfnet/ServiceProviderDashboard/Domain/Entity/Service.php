@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\S
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.UnusedPrivateField) It is used to indicate the age of a service. See: https://www.pivotaltracker.com/story/show/187715470
  */
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service
