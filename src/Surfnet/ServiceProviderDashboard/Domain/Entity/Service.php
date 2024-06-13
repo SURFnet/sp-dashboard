@@ -27,7 +27,8 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\S
 
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
- * @SuppressWarnings(PHPMD.UnusedPrivateField) It is used to indicate the age of a service. See: https://www.pivotaltracker.com/story/show/187715470
+ * @SuppressWarnings(PHPMD.UnusedPrivateField) - the createdAt field is not used in code, but used by TPM's to check for
+ *                                               the creation date of a service.
  */
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service

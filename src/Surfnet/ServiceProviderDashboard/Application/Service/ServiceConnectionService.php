@@ -89,6 +89,9 @@ class ServiceConnectionService
         $collection->addIdpList($this->listTestIdps());
     }
 
+    /**
+     * @param array<string, IdentityProvider> $testIdpsIndexed
+     */
     private function addEntitiesToCollection(
         EntityConnectionCollection $collection,
         InstitutionId $institutionId,
@@ -150,6 +153,9 @@ class ServiceConnectionService
         $collection->addEntityConnections($list);
     }
 
+    /**
+     * @return array<string, IdentityProvider>
+     */
     private function getTestIdpsIndexed(): array
     {
         // First create an indexed list of the test entities
