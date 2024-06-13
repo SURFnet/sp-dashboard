@@ -105,7 +105,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
 
         try {
             // An exception is thrown when isMemberOf is empty.
-            $surfAuthorizations = (array) $translatedAssertion->getAttributeValue('surf-autorisaties');
+            $surfAuthorizations = (array) $translatedAssertion->getAttributeValue('eduPersonEntitlement');
         } catch (RuntimeException) {
             $surfAuthorizations = [];
         }
