@@ -2662,6 +2662,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:\\$createdAt is unused\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:\\$institutionId \\(string\\) does not accept string\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
@@ -3415,6 +3420,11 @@ $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$questions of static method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Command\\\\PrivacyQuestions\\\\PrivacyQuestionsCommand\\:\\:fromQuestions\\(\\) expects Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\PrivacyQuestions, Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\PrivacyQuestions\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/PrivacyQuestionsController.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot call method getContact\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\ServiceConnectionsController\\:\\:myServices\\(\\) has no return type specified\\.$#',
