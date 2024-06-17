@@ -27,6 +27,7 @@ class SurfConextResponsibleTest extends WebTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->loadFixtures();
         $this->teamsQueryClient->registerTeam(WebTestFixtures::TEAMNAME_ACME, 'data');
 
