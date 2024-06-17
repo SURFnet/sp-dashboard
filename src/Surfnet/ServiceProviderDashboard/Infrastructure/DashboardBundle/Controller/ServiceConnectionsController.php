@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Contro
 use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
+use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityConnectionCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InstitutionIdNotFoundException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -54,18 +55,21 @@ class ServiceConnectionsController extends AbstractController
         }
         if ($serviceCount === 1) {
             $service = reset($services);
-            $institutionId = $this->getUser()->getContact()->getInstitutionId();
-            if ($institutionId === null) {
-                throw new InstitutionIdNotFoundException('Institution id not found on Contact');
-            }
             $entities = $this->serviceConnectionService->findByInstitutionId(
-                new InstitutionId($institutionId),
+                $this->getInstitutionId(),
                 $service
+            );
+        }
+        $isSurfConextRepresentative = $serviceCount === 0 && empty($allowedServices);
+        if ($isSurfConextRepresentative) {
+            $entities = $this->serviceConnectionService->findByInstitutionId(
+                $this->getInstitutionId(),
+                null
             );
         }
 
         if (!isset($entities)) {
-            throw new RuntimeException('The Institution SP entities could not be read.');
+            $entities = EntityConnectionCollection::empty();
         }
 
         return $this->render(
@@ -75,5 +79,14 @@ class ServiceConnectionsController extends AbstractController
                 'entities' => $entities->getEntityConnections(),
             ]
         );
+    }
+
+    private function getInstitutionId(): InstitutionId
+    {
+        $institutionId = $this->getUser()->getContact()->getInstitutionId();
+        if ($institutionId === null) {
+            throw new InstitutionIdNotFoundException('Institution id not found on Contact');
+        }
+        return new InstitutionId($institutionId);
     }
 }

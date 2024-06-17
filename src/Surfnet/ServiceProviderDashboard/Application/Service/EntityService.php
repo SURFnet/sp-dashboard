@@ -243,6 +243,9 @@ class EntityService implements EntityServiceInterface
     }
 
 
+    /**
+     * @return array<ManageEntity>|null
+     */
     public function findPublishedTestEntitiesByInstitutionId(InstitutionId $institutionId)
     {
         return $this->queryRepositoryProvider

@@ -71,7 +71,7 @@ class ServiceController extends AbstractController
     }
 
     #[IsGranted('ROLE_USER')]
-    #[Route(path: '/', name: 'service_overview', methods: ['GET'])]
+    #[Route(path: '/service-overview', name: 'service_overview', methods: ['GET'])]
     public function overview(Request $request): RedirectResponse|Response
     {
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();

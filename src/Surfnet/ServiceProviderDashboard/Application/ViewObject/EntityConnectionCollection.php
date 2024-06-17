@@ -32,6 +32,11 @@ class EntityConnectionCollection
      */
     private array $collection = [];
 
+    public static function empty(): self
+    {
+        return new self();
+    }
+
     public function addIdpList(array $idps): void
     {
         $this->idpList = $this->idpList + $idps;

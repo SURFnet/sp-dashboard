@@ -128,8 +128,9 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         // Default to the ROLE_USER role for services.
         $role = 'ROLE_USER';
         if ($authorizations && $authorizations->isSurfConextResponsible()) {
+            $role = 'ROLE_SURFCONEXT_RESPONSIBLE';
             $contact->setInstitutionId($authorizations->getOrganizationCode());
-            $contact->assignRole('ROLE_SURFCONEXT_RESPONSIBLE');
+            $contact->assignRole($role);
         }
 
         if (array_intersect($this->administratorTeams, $teamNames) !== []) {
