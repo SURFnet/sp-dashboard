@@ -1,7 +1,6 @@
 security:
     role_hierarchy:
         ROLE_ADMINISTRATOR: ROLE_USER
-        ROLE_SURFCONEXT_RESPONSIBLE: ROLE_USER
 
     providers:
         saml-provider:

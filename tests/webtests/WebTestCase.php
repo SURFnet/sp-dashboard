@@ -88,6 +88,9 @@ class WebTestCase extends PantherTestCase
 
     protected DevelopmentIssueRepository $jiraIssueRepository;
 
+    private string $surfConextRepresentativeAttributeName = '';
+    private string $surfConextRepresentativeAttributeValue = '';
+
     public static function setUpBeforeClass(): void
     {
         exec('cd /var/www/html && composer dump-env test -q && chmod 777 /tmp/spdashboard-webtests.sqlite');
@@ -162,6 +165,10 @@ class WebTestCase extends PantherTestCase
         $this->teamsQueryClient->reset();
         $this->jiraIssueRepository = self::getContainer()
             ->get('surfnet.dashboard.repository.issue');
+        $this->surfConextRepresentativeAttributeName = self::getContainer()
+            ->getParameter('surfnet.dashboard.security.authentication.authorization_attribute_name');
+        $this->surfConextRepresentativeAttributeValue = self::getContainer()
+            ->getParameter('surfnet.dashboard.security.authentication.surfconext_responsible_authorization');
     }
 
     protected function registerManageEntity(
@@ -323,7 +330,7 @@ class WebTestCase extends PantherTestCase
         self::$pantherClient->restart();
     }
 
-    protected function logIn(Service $service = null, Service $secondService = null)
+    protected function logIn(Service $service = null, Service $secondService = null): Crawler
     {
         $crawler = self::$pantherClient->request('GET', 'https://spdashboard.dev.openconext.local');
 
@@ -347,6 +354,44 @@ class WebTestCase extends PantherTestCase
             $isMemberOf = $crawler->filter('input[name="urn:mace:dir:attribute-def:isMemberOf"]')->eq(1);
             $isMemberOf->sendKeys($secondTeamName);
         }
+
+        return $this->finishLogin();
+    }
+
+    protected function logInSurfConextResponsible(string $institutionId): void
+    {
+        $crawler = self::$pantherClient->request('GET', 'https://spdashboard.dev.openconext.local');
+
+        $form = $crawler->findElement(WebDriverBy::cssSelector('form.login-form'));
+        $this->fillFormField($form, '#username', 'John Dart');
+        $this->fillFormField($form, '#password', 'secret');
+
+        $select = $crawler->filterXPath(
+            sprintf(
+                ".//select[@id='add-attribute']//option[@value='urn:mace:dir:attribute-def:%s']",
+                $this->surfConextRepresentativeAttributeName
+            )
+        );
+        $select->click();
+        $entitlement = $crawler->filter(sprintf('input[name="urn:mace:dir:attribute-def:%s"]', $this->surfConextRepresentativeAttributeName));
+        $entitlement->sendKeys($institutionId);
+        // Now also send the attribute value that indicates this user is of role SurfConext representative
+        $select = $crawler->filterXPath(
+            sprintf(
+                ".//select[@id='add-attribute']//option[@value='urn:mace:dir:attribute-def:%s']",
+                $this->surfConextRepresentativeAttributeName
+            )
+        );
+        $select->click();
+        $entitlement = $crawler->filter(sprintf('input[name="urn:mace:dir:attribute-def:%s"]', $this->surfConextRepresentativeAttributeName));
+        $entitlement->sendKeys($this->surfConextRepresentativeAttributeValue);
+
+        $this->finishLogin();
+        self::$pantherClient->takeScreenshot('Foobar.png'); die;
+    }
+
+    private function finishLogin(): Crawler
+    {
         self::findBy('.button')->click();
         $crawler = self::$pantherClient->refreshCrawler();
 
@@ -363,7 +408,7 @@ class WebTestCase extends PantherTestCase
      * @return Crawler
      * @throws InvalidArgumentException
      */
-    protected function switchToService($serviceName): \Symfony\Component\DomCrawler\Crawler
+    protected function switchToService($serviceName): Crawler
     {
         $service = $this->getServiceRepository()->findByName($serviceName);
 

@@ -23,7 +23,9 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityConnection;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityConnectionCollection;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 
@@ -56,22 +58,22 @@ class ServiceConnectionService
             $this->addEntitiesToCollection(
                 $collection,
                 $institutionId,
-                $service,
                 $this->getTestIdpsIndexed(),
+                $service,
             );
         }
         return $collection;
     }
 
-    public function findByInstitutionId(InstitutionId $institutionId, Service $service): EntityConnectionCollection
+    public function findByInstitutionId(InstitutionId $institutionId, ?Service $service): EntityConnectionCollection
     {
         $collection = new EntityConnectionCollection();
         $this->addIdpList($collection);
         $this->addEntitiesToCollection(
             $collection,
             $institutionId,
-            $service,
             $this->getTestIdpsIndexed(),
+            $service,
         );
         return $collection;
     }
@@ -95,8 +97,8 @@ class ServiceConnectionService
     private function addEntitiesToCollection(
         EntityConnectionCollection $collection,
         InstitutionId $institutionId,
-        Service $service,
-        array $testIdpsIndexed
+        array $testIdpsIndexed,
+        ?Service $service = null,
     ): void {
         $list = [];
         $entities = $this->entityService->findPublishedTestEntitiesByInstitutionId($institutionId);
@@ -110,27 +112,12 @@ class ServiceConnectionService
                 // Skipping irrelevant entity types
                 continue;
             }
-            $metadata = $entity->getMetaData();
-            if ($metadata === null) {
-                throw new RuntimeException(
-                    sprintf(
-                        'No metadata available on entity with manage id: %s',
-                        $entity->getId()
-                    )
-                );
-            }
-            if ($metadata->getNameEn() === null) {
-                throw new RuntimeException(
-                    sprintf(
-                        'No name:en available for entity with manage id: %s',
-                        $entity->getId()
-                    )
-                );
-            }
+            $metadata = $this->assertValidMetadata($entity);
             if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
+                $serviceName = $service !== null ? $service->getOrganizationNameEn() : 'Unknown service name';
                 $list[$entity->getId()] = new EntityConnection(
                     $metadata->getNameEn(),
-                    $service->getOrganizationNameEn(),
+                    $serviceName,
                     $testIdpsIndexed,
                     $testIdpsIndexed,
                 );
@@ -145,7 +132,7 @@ class ServiceConnectionService
 
             $list[$entity->getId()] = new EntityConnection(
                 $metadata->getNameEn(),
-                $service->getOrganizationNameEn(),
+                $service !== null ? $service->getOrganizationNameEn() : 'Unknown service name',
                 $testIdpsIndexed,
                 $connectedIdps,
             );
@@ -167,5 +154,27 @@ class ServiceConnectionService
         }
 
         return $testIdpsIndexed;
+    }
+
+    private function assertValidMetadata(ManageEntity $entity): MetaData
+    {
+        $metadata = $entity->getMetaData();
+        if ($metadata === null) {
+            throw new RuntimeException(
+                sprintf(
+                    'No metadata available on entity with manage id: %s',
+                    $entity->getId()
+                )
+            );
+        }
+        if ($metadata->getNameEn() === null) {
+            throw new RuntimeException(
+                sprintf(
+                    'No name:en available for entity with manage id: %s',
+                    $entity->getId()
+                )
+            );
+        }
+        return $metadata;
     }
 }

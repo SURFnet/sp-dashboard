@@ -1732,11 +1732,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\EntityService\\:\\:findPublishedTestEntitiesByInstitutionId\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @param references unknown parameter\\: \\$service$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/EntityService.php',
@@ -1770,6 +1765,11 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot call method resetResourceServers\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\OidcClientInterface\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/LoadEntityService.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$entityName of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityConnection constructor expects string, string\\|null given\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/ServiceConnectionService.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\ServiceService\\:\\:getServiceNamesById\\(\\) return type has no value type specified in iterable type array\\.$#',
@@ -2672,11 +2672,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\:\\:\\$createdAt is unused\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Entity/Service.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Mailer\\\\Mailer\\:\\:send\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/Mailer/Mailer.php',
@@ -3428,6 +3423,11 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\ServiceConnectionsController\\:\\:myServices\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#2 \\$service of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\ServiceConnectionService\\:\\:findByInstitutionId\\(\\) expects Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|null, Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|false given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
 ];

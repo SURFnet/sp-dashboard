@@ -41,6 +41,12 @@ class WebTestFixtures extends Fixture
         $privacyQuestions = $this->createPrivacyQuestions($service);
         $manager->persist($privacyQuestions);
 
+        // A third service is used to test the SURFConext responsible role which pivots on entities with institution_id manage entities
+        $service = $this->createService('Acme Corporation', 'urn:collab:group:vm.openconext.org:demo:openconext:org:acme.com');
+        $service->setServiceType(Service::SERVICE_TYPE_INSTITUTE);
+        $service->setInstitutionId('ACME Corporation');
+        $manager->persist($service);
+
         $manager->flush();
     }
 

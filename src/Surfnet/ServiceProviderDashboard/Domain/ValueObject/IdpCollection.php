@@ -25,10 +25,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 class IdpCollection
 {
     /** @var IdentityProvider[] */
-    private array $testEntities;
+    private array $testEntities = [];
 
     /** @var IdentityProvider[] */
-    private array $institutionEntities;
+    private array $institutionEntities = [];
 
     /**
      * @param EntityId[] $testEntities
