@@ -59,6 +59,19 @@ class DashboardExtension extends Extension
         }
 
         $this->parseTeamsConfiguration($config['teams'], $container);
+
+        $container->setParameter(
+            'surfnet.dashboard.security.authentication.administrator_teams',
+            $config['administrator_teams']
+        );
+        $container->setParameter(
+            'surfnet.dashboard.security.authentication.surfconext_representative_authorization',
+            $config['surfconext_representative_authorization']
+        );
+        $container->setParameter(
+            'surfnet.dashboard.security.authentication.authorization_attribute_name',
+            $config['authorization_attribute_name']
+        );
     }
 
     /**

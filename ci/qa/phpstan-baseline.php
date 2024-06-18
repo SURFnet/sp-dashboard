@@ -3892,7 +3892,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/AuthorizationService.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\AuthorizationService\\:\\:isSurfConextResponsible\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\AuthorizationService\\:\\:isSurfConextRepresentative\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/AuthorizationService.php',
 ];
@@ -4107,7 +4107,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardSamlBundle/DependencyInjection/Configuration.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method scalarNode\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#',
+	'message' => '#^Cannot call method integerNode\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardSamlBundle/DependencyInjection/Configuration.php',
 ];

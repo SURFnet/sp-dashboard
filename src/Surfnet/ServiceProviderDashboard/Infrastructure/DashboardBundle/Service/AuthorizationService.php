@@ -72,14 +72,14 @@ class AuthorizationService
         return in_array('ROLE_ADMINISTRATOR', $roles);
     }
 
-    public function isSurfConextResponsible()
+    public function isSurfConextRepresentative()
     {
         if (!$this->isLoggedIn()) {
             return false;
         }
 
         $roles = $this->tokenStorage->getToken()->getRoleNames();
-        return in_array('ROLE_SURFCONEXT_RESPONSIBLE', $roles);
+        return in_array('ROLE_SURFCONEXT_REPRESENTATIVE', $roles);
     }
 
     /**

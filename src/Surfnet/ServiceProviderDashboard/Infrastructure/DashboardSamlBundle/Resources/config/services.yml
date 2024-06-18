@@ -22,7 +22,7 @@ services:
             - '@surfnet_saml.saml.attribute_dictionary'
             - '@logger'
             - '%surfnet.dashboard.security.authentication.authorization_attribute_name%'
-            - '%surfnet.dashboard.security.authentication.surfconext_responsible_authorization%'
+            - '%surfnet.dashboard.security.authentication.surfconext_representative_authorization%'
             - '%surfnet.dashboard.security.authentication.administrator_teams%'
 
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider:

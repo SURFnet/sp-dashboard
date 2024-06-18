@@ -31,14 +31,14 @@ class SurfAuthorizationsTest extends TestCase
      */
     public function test_create_authorizations(
         string $expectedOrganizationCode,
-        bool $isSurfConextResponsible,
+        bool $isSurfConextRepresentative,
         array $attributeValues
     ) {
         $authorizations = new SurfAuthorizations(
             $attributeValues,
             'urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijke'
         );
-        self::assertEquals($isSurfConextResponsible, $authorizations->isSurfConextResponsible());
+        self::assertEquals($isSurfConextRepresentative, $authorizations->isSurfConextRepresentative());
         self::assertEquals($expectedOrganizationCode, $authorizations->getOrganizationCode());
     }
 

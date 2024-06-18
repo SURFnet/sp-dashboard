@@ -11,9 +11,9 @@ Doing this ensures that when you log in you are a member of the teams listed the
 
 ## Logging in as SURFconext verantwoordelijke:
 Just like setting the administrator teams. You can also configure a role(s) that will make the logged in user a 'SURFconext verantwoordelijke'. 
-Use the `surfconext_responsible_authorization` `.env` var to configure these roles. 
+Use the `surfconext_representative_authorization` `.env` var to configure these roles. 
 
-In this case. SP Dashboard will read the `surf-authorisaties` attribute (from SAML Response attributes). And see if the value there matches our `surfconext_responsible_authorization` value.
+In this case. SP Dashboard will read the `surf-authorisaties` attribute (from SAML Response attributes). And see if the value there matches our `surfconext_representative_authorization` value.
 
 ## Logging in as a "normal user":
 - remove the content under the `administrator_teams` key in `.env`, so no key is present.

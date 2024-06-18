@@ -1,4 +1,7 @@
 dashboard:
+  administrator_teams: "%env(administrator_teams)%"
+  surfconext_representative_authorization: "%env(surfconext_representative_authorization)%"
+  authorization_attribute_name: "%env(authorization_attribute_name)%"
   manage:
     test:
       connection:

@@ -69,7 +69,7 @@ class SamlProviderTest extends TestCase
         );
     }
 
-    public function test_surfconext_responsible_teams_validation_accepts_valid_teams()
+    public function test_surfconext_representative_teams_validation_accepts_valid_teams()
     {
         $provider = $this->buildProvider("'urn:collab:foo:team.foobar.com'", "'urn:collab:foo:team.foobar.com', 'urn:collab:foo:team.foobar2.com'");
         self::assertInstanceOf(

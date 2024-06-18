@@ -168,7 +168,7 @@ class WebTestCase extends PantherTestCase
         $this->surfConextRepresentativeAttributeName = self::getContainer()
             ->getParameter('surfnet.dashboard.security.authentication.authorization_attribute_name');
         $this->surfConextRepresentativeAttributeValue = self::getContainer()
-            ->getParameter('surfnet.dashboard.security.authentication.surfconext_responsible_authorization');
+            ->getParameter('surfnet.dashboard.security.authentication.surfconext_representative_authorization');
     }
 
     protected function registerManageEntity(
