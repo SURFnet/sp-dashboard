@@ -37,6 +37,7 @@ class EntityDetailTest extends WebTestCase
         );
 
         $issueType = 'spd-delete-production-entity';
+        $this->jiraIssueRepository->shouldNotFailCreateIssue();
         $this->createjiraTicket($entityId, $issueType);
 
         $this->switchToService('SURFnet');

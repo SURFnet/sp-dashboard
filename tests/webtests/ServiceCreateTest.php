@@ -57,6 +57,6 @@ class ServiceCreateTest extends WebTestCase
         self::fillFormField($form, 'input[name="dashboard_bundle_service_type[teams][teamManagerEmail]"]', 'loeki@example.org');
         self::findBy('#dashboard_bundle_service_type_save')->click();
         $services = $this->getServiceRepository()->findAll();
-        $this->assertCount(3, $services);
+        $this->assertCount(4, $services);
     }
 }

@@ -49,6 +49,12 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         $this->failIssueCreation = true;
         $this->storeData();
     }
+    public function shouldNotFailCreateIssue(): void
+    {
+        $this->loadData();
+        $this->failIssueCreation = false;
+        $this->storeData();
+    }
 
     public function findByManageIds(array $manageIds): IssueCollection
     {
