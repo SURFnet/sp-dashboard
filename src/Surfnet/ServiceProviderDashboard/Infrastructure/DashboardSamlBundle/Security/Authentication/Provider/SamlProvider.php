@@ -69,7 +69,7 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
 
         Assert::stringNotEmpty(
             $surfConextResponsibleAuthorization,
-            'The `surfconext_responsible_authorization` config parameter should be a non empty string.'
+            'The `surfconext_representative_authorization` config parameter should be a non empty string.'
         );
         $this->surfConextResponsibleAuthorization = $surfConextResponsibleAuthorization;
     }
@@ -127,8 +127,8 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
         }
         // Default to the ROLE_USER role for services.
         $role = 'ROLE_USER';
-        if ($authorizations && $authorizations->isSurfConextResponsible()) {
-            $role = 'ROLE_SURFCONEXT_RESPONSIBLE';
+        if ($authorizations && $authorizations->isSurfConextRepresentative()) {
+            $role = 'ROLE_SURFCONEXT_REPRESENTATIVE';
             $contact->setInstitutionId($authorizations->getOrganizationCode());
             $contact->assignRole($role);
         }

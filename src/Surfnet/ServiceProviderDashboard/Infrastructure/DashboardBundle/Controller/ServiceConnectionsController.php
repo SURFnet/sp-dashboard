@@ -39,7 +39,7 @@ class ServiceConnectionsController extends AbstractController
     ) {
     }
 
-    #[IsGranted(new Expression('is_granted("ROLE_ADMINISTRATOR") or is_granted("ROLE_SURFCONEXT_RESPONSIBLE")'))]
+    #[IsGranted(new Expression('is_granted("ROLE_ADMINISTRATOR") or is_granted("ROLE_SURFCONEXT_REPRESENTATIVE")'))]
     #[Route(
         path: '/connections',
         name: 'service_connections',

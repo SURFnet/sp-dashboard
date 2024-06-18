@@ -28,14 +28,14 @@ class SurfAuthorizations
 {
     private const SAB_ORGCODE_PATTERN = '/urn:mace:surfnet.nl:surfnet.nl:sab:organizationCode:(.+)/';
     private string $organizationCode;
-    private bool $isSurfConextResponsible;
+    private bool $isSurfConextRepresentative;
 
     public function __construct(array $authorizations, string $sabRoleName)
     {
         // Is the ROLE_NAME present in the authorizations?
-        $this->isSurfConextResponsible = false;
+        $this->isSurfConextRepresentative = false;
         if (in_array($sabRoleName, $authorizations)) {
-            $this->isSurfConextResponsible = true;
+            $this->isSurfConextRepresentative = true;
         }
 
         // Now test if the organization code is present in the authorizations
@@ -49,9 +49,9 @@ class SurfAuthorizations
         $this->organizationCode = $organizationCodeMatches[1];
     }
 
-    public function isSurfConextResponsible(): bool
+    public function isSurfConextRepresentative(): bool
     {
-        return $this->isSurfConextResponsible;
+        return $this->isSurfConextRepresentative;
     }
 
     public function getOrganizationCode(): string

@@ -29,8 +29,8 @@ class EntrypointController extends AbstractController
     #[Route(path: '/', name: 'entrypoint', methods: ['GET'])]
     public function __invoke(): RedirectResponse
     {
-        // When surfconext responsible, go tho the connections page
-        if ($this->isGranted('ROLE_SURFCONEXT_RESPONSIBLE')) {
+        // When surfconext representative, go tho the connections page
+        if ($this->isGranted('ROLE_SURFCONEXT_REPRESENTATIVE')) {
             return $this->redirectToRoute('service_connections');
         }
         // Otherwise start at the service overview page
