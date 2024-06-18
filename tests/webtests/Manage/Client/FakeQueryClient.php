@@ -55,9 +55,10 @@ class FakeQueryClient implements QueryManageRepository
         string $entityId,
         ?string $metadataUrl,
         string $name,
-        ?string $teamName = null
+        ?string $teamName = null,
+        ?string $institutionId = '',
     ) {
-        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, $metadataUrl, $name, $teamName);
+        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, $metadataUrl, $name, $teamName, $institutionId);
         $this->storeEntities();
     }
 
@@ -142,6 +143,7 @@ class FakeQueryClient implements QueryManageRepository
                 $searchResults[] = ManageEntity::fromApiResponse($result);
             }
         }
+        return $searchResults;
     }
 
     public function findByManageIdAndProtocol(string $manageId, string $protocol) :? ManageEntity

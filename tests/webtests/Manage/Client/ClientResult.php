@@ -39,13 +39,16 @@ class ClientResult implements ClientResultInterface
 
     private $teamName;
 
+    private string $institutionId;
+
     public function __construct(
         string $protocol,
         string $id,
         string $entityId,
         ?string $metadataUrl,
         string $name,
-        ?string $teamName
+        ?string $teamName,
+        ?string $institutionId,
     ) {
         $this->id = $id;
         $this->protocol = $protocol;
@@ -56,6 +59,7 @@ class ClientResult implements ClientResultInterface
         $this->metadataUrl = $metadataUrl;
         $this->name = $name;
         $this->teamName = $teamName;
+        $this->institutionId = $institutionId;
         if ($teamName === null) {
             $this->teamName = 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl';
         }
@@ -87,7 +91,8 @@ class ClientResult implements ClientResultInterface
             $this->metadataUrl,
             $this->name,
             str_replace('_', '-', $this->protocol),
-            $this->teamName
+            $this->teamName,
+            $this->institutionId
         );
         return json_decode($data, true);
     }
@@ -116,7 +121,8 @@ class ClientResult implements ClientResultInterface
             $data['entityId'],
             $data['metadataUrl'],
             $data['name'],
-            $data['teamName']
+            $data['teamName'],
+            $data['institutionId'],
         );
     }
 
@@ -129,6 +135,7 @@ class ClientResult implements ClientResultInterface
             'metadataUrl' => $this->metadataUrl,
             'name' => $this->name,
             'teamName' => $this->teamName,
+            'institutionId' => $this->institutionId,
         ];
     }
 }

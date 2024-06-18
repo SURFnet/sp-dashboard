@@ -64,6 +64,7 @@
       "OrganizationDisplayName:nl": "%5$s Organisation Name Dutch",
       "OrganizationURL:nl": "%5$s Organisation Url Dutch",
       "coin:service_team_id": "%7$s",
+      "coin:institution_id": "%8$s",
       "isPublicClient": true
     },
     "allowedEntities": [],
