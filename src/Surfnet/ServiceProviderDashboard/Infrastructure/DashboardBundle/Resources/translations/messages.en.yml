@@ -563,8 +563,8 @@ service.overview.progress.tooltip.production-connection.in-progress.html: "The d
 service.overview.progress.tooltip.production-connection.success.html: "Thank you\nA production connection is active"
 
 service.connections.title.main: "Connections"
-service.connections.title.filters: Filters
 service.connections.title.content: Connection status
+service.connections.content.description: "The list below shows the entities you are responsible for. If a service is connected to a test IdP, it is marked with a green checkmark. If the service is connected to any other IdP, then a green checkmark wil be displayed in the final column."
 service.connections.connected: Not connected
 service.connections.not-connected: Connected
 service.connections.table.no-results: No entities found
