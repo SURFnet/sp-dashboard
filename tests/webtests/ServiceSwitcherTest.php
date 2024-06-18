@@ -74,12 +74,14 @@ class ServiceSwitcherTest extends WebTestCase
         $crawler = self::$pantherClient->request('GET', '/service/create');
 
         $options = $crawler->filter('select#service-switcher option');
-        $this->assertCount(3, $options, 'Expecting 2 services in service switcher (excluding empty option)');
+        $this->assertCount(4, $options, 'Expecting 3 services in service switcher (excluding empty option)');
 
         $crawler->filter('.service-switcher form')->click();
-        $ibuildings = "//li[contains(@id,'select2-service-switcher-result-')][1]";
-        $surf = "//li[contains(@id,'select2-service-switcher-result-')][2]";
+        $acme = "//li[contains(@id,'select2-service-switcher-result-')][1]";
+        $ibuildings = "//li[contains(@id,'select2-service-switcher-result-')][2]";
+        $surf = "//li[contains(@id,'select2-service-switcher-result-')][3]";
 
+        $this->assertEquals('Acme Corporation [acme.com]', $crawler->findElement(WebDriverBy::xpath($acme))->getText());
         $this->assertEquals('Ibuildings B.V. [ibuildings.nl]', $crawler->findElement(WebDriverBy::xpath($ibuildings))->getText());
         $this->assertEquals('SURFnet [surf.nl]', $crawler->findElement(WebDriverBy::xpath($surf))->getText());
     }
