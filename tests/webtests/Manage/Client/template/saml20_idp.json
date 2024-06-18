@@ -21,7 +21,8 @@
     "metaDataFields": {
       "name:en": "%5$s Name English",
       "name:nl": "%5$s Name Dutch",
-      "coin:service_team_id": "%7$s"
+      "coin:service_team_id": "%7$s",
+      "coin:institution_id": "%8$s"
     },
     "eid": 31
   }

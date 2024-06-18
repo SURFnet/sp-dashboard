@@ -26,14 +26,16 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Factory\IdentityProvi
 
 class FakeIdentityProviderClient implements IdentityProviderRepository
 {
+    private string $path = __DIR__ . '/../../../../var/webtest-idps.json';
     /**
      * @var ClientResult[]
      */
     private $entities = [];
 
-    public function registerEntity(string $protocol, string $id, string $entityId, string $name)
+    public function registerEntity(string $protocol, string $id, string $entityId, string $name, string $institutionId = '')
     {
-        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, null, $name, null);
+        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, null, $name, null, $institutionId);
+        $this->storeEntities();
     }
 
     /**
@@ -41,6 +43,7 @@ class FakeIdentityProviderClient implements IdentityProviderRepository
      */
     public function findAll()
     {
+        $this->load();
         $list = [];
         foreach ($this->entities as $manageResult) {
             $list[] = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
@@ -50,6 +53,7 @@ class FakeIdentityProviderClient implements IdentityProviderRepository
 
     public function findByEntityId(EntityId $entityId): ?IdentityProvider
     {
+        $this->load();
         foreach ($this->entities as $manageResult) {
             $entity = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
             if ($entity->getEntityId() === (string) $entityId) {
@@ -66,10 +70,46 @@ class FakeIdentityProviderClient implements IdentityProviderRepository
      */
     public function findByInstitutionId(InstitutionId $institutionId): array
     {
+        $this->load();
         $list = [];
         foreach ($this->entities as $manageResult) {
             $list[] = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
         }
         return $list;
+    }
+
+
+    private function read()
+    {
+        return json_decode(file_get_contents($this->path), true);
+    }
+
+    private function write(array $data)
+    {
+        file_put_contents($this->path, json_encode($data));
+    }
+
+    private function storeEntities()
+    {
+        // Also store the new entity in the on-file storage
+        $data = [];
+        foreach ($this->entities as $identifier => $entity) {
+            $data[$identifier] = $entity->encode();
+        }
+        $this->write($data);
+    }
+
+    private function load()
+    {
+        $data = $this->read();
+        foreach ($data as $id => $rawClientResult) {
+            if (array_key_exists('protocol', $rawClientResult)) {
+                $this->entities[$id] = ClientResult::decode($rawClientResult);
+                continue;
+            }
+            if (array_key_exists('json', $rawClientResult)) {
+                $this->entities[$id] = ClientResultRaw::decode($rawClientResult);
+            }
+        }
     }
 }

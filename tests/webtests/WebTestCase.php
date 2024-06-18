@@ -178,7 +178,8 @@ class WebTestCase extends PantherTestCase
         string $name,
         string $entityId,
         ?string $metadataUrl = null,
-        ?string $teamName = null
+        ?string $teamName = null,
+        ?string $institutionId = '',
     ) {
         switch ($protocol) {
             case 'saml20_sp':
@@ -191,11 +192,12 @@ class WebTestCase extends PantherTestCase
                     $name,
                     $entityId,
                     $metadataUrl,
-                    $teamName
+                    $teamName,
+                    $institutionId,
                 );
                 break;
             case 'saml20_idp':
-                $this->registerIdP($env, $protocol, $id, $name, $entityId);
+                $this->registerIdP($env, $protocol, $id, $name, $entityId, $institutionId);
                 break;
         }
     }
@@ -236,7 +238,8 @@ class WebTestCase extends PantherTestCase
         string $name,
         string $entityId,
         ?string $metadataUrl = null,
-        ?string $teamName = null
+        ?string $teamName = null,
+        ?string $institutionId = '',
     ) {
         switch ($env) {
             case 'production':
@@ -246,7 +249,8 @@ class WebTestCase extends PantherTestCase
                     $entityId,
                     $metadataUrl,
                     $name,
-                    $teamName
+                    $teamName,
+                    $institutionId
                 );
                 break;
             case 'test':
@@ -256,7 +260,8 @@ class WebTestCase extends PantherTestCase
                     $entityId,
                     $metadataUrl,
                     $name,
-                    $teamName
+                    $teamName,
+                    $institutionId
                 );
                 break;
             default:
@@ -264,7 +269,7 @@ class WebTestCase extends PantherTestCase
         }
     }
 
-    private function registerIdP(string $env, string $protocol, string $id, string $name, string $entityId)
+    private function registerIdP(string $env, string $protocol, string $id, string $name, string $entityId, string $institutionId = '')
     {
         switch ($env) {
             case 'production':
@@ -272,7 +277,8 @@ class WebTestCase extends PantherTestCase
                     $protocol,
                     $id,
                     $entityId,
-                    $name
+                    $name,
+                    $institutionId
                 );
                 break;
             case 'test':
@@ -280,7 +286,8 @@ class WebTestCase extends PantherTestCase
                     $protocol,
                     $id,
                     $entityId,
-                    $name
+                    $name,
+                    $institutionId
                 );
                 break;
             default:
@@ -374,7 +381,7 @@ class WebTestCase extends PantherTestCase
         );
         $select->click();
         $entitlement = $crawler->filter(sprintf('input[name="urn:mace:dir:attribute-def:%s"]', $this->surfConextRepresentativeAttributeName));
-        $entitlement->sendKeys($institutionId);
+        $entitlement->sendKeys('urn:mace:surfnet.nl:surfnet.nl:sab:organizationCode:' . $institutionId);
         // Now also send the attribute value that indicates this user is of role SurfConext representative
         $select = $crawler->filterXPath(
             sprintf(
@@ -383,11 +390,12 @@ class WebTestCase extends PantherTestCase
             )
         );
         $select->click();
-        $entitlement = $crawler->filter(sprintf('input[name="urn:mace:dir:attribute-def:%s"]', $this->surfConextRepresentativeAttributeName));
-        $entitlement->sendKeys($this->surfConextRepresentativeAttributeValue);
+        $entitlement = $crawler
+            ->filter(sprintf('input[name="urn:mace:dir:attribute-def:%s"]', $this->surfConextRepresentativeAttributeName))
+            ->eq(1); // There are now 2 entitlement attrs, pick the second
 
+        $entitlement->sendKeys($this->surfConextRepresentativeAttributeValue);
         $this->finishLogin();
-        self::$pantherClient->takeScreenshot('Foobar.png'); die;
     }
 
     private function finishLogin(): Crawler
@@ -490,5 +498,10 @@ class WebTestCase extends PantherTestCase
     protected function getAuthorizationService(): AuthorizationService
     {
         return self::getContainer()->get(AuthorizationService::class);
+    }
+
+    protected function screenshot(string $filename)
+    {
+        self::$pantherClient->takeScreenshot($filename);
     }
 }
