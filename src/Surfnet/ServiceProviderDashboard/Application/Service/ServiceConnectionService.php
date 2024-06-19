@@ -34,6 +34,8 @@ class ServiceConnectionService
     public function __construct(
         private readonly IdpService $testIdps,
         private readonly EntityService $entityService,
+        private readonly IdpServiceInterface $idpService,
+        private readonly ServiceService $serviceService,
     ) {
     }
 
@@ -47,33 +49,35 @@ class ServiceConnectionService
             throw new RuntimeException('No service provided');
         }
         $collection = new EntityConnectionCollection();
-        $this->addIdpList($collection);
 
         foreach ($services as $service) {
             if ($service->getInstitutionId() === null) {
                 continue;
             }
-
             $institutionId = new InstitutionId($service->getInstitutionId());
+            $connectedOtherIdps = $this->getRemainingIdpConnections($institutionId);
+
+            $collection->addIdpList($this->listTestIdps());
             $this->addEntitiesToCollection(
                 $collection,
                 $institutionId,
                 $this->getTestIdpsIndexed(),
-                $service,
+                $connectedOtherIdps,
             );
         }
         return $collection;
     }
 
-    public function findByInstitutionId(InstitutionId $institutionId, ?Service $service): EntityConnectionCollection
+    public function findByInstitutionId(InstitutionId $institutionId): EntityConnectionCollection
     {
         $collection = new EntityConnectionCollection();
-        $this->addIdpList($collection);
+        $collection->addIdpList($this->listTestIdps());
+        $connectedOtherIdps = $this->getRemainingIdpConnections($institutionId);
         $this->addEntitiesToCollection(
             $collection,
             $institutionId,
             $this->getTestIdpsIndexed(),
-            $service,
+            $connectedOtherIdps
         );
         return $collection;
     }
@@ -86,11 +90,6 @@ class ServiceConnectionService
         return $this->testIdps->createCollection()->testEntities();
     }
 
-    private function addIdpList(EntityConnectionCollection $collection): void
-    {
-        $collection->addIdpList($this->listTestIdps());
-    }
-
     /**
      * @param array<string, IdentityProvider> $testIdpsIndexed
      */
@@ -98,28 +97,37 @@ class ServiceConnectionService
         EntityConnectionCollection $collection,
         InstitutionId $institutionId,
         array $testIdpsIndexed,
-        ?Service $service = null,
+        array $otherIdpsIndexed,
     ): void {
         $list = [];
         $entities = $this->entityService->findPublishedTestEntitiesByInstitutionId($institutionId);
+
         if ($entities === null) {
             $collection->addEntityConnections($list);
             return;
         }
         $allowedProtocols = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
         foreach ($entities as $entity) {
+            $team = $entity->getMetaData()->getCoin()->getServiceTeamId();
+            $service = $this->serviceService->getServiceByTeamName($team);
+            if ($service === null) {
+                // Skipping entities that do not have a team id
+                continue;
+            }
             if (!in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
                 // Skipping irrelevant entity types
                 continue;
             }
             $metadata = $this->assertValidMetadata($entity);
             if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
-                $serviceName = $service !== null ? $service->getOrganizationNameEn() : 'Unknown service name';
+                $serviceName = $service->getOrganizationNameEn();
                 $list[$entity->getId()] = new EntityConnection(
                     $metadata->getNameEn(),
+                    $entity->getMetaData()->getEntityId(),
                     $serviceName,
                     $testIdpsIndexed,
-                    $testIdpsIndexed,
+                    $otherIdpsIndexed,
+                    $testIdpsIndexed + $otherIdpsIndexed,
                 );
                 continue;
             }
@@ -132,8 +140,10 @@ class ServiceConnectionService
 
             $list[$entity->getId()] = new EntityConnection(
                 $metadata->getNameEn(),
-                $service !== null ? $service->getOrganizationNameEn() : 'Unknown service name',
+                $entity->getMetaData()->getEntityId(),
+                $service->getOrganizationNameEn(),
                 $testIdpsIndexed,
+                $otherIdpsIndexed,
                 $connectedIdps,
             );
         }
@@ -176,5 +186,18 @@ class ServiceConnectionService
             );
         }
         return $metadata;
+    }
+
+    /**
+     * @return array<string, IdentityProvider>
+     */
+    private function getRemainingIdpConnections(InstitutionId $institutionId)
+    {
+        $items = $this->idpService->findInstitutionIdps($institutionId);
+        $indexed = [];
+        foreach ($items->institutionEntities() as $idp) {
+            $indexed[$idp->getEntityId()] = $idp;
+        }
+        return $indexed;
     }
 }
