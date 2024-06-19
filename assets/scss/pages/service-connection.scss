@@ -1,29 +1,42 @@
 .service-connections {
   div.sps {
-    td {
-      padding: 15px 10px;
-
-      i.connected {
-        color: $dark-green;
+    thead {
+      tr {
+        border-top: none;
       }
-      i.not-connected {
-        color: $red;
-      }
-
-      &.idp {
-        width: 3rem;
+      th {
+        border-bottom: 1px solid $black;
+        padding: 11px 10px;
+        font-size: .875rem;
+        font-weight: 600;
+        vertical-align: bottom;
       }
     }
-    th {
-      border-bottom: 1px solid $black;
-      padding: 11px 10px;
-      font-size: .875rem;
-      font-weight: 600;
-      vertical-align: bottom;
-    }
+    tbody {
+      tr{
+        border: none;
+        border-top: 1px solid $lighter-grey;
+        td {
+          padding: 10px 10px;
 
-    td.name {
-      color: $blue
+          i.connected {
+            color: $dark-green;
+          }
+          i.not-connected {
+            color: $red;
+          }
+
+          &.idp {
+            width: 3rem;
+          }
+        }
+        &.no-stripe{
+          border: none;
+        }
+      }
+      td.name {
+        color: $blue
+      }
     }
   }
 }

@@ -20,28 +20,38 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="col">Name</th>
                             <th scope="col">Vendor</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Entity Id</th>
                             {% for idp in  testIdps %}
                                 <th scope="col" class="idp" title="{{ idp.entityId }}">{{ idp.name }}</th>
                             {% endfor %}
+                            <th scope="col">Institution idps</th>
                         </tr>
                     </thead>
                     <tbody>
 
-                    {% if entities is empty %}
+                    {% if entities.services is empty %}
                         <tr>
                             <td colspan="{{ columnCount }}">{{ 'service.connections.table.no-results'|trans }}</td>
                         </tr>
                     {% else %}
-                    {% for sp in  entities %}
-                    <tr>
-                        <td class="name">{{ sp.entityName }}</td>
-                        <td class="vendor">{{ sp.vendorName }}</td>
-                            {% for connected in  sp.listConnected %}
-                            <td class="idp"><i class="fa fa-{{ (connected ? 'check' : 'times')|trans }} {{ (not connected) ? 'not-' : '' }}connected"><span class="hidden">{{ (connected ? 'service.connections.connected' : 'service.connections.not-connected')|trans }}</span></i></td>
-                            {% endfor %}
-                    </tr>
+
+                    {% set currentServiceName = '' %}
+                    {% for serviceName in entities.services %}
+                        {% for sp in entities.entityConnectionsByServiceName(serviceName) %}
+
+                        <tr {{ currentServiceName == serviceName ? 'class="no-stripe"'}}>
+                            <td class="vendor">{{ currentServiceName != serviceName ? sp.vendorName : ''}}</td>
+                            <td class="name">{{ sp.entityName }}</td>
+                            <td class="vendor">{{ sp.entityId }}</td>
+                                {% for connected in sp.listConnected %}
+                                <td class="idp"><i class="fa fa-{{ (connected ? 'check' : 'times')|trans }} {{ (not connected) ? 'not-' : '' }}connected"><span class="hidden">{{ (connected ? 'service.connections.connected' : 'service.connections.not-connected')|trans }}</span></i></td>
+                                {% endfor %}
+                            <td class="idp"><i class="fa fa-{{ (sp.hasConnectedOtherIdp ? 'check' : 'times')|trans }} {{ (not sp.hasConnectedOtherIdp) ? 'not-' : '' }}connected"><span class="hidden">{{ (sp.hasConnectedOtherIdp ? 'service.connections.connected' : 'service.connections.not-connected')|trans }}</span></i></td>
+                        </tr>
+                            {% set currentServiceName = serviceName %}
+                        {% endfor %}
                     {% endfor %}
                     {% endif %}
                     </tbody>
