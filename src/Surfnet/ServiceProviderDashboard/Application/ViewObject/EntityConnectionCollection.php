@@ -25,12 +25,9 @@ class EntityConnectionCollection
     /**
      * @param array<string, IdentityProvider> $idpList
      */
-    private array $idpList = [];
+    private array $testIdpList = [];
 
-    /**
-     * @var array<string, EntityConnection> $collection
-     */
-    private array $collection = [];
+    private array $collectionByServiceName = [];
 
     public static function empty(): self
     {
@@ -39,15 +36,31 @@ class EntityConnectionCollection
 
     public function addIdpList(array $idps): void
     {
-        $this->idpList = $this->idpList + $idps;
+        $this->testIdpList = $this->testIdpList + $idps;
     }
 
     /**
      * @return array<string, IdentityProvider>
      */
-    public function getIdps(): array
+    public function getTestIdps(): array
     {
-        return $this->idpList;
+        return $this->testIdpList;
+    }
+
+    public function services(): array
+    {
+        return array_keys($this->collectionByServiceName);
+    }
+
+    /**
+     * @return array<EntityConnection>
+     */
+    public function entityConnectionsByServiceName(string $serviceName): array
+    {
+        if (array_key_exists($serviceName, $this->collectionByServiceName)) {
+            return $this->collectionByServiceName[$serviceName];
+        }
+        return [];
     }
 
     /**
@@ -55,11 +68,8 @@ class EntityConnectionCollection
      */
     public function addEntityConnections(array $entityConnections): void
     {
-        $this->collection = $this->collection + $entityConnections;
-    }
-
-    public function getEntityConnections(): array
-    {
-        return $this->collection;
+        foreach ($entityConnections as $connection) {
+            $this->collectionByServiceName[$connection->vendorName][] = $connection;
+        }
     }
 }
