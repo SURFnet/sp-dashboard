@@ -24,9 +24,12 @@ class EntityConnection
 {
     public function __construct(
         public string $entityName,
+        public string $entityId,
         public string $vendorName,
-        /** @var array<string, IdentityProvider> $availableIdps */
-        private array $availableIdps,
+        /** @var array<string, IdentityProvider> $availableTestIdps */
+        private array $availableTestIdps,
+        /** @var array<string, IdentityProvider> $availableTestIdps */
+        private array $availableOtherIdps,
         /** @var array<string, IdentityProvider> $connectedIdps */
         private array $connectedIdps,
     ) {
@@ -38,7 +41,7 @@ class EntityConnection
     public function listConnected(): array
     {
         $list = [];
-        foreach (array_keys($this->availableIdps) as $entityId) {
+        foreach (array_keys($this->availableTestIdps) as $entityId) {
             $list[$entityId] = false;
             if (array_key_exists($entityId, $this->connectedIdps)) {
                 $list[$entityId] = true;
@@ -47,13 +50,22 @@ class EntityConnection
         return $list;
     }
 
+    public function hasConnectedOtherIdp(): bool
+    {
+        $intersection = array_intersect(array_keys($this->availableOtherIdps), array_keys($this->connectedIdps));
+        if (count($intersection) > 0) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns the test entities that are available to the services
      * These are the .env configurable test_idp_entity_ids
      * @return array<string, IdentityProvider>
      */
-    public function listAvailable(): array
+    public function listAvailableTestIdps(): array
     {
-        return $this->availableIdps;
+        return $this->availableTestIdps;
     }
 }

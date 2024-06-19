@@ -26,10 +26,12 @@ class EntityConnectionTest extends TestCase
 {
     public function test_correct_lists_are_created()
     {
-        $available = [
+        $availableTest = [
             'mock-idp' => new IdentityProvider('123123', 'mock-idp', 'Mujina', 'Muhjina'),
             'https://eduid.nl' => new IdentityProvider('4363456', 'eduid', 'EduId', 'Eduid'),
             'https://test.example.nl' => new IdentityProvider('86524365', 'Test', 'Test', 'Test'),
+        ];
+        $availableOther = [
             'https://foobar.org' => new IdentityProvider('43688434', 'foobar', 'foobar', 'foobar'),
         ];
         $connected = [
@@ -37,15 +39,20 @@ class EntityConnectionTest extends TestCase
             'https://foobar.org' => new IdentityProvider('43688434', 'foobar', 'foobar', 'foobar'),
         ];
 
-        $connection = new EntityConnection('SP Exceptionale', 'Vendor', $available, $connected);
+        $connection = new EntityConnection(
+            'SP Exceptionale',
+            'Vendor',
+            'https://entityId',
+            $availableTest,
+            $availableOther,
+            $connected
+        );
 
-        $this->assertEquals($available, $connection->listAvailable());
+        $this->assertEquals($availableTest, $connection->listAvailableTestIdps());
         $expectedConnections = [
             'mock-idp' => false,
             'https://eduid.nl' => true,
             'https://test.example.nl' => false,
-            'https://foobar.org' => true,
-
         ];
 
         $this->assertEquals($expectedConnections, $connection->listConnected());
@@ -53,10 +60,12 @@ class EntityConnectionTest extends TestCase
 
     public function test_allowall_results_in_all_selected()
     {
-        $available = [
+        $availableTest = [
             'mock-idp' => new IdentityProvider('123123', 'mock-idp', 'Mujina', 'Muhjina'),
             'https://eduid.nl' => new IdentityProvider('4363456', 'eduid', 'EduId', 'Eduid'),
             'https://test.example.nl' => new IdentityProvider('86524365', 'Test', 'Test', 'Test'),
+        ];
+        $availableOther = [
             'https://foobar.org' => new IdentityProvider('43688434', 'foobar', 'foobar', 'foobar'),
         ];
         $connected = [
@@ -66,9 +75,16 @@ class EntityConnectionTest extends TestCase
             'https://foobar.org' => new IdentityProvider('43688434', 'foobar', 'foobar', 'foobar'),
         ];
 
-        $connection = new EntityConnection('SP Exceptionale', 'Vendor', $available, $connected);
+        $connection = new EntityConnection(
+            'SP Exceptionale',
+            'https://entityId',
+            'Vendor',
+            $availableTest,
+            $availableOther,
+            $connected
+        );
 
-        $this->assertEquals($available, $connection->listAvailable());
+        $this->assertEquals($availableTest, $connection->listAvailableTestIdps());
         $expectedConnections = [
             'mock-idp' => true,
             'https://eduid.nl' => true,
