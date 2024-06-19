@@ -27,13 +27,16 @@ use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\In
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ServiceConnectionsController extends AbstractController
 {
     public function __construct(
-        private readonly AuthorizationService $authorizationService,
+        private readonly AuthorizationService     $authorizationService,
         private readonly ServiceConnectionService $serviceConnectionService,
         private readonly ServiceService $serviceService,
     ) {
@@ -45,7 +48,29 @@ class ServiceConnectionsController extends AbstractController
         name: 'service_connections',
         methods: ['GET', 'POST']
     )]
-    public function myServices()
+    public function __invoke(): RedirectResponse|Response
+    {
+        // The admin overview (which span multiple services) is rendered in a separate action
+        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
+            return $this->redirect($this->generateUrl('service_admin_overview'));
+        }
+        $entities = $this->serviceConnectionService->findByInstitutionId($this->getInstitutionId());
+        return $this->render(
+            '@Dashboard/Service/my-services.html.twig',
+            [
+                'testIdps' => $entities->getTestIdps(),
+                'entities' => $entities,
+            ]
+        );
+    }
+
+    #[IsGranted("ROLE_ADMINISTRATOR")]
+    #[Route(
+        path: '/admin-connections',
+        name: 'admin_service_connections',
+        methods: ['GET', 'POST']
+    )]
+    public function adminConnections(): Response
     {
         $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
         $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
@@ -54,17 +79,8 @@ class ServiceConnectionsController extends AbstractController
             $entities = $this->serviceConnectionService->findByServices($services);
         }
         if ($serviceCount === 1) {
-            $service = reset($services);
             $entities = $this->serviceConnectionService->findByInstitutionId(
                 $this->getInstitutionId(),
-                $service
-            );
-        }
-        $isSurfConextRepresentative = $serviceCount === 0 && empty($allowedServices);
-        if ($isSurfConextRepresentative) {
-            $entities = $this->serviceConnectionService->findByInstitutionId(
-                $this->getInstitutionId(),
-                null
             );
         }
 
@@ -75,7 +91,7 @@ class ServiceConnectionsController extends AbstractController
         return $this->render(
             '@Dashboard/Service/my-services.html.twig',
             [
-                'testIdps' => $entities->getIdps(),
+                'testIdps' => $entities->getTestIdps(),
                 'entities' => $entities->getEntityConnections(),
             ]
         );
