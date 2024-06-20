@@ -77,7 +77,13 @@ class EntityConnectionCollection
         }
     }
 
-    public function export()
+    /**
+     * Returns a serializable flat representation of the
+     * connected entities
+     *
+     * @return EntityConnection[]
+     */
+    public function export(): array
     {
         $list = [];
         foreach ($this->collectionByServiceName as $serviceEntities) {

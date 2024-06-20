@@ -76,19 +76,19 @@ class EntityConnection
         return $this->availableTestIdps;
     }
 
+    /**
+     * @return string[]
+     */
     public function availableTestIdps(): array
     {
-        if ($this->isAllowedAll) {
-            return array_keys($this->connectedIdps);
-        }
         return array_intersect(array_keys($this->availableTestIdps), array_keys($this->connectedIdps));
     }
 
+    /**
+     * @return string[]
+     */
     public function availableOtherIdps(): array
     {
-        if ($this->isAllowedAll) {
-            return array_keys($this->connectedIdps);
-        }
         return array_intersect(array_keys($this->availableOtherIdps), array_keys($this->connectedIdps));
     }
 }
