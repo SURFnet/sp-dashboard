@@ -89,8 +89,8 @@ class EntityConnectionTest extends TestCase
             'mock-idp' => true,
             'https://eduid.nl' => true,
             'https://test.example.nl' => true,
-            'https://foobar.org' => true,
-
+            // 'https://foobar.org' => true, // The other connected IdP is not listed explicitly, as we do not show
+            // the other connected IdPs on the list page (we do on the CSV export)
         ];
 
         $this->assertEquals($expectedConnections, $connection->listConnected());

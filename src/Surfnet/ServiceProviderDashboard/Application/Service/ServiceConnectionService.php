@@ -28,6 +28,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
+use function array_key_exists;
 
 class ServiceConnectionService
 {
@@ -92,6 +93,7 @@ class ServiceConnectionService
 
     /**
      * @param array<string, IdentityProvider> $testIdpsIndexed
+     * @param array<string, IdentityProvider> $otherIdpsIndexed
      */
     private function addEntitiesToCollection(
         EntityConnectionCollection $collection,
@@ -108,22 +110,18 @@ class ServiceConnectionService
         }
         $allowedProtocols = [Constants::TYPE_SAML, Constants::TYPE_OPENID_CONNECT_TNG];
         foreach ($entities as $entity) {
-            $team = $entity->getMetaData()->getCoin()->getServiceTeamId();
-            $service = $this->serviceService->getServiceByTeamName($team);
-            if ($service === null) {
-                // Skipping entities that do not have a team id
-                continue;
-            }
-            if (!in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
-                // Skipping irrelevant entity types
-                continue;
-            }
             $metadata = $this->assertValidMetadata($entity);
+            $team = $this->getTeam($metadata);
+            $service = $this->serviceService->getServiceByTeamName($team);
+            if ($service === null || !in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
+                // Skipping entities of which we do not know the service (team is not set on any of our Services)
+                continue;
+            }
             if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
                 $serviceName = $service->getOrganizationNameEn();
                 $list[$entity->getId()] = new EntityConnection(
                     $metadata->getNameEn(),
-                    $entity->getMetaData()->getEntityId(),
+                    $metadata->getEntityId() ?: '',
                     $serviceName,
                     $testIdpsIndexed,
                     $otherIdpsIndexed,
@@ -131,20 +129,14 @@ class ServiceConnectionService
                 );
                 continue;
             }
-            $connectedIdps = [];
-            foreach ($entity->getAllowedIdentityProviders()->getAllowedIdentityProviders() as $identityProvider) {
-                if (array_key_exists($identityProvider, $testIdpsIndexed)) {
-                    $connectedIdps[$identityProvider] = $testIdpsIndexed[$identityProvider];
-                }
-            }
 
             $list[$entity->getId()] = new EntityConnection(
                 $metadata->getNameEn(),
-                $entity->getMetaData()->getEntityId(),
+                $metadata->getEntityId() ?: '',
                 $service->getOrganizationNameEn(),
                 $testIdpsIndexed,
                 $otherIdpsIndexed,
-                $connectedIdps,
+                $this->gatherConnectedIdps($entity, $testIdpsIndexed),
             );
         }
         $collection->addEntityConnections($list);
@@ -199,5 +191,30 @@ class ServiceConnectionService
             $indexed[$idp->getEntityId()] = $idp;
         }
         return $indexed;
+    }
+
+    /**
+     * @param array<string, IdentityProvider> $testIdpsIndexed
+     * @return array<string, IdentityProvider>
+     */
+    private function gatherConnectedIdps(ManageEntity $entity, array $testIdpsIndexed): array
+    {
+        $connectedIdps = [];
+        foreach ($entity->getAllowedIdentityProviders()->getAllowedIdentityProviders() as $identityProvider) {
+            if (array_key_exists($identityProvider, $testIdpsIndexed)) {
+                $connectedIdps[$identityProvider] = $testIdpsIndexed[$identityProvider];
+            }
+        }
+        return $connectedIdps;
+    }
+
+    private function getTeam(MetaData $metadata): string
+    {
+        $team = $metadata->getCoin()->getServiceTeamId();
+        if ($team === null) {
+            // Skipping entities that do not have a team id
+            throw new RuntimeException('No teamid is set on the Manage Entity, unable to continue');
+        }
+        return $team;
     }
 }

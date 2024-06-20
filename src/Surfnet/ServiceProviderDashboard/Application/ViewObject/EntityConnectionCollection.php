@@ -23,10 +23,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 class EntityConnectionCollection
 {
     /**
-     * @param array<string, IdentityProvider> $idpList
+     * @var array<string, IdentityProvider> $testIdpList
      */
     private array $testIdpList = [];
 
+    /** @var array<string, array<int, EntityConnection>> $collectionByServiceName */
     private array $collectionByServiceName = [];
 
     public static function empty(): self
@@ -47,6 +48,9 @@ class EntityConnectionCollection
         return $this->testIdpList;
     }
 
+    /**
+     * @return string[]
+     */
     public function services(): array
     {
         return array_keys($this->collectionByServiceName);

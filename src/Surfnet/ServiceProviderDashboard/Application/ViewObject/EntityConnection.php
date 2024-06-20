@@ -28,7 +28,7 @@ class EntityConnection
         public string $vendorName,
         /** @var array<string, IdentityProvider> $availableTestIdps */
         private array $availableTestIdps,
-        /** @var array<string, IdentityProvider> $availableTestIdps */
+        /** @var array<string, IdentityProvider> $availableOtherIdps */
         private array $availableOtherIdps,
         /** @var array<string, IdentityProvider> $connectedIdps */
         private array $connectedIdps,
