@@ -76,4 +76,15 @@ class EntityConnectionCollection
             $this->collectionByServiceName[$connection->vendorName][] = $connection;
         }
     }
+
+    public function export()
+    {
+        $list = [];
+        foreach ($this->collectionByServiceName as $serviceEntities) {
+            foreach ($serviceEntities as $entity) {
+                $list[] = $entity;
+            }
+        }
+        return $list;
+    }
 }
