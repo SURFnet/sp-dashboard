@@ -66,7 +66,7 @@ class Builder
         } else {
             $menu->addChild('global.menu.services', ['route' => 'service_overview']);
         }
-        if ($this->authorizationService->isSurfConextRepresentative() || $this->authorizationService->isAdministrator()) {
+        if ($this->authorizationService->isSurfConextRepresentative()) {
             $menu->addChild('global.menu.connections', ['route' => 'service_connections']);
         }
         if ($this->authorizationService->isAdministrator()) {
