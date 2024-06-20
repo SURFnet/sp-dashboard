@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
 class SurfConextResponsibleTest extends WebTestCase
@@ -43,7 +44,7 @@ class SurfConextResponsibleTest extends WebTestCase
         );
     }
 
-    public function test_after_login_i_am_on_connections_page()
+    public function test_after_login_i_am_on_connections_page(): void
     {
         $this->logInSurfConextResponsible(self::INSTITUTION_ID);
         $url = self::$pantherClient->getCurrentURL();
@@ -52,7 +53,7 @@ class SurfConextResponsibleTest extends WebTestCase
         self::assertOnPage('No entities found'); // At this point there should be no entities
     }
 
-    public function test_entities_are_listed_on_the_page_with_connected_idp()
+    public function test_entities_are_listed_on_the_page_with_connected_idp(): void
     {
         $this->createSpEntity('ACME Anvil');
         $this->logInSurfConextResponsible(self::INSTITUTION_ID);
@@ -61,7 +62,7 @@ class SurfConextResponsibleTest extends WebTestCase
         $this->assertVendorOnPage('Acme Corporation');
     }
 
-    public function test_entities_are_listed_on_the_page_with_connected_idp_with_multiple_sps()
+    public function test_entities_are_listed_on_the_page_with_connected_idp_with_multiple_sps(): void
     {
         $this->createSpEntity('ACME Anvil 1');
         $this->createSpEntity('ACME Anvil 2');
@@ -78,7 +79,7 @@ class SurfConextResponsibleTest extends WebTestCase
         $this->assertOnPage('Test IdP Name Dutch');
     }
 
-    public function test_different_teams_same_institution_id()
+    public function test_different_teams_same_institution_id(): void
     {
         $this->createSpEntity('ACME Anvil 1');
         $this->createSpEntity('ACME Anvil 2', WebTestFixtures::TEAMNAME_IBUILDINGS);
@@ -94,6 +95,17 @@ class SurfConextResponsibleTest extends WebTestCase
         $this->assertVendorOnPage('SURFnet');
         $this->assertVendorOnPage('Ibuildings B.V.');
         $this->assertVendorOnPage('Acme Corporation');
+    }
+
+    public function test_administrator_does_not_have_access(): void
+    {
+        $this->createSpEntity('ACME Anvil');
+        $this->logIn();
+        self::$pantherClient->request('GET', '/connections');
+        // Nasty trick to get the HTTP Response code (it is not available via the client response).
+        // See: https://github.com/symfony/panther/issues/67
+        $statusCode = self::$pantherClient->executeScript('return window.performance.getEntries()[0].responseStatus');
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $statusCode);
     }
 
     private function assertVendorOnPage(string $vendorName): void
