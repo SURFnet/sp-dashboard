@@ -26,11 +26,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ServiceConnectionsController extends AbstractController
 {
     public function __construct(
         private readonly ServiceConnectionService $serviceConnectionService,
+        private readonly SerializerInterface $serializer,
     ) {
     }
 
@@ -50,6 +52,22 @@ class ServiceConnectionsController extends AbstractController
                 'entities' => $entities,
             ]
         );
+    }
+
+    #[IsGranted("ROLE_SURFCONEXT_REPRESENTATIVE")]
+    #[Route(
+        path: '/connections-download',
+        name: 'service_connections_download',
+        methods: ['GET']
+    )]
+    public function download(): Response
+    {
+        $entities = $this->serviceConnectionService->findByInstitutionId($this->getInstitutionId());
+        $csv = $this->serializer->serialize($entities->export(), 'csv');
+        $response = new Response($csv);
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="surfconext-service-connections.csv"');
+        return $response;
     }
 
     private function getInstitutionId(): InstitutionId
