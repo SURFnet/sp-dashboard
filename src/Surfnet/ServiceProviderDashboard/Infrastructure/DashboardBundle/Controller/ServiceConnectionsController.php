@@ -18,16 +18,10 @@
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Controller;
 
-use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Service\ServiceConnectionService;
-use Surfnet\ServiceProviderDashboard\Application\Service\ServiceService;
-use Surfnet\ServiceProviderDashboard\Application\ViewObject\EntityConnectionCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Exception\InstitutionIdNotFoundException;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -36,58 +30,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ServiceConnectionsController extends AbstractController
 {
     public function __construct(
-        private readonly AuthorizationService     $authorizationService,
         private readonly ServiceConnectionService $serviceConnectionService,
-        private readonly ServiceService $serviceService,
     ) {
     }
 
-    #[IsGranted(new Expression('is_granted("ROLE_ADMINISTRATOR") or is_granted("ROLE_SURFCONEXT_REPRESENTATIVE")'))]
+    #[IsGranted("ROLE_SURFCONEXT_REPRESENTATIVE")]
     #[Route(
         path: '/connections',
         name: 'service_connections',
-        methods: ['GET', 'POST']
+        methods: ['GET']
     )]
     public function __invoke(): RedirectResponse|Response
     {
-        // The admin overview (which span multiple services) is rendered in a separate action
-        if ($this->isGranted('ROLE_ADMINISTRATOR')) {
-            return $this->redirect($this->generateUrl('service_admin_overview'));
-        }
         $entities = $this->serviceConnectionService->findByInstitutionId($this->getInstitutionId());
-        return $this->render(
-            '@Dashboard/Service/my-services.html.twig',
-            [
-                'testIdps' => $entities->getTestIdps(),
-                'entities' => $entities,
-            ]
-        );
-    }
-
-    #[IsGranted("ROLE_ADMINISTRATOR")]
-    #[Route(
-        path: '/admin-connections',
-        name: 'admin_service_connections',
-        methods: ['GET', 'POST']
-    )]
-    public function adminConnections(): Response
-    {
-        $allowedServices = $this->authorizationService->getAllowedServiceNamesById();
-        $services = $this->serviceService->getServicesByAllowedServices($allowedServices);
-        $serviceCount = count($services);
-        if ($serviceCount > 1) {
-            $entities = $this->serviceConnectionService->findByServices($services);
-        }
-        if ($serviceCount === 1) {
-            $entities = $this->serviceConnectionService->findByInstitutionId(
-                $this->getInstitutionId(),
-            );
-        }
-
-        if (!isset($entities)) {
-            $entities = EntityConnectionCollection::empty();
-        }
-
         return $this->render(
             '@Dashboard/Service/my-services.html.twig',
             [
