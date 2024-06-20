@@ -1917,16 +1917,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/EntityConnectionCollection.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityConnectionCollection\\:\\:getEntityConnections\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/EntityConnectionCollection.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityConnectionCollection\\:\\:\\$idpList type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/EntityConnectionCollection.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/EntityDetail.php',
@@ -3418,16 +3408,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot call method getContact\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Controller\\\\ServiceConnectionsController\\:\\:myServices\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$service of method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\ServiceConnectionService\\:\\:findByInstitutionId\\(\\) expects Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|null, Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Service\\|false given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Controller/ServiceConnectionsController.php',
 ];

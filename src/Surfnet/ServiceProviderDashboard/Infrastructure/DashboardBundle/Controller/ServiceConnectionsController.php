@@ -92,7 +92,7 @@ class ServiceConnectionsController extends AbstractController
             '@Dashboard/Service/my-services.html.twig',
             [
                 'testIdps' => $entities->getTestIdps(),
-                'entities' => $entities->getEntityConnections(),
+                'entities' => $entities,
             ]
         );
     }
