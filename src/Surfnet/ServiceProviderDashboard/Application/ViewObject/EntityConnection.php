@@ -19,6 +19,9 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Symfony\Component\Serializer\Attribute\Ignore;
+use function array_keys;
+use function implode;
 
 class EntityConnection
 {
@@ -26,6 +29,7 @@ class EntityConnection
         public string $entityName,
         public string $entityId,
         public string $vendorName,
+        private bool $isAllowedAll,
         /** @var array<string, IdentityProvider> $availableTestIdps */
         private array $availableTestIdps,
         /** @var array<string, IdentityProvider> $availableOtherIdps */
@@ -38,6 +42,7 @@ class EntityConnection
     /**
      * @return array<string, bool>
      */
+    #[Ignore]
     public function listConnected(): array
     {
         $list = [];
@@ -50,9 +55,10 @@ class EntityConnection
         return $list;
     }
 
+    #[Ignore]
     public function hasConnectedOtherIdp(): bool
     {
-        $intersection = array_intersect(array_keys($this->availableOtherIdps), array_keys($this->connectedIdps));
+        $intersection = $this->availableOtherIdps();
         if (count($intersection) > 0) {
             return true;
         }
@@ -64,8 +70,25 @@ class EntityConnection
      * These are the .env configurable test_idp_entity_ids
      * @return array<string, IdentityProvider>
      */
+    #[Ignore]
     public function listAvailableTestIdps(): array
     {
         return $this->availableTestIdps;
+    }
+
+    public function availableTestIdps(): array
+    {
+        if ($this->isAllowedAll) {
+            return array_keys($this->connectedIdps);
+        }
+        return array_intersect(array_keys($this->availableTestIdps), array_keys($this->connectedIdps));
+    }
+
+    public function availableOtherIdps(): array
+    {
+        if ($this->isAllowedAll) {
+            return array_keys($this->connectedIdps);
+        }
+        return array_intersect(array_keys($this->availableOtherIdps), array_keys($this->connectedIdps));
     }
 }
