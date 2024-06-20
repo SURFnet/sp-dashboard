@@ -500,7 +500,7 @@ class WebTestCase extends PantherTestCase
         return self::getContainer()->get(AuthorizationService::class);
     }
 
-    protected function screenshot(string $filename)
+    protected function screenshot(string $filename = 'Foobar.png')
     {
         self::$pantherClient->takeScreenshot($filename);
     }

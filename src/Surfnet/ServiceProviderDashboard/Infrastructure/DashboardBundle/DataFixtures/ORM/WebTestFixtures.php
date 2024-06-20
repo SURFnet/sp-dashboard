@@ -27,12 +27,16 @@ use Symfony\Component\Uid\Uuid;
 
 class WebTestFixtures extends Fixture
 {
+    public const TEAMNAME_SURF = 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl';
+    public const TEAMNAME_IBUILDINGS = 'urn:collab:group:vm.openconext.org:demo:openconext:org:ibuildings.nl';
+    public const TEAMNAME_ACME = 'demo:openconext:org:acme.com';
+
     public function load(ObjectManager $manager): void
     {
-        $service = $this->createService('SURFnet', 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl');
+        $service = $this->createService('SURFnet', self::TEAMNAME_SURF);
         $manager->persist($service);
 
-        $service =  $this->createService('Ibuildings B.V.', 'urn:collab:group:vm.openconext.org:demo:openconext:org:ibuildings.nl');
+        $service =  $this->createService('Ibuildings B.V.', self::TEAMNAME_IBUILDINGS);
         $service->setPrivacyQuestionsEnabled(true);
         $service->setClientCredentialClientsEnabled(true);
         $manager->persist($service);
@@ -42,7 +46,7 @@ class WebTestFixtures extends Fixture
         $manager->persist($privacyQuestions);
 
         // A third service is used to test the SURFConext responsible role which pivots on entities with institution_id manage entities
-        $service = $this->createService('Acme Corporation', 'urn:collab:group:vm.openconext.org:demo:openconext:org:acme.com');
+        $service = $this->createService('Acme Corporation', self::TEAMNAME_ACME);
         $service->setServiceType(Service::SERVICE_TYPE_INSTITUTE);
         $service->setInstitutionId('ACME Corporation');
         $manager->persist($service);
