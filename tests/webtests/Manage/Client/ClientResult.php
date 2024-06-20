@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use function file_get_contents;
 use function json_decode;
 use function sprintf;
@@ -61,7 +62,7 @@ class ClientResult implements ClientResultInterface
         $this->teamName = $teamName;
         $this->institutionId = $institutionId;
         if ($teamName === null) {
-            $this->teamName = 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl';
+            $this->teamName = WebTestFixtures::TEAMNAME_SURF;
         }
     }
 

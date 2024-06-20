@@ -18,128 +18,109 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
+use Symfony\Component\Uid\Uuid;
+
 class SurfConextResponsibleTest extends WebTestCase
 {
-    private string $institutionId = 'ACME Corporation';
+    private const INSTITUTION_ID = 'ACME Corporation';
     public function setUp(): void
     {
         parent::setUp();
         $this->loadFixtures();
-        $this->teamsQueryClient->registerTeam('demo:openconext:org:acme.nl', 'data');
+        $this->teamsQueryClient->registerTeam(WebTestFixtures::TEAMNAME_ACME, 'data');
+
+        $this->registerManageEntity(
+            'test',
+            'saml20_idp',
+            '1d4abec3-3f67-4b8a-b90d-ce56a3b0abc5',
+            'Test IdP',
+            'test-idp-1',
+            'https://test-idp/metadata',
+            WebTestFixtures::TEAMNAME_ACME,
+            self::INSTITUTION_ID,
+        );
     }
 
     public function test_after_login_i_am_on_connections_page()
     {
-        $this->logInSurfConextResponsible($this->institutionId);
+        $this->logInSurfConextResponsible(self::INSTITUTION_ID);
         $url = self::$pantherClient->getCurrentURL();
         $urlParts = parse_url($url);
         self::assertEquals('/connections', $urlParts['path']);
         self::assertOnPage('No entities found'); // At this point there should be no entities
     }
 
-    public function test_entities_are_listed_on_the_page()
-    {
-        $this->registerManageEntity(
-            'test',
-            'saml20_sp',
-            'aee8f00d-428a-4fbc-9cf8-ad2f3b2af589',
-            'ACME Anvil',
-            'http://acme-anvil',
-            'https://acme-anvil.example.com/metadata',
-            'demo:openconext:org:acme.nl',
-            $this->institutionId,
-        );
-        $this->logInSurfConextResponsible($this->institutionId);
-        $this->assertOnPage('ACME Anvil Name English');
-        // When logging in with only the SURF representative, we do not know the service the entity is associated with
-        $this->assertOnPage('Unknown service name');
-    }
-
     public function test_entities_are_listed_on_the_page_with_connected_idp()
     {
-        $this->registerManageEntity(
-            'test',
-            'saml20_sp',
-            'aee8f00d-428a-4fbc-9cf8-ad2f3b2af589',
-            'ACME Anvil',
-            'http://acme-anvil',
-            'https://acme-anvil.example.com/metadata',
-            'demo:openconext:org:acme.nl',
-            $this->institutionId,
-        );
-        $this->registerManageEntity(
-            'test',
-            'saml20_idp',
-            '1d4abec3-3f67-4b8a-b90d-ce56a3b0abc5',
-            'Test IdP',
-            'test-idp-1',
-            'https://test-idp/metadata',
-            'demo:openconext:org:acme.nl',
-            $this->institutionId,
-        );
-        $this->logInSurfConextResponsible($this->institutionId);
+        $this->createSpEntity('ACME Anvil');
+        $this->logInSurfConextResponsible(self::INSTITUTION_ID);
         $this->assertOnPage('ACME Anvil Name English');
         $this->assertOnPage('Test IdP Name Dutch');
+        $this->assertVendorOnPage('Acme Corporation');
     }
 
     public function test_entities_are_listed_on_the_page_with_connected_idp_with_multiple_sps()
     {
-        $this->registerManageEntity(
-            'test',
-            'saml20_sp',
-            'aee8f00d-428a-4fbc-9cf8-ad2f3b2af589',
-            'ACME Anvil 1',
-            'http://acme-anvil-1',
-            'https://acme-anvil.example.com/metadata',
-            'demo:openconext:org:acme.nl',
-            $this->institutionId,
-        );
-        $this->registerManageEntity(
-            'test',
-            'saml20_sp',
-            'bee8f00d-428a-4fbc-9cf8-ad2f3b2af589',
-            'ACME Anvil 2',
-            'http://acme-anvil-2',
-            'https://acme-anvil.example.com/metadata',
-            'demo:openconext:org:acme.nl',
-            $this->institutionId,
-        );
-        $this->registerManageEntity(
-            'test',
-            'saml20_sp',
-            'cee8f00d-428a-4fbc-9cf8-ad2f3b2af589',
-            'ACME Anvil 3',
-            'http://acme-anvil-3',
-            'https://acme-anvil.example.com/metadata',
-            'demo:openconext:org:acme.nl',
-            $this->institutionId,
-        );
-        $this->registerManageEntity(
-            'test',
-            'saml20_sp',
-            'fee8f00d-428a-4fbc-9cf8-ad2f3b2af589',
-            'Should not be on page',
-            'http://foobar',
-            'https://foobar.example.com/metadata',
-            'demo:openconext:org:acme.nl',
-            'not-acme',
-        );
-        $this->registerManageEntity(
-            'test',
-            'saml20_idp',
-            '1d4abec3-3f67-4b8a-b90d-ce56a3b0abc5',
-            'Test IdP',
-            'test-idp-1',
-            'https://test-idp/metadata',
-            'demo:openconext:org:acme.nl',
-            $this->institutionId,
-        );
-        $this->logInSurfConextResponsible($this->institutionId);
+        $this->createSpEntity('ACME Anvil 1');
+        $this->createSpEntity('ACME Anvil 2');
+        $this->createSpEntity('ACME Anvil 3');
+        $this->createSpEntity('Should not be on page', WebTestFixtures::TEAMNAME_ACME, 'not-acme');
+
+        $this->logInSurfConextResponsible(self::INSTITUTION_ID);
+        $this->assertVendorOnPage('Acme Corporation');
         $this->assertOnPage('ACME Anvil 1 Name English');
         $this->assertOnPage('ACME Anvil 2 Name English');
         $this->assertOnPage('ACME Anvil 3 Name English');
         // The fourth SP should not show up on the page
         $this->assertNotOnPage('Should not be on page');
         $this->assertOnPage('Test IdP Name Dutch');
+    }
+
+    public function test_different_teams_same_institution_id()
+    {
+        $this->createSpEntity('ACME Anvil 1');
+        $this->createSpEntity('ACME Anvil 2', WebTestFixtures::TEAMNAME_IBUILDINGS);
+        $this->createSpEntity('ACME Anvil 3', WebTestFixtures::TEAMNAME_SURF);
+        $this->createSpEntity('ACME for SURF', WebTestFixtures::TEAMNAME_SURF);
+
+        $this->logInSurfConextResponsible(self::INSTITUTION_ID);
+        $crawler = self::$pantherClient->refreshCrawler();
+        $this->assertCount(4, $crawler->filter('tbody td.name')); // There should be 4 entities
+        $vendors = $crawler->filter('tbody td.vendor');
+
+        $this->assertCount(3, $vendors); // There should be 3 vendors (services) listed
+        $this->assertVendorOnPage('SURFnet');
+        $this->assertVendorOnPage('Ibuildings B.V.');
+        $this->assertVendorOnPage('Acme Corporation');
+    }
+
+    private function assertVendorOnPage(string $vendorName): void
+    {
+        $vendors = self::$pantherClient->refreshCrawler()->filter('tbody td.vendor');
+        foreach ($vendors as $vendor) {
+            if ($vendor->getText() === $vendorName) {
+                return;
+            }
+        }
+        $this->fail(sprintf('Vendor %s could not be found', $vendorName));
+    }
+    
+    private function createSpEntity(
+        string $nameEn,
+        $teamName = WebTestFixtures::TEAMNAME_ACME,
+        $institutionId = self::INSTITUTION_ID
+    ): void {
+        $hostname = urlencode(strtolower(str_replace(' ', '-', $nameEn)));
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            Uuid::v4()->toRfc4122(),
+            $nameEn,
+            'https://' . $hostname,
+            'https://' . $hostname . '/metadata',
+            $teamName,
+            $institutionId,
+        );
     }
 }

@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Facebook\WebDriver\WebDriverBy;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 
 class CreateConnectionRequestTest extends WebTestCase
 {
@@ -38,7 +39,7 @@ class CreateConnectionRequestTest extends WebTestCase
             'SURF SP2',
             'https://sp2-surf.com',
             'https://sp2-surf.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $this->logIn();

@@ -42,9 +42,9 @@
                         {% for sp in entities.entityConnectionsByServiceName(serviceName) %}
 
                         <tr {{ currentServiceName == serviceName ? 'class="no-stripe"'}}>
-                            <td class="vendor">{{ currentServiceName != serviceName ? sp.vendorName : ''}}</td>
+                            <td class="{{ currentServiceName != serviceName ? 'vendor' : ''}}">{{ currentServiceName != serviceName ? sp.vendorName : ''}}</td>
                             <td class="name">{{ sp.entityName }}</td>
-                            <td class="vendor">{{ sp.entityId }}</td>
+                            <td class="entity-id">{{ sp.entityId }}</td>
                                 {% for connected in sp.listConnected %}
                                 <td class="idp"><i class="fa fa-{{ (connected ? 'check' : 'times')|trans }} {{ (not connected) ? 'not-' : '' }}connected"><span class="hidden">{{ (connected ? 'service.connections.connected' : 'service.connections.not-connected')|trans }}</span></i></td>
                                 {% endfor %}

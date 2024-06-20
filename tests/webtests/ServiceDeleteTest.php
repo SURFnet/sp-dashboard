@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
+
 class ServiceDeleteTest extends WebTestCase
 {
     public function setUp(): void
@@ -31,7 +33,7 @@ class ServiceDeleteTest extends WebTestCase
             'SP1',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
         $this->registerManageEntity(
             'test',
@@ -40,7 +42,7 @@ class ServiceDeleteTest extends WebTestCase
             'SP2',
             'https://sp2-entityid.example.com',
             'https://sp2-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
         $this->testDeleteClient->registerDeleteRequest('9729d851-cfdd-4283-a8f1-a29ba5036261');
         $this->testDeleteClient->registerDeleteRequest('7398d851-abd1-2283-a8f1-a29ba5036174');
