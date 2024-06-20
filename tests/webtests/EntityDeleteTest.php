@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketServiceInterface;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 
 class EntityDeleteTest extends WebTestCase
 {
@@ -42,7 +43,7 @@ class EntityDeleteTest extends WebTestCase
             'SP1',
             'SP1',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $this->testDeleteClient->registerDeleteRequest('a8e7cffd-0409-45c7-a37a-000000000000');
@@ -70,7 +71,7 @@ class EntityDeleteTest extends WebTestCase
             'SP1',
             'SP1',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $this->prodDeleteClient->registerDeleteRequest('a8e7cffd-0409-45c7-a37a-000000000000');
@@ -103,7 +104,7 @@ class EntityDeleteTest extends WebTestCase
             'SP1',
             'SP1',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $this->ticketService->shouldFailCreateIssue();

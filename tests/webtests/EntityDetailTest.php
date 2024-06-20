@@ -18,6 +18,8 @@
 
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
+
 class EntityDetailTest extends WebTestCase
 {
 
@@ -33,7 +35,7 @@ class EntityDetailTest extends WebTestCase
             'SP3',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $issueType = 'spd-delete-production-entity';
@@ -65,7 +67,7 @@ class EntityDetailTest extends WebTestCase
             'SP3',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $this->switchToService('SURFnet');
@@ -95,7 +97,7 @@ class EntityDetailTest extends WebTestCase
             'SP3',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $this->loadFixtures();
@@ -118,7 +120,7 @@ class EntityDetailTest extends WebTestCase
             'SP3',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
 
         $this->loadFixtures();

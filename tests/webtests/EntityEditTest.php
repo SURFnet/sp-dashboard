@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeType;
 
 class EntityEditTest extends WebTestCase
@@ -37,7 +38,7 @@ class EntityEditTest extends WebTestCase
             'SP1',
             'https://sp1-entityid.example.com',
             'https://sp1-entityid.example.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
         $this->registerManageEntity(
             'production',
@@ -46,7 +47,7 @@ class EntityEditTest extends WebTestCase
             'SURF SP2',
             'https://sp2-surf.com',
             'https://sp2-surf.com/metadata',
-            'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl'
+            WebTestFixtures::TEAMNAME_SURF
         );
         $this->registerManageEntity(
             'test',

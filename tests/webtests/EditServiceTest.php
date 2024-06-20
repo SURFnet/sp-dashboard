@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Facebook\WebDriver\WebDriverBy;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 
 class EditServiceTest extends WebTestCase
 {
@@ -65,7 +66,7 @@ class EditServiceTest extends WebTestCase
         // Step 1: Admin sets privacy questions enabled to false
         $formData = [
             'dashboard_bundle_edit_service_type[general][privacyQuestionsEnabled]' => false,
-            'dashboard_bundle_edit_service_type[teams][teamName]' => 'urn:collab:group:vm.openconext.org:demo:openconext:org:surf.nl',
+            'dashboard_bundle_edit_service_type[teams][teamName]' => WebTestFixtures::TEAMNAME_SURF,
             'dashboard_bundle_edit_service_type[serviceStatus][surfconextRepresentativeApproved]' => 'no',
         ];
         $form = $crawler
