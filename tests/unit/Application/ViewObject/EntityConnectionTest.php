@@ -45,7 +45,10 @@ class EntityConnectionTest extends TestCase
             'https://entityId',
             $availableTest,
             $availableOther,
-            $connected
+            $connected,
+            'James',
+            'Jenny',
+            'John',
         );
 
         $this->assertEquals($availableTest, $connection->listAvailableTestIdps());
@@ -81,7 +84,10 @@ class EntityConnectionTest extends TestCase
             'Vendor',
             $availableTest,
             $availableOther,
-            $connected
+            $connected,
+            'James',
+            'Jenny',
+            'John',
         );
 
         $this->assertEquals($availableTest, $connection->listAvailableTestIdps());
