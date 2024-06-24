@@ -113,6 +113,9 @@ class ServiceConnectionService
             $metadata = $this->assertValidMetadata($entity);
             $team = $this->getTeam($metadata);
             $service = $this->serviceService->getServiceByTeamName($team);
+            $supportContact = $this->getContactData($entity, 'support');
+            $technicalContact = $this->getContactData($entity, 'technical');
+            $adminContact = $this->getContactData($entity, 'admin');
             if ($service === null || !in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
                 // Skipping entities of which we do not know the service (team is not set on any of our Services)
                 continue;
@@ -123,10 +126,12 @@ class ServiceConnectionService
                     $metadata->getNameEn(),
                     $metadata->getEntityId() ?: '',
                     $serviceName,
-                    true,
                     $testIdpsIndexed,
                     $otherIdpsIndexed,
                     $testIdpsIndexed + $otherIdpsIndexed,
+                    $supportContact,
+                    $technicalContact,
+                    $adminContact
                 );
                 continue;
             }
@@ -135,10 +140,12 @@ class ServiceConnectionService
                 $metadata->getNameEn(),
                 $metadata->getEntityId() ?: '',
                 $service->getOrganizationNameEn(),
-                false,
                 $testIdpsIndexed,
                 $otherIdpsIndexed,
                 $this->gatherConnectedIdps($entity, $testIdpsIndexed),
+                $supportContact,
+                $technicalContact,
+                $adminContact
             );
         }
         $collection->addEntityConnections($list);
@@ -218,5 +225,19 @@ class ServiceConnectionService
             throw new RuntimeException('No teamid is set on the Manage Entity, unable to continue');
         }
         return $team;
+    }
+
+    private function getContactData(ManageEntity $entity, string $type): string
+    {
+        $data = match ($type) {
+            'support' => $entity->getMetaData()?->getContacts()?->findSupportContact(),
+            'technical' => $entity->getMetaData()?->getContacts()?->findTechnicalContact(),
+            'admin' => $entity->getMetaData()?->getContacts()?->findAdministrativeContact(),
+            default => throw new RuntimeException(sprintf('Cannot get contact information for type: %s', $type)),
+        };
+        if ($data === null) {
+            return '';
+        }
+        return sprintf('%s %s (%s)', $data->getGivenName(), $data->getSurName(), $data->getEmail());
     }
 }
