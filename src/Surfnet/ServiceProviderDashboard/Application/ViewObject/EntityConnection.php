@@ -20,8 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Symfony\Component\Serializer\Attribute\Ignore;
-use function array_keys;
-use function implode;
 
 class EntityConnection
 {
@@ -29,20 +27,23 @@ class EntityConnection
         public string $entityName,
         public string $entityId,
         public string $vendorName,
-        private bool $isAllowedAll,
         /** @var array<string, IdentityProvider> $availableTestIdps */
         private array $availableTestIdps,
         /** @var array<string, IdentityProvider> $availableOtherIdps */
+        #[Ignore]
         private array $availableOtherIdps,
         /** @var array<string, IdentityProvider> $connectedIdps */
+        #[Ignore]
         private array $connectedIdps,
+        public string $supportContact,
+        public string $technicalContact,
+        public string $administativeContact,
     ) {
     }
 
     /**
      * @return array<string, bool>
      */
-    #[Ignore]
     public function listConnected(): array
     {
         $list = [];
@@ -70,7 +71,6 @@ class EntityConnection
      * These are the .env configurable test_idp_entity_ids
      * @return array<string, IdentityProvider>
      */
-    #[Ignore]
     public function listAvailableTestIdps(): array
     {
         return $this->availableTestIdps;
@@ -81,7 +81,8 @@ class EntityConnection
      */
     public function availableTestIdps(): array
     {
-        return array_intersect(array_keys($this->availableTestIdps), array_keys($this->connectedIdps));
+        // Used to render the connected idps in the CSV export
+        return array_keys($this->connectedIdps);
     }
 
     /**
