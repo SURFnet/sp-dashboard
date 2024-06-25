@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use function in_array;
@@ -116,6 +117,19 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
      */
     #[Assert\Url]
     private $applicationUrl;
+
+    /** @var TypeOfService[] */
+    #[Assert\All([
+        new Assert\NotBlank(),
+        new Assert\Type(type: TypeOfService::class),
+    ])]
+    #[Assert\Count(
+        min: 1,
+        max: 3,
+        minMessage: 'validator.type-of-service.min',
+        maxMessage: 'validator.type-of-service.max',
+    )]
+    private array $typeOfService;
 
     /**
      * @var string
@@ -534,5 +548,21 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     public function getAcsLocations(): ?array
     {
         return null;
+    }
+
+    /**
+     * @return TypeOfService[]
+     */
+    public function getTypeOfService(): array
+    {
+        return $this->typeOfService;
+    }
+
+    /**
+     * @param TypeOfService[] $typeOfService
+     */
+    public function setTypeOfService(array $typeOfService): void
+    {
+        $this->typeOfService = $typeOfService;
     }
 }

@@ -369,6 +369,7 @@ entity.edit.information.technicalContact: Text should be set in web translations
 entity.edit.information.comments: Text should be set in web translations
 entity.edit.information.nameIdFormat: Text should be set in web translations
 entity.edit.information.subjectType: Text should be set in web translations
+entity.edit.information.typeOfService: Choose 1..3 categories that describe your service the best
 entity.edit.motivation.keep_talking: 'Please provide a more detailed motivation.'
 entity.edit.label.transient: Transient
 entity.edit.label.persistent: Persistent

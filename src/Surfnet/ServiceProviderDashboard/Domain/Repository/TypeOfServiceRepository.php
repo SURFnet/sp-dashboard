@@ -20,6 +20,8 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
+
 interface TypeOfServiceRepository
 {
     /**
@@ -27,7 +29,7 @@ interface TypeOfServiceRepository
      * Where the keys of the array should have the display name and
      * the value represents the identifier
      *
-     * @return array<string, string>
+     * @return array<TypeOfService>
      */
     public function getTypesOfServiceChoices(): array;
 }

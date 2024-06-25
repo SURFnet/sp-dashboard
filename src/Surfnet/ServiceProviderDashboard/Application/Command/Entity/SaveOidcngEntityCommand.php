@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\OidcGrantType;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -143,6 +144,19 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      */
     #[Assert\Url]
     private $applicationUrl;
+
+    /** @var TypeOfService[] */
+    #[Assert\All([
+        new Assert\NotBlank(),
+        new Assert\Type(type: TypeOfService::class),
+    ])]
+    #[Assert\Count(
+        min: 1,
+        max: 3,
+        minMessage: 'validator.type-of-service.min',
+        maxMessage: 'validator.type-of-service.max',
+    )]
+    private array $typeOfService;
 
     /**
      * @var string
@@ -686,5 +700,21 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
     {
         $this->organizationUnitAttribute = $organizationUnitAttribute;
+    }
+
+    /**
+     * @return TypeOfService[]
+     */
+    public function getTypeOfService(): array
+    {
+        return $this->typeOfService;
+    }
+
+    /**
+     * @param TypeOfService[] $typeOfService
+     */
+    public function setTypeOfService(array $typeOfService): void
+    {
+        $this->typeOfService = $typeOfService;
     }
 }
