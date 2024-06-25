@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Validator\Constraints as SpDashboardAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -105,6 +106,19 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     #[Assert\Url]
     private ?string $applicationUrl = null;
+
+    /** @var TypeOfService[] */
+    #[Assert\All([
+        new Assert\NotBlank(),
+        new Assert\Type(type: TypeOfService::class),
+    ])]
+    #[Assert\Count(
+        min: 1,
+        max: 3,
+        minMessage: 'validator.type-of-service.min',
+        maxMessage: 'validator.type-of-service.max',
+    )]
+    private array $typeOfService;
 
     #[Assert\Url]
     private ?string $eulaUrl = null;
@@ -456,5 +470,21 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     public function setOrganizationUnitAttribute(?Attribute $organizationUnitAttribute): void
     {
         $this->organizationUnitAttribute = $organizationUnitAttribute;
+    }
+
+    /**
+     * @return TypeOfService[]
+     */
+    public function getTypeOfService(): array
+    {
+        return $this->typeOfService;
+    }
+
+    /**
+     * @param TypeOfService[] $typesOfService
+     */
+    public function setTypeOfService(array $typesOfService): void
+    {
+        $this->typeOfService = $typesOfService;
     }
 }

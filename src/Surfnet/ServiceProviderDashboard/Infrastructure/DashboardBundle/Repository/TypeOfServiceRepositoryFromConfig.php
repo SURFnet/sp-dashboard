@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
 
+use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
@@ -35,7 +36,12 @@ class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
 
     private function load(): void
     {
-        $data = json_decode(file_get_contents($this->typeOfServiceLocation));
+        $fileContents = file_get_contents($this->typeOfServiceLocation);
+        if (!$fileContents) {
+            throw new RuntimeException('Unable to load the type of service json file.');
+        }
+        $data = json_decode($fileContents);
+        assert(is_array($data), 'The json can not be parsed into an array of service types');
         $this->collection = new TypeOfServiceCollection();
         foreach ($data as $entry) {
             $typeOfService = new TypeOfService($entry->id, $entry->typeNl, $entry->typeEn);
@@ -44,16 +50,11 @@ class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
     }
 
     /**
-     * @return array<string, string>
+     * @return array<TypeOfService>
      */
     public function getTypesOfServiceChoices(): array
     {
         $this->load();
-        $typesOfService = $this->collection->getArray();
-        $choices = [];
-        foreach ($typesOfService as $typeOfService) {
-            $choices[$typeOfService->typeEn] = $typeOfService->typeIdentifier;
-        }
-        return $choices;
+        return $this->collection->getArray();
     }
 }

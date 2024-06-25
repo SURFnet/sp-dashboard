@@ -20,6 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveSamlEntityCommand;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepository;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -36,8 +38,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SamlEntityType extends AbstractType
 {
-    public function __construct(private readonly AttributeTypeFactory $attributeTypeFactory)
-    {
+    public function __construct(
+        private readonly AttributeTypeFactory $attributeTypeFactory,
+        private readonly TypeOfServiceRepository $typeOfServiceProvider,
+    ) {
     }
 
     /**
@@ -230,6 +234,22 @@ class SamlEntityType extends AbstractType
                                 'data-help' => 'entity.edit.information.applicationUrl',
                                 'data-parsley-urlstrict' => null,
                                 'data-parsley-trigger' => 'blur',
+                            ],
+                        ]
+                    )
+                    ->add(
+                        'typeOfService',
+                        ChoiceType::class,
+                        [
+                            'required' => false,
+                            'choices' => $this->typeOfServiceProvider->getTypesOfServiceChoices(),
+                            'choice_value' => fn(TypeOfService $tos): string => $tos->typeIdentifier,
+                            'choice_label' => fn(TypeOfService $tos): string => $tos->typeEn,
+                            'expanded' => true,
+                            'multiple' => true,
+                            'attr' => [
+                                'class' => 'type-of-service',
+                                'data-help' => 'entity.edit.information.typeOfService',
                             ],
                         ]
                     )
