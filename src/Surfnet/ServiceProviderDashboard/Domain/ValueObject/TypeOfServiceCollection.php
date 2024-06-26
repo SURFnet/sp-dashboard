@@ -22,16 +22,16 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 class TypeOfServiceCollection
 {
-    /** @var array<string, TypeOfService> */
+    /** @var array<TypeOfService> */
     private array $types = [];
 
     public function add(TypeOfService $type): void
     {
-        $this->types[$type->typeIdentifier] = $type;
+        $this->types[] = $type;
     }
 
     /**
-     * @return array<string, TypeOfService>
+     * @return array<TypeOfService>
      */
     public function getArray(): array
     {
