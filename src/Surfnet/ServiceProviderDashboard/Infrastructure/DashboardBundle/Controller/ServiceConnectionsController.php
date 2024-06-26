@@ -62,8 +62,8 @@ class ServiceConnectionsController extends AbstractController
     )]
     public function download(): Response
     {
-        $entities = $this->serviceConnectionService->findByInstitutionId($this->getInstitutionId());
-        $csv = $this->serializer->serialize($entities->export(), 'csv');
+        $entities = $this->serviceConnectionService->getExportData($this->getInstitutionId());
+        $csv = $this->serializer->serialize($entities, 'csv');
         $response = new Response($csv);
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename="surfconext-service-connections.csv"');
