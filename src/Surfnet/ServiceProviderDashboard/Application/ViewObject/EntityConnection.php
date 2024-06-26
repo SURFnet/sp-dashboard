@@ -19,6 +19,7 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\ViewObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 class EntityConnection
 {
@@ -32,6 +33,9 @@ class EntityConnection
         private array $availableOtherIdps,
         /** @var array<string, IdentityProvider> $connectedIdps */
         private array $connectedIdps,
+        public string $supportContact,
+        public string $technicalContact,
+        public string $administativeContact,
     ) {
     }
 
@@ -52,7 +56,7 @@ class EntityConnection
 
     public function hasConnectedOtherIdp(): bool
     {
-        $intersection = array_intersect(array_keys($this->availableOtherIdps), array_keys($this->connectedIdps));
+        $intersection = $this->availableOtherIdps();
         if (count($intersection) > 0) {
             return true;
         }
@@ -67,5 +71,22 @@ class EntityConnection
     public function listAvailableTestIdps(): array
     {
         return $this->availableTestIdps;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function availableIdps(): array
+    {
+        // Used to render the connected idps in the CSV export
+        return array_keys($this->connectedIdps);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function availableOtherIdps(): array
+    {
+        return array_intersect(array_keys($this->availableOtherIdps), array_keys($this->connectedIdps));
     }
 }

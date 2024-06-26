@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityConnectionExport;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use function array_key_exists;
 
@@ -113,6 +114,9 @@ class ServiceConnectionService
             $metadata = $this->assertValidMetadata($entity);
             $team = $this->getTeam($metadata);
             $service = $this->serviceService->getServiceByTeamName($team);
+            $supportContact = $this->getContactData($entity, 'support');
+            $technicalContact = $this->getContactData($entity, 'technical');
+            $adminContact = $this->getContactData($entity, 'admin');
             if ($service === null || !in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
                 // Skipping entities of which we do not know the service (team is not set on any of our Services)
                 continue;
@@ -126,6 +130,9 @@ class ServiceConnectionService
                     $testIdpsIndexed,
                     $otherIdpsIndexed,
                     $testIdpsIndexed + $otherIdpsIndexed,
+                    $supportContact,
+                    $technicalContact,
+                    $adminContact
                 );
                 continue;
             }
@@ -137,6 +144,9 @@ class ServiceConnectionService
                 $testIdpsIndexed,
                 $otherIdpsIndexed,
                 $this->gatherConnectedIdps($entity, $testIdpsIndexed),
+                $supportContact,
+                $technicalContact,
+                $adminContact
             );
         }
         $collection->addEntityConnections($list);
@@ -216,5 +226,40 @@ class ServiceConnectionService
             throw new RuntimeException('No teamid is set on the Manage Entity, unable to continue');
         }
         return $team;
+    }
+
+    private function getContactData(ManageEntity $entity, string $type): string
+    {
+        $data = match ($type) {
+            'support' => $entity->getMetaData()?->getContacts()?->findSupportContact(),
+            'technical' => $entity->getMetaData()?->getContacts()?->findTechnicalContact(),
+            'admin' => $entity->getMetaData()?->getContacts()?->findAdministrativeContact(),
+            default => throw new RuntimeException(sprintf('Cannot get contact information for type: %s', $type)),
+        };
+        if ($data === null) {
+            return '';
+        }
+        return sprintf('%s %s (%s)', $data->getGivenName(), $data->getSurName(), $data->getEmail());
+    }
+
+    /**
+     * @return array<EntityConnectionExport>
+     */
+    public function getExportData(InstitutionId $institutionId): array
+    {
+        $data = $this->findByInstitutionId($institutionId);
+        $exportData = [];
+        foreach ($data->export() as $entity) {
+            $exportValueObject = new EntityConnectionExport();
+            $exportValueObject->entityId = $entity->entityId;
+            $exportValueObject->nameOfEntity = $entity->entityName;
+            $exportValueObject->nameOfService = $entity->vendorName;
+            $exportValueObject->supportContact = $entity->supportContact;
+            $exportValueObject->adminContact = $entity->administativeContact;
+            $exportValueObject->technicalContact = $entity->technicalContact;
+            $exportValueObject->idps = $entity->availableIdps();
+            $exportData[] = $exportValueObject;
+        }
+        return $exportData;
     }
 }

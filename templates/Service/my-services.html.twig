@@ -17,6 +17,10 @@
                 </div>
                 <div>
 
+                {% if entities.services is not empty %}
+                    <a class="button blue pull-right" href="{{ path('service_connections_download') }}" type="button">{{ 'service.connections.export-button'|trans }} <i class="fa fa-download"></i></a>
+                {% endif %}
+
                 <table>
                     <thead>
                         <tr>

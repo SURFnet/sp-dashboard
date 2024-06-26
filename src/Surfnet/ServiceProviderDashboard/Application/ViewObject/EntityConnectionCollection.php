@@ -76,4 +76,21 @@ class EntityConnectionCollection
             $this->collectionByServiceName[$connection->vendorName][] = $connection;
         }
     }
+
+    /**
+     * Returns a serializable flat representation of the
+     * connected entities
+     *
+     * @return EntityConnection[]
+     */
+    public function export(): array
+    {
+        $list = [];
+        foreach ($this->collectionByServiceName as $serviceEntities) {
+            foreach ($serviceEntities as $entity) {
+                $list[] = $entity;
+            }
+        }
+        return $list;
+    }
 }
