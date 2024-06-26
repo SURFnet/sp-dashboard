@@ -174,7 +174,7 @@ class OauthClientCredentialEntityType extends AbstractType
                 [
                     'required' => false,
                     'choices' => $this->typeOfServiceProvider->getTypesOfServiceChoices(),
-                    'choice_value' => fn(TypeOfService $tos): string => $tos->typeIdentifier,
+                    'choice_value' => fn(TypeOfService $tos): string => $tos->typeEn,
                     'choice_label' => fn(TypeOfService $tos): string => $tos->typeEn,
                     'expanded' => true,
                     'multiple' => true,

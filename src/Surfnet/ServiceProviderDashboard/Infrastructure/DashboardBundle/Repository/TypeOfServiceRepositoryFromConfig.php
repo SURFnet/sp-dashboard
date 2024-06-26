@@ -24,6 +24,8 @@ use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
+use function file_exists;
+use function is_array;
 
 class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
 {
@@ -36,15 +38,25 @@ class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
 
     private function load(): void
     {
+        if (!file_exists($this->typeOfServiceLocation)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Please review the file location of the type of services json blob. %s',
+                    $this->typeOfServiceLocation
+                )
+            );
+        }
         $fileContents = file_get_contents($this->typeOfServiceLocation);
         if (!$fileContents) {
             throw new RuntimeException('Unable to load the type of service json file.');
         }
         $data = json_decode($fileContents);
-        assert(is_array($data), 'The json can not be parsed into an array of service types');
+        if (!is_array($data)) {
+            throw new RuntimeException('The json can not be parsed into an array of service types');
+        }
         $this->collection = new TypeOfServiceCollection();
         foreach ($data as $entry) {
-            $typeOfService = new TypeOfService($entry->id, $entry->typeNl, $entry->typeEn);
+            $typeOfService = new TypeOfService($entry->typeNl, $entry->typeEn);
             $this->collection->add($typeOfService);
         }
     }
