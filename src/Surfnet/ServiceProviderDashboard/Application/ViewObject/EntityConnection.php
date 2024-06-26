@@ -30,10 +30,8 @@ class EntityConnection
         /** @var array<string, IdentityProvider> $availableTestIdps */
         private array $availableTestIdps,
         /** @var array<string, IdentityProvider> $availableOtherIdps */
-        #[Ignore]
         private array $availableOtherIdps,
         /** @var array<string, IdentityProvider> $connectedIdps */
-        #[Ignore]
         private array $connectedIdps,
         public string $supportContact,
         public string $technicalContact,
@@ -56,7 +54,6 @@ class EntityConnection
         return $list;
     }
 
-    #[Ignore]
     public function hasConnectedOtherIdp(): bool
     {
         $intersection = $this->availableOtherIdps();
@@ -79,7 +76,7 @@ class EntityConnection
     /**
      * @return string[]
      */
-    public function availableTestIdps(): array
+    public function availableIdps(): array
     {
         // Used to render the connected idps in the CSV export
         return array_keys($this->connectedIdps);

@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityConnectionExport;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use function array_key_exists;
 
@@ -239,5 +240,26 @@ class ServiceConnectionService
             return '';
         }
         return sprintf('%s %s (%s)', $data->getGivenName(), $data->getSurName(), $data->getEmail());
+    }
+
+    /**
+     * @return array<EntityConnectionExport>
+     */
+    public function getExportData(InstitutionId $institutionId): array
+    {
+        $data = $this->findByInstitutionId($institutionId);
+        $exportData = [];
+        foreach ($data->export() as $entity) {
+            $exportValueObject = new EntityConnectionExport();
+            $exportValueObject->entityId = $entity->entityId;
+            $exportValueObject->nameOfEntity = $entity->entityName;
+            $exportValueObject->nameOfService = $entity->vendorName;
+            $exportValueObject->supportContact = $entity->supportContact;
+            $exportValueObject->adminContact = $entity->administativeContact;
+            $exportValueObject->technicalContact = $entity->technicalContact;
+            $exportValueObject->idps = $entity->availableIdps();
+            $exportData[] = $exportValueObject;
+        }
+        return $exportData;
     }
 }
