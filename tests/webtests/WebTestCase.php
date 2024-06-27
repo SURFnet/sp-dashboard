@@ -93,9 +93,12 @@ class WebTestCase extends PantherTestCase
     private string $surfConextRepresentativeAttributeName = '';
     private string $surfConextRepresentativeAttributeValue = '';
 
+
     public static function setUpBeforeClass(): void
     {
-        exec('cd /var/www/html && composer dump-env test -q && chmod 777 /tmp/spdashboard-webtests.sqlite');
+
+        DatabasePrimer::prime(self::bootKernel());
+        exec('cd /var/www/html && composer dump-env test -q ');
     }
 
     public static function tearDownAfterClass(): void
