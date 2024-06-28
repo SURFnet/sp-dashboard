@@ -63,6 +63,7 @@ class EntityCreateController extends AbstractController
     #[Route(
         path: '/entity/create/type/{serviceId}/{targetEnvironment}/{inputId}',
         name: 'entity_type',
+        requirements: ['inputId' => '.+'],
         defaults: ['targetEnvironment' => 'test'],
         methods: ['GET', 'POST']
     )]
