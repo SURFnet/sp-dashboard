@@ -444,4 +444,9 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     {
         return null;
     }
+
+    public function getTypeOfService(): array
+    {
+        return [];
+    }
 }

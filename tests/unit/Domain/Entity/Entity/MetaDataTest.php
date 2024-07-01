@@ -243,7 +243,7 @@ class MetaDataTest extends TestCase
         $contactList = m::mock(ContactList::class);
         $contactList->shouldReceive('merge');
 
-        $coin = m::mock(Coin::class, [null, null, null, null, null, null, null]);
+        $coin = m::mock(Coin::class, [null, null, null, null, null, null, null, null]);
         $coin->shouldReceive('merge');
 
         $logo = m::mock(Logo::class);

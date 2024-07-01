@@ -21,6 +21,8 @@ namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 
 interface SaveEntityCommandInterface extends Command
 {
@@ -68,4 +70,9 @@ interface SaveEntityCommandInterface extends Command
     public function getEnvironment(): ?string;
 
     public function getProtocol(): string;
+
+    /**
+     * @return array<TypeOfService>
+     */
+    public function getTypeOfService(): array;
 }

@@ -18,13 +18,10 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
+namespace Surfnet\ServiceProviderDashboard\Domain\Exception;
 
-readonly class TypeOfService
+use Exception;
+
+class TypeOfServiceException extends Exception
 {
-    public function __construct(
-        public string $typeEn,
-        public string $typeNl = '',
-    ) {
-    }
 }

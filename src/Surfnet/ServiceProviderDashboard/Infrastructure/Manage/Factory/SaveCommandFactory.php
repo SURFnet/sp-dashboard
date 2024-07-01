@@ -75,6 +75,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setApplicationUrl($coins->getApplicationUrl());
         $command->setEulaUrl($coins->getEula());
         $command->setImportUrl($coins->getOriginalMetadataUrl());
+        $command->setTypeOfService($coins->getTypeOfService()->getArray());
 
         // Attributes
         $this->setAttributes($command, $manageEntity->getAttributes());
@@ -111,6 +112,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         // Coin data
         $command->setApplicationUrl($coins->getApplicationUrl());
         $command->setEulaUrl($coins->getEula());
+        $command->setTypeOfService($coins->getTypeOfService()->getArray());
 
         // Attributes
         $this->setAttributes($command, $manageEntity->getAttributes());
@@ -208,6 +210,8 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
         // Coin data
         $command->setApplicationUrl($coins->getApplicationUrl());
+        $command->setTypeOfService($coins->getTypeOfService()->getArray());
+
         $command->setEulaUrl($coins->getEula());
 
         $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));

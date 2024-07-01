@@ -39,6 +39,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\MetaData;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\NullSecret;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Secret;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use function in_array;
 
 /**
@@ -211,12 +212,18 @@ class EntityMergeService
 
     private function buildCoinFromCommand(SaveEntityCommandInterface $command): Coin
     {
+        $typesOfService = new TypeOfServiceCollection();
+        foreach ($command->getTypeOfService() as $typeOfService) {
+            $typesOfService->add($typeOfService);
+        }
+
         return new Coin(
             null,
             null,
             null,
             null,
             $command->getApplicationUrl(),
+            $typesOfService,
             $command->getEulaUrl(),
             null
         );

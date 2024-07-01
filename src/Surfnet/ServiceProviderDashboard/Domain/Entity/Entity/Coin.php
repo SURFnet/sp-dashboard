@@ -21,8 +21,9 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\TypeOfServiceException;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use Webmozart\Assert\Assert;
-use function is_null;
 
 class Coin implements Comparable
 {
@@ -38,6 +39,8 @@ class Coin implements Comparable
         $oidcClient = isset($metaDataFields['coin:oidc_client'])
             ? (int)$metaDataFields['coin:oidc_client'] : 0;
 
+        $typeOfService = TypeOfServiceCollection::createFromManageResponse($metaDataFields);
+
         Assert::string($signatureMethod);
         Assert::string($serviceTeamId);
         Assert::string($originalMetadataUrl);
@@ -52,6 +55,7 @@ class Coin implements Comparable
             $originalMetadataUrl,
             $excludeFromPush,
             $applicationUrl,
+            $typeOfService,
             $eula,
             $oidcClient
         );
@@ -63,6 +67,7 @@ class Coin implements Comparable
         private ?string $originalMetadataUrl,
         private null|string|int $excludeFromPush,
         private ?string $applicationUrl,
+        private ?TypeOfServiceCollection $typeOfService,
         private ?string $eula,
         private ?int $oidcClient,
     ) {
@@ -103,6 +108,13 @@ class Coin implements Comparable
         return $this->oidcClient;
     }
 
+    public function getTypeOfService(): TypeOfServiceCollection
+    {
+        if ($this->typeOfService === null) {
+            throw new TypeOfServiceException('Type of service is not set on the Coin');
+        }
+        return $this->typeOfService;
+    }
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -118,6 +130,7 @@ class Coin implements Comparable
         $this->applicationUrl = is_null($coin->getApplicationUrl()) ? null : $coin->getApplicationUrl();
         $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
+        $this->typeOfService = $coin->getTypeOfService();
     }
 
     public function asArray(): array
@@ -128,6 +141,8 @@ class Coin implements Comparable
             'metaDataFields.coin:exclude_from_push' => $this->getExcludeFromPush(),
             'metaDataFields.coin:oidc_client' => $this->getOidcClient(),
             'metaDataFields.coin:original_metadata_url' => $this->getOriginalMetadataUrl(),
+            'metaDataFields.coin:ss:type_of_service:en' => $this->getTypeOfService()->getServicesAsEnglishString(),
+            'metaDataFields.coin:ss:type_of_service:nl' => $this->getTypeOfService()->getServicesAsDutchString(),
         ];
     }
 }

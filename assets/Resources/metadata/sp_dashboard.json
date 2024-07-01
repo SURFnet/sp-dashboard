@@ -30,5 +30,14 @@
     "urns": [
       "coin:eula"
     ]
+  },
+  {
+    "id": "typeOfService",
+    "getterName": "getTypeOfService",
+    "friendlyName": "TypeOfService",
+    "urns": [
+      "coin:ss:type_of_service:en",
+      "coin:ss:type_of_service:nl"
+    ]
   }
 ]

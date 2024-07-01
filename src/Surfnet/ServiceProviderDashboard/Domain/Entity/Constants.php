@@ -48,6 +48,8 @@ class Constants
 
     final public const OIDC_SECRET_LENGTH = 20;
 
+    final public const TYPE_OF_SERVICE_LOCATION = __DIR__ . '/../../../../../assets/type_of_service.json';
+
     public static function getValidNameIdFormats(): array
     {
         return [
