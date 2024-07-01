@@ -87,8 +87,8 @@ class EntityDetailFactory
             $manageEntity->getMetaData()->getNameEn(),
             $manageEntity->getMetaData()->getDescriptionNl(),
             $manageEntity->getMetaData()->getDescriptionEn(),
-            $manageEntity->getMetaData()->getCoin()->getApplicationUrl(),
-            $manageEntity->getMetaData()->getCoin()->getEula(),
+            $manageEntity->getMetaData()?->getCoin()->getApplicationUrl(),
+            $manageEntity->getMetaData()?->getCoin()->getEula(),
             $manageEntity->getMetaData()->getContacts()->findAdministrativeContact(),
             $manageEntity->getMetaData()->getContacts()->findTechnicalContact(),
             $manageEntity->getMetaData()->getContacts()->findSupportContact(),
@@ -106,7 +106,8 @@ class EntityDetailFactory
             $playgroundEnabled,
             $accessTokenValidity,
             $isPublicClient,
-            $resourceServers
+            $resourceServers,
+            $manageEntity->getMetaData()?->getCoin()->getTypeOfService()->getServicesAsArray()
         );
     }
 

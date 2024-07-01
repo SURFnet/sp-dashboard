@@ -30,7 +30,8 @@ class EntityDetail
 {
     public $organizationUnitNameAttribute;
     /**
-     * @param                                          ManageEntity[]|null $resourceServers
+     * @param ManageEntity[]|null $resourceServers
+     * @param array<string>|null $typeOfService
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -259,5 +260,13 @@ class EntityDetail
     public function getResourceServers(): ?array
     {
         return $this->resourceServers;
+    }
+
+    /**
+     * @return array<string>|null
+     */
+    public function typeOfService(): ?array
+    {
+        return $this->typeOfService;
     }
 }
