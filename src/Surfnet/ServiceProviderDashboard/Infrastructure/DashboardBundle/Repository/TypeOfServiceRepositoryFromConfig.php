@@ -56,7 +56,7 @@ class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
         }
         $this->collection = new TypeOfServiceCollection();
         foreach ($data as $entry) {
-            $typeOfService = new TypeOfService($entry->typeNl, $entry->typeEn);
+            $typeOfService = new TypeOfService($entry->typeEn, $entry->typeNl);
             $this->collection->add($typeOfService);
         }
     }
