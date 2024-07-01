@@ -118,7 +118,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
         minMessage: 'validator.type-of-service.min',
         maxMessage: 'validator.type-of-service.max',
     )]
-    private array $typeOfService;
+    private array $typeOfService = [];
 
     #[Assert\Url]
     private ?string $eulaUrl = null;
