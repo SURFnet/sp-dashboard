@@ -22,7 +22,6 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
 use Surfnet\ServiceProviderDashboard\Domain\Exception\TypeOfServiceException;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepositoryFromConfig;
-use function implode;
 
 class TypeOfServiceCollection
 {

@@ -210,6 +210,7 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
 
         // Coin data
         $command->setApplicationUrl($coins->getApplicationUrl());
+
         $command->setEulaUrl($coins->getEula());
 
         $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
