@@ -23,8 +23,8 @@ namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 readonly class TypeOfService
 {
     public function __construct(
-        public string $typeNl,
         public string $typeEn,
+        public string $typeNl = '',
     ) {
     }
 }

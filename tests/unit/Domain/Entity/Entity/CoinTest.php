@@ -24,6 +24,14 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 class CoinTest extends TestCase
 {
     /**
+     * @dataProvider provideCoinTestDataWithTypeOfService
+     */
+    public function test_type_of_service_data_is_parsed_correctly($testData)
+    {
+
+    }
+
+    /**
      * @dataProvider provideCoinTestData
      */
     public function test_it_can_merge_data(Coin $coin, Coin $newData, Coin $expectation)
@@ -64,6 +72,12 @@ class CoinTest extends TestCase
             new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
             new Coin(null, null, null, null, null, null, null),
             new Coin(null, null, null, '1', null, null, null)
+        ];
+    }
+    public function provideManageResponse()
+    {
+        yield [
+
         ];
     }
 }
