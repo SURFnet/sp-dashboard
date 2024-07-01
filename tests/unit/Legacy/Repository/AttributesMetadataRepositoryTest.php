@@ -91,11 +91,12 @@ class AttributesMetadataRepositoryTest extends MockeryTestCase
             "applicationUrl",
             "teamID",
             "originalMetadataUrl",
+            "typeOfService",
         ];
 
         $attributes = $this->repository->findAllSpDashboardAttributes();
 
-        $this->assertCount(4, $attributes);
+        $this->assertCount(5, $attributes);
         foreach ($attributes as $attribute) {
             $this->assertContains($attribute->id, $expectedAttributes);
         }

@@ -617,11 +617,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getCoin\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method getContacts\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',

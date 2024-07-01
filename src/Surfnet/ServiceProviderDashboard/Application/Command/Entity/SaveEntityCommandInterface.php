@@ -22,7 +22,6 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Command;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 
 interface SaveEntityCommandInterface extends Command
 {

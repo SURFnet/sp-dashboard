@@ -104,4 +104,16 @@ class TypeOfServiceCollection
         }
         return implode(',', $commasSeperated);
     }
+
+    /**
+     * @return array<string>
+     */
+    public function getServicesAsArray(): array
+    {
+        $services = [];
+        foreach ($this->types as $type) {
+            $services[] = $type->typeEn;
+        }
+        return $services;
+    }
 }
