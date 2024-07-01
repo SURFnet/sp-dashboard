@@ -51,9 +51,19 @@ class SpDashboardMetadataGenerator implements MetadataGenerator
                 case $attribute->id === 'originalMetadataUrl':
                 case $attribute->id === 'applicationUrl':
                 case $attribute->id === 'eula':
-                    $coin = $entity->getMetaData()->getCoin();
+                    $coin = $entity->getMetaData()?->getCoin();
                     if ($coin && $coin->$getterName()) {
                         $attributes[$attribute->urns[0]] = $coin->$getterName();
+                    }
+                    break;
+                case $attribute->id === 'typeOfService':
+                    $coin = $entity->getMetaData()?->getCoin();
+                    // Does the Coin VO have types of service set? In that case add them to the
+                    // attributes (in a manage multilingual fashion)
+                    if ($coin && $coin->$getterName() && count($coin->getTypeOfService()->getArray()) > 0) {
+                        // The nl and en attributes for the Type of service need to be set specifically
+                        $attributes[$attribute->urns[0]] = $coin->getTypeOfService()->getServicesAsEnglishString();
+                        $attributes[$attribute->urns[1]] = $coin->getTypeOfService()->getServicesAsDutchString();
                     }
                     break;
             }

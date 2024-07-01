@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Domain\Entity\Entity;
 
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Comparable;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\TypeOfServiceException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use Webmozart\Assert\Assert;
 
@@ -66,7 +67,7 @@ class Coin implements Comparable
         private ?string $originalMetadataUrl,
         private null|string|int $excludeFromPush,
         private ?string $applicationUrl,
-        private TypeOfServiceCollection $typeOfService,
+        private ?TypeOfServiceCollection $typeOfService,
         private ?string $eula,
         private ?int $oidcClient,
     ) {
@@ -107,8 +108,11 @@ class Coin implements Comparable
         return $this->oidcClient;
     }
 
-    public function getTypeOfService(): array
+    public function getTypeOfService(): TypeOfServiceCollection
     {
+        if ($this->typeOfService === null) {
+            throw new TypeOfServiceException('Type of service is not set on the Coin');
+        }
         return $this->typeOfService;
     }
     /**
@@ -126,6 +130,7 @@ class Coin implements Comparable
         $this->applicationUrl = is_null($coin->getApplicationUrl()) ? null : $coin->getApplicationUrl();
         $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
+        $this->typeOfService = $coin->getTypeOfService();
     }
 
     public function asArray(): array
@@ -136,8 +141,8 @@ class Coin implements Comparable
             'metaDataFields.coin:exclude_from_push' => $this->getExcludeFromPush(),
             'metaDataFields.coin:oidc_client' => $this->getOidcClient(),
             'metaDataFields.coin:original_metadata_url' => $this->getOriginalMetadataUrl(),
-            // TODO: TOS needs to be pulled apart in dutch/english parts
-            'metaDataFields.coin:ss:type_of_service:en' => implode(',', $this->getTypeOfService()->getArray()),
+            'metaDataFields.coin:ss:type_of_service:en' => $this->getTypeOfService()->getServicesAsEnglishString(),
+            'metaDataFields.coin:ss:type_of_service:nl' => $this->getTypeOfService()->getServicesAsDutchString(),
         ];
     }
 }

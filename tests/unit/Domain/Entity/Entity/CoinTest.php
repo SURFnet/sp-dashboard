@@ -20,15 +20,26 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\Entity\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 
 class CoinTest extends TestCase
 {
-    /**
-     * @dataProvider provideCoinTestDataWithTypeOfService
-     */
-    public function test_type_of_service_data_is_parsed_correctly($testData)
+    public function test_type_of_service_data_is_parsed_correctly()
     {
-
+        $enTypes = 'Productivity,Management of education/research,Medical,eCommerce';
+        // to make a point. The Dutch translations are following the configured translations. Not the ones provided from Manage
+        $nlTypes = 'Productiviteit,matcht niet,Mecisch,eCommerce';
+        $data = sprintf(file_get_contents(__DIR__.'/fixture/read_response-coin-types-of-service.json'), $enTypes, $nlTypes);
+        $decodedData = json_decode($data, true);
+        $coin = Coin::fromApiResponse($decodedData['metaDataFields']);
+        $tos = $coin->getTypeOfService();
+        self::assertContainsOnlyInstancesOf(TypeOfService::class, $tos->getArray());
+        self::assertEquals($enTypes, $tos->getServicesAsEnglishString());
+        self::assertEquals(
+            'Productiviteit,Organisatie van onderwijs/onderzoek,Medisch,eCommerce',
+            $tos->getServicesAsDutchString()
+        );
     }
 
     /**
@@ -59,22 +70,22 @@ class CoinTest extends TestCase
     public function provideCoinTestData()
     {
         yield [
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1)
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', null, 'https://example.com/eula', 1),
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', null, 'https://example.com/eula', 1),
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', null, 'https://example.com/eula', 1)
         ];
         yield [
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
-            new Coin('signatureMethod', null, 'https://www.example.com', null, 'https://example.com', 'https://example.com/eula', 1),
-            new Coin('signatureMethod', null, 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', null, 'https://example.com/eula', 1),
+            new Coin('signatureMethod', null, 'https://www.example.com', null, 'https://example.com', null, 'https://example.com/eula', 1),
+            new Coin('signatureMethod', null, 'https://www.example.com', '1', 'https://example.com', null, 'https://example.com/eula', 1),
         ];
         yield [
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', 'https://example.com/eula', 1),
-            new Coin(null, null, null, null, null, null, null),
-            new Coin(null, null, null, '1', null, null, null)
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', null, 'https://example.com/eula', 1),
+            new Coin(null, null, null, null, null, null, null, null),
+            new Coin(null, null, null, '1', null, null, null, null)
         ];
     }
-    public function provideManageResponse()
+    public function provideCoinTestDataWithTypeOfService()
     {
         yield [
 

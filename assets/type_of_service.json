@@ -25,11 +25,11 @@
   },
   {
     "typeEn" : "Recommended",
-    "typeNl" : "Productiviteit"
+    "typeNl" : "Aangeraden"
   },
   {
     "typeEn" : "Productivity",
-    "typeNl" : "Aangeraden"
+    "typeNl" : "Productiviteit"
   },
   {
     "typeEn" : "Management of education/research",
@@ -41,7 +41,7 @@
   },
   {
     "typeEn" : "Medical",
-    "typeNl" : "Medical"
+    "typeNl" : "Medisch"
   },
   {
     "typeEn" : "eCommerce",
