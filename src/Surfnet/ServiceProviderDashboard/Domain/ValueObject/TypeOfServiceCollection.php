@@ -20,6 +20,10 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use Surfnet\ServiceProviderDashboard\Domain\Exception\TypeOfServiceException;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepositoryFromConfig;
+use function implode;
+
 class TypeOfServiceCollection
 {
     /** @var array<TypeOfService> */
@@ -28,12 +32,19 @@ class TypeOfServiceCollection
     public static function createFromManageResponse(array $metaDataFields): TypeOfServiceCollection
     {
         $collection = new TypeOfServiceCollection();
+        $repository = new TypeOfServiceRepositoryFromConfig();
         $englishEntry = $metaDataFields['coin:ss:type_of_service:en'] ?? '';
+        if ($englishEntry === '') {
+            return $collection;
+        }
         $englishEnties = explode(',', $englishEntry);
         foreach ($englishEnties as $singleEntity) {
             // When loading the entities from manage, we only load the english types of service.
             // The Dutch translations are only relevant when writing to Manage
-            $collection->add(new TypeOfService($singleEntity));
+            $searchResult = $repository->findByEnglishTypeOfService($singleEntity);
+            if ($searchResult !== null) {
+                $collection->add($searchResult);
+            }
         }
         return $collection;
     }
@@ -49,5 +60,48 @@ class TypeOfServiceCollection
     public function getArray(): array
     {
         return $this->types;
+    }
+
+    public function has(string $englishTypeOfService): bool
+    {
+        foreach ($this->types as $type) {
+            if ($type->typeEn === $englishTypeOfService) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function get(string $englishTypeOfService): TypeOfService
+    {
+        foreach ($this->types as $type) {
+            if ($type->typeEn === $englishTypeOfService) {
+                return $type;
+            }
+        }
+        throw new TypeOfServiceException(
+            sprintf(
+                'Type of Service with English name %s could not be located',
+                $englishTypeOfService
+            )
+        );
+    }
+
+    public function getServicesAsDutchString(): string
+    {
+        $commasSeperated = [];
+        foreach ($this->types as $type) {
+            $commasSeperated[] = $type->typeNl;
+        }
+        return implode(',', $commasSeperated);
+    }
+
+    public function getServicesAsEnglishString(): string
+    {
+        $commasSeperated = [];
+        foreach ($this->types as $type) {
+            $commasSeperated[] = $type->typeEn;
+        }
+        return implode(',', $commasSeperated);
     }
 }

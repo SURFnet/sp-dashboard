@@ -24,6 +24,7 @@ use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashbo
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
+use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use Surfnet\ServiceProviderDashboard\Legacy\Repository\AttributesMetadataRepository;
 
 class SpDashboardMetadataGeneratorTest extends MockeryTestCase
@@ -39,6 +40,7 @@ class SpDashboardMetadataGeneratorTest extends MockeryTestCase
         $coin->shouldReceive('getOriginalMetadataUrl')->andReturn('http://the-a-team.com/saml/metadata');
         $coin->shouldReceive('getApplicationUrl')->andReturn(null);
         $coin->shouldReceive('getEula')->andReturn(null);
+        $coin->shouldReceive('getTypeOfService')->andReturn(new TypeOfServiceCollection());
         $entity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
 
         $entity->setService($service);

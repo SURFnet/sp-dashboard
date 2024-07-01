@@ -1082,16 +1082,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator/PrivacyQuestionsMetadataGenerator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getCoin\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator/SpDashboardMetadataGenerator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Left side of && is always true\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator/SpDashboardMetadataGenerator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\JsonGenerator\\\\SpDashboardMetadataGenerator\\:\\:build\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator/SpDashboardMetadataGenerator.php',
@@ -2910,6 +2900,11 @@ $ignoreErrors[] = [
 	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\ValueObject\\\\Ticket\\:\\:\\$connectionRequests type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/Ticket.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\ValueObject\\\\TypeOfServiceCollection\\:\\:createFromManageResponse\\(\\) has parameter \\$metaDataFields with no value type specified in iterable type array\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/TypeOfServiceCollection.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Command\\\\Entity\\\\ChooseEntityTypeCommand\\:\\:__construct\\(\\) has parameter \\$type with no type specified\\.$#',

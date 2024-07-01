@@ -28,19 +28,28 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
 {
     private TypeOfServiceCollection $collection;
+    private string $typeOfServiceLocation = Constants::TYPE_OF_SERVICE_LOCATION;
+
+    public function __construct(?string $typeOfServiceLocation = null)
+    {
+        // Allow overwriting the default typeOfService location. This is particularly useful for testing
+        if ($typeOfServiceLocation !== null) {
+            $this->typeOfServiceLocation = $typeOfServiceLocation;
+        }
+        $this->load();
+    }
 
     private function load(): void
     {
-        $typeOfServiceLocation = Constants::TYPE_OF_SERVICE_LOCATION;
-        if (!file_exists($typeOfServiceLocation)) {
+        if (!file_exists($this->typeOfServiceLocation)) {
             throw new TypeOfServiceException(
                 sprintf(
                     'Please review the file location of the type of services json blob. %s',
-                    $typeOfServiceLocation
+                    $this->typeOfServiceLocation
                 )
             );
         }
-        $fileContents = file_get_contents($typeOfServiceLocation);
+        $fileContents = file_get_contents($this->typeOfServiceLocation);
         if (!$fileContents) {
             throw new TypeOfServiceException('Unable to load the type of service json file.');
         }
@@ -60,7 +69,14 @@ class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
      */
     public function getTypesOfServiceChoices(): array
     {
-        $this->load();
         return $this->collection->getArray();
+    }
+
+    public function findByEnglishTypeOfService(string $enTos): ?TypeOfService
+    {
+        if ($this->collection->has($enTos)) {
+            return $this->collection->get($enTos);
+        }
+        return null;
     }
 }

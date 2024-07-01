@@ -47,4 +47,33 @@ class TypeOfServiceRepositoryFromConfigTest extends TestCase
         $typesRepo = new TypeOfServiceRepositoryFromConfig(__DIR__ . '/Fixtures/type_of_service_corrupt_json.json');
         $typesRepo->getTypesOfServiceChoices();
     }
+
+    /**
+     * @dataProvider proivdeTypeOfServiceExpectations
+     */
+    public function test_find_by_english_type_of_service(
+        string $searchText,
+        null|TypeOfService $expected,
+    ): void {
+        $typesRepo = new TypeOfServiceRepositoryFromConfig();
+        $result = $typesRepo->findByEnglishTypeOfService($searchText);
+        self::assertEquals($expected, $result);
+
+        if ($expected !== null) {
+            self::assertEquals($expected->typeEn, $result->typeEn);
+            self::assertEquals($expected->typeNl, $result->typeNl);
+        }
+    }
+
+    public function proivdeTypeOfServiceExpectations()
+    {
+        return [
+            'existing' => ['Tooling', new TypeOfService('Tooling', 'Tooling')],
+            'existing 2' => ['Management of education/research', new TypeOfService('Management of education/research', 'Organisatie van onderwijs/onderzoek')],
+            'existing 3' => ['Research', new TypeOfService('Research', 'Onderzoek')],
+            'is case sensitive' => ['tooling', null],
+            'only finds by english text' => ['Onderzoek', null],
+        ];
+    }
+
 }
