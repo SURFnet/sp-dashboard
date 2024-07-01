@@ -25,6 +25,19 @@ class TypeOfServiceCollection
     /** @var array<TypeOfService> */
     private array $types = [];
 
+    public static function createFromManageResponse(array $metaDataFields): TypeOfServiceCollection
+    {
+        $collection = new TypeOfServiceCollection();
+        $englishEntry = $metaDataFields['coin:ss:type_of_service:en'] ?? '';
+        $englishEnties = explode(',', $englishEntry);
+        foreach ($englishEnties as $singleEntity) {
+            // When loading the entities from manage, we only load the english types of service.
+            // The Dutch translations are only relevant when writing to Manage
+            $collection->add(new TypeOfService($singleEntity));
+        }
+        return $collection;
+    }
+
     public function add(TypeOfService $type): void
     {
         $this->types[] = $type;
