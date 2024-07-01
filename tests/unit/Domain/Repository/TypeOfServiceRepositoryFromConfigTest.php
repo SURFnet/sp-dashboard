@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Infrastructure\DashboardBundle\Repository;
+namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Domain\DashboardBundle\Repository;
 
 use PHPUnit\Framework\TestCase;
 use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\TypeOfServiceException;
+use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepositoryFromConfig;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
-use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\TypeOfServiceRepositoryFromConfig;
 
 class TypeOfServiceRepositoryFromConfigTest extends TestCase
 {
@@ -34,14 +35,14 @@ class TypeOfServiceRepositoryFromConfigTest extends TestCase
     }
     public function test_it_rejects_non_existing_file()
     {
-        self::expectException(RuntimeException::class);
+        self::expectException(TypeOfServiceException::class);
         self::expectExceptionMessageMatches('/Please review the file location of the type of services json blob/');
         $typesRepo = new TypeOfServiceRepositoryFromConfig('/Fixtures/shes_not_there.json');
         $typesRepo->getTypesOfServiceChoices();
     }
     public function test_it_rejects_faulty_json()
     {
-        self::expectException(RuntimeException::class);
+        self::expectException(TypeOfServiceException::class);
         self::expectExceptionMessage('The json can not be parsed into an array of service types');
         $typesRepo = new TypeOfServiceRepositoryFromConfig(__DIR__ . '/Fixtures/type_of_service_corrupt_json.json');
         $typesRepo->getTypesOfServiceChoices();

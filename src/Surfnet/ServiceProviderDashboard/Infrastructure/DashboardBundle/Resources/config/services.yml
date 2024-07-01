@@ -235,12 +235,10 @@ services:
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository:
     arguments: [ '%kernel.project_dir%/assets/attributes.json' ]
 
+  Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepositoryFromConfig:
+
   Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepository:
-    alias: Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\TypeOfServiceRepositoryFromConfig
-
-  Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\TypeOfServiceRepositoryFromConfig:
-
-    arguments: [ '%kernel.project_dir%/assets/type_of_service.json' ]
+    alias: Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepositoryFromConfig
 
   Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\PrivacyQuestionsRepository:
     public: true

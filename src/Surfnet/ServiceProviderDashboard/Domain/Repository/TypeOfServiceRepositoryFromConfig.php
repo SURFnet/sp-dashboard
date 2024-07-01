@@ -18,41 +18,35 @@ declare(strict_types = 1);
  * limitations under the License.
  */
 
-namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository;
+namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
-use Surfnet\ServiceProviderDashboard\Application\Exception\RuntimeException;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Exception\TypeOfServiceException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
-use function file_exists;
-use function is_array;
 
 class TypeOfServiceRepositoryFromConfig implements TypeOfServiceRepository
 {
     private TypeOfServiceCollection $collection;
 
-    public function __construct(
-        private readonly string $typeOfServiceLocation,
-    ) {
-    }
-
     private function load(): void
     {
-        if (!file_exists($this->typeOfServiceLocation)) {
-            throw new RuntimeException(
+        $typeOfServiceLocation = Constants::TYPE_OF_SERVICE_LOCATION;
+        if (!file_exists($typeOfServiceLocation)) {
+            throw new TypeOfServiceException(
                 sprintf(
                     'Please review the file location of the type of services json blob. %s',
-                    $this->typeOfServiceLocation
+                    $typeOfServiceLocation
                 )
             );
         }
-        $fileContents = file_get_contents($this->typeOfServiceLocation);
+        $fileContents = file_get_contents($typeOfServiceLocation);
         if (!$fileContents) {
-            throw new RuntimeException('Unable to load the type of service json file.');
+            throw new TypeOfServiceException('Unable to load the type of service json file.');
         }
         $data = json_decode($fileContents);
         if (!is_array($data)) {
-            throw new RuntimeException('The json can not be parsed into an array of service types');
+            throw new TypeOfServiceException('The json can not be parsed into an array of service types');
         }
         $this->collection = new TypeOfServiceCollection();
         foreach ($data as $entry) {
