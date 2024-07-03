@@ -118,19 +118,6 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     #[Assert\Url]
     private $applicationUrl;
 
-    /** @var TypeOfService[] */
-    #[Assert\All([
-        new Assert\NotBlank(),
-        new Assert\Type(type: TypeOfService::class),
-    ])]
-    #[Assert\Count(
-        min: 1,
-        max: 3,
-        minMessage: 'validator.type-of-service.min',
-        maxMessage: 'validator.type-of-service.max',
-    )]
-    private array $typeOfService;
-
     /**
      * @var string
      */
@@ -550,19 +537,9 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         return null;
     }
 
-    /**
-     * @return TypeOfService[]
-     */
     public function getTypeOfService(): array
     {
-        return $this->typeOfService;
-    }
-
-    /**
-     * @param TypeOfService[] $typeOfService
-     */
-    public function setTypeOfService(array $typeOfService): void
-    {
-        $this->typeOfService = $typeOfService;
+        // not implemented for oauth_ccc entities
+        return [];
     }
 }

@@ -20,8 +20,6 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\E
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOauthClientCredentialClientCommand;
 use Surfnet\ServiceProviderDashboard\Application\Command\Entity\SaveOidcngEntityCommand;
-use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepository;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -40,7 +38,6 @@ class OauthClientCredentialEntityType extends AbstractType
 {
     public function __construct(
         private readonly OidcngResourceServerOptionsFactory $oidcngResourceServerOptionsFactory,
-        private readonly TypeOfServiceRepository $typeOfServiceProvider
     ) {
     }
 
@@ -165,22 +162,6 @@ class OauthClientCredentialEntityType extends AbstractType
                         'data-help' => 'entity.edit.information.applicationUrl',
                         'data-parsley-urlstrict' => null,
                         'data-parsley-trigger' => 'blur',
-                    ],
-                ]
-            )
-            ->add(
-                'typeOfService',
-                ChoiceType::class,
-                [
-                    'required' => false,
-                    'choices' => $this->typeOfServiceProvider->getTypesOfServiceChoices(),
-                    'choice_value' => fn(TypeOfService $tos): string => $tos->typeEn,
-                    'choice_label' => fn(TypeOfService $tos): string => $tos->typeEn,
-                    'expanded' => true,
-                    'multiple' => true,
-                    'attr' => [
-                        'class' => 'type-of-service',
-                        'data-help' => 'entity.edit.information.typeOfService',
                     ],
                 ]
             )
