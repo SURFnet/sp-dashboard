@@ -67,6 +67,7 @@ class EntityDetail
         private readonly ?int $accessTokenValidity,
         private readonly ?bool $isPublicClient,
         private readonly ?array $resourceServers,
+        private readonly ?array $typeOfService,
     ) {
     }
 

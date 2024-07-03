@@ -57,6 +57,7 @@ entity:
       redirect_uris: Redirect URIs
       playground_enabled: Playground enabled?
       name_id_format: NameID format
+      type_of_service: Type of service
       subject_type: Subject type
       certificate: Certificate
       logo_url: Logo URL
