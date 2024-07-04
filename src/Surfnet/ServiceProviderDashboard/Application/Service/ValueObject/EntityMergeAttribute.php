@@ -28,8 +28,8 @@ class EntityMergeAttribute
     }
 
     public static function fromAttribute(
-        $name,
-        $urn,
+        string $name,
+        string $urn,
     ): EntityMergeAttribute {
         return new self(
             $name,
