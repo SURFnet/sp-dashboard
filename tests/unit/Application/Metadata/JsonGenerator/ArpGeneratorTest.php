@@ -119,10 +119,10 @@ class ArpGeneratorTest extends MockeryTestCase
         $attributes = [];
         if ($registerAttributes) {
             $attributes = [
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:cn', 'voot', '*'),
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*'),
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:givenName', 'idp', '*'),
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:eduPersonEntitlement', 'sab', '/^foobar(.*)$/i'),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:cn', 'voot', '*', '123', false),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*', '123', false),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:givenName', 'idp', '*', '123', false),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:eduPersonEntitlement', 'sab', '/^foobar(.*)$/i', '123', false),
             ];
             $manageEntity
                 ->shouldReceive('getAttributes->findAllByUrn')
@@ -162,7 +162,14 @@ class ArpGeneratorTest extends MockeryTestCase
         return $manageEntity;
     }
 
-    private function buildManageAttribute(ManageEntity $manageEntity, string $attributeName, string $source, string $value)
+    private function buildManageAttribute(
+        ManageEntity $manageEntity,
+        string $attributeName,
+        string $source,
+        string $value,
+        string $releaseAs = "123",
+        bool  $useAsNameId =  true,
+    )
     {
         $attribute = m::mock(Attribute::class);
         $attribute->shouldReceive('getName')
@@ -171,6 +178,10 @@ class ArpGeneratorTest extends MockeryTestCase
             ->andReturn($source);
         $attribute->shouldReceive('getValue')
             ->andReturn($value);
+        $attribute->shouldReceive('getReleaseAs')
+            ->andReturn($releaseAs);
+        $attribute->shouldReceive('getUseAsNameId')
+            ->andReturn($useAsNameId);
         $attribute->shouldReceive('getMotivation')
             ->andReturn('The Manage motivation');
         $attribute->shouldReceive('hasMotivation')
