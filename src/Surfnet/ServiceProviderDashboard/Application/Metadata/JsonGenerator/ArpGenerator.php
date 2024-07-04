@@ -50,6 +50,8 @@ class ArpGenerator implements MetadataGenerator
                     'source' => $attribute->getSource(),
                     'value' => $attribute->getValue() === '' ? '*' : $attribute->getValue(),
                     'motivation' => $attribute->getMotivation(),
+                    'release_as' => $attribute->getReleaseAs() ?? '',
+                    'use_as_name_id' => $attribute->getUseAsNameId() ?? false,
                 ];
             }
         }
@@ -85,6 +87,8 @@ class ArpGenerator implements MetadataGenerator
                     'source' => $attribute->getSource(),
                     'value' => $attribute->getValue(),
                     'motivation' => $attribute->getMotivation(),
+                    'release_as' => $attribute->getReleaseAs(),
+                    'use_as_name_id' => $attribute->getUseAsNameId(),
                 ];
             }
         }
