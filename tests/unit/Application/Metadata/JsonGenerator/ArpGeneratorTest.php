@@ -45,12 +45,15 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->attributeRepository = new AttributeRepository(__DIR__ . '/../fixture/attributes.json');
         $this->attributeService = new AttributeService($this->attributeRepository, 'en');
     }
+
     public function test_it_can_build_arp_metadata()
     {
         $entity = m::mock(ManageEntity::class)->makePartial();
         $attribute = m::mock(Attribute::class);
         $attribute->shouldReceive('getSource')->andReturn('idp');
         $attribute->shouldReceive('getValue')->andReturn('*');
+        $attribute->shouldReceive('getReleaseAs')->andReturn('123');
+        $attribute->shouldReceive('getUseAsNameId')->andReturn(false);
         $attribute->shouldReceive('hasMotivation')->andReturn(true);
         $attribute->shouldReceive('getMotivation')->andReturn('Motivation');
 
@@ -76,7 +79,7 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
     }
 
-    public function test_does_not_override_existing_manage_attributes_and_sources()
+    public function test_does_not_override_existing_manage_attributes_and_source_and_()
     {
         $factory = new ArpGenerator($this->attributeService);
         $manageEntity = $this->getManageEntity();
@@ -87,27 +90,27 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:displayName']);
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['value']);
+        $this->assertEquals('456', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['release_as']);
+        $this->assertTrue($metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['use_as_name_id']);
+
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
         $this->assertEquals('voot', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['value']);
+        $this->assertEquals('123', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['release_as']);
+        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['use_as_name_id']);
+
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:givenName']);
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['value']);
+        $this->assertEquals('789', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['release_as']);
+        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['use_as_name_id']);
+
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement']);
         $this->assertEquals('sab', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['source']);
         $this->assertEquals('/^foobar(.*)$/i', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['value']);
-    }
+        $this->assertEquals('123', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['release_as']);
+        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['use_as_name_id']);
 
-    public function test_does_not_add_epti_for_oidcng_entities()
-    {
-        $entity = $this->getManageEntity(Constants::TYPE_OPENID_CONNECT_TNG, false);
-
-        $factory = new ArpGenerator($this->attributeService);
-
-        $metadata = $factory->build($entity);
-
-        // When no attributes are present, a stdClass is set as metadata attributes (for json encoding purposes)
-        $this->assertEquals(new stdClass(), $metadata['attributes']);
     }
 
     private function getManageEntity(string $protocol = 'sanl20', $registerAttributes = true)
@@ -120,8 +123,8 @@ class ArpGeneratorTest extends MockeryTestCase
         if ($registerAttributes) {
             $attributes = [
                 $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:cn', 'voot', '*', '123', false),
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*', '123', false),
-                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:givenName', 'idp', '*', '123', false),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:displayName', 'idp', '*', '456', true),
+                $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:givenName', 'idp', '*', '789', false),
                 $this->buildManageAttribute($manageEntity, 'urn:mace:dir:attribute-def:eduPersonEntitlement', 'sab', '/^foobar(.*)$/i', '123', false),
             ];
             $manageEntity
@@ -164,11 +167,11 @@ class ArpGeneratorTest extends MockeryTestCase
 
     private function buildManageAttribute(
         ManageEntity $manageEntity,
-        string $attributeName,
-        string $source,
-        string $value,
-        string $releaseAs = "123",
-        bool  $useAsNameId =  true,
+        string       $attributeName,
+        string       $source,
+        string       $value,
+        string       $releaseAs,
+        bool         $useAsNameId,
     )
     {
         $attribute = m::mock(Attribute::class);
@@ -193,5 +196,17 @@ class ArpGeneratorTest extends MockeryTestCase
             ->andReturn($attribute);
 
         return $attribute;
+    }
+
+    public function test_does_not_add_epti_for_oidcng_entities()
+    {
+        $entity = $this->getManageEntity(Constants::TYPE_OPENID_CONNECT_TNG, false);
+
+        $factory = new ArpGenerator($this->attributeService);
+
+        $metadata = $factory->build($entity);
+
+        // When no attributes are present, a stdClass is set as metadata attributes (for json encoding purposes)
+        $this->assertEquals(new stdClass(), $metadata['attributes']);
     }
 }
