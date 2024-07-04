@@ -29,17 +29,23 @@ class Attribute
         $value = $attributeData['value'];
         $source = $attributeData['source'] ?? '';
         $motivation = $attributeData['motivation'] ?? '';
+        $releaseAs = $attributeData['release_as'] ?? '';
+        $useAsNameId = $attributeData['use_as_name_id'] ?? '';
 
         Assert::stringNotEmpty($attributeName, 'The attribute name must be non-empty string');
         Assert::stringNotEmpty($value, 'The attribute value must be non-empty string');
         Assert::string($source, 'The attribute source must be string');
+        Assert::string($releaseAs, 'The attribute release_as must be string');
+        Assert::boolean($useAsNameId, 'The attribute use_as_name_id must be boolean');
         Assert::string($motivation, 'The attribute motivation must be string');
 
         return new self(
             $attributeName,
             $value,
             $source,
-            $motivation
+            $motivation,
+            $releaseAs,
+            $useAsNameId,
         );
     }
 
@@ -48,6 +54,8 @@ class Attribute
         private readonly string $value,
         private string $source,
         private ?string $motivation,
+        private ?string $releaseAs,
+        private ?bool $useAsNameId,
     ) {
     }
 
@@ -74,6 +82,16 @@ class Attribute
     public function getMotivation(): string
     {
         return $this->motivation;
+    }
+
+    public function getReleaseAs(): string
+    {
+        return $this->releaseAs;
+    }
+
+    public function getUseAsNameId(): bool
+    {
+        return $this->useAsNameId;
     }
 
     public function updateSource(string $newSource): static
