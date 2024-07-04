@@ -55,51 +55,51 @@ class AttributeListTest extends TestCase
         yield [
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation'),
-                    $this->attr('urn1', '*', 'idp', 'motivation'),
-                    $this->attr('urn2', '*', 'idp', 'motivation')
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true)
                 ]
             ),
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation'),
-                    $this->attr('urn1', '*', 'idp', 'motivation'),
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
                 ]
             ),
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation'),
-                    $this->attr('urn1', '*', 'idp', 'motivation'),
-                ]
-            ),
-        ];
-        yield [
-            $this->attributeList(
-                [
-                    $this->attr('urn0', '*', 'idp', 'motivation'),
-                    $this->attr('urn1', '*', 'idp', 'motivation'),
-                    $this->attr('urn2', '*', 'idp', 'motivation')
-                ]
-            ),
-            $this->attributeList(
-                [
-                    $this->attr('urn2', '*', 'idp', 'motivation'),
-                    $this->attr('urn1', '*', 'idp', 'super motivation'),
-                ]
-            ),
-            $this->attributeList(
-                [
-                    $this->attr('urn2', '*', 'idp', 'motivation'),
-                    $this->attr('urn1', '*', 'idp', 'super motivation'),
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
                 ]
             ),
         ];
         yield [
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation'),
-                    $this->attr('urn1', '*', 'idp', 'motivation'),
-                    $this->attr('urn2', '*', 'idp', 'motivation')
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true),
+                ]
+            ),
+            $this->attributeList(
+                [
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn1', '*', 'idp', 'super motivation', 'release_as', true),
+                ]
+            ),
+            $this->attributeList(
+                [
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn1', '*', 'idp', 'super motivation', 'release_as', true),
+                ]
+            ),
+        ];
+        yield [
+            $this->attributeList(
+                [
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true)
                 ]
             ),
             $this->attributeList([]),
@@ -107,7 +107,7 @@ class AttributeListTest extends TestCase
         ];
     }
 
-    private function attributeList(array $attributes = null)
+    private function attributeList(array $attributes = null): AttributeList
     {
         $attributeList = new AttributeList();
         if ($attributes) {
@@ -118,8 +118,15 @@ class AttributeListTest extends TestCase
         return $attributeList;
     }
 
-    private function attr(string $urn, string $value, string $source, string $motivation)
+    private function attr(string $urn, string $value, string $source, string $motivation, string $releaseAs, bool $useAsNameId): Attribute
     {
-        return new Attribute($urn, $value, $source, $motivation);
+        return new Attribute(
+            $urn,
+            $value,
+            $source,
+            $motivation,
+            $releaseAs,
+            $useAsNameId
+        );
     }
 }
