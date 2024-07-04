@@ -30,7 +30,7 @@ class Attribute
         $source = $attributeData['source'] ?? '';
         $motivation = $attributeData['motivation'] ?? '';
         $releaseAs = $attributeData['release_as'] ?? '';
-        $useAsNameId = $attributeData['use_as_name_id'] ?? '';
+        $useAsNameId = $attributeData['use_as_name_id'] ?? false;
 
         Assert::stringNotEmpty($attributeName, 'The attribute name must be non-empty string');
         Assert::stringNotEmpty($value, 'The attribute value must be non-empty string');
@@ -54,8 +54,8 @@ class Attribute
         private readonly string $value,
         private string $source,
         private ?string $motivation,
-        private ?string $releaseAs,
-        private ?bool $useAsNameId,
+        private string $releaseAs,
+        private bool $useAsNameId,
     ) {
     }
 
