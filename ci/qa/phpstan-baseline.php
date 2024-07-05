@@ -1822,16 +1822,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/TicketServiceInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\ValueObject\\\\EntityMergeAttribute\\:\\:fromAttribute\\(\\) has parameter \\$name with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/ValueObject/EntityMergeAttribute.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Service\\\\ValueObject\\\\EntityMergeAttribute\\:\\:fromAttribute\\(\\) has parameter \\$urn with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Service/ValueObject/EntityMergeAttribute.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\Apis\\\\ApiConfig\\:\\:getPublicationStatus\\(\\) should return Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\Apis\\\\PublicationStatus but returns Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\Apis\\\\PublicationStatus\\|null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/ViewObject/Apis/ApiConfig.php',
