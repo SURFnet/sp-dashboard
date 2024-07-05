@@ -158,11 +158,7 @@ class EntityMergeService
     {
         $attributeList = new AttributeList();
 
-        // Oidc TNG resource servers do not track attributes in manage
-        // Neither do the Oauth Client Credentials clients
-        if ($command instanceof SaveOidcngResourceServerEntityCommand
-            || $command instanceof SaveOauthClientCredentialClientCommand
-        ) {
+        if ($this->isNotTrackedInManage($command)) {
             return $attributeList;
         }
 
@@ -174,7 +170,9 @@ class EntityMergeService
                         $entityMergeAttribute->getUrn(),
                         '',
                         'idp',
-                        $commandAttribute->getMotivation()
+                        $commandAttribute->getMotivation(),
+                        '',
+                        false
                     )
                 );
             }
@@ -250,5 +248,19 @@ class EntityMergeService
             }
         }
         return $urls;
+    }
+
+    /**
+     * @param SaveEntityCommandInterface $command
+     * @return bool
+     */
+    private function isNotTrackedInManage(SaveEntityCommandInterface $command): bool
+    {
+        // Oidc TNG resource servers do not track attributes in manage
+        // Neither do the Oauth Client Credentials clients
+
+        return
+            $command instanceof SaveOidcngResourceServerEntityCommand ||
+            $command instanceof SaveOauthClientCredentialClientCommand;
     }
 }
