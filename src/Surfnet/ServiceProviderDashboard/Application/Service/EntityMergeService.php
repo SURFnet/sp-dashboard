@@ -212,9 +212,9 @@ class EntityMergeService
 
     private function buildCoinFromCommand(SaveEntityCommandInterface $command): Coin
     {
-        $typesOfService = new TypeOfServiceCollection();
+        $typeOfService = new TypeOfServiceCollection();
         foreach ($command->getTypeOfService() as $typeOfService) {
-            $typesOfService->add($typeOfService);
+            $typeOfService->add($typeOfService);
         }
 
         return new Coin(
@@ -223,7 +223,7 @@ class EntityMergeService
             null,
             null,
             $command->getApplicationUrl(),
-            $typesOfService,
+            $typeOfService,
             $command->getEulaUrl(),
             null
         );
