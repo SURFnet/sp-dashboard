@@ -29,8 +29,10 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\EntityConnectionExport;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
-use function array_key_exists;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ServiceConnectionService
 {
     public function __construct(
@@ -114,9 +116,9 @@ class ServiceConnectionService
             $metadata = $this->assertValidMetadata($entity);
             $team = $this->getTeam($metadata);
             $service = $this->serviceService->getServiceByTeamName($team);
-            $supportContact = $this->getContactData($entity, 'support');
-            $technicalContact = $this->getContactData($entity, 'technical');
-            $adminContact = $this->getContactData($entity, 'admin');
+            $supportContact = $this->composeContactString($entity, 'support');
+            $technicalContact = $this->composeContactString($entity, 'technical');
+            $adminContact = $this->composeContactString($entity, 'admin');
             if ($service === null || !in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
                 // Skipping entities of which we do not know the service (team is not set on any of our Services)
                 continue;
@@ -228,7 +230,7 @@ class ServiceConnectionService
         return $team;
     }
 
-    private function getContactData(ManageEntity $entity, string $type): string
+    private function composeContactString(ManageEntity $entity, string $type): string
     {
         $data = match ($type) {
             'support' => $entity->getMetaData()?->getContacts()?->findSupportContact(),
