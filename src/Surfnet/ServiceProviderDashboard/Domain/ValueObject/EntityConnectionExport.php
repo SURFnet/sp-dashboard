@@ -34,5 +34,8 @@ class EntityConnectionExport
 
     public string $adminContact;
 
+    /**
+     * @var string[]
+     */
     public array $idps;
 }
