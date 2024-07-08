@@ -481,10 +481,10 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     }
 
     /**
-     * @param TypeOfService[] $typesOfService
+     * @param TypeOfService[] $typeOfServices
      */
-    public function setTypeOfService(array $typesOfService): void
+    public function setTypeOfService(array $typeOfServices): void
     {
-        $this->typeOfService = $typesOfService;
+        $this->typeOfService = $typeOfServices;
     }
 }
