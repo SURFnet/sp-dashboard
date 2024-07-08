@@ -65,6 +65,8 @@
       "OrganizationURL:nl": "%5$s Organisation Url Dutch",
       "coin:service_team_id": "%7$s",
       "coin:institution_id": "%8$s",
+      "coin:ss:type_of_service:en": "Research",
+      "coin:ss:type_of_service:nl": "Research",
       "logo:0:url": "%3$s\/images\/logo.png",
       "logo:0:width": 100,
       "logo:0:height": 100,

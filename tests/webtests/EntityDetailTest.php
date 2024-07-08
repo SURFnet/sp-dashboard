@@ -79,9 +79,9 @@ class EntityDetailTest extends WebTestCase
         $this->assertDetailEquals(0, 'Metadata URL', 'https://sp1-entityid.example.com/metadata');
         $this->assertDetailsAscLocationEquals(1, 'ACS location', 'https://sp1-entityid.example.com/acs');
         $this->assertDetailEquals(2, 'Entity ID', 'https://sp1-entityid.example.com');
-        $this->assertDetailEquals(8, 'Name EN', 'SP3 Name English');
-        $this->assertDetailEquals(10, 'First name', 'givenname', true);
-        $this->assertDetailEquals(11, 'Last name', 'surname', false);
+        $this->assertDetailEquals(9, 'Name EN', 'SP3 Name English');
+        $this->assertDetailEquals(11, 'First name', 'givenname');
+        $this->assertDetailEquals(12, 'Last name', 'surname', false);
     }
 
 

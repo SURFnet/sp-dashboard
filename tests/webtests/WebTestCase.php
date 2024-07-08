@@ -26,6 +26,8 @@ use Doctrine\ORM\EntityManager;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
+use Facebook\WebDriver\WebDriverKeyboard;
+use Facebook\WebDriver\WebDriverKeys;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;

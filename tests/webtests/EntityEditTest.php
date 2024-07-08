@@ -155,6 +155,8 @@ class EntityEditTest extends WebTestCase
         self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_commonNameAttribute_motivation', 'foo');
         self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_organizationAttribute_motivation', 'foo');
         self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_personalCodeAttribute_motivation', 'foo');
+        // Also check a type of service (as they are mandatory)
+        self::findBy('label[for="dashboard_bundle_entity_type_metadata_typeOfService_4"]')->click();
         self::findBy('#dashboard_bundle_entity_type_publishButton')->click();
 
         $pageTitle = self::$pantherClient->refreshCrawler()->filter('h1')->first()->text();
@@ -288,6 +290,7 @@ class EntityEditTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][descriptionEn]' => 'SURF SP2 Description English',
             'dashboard_bundle_entity_type[metadata][applicationUrl]' => '',
             'dashboard_bundle_entity_type[metadata][eulaUrl]' => '',
+            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'Jane',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][lastName]' => 'Doe',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][email]' => 'janedoe@example.com',
@@ -300,7 +303,7 @@ class EntityEditTest extends WebTestCase
             'dashboard_bundle_entity_type[contactInformation][supportContact][lastName]' => 'surname',
             'dashboard_bundle_entity_type[contactInformation][supportContact][email]' => 'foobar@example.com',
             'dashboard_bundle_entity_type[contactInformation][supportContact][phone]' => 'telephonenumber',
-            'dashboard_bundle_entity_type[comments][comments]' => 'I need a new name NL'
+            'dashboard_bundle_entity_type[comments][comments]' => 'I need a new name NL',
         ];
 
         foreach ($attributes as $attribute) {
