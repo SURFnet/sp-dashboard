@@ -59,6 +59,7 @@ class EntityDeleteTest extends WebTestCase
             ->form();
 
         self::$pantherClient->submit($form);
+        self::$pantherClient->wait(2);
         self::assertOnPage('Your entity is deleted');
     }
 
@@ -87,6 +88,7 @@ class EntityDeleteTest extends WebTestCase
             ->form();
 
         self::$pantherClient->submit($form);
+        self::$pantherClient->wait(2);
         self::assertOnPage('Your entity is deleted');
 
     }
@@ -118,6 +120,7 @@ class EntityDeleteTest extends WebTestCase
             ->form();
 
         self::$pantherClient->submit($form);
+        self::$pantherClient->wait(2);
         $this->assertOnPage(
             'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.'
         );
