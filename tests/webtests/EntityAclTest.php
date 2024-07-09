@@ -30,6 +30,7 @@ class EntityAclTest extends WebTestCase
         $this->loadFixtures();
 
         $service = $this->getServiceRepository()->findByName('SURFnet');
+        $serviceIb = $this->getServiceRepository()->findByName('Ibuildings B.V.');
         $this->registerManageEntity(
             'test',
             'saml20_sp',
@@ -48,6 +49,16 @@ class EntityAclTest extends WebTestCase
             'https://sp1-entityid.example.com/metadata',
             $service->getTeamName()
         );
+        // The IB entity that SURF should not be able to accesss
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            'a8e7cffd-0409-45c7-a37a-000000000001',
+            'Ibuildings SP1',
+            'https://sp1-ibuildings-entityid.example.com',
+            'https://sp1-ibuildings-entityid.example.com/metadata',
+            $serviceIb->getTeamName()
+        );
         $this->registerManageEntity(
             'test',
             'saml20_idp',
@@ -56,15 +67,15 @@ class EntityAclTest extends WebTestCase
             'https://engine.dev.openconext.local/authentication/idp/metadata'
         );
 
-        $this->logIn();
-        $this->switchToService('SURFnet');
-
         $this->entityId = 'a8e7cffd-0409-45c7-a37a-000000000000';
         $this->serviceId = $service->getId();
     }
 
     public function test_it_renders_the_form()
     {
+        $this->logIn();
+        $this->switchToService('SURFnet');
+
         $crawler = self::$pantherClient->request('GET', "/entity/acl/{$this->serviceId}/{$this->entityId}");
         $form = $crawler->filter('.page-container')
             ->selectButton('Save')
@@ -75,5 +86,28 @@ class EntityAclTest extends WebTestCase
             $selectAllInput->getValue(),
             'Expect the selectAll field to be set'
         );
+    }
+    public function test_it_not_allowed_on_another_services_acl()
+    {
+        $service = $this->getServiceRepository()->findByName('SURFnet');
+        $serviceIb = $this->getServiceRepository()->findByName('Ibuildings B.V.');
+        // Log in as SURFnet
+        $this->logIn($service);
+
+        // The SURFnet entity can be displayed on the ACL page
+        self::$pantherClient->request('GET', "/entity/acl/{$this->serviceId}/{$this->entityId}");
+        self::assertOnPage('Entity Idp access');
+
+        // The SURFnet entity can be displayed on the other Idps ACL page (for connecting test entities)
+        self::$pantherClient->request('GET', "/entity/idps/{$this->serviceId}/{$this->entityId}");
+        self::assertOnPage('Connect some Idp\'s to your entity');
+
+        // Now go to the page of Ibuildings, which we do not have team membership at
+        self::$pantherClient->request('GET', "/entity/acl/{$serviceIb->getId()}/a8e7cffd-0409-45c7-a37a-000000000001");
+        self::assertOnPage('You are not allowed to view ACLs of another service');
+
+        // The other Idps acl page shares the authz check the `acl` route also has
+        self::$pantherClient->request('GET', "/entity/idps/{$serviceIb->getId()}/a8e7cffd-0409-45c7-a37a-000000000001");
+        self::assertOnPage('You are not allowed to view ACLs of another service');
     }
 }
