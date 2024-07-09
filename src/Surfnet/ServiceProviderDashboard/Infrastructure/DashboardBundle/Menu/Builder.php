@@ -63,7 +63,7 @@ class Builder
                 'routeParameters' => ['serviceId' => $this->authorizationService->getActiveServiceId()],
                 ]
             );
-        } else {
+        } elseif (!$this->authorizationService->isSurfConextRepresentative()) {
             $menu->addChild('global.menu.services', ['route' => 'service_overview']);
         }
         if ($this->authorizationService->isSurfConextRepresentative()) {
