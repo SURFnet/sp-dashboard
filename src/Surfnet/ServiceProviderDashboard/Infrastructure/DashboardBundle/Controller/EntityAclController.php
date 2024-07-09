@@ -27,11 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Command\Entity\UpdateEntityIdps
 use Surfnet\ServiceProviderDashboard\Application\Factory\EntityDetailFactory;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityAclService;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityService;
-use Surfnet\ServiceProviderDashboard\Application\Service\IdpServiceInterface;
-use Surfnet\ServiceProviderDashboard\Application\Service\TestIdpService;
-use Surfnet\ServiceProviderDashboard\Application\Service\TestIdpServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AclEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\IdpEntityType;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Service\AuthorizationService;
@@ -57,6 +53,12 @@ class EntityAclController extends AbstractController
     #[Route(path: '/entity/idps/{serviceId}/{id}', name: 'entity_acl_idps', methods: ['GET', 'POST'])]
     public function idps(Request $request, string $serviceId, string $id): Response
     {
+        $allowed = $this->authorizationService->getAllowedServiceNamesById();
+        if (!array_key_exists($serviceId, $allowed)) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to view ACLs of another service'
+            );
+        }
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
         $selectedIdps = $this->entityAclService->getAllowedIdpsFromEntity($entity);
@@ -89,6 +91,13 @@ class EntityAclController extends AbstractController
     #[Route(path: '/entity/acl/{serviceId}/{id}', name: 'entity_acl', methods: ['GET', 'POST'])]
     public function acl(Request $request, string $serviceId, string $id): Response
     {
+        $allowed = $this->authorizationService->getAllowedServiceNamesById();
+        if (!array_key_exists($serviceId, $allowed)) {
+            throw $this->createAccessDeniedException(
+                'You are not allowed to view ACLs of another service'
+            );
+        }
+
         $service = $this->authorizationService->changeActiveService($serviceId);
         $entity = $this->entityService->getEntityByIdAndTarget($id, Constants::ENVIRONMENT_TEST, $service);
 
