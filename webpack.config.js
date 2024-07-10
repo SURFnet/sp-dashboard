@@ -9,6 +9,7 @@ Encore
     .addStyleEntry('global', './assets/scss/application.scss')
     .cleanupOutputBeforeBuild()
     .autoProvidejQuery()
+    .enableStimulusBridge('./assets/controllers.json')
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
     // Convert sass files.

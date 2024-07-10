@@ -258,7 +258,7 @@ class OidcngEntityType extends AbstractType
                         'data-parsley-mincheck' => 1,
                         'data-parsley-maxcheck' => 3,
                     ],
-                    'expanded' => true,
+                    'autocomplete' => true, // Enables the UX-Autocomplete
                     'multiple' => true,
                     'attr' => [
                         'class' => 'type-of-service',
