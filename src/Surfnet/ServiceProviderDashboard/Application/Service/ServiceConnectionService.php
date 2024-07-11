@@ -119,12 +119,12 @@ class ServiceConnectionService
             $supportContact = $this->composeContactString($entity, 'support');
             $technicalContact = $this->composeContactString($entity, 'technical');
             $adminContact = $this->composeContactString($entity, 'admin');
-            if ($service === null || !in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
-                // Skipping entities of which we do not know the service (team is not set on any of our Services)
+            if (!in_array($entity->getProtocol()->getProtocol(), $allowedProtocols)) {
+                // Skipping entities that are not saml or oidc rp
                 continue;
             }
             if ($entity->getAllowedIdentityProviders()->isAllowAll()) {
-                $serviceName = $service->getOrganizationNameEn();
+                $serviceName = $service?->getOrganizationNameEn() ?: 'Unknown';
                 $list[$entity->getId()] = new EntityConnection(
                     $metadata->getNameEn(),
                     $metadata->getEntityId() ?: '',
@@ -142,7 +142,7 @@ class ServiceConnectionService
             $list[$entity->getId()] = new EntityConnection(
                 $metadata->getNameEn(),
                 $metadata->getEntityId() ?: '',
-                $service->getOrganizationNameEn(),
+                $service?->getOrganizationNameEn() ?: 'Unknown',
                 $testIdpsIndexed,
                 $otherIdpsIndexed,
                 $this->gatherConnectedIdps($entity, $testIdpsIndexed),
