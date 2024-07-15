@@ -85,8 +85,11 @@ class OauthClientCredentialsClientJsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
         $entity = $this->createManageEntity();
-        $data = $generator->generateForNewEntity($entity, 'prodaccepted');
-        $this->assertSame('revisionnote', $data['data']['revisionnote']);
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForNewEntity($entity, 'prodaccepted', $contact);
+        $this->assertMatchesRegularExpression('/Entity Created by user John Doe with email address "jd@example.com"\nVia the SPdashboard on .* \nComment: "revisionnote"/', $data['data']['revisionnote']);
     }
 
     private function createManageEntity()

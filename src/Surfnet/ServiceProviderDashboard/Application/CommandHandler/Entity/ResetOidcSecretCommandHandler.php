@@ -68,7 +68,7 @@ class ResetOidcSecretCommandHandler implements CommandHandler
             $publishCommand->markPublishClientReset();
             $this->commandBus->handle($publishCommand);
         } elseif ($entity->getEnvironment() === Constants::ENVIRONMENT_TEST) {
-            $publishCommand = new PublishEntityTestCommand($entity);
+            $publishCommand = new PublishEntityTestCommand($entity, $command->getApplicant());
             $this->commandBus->handle($publishCommand);
         }
         if (!$entity->isExcludedFromPush()) {

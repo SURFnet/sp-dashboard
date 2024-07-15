@@ -18,6 +18,7 @@
 
 namespace Surfnet\ServiceProviderDashboard\Domain\Repository;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
 interface PublishEntityRepository
@@ -26,7 +27,12 @@ interface PublishEntityRepository
      * Publishes the Entity to a Service registry (like Manage, ..) This action might also result in the
      * sending of a mail message to a service desk who in turn can publish the entity in the registry.
      */
-    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = ''): mixed;
+    public function publish(
+        ManageEntity $entity,
+        ?ManageEntity $pristineEntity,
+        Contact $contact,
+        string $part = '',
+    ): mixed;
 
     /**
      * Push the metadata from Manage to Engineblock

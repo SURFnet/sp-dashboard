@@ -19,6 +19,8 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Attribute;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Facebook\WebDriver\WebDriverBy;
 
@@ -164,7 +166,6 @@ class EntityCreateSamlTest extends WebTestCase
      */
     public function test_it_can_publish_the_form()
     {
-        $this->markTestSkipped('TODO: add test coverage for IdPs connection page');
         $this->testPublicationClient->registerPublishResponse(
             'https://entity-id.url',
             '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
@@ -188,14 +189,34 @@ class EntityCreateSamlTest extends WebTestCase
         $formData = $this->buildValidFormData();
         self::$pantherClient->submit($form, $formData);
 
-        $pageTitle = self::$pantherClient->getCrawler()->filter('h1')->first()->text();
+        // Now register the entity in the query client (it is not actuallly stored in Manage, so we need to provide
+        // test data
+        $this->registerManageEntity(
+            Constants::ENVIRONMENT_TEST,
+            'saml20_sp',
+            'f1e394b2-08b1-4882-8b32-43876c15c743',
+            'The C Team',
+            'https://entity-id.test',
+            '',
+            WebTestFixtures::TEAMNAME_IBUILDINGS,
+        );
+        $crawler = self::$pantherClient->reload();
+        $this->assertOnPage('Connect some Idp\'s to your entity');
+        // Continue without selecting test IdPs
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+        $crawler = self::$pantherClient->submit(
+            $form,
+            ['idp_entity[institutionEntities][]' => '0c3febd2-3f67-4b8a-b90d-ce56a3b0abb4']
+        );
+
+        $pageTitle = $crawler->filter('h1')->first()->text();
         self::assertEquals('Successfully published the entity to test', $pageTitle);
     }
 
     public function test_it_can_publish_multiple_acs_locations()
     {
-        $this->markTestSkipped('TODO: add test coverage for IdPs connection page');
-
         $this->testPublicationClient->registerPublishResponse(
             'https://entity-id.url',
             '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}'
@@ -231,9 +252,26 @@ class EntityCreateSamlTest extends WebTestCase
         $formData = $this->buildValidFormData();
         self::$pantherClient->submit($form, $formData);
 
-        self::$pantherClient->followRedirects();
+        // Now register the entity in the query client (it is not actuallly stored in Manage, so we need to provide
+        // test data
+        $this->registerManageEntity(
+            Constants::ENVIRONMENT_TEST,
+            'saml20_sp',
+            'f1e394b2-08b1-4882-8b32-43876c15c743',
+            'The C Team',
+            'https://entity-id.test',
+            '',
+            WebTestFixtures::TEAMNAME_IBUILDINGS,
+        );
+        $crawler = self::$pantherClient->reload();
+        $this->assertOnPage('Connect some Idp\'s to your entity');
+        // Continue without selecting test IdPs
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+        $crawler = self::$pantherClient->submit($form);
 
-        $pageTitle = self::$pantherClient->getCrawler()->filter('h1')->first()->text();
+        $pageTitle = $crawler->filter('h1')->first()->text();
         self::assertEquals('Successfully published the entity to test', $pageTitle);
     }
 
@@ -379,6 +417,7 @@ class EntityCreateSamlTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][nameNl]' => 'The A Team',
             'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://metadata-url.net',
             'dashboard_bundle_entity_type[metadata][entityId]' => 'https://entity-id.url',
+            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[metadata][certificate]' => file_get_contents(
                 __DIR__ . '/fixtures/publish/valid.cer'
             ),

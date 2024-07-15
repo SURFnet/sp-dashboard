@@ -20,6 +20,8 @@ namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\WebDriverBy;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 
 class EntityCreateOidcngTest extends WebTestCase
 {
@@ -96,7 +98,6 @@ class EntityCreateOidcngTest extends WebTestCase
 
     public function test_it_can_publish_the_form()
     {
-        $this->markTestSkipped('TODO: add test coverage for IdPs connection page');
         $this->testPublicationClient->registerPublishResponse('https://entity-id.test', '{"id":"f1e394b2-08b1-4882-8b32-43876c15c743"}');
         $formData = $this->buildValidFormData();
         $crawler = self::$pantherClient->request('GET', "/entity/create/2/oidcng/test");
@@ -113,8 +114,26 @@ class EntityCreateOidcngTest extends WebTestCase
         $this->fillFormField($form, '#dashboard_bundle_entity_type_metadata_redirectUrls .collection-entry input', 'https://redirect-url.example.com');
         $this->click($form, '.add_collection_entry');
         $this->click($form, '#dashboard_bundle_entity_type_publishButton');
+        // Now register the entity in the query client (it is not actuallly stored in Manage, so we need to provide
+        // test data
+        $this->registerManageEntity(
+            Constants::ENVIRONMENT_TEST,
+            'oidc10_rp',
+            'f1e394b2-08b1-4882-8b32-43876c15c743',
+            'The C Team',
+            'https://entity-id.test',
+            '',
+            WebTestFixtures::TEAMNAME_IBUILDINGS,
+        );
+        $crawler = self::$pantherClient->reload();
+        $this->assertOnPage('Connect some Idp\'s to your entity');
 
-        $crawler = self::$pantherClient->refreshCrawler();
+        // Continue without selecting test IdPs
+        $form = $crawler
+            ->selectButton('Save')
+            ->form();
+        $crawler = self::$pantherClient->submit($form);
+
         $label = $crawler->filter('.monospaced label')->first()->text();
         $span = $crawler->filter('.monospaced pre')->first()->text();
         // A secret should be displayed
@@ -170,6 +189,7 @@ class EntityCreateOidcngTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][isPublicClient]' => true,
             'dashboard_bundle_entity_type[metadata][grants]' => ['authorization_code'],
             'dashboard_bundle_entity_type[metadata][accessTokenValidity]' => '3600',
+            'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][requested]' => true,
             'dashboard_bundle_entity_type[attributes][displayNameAttribute][motivation]' => 'We really need it!',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',

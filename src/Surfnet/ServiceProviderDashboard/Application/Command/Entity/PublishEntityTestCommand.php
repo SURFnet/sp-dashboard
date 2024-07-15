@@ -28,11 +28,17 @@ class PublishEntityTestCommand implements Command
     public function __construct(
         #[Assert\Type(ManageEntity::class)]
         private readonly ManageEntity $manageEntity,
+        private readonly Contact $applicant,
     ) {
     }
 
     public function getManageEntity(): ManageEntity
     {
         return $this->manageEntity;
+    }
+
+    public function getApplicant(): Contact
+    {
+        return $this->applicant;
     }
 }

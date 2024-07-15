@@ -108,14 +108,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
         $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
 
-        $this->publishEntityClient
-            ->shouldReceive('publish')
-            ->once()
-            ->with($manageEntity, $manageEntity)
-            ->andReturn([
-                'id' => '123',
-            ]);
-
         $manageEntity
             ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('https://app.example.com/');
@@ -147,6 +139,15 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity, $manageEntity, $applicant)
+            ->andReturn([
+                'id' => '123',
+            ]);
+
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $this->commandHandler->handle($command);
     }
@@ -161,14 +162,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getMetaData->getNameEn')
             ->andReturn('Test Entity Name');
-
-        $this->publishEntityClient
-            ->shouldReceive('publish')
-            ->once()
-            ->with($manageEntity, $manageEntity)
-            ->andReturn([
-                'id' => '123',
-            ]);
 
         $manageEntity
             ->shouldReceive('getMetaData->getEntityId')
@@ -204,6 +197,13 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity, $manageEntity, $applicant)
+            ->andReturn([
+                'id' => '123',
+            ]);
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $this->commandHandler->handle($command);
     }
@@ -269,15 +269,6 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('Test Entity Name');
         $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
         $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
-
-        $this->publishEntityClient
-            ->shouldReceive('publish')
-            ->once()
-            ->with($manageEntity, $manageEntity)
-            ->andReturn([
-                'id' => '123',
-            ]);
-
         $manageEntity
             ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('https://app.example.com/');
@@ -309,6 +300,13 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $this->entityService->shouldReceive('getPristineManageEntityById')->andReturn($manageEntity);
 
         $applicant = new Contact('john:doe', 'john@example.com', 'John Doe');
+        $this->publishEntityClient
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity, $manageEntity, $applicant)
+            ->andReturn([
+                'id' => '123',
+            ]);
         $command = new PublishEntityProductionCommand($manageEntity, $applicant);
         $command->markPublishClientReset();
         $this->commandHandler->handle($command);

@@ -28,7 +28,11 @@ interface GeneratorInterface
     /**
      * Convert a new, unpublished entity to json-serializable array.
      */
-    public function generateForNewEntity(ManageEntity $entity, string $workflowState): array;
+    public function generateForNewEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        Contact $contact,
+    ): array;
 
     /**
      * Convert entity to an array for the manage merge-write API call.

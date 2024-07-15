@@ -2872,11 +2872,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/Ticket.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$manageId of class Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\ValueObject\\\\Ticket constructor expects string, string\\|null given\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/Ticket.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#3 \\$entityName of class Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\ValueObject\\\\Ticket constructor expects string, string\\|null given\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Domain/ValueObject/Ticket.php',

@@ -57,8 +57,8 @@ class EntityResetSecretController extends AbstractController
         }
         // Verify the Entity Service Id is one of the logged in users services
         $this->authorizationService->assertServiceIdAllowed($entityServiceId);
-
-        $resetOidcSecretCommand = new ResetOidcSecretCommand($manageEntity);
+        $applicant = $this->authorizationService->getContact();
+        $resetOidcSecretCommand = new ResetOidcSecretCommand($manageEntity, $applicant);
         try {
             $this->commandBus->handle($resetOidcSecretCommand);
         } catch (Exception) {

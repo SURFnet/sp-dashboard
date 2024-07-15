@@ -105,7 +105,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         if ($this->failIssueCreation) {
             throw new JiraException('Unable to write the Jira issue (failure was requested by calling shouldFailCreateIssue)');
         }
-        $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), Issue::STATUS_OPEN);
+        $issue = new Issue($ticket->getManageId() ?: "manage-id", $ticket->getIssueType(), Issue::STATUS_OPEN);
         $this->data[$ticket->getManageId()] = $issue;
         $this->storeData();
         return $issue;
@@ -117,7 +117,7 @@ class DevelopmentIssueRepository implements TicketServiceInterface
         if ($this->failIssueCreation) {
             throw new JiraException('Unable to write the Jira issue (failure was requested by calling shouldFailCreateIssue)');
         }
-        $issue = new Issue($ticket->getManageId(), $ticket->getIssueType(), Issue::STATUS_OPEN);
+        $issue = new Issue($ticket->getManageId() ?: "manage-id", $ticket->getIssueType(), Issue::STATUS_OPEN);
         $this->data[$ticket->getManageId()] = $issue;
         $this->storeData();
         return $issue;
