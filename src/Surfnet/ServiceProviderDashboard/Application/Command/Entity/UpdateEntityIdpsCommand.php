@@ -21,6 +21,7 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -45,6 +46,7 @@ class UpdateEntityIdpsCommand implements Command
             new Assert\Type(type: IdentityProvider::class),
         ])]
         public array $institutionEntities,
+        public readonly Contact $applicant,
     ) {
     }
 }

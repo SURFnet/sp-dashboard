@@ -21,6 +21,7 @@ namespace Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client;
 use Psr\Log\LoggerInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\HttpException\HttpException;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -44,8 +45,12 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
      *
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
-    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $updatedPart = ''): mixed
-    {
+    public function publish(
+        ManageEntity $entity,
+        ?ManageEntity $pristineEntity,
+        Contact $contact,
+        string $part = ''
+    ): mixed {
         try {
             if (!$entity->isManageEntity()) {
                 $this->logger->info(sprintf('Creating new entity \'%s\' in manage', $entity->getId()));
@@ -53,7 +58,8 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                     json_encode(
                         $this->generator->generateForNewEntity(
                             $entity,
-                            $this->manageConfig->getPublicationStatus()->getStatus()
+                            $this->manageConfig->getPublicationStatus()->getStatus(),
+                            $contact,
                         )
                     ),
                     '/manage/api/internal/metadata'
@@ -67,7 +73,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                         $entity,
                         $diff,
                         $this->manageConfig->getPublicationStatus()->getStatus(),
-                        $updatedPart
+                        $part
                     )
                 );
 

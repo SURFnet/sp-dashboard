@@ -58,7 +58,7 @@ class UpdateEntityIdpsCommandHandler implements CommandHandler
         $allowedIdps = new AllowedIdentityProviders($idps, $allowedAll);
         $entity->getAllowedIdentityProviders()->merge($allowedIdps);
         try {
-            $this->publishClient->publish($entity, $entity, 'ACL');
+            $this->publishClient->publish($entity, $entity, $command->applicant, 'ACL');
         } catch (Exception $e) {
             $this->logger->error(
                 sprintf(

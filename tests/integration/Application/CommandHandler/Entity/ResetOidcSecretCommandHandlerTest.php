@@ -149,6 +149,6 @@ class ResetOidcSecretCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('isExcludedFromPush')
             ->andReturn($isExcludedFromPush);
 
-        return new ResetOidcSecretCommand($manageEntity);
+        return new ResetOidcSecretCommand($manageEntity, m::mock(Contact::class));
     }
 }

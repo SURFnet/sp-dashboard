@@ -27,6 +27,7 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -80,17 +81,13 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     $entity->getMetaData()->getNameEn()
                 )
             );
-            $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
+            $publishResponse = $this->publishClient->publish(
+                $entity,
+                $pristineEntity,
+                $command->getApplicant(),
+            );
             if (array_key_exists('id', $publishResponse)) {
                 $entity->setId($publishResponse['id']);
-
-                $this->logger->info(
-                    sprintf(
-                        'Updating status of "%s" to published',
-                        $entity->getMetaData()->getNameEn()
-                    )
-                );
-
                 // No need to create a Jira ticket when resetting the client secret
                 if ($command instanceof PublishEntityProductionCommand && !$command->isClientReset()) {
                     $this->ticketService->createJiraTicket(
@@ -101,6 +98,12 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                         $this->descriptionTranslationKey
                     );
                 }
+                $this->logger->info(
+                    sprintf(
+                        'Updating status of "%s" to published',
+                        $entity->getMetaData()->getNameEn()
+                    )
+                );
             } else {
                 $this->logger->error(
                     sprintf(

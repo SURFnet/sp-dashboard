@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
 use Surfnet\ServiceProviderDashboard\Application\ViewObject\Apis\ApiConfig as Config;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -114,7 +115,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForNewEntity')
             ->andReturn(json_decode($json, true));
 
-        $response = $this->client->publish($entity, $entity);
+        $response = $this->client->publish($entity, $entity, m::mock(Contact::class));
         $this->assertEquals('1', $response['id']);
     }
 
@@ -148,7 +149,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForExistingEntity')
             ->andReturn(json_decode($json, true));
 
-        $response = $this->client->publish($entity, $entity);
+        $response = $this->client->publish($entity, $entity, m::mock(Contact::class));
         $this->assertEquals('1', $response['id']);
     }
 
@@ -192,7 +193,7 @@ class PublishEntityClientTest extends MockeryTestCase
             ->shouldReceive('generateForNewEntity')
             ->andReturn(json_decode($json, true));
 
-        $this->client->publish($entity, $entity);
+        $this->client->publish($entity, $entity, m::mock(Contact::class));
     }
 
     public function test_it_can_push_to_engineblock()

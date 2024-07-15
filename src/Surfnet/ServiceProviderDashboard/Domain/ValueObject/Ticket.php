@@ -31,7 +31,7 @@ class Ticket
 
     public function __construct(
         private readonly string $entityId,
-        private readonly string $manageId,
+        private readonly ?string $manageId,
         private readonly string $entityName,
         private readonly string $summaryTranslationKey,
         private readonly string $descriptionTranslationKey,
@@ -95,7 +95,7 @@ class Ticket
         return $this->entityId;
     }
 
-    public function getManageId(): string
+    public function getManageId(): ?string
     {
         return $this->manageId;
     }

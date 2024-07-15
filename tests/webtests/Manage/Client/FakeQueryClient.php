@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\QueryManageRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use function array_key_exists;
+use function json_encode;
 
 class FakeQueryClient implements QueryManageRepository
 {

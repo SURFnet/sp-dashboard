@@ -24,6 +24,8 @@ use Surfnet\ServiceProviderDashboard\Application\CommandHandler\CommandHandler;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
@@ -60,7 +62,11 @@ class PublishEntityTestCommandHandler implements CommandHandler
                 )
             );
 
-            $publishResponse = $this->publishClient->publish($entity, $pristineEntity);
+            $publishResponse = $this->publishClient->publish(
+                $entity,
+                $pristineEntity,
+                $command->getApplicant(),
+            );
             if (array_key_exists('id', $publishResponse)) {
                 if ($this->isNewResourceServer($entity)) {
                     $this->requestStack->getSession()->getFlashBag()->add('wysiwyg', 'entity.list.oidcng_connection.info.html');

@@ -79,7 +79,10 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->spDashboardMetadataGenerator
         );
 
-        $metadata = $generator->generateForNewEntity($this->createManageEntity(), 'testaccepted');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $metadata = $generator->generateForNewEntity($this->createManageEntity(), 'testaccepted', $contact);
         $metadata = $metadata['data'];
 
         $this->assertEquals('saml20-sp', $metadata['type']);
@@ -92,7 +95,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('http://metadata', $metadata['metadataurl']);
         $this->assertEquals('testaccepted', $metadata['state']);
         $this->assertEquals('saml20-sp', $metadata['type']);
-        $this->assertEquals('revisionnote', $metadata['revisionnote']);
+        $this->assertMatchesRegularExpression('/Entity Created by user John Doe with email address "jd@example.com"\nVia the SPdashboard on .* \nComment: "revisionnote"/', $metadata['revisionnote']);
         $this->assertEquals(['arp' => 'arp'], $metadata['arp']);
 
         $fields = $metadata['metaDataFields'];
@@ -155,8 +158,10 @@ class JsonGeneratorTest extends MockeryTestCase
             $this->privacyQuestionsMetadataGenerator,
             $this->spDashboardMetadataGenerator
         );
-
-        $data = $generator->generateForNewEntity($this->createManageEntity(), 'prodaccepted');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForNewEntity($this->createManageEntity(), 'prodaccepted', $contact);
 
         $expected = array (
             'data' =>
@@ -198,10 +203,15 @@ class JsonGeneratorTest extends MockeryTestCase
                             'coin:exclude_from_push' => '0'
                         ),
                     'metadataurl' => 'http://metadata',
-                    'revisionnote' => 'revisionnote',
                 ),
             'type' => 'saml20_sp',
         );
+
+        // Test the revisionNote separately
+        $expectedRevisionNote = '/Entity Created by user John Doe with email address "jd@example.com"\nVia the SPdashboard on .* \nComment: "revisionnote"/';
+        $actualrevisionNote = $data['data']['revisionnote'];
+        unset($data['data']['revisionnote']);
+        $this->assertMatchesRegularExpression($expectedRevisionNote, $actualrevisionNote);
 
         $this->addEmptyAscLocations(1, '', $expected['data']['metaDataFields']);
         $this->assertEquals($expected, $data);
@@ -416,7 +426,10 @@ class JsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('isProduction')
             ->andReturn(false);
 
-        $data = $generator->generateForNewEntity($entity, 'prodaccepted');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForNewEntity($entity, 'prodaccepted', $contact);
 
         $expected = array (
             'data' =>
@@ -456,10 +469,16 @@ class JsonGeneratorTest extends MockeryTestCase
                             'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266'
                         ),
                     'metadataurl' => 'http://metadata',
-                    'revisionnote' => 'revisionnote',
                 ),
             'type' => 'saml20_sp',
         );
+
+        // Test the revisionNote separately
+        $expectedRevisionNote = '/Entity Created by user John Doe with email address "jd@example.com"\nVia the SPdashboard on .* \nComment: "revisionnote"/';
+        $actualrevisionNote = $data['data']['revisionnote'];
+        unset($data['data']['revisionnote']);
+        $this->assertMatchesRegularExpression($expectedRevisionNote, $actualrevisionNote);
+
         $this->addEmptyAscLocations(1, '', $expected['data']['metaDataFields']);
         $this->assertEquals($expected, $data);
     }

@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Parser\OidcngClientIdParser;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ChangeRequestRevisionNote;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\EntityCreationRevisionNote;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -49,13 +50,22 @@ class OidcngJsonGenerator implements GeneratorInterface
     ) {
     }
 
-    public function generateForNewEntity(ManageEntity $entity, string $workflowState): array
-    {
+    public function generateForNewEntity(
+        ManageEntity $entity,
+        string $workflowState,
+        ContactEntity $contact,
+    ) : array {
         // the type for entities is always saml because manage is using saml internally
-        return [
+        $payload = [
             'data' => $this->generateDataForNewEntity($entity, $workflowState),
             'type' => 'oidc10_rp',
         ];
+        $payload['data']['revisionnote'] = (string) new EntityCreationRevisionNote(
+            $entity->getComments(),
+            $contact->getDisplayName(),
+            $contact->getEmailAddress(),
+        );
+        return $payload;
     }
 
     public function generateForExistingEntity(
@@ -77,21 +87,23 @@ class OidcngJsonGenerator implements GeneratorInterface
         ContactEntity $contact,
         JiraTicketNumber $jiraTicketNumber,
     ): array {
+        $revisionNote = (string) new ChangeRequestRevisionNote(
+            $entity->getComments(),
+            $contact->getDisplayName(),
+            $contact->getEmailAddress(),
+            $jiraTicketNumber,
+        );
         $payload = [
             'metaDataId' => $entity->getId(),
             'type' => 'oidc10_rp',
             'pathUpdates' => $this->generateForChangeRequest($differences, $entity),
             'auditData' => [
                 'user' => $contact->getEmailAddress(),
+                'notes' => $revisionNote,
             ],
         ];
 
-        $payload['note'] = (string) new ChangeRequestRevisionNote(
-            $entity->getComments(),
-            $contact->getDisplayName(),
-            $contact->getEmailAddress(),
-            $jiraTicketNumber,
-        );
+        $payload['note'] = $revisionNote;
 
         return $payload;
     }

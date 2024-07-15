@@ -19,6 +19,7 @@
 namespace Application\CommandHandler\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\PublishEntityClient;
 use Surfnet\ServiceProviderDashboard\Infrastructure\Manage\Client\QueryClient;
 use Mockery as m;
@@ -79,13 +80,6 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('info')
             ->times(1);
 
-        $this->client
-            ->shouldReceive('publish')
-            ->once()
-            ->with($manageEntity, $manageEntity)
-            ->andReturn([
-                'id' => '123',
-            ]);
         $manageEntity
             ->shouldReceive('getAllowedIdentityProviders->getAllowedIdentityProviders')
             ->andReturn([]);
@@ -109,7 +103,14 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
         $this->entityService
             ->shouldReceive('getPristineManageEntityById')
             ->andReturn($manageEntity);
-        $command = new PublishEntityTestCommand($manageEntity);
+        $command = new PublishEntityTestCommand($manageEntity, m::mock(Contact::class));
+        $this->client
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity, $manageEntity, $command->getApplicant())
+            ->andReturn([
+                'id' => '123',
+            ]);
         $this->commandHandler->handle($command);
     }
 
@@ -147,12 +148,6 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('error')
             ->times(1);
 
-        $this->client
-            ->shouldReceive('publish')
-            ->once()
-            ->with($manageEntity, $manageEntity)
-            ->andThrow(PublishMetadataException::class);
-
         $this->requestStack
             ->shouldReceive('getSession->getFlashBag->add')
             ->with('error', 'entity.edit.error.publish');
@@ -161,7 +156,14 @@ class PublishEntityTestCommandHandlerTest extends MockeryTestCase
             ->shouldReceive('getPristineManageEntityById')
             ->andReturn($manageEntity);
 
-        $command = new PublishEntityTestCommand($manageEntity);
+        $command = new PublishEntityTestCommand($manageEntity, m::mock(Contact::class));
+
+        $this->client
+            ->shouldReceive('publish')
+            ->once()
+            ->with($manageEntity, $manageEntity, $command->getApplicant())
+            ->andThrow(PublishMetadataException::class);
+
         $this->commandHandler->handle($command);
     }
 }

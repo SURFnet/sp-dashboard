@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Application\Dto\MetadataConversionDto;
 use Surfnet\ServiceProviderDashboard\Application\Exception\JsonGeneratorStrategyNotFoundException;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\GeneratorInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGeneratorStrategy;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 
@@ -72,11 +73,11 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
         $entity = m::mock(ManageEntity::class);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
-        $result = $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+        $result = $this->strategy->generateForNewEntity($entity, 'prodaccepted', m::mock(Contact::class));
         $this->assertIsArray($result);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
-        $result = $this->strategy->generateForNewEntity($entity, 'prodaccepted');
+        $result = $this->strategy->generateForNewEntity($entity, 'prodaccepted', m::mock(Contact::class));
         $this->assertIsArray($result);
     }
 

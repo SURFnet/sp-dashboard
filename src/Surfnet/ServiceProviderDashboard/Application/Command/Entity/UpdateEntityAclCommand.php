@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Application\Command\Entity;
 
 use Surfnet\ServiceProviderDashboard\Application\Command\Command;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
@@ -37,6 +38,7 @@ class UpdateEntityAclCommand implements Command
         ])]
         private array $selected,
         private bool $selectAll,
+        private readonly Contact $applicant,
     ) {
     }
 
@@ -72,5 +74,10 @@ class UpdateEntityAclCommand implements Command
     public function setSelectAll($selectAll): void
     {
         $this->selectAll = (bool)$selectAll;
+    }
+
+    public function getApplicant(): Contact
+    {
+        return $this->applicant;
     }
 }

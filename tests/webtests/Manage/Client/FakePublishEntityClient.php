@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests\Manage\Client;
 
 use RuntimeException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository as PublishEntityRepositoryInterface;
 
@@ -45,8 +46,12 @@ class FakePublishEntityClient implements PublishEntityRepositoryInterface
         $this->pushOk = false;
     }
 
-    public function publish(ManageEntity $entity, ?ManageEntity $pristineEntity, string $part = ''): mixed
-    {
+    public function publish(
+        ManageEntity $entity,
+        ?ManageEntity $pristineEntity,
+        Contact $contact,
+        string $part = ''
+    ): mixed {
         $entityId = $entity->getMetaData()->getEntityId();
         $publishResponses = $this->read();
         if (!array_key_exists($entityId, $publishResponses)) {

@@ -151,16 +151,15 @@ trait EntityControllerTrait
         ?ManageEntity $entity,
         bool $isEntityChangeRequest,
     ): PublishEntityTestCommand|EntityChangeRequestCommand|PublishEntityProductionCommand {
+        $applicant = $this->authorizationService->getContact();
         switch (true) {
             case $entity->getEnvironment() === Constants::ENVIRONMENT_TEST:
-                $publishEntityCommand = new PublishEntityTestCommand($entity);
+                $publishEntityCommand = new PublishEntityTestCommand($entity, $applicant);
                 break;
             case $isEntityChangeRequest:
-                $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new EntityChangeRequestCommand($entity, $applicant);
                 break;
             case $entity->getEnvironment() === Constants::ENVIRONMENT_PRODUCTION:
-                $applicant = $this->authorizationService->getContact();
                 $publishEntityCommand = new PublishEntityProductionCommand($entity, $applicant);
                 break;
             default:

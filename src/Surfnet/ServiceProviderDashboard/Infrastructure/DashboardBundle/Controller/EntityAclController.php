@@ -65,6 +65,7 @@ class EntityAclController extends AbstractController
             $entity,
             $selectedIdps,
             $selectedIdps,
+            $this->authorizationService->getContact()
         );
 
         $form = $this->createForm(IdpEntityType::class, $command);
@@ -97,7 +98,8 @@ class EntityAclController extends AbstractController
         $command = new UpdateEntityAclCommand(
             $entity,
             $selectedIdps,
-            $entity->getAllowedIdentityProviders()->isAllowAll()
+            $entity->getAllowedIdentityProviders()->isAllowAll(),
+            $this->authorizationService->getContact(),
         );
         $form = $this->createForm(AclEntityType::class, $command);
 

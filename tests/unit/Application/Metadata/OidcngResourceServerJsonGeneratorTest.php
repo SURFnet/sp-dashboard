@@ -73,8 +73,16 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
             $this->privacyQuestionsMetadataGenerator,
             $this->spDashboardMetadataGenerator
         );
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForNewEntity($this->createManageEntity(), 'testaccepted', $contact);
+        // Test the revisionNote separately
+        $expectedRevisionNote = '/Entity Created by user John Doe with email address "jd@example.com"\nVia the SPdashboard on .* \nComment: "revisionnote"/';
+        $actualrevisionNote = $data['data']['revisionnote'];
+        unset($data['data']['revisionnote']);
+        $this->assertMatchesRegularExpression($expectedRevisionNote, $actualrevisionNote);
 
-        $data = $generator->generateForNewEntity($this->createManageEntity(), 'testaccepted');
         $this->assertEquals(
             [
                 'data' => [
@@ -82,7 +90,6 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                     'state' => 'testaccepted',
                     'entityid' => 'entityid',
                     'active' => true,
-                    'revisionnote' => 'revisionnote',
                     'metaDataFields' => [
                         'description:en' => 'description en',
                         'description:nl' => 'description nl',
