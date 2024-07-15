@@ -251,6 +251,9 @@ class SamlEntityType extends AbstractType
                                 'data-parsley-maxcheck' => 3,
                             ],
                             'autocomplete' => true, // Enables the UX-Autocomplete
+                            'tom_select_options' => [
+                                'maxItems' => 3
+                            ],
                             'multiple' => true,
                             'attr' => [
                                 'class' => 'type-of-service',
