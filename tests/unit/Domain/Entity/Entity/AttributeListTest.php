@@ -55,42 +55,65 @@ class AttributeListTest extends TestCase
         yield [
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true)
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', false)
                 ]
             ),
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', false),
                 ]
             ),
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', false),
                 ]
             ),
         ];
         yield [
             $this->attributeList(
                 [
-                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true),
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', false)
                 ]
             ),
             $this->attributeList(
                 [
-                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn1', '*', 'idp', 'super motivation', 'release_as', true),
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'nameid', false),
+                    $this->attr('urn1', '*', 'idp', 'motivation', '', true),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', false)
                 ]
             ),
             $this->attributeList(
                 [
-                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', true),
-                    $this->attr('urn1', '*', 'idp', 'super motivation', 'release_as', true),
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'nameid', false),
+                    $this->attr('urn1', '*', 'idp', 'motivation', '', true),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', false)
+                ]
+            ),
+        ];
+        yield [
+            $this->attributeList(
+                [
+                    $this->attr('urn0', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn1', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', false),
+                ]
+            ),
+            $this->attributeList(
+                [
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn1', '*', 'idp', 'super motivation', 'release_as', false),
+                ]
+            ),
+            $this->attributeList(
+                [
+                    $this->attr('urn2', '*', 'idp', 'motivation', 'release_as', false),
+                    $this->attr('urn1', '*', 'idp', 'super motivation', 'release_as', false),
                 ]
             ),
         ];
