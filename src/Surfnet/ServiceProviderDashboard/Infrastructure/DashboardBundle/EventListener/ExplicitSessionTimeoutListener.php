@@ -21,8 +21,8 @@ declare(strict_types = 1);
 namespace Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\EventListener;
 
 use Psr\Log\LoggerInterface;
-use Surfnet\StepupSelfService\SelfServiceBundle\Security\Authentication\AuthenticatedSessionStateHandler;
-use Surfnet\StepupSelfService\SelfServiceBundle\Security\Authentication\Session\SessionLifetimeGuard;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\AuthenticatedSessionStateHandler;
+use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Session\SessionLifetimeGuard;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,8 +38,8 @@ final readonly class ExplicitSessionTimeoutListener implements EventSubscriberIn
     public function __construct(
         private TokenStorageInterface            $tokenStorage,
         private AuthenticatedSessionStateHandler $authenticatedSession,
-        #[Autowire(service: 'self_service.security.authentication.session.session_lifetime_guard')]
-        private SessionLifetimeGuard             $sessionLifetimeGuard,
+        #[Autowire(service: SessionLifetimeGuard::class)]
+        private SessionLifetimeGuard           $sessionLifetimeGuard,
         private RouterInterface                  $router,
         private LoggerInterface                  $logger,
         private EventDispatcherInterface         $eventDispatcher,

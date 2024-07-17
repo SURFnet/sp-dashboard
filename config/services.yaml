@@ -28,3 +28,5 @@ services:
             - '@twig'
             - []
             - '@logger'
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Authentication\Session\SessionLifetimeGuard:
