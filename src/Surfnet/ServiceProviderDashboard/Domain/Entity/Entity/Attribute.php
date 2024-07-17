@@ -30,13 +30,13 @@ class Attribute
         $source = $attributeData['source'] ?? '';
         $motivation = $attributeData['motivation'] ?? '';
         $releaseAs = $attributeData['release_as'] ?? '';
-        $useAsNameId = $attributeData['use_as_name_id'] ?? false;
+        $useAsNameId = $attributeData['use_as_nameid'] ?? false;
 
         Assert::stringNotEmpty($attributeName, 'The attribute name must be non-empty string');
         Assert::stringNotEmpty($value, 'The attribute value must be non-empty string');
         Assert::string($source, 'The attribute source must be string');
         Assert::string($releaseAs, 'The attribute release_as must be string');
-        Assert::boolean($useAsNameId, 'The attribute use_as_name_id must be boolean');
+        Assert::boolean($useAsNameId, 'The attribute use_as_nameid must be boolean');
         Assert::string($motivation, 'The attribute motivation must be string');
 
         return new self(
