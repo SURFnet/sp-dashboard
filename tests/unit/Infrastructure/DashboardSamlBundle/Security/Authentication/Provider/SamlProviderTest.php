@@ -23,7 +23,11 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use SAML2\Assertion;
+use Surfnet\SamlBundle\Exception\RuntimeException;
 use Surfnet\SamlBundle\SAML2\Attribute\AttributeDictionary;
+use Surfnet\SamlBundle\SAML2\Response\AssertionAdapter;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ContactRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Authentication\Provider\SamlProvider;
@@ -85,6 +89,77 @@ class SamlProviderTest extends TestCase
         $this->buildProvider(",345345,true,false,foo,bar");
     }
 
+    public function test_authorization_user()
+    {
+        $provider = $this->buildProvider("'urn:collab:foo:team.foobar.com'", 'eduPersonEntitlement');
+
+        $assertion = m::mock(Assertion::class);
+        $adapter = m::mock(AssertionAdapter::class);
+        $this->attributeDictionary->shouldReceive('translate')->andReturn($adapter);
+        $adapter->shouldReceive('getNameID')->andReturn('does-not-exist-yet');
+        $adapter->shouldReceive('getAttributeValue')->with('mail')->andReturn(['john@example.com']);
+        $adapter->shouldReceive('getAttributeValue')->with('commonName')->andReturn(['John Doe']);
+        $adapter->shouldReceive('getAttributeValue')->with('isMemberOf')->andReturn(['team-1', 'team-2']);
+        $this->contactRepo->shouldReceive('findByNameId')->with('does-not-exist-yet')->andReturnNull();
+        $service1 = m::mock(Service::class);
+        $service2 = m::mock(Service::class);
+        $this->serviceRepo->shouldReceive('findByTeamNames')->with(['team-1', 'team-2'])->andReturn([$service1, $service2]);
+        $this->contactRepo->shouldReceive('save');
+        $user = $provider->getUser($assertion);
+        self::assertEquals($user->getRoles(), ['ROLE_USER']);
+    }
+
+    public function test_authorization_surfconext_representative()
+    {
+        $provider = $this->buildProvider("'urn:collab:foo:team.foobar.com'", 'urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijk');
+
+        $assertion = m::mock(Assertion::class);
+        $adapter = m::mock(AssertionAdapter::class);
+        $this->attributeDictionary->shouldReceive('translate')->andReturn($adapter);
+        $adapter->shouldReceive('getNameID')->andReturn('does-not-exist-yet');
+        $adapter->shouldReceive('getAttributeValue')->with('mail')->andReturn(['john@example.com']);
+        $adapter->shouldReceive('getAttributeValue')->with('commonName')->andReturn(['John Doe']);
+        $adapter->shouldReceive('getAttributeValue')->with('isMemberOf')->andReturn([]);
+        $adapter->shouldReceive('getAttributeValue')->with('urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijke', [])->andReturn(
+            [
+                'urn:mace:surfnet.nl:surfnet.nl:sab:organizationCode:ibuildings',
+                'urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijk',
+            ]
+        );
+        $this->contactRepo->shouldReceive('findByNameId')->with('does-not-exist-yet')->andReturnNull();
+        $this->serviceRepo->shouldReceive('findByTeamNames')->andReturnNull();
+        $this->contactRepo->shouldReceive('save');
+        $user = $provider->getUser($assertion);
+        self::assertEquals($user->getRoles(), ['ROLE_SURFCONEXT_REPRESENTATIVE']);
+    }
+
+    public function test_authorization_surfconext_representative_and_user()
+    {
+        $provider = $this->buildProvider("'urn:collab:foo:team.foobar.com'", 'urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijk');
+
+        $assertion = m::mock(Assertion::class);
+        $adapter = m::mock(AssertionAdapter::class);
+        $this->attributeDictionary->shouldReceive('translate')->andReturn($adapter);
+        $adapter->shouldReceive('getNameID')->andReturn('does-not-exist-yet');
+        $adapter->shouldReceive('getAttributeValue')->with('mail')->andReturn(['john@example.com']);
+        $adapter->shouldReceive('getAttributeValue')->with('commonName')->andReturn(['John Doe']);
+        $adapter->shouldReceive('getAttributeValue')->with('isMemberOf')->andReturn(['team-1', 'team-2']);
+        $adapter->shouldReceive('getAttributeValue')->with('urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijke', [])->andReturn(
+            [
+                'urn:mace:surfnet.nl:surfnet.nl:sab:organizationCode:ibuildings',
+                'urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijk',
+            ]
+        );
+        $service1 = m::mock(Service::class);
+        $service2 = m::mock(Service::class);
+        $this->serviceRepo->shouldReceive('findByTeamNames')->with(['team-1', 'team-2'])->andReturn([$service1, $service2]);
+        $this->contactRepo->shouldReceive('findByNameId')->with('does-not-exist-yet')->andReturnNull();
+        $this->serviceRepo->shouldReceive('findByTeamNames')->andReturnNull();
+        $this->contactRepo->shouldReceive('save');
+        $user = $provider->getUser($assertion);
+        self::assertEquals($user->getRoles(), ['ROLE_SURFCONEXT_REPRESENTATIVE', 'ROLE_USER']);
+    }
+
     private function buildProvider(string $administratorTeams, $surfConextResponsible = "defualt")
     {
         return new SamlProvider(
@@ -92,7 +167,7 @@ class SamlProviderTest extends TestCase
             $this->serviceRepo,
             $this->attributeDictionary,
             $this->logger,
-            'surf-autorisaties',
+            'urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconext-verantwoordelijke',
             $surfConextResponsible,
             $administratorTeams,
         );
