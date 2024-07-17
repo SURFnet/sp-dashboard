@@ -126,22 +126,31 @@ class SamlProvider implements SamlProviderInterface, UserProviderInterface
             $authorizations = null;
         }
         // Default to the ROLE_USER role for services.
-        $role = 'ROLE_USER';
         if ($authorizations && $authorizations->isSurfConextRepresentative()) {
-            $role = 'ROLE_SURFCONEXT_REPRESENTATIVE';
             $contact->setInstitutionId($authorizations->getOrganizationCode());
-            $contact->assignRole($role);
+            $contact->assignRole('ROLE_SURFCONEXT_REPRESENTATIVE');
         }
 
         if (array_intersect($this->administratorTeams, $teamNames) !== []) {
-            $role = 'ROLE_ADMINISTRATOR';
-            $contact->assignRole($role);
+            $contact->assignRole('ROLE_ADMINISTRATOR');
+            return;
         }
 
-        if ($role === 'ROLE_USER') {
-            $this->assignServicesToContact($contact, $teamNames);
+        if ($teamNames !== []) {
+            try {
+                $this->assignServicesToContact($contact, $teamNames);
+            } catch (UnknownServiceException $e) {
+                // If the isMemberOf attribute did not have any teams that grant the user access to SPD,
+                // but the user is a surfconext representative. Only grant ROLE_SURFCONEXT_REPRESENTATIVE
+                if ($contact->isSurfConextRepresentative()) {
+                    return;
+                }
+                // Otherwise, the user is neither USER or ROLE_SURFCONEXT_REPRESENTATIVE, throw the original exception
+                // SPD will display a user friendly 405 error message.
+                throw $e;
+            }
             $this->contacts->save($contact);
-            $contact->assignRole($role);
+            $contact->assignRole('ROLE_USER');
         }
     }
 
