@@ -91,25 +91,25 @@ class ArpGeneratorTest extends MockeryTestCase
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['value']);
         $this->assertEquals('456', $metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['release_as']);
-        $this->assertTrue($metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['use_as_name_id']);
+        $this->assertTrue($metadata['attributes']['urn:mace:dir:attribute-def:displayName'][0]['use_as_nameid']);
 
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:cn']);
         $this->assertEquals('voot', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['value']);
         $this->assertEquals('123', $metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['release_as']);
-        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['use_as_name_id']);
+        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:cn'][0]['use_as_nameid']);
 
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:givenName']);
         $this->assertEquals('idp', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['source']);
         $this->assertEquals('*', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['value']);
         $this->assertEquals('789', $metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['release_as']);
-        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['use_as_name_id']);
+        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:givenName'][0]['use_as_nameid']);
 
         $this->assertNotEmpty($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement']);
         $this->assertEquals('sab', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['source']);
         $this->assertEquals('/^foobar(.*)$/i', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['value']);
         $this->assertEquals('123', $metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['release_as']);
-        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['use_as_name_id']);
+        $this->assertFalse($metadata['attributes']['urn:mace:dir:attribute-def:eduPersonEntitlement'][0]['use_as_nameid']);
 
     }
 
