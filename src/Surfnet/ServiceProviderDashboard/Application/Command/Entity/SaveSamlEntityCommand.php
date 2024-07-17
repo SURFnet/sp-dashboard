@@ -80,6 +80,8 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     #[SpDashboardAssert\ValidEntityId()]
     #[SpDashboardAssert\UniqueEntityId()]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
+
     private string $entityId;
 
     #[SpDashboardAssert\ValidSSLCertificate()]
@@ -88,12 +90,15 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private ?string $logoUrl = null;
 
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $nameNl = null;
 
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $nameEn = null;
 
     #[Assert\NotBlank]
@@ -105,6 +110,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     private ?string $descriptionEn = null;
 
     #[Assert\Url]
+    #[Assert\Length(max: 300)]
     private ?string $applicationUrl = null;
 
     /** @var TypeOfService[] */
@@ -121,6 +127,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     private array $typeOfService = [];
 
     #[Assert\Url]
+    #[Assert\Length(max: 300)]
     private ?string $eulaUrl = null;
 
     
@@ -143,6 +150,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     )]
     private array $attributes = [];
 
+    #[Assert\Length(max: 300)]
     private ?string $comments = null;
 
     #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]

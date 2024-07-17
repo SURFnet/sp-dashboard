@@ -30,15 +30,18 @@ class Contact implements Stringable
      * @var string
      */
     #[Assert\NotBlank(groups: ['Default', 'production'])]
+    #[Assert\Length(max: 150)]
     private $firstName;
 
     /**
      * @var string
      */
     #[Assert\NotBlank(groups: ['Default', 'production'])]
+    #[Assert\Length(max: 150)]
     private $lastName;
 
     #[Assert\NotBlank(groups: ['Default', 'production'])]
+    #[Assert\Length(max: 200)]
     private string|null|array $email = null;
 
     /**
