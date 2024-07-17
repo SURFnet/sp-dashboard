@@ -1,3 +1,9 @@
+## 6.1.0
+- Adds a SURFConext representative role to SPD, which grants access to a new page that displays SP/IdP connections
+- Type Of Service can now be configured on SAML and OIDC entities
+- Revision notes are more detailed (change request and new entity creation)
+- The new Manage ARP params (release_as and name_id_override) are supported by SPD
+
 ## 6.0.2
 - Fix the mixup of DPA_TYPE_MODEL_SURF and DPA_TYPE_IN_SURF_AGREEMENT #614
 - Security upgrades
