@@ -29,4 +29,8 @@ services:
             - []
             - '@logger'
 
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Authentication\Listener\ExplicitSessionTimeoutListener:
+
+    Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Authentication\Listener\AuthenticatedUserListener:
+
     Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Security\Authentication\Session\SessionLifetimeGuard:
