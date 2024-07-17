@@ -54,8 +54,10 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     #[SpDashboardAssert\ValidClientId]
     #[SpDashboardAssert\UniqueEntityId]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private ?string $entityId = null;
 
+    #[Assert\Length(max: 300)]
     private ?string $secret = null;
 
     private ?bool $isPublicClient = null;
@@ -77,6 +79,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $logoUrl;
 
     /**
@@ -90,12 +93,14 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
      * @var string
      */
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $nameNl;
 
     /**
      * @var string
      */
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $nameEn;
 
     /**
@@ -148,6 +153,7 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
     /**
      * @var string
      */
+    #[Assert\Length(max: 300)]
     private $comments;
 
     /**

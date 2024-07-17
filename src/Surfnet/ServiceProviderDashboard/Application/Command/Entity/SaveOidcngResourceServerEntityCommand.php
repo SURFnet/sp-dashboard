@@ -56,23 +56,27 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     #[SpDashboardAssert\ValidClientId]
     #[SpDashboardAssert\UniqueEntityId]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private ?string $entityId = null;
 
     /**
      * @var string
      */
+    #[Assert\Length(max: 255)]
     private $secret;
 
     /**
      * @var string
      */
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $nameNl;
 
     /**
      * @var string
      */
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $nameEn;
 
     /**
@@ -113,6 +117,7 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     /**
      * @var string
      */
+    #[Assert\Length(max: 300)]
     private $comments;
 
     /**

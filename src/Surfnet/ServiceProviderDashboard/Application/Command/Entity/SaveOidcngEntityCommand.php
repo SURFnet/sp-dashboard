@@ -60,11 +60,13 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     #[SpDashboardAssert\ValidClientId()]
     #[SpDashboardAssert\UniqueEntityId()]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 300)]
     private ?string $entityId = null;
 
     /**
      * @var string
      */
+    #[Assert\Length(max: 255)]
     private $secret;
 
     /**
@@ -105,6 +107,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $logoUrl;
 
     /**
@@ -118,12 +121,14 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var string
      */
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $nameNl;
 
     /**
      * @var string
      */
     #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private $nameEn;
 
     /**
@@ -144,6 +149,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var string
      */
     #[Assert\Url]
+    #[Assert\Length(max: 300)]
     private $applicationUrl;
 
     /** @var TypeOfService[] */
@@ -163,6 +169,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
      * @var string
      */
     #[Assert\Url]
+    #[Assert\Length(max: 300)]
     private $eulaUrl;
 
     /**
@@ -192,6 +199,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * @var string
      */
+    #[Assert\Length(max: 300)]
     private $comments;
 
     /**
