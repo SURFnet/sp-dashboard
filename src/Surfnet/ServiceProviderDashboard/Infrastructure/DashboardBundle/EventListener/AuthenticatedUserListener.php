@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 
 /**
- * Copyright 2016 SURFnet bv
+ * Copyright 2024 SURFnet B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
