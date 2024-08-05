@@ -120,6 +120,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('surname', $fields['contacts:0:surName']);
         $this->assertEquals('emailaddress', $fields['contacts:0:emailAddress']);
         $this->assertEquals('telephonenumber', $fields['contacts:0:telephoneNumber']);
+        $this->assertEquals(false, $fields['coin:ss:idp_visible_only']);
     }
 
     public function test_it_can_build_saml_metadata_for_existing_entities()
@@ -200,7 +201,8 @@ class JsonGeneratorTest extends MockeryTestCase
                             'certData' => 'certdata',
                             'coin:institution_id' => 'service-institution-id',
                             'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
-                            'coin:exclude_from_push' => '0'
+                            'coin:exclude_from_push' => '0',
+                            'coin:ss:idp_visible_only' => false
                         ),
                     'metadataurl' => 'http://metadata',
                 ),
@@ -243,6 +245,7 @@ class JsonGeneratorTest extends MockeryTestCase
                     'revisionnote' => 'revisionnote',
                     'metaDataFields.contacts:2:givenName' => 'John Doe',
                     'metaDataFields.coin:exclude_from_push' => '0',
+                    'metaDataFields.coin:ss:idp_visible_only' => null,
                     'privacy' => 'privacy',
                 ),
             'type' => 'saml20_sp',
@@ -514,7 +517,7 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('manageId', $data['metaDataId']);
         $this->assertEquals('saml20_sp', $data['type']);
         $this->assertIsArray($data['pathUpdates']);
-        $this->assertCount(4, $data['pathUpdates']);
+        $this->assertCount(5, $data['pathUpdates']);
         $this->assertStringContainsString('Change request by user A.F.Th. van der Heijden with email address "j.doe@example.com"', $data['note']);
         $this->assertStringContainsString('CHR-5421', $data['note']);
         $this->assertStringContainsString('revisionnote', $data['note']);

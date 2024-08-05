@@ -74,4 +74,6 @@ interface SaveEntityCommandInterface extends Command
      * @return array<TypeOfService>
      */
     public function getTypeOfService(): array;
+
+    public function isPublicInDashboard(): ?bool;
 }
