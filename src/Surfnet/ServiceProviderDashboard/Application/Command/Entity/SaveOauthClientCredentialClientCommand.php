@@ -543,4 +543,10 @@ class SaveOauthClientCredentialClientCommand implements SaveEntityCommandInterfa
         // not implemented for oauth_ccc entities
         return [];
     }
+
+    public function isPublicInDashboard(): ?bool
+    {
+        // This coin is not used for CCC entities
+        return null;
+    }
 }

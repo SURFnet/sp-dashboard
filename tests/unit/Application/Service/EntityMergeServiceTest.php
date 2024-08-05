@@ -107,6 +107,7 @@ class EntityMergeServiceTest extends TestCase
         $contact->setEmail('j.doe@example.com');
         $command->setTechnicalContact($contact);
         $command->setService($service);
+        $command->setIsPublicInDashboard(true);
         return $command;
     }
 }

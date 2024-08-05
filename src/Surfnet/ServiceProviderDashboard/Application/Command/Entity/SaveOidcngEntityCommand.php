@@ -726,4 +726,9 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     {
         $this->typeOfService = $typeOfService;
     }
+
+    public function isPublicInDashboard(): ?bool
+    {
+        return $this->idpVisibleOnly;
+    }
 }

@@ -222,7 +222,10 @@ class EntityMergeService
             $typeOfServiceCollection,
             $command->getEulaUrl(),
             null,
-            null
+            null,
+            // Note when the dashboard sets the isPublicInDashboard to be true
+            // That means the metaDataFields.coin:ss:idp_visible_only must be false
+            !$command->isPublicInDashboard(),
         );
     }
 

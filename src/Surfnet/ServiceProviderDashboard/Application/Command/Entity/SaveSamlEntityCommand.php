@@ -487,4 +487,9 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     {
         $this->typeOfService = $typeOfServices;
     }
+
+    public function isPublicInDashboard(): ?bool
+    {
+        return $this->idpVisibleOnly;
+    }
 }
