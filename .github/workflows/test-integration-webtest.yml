@@ -1,0 +1,66 @@
+name: Run integration tests - Webtests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    # Due to the cgroups 1 issue on the openconext container, we do not
+    # use the new ubuntu platform yet. As they started using cgroups v2
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-ci.yml
+      DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-ci.yml exec -T spdashboard
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+        with:
+          path: spdashboard
+
+      - name: Checkout openconext-devconf
+        uses: actions/checkout@v4
+        with: 
+          path: OpenConext-devconf
+          repository: OpenConext/OpenConext-devconf
+          
+      - name: Start the docker images for testing
+        working-directory: spdashboard
+        run: ${DOCKER_COMPOSE} up -d
+
+      - name: Bootstrap the openconext environment
+        working-directory: spdashboard
+        run: bash ../OpenConext-devconf/core/scripts/init.sh
+
+      - name: Instantiate the env file
+        run: cp spdashboard/.env.dist spdashboard/.env
+
+      - name: Run composer
+        working-directory: spdashboard
+        run: |
+          ${DOCKER_COMPOSE_PHP} /usr/bin/composer install -n --prefer-dist -o --ignore-platform-reqs
+
+      - name: Run yarn
+        working-directory: spdashboard
+        run: |
+          ${DOCKER_COMPOSE_PHP} yarn install
+
+      - name: Create front end dependencies (yarn encore production)
+        working-directory: spdashboard
+        run: |
+          ${DOCKER_COMPOSE_PHP} yarn run encore production
+
+      - name: Get the database up and running
+        working-directory: spdashboard
+        run: |
+          ${DOCKER_COMPOSE_PHP} bin/console doctrine:schema:create
+        env:
+          APP_ENV: test
+
+      - name: Run CI tests
+        working-directory: spdashboard
+        run: |
+          ${DOCKER_COMPOSE_PHP} sh -c 'composer webtests'
