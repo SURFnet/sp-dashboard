@@ -129,7 +129,6 @@
     ],
     "jest": "./ci/qa/jest",
     "phpcbf": "./ci/qa/phpcbf",
-    "prepare-webtest": "./ci/qa/prepare_webtest",
     "jscpd": "./ci/qa/jscpd",
     "phpcs": "./ci/qa/phpcs",
     "phpstan": "./ci/qa/phpstan",
