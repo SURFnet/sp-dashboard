@@ -118,6 +118,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private string $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
+     * When checked on the form, the idpVisibleOnly coin value becomes false
+     */
+    public bool $isPublicOnDashboard;
+
+    /**
      * @var string
      */
     #[Assert\NotBlank]
