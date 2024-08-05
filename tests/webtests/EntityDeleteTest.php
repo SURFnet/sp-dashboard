@@ -51,15 +51,9 @@ class EntityDeleteTest extends WebTestCase
         $crawler = self::$pantherClient->request('GET', "/entity/delete/published/1/a8e7cffd-0409-45c7-a37a-000000000000");
 
         $pageTitle = $crawler->filter('.page-container h1');
-
         $this->assertEquals('Delete entity', $pageTitle->text());
-
-        $form = $crawler->filter('.page-container')
-            ->selectButton('Delete')
-            ->form();
-
-        self::$pantherClient->submit($form);
-        self::$pantherClient->wait(2);
+        self::findBy('#dashboard_bundle_delete_entity_type_delete')->click();
+        self::$pantherClient->waitForVisibility('.service-status-entities-table-title', 10);
         self::assertOnPage('Your entity is deleted');
     }
 
@@ -82,13 +76,8 @@ class EntityDeleteTest extends WebTestCase
         $pageTitle = $crawler->filter('.page-container h1');
 
         $this->assertEquals('Delete entity', $pageTitle->text());
-
-        $form = $crawler->filter('.page-container')
-            ->selectButton('Delete')
-            ->form();
-
-        self::$pantherClient->submit($form);
-        self::$pantherClient->wait(2);
+        self::findBy('#dashboard_bundle_delete_entity_type_delete')->click();
+        self::$pantherClient->waitForVisibility('.service-status-entities-table-title', 10);
         self::assertOnPage('Your entity is deleted');
 
     }
@@ -115,12 +104,8 @@ class EntityDeleteTest extends WebTestCase
         $pageTitle = $crawler->filter('.page-container h1');
         $this->assertEquals('Delete entity', $pageTitle->text());
 
-        $form = $crawler->filter('.page-container')
-            ->selectButton('Delete')
-            ->form();
-
-        self::$pantherClient->submit($form);
-        self::$pantherClient->wait(2);
+        self::findBy('#dashboard_bundle_delete_entity_type_delete')->click();
+        self::$pantherClient->waitForVisibility('.service-status-entities-table-title', 10);
         $this->assertOnPage(
             'Oops, creating the delete request failed. Our ticket service might have been offline. Please try again at a later time.'
         );
