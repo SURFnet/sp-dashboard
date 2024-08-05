@@ -156,7 +156,7 @@ class EntityEditTest extends WebTestCase
         self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_organizationAttribute_motivation', 'foo');
         self::fillFormField($formElement, '#dashboard_bundle_entity_type_attributes_personalCodeAttribute_motivation', 'foo');
         // Also check a type of service (as they are mandatory)
-        self::findBy('label[for="dashboard_bundle_entity_type_metadata_typeOfService_4"]')->click();
+        self::findBy('option.decorated:nth-child(4)')->click();
         self::findBy('#dashboard_bundle_entity_type_publishButton')->click();
 
         $pageTitle = self::$pantherClient->refreshCrawler()->filter('h1')->first()->text();
