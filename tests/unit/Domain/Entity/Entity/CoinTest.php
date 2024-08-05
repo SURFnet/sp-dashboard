@@ -70,19 +70,19 @@ class CoinTest extends TestCase
     public function provideCoinTestData()
     {
         yield [
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null),
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null),
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null)
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null, true),
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null, true),
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null, true)
         ];
         yield [
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null),
-            new Coin('signatureMethod', null, 'https://www.example.com', null, 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null),
-            new Coin('signatureMethod', null, 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null),
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null, true),
+            new Coin('signatureMethod', null, 'https://www.example.com', null, 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null, null),
+            new Coin('signatureMethod', null, 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null, null),
         ];
         yield [
-            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null),
-            new Coin(null, null, null, null, null, new TypeOfServiceCollection(), null, null, null),
-            new Coin(null, null, null, '1', null, new TypeOfServiceCollection(), null, null, null)
+            new Coin('signatureMethod', '23', 'https://www.example.com', '1', 'https://example.com', new TypeOfServiceCollection(), 'https://example.com/eula', 1, null, false),
+            new Coin(null, null, null, null, null, new TypeOfServiceCollection(), null, null, null, false),
+            new Coin(null, null, null, '1', null, new TypeOfServiceCollection(), null, null, null, false)
         ];
     }
     public function provideCoinTestDataWithTypeOfService()

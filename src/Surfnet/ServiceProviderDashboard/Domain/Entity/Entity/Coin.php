@@ -41,9 +41,9 @@ class Coin implements Comparable
             ? (int)$metaDataFields['coin:exclude_from_push'] : null;
         $oidcClient = isset($metaDataFields['coin:oidc_client'])
             ? (int)$metaDataFields['coin:oidc_client'] : 0;
+        $idpVisibleOnly = $metaDataFields['coin:ss:idp_visible_only'] ?? null;
 
         $typeOfService = TypeOfServiceCollection::createFromManageResponse($metaDataFields);
-
         Assert::string($signatureMethod);
         Assert::string($serviceTeamId);
         Assert::string($originalMetadataUrl);
@@ -52,6 +52,7 @@ class Coin implements Comparable
         Assert::nullOrIntegerish($excludeFromPush);
         Assert::integer($oidcClient);
         Assert::nullOrString($contractualBase);
+        Assert::nullOrBoolean($idpVisibleOnly);
 
         return new self(
             $signatureMethod,
@@ -63,6 +64,7 @@ class Coin implements Comparable
             $eula,
             $oidcClient,
             $contractualBase,
+            $idpVisibleOnly,
         );
     }
 
@@ -76,6 +78,7 @@ class Coin implements Comparable
         private ?string $eula,
         private ?int $oidcClient,
         private ?string $contractualBase,
+        private ?bool $idpVisibleOnly,
     ) {
     }
 
@@ -132,6 +135,12 @@ class Coin implements Comparable
         $this->contractualBase = $contractualBase;
     }
 
+
+    public function isIdpVisibleOnly(): ?bool
+    {
+        return $this->idpVisibleOnly;
+    }
+
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -149,6 +158,7 @@ class Coin implements Comparable
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
         $this->typeOfService = $coin->getTypeOfService();
         $this->contractualBase = $coin->getContractualBase();
+        $this->idpVisibleOnly = $coin->isIdpVisibleOnly();
     }
 
     public function asArray(): array
@@ -162,6 +172,7 @@ class Coin implements Comparable
             'metaDataFields.coin:ss:type_of_service:en' => $this->getTypeOfService()->getServicesAsEnglishString(),
             'metaDataFields.coin:ss:type_of_service:nl' => $this->getTypeOfService()->getServicesAsDutchString(),
             'metaDataFields.coin:contractual_base' => $this->getContractualBase(),
+            'metaDataFields.coin:ss:idp_visible_only' => $this->isIdpVisibleOnly(),
         ];
     }
 }

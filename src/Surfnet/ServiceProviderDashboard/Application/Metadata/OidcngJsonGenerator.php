@@ -201,6 +201,9 @@ class OidcngJsonGenerator implements GeneratorInterface
         if ($entity->getMetaData()?->getCoin()->getContractualBase() !== null) {
             $metadata['coin:contractual_base'] = $entity->getMetaData()->getCoin()->getContractualBase();
         }
+        if ($entity->getMetaData()?->getCoin()->isIdpVisibleOnly() !== null) {
+            $metadata['coin:ss:idp_visible_only'] = $entity->getMetaData()->getCoin()->isIdpVisibleOnly();
+        }
         return $metadata;
     }
 

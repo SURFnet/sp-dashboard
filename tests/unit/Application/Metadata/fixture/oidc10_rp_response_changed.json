@@ -61,7 +61,8 @@
       "OrganizationName:nl": "Drop Supplies",
       "OrganizationDisplayName:nl": "orgdisnl",
       "OrganizationURL:nl": "http://orgnl",
-      "isPublicClient": true
+      "isPublicClient": true,
+      "coin:ss:idp_visible_only": true
     },
     "allowedEntities": [],
     "allowedResourceServers": [],
