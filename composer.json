@@ -144,6 +144,7 @@
     "createtestdb": "./ci/qa/createtestdb",
     "phpcov": "./ci/qa/phpcov",
     "test": "./ci/qa/phpunit",
+    "webtests": "./ci/qa/webtests",
     "cypress": "./ci/qa/cypress",
     "translations": "bin/translations"
   },
