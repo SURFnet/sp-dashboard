@@ -186,6 +186,17 @@ class OidcngEntityType extends AbstractType
                 ]
             )
             ->add(
+                'isPublicOnDashboard',
+                CheckboxType::class,
+                [
+                    'required' => false,
+                    'attr' => [
+                        'required' => false,
+                        'data-help' => 'entity.edit.information.isPublicOnDashboard',
+                    ],
+                ]
+            )
+            ->add(
                 'logoUrl',
                 TextType::class,
                 [

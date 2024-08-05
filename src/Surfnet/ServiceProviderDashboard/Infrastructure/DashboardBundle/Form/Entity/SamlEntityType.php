@@ -23,6 +23,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\TypeOfServiceRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -163,6 +164,17 @@ class SamlEntityType extends AbstractType
                             'attr' => [
                                 'class' => 'nameidformat-attributesContainer',
                                 'data-help' => 'entity.edit.information.nameIdFormat',
+                            ],
+                        ]
+                    )
+                    ->add(
+                        'isPublicOnDashboard',
+                        CheckboxType::class,
+                        [
+                            'required' => false,
+                            'attr' => [
+                                'required' => false,
+                                'data-help' => 'entity.edit.information.isPublicOnDashboard',
                             ],
                         ]
                     )
