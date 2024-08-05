@@ -117,8 +117,11 @@
       "@attrsc",
       "@attrdc",
       "@phpstan",
-      "@test-db",
       "@test"
+    ],
+    "webtest":[
+      "@test-db",
+      "@webtests"
     ],
     "test-db": [
       "@droptestdb",
