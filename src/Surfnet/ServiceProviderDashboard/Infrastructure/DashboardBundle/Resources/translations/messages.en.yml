@@ -571,6 +571,10 @@ service.connections.export-button: Download CSV
 service.connections.connected: Not connected
 service.connections.not-connected: Connected
 service.connections.table.no-results: No entities found
+service.connections.table.header.service: Service
+service.connections.table.header.entity-name: Name
+service.connections.table.header.entity-id: entityID / Client ID
+service.connections.table.header.institution-idps: Institution idps
 
 teams.management.close: Close
 teams.management.title: User management
