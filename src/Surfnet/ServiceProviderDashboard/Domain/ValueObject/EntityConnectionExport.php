@@ -20,22 +20,31 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Domain\ValueObject;
 
+use Symfony\Component\Serializer\Attribute\SerializedName;
+
 class EntityConnectionExport
 {
+    #[SerializedName('Servicename')]
     public string $nameOfService;
 
+    #[SerializedName('Name')]
     public string $nameOfEntity;
 
+    #[SerializedName('entityID / Client ID')]
     public string $entityId;
 
+    #[SerializedName('Support contact')]
     public string $supportContact;
 
+    #[SerializedName('Technical contact')]
     public string $technicalContact;
 
+    #[SerializedName('Admin contact')]
     public string $adminContact;
 
     /**
      * @var string[]
      */
+    #[SerializedName('Connected IdP')]
     public array $idps;
 }
