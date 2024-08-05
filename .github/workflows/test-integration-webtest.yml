@@ -14,6 +14,9 @@ jobs:
     env:
       DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-ci.yml
       DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-ci.yml exec -T spdashboard
+      PANTHER_CHROME_ARGUMENTS: "--disable-dev-shm-usage"
+      PANTHER_CHROME_DRIVER_BINARY: "/usr/bin/chromedriver"
+      PANTHER_NO_SANDBOX: "1"
 
     steps:
       - name: Check out the repo
