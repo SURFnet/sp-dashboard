@@ -121,8 +121,9 @@ class EntityEditController extends AbstractController
         return $this->render(
             '@Dashboard/EntityEdit/edit.html.twig',
             [
-            'form' => $form->createView(),
-            'type' => $entity->getProtocol()->getProtocol(),
+                'form' => $form->createView(),
+                'type' => $entity->getProtocol()->getProtocol(),
+                'environment' => $environment,
             ]
         );
     }

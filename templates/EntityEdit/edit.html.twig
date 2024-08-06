@@ -18,7 +18,7 @@
         {{ form_errors(form) }}
 
         <h2>{{ ('entity.edit.info.' ~ type ~ '.title')|trans }}</h2>
-        <div class="wysiwyg">{{ ('entity.edit.info.' ~ type ~ '.html')|trans|wysiwyg }}</div>
+        <div class="wysiwyg">{{ ('entity.edit.info.' ~ type ~ '.' ~ environment ~ '.html')|trans|wysiwyg }}</div>
     </div>
 
     <div class="fieldset card">
