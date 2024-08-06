@@ -66,6 +66,7 @@ entity:
       description_en: Description EN
       application_url: Application URL
       eula_url: EULA URL
+      is_public_on_dashboard: Is your service publicly visible in the SURFconext dashboard?
       saml20:
         title: Metadata
         html: <strong>information about the metadata fields</strong>

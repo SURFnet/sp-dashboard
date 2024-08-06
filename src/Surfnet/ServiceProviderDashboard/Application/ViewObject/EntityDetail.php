@@ -64,6 +64,7 @@ class EntityDetail
         private readonly ?array $grants,
         private readonly ?bool $playgroundEnabled,
         private readonly ?int $accessTokenValidity,
+        private readonly ?bool $isPublicInDashboard,
         private readonly ?bool $isPublicClient,
         private readonly ?array $resourceServers,
         private readonly ?array $typeOfService,
@@ -263,5 +264,10 @@ class EntityDetail
     public function typeOfService(): ?array
     {
         return $this->typeOfService;
+    }
+
+    public function isPublicInDashboard(): ?bool
+    {
+        return $this->isPublicInDashboard;
     }
 }
