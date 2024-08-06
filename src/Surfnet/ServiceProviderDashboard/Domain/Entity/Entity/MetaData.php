@@ -40,7 +40,6 @@ class MetaData implements Comparable
         $metaDataUrl = $data['data']['metadataurl'] ?? '';
         $acsLocations = self::getAcsLocationsFromMetaDataFields($metaDataFields);
         $nameIdFormat = $metaDataFields['NameIDFormat'] ?? '';
-        $certData = $metaDataFields['certData'] ?? '';
         $descriptionEn = $metaDataFields['description:en'] ?? '';
         $descriptionNl = $metaDataFields['description:nl'] ?? '';
         $nameEn = $metaDataFields['name:en'] ?? '';
@@ -50,7 +49,6 @@ class MetaData implements Comparable
         Assert::string($metaDataUrl);
         Assert::allString($acsLocations);
         Assert::string($nameIdFormat);
-        Assert::string($certData);
         Assert::string($descriptionEn);
         Assert::string($descriptionNl);
         Assert::string($nameEn);
@@ -74,7 +72,6 @@ class MetaData implements Comparable
             $metaDataUrl,
             $acsLocations,
             $nameIdFormat,
-            $certData,
             $descriptionEn,
             $descriptionNl,
             $nameEn,
@@ -94,7 +91,6 @@ class MetaData implements Comparable
         private ?string $metaDataUrl,
         private ?array $acsLocations,
         private ?string $nameIdFormat,
-        private ?string $certData,
         private ?string $descriptionEn,
         private ?string $descriptionNl,
         private ?string $nameEn,
@@ -129,11 +125,6 @@ class MetaData implements Comparable
     public function getNameIdFormat(): ?string
     {
         return $this->nameIdFormat;
-    }
-
-    public function getCertData(): ?string
-    {
-        return $this->certData;
     }
 
     public function getDescriptionEn(): ?string
@@ -186,7 +177,6 @@ class MetaData implements Comparable
         $this->metaDataUrl = is_null($metaData->getMetaDataUrl()) ? null : $metaData->getMetaDataUrl();
         $this->acsLocations = is_null($metaData->getAcsLocations()) ? null : $metaData->getAcsLocations();
         $this->nameIdFormat = is_null($metaData->getNameIdFormat()) ? null : $metaData->getNameIdFormat();
-        $this->certData = is_null($metaData->getCertData()) ? null : $metaData->getCertData();
         $this->descriptionEn = is_null($metaData->getDescriptionEn()) ? null : $metaData->getDescriptionEn();
         $this->descriptionNl = is_null($metaData->getDescriptionNl()) ? null : $metaData->getDescriptionNl();
         $this->nameEn = is_null($metaData->getNameEn()) ? null : $metaData->getNameEn();
@@ -228,7 +218,6 @@ class MetaData implements Comparable
             'entityid' => $this->getEntityId(),
             'metadataurl' => $this->getMetaDataUrl(),
             'metaDataFields.NameIDFormat' => $this->getNameIdFormat(),
-            'metaDataFields.certData' => $this->getCertData(),
             'metaDataFields.description:nl' => $this->getDescriptionNl(),
             'metaDataFields.description:en' => $this->getDescriptionEn(),
             'metaDataFields.name:nl' => $this->getNameNl(),

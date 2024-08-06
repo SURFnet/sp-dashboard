@@ -59,7 +59,6 @@ entity:
       name_id_format: NameID format
       type_of_service: Type of service
       subject_type: Subject type
-      certificate: Certificate
       logo_url: Logo URL
       name_nl: Name NL
       description_nl: Description NL
@@ -160,7 +159,7 @@ In the following pages we will ask you to submit the necessary information that 
 <li>Various contacts responsible for the entity. Support, administrative and technical
 should be present.</li>
 <li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL, certificate and logo of your entity.</li>
+<li>Metadata information including URL and logo of your entity.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 
@@ -228,7 +227,7 @@ In the following pages we will ask you to submit the necessary information that 
 <li>Various contacts responsible for the entity. Support, administrative and technical
 should be present.</li>
 <li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL, certificate and logo of your entity.</li>
+<li>Metadata information including URL and logo of your entity.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 "
@@ -243,7 +242,7 @@ In the following pages we will ask you to submit the necessary information that 
 <li>Various contacts responsible for the entity. Support, administrative and technical
 should be present.</li>
 <li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL, certificate and logo of your entity.</li>
+<li>Metadata information including URL and logo of your entity.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 "
@@ -258,7 +257,7 @@ In the following pages we will ask you to submit the necessary information that 
 <li>Various contacts responsible for the entity. Support, administrative and technical
 should be present.</li>
 <li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL, certificate and logo of your entity.</li>
+<li>Metadata information including URL and logo of your entity.</li>
 <li>A list of the attributes your Service Provider requires to operate.</li>
 </ul>
 "
@@ -354,7 +353,6 @@ entity.edit.information.resourceServers: Text should be set in web translations
 entity.edit.information.redirectUrls: Text should be set in web translations
 entity.edit.information.isPublicClient: Text should be set in web translations
 entity.edit.information.pastedMetadata: Text should be set in web translations
-entity.edit.information.certificate: Text should be set in web translations
 entity.edit.information.logoUrl: Text should be set in web translations
 entity.edit.information.nameNl: Text should be set in web translations
 entity.edit.information.descriptionNl: Text should be set in web translations
