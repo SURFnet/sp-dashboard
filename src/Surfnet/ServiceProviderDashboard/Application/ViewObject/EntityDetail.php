@@ -41,7 +41,6 @@ class EntityDetail
         private readonly array $acsLocations,
         private readonly string $entityId,
         private readonly string $protocol,
-        private readonly string $certificate,
         private readonly ?string $logoUrl,
         private readonly string $nameNl,
         private readonly string $nameEn,
@@ -89,11 +88,6 @@ class EntityDetail
     public function getEntityId(): string
     {
         return $this->entityId;
-    }
-
-    public function getCertificate(): string
-    {
-        return $this->certificate;
     }
 
     /**

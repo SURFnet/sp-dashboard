@@ -81,7 +81,6 @@ class EntityDetailFactory
             $manageEntity->getMetaData()->getAcsLocations(),
             $manageEntity->getMetaData()->getEntityId(),
             $manageEntity->getProtocol()->getProtocol(),
-            $manageEntity->getMetaData()->getCertData(),
             $logo,
             $manageEntity->getMetaData()->getNameNl(),
             $manageEntity->getMetaData()->getNameEn(),

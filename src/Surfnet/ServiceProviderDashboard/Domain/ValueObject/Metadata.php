@@ -40,11 +40,6 @@ class Metadata
     /**
      * @var string
      */
-    public $certificate;
-
-    /**
-     * @var string
-     */
     public $nameIdFormat;
 
     /**

@@ -58,7 +58,6 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setMetadataUrl($metaData->getMetaDataUrl());
         $command->setAcsLocations($metaData->getAcsLocations());
         $command->setEntityId($metaData->getEntityId());
-        $command->setCertificate($metaData->getCertData());
         $command->setLogoUrl($metaData->getLogo()->getUrl());
         $command->setAdministrativeContact(Contact::from($metaData->getContacts()->findAdministrativeContact()));
         $command->setTechnicalContact(Contact::from($metaData->getContacts()->findTechnicalContact()));

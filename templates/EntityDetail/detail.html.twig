@@ -48,7 +48,6 @@
         {% endif %}
 
 
-        {% include '@Dashboard/EntityDetail/detailFormattedField.html.twig' with {label: 'entity.detail.metadata.certificate'|trans, value: entity.certificate, informationPopup: 'entity.edit.information.certificate'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.logo_url'|trans, value: entity.logoUrl, informationPopup: 'entity.edit.information.logoUrl'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.name_nl'|trans, value: entity.nameNl, informationPopup: 'entity.edit.information.nameNl'} %}
         {% include '@Dashboard/EntityDetail/detailTextField.html.twig' with {label: 'entity.detail.metadata.description_nl'|trans, value: entity.descriptionNl, informationPopup: 'entity.edit.information.descriptionNl'} %}

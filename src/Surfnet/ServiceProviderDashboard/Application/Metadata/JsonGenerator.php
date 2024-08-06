@@ -213,7 +213,6 @@ class JsonGenerator implements GeneratorInterface
 
         $metadata['NameIDFormat'] = $entity->getMetaData()->getNameIdFormat();
         $metadata['coin:signature_method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-        $metadata = array_merge($metadata, $this->generateCertDataMetadata($entity));
 
         // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
         // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0
@@ -229,31 +228,6 @@ class JsonGenerator implements GeneratorInterface
         }
 
         return $metadata;
-    }
-
-    private function generateCertDataMetadata(ManageEntity $entity): array
-    {
-        $metadata = [];
-        if ($entity->getMetaData()->getCertData() !== null
-            && $entity->getMetaData()->getCertData() !== ''
-            && $entity->getMetaData()->getCertData() !== '0') {
-            $metadata['certData'] = $this->stripCertificateEnvelope(
-                $entity->getMetaData()->getCertData()
-            );
-        }
-
-        return $metadata;
-    }
-
-    /**
-     * Strip header and footer from certificate data.
-     */
-    private function stripCertificateEnvelope(string $certData): string
-    {
-        $certData = str_replace('-----BEGIN CERTIFICATE-----', '', $certData);
-        $certData = str_replace('-----END CERTIFICATE-----', '', $certData);
-
-        return trim($certData);
     }
 
     private function generateAllContactsMetadata(ManageEntity $entity): array

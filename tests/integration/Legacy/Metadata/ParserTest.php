@@ -21,10 +21,11 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Integration\Legacy\Metadata;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
+use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Metadata;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\AttributeRepository;
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
-use Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser;
+use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException;
 use Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser;
 
 class ParserTest extends MockeryTestCase
@@ -46,7 +47,6 @@ class ParserTest extends MockeryTestCase
         $rootDir = __DIR__ . '/../../../../assets/Resources/';
         $attributeRepository = new AttributeRepository(__DIR__ . '/fixture/attributes.json');
         $this->parser = new Parser(
-            new CertificateParser(),
             new AttributeService($attributeRepository, 'en'),
             $rootDir,
             $this->logger
@@ -94,52 +94,6 @@ class ParserTest extends MockeryTestCase
         $this->assertEquals($metadata->organizationUrlEn, 'http://orgen');
         $this->assertEquals($metadata->organizationNameNl, 'orgnl');
         $this->assertEquals($metadata->organizationUrlNl, 'http://orgnl');
-
-        $this->assertEquals(
-            $metadata->certificate,
-            <<<CER
------BEGIN CERTIFICATE-----
-MIIGxTCCBa2gAwIBAgIIJa5ldegBaEAwDQYJKoZIhvcNAQEFBQAwSTELMAkGA1UE
-BhMCVVMxEzARBgNVBAoTCkdvb2dsZSBJbmMxJTAjBgNVBAMTHEdvb2dsZSBJbnRl
-cm5ldCBBdXRob3JpdHkgRzIwHhcNMTQxMTIwMDkyOTE0WhcNMTUwMjE4MDAwMDAw
-WjBmMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwN
-TW91bnRhaW4gVmlldzETMBEGA1UECgwKR29vZ2xlIEluYzEVMBMGA1UEAwwMKi5n
-b29nbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7xECHjrReiXV4OZj
-6K6xvYnN0j3ZOKoZNrIZ7eLMI9jSujJFLHX1tmxukBaIASzf2GX00wNbBY9AtgFs
-lcoO1KOCBF0wggRZMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjCCAyYG
-A1UdEQSCAx0wggMZggwqLmdvb2dsZS5jb22CDSouYW5kcm9pZC5jb22CFiouYXBw
-ZW5naW5lLmdvb2dsZS5jb22CEiouY2xvdWQuZ29vZ2xlLmNvbYIWKi5nb29nbGUt
-YW5hbHl0aWNzLmNvbYILKi5nb29nbGUuY2GCCyouZ29vZ2xlLmNsgg4qLmdvb2ds
-ZS5jby5pboIOKi5nb29nbGUuY28uanCCDiouZ29vZ2xlLmNvLnVrgg8qLmdvb2ds
-ZS5jb20uYXKCDyouZ29vZ2xlLmNvbS5hdYIPKi5nb29nbGUuY29tLmJygg8qLmdv
-b2dsZS5jb20uY2+CDyouZ29vZ2xlLmNvbS5teIIPKi5nb29nbGUuY29tLnRygg8q
-Lmdvb2dsZS5jb20udm6CCyouZ29vZ2xlLmRlggsqLmdvb2dsZS5lc4ILKi5nb29n
-bGUuZnKCCyouZ29vZ2xlLmh1ggsqLmdvb2dsZS5pdIILKi5nb29nbGUubmyCCyou
-Z29vZ2xlLnBsggsqLmdvb2dsZS5wdIISKi5nb29nbGVhZGFwaXMuY29tgg8qLmdv
-b2dsZWFwaXMuY26CFCouZ29vZ2xlY29tbWVyY2UuY29tghEqLmdvb2dsZXZpZGVv
-LmNvbYIMKi5nc3RhdGljLmNugg0qLmdzdGF0aWMuY29tggoqLmd2dDEuY29tggoq
-Lmd2dDIuY29tghQqLm1ldHJpYy5nc3RhdGljLmNvbYIMKi51cmNoaW4uY29tghAq
-LnVybC5nb29nbGUuY29tghYqLnlvdXR1YmUtbm9jb29raWUuY29tgg0qLnlvdXR1
-YmUuY29tghYqLnlvdXR1YmVlZHVjYXRpb24uY29tggsqLnl0aW1nLmNvbYILYW5k
-cm9pZC5jb22CBGcuY2+CBmdvby5nbIIUZ29vZ2xlLWFuYWx5dGljcy5jb22CCmdv
-b2dsZS5jb22CEmdvb2dsZWNvbW1lcmNlLmNvbYIKdXJjaGluLmNvbYIIeW91dHUu
-YmWCC3lvdXR1YmUuY29tghR5b3V0dWJlZWR1Y2F0aW9uLmNvbTALBgNVHQ8EBAMC
-B4AwaAYIKwYBBQUHAQEEXDBaMCsGCCsGAQUFBzAChh9odHRwOi8vcGtpLmdvb2ds
-ZS5jb20vR0lBRzIuY3J0MCsGCCsGAQUFBzABhh9odHRwOi8vY2xpZW50czEuZ29v
-Z2xlLmNvbS9vY3NwMB0GA1UdDgQWBBReMq7ulPRUna/Q6eF3kzaQbpNlajAMBgNV
-HRMBAf8EAjAAMB8GA1UdIwQYMBaAFErdBhYbvPZotXb1gba7Yhq6WoEvMBcGA1Ud
-IAQQMA4wDAYKKwYBBAHWeQIFATAwBgNVHR8EKTAnMCWgI6Ahhh9odHRwOi8vcGtp
-Lmdvb2dsZS5jb20vR0lBRzIuY3JsMA0GCSqGSIb3DQEBBQUAA4IBAQATKeJDgSxt
-4Yr7eQL7cVS+LCVctHMwspM9fzaPIV3aph70oVQ6x7n28CJn/uSm3ASsWklcN4fC
-yDSybBRYSp2lHcWX6gAt32OLTAi94/3hJP7jC0k/oG8880mZbM5BvywIUmko19nz
-OKwmkZTeHgq09wVw5soF9l+orXv5lymml+NNb5A5v+F5jNZdVwaEdxwe6LjXkpYy
-95e/buZ+bcHfYkU2xMH9WAPa62U3Fhr+j1xBm8hC2fS1DNOSbvBspKxAbuG7I0LQ
-YWjtV5KlAn7Pqug4IgbM+mSsJ2t0u8kwlW0e+/7J789I5HiYkNpEr2ya6F/NZi4x
-oLtcUeUILPXB
------END CERTIFICATE-----
-CER
-        );
-
         $this->assertTrue($metadata->getAttribute('emailAddressAttribute')->isRequested());
         $this->assertTrue($metadata->getAttribute('displayNameAttribute')->isRequested());
         $this->assertTrue($metadata->getAttribute('affiliationAttribute')->isRequested());
@@ -158,7 +112,7 @@ CER
     public function test_it_rejects_missing_acs_metadata()
     {
         $this->expectExceptionMessage("The metadata XML is invalid considering the associated XSD");
-        $this->expectException(\Surfnet\ServiceProviderDashboard\Legacy\Metadata\Exception\ParserException::class);
+        $this->expectException(ParserException::class);
         $this->logger->shouldReceive('error');
 
         $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_acs_metadata.xml'));
@@ -167,7 +121,7 @@ CER
     public function test_it_rejects_to_many_acs_entries()
     {
         $this->expectExceptionMessage("The metadata should not contain an ACS with an index larger than 9.");
-        $this->expectException(\Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->logger->shouldReceive('error');
         $this->parser->parseXml(file_get_contents(__DIR__.'/fixture/invalid_index_metadata.xml'));
     }

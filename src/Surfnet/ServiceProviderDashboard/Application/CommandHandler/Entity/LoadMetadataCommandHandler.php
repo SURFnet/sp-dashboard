@@ -86,7 +86,6 @@ class LoadMetadataCommandHandler implements CommandHandler
             'descriptionNl' => ['getDescriptionNl', 'setDescriptionNl'],
             'descriptionEn' => ['getDescriptionEn', 'setDescriptionEn'],
             'applicationUrlEn' => ['getApplicationUrl', 'setApplicationUrl'],
-            'certificate' => ['getCertificate', 'setCertificate'],
         ];
 
         $this->map($map, $command, $metadata);
