@@ -149,118 +149,32 @@ entity.edit.error.publish: "Unable to publish the entity, try again later"
 entity.edit.error.push: "Unable to publish the entity, try again later"
 entity.edit.title: Service Provider registration form
 entity.edit.info.saml20.title: Info
-entity.edit.info.saml20.html: "
-<p>Documentation about this SP registration form can be found at:
-<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
-
-<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
-In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
-<ul>
-<li>Various contacts responsible for the entity. Support, administrative and technical
-should be present.</li>
-<li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL and logo of your entity.</li>
-<li>A list of the attributes your Service Provider requires to operate.</li>
-</ul>
-
-<p>
-<strong>Publish</strong>
-When all fields are filled in correctly you can publish the configuration to the SURFconext test environment. The service will be available directly for testing.
-</p>
-
-<p>
-<strong>Update</strong>
-The configuration can be modified whenever you see fit. Just change the fields, press 'update' and 'confirm'. The changes are available instantenously.
-</p>
-
-
-<p>
-<strong>Production</strong>
-When tests are successful you can request a production connection. Simply press the button 'to production' to initiate this process.
-<strong>Note:</strong> your service can get production status only if the required contracts are in place.
-</p>
-
-<p>If there are any questions during completion of the form don’t hesitate to mail to support@surfconext.nl. Please add the ticket number to the subject (CXT-...).</p>
-"
-entity.edit.info.oidc.title: Info
-entity.edit.info.oidc.html: "
-<p>Documentation about this SP registration form can be found at:
-<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
-
-<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
-In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
-<ul>
-<li>Various contacts responsible for the entity. Support, administrative and technical
-should be present.</li>
-<li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL, certificate and logo of your entity.</li>
-<li>A list of the attributes your Service Provider requires to operate.</li>
-</ul>
-
-<p>
-<strong>Publish</strong>
-When all fields are filled in correctly you can publish the configuration to the SURFconext test environment. The service will be available directly for testing.
-</p>
-
-<p>
-<strong>Update</strong>
-The configuration can be modified whenever you see fit. Just change the fields, press 'update' and 'confirm'. The changes are available instantenously.
-</p>
-
-
-<p>
-<strong>Production</strong>
-When tests are successful you can request a production connection. Simply press the button 'to production' to initiate this process.
-<strong>Note:</strong> your service can get production status only if the required contracts are in place.
-</p>
-
-<p>If there are any questions during completion of the form don’t hesitate to mail to support@surfconext.nl. Please add the ticket number to the subject (CXT-...).</p>
-"
+entity.edit.info.saml20.production.html: "<p>Documentation about this TEST SP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
+entity.edit.info.saml20.test.html: "
+<p>Documentation about this PROD SP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
 entity.edit.info.oidcng.title: Info
-entity.edit.info.oidcng.html: "
-<p>Documentation about this SP registration form can be found at:
-<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
-
-<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
-In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
-<ul>
-<li>Various contacts responsible for the entity. Support, administrative and technical
-should be present.</li>
-<li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL and logo of your entity.</li>
-<li>A list of the attributes your Service Provider requires to operate.</li>
-</ul>
-"
+entity.edit.info.oidcng.test.html: "
+<p>Documentation about this TEST OIDC RP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
+entity.edit.info.oidcng.production.html: "
+<p>Documentation about this PROD OIDC RP registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
 entity.edit.info.oauth20_rs.title: Info
-entity.edit.info.oauth20_rs.html: "
-<p>Documentation about this SP registration form can be found at:
-<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
-
-<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
-In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
-<ul>
-<li>Various contacts responsible for the entity. Support, administrative and technical
-should be present.</li>
-<li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL and logo of your entity.</li>
-<li>A list of the attributes your Service Provider requires to operate.</li>
-</ul>
-"
+entity.edit.info.oauth20_rs.test.html: "
+<p>Documentation about this TEST RS registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
+entity.edit.info.oauth20_rs.production.html: "
+<p>Documentation about this PROD RS registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
 entity.edit.info.oauth20_ccc.title: Info
-entity.edit.info.oauth20_ccc.html: "
-<p>Documentation about this SP registration form can be found at:
-<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>
-
-<p>The registration of your Service Provider consists of two parts. A contractual and technical part. This form covers the technical part. The contractual part will be handled by SURFmarket.
-In the following pages we will ask you to submit the necessary information that allows us to create a test connection. With the following details ready we estimate this process will take around 20 minutes to complete. Information we need and collect through this form includes:</p>
-<ul>
-<li>Various contacts responsible for the entity. Support, administrative and technical
-should be present.</li>
-<li>Information about SAML 2.0 configuration.</li>
-<li>Metadata information including URL and logo of your entity.</li>
-<li>A list of the attributes your Service Provider requires to operate.</li>
-</ul>
-"
+entity.edit.info.oauth20_ccc.test.html: "
+<p>Documentation about this TEST CCC registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
+entity.edit.info.oauth20_ccc.production.html: "
+<p>Documentation about this PROD CCC registration form can be found at:
+<a href=\"https://wiki.surfnet.nl/x/isZWAw\">https://wiki.surfnet.nl/x/isZWAw</a>.</p>"
 entity.edit.general.title: General
 entity.edit.general.html: "<p>Enter/edit your contact information below. We will use this information in case we have additional questions.</p>"
 entity.edit.metadata.fetch.exception: "Unable to load the metadata from the provided import url."
