@@ -169,7 +169,6 @@ class MetaDataTest extends TestCase
             self::assertEquals($expectation->getMetaDataUrl(), $metaData->getMetaDataUrl());
             self::assertEquals($expectation->getAcsLocations(), $metaData->getAcsLocations());
             self::assertEquals($expectation->getNameIdFormat(), $metaData->getNameIdFormat());
-            self::assertEquals($expectation->getCertData(), $metaData->getCertData());
             self::assertEquals($expectation->getDescriptionEn(), $metaData->getDescriptionEn());
             self::assertEquals($expectation->getDescriptionNl(), $metaData->getDescriptionNl());
             self::assertEquals($expectation->getNameEn(), $metaData->getNameEn());
@@ -180,7 +179,6 @@ class MetaDataTest extends TestCase
             self::assertNull($metaData->getMetaDataUrl());
             self::assertNull($metaData->getAcsLocations());
             self::assertNull($metaData->getNameIdFormat());
-            self::assertNull($metaData->getCertData());
             self::assertNull($metaData->getDescriptionEn());
             self::assertNull($metaData->getDescriptionNl());
             self::assertNull($metaData->getNameEn());
@@ -256,7 +254,6 @@ class MetaDataTest extends TestCase
                     'https://www.example.org/metadata',
                     ['https://www.example.org/consume-assertion'],
                     'nameIdFormat-transient',
-                    'certData',
                     'Description EN',
                     'Description NL',
                     'Name EN',
@@ -272,7 +269,6 @@ class MetaDataTest extends TestCase
                     'https://www.example.org/metadataB',
                     ['https://www.example.org/consume-assertionB'],
                     'nameIdFormat-transientB',
-                    'certDataB',
                     'Description B EN',
                     'Description B NL',
                     'Name B EN',
@@ -284,7 +280,6 @@ class MetaDataTest extends TestCase
                 );
             case 'null':
                 return new MetaData(
-                    null,
                     null,
                     null,
                     null,

@@ -612,11 +612,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getCertData\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method getContacts\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
@@ -702,27 +697,27 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#10 \\$nameEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#10 \\$descriptionNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#11 \\$descriptionNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#11 \\$descriptionEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#12 \\$descriptionEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#12 \\$applicationUrl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#13 \\$applicationUrl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#13 \\$eulaUrl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#14 \\$eulaUrl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#19 \\$nameIdFormat of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
@@ -737,37 +732,32 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#20 \\$nameIdFormat of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#20 \\$organizationNameNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#21 \\$organizationNameNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#21 \\$organizationNameEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#22 \\$organizationNameEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#22 \\$organizationDisplayNameNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#23 \\$organizationDisplayNameNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#23 \\$organizationDisplayNameEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#24 \\$organizationDisplayNameEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#24 \\$organizationUrlNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#25 \\$organizationUrlNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#26 \\$organizationUrlEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#25 \\$organizationUrlEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
@@ -802,12 +792,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#7 \\$certificate of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#8 \\$nameNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#9 \\$nameNl of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
+	'message' => '#^Parameter \\#9 \\$nameEn of class Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\ViewObject\\\\EntityDetail constructor expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Factory/EntityDetailFactory.php',
 ];
@@ -887,11 +877,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getCertData\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method getContacts\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
 	'count' => 6,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
@@ -968,11 +953,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\JsonGenerator\\:\\:generateArp\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\JsonGenerator\\:\\:generateCertDataMetadata\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
 ];
@@ -4037,26 +4017,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidRedirectUrlValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Validator\\\\Constraints\\\\ValidSSLCertificate\\:\\:\\$message has no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidSSLCertificate.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidSSLCertificateValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Validator\\\\Constraints\\\\ValidSSLCertificateValidator\\:\\:setCertificateEnvelope\\(\\) has parameter \\$certData with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidSSLCertificateValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Validator\\\\Constraints\\\\ValidSSLCertificateValidator\\:\\:stripCertificateEnvelope\\(\\) has parameter \\$certData with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidSSLCertificateValidator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:children\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardSamlBundle/DependencyInjection/Configuration.php',
@@ -4502,11 +4462,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getCertData\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\MetaData\\|null\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method getClientSecret\\(\\) on Surfnet\\\\ServiceProviderDashboard\\\\Domain\\\\Entity\\\\Entity\\\\OidcClientInterface\\|null\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Manage/Factory/SaveCommandFactory.php',
@@ -4900,11 +4855,6 @@ $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$result of method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\Teams\\\\Client\\\\QueryClient\\:\\:transformTeamForFrontend\\(\\) expects array, mixed given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/Teams/Client/QueryClient.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'name\' on array\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Legacy/Metadata/CertificateParser.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Legacy\\\\Metadata\\\\Fetcher\\:\\:__construct\\(\\) has parameter \\$timeout with no type specified\\.$#',

@@ -82,9 +82,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     #[Assert\NotBlank]
     private string $entityId;
 
-    #[SpDashboardAssert\ValidSSLCertificate()]
-    private ?string $certificate = null;
-
     #[SpDashboardAssert\ValidLogo()]
     #[Assert\Url]
     #[Assert\NotBlank]
@@ -290,16 +287,6 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     public function setEntityId(string $entityId): void
     {
         $this->entityId = $entityId;
-    }
-
-    public function getCertificate(): ?string
-    {
-        return $this->certificate;
-    }
-
-    public function setCertificate(?string $certificate): void
-    {
-        $this->certificate = $certificate;
     }
 
     public function getLogoUrl(): ?string

@@ -24,7 +24,6 @@ use DOMDocument;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
-use Surfnet\ServiceProviderDashboard\Application\Metadata\CertificateParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\ParserInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\Attribute;
@@ -53,7 +52,6 @@ class Parser implements ParserInterface
     final public const NAMEID_FORMAT_TRANSIENT = 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient';
 
     public function __construct(
-        private readonly CertificateParserInterface $certParser,
         private readonly AttributeService $attributeService,
         private readonly string $schemaLocation,
         private readonly LoggerInterface $logger,
@@ -102,10 +100,6 @@ class Parser implements ParserInterface
         $this->parseAssertionConsumerService($descriptor, $metadata);
         $this->parseNameIdFormat($descriptor, $metadata);
 
-        if (property_exists($descriptor, 'KeyDescriptor') && $descriptor->KeyDescriptor !== null) {
-            $this->parseCertificate($descriptor, $metadata);
-        }
-
         if (property_exists($descriptor, 'Extensions') && $descriptor->Extensions !== null) {
             $this->parseUi($descriptor, $metadata);
         }
@@ -149,14 +143,6 @@ class Parser implements ParserInterface
                     'The metadata should not contain an ACS with an index larger than 9.'
                 );
             }
-        }
-    }
-
-    private function parseCertificate(SimpleXMLElement $descriptor, Metadata $metadata): void
-    {
-        foreach ($descriptor->KeyDescriptor->children(self::XMLDSIGNS) as $keyInfo) {
-            $metadata->certificate = $this->certParser->parse((string)$keyInfo->X509Data->X509Certificate);
-            break;
         }
     }
 

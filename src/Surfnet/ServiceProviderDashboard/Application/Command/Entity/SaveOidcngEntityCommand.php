@@ -678,11 +678,6 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
         return null;
     }
 
-    public function getCertificate(): ?string
-    {
-        return null;
-    }
-
     public function getNameIdFormat(): string
     {
         return $this->getSubjectType();

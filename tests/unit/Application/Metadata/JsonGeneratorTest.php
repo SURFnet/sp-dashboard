@@ -110,7 +110,6 @@ class JsonGeneratorTest extends MockeryTestCase
         $this->assertEquals('name nl', $fields['name:nl']);
         $this->assertEquals('description en', $fields['description:en']);
         $this->assertEquals('description nl', $fields['description:nl']);
-        $this->assertEquals('certdata', $fields['certData']);
 
         $this->assertEquals('orgen', $fields['OrganizationName:en']);
         $this->assertEquals('orgnl', $fields['OrganizationName:nl']);
@@ -197,7 +196,6 @@ class JsonGeneratorTest extends MockeryTestCase
                             'AssertionConsumerService:0:Location' => 'http://acs',
                             'NameIDFormat' => 'nameidformat',
                             'coin:signature_method' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256',
-                            'certData' => 'certdata',
                             'coin:institution_id' => 'service-institution-id',
                             'coin:institution_guid' => '543b4e5b-76b5-453f-af1e-5648378bb266',
                             'coin:exclude_from_push' => '0'

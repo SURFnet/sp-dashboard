@@ -165,17 +165,6 @@ class SamlEntityType extends AbstractType
                         ]
                     )
                     ->add(
-                        'certificate',
-                        TextareaType::class,
-                        [
-                            'required' => false,
-                            'attr' => [
-                                'data-help' => 'entity.edit.information.certificate',
-                                'rows' => 10,
-                            ],
-                        ]
-                    )
-                    ->add(
                         'logoUrl',
                         TextType::class,
                         [

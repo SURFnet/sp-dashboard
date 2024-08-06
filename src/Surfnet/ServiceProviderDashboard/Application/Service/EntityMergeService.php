@@ -65,7 +65,6 @@ class EntityMergeService
             $command->getMetadataUrl(),
             $command->getAcsLocations(),
             $command->getNameIdFormat(),
-            $command->getCertificate(),
             $command->getDescriptionEn(),
             $command->getDescriptionNl(),
             $command->getNameEn(),

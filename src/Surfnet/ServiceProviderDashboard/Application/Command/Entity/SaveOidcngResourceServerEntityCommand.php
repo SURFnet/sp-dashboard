@@ -435,11 +435,6 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
         return null;
     }
 
-    public function getCertificate(): ?string
-    {
-        return null;
-    }
-
     public function getLogoUrl(): ?string
     {
         return null;

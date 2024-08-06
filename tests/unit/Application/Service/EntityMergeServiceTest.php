@@ -58,7 +58,6 @@ class EntityMergeServiceTest extends TestCase
         self::assertNull($manageEntity->getId());
         self::assertFalse($manageEntity->isManageEntity());
         self::assertEquals('https://www.example.com', $manageEntity->getMetaData()->getEntityId());
-        self::assertEquals('certdata', $manageEntity->getMetaData()->getCertData());
         self::assertEquals('https://www.example.com/eula', $manageEntity->getMetaData()->getCoin()->getEula());
         self::assertEquals($service, $manageEntity->getService());
         self::assertEquals('Motivation', $manageEntity->getAttributes()->findByUrn('urn:mace:dir:attribute-def:uid')->getMotivation());
@@ -96,7 +95,6 @@ class EntityMergeServiceTest extends TestCase
     {
         $command = new SaveSamlEntityCommand();
         $command->setEntityId('https://www.example.com');
-        $command->setCertificate('certdata');
         $command->setApplicationUrl('https://www.example.com');
         $command->setEulaUrl('https://www.example.com/eula');
         $attr = new Attribute();
