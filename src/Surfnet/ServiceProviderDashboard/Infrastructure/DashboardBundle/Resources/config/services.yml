@@ -116,6 +116,7 @@ services:
     class: Surfnet\ServiceProviderDashboard\Application\CommandHandler\Entity\PublishEntityProductionCommandHandler
     arguments:
       - '@surfnet.manage.client.publish_client.prod_environment'
+      - '@Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\EntityService'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\TicketService'
       - '@request_stack'
@@ -643,6 +644,8 @@ services:
 
   Surfnet\ServiceProviderDashboard\Domain\Repository\ServiceRepository:
     '@Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Repository\ServiceRepository'
+
+  Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService:
 
   Surfnet\ServiceProviderDashboard\Application\Service\AttributeServiceInterface:
     '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
