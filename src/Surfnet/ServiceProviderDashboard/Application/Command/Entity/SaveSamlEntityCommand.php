@@ -148,6 +148,11 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     #[Assert\Choice(callback: [Constants::class, 'getValidNameIdFormats'], strict: true)]
     private ?string $nameIdFormat = Constants::NAME_ID_FORMAT_TRANSIENT;
 
+    /**
+     * When checked on the form, the idpVisibleOnly value becomes false
+     */
+    public bool $isPublicInDashboard;
+
     private ?string $manageId = null;
     private ?Attribute $organizationUnitAttribute = null;
 
@@ -486,5 +491,15 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     public function setTypeOfService(array $typeOfServices): void
     {
         $this->typeOfService = $typeOfServices;
+    }
+
+    public function isPublicInDashboard(): ?bool
+    {
+        return $this->isPublicInDashboard;
+    }
+
+    public function setIsPublicInDashboard(bool $isPublic): void
+    {
+        $this->isPublicInDashboard = $isPublic;
     }
 }

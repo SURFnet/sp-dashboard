@@ -227,7 +227,9 @@ class JsonGenerator implements GeneratorInterface
         if ($entity->getMetaData()->getLogo() instanceof Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
-
+        if ($entity->getMetaData()?->getCoin()->isIdpVisibleOnly() !== null) {
+            $metadata['coin:ss:idp_visible_only'] = $entity->getMetaData()->getCoin()->isIdpVisibleOnly();
+        }
         return $metadata;
     }
 

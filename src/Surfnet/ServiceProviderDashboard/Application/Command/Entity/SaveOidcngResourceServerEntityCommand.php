@@ -449,4 +449,10 @@ class SaveOidcngResourceServerEntityCommand implements SaveEntityCommandInterfac
     {
         return [];
     }
+
+    public function isPublicInDashboard(): ?bool
+    {
+        // This coin is not used for RS entities
+        return null;
+    }
 }

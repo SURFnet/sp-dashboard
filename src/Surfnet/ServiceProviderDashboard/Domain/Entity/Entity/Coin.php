@@ -38,9 +38,9 @@ class Coin implements Comparable
             ? (int)$metaDataFields['coin:exclude_from_push'] : null;
         $oidcClient = isset($metaDataFields['coin:oidc_client'])
             ? (int)$metaDataFields['coin:oidc_client'] : 0;
+        $idpVisibleOnly = $metaDataFields['coin:ss:idp_visible_only'] ?? null;
 
         $typeOfService = TypeOfServiceCollection::createFromManageResponse($metaDataFields);
-
         Assert::string($signatureMethod);
         Assert::string($serviceTeamId);
         Assert::string($originalMetadataUrl);
@@ -48,6 +48,7 @@ class Coin implements Comparable
         Assert::string($eula);
         Assert::nullOrIntegerish($excludeFromPush);
         Assert::integer($oidcClient);
+        Assert::nullOrBoolean($idpVisibleOnly);
 
         return new self(
             $signatureMethod,
@@ -57,7 +58,8 @@ class Coin implements Comparable
             $applicationUrl,
             $typeOfService,
             $eula,
-            $oidcClient
+            $oidcClient,
+            $idpVisibleOnly
         );
     }
 
@@ -70,6 +72,7 @@ class Coin implements Comparable
         private ?TypeOfServiceCollection $typeOfService,
         private ?string $eula,
         private ?int $oidcClient,
+        private ?bool $idpVisibleOnly,
     ) {
     }
 
@@ -115,6 +118,12 @@ class Coin implements Comparable
         }
         return $this->typeOfService;
     }
+
+    public function isIdpVisibleOnly(): ?bool
+    {
+        return $this->idpVisibleOnly;
+    }
+
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -131,6 +140,7 @@ class Coin implements Comparable
         $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
         $this->typeOfService = $coin->getTypeOfService();
+        $this->idpVisibleOnly = $coin->isIdpVisibleOnly();
     }
 
     public function asArray(): array
@@ -143,6 +153,7 @@ class Coin implements Comparable
             'metaDataFields.coin:original_metadata_url' => $this->getOriginalMetadataUrl(),
             'metaDataFields.coin:ss:type_of_service:en' => $this->getTypeOfService()->getServicesAsEnglishString(),
             'metaDataFields.coin:ss:type_of_service:nl' => $this->getTypeOfService()->getServicesAsDutchString(),
+            'metaDataFields.coin:ss:idp_visible_only' => $this->isIdpVisibleOnly(),
         ];
     }
 }

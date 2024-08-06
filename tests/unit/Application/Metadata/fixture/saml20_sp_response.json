@@ -58,7 +58,8 @@
       "OrganizationDisplayName:nl": "orgdisnl",
       "OrganizationURL:nl": "http://orgnl",
       "coin:service_team_id": "service-institution-id",
-      "coin:original_metadata_url": "https:\/\/engine.surfconext.nl\/authentication\/sp\/metadata"
+      "coin:original_metadata_url": "https:\/\/engine.surfconext.nl\/authentication\/sp\/metadata",
+      "coin:ss:idp_visible_only": false
     },
     "eid": 31
   }

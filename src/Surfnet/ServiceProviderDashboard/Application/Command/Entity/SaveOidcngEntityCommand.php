@@ -115,6 +115,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     private string $subjectType = Constants::NAME_ID_FORMAT_TRANSIENT;
 
     /**
+     * When checked on the form, the idpVisibleOnly coin value becomes false
+     */
+    public bool $isPublicInDashboard;
+
+    /**
      * @var string
      */
     #[Assert\NotBlank]
@@ -717,5 +722,15 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     public function setTypeOfService(array $typeOfService): void
     {
         $this->typeOfService = $typeOfService;
+    }
+
+    public function isPublicInDashboard(): ?bool
+    {
+        return $this->isPublicInDashboard;
+    }
+
+    public function setIsPublicInDashboard(bool $isPublic): void
+    {
+        $this->isPublicInDashboard = $isPublic;
     }
 }

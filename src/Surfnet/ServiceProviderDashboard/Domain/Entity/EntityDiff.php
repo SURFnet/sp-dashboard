@@ -58,7 +58,9 @@ class EntityDiff
                     if ($recursiveDiff !== []) {
                         $diffResults[$key] = $recursiveDiff;
                     }
-                } elseif ($value != $originalData[$key]) {
+                } elseif (($value === null && $originalData[$key] === "") || ($value === null && $originalData[$key] === 0)) {
+                    continue;
+                } elseif ($value !== $originalData[$key]) {
                     // When a secret is not changed (resulting in an empty value) do not include it in the diff.
                     if ($key === 'metaDataFields.secret' && $value === '') {
                         continue;

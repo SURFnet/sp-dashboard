@@ -29,7 +29,6 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\EntityCreationRevision
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
-use function sprintf;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Logo;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\OidcClientInterface;
 
@@ -193,7 +192,9 @@ class OidcngJsonGenerator implements GeneratorInterface
         if ($entity->getMetaData()->getLogo() instanceof Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata += $this->generateLogoMetadata($entity);
         }
-
+        if ($entity->getMetaData()?->getCoin()->isIdpVisibleOnly() !== null) {
+            $metadata['coin:ss:idp_visible_only'] = $entity->getMetaData()->getCoin()->isIdpVisibleOnly();
+        }
         return $metadata;
     }
 
