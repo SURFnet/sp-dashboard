@@ -24,13 +24,13 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="col">Vendor</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Entity Id</th>
+                            <th scope="col">{{ 'service.connections.table.header.service'|trans }}</th>
+                            <th scope="col">{{ 'service.connections.table.header.entity-name'|trans }}</th>
+                            <th scope="col">{{ 'service.connections.table.header.entity-id'|trans }}</th>
                             {% for idp in  testIdps %}
                                 <th scope="col" class="idp" title="{{ idp.entityId }}">{{ idp.name }}</th>
                             {% endfor %}
-                            <th scope="col">Institution idps</th>
+                            <th scope="col">{{ 'service.connections.table.header.institution-idps'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
