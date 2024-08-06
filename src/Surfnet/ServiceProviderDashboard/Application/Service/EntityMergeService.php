@@ -222,6 +222,7 @@ class EntityMergeService
             $command->getApplicationUrl(),
             $typeOfServiceCollection,
             $command->getEulaUrl(),
+            null,
             null
         );
     }

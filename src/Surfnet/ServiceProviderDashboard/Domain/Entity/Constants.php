@@ -41,6 +41,11 @@ class Constants
     final public const STATE_PUBLICATION_REQUESTED = 'requested';
     final public const STATE_REMOVAL_REQUESTED = 'removal requested';
 
+    final public const SERVICE_TYPE_INSTITUTE = 'institute';
+    final public const SERVICE_TYPE_NON_INSTITUTE = 'non-institute';
+    final public const CONTRACTUAL_BASE_IX = 'IX';
+    final public const CONTRACTUAL_BASE_AO = 'AO';
+
     final public const TYPE_SAML = 'saml20';
     final public const TYPE_OPENID_CONNECT_TNG = 'oidcng';
     final public const TYPE_OPENID_CONNECT_TNG_RESOURCE_SERVER = 'oauth20_rs';
