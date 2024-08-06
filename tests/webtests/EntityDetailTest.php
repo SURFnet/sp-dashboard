@@ -72,16 +72,17 @@ class EntityDetailTest extends WebTestCase
 
         $this->switchToService('SURFnet');
 
-        $crawler = self::$pantherClient->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
+        self::$pantherClient->request('GET', '/entity/detail/1/9729d851-cfdd-4283-a8f1-a29ba5036261/production');
 
         self::assertOnPage("Entity details");
 
         $this->assertDetailEquals(0, 'Metadata URL', 'https://sp1-entityid.example.com/metadata');
         $this->assertDetailsAscLocationEquals(1, 'ACS location', 'https://sp1-entityid.example.com/acs');
         $this->assertDetailEquals(2, 'Entity ID', 'https://sp1-entityid.example.com');
-        $this->assertDetailEquals(8, 'Name EN', 'SP3 Name English');
-        $this->assertDetailEquals(10, 'First name', 'givenname');
-        $this->assertDetailEquals(11, 'Last name', 'surname', false);
+        $this->assertChecked(4, 'Is your service publicly visible in the SURFconext dashboard?');
+        $this->assertDetailEquals(9, 'Name EN', 'SP3 Name English');
+        $this->assertDetailEquals(11, 'First name', 'givenname');
+        $this->assertDetailEquals(12, 'Last name', 'surname', false);
     }
 
 
@@ -201,6 +202,26 @@ class EntityDetailTest extends WebTestCase
             $expectedValue,
             $valueSpan,
             sprintf('Expected span "%s" at the row on position %d', $expectedValue, $position)
+        );
+    }
+
+    private function assertChecked($position, $expectedLabel)
+    {
+        $rows = self::$pantherClient->getCrawler()->filter('div.detail');
+        $row = $rows->eq($position);
+        $label = $row->filter('label')->text();
+        $icon = $row->filter('i')->last();
+        $classes = $icon->attr('class');
+
+        $this->assertEquals(
+            $expectedLabel,
+            $label,
+            sprintf('Expected label "%s" at the row on position %d', $expectedLabel, $position)
+        );
+        $this->assertEquals(
+            'fa fa-check-square',
+            $classes,
+            sprintf('Expected to find a checkbox for this option as pos %s', $position)
         );
     }
 
