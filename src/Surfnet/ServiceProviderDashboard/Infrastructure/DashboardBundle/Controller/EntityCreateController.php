@@ -209,8 +209,9 @@ class EntityCreateController extends AbstractController
         return $this->render(
             '@Dashboard/EntityEdit/edit.html.twig',
             [
-            'form' => $form->createView(),
-            'type' => $type,
+                'form' => $form->createView(),
+                'type' => $type,
+                'environment' => $targetEnvironment,
             ]
         );
     }
@@ -314,8 +315,9 @@ class EntityCreateController extends AbstractController
         return $this->render(
             '@Dashboard/EntityEdit/edit.html.twig',
             [
-            'form' => $form->createView(),
-            'type' => $entity->getProtocol()->getProtocol(),
+                'form' => $form->createView(),
+                'type' => $entity->getProtocol()->getProtocol(),
+                'environment' => $targetEnvironment,
             ]
         );
     }
