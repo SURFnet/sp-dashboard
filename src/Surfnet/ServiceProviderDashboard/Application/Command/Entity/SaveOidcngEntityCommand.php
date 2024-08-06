@@ -120,7 +120,7 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
     /**
      * When checked on the form, the idpVisibleOnly coin value becomes false
      */
-    public bool $isPublicOnDashboard;
+    public bool $isPublicInDashboard;
 
     /**
      * @var string
@@ -729,6 +729,11 @@ class SaveOidcngEntityCommand implements SaveEntityCommandInterface
 
     public function isPublicInDashboard(): ?bool
     {
-        return $this->idpVisibleOnly;
+        return $this->isPublicInDashboard;
+    }
+
+    public function setIsPublicInDashboard(bool $isPublic): void
+    {
+        $this->isPublicInDashboard = $isPublic;
     }
 }

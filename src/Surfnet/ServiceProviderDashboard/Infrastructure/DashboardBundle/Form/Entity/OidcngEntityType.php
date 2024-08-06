@@ -186,7 +186,7 @@ class OidcngEntityType extends AbstractType
                 ]
             )
             ->add(
-                'isPublicOnDashboard',
+                'isPublicInDashboard',
                 CheckboxType::class,
                 [
                     'required' => false,

@@ -156,7 +156,7 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
     /**
      * When checked on the form, the idpVisibleOnly value becomes false
      */
-    public bool $isPublicOnDashboard;
+    public bool $isPublicInDashboard;
 
     private ?string $manageId = null;
     private ?Attribute $organizationUnitAttribute = null;
@@ -490,6 +490,11 @@ class SaveSamlEntityCommand implements SaveEntityCommandInterface
 
     public function isPublicInDashboard(): ?bool
     {
-        return $this->idpVisibleOnly;
+        return $this->isPublicInDashboard;
+    }
+
+    public function setIsPublicInDashboard(bool $isPublic): void
+    {
+        $this->isPublicInDashboard = $isPublic;
     }
 }
