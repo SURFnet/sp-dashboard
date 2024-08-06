@@ -27,13 +27,15 @@ use Surfnet\ServiceProviderDashboard\Application\Service\EntityServiceInterface;
 use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
-use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\HttpClient\Exceptions\RuntimeException\PublishMetadataException;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PublishEntityProductionCommandHandler implements CommandHandler
 {
     private readonly string $summaryTranslationKey;
@@ -42,6 +44,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
 
     public function __construct(
         private readonly PublishEntityRepository $publishClient,
+        private readonly ContractualBaseService $contractualBaseHelper,
         private readonly EntityServiceInterface $entityService,
         private readonly TicketService $ticketService,
         private readonly RequestStack $requestStack,
@@ -81,6 +84,7 @@ class PublishEntityProductionCommandHandler implements CommandHandler
                     $entity->getMetaData()->getNameEn()
                 )
             );
+            $this->contractualBaseHelper->writeContractualBase($entity);
             $publishResponse = $this->publishClient->publish(
                 $entity,
                 $pristineEntity,

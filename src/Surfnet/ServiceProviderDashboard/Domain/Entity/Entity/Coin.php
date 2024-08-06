@@ -27,12 +27,15 @@ use Webmozart\Assert\Assert;
 
 class Coin implements Comparable
 {
+
+
     public static function fromApiResponse(array $metaDataFields): self
     {
         $signatureMethod = $metaDataFields['coin:signature_method'] ?? '';
         $serviceTeamId = $metaDataFields['coin:service_team_id'] ?? '';
         $originalMetadataUrl = $metaDataFields['coin:original_metadata_url'] ?? '';
         $applicationUrl = $metaDataFields['coin:application_url'] ?? '';
+        $contractualBase = $metaDataFields['coin:contractual_base'] ?? null;
         $eula = $metaDataFields['coin:eula'] ?? '';
         $excludeFromPush = isset($metaDataFields['coin:exclude_from_push'])
             ? (int)$metaDataFields['coin:exclude_from_push'] : null;
@@ -48,6 +51,7 @@ class Coin implements Comparable
         Assert::string($eula);
         Assert::nullOrIntegerish($excludeFromPush);
         Assert::integer($oidcClient);
+        Assert::nullOrString($contractualBase);
 
         return new self(
             $signatureMethod,
@@ -57,7 +61,8 @@ class Coin implements Comparable
             $applicationUrl,
             $typeOfService,
             $eula,
-            $oidcClient
+            $oidcClient,
+            $contractualBase,
         );
     }
 
@@ -70,6 +75,7 @@ class Coin implements Comparable
         private ?TypeOfServiceCollection $typeOfService,
         private ?string $eula,
         private ?int $oidcClient,
+        private ?string $contractualBase,
     ) {
     }
 
@@ -115,6 +121,17 @@ class Coin implements Comparable
         }
         return $this->typeOfService;
     }
+
+    public function getContractualBase(): ?string
+    {
+        return $this->contractualBase;
+    }
+
+    public function setContractualBase(string $contractualBase): void
+    {
+        $this->contractualBase = $contractualBase;
+    }
+
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -131,6 +148,7 @@ class Coin implements Comparable
         $this->eula = is_null($coin->getEula()) ? null : $coin->getEula();
         $this->oidcClient = is_null($coin->getOidcClient()) ? null : $coin->getOidcClient();
         $this->typeOfService = $coin->getTypeOfService();
+        $this->contractualBase = $coin->getContractualBase();
     }
 
     public function asArray(): array
@@ -143,6 +161,7 @@ class Coin implements Comparable
             'metaDataFields.coin:original_metadata_url' => $this->getOriginalMetadataUrl(),
             'metaDataFields.coin:ss:type_of_service:en' => $this->getTypeOfService()->getServicesAsEnglishString(),
             'metaDataFields.coin:ss:type_of_service:nl' => $this->getTypeOfService()->getServicesAsDutchString(),
+            'metaDataFields.coin:contractual_base' => $this->getContractualBase(),
         ];
     }
 }

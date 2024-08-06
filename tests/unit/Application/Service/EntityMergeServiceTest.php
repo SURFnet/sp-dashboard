@@ -53,7 +53,7 @@ class EntityMergeServiceTest extends TestCase
         $service = m::mock(Service::class);
         $service->shouldReceive('getOrganizationNameEn', 'getOrganizationNameNl', 'getOrganizationDisplayNameEn', 'getOrganizationDisplayNameNl')
             ->andReturn('Organization Name');
-        $manageEntity = $this->service->mergeEntityCommand($this->buildSamlCommand($service), null);
+        $manageEntity = $this->service->mergeEntityCommand($this->buildSamlCommand($service));
 
         self::assertNull($manageEntity->getId());
         self::assertFalse($manageEntity->isManageEntity());
