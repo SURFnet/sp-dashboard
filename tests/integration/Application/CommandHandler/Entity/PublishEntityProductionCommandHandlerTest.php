@@ -32,8 +32,11 @@ use Surfnet\ServiceProviderDashboard\Application\Service\MailService;
 use Surfnet\ServiceProviderDashboard\Application\Service\TicketService;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Coin;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Protocol;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\PublishEntityRepository;
+use Surfnet\ServiceProviderDashboard\Domain\Service\ContractualBaseService;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardSamlBundle\Security\Identity;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -88,6 +91,7 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
 
         $this->commandHandler = new PublishEntityProductionCommandHandler(
             $this->publishEntityClient,
+            new ContractualBaseService(),
             $this->entityService,
             $this->ticketService,
             $this->requestStack,
@@ -107,6 +111,17 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('Test Entity Name');
         $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
         $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
+        $manageEntity->shouldReceive('getService->getServiceType')->andReturn(Constants::SERVICE_TYPE_INSTITUTE);
+
+        $coin = m::mock(Coin::class);
+        $coin->shouldReceive('setContractualBase')->with(Constants::CONTRACTUAL_BASE_IX);
+        $manageEntity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
+
+        $protocol = m::mock(Protocol::class);
+        $protocol->shouldReceive('getProtocol')->andReturn(Constants::TYPE_SAML);
+
+        $manageEntity
+            ->shouldReceive('getProtocol')->andReturn($protocol);
 
         $manageEntity
             ->shouldReceive('getMetaData->getEntityId')
@@ -172,7 +187,17 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
             ->andReturn('123');
         $manageEntity->shouldReceive('isManageEntity')->andReturnTrue();
         $manageEntity->shouldReceive('getEnvironment')->andReturn('production');
+        $manageEntity->shouldReceive('getService->getServiceType')->andReturn(Constants::SERVICE_TYPE_INSTITUTE);
 
+        $coin = m::mock(Coin::class);
+        $coin->shouldReceive('setContractualBase')->with(Constants::CONTRACTUAL_BASE_IX);
+        $manageEntity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
+
+        $protocol = m::mock(Protocol::class);
+        $protocol->shouldReceive('getProtocol')->andReturn(Constants::TYPE_SAML);
+
+        $manageEntity
+            ->shouldReceive('getProtocol')->andReturn($protocol);
         $manageEntity
             ->shouldReceive('setStatus')
             ->with(Constants::STATE_PUBLISHED);
@@ -272,6 +297,17 @@ class PublishEntityProductionCommandHandlerTest extends MockeryTestCase
         $manageEntity
             ->shouldReceive('getMetaData->getEntityId')
             ->andReturn('https://app.example.com/');
+        $manageEntity->shouldReceive('getService->getServiceType')->andReturn(Constants::SERVICE_TYPE_INSTITUTE);
+
+        $coin = m::mock(Coin::class);
+        $coin->shouldReceive('setContractualBase')->with(Constants::CONTRACTUAL_BASE_IX);
+        $manageEntity->shouldReceive('getMetaData->getCoin')->andReturn($coin);
+
+        $protocol = m::mock(Protocol::class);
+        $protocol->shouldReceive('getProtocol')->andReturn(Constants::TYPE_SAML);
+
+        $manageEntity
+            ->shouldReceive('getProtocol')->andReturn($protocol);
 
         $manageEntity
             ->shouldReceive('getId')
