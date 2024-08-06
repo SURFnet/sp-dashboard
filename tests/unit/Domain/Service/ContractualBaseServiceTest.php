@@ -107,7 +107,7 @@ class ContractualBaseServiceTest extends TestCase
     {
         $metadata = $this->createMock(MetaData::class);
         // Use an acutal Coin instance, as the value for the contractual base is overwritten in the service
-        $coin = new Coin(null, null, null, null, null, null, null, null, null);
+        $coin = new Coin(null, null, null, null, null, null, null, null, null, null);
         $service = $this->createMock(Service::class);
         $protocol = $this->createMock(Protocol::class);
         $protocol->method('getProtocol')->willReturn($protocolValue);
