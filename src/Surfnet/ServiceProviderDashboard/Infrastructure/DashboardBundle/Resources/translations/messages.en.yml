@@ -267,7 +267,8 @@ entity.edit.information.accessTokenValidity: Text should be set in web translati
 entity.edit.information.resourceServers: Text should be set in web translations
 entity.edit.information.redirectUrls: Text should be set in web translations
 entity.edit.information.isPublicClient: Text should be set in web translations
-entity.edit.information.isPublicOnDashboard: Text should be set in web translations
+entity.edit.label.isPublicOnDashboard: Make your service publicly visible in the SURFconext dashboard
+entity.edit.information.isPublicOnDashboard: The SURFconext dashboard shows institutions a list of applications that are connected to SURFconext. If you tick the checkbox, your application will be visible to everyone, and instutions can request to connect. Leave the checkbox unticked if you have an application that is for one institution only and you do not want other institutions to be able to log in to your application as well.
 entity.edit.information.pastedMetadata: Text should be set in web translations
 entity.edit.information.logoUrl: Text should be set in web translations
 entity.edit.information.nameNl: Text should be set in web translations

@@ -25,10 +25,11 @@ use Surfnet\ServiceProviderDashboard\Domain\Exception\TypeOfServiceException;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\TypeOfServiceCollection;
 use Webmozart\Assert\Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ */
 class Coin implements Comparable
 {
-
-
     public static function fromApiResponse(array $metaDataFields): self
     {
         $signatureMethod = $metaDataFields['coin:signature_method'] ?? '';

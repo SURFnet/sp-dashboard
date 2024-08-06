@@ -190,6 +190,7 @@ class OidcngEntityType extends AbstractType
                 CheckboxType::class,
                 [
                     'required' => false,
+                    'label' => 'entity.edit.label.isPublicOnDashboard',
                     'attr' => [
                         'required' => false,
                         'data-help' => 'entity.edit.information.isPublicOnDashboard',

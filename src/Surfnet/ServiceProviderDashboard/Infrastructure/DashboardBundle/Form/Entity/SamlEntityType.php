@@ -171,6 +171,7 @@ class SamlEntityType extends AbstractType
                         'isPublicInDashboard',
                         CheckboxType::class,
                         [
+                            'label' => 'entity.edit.label.isPublicOnDashboard',
                             'required' => false,
                             'attr' => [
                                 'required' => false,
