@@ -104,6 +104,9 @@ class EntityDetailFactory
             $grants,
             $playgroundEnabled,
             $accessTokenValidity,
+            // Note when the metaDataFields.coin:ss:idp_visible_only is set to be true
+            // that translate to the dashboards isPublicInDashboard to be false
+            !$manageEntity->getMetaData()?->getCoin()->isIdpVisibleOnly(),
             $isPublicClient,
             $resourceServers,
             $manageEntity->getMetaData()?->getCoin()->getTypeOfService()->getServicesAsArray()

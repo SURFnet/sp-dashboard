@@ -75,6 +75,9 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setEulaUrl($coins->getEula());
         $command->setImportUrl($coins->getOriginalMetadataUrl());
         $command->setTypeOfService($coins->getTypeOfService()->getArray());
+        // Note that the IdP Visible Only coin has the opposite meaning to our setting (is public in idp dashboard)
+        // hence the negation
+        $command->setIsPublicInDashboard(!$coins->isIdpVisibleOnly());
 
         // Attributes
         $this->setAttributes($command, $manageEntity->getAttributes());
@@ -112,6 +115,9 @@ class SaveCommandFactory implements SaveCommandFactoryInterface
         $command->setApplicationUrl($coins->getApplicationUrl());
         $command->setEulaUrl($coins->getEula());
         $command->setTypeOfService($coins->getTypeOfService()->getArray());
+        // Note that the IdP Visible Only coin has the opposite meaning to our setting (is public in idp dashboard)
+        // hence the negation
+        $command->setIsPublicInDashboard(!$coins->isIdpVisibleOnly());
 
         // Attributes
         $this->setAttributes($command, $manageEntity->getAttributes());
