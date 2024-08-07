@@ -31,6 +31,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -323,6 +325,18 @@ class SamlEntityType extends AbstractType
 
             ->add('publishButton', SubmitType::class, ['label'=> $options['publish_button_label'], 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
+
+        // When the SAML2.0 entity is set to have an UNSPECIFIED name id format (in manage) do not show the field on the form
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+            /** @var SaveSamlEntityCommand $data */
+            $data = $event->getData();
+            if ($data->getNameIdFormat() === Constants::NAME_ID_FORMAT_UNSPECIFIED) {
+                $form = $event->getForm();
+                if ($form->has('metadata') && $form->get('metadata')->has('nameIdFormat')) {
+                    $form->get('metadata')->remove('nameIdFormat');
+                }
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

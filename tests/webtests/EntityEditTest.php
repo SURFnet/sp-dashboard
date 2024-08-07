@@ -19,6 +19,7 @@
 namespace Surfnet\ServiceProviderDashboard\Webtests;
 
 use Surfnet\ServiceProviderDashboard\Application\Service\AttributeService;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\DataFixtures\ORM\WebTestFixtures;
 use Surfnet\ServiceProviderDashboard\Infrastructure\DashboardBundle\Form\Entity\AttributeType;
 
@@ -78,6 +79,33 @@ class EntityEditTest extends WebTestCase
             'SP1 Name English',
             $nameEnfield->getValue(),
             'Expect the NameEN field to be set with value from command'
+        );
+    }
+
+    public function test_it_hides_name_id_format_unspecified()
+    {
+        // 1. When NameIdFormat is not Unspecified, the form field does appear on the form
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/{$this->manageId}/1");
+        $this->assertOnPage(
+            'Name id format',
+            $crawler
+        );
+        // 2. But when the nameIdFormat is unspecified, the form field is not displayed on the form
+        $this->registerManageEntity(
+            'test',
+            'saml20_sp',
+            '88888888-1111-1111-1111-888888888888',
+            'SP1',
+            'https://spx-entityid.example.com',
+            'https://spx-entityid.example.com/metadata',
+            WebTestFixtures::TEAMNAME_SURF,
+            '12',
+            Constants::NAME_ID_FORMAT_UNSPECIFIED
+        );
+        $crawler = self::$pantherClient->request('GET', "/entity/edit/test/88888888-1111-1111-1111-888888888888/1");
+        $this->assertNotOnPage(
+            'Name id format',
+            $crawler
         );
     }
 

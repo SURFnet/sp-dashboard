@@ -55,6 +55,7 @@ class Constants
         return [
             Constants::NAME_ID_FORMAT_TRANSIENT,
             Constants::NAME_ID_FORMAT_PERSISTENT,
+            Constants::NAME_ID_FORMAT_UNSPECIFIED,
         ];
     }
 }

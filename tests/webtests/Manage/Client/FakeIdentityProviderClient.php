@@ -34,7 +34,7 @@ class FakeIdentityProviderClient implements IdentityProviderRepository
 
     public function registerEntity(string $protocol, string $id, string $entityId, string $name, string $institutionId = '')
     {
-        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, null, $name, null, $institutionId);
+        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, null, $name, null, $institutionId, null);
         $this->storeEntities();
     }
 

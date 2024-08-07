@@ -45,7 +45,7 @@
     "metaDataFields": {
       "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
       "AssertionConsumerService:0:Location": "%3$s\/acs",
-      "NameIDFormat": "nameidformat",
+      "NameIDFormat": "%9$s",
       "description:en": "%5$s Description English",
       "description:nl": "%5$s Description Dutch",
       "name:en": "%5$s Name English",
