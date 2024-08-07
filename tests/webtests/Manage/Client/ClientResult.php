@@ -41,6 +41,7 @@ class ClientResult implements ClientResultInterface
     private $teamName;
 
     private string $institutionId;
+    private string $nameIdFormat;
 
     public function __construct(
         string $protocol,
@@ -50,6 +51,7 @@ class ClientResult implements ClientResultInterface
         string $name,
         ?string $teamName,
         ?string $institutionId,
+        ?string $nameIdFormat,
     ) {
         $this->id = $id;
         $this->protocol = $protocol;
@@ -64,6 +66,7 @@ class ClientResult implements ClientResultInterface
         if ($teamName === null) {
             $this->teamName = WebTestFixtures::TEAMNAME_SURF;
         }
+        $this->nameIdFormat = $nameIdFormat ?? 'nameidformat';
     }
 
     public function getEntityResult(): array
@@ -93,7 +96,8 @@ class ClientResult implements ClientResultInterface
             $this->name,
             str_replace('_', '-', $this->protocol),
             $this->teamName,
-            $this->institutionId
+            $this->institutionId,
+            $this->nameIdFormat,
         );
         return json_decode($data, true);
     }
@@ -124,6 +128,7 @@ class ClientResult implements ClientResultInterface
             $data['name'],
             $data['teamName'],
             $data['institutionId'],
+            $data['nameIdFormat'],
         );
     }
 
@@ -137,6 +142,7 @@ class ClientResult implements ClientResultInterface
             'name' => $this->name,
             'teamName' => $this->teamName,
             'institutionId' => $this->institutionId,
+            'nameIdFormat' => $this->nameIdFormat,
         ];
     }
 }

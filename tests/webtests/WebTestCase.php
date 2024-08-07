@@ -31,6 +31,7 @@ use Facebook\WebDriver\WebDriverKeys;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use Surfnet\ServiceProviderDashboard\Application\Exception\InvalidArgumentException;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Constants;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Service;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\DeleteManageEntityRepository;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
@@ -182,6 +183,7 @@ class WebTestCase extends PantherTestCase
         ?string $metadataUrl = null,
         ?string $teamName = null,
         ?string $institutionId = '',
+        ?string $nameIdFormat = Constants::NAME_ID_FORMAT_PERSISTENT
     ) {
         switch ($protocol) {
             case 'saml20_sp':
@@ -196,6 +198,7 @@ class WebTestCase extends PantherTestCase
                     $metadataUrl,
                     $teamName,
                     $institutionId,
+                    $nameIdFormat,
                 );
                 break;
             case 'saml20_idp':
@@ -242,6 +245,7 @@ class WebTestCase extends PantherTestCase
         ?string $metadataUrl = null,
         ?string $teamName = null,
         ?string $institutionId = '',
+        ?string $nameIdFormat = '',
     ) {
         switch ($env) {
             case 'production':
@@ -252,7 +256,8 @@ class WebTestCase extends PantherTestCase
                     $metadataUrl,
                     $name,
                     $teamName,
-                    $institutionId
+                    $institutionId,
+                    $nameIdFormat
                 );
                 break;
             case 'test':
@@ -263,7 +268,8 @@ class WebTestCase extends PantherTestCase
                     $metadataUrl,
                     $name,
                     $teamName,
-                    $institutionId
+                    $institutionId,
+                    $nameIdFormat
                 );
                 break;
             default:
