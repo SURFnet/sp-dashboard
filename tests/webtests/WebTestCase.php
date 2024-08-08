@@ -471,9 +471,11 @@ class WebTestCase extends PantherTestCase
         self::assertTrue(true);
     }
 
-    protected static function findBy(string $cssSelector): WebDriverElement
+    protected static function findBy(string $cssSelector, bool $doWait = true): WebDriverElement
     {
-        self::$pantherClient->waitForVisibility($cssSelector, 10);
+        if ($doWait) {
+            self::$pantherClient->waitForVisibility($cssSelector, 10);
+        }
         return self::$pantherClient->findElement(WebDriverBy::cssSelector($cssSelector));
     }
 

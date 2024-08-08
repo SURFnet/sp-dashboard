@@ -63,7 +63,7 @@ class ServiceSwitcherTest extends WebTestCase
         $this->loadFixtures();
         self::$pantherClient->request('GET', '/service/create');
 
-        $this->assertEmpty(self::findBy('select#service-switcher')->getText());
+        $this->assertEmpty(self::findBy('select#service-switcher', false)->getText());
     }
 
     public function test_switcher_lists_all_services_for_administrators()
