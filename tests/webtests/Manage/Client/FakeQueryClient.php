@@ -58,8 +58,9 @@ class FakeQueryClient implements QueryManageRepository
         string $name,
         ?string $teamName = null,
         ?string $institutionId = '',
+        ?string $nameIdFormat = '',
     ) {
-        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, $metadataUrl, $name, $teamName, $institutionId);
+        $this->entities[$id] = new ClientResult($protocol, $id, $entityId, $metadataUrl, $name, $teamName, $institutionId, $nameIdFormat);
         $this->storeEntities();
     }
 

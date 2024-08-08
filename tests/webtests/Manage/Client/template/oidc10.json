@@ -50,7 +50,7 @@
         "authorization_code",
         "refresh_token"
       ],
-      "NameIDFormat": "nameidformat",
+      "NameIDFormat": "%9$s",
       "isResourceServer": false,
       "contacts:0:emailAddress": "emailaddress@example.com",
       "contacts:0:contactType": "support",

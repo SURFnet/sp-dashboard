@@ -34,6 +34,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -373,6 +375,18 @@ class OidcngEntityType extends AbstractType
 
             ->add('publishButton', SubmitType::class, ['label'=> $options['publish_button_label'], 'attr' => ['class' => 'button']])
             ->add('cancel', SubmitType::class, ['attr' => ['class' => 'button']]);
+
+        // When the Oidc entity is set to have an UNSPECIFIED subject type (in manage) do not show the field on the form
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+            /** @var SaveOidcngEntityCommand $data */
+            $data = $event->getData();
+            if ($data->getSubjectType() === Constants::NAME_ID_FORMAT_UNSPECIFIED) {
+                $form = $event->getForm();
+                if ($form->has('metadata') && $form->get('metadata')->has('subjectType')) {
+                    $form->get('metadata')->remove('subjectType');
+                }
+            }
+        });
     }
 
     private function buildAttributeTypes(FormBuilderInterface $container): FormBuilderInterface
