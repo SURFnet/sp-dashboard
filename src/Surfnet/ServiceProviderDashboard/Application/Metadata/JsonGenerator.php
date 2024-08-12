@@ -77,7 +77,7 @@ class JsonGenerator implements GeneratorInterface
             'type' => 'saml20_sp',
             'id' => $entity->getId(),
         ];
-        $data['revisionnote'] = (string) new EntityEditRevisionNote(
+        $data['pathUpdates']['revisionnote'] = (string) new EntityEditRevisionNote(
             $entity->getComments(),
             $contact->getDisplayName(),
             $contact->getEmailAddress(),
@@ -125,8 +125,6 @@ class JsonGenerator implements GeneratorInterface
         $metadata += $this->generateAclData($entity);
         $metadata['metadataurl'] = $entity->getMetaData()->getMetadataUrl();
 
-        $metadata['revisionnote'] = $entity->getRevisionNote();
-
         return $metadata;
     }
 
@@ -154,7 +152,6 @@ class JsonGenerator implements GeneratorInterface
                 }
                 $metadata = $this->generateArp($metadata, $entity);
                 $metadata['state'] = $workflowState;
-                $metadata['revisionnote'] = $entity->getRevisionNote();
 
                 // When publishing to production, the coin:exclude_from_push must be present and set to '1'. This prevents the
                 // entity from being pushed to EngineBlock. Once the entity is checked a final time, the flag is set to 0

@@ -133,8 +133,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $entity = $this->createManageEntity();
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
-
-        $metadata = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('Alec Ann');
+        $contact->shouldReceive('getEmailAddress')->andReturn('aa@example.com');
+        $metadata = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $contact);
         $metadata = $metadata['pathUpdates'];
 
         $this->assertArrayNotHasKey('active', $metadata);
@@ -142,7 +144,8 @@ class JsonGeneratorTest extends MockeryTestCase
 
         $this->assertEquals('http://entityid', $metadata['entityid']);
         $this->assertEquals('http://metadata', $metadata['metadataurl']);
-        $this->assertEquals('revisionnote', $metadata['revisionnote']);
+        $this->assertStringContainsString('Entity edited by user Alec Ann with email address "aa@example.com"', $metadata['revisionnote']);
+        $this->assertStringContainsString('revisionnote', $metadata['revisionnote']);
         $this->assertEquals(['arp' => 'arp'], $metadata['arp']);
 
 
@@ -229,7 +232,11 @@ class JsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $contact);
 
         $expected = array (
             'pathUpdates' =>
@@ -240,19 +247,22 @@ class JsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.name:en' => 'Test Entity EN',
                     'metaDataFields.name:nl' => 'Test Entity NL',
                     'state' => 'testaccepted',
-                    'revisionnote' => 'revisionnote',
                     'metaDataFields.contacts:2:givenName' => 'John Doe',
                     'metaDataFields.coin:exclude_from_push' => '0',
                     'privacy' => 'privacy',
                 ),
             'type' => 'saml20_sp',
             'id' => 'manageId',
+
         );
 
         $this->addEmptyAscLocations(1, 'metaDataFields.', $expected['pathUpdates']);
 
         $expected['pathUpdates']['metaDataFields.AssertionConsumerService:0:Binding'] = Constants::BINDING_HTTP_POST;
         $expected['pathUpdates']['metaDataFields.AssertionConsumerService:0:Location'] = 'http://acs';
+
+        $this->assertStringContainsString('Entity edited by user John Doe with email address "jd@example.com"', $data['pathUpdates']['revisionnote']);
+        unset($data['pathUpdates']['revisionnote']);
 
         $this->assertEquals($expected, $data);
     }
@@ -269,7 +279,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $contact, 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -289,7 +302,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $contact, 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -309,7 +325,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $contact, 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -330,7 +349,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $contact, 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -358,7 +380,10 @@ class JsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('isProduction')
             ->andReturn(true);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'prodaccepted', $contact);
 
         $this->assertEquals('1', $data['pathUpdates']['metaDataFields.coin:exclude_from_push']);
     }
@@ -382,7 +407,10 @@ class JsonGeneratorTest extends MockeryTestCase
             ->shouldReceive('isProduction')
             ->andReturn(true);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'prodaccepted', $contact);
 
         $this->assertEquals('0', $data['pathUpdates']['metaDataFields.coin:exclude_from_push']);
     }
@@ -400,7 +428,10 @@ class JsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $contact = m::mock(Contact::class);
+        $contact->shouldReceive('getDisplayName')->andReturn('John Doe');
+        $contact->shouldReceive('getEmailAddress')->andReturn('jd@example.com');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $contact, 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);

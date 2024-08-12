@@ -87,11 +87,11 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('saml');
         $diff = m::mock(EntityDiff::class);
-        $result = $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $result = $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted', m::mock(Contact::class));
         $this->assertIsArray($result);
 
         $entity->shouldReceive('getProtocol->getProtocol')->andReturn('oidcng');
-        $result = $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $result = $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted', m::mock(Contact::class));
         $this->assertIsArray($result);
     }
 
@@ -104,6 +104,6 @@ class JsonGeneratorStrategyTest extends MockeryTestCase
         $this->expectException(JsonGeneratorStrategyNotFoundException::class);
         $this->expectExceptionMessage('The requested JsonGenerator for protocol "saml30" is not registered');
         $diff = m::mock(EntityDiff::class);
-        $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted');
+        $this->strategy->generateForExistingEntity($entity, $diff, 'prodaccepted', m::mock(Contact::class));
     }
 }

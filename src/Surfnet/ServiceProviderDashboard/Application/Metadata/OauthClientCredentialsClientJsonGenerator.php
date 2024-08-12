@@ -81,7 +81,7 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
             'type' => 'oidc10_rp',
             'id' => $entity->getId(),
         ];
-        $data['revisionnote'] = (string) new EntityEditRevisionNote(
+        $data['pathUpdates']['revisionnote'] = (string) new EntityEditRevisionNote(
             $entity->getComments(),
             $contact->getDisplayName(),
             $contact->getEmailAddress(),
@@ -155,7 +155,6 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
                 $this->privacyQuestionsMetadataGenerator->withMetadataPrefix();
                 $metadata += $this->privacyQuestionsMetadataGenerator->build($entity);
 
-                $metadata['revisionnote'] = $entity->getRevisionNote();
                 return $metadata;
         }
     }

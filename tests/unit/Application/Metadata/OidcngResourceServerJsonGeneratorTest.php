@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\SpDashboardMetadataGenerator;
@@ -125,7 +126,10 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
         $diff = m::mock(EntityDiff::class);
         $diff->shouldReceive('getDiff')
             ->andReturn(['metaDataFields.name:en' => 'A new hope']);
-        $data = $generator->generateForExistingEntity($this->createManageEntity(), $diff, 'testaccepted');
+        $data = $generator->generateForExistingEntity($this->createManageEntity(), $diff, 'testaccepted', $this->getContact());
+
+        $this->assertStringContainsString('Entity edited by user John Doe with email address "j.doe@example.com"', $data['pathUpdates']['revisionnote']);
+        unset($data['pathUpdates']['revisionnote']);
 
         $this->assertEquals(
             array(
@@ -134,7 +138,6 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
                         'entityid' => 'entityid',
                         'metaDataFields.name:en' => 'A new hope',
                         'state' => 'testaccepted',
-                        'revisionnote' => 'revisionnote',
                         'privacy' => 'privacy'
                     ),
                 'type' => 'oauth20_rs',
@@ -221,5 +224,13 @@ class OidcngResourceServerJsonGeneratorTest extends MockeryTestCase
         $entity->setComments('revisionnote');
         $entity = m::mock($entity);
         return $entity;
+    }
+
+    private function getContact(): MockInterface&Contact
+    {
+        $mock = m::mock(Contact::class);
+        $mock->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $mock->shouldReceive('getDisplayName')->andReturn('John Doe');
+        return $mock;
     }
 }

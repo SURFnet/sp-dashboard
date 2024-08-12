@@ -73,6 +73,7 @@ class PublishEntityClient implements PublishEntityRepositoryInterface
                         $entity,
                         $diff,
                         $this->manageConfig->getPublicationStatus()->getStatus(),
+                        $contact,
                         $part
                     )
                 );
