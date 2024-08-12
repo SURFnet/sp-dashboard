@@ -25,6 +25,7 @@ use Surfnet\ServiceProviderDashboard\Domain\Entity\Contact as ContactEntity;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\ChangeRequestRevisionNote;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\Contact;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\EntityCreationRevisionNote;
+use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\EntityEditRevisionNote;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\Entity\JiraTicketNumber;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\EntityDiff;
 use Surfnet\ServiceProviderDashboard\Domain\Entity\ManageEntity;
@@ -72,13 +73,20 @@ class OauthClientCredentialsClientJsonGenerator implements GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
+        ContactEntity $contact,
         string $updatedPart = '',
     ): array {
-        return [
+        $data = [
             'pathUpdates' => $this->generateDataForExistingEntity($entity, $differences, $workflowState, $updatedPart),
             'type' => 'oidc10_rp',
             'id' => $entity->getId(),
         ];
+        $data['revisionnote'] = (string) new EntityEditRevisionNote(
+            $entity->getComments(),
+            $contact->getDisplayName(),
+            $contact->getEmailAddress(),
+        );
+        return $data;
     }
 
     private function generateDataForNewEntity(ManageEntity $entity, string $workflowState): array

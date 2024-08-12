@@ -50,6 +50,7 @@ interface GeneratorInterface
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
+        Contact $contact,
         string $updatedPart = '',
     ): array;
 
