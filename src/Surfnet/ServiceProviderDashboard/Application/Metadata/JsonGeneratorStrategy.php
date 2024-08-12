@@ -69,10 +69,11 @@ class JsonGeneratorStrategy
         ManageEntity $entity,
         EntityDiff $differences,
         string $workflowState,
+        Contact $contact,
         string $updatedPart = '',
     ): array {
         return $this->getStrategy($entity->getProtocol()->getProtocol())
-            ->generateForExistingEntity($entity, $differences, $workflowState, $updatedPart);
+            ->generateForExistingEntity($entity, $differences, $workflowState, $contact, $updatedPart);
     }
 
     public function generateEntityChangeRequest(

@@ -77,7 +77,7 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
             'active' => true,
             'id' => $entity->getId(),
         ];
-        $data['revisionnote'] = (string) new EntityEditRevisionNote(
+        $data['pathUpdates']['revisionnote'] = (string) new EntityEditRevisionNote(
             $entity->getComments(),
             $contact->getDisplayName(),
             $contact->getEmailAddress(),
@@ -142,8 +142,6 @@ class OidcngResourceServerJsonGenerator implements GeneratorInterface
 
         $this->privacyQuestionsMetadataGenerator->withMetadataPrefix();
         $metadata += $this->privacyQuestionsMetadataGenerator->build($entity);
-
-        $metadata['revisionnote'] = $entity->getRevisionNote();
 
         return $metadata;
     }

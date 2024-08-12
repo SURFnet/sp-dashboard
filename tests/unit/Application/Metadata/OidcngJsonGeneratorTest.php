@@ -20,6 +20,7 @@ namespace Surfnet\ServiceProviderDashboard\Tests\Unit\Application\Factory;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\ArpGenerator;
 use Surfnet\ServiceProviderDashboard\Application\Metadata\JsonGenerator\PrivacyQuestionsMetadataGenerator;
@@ -81,7 +82,14 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity = $this->createManageEntity();
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $this->getContact());
+
+        $note = $data['pathUpdates']['revisionnote'];
+        // First test the revisionnote (date part is not tested, it is not using a static (test) clock so only the first part is tested,
+        $this->assertStringContainsString('Entity edited by user John Doe with email address "j.doe@example.com"', $note);
+        // Then remove the revisiononte from the data and expected data.
+        unset($data['pathUpdates']['revisionnote']);
+
         $this->assertEquals(
             [
                 'type' => 'oidc10_rp',
@@ -94,7 +102,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                     'metaDataFields.contacts:2:surName' => 'Doe',
                     'metaDataFields.OrganizationName:nl' => 'Drop Supplies',
                     'metaDataFields.OrganizationDisplayName:en' => 'Drop Supplies',
-                    'revisionnote' => 'revisionnote',
                     'privacy' => 'privacy'
                 ],
             ],
@@ -117,8 +124,10 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity = $this->createManageEntity();
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $this->getContact());
 
+        $this->assertStringContainsString('Entity edited by user John Doe with email address "j.doe@example.com"', $data['pathUpdates']['revisionnote']);
+        unset($data['pathUpdates']['revisionnote']);
         $this->assertEquals(
             array(
                 'pathUpdates' =>
@@ -132,7 +141,6 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
                         'allowedResourceServers' => [
 
                         ],
-                        'revisionnote' => 'revisionnote',
                         'privacy' => 'privacy'
                     ),
                 'type' => 'oidc10_rp',
@@ -155,7 +163,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity = $this->createManageEntity();
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $this->getContact(), 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -179,7 +187,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $this->getContact(), 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(true, $data['pathUpdates']['allowedall']);
@@ -203,7 +211,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $this->getContact(), 'ACL');
 
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
@@ -229,7 +237,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         ]);
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $this->getContact(), 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -257,7 +265,7 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $changedEntity = $this->createChangedManageEntity();
         $diff = $entity->diff($changedEntity);
 
-        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', 'ACL');
+        $data = $generator->generateForExistingEntity($entity, $diff, 'testaccepted', $this->getContact(), 'ACL');
 
         $this->assertArrayHasKey('allowedall', $data['pathUpdates']);
         $this->assertSame(false, $data['pathUpdates']['allowedall']);
@@ -333,5 +341,13 @@ class OidcngJsonGeneratorTest extends MockeryTestCase
         $entity->setComments('revisionnote');
         $entity = m::mock($entity);
         return $entity;
+    }
+
+    private function getContact(): MockInterface&Contact
+    {
+        $mock = m::mock(Contact::class);
+        $mock->shouldReceive('getEmailAddress')->andReturn('j.doe@example.com');
+        $mock->shouldReceive('getDisplayName')->andReturn('John Doe');
+        return $mock;
     }
 }
