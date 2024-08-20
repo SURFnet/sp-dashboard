@@ -230,7 +230,9 @@ class JsonGenerator implements GeneratorInterface
         if ($entity->getMetaData()->getLogo() instanceof Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
             $metadata = array_merge($metadata, $this->generateLogoMetadata($entity));
         }
-
+        if ($entity->getMetaData()?->getCoin()->getContractualBase() !== null) {
+            $metadata['coin:contractual_base'] = $entity->getMetaData()->getCoin()->getContractualBase();
+        }
         return $metadata;
     }
 
