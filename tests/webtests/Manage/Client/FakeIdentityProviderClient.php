@@ -46,7 +46,8 @@ class FakeIdentityProviderClient implements IdentityProviderRepository
         $this->load();
         $list = [];
         foreach ($this->entities as $manageResult) {
-            $list[] = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
+            $idp = IdentityProviderFactory::fromManageResult($manageResult->getEntityResult());
+            $list[$idp->getEntityId()] = $idp;
         }
         return $list;
     }

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionIdpCollection;
@@ -29,4 +30,9 @@ interface IdpServiceInterface
     public function createCollection(): IdpCollection;
 
     public function findInstitutionIdps(InstitutionId $institutionId): InstitutionIdpCollection;
+
+    /**
+     * @return array<string, IdentityProvider>
+     */
+    public function findAll(): array;
 }

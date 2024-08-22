@@ -23,6 +23,9 @@ use Symfony\Component\Serializer\Attribute\Ignore;
 
 class EntityConnection
 {
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) - Could be decomposed, but for now makes no sense.
+     */
     public function __construct(
         public string $entityName,
         public string $entityId,
@@ -36,6 +39,7 @@ class EntityConnection
         public string $supportContact,
         public string $technicalContact,
         public string $administativeContact,
+        public bool $isAllowAll,
     ) {
     }
 

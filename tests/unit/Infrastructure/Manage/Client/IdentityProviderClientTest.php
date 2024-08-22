@@ -74,6 +74,8 @@ class IdentityProviderClientTest extends MockeryTestCase
             ->andReturn('testaccepted');
 
         $idps = $this->client->findAll();
+        // Re-index the results to allow for numeric access to the collection.
+        $idps = array_values($idps);
         $this->assertCount(4, $idps);
 
         $this->assertInstanceOf(IdentityProvider::class, $idps[0]);
@@ -105,7 +107,7 @@ class IdentityProviderClientTest extends MockeryTestCase
 
         $this->assertInstanceOf(IdentityProvider::class, $idps[3]);
         $this->assertSame(
-            'https://engine.dev.support.surfconext.nl/authentication/idp/metadata2',
+            'https://engine.dev.support.surfconext.nl/authentication/idp/metadata3',
             $idps[3]->getEntityId()
         );
         $this->assertSame('0c3febd2-3f67-4b8a-b90d-ce56a3b0abb6', $idps[3]->getManageId());
