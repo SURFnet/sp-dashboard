@@ -59,7 +59,8 @@ class IdentityProviderClient implements IdentityProviderRepository
                 return $list;
             }
             foreach ($result as $manageResult) {
-                $list[] = IdentityProviderFactory::fromManageResult($manageResult);
+                $idp = IdentityProviderFactory::fromManageResult($manageResult);
+                $list[$idp->getEntityId()] = $idp;
             }
             return $list;
         } catch (HttpException $e) {

@@ -49,6 +49,7 @@ class EntityConnectionTest extends TestCase
             'James',
             'Jenny',
             'John',
+            false,
         );
 
         $this->assertEquals($availableTest, $connection->listAvailableTestIdps());
@@ -88,6 +89,7 @@ class EntityConnectionTest extends TestCase
             'James',
             'Jenny',
             'John',
+            false
         );
 
         $this->assertEquals($availableTest, $connection->listAvailableTestIdps());

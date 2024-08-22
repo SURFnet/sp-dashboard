@@ -67,6 +67,7 @@ class ServiceConnectionService
                 $institutionId,
                 $this->getTestIdpsIndexed(),
                 $connectedOtherIdps,
+                $this->idpService->findAll()
             );
         }
         return $collection;
@@ -81,7 +82,8 @@ class ServiceConnectionService
             $collection,
             $institutionId,
             $this->getTestIdpsIndexed(),
-            $connectedOtherIdps
+            $connectedOtherIdps,
+            $this->idpService->findAll()
         );
         return $collection;
     }
@@ -97,12 +99,14 @@ class ServiceConnectionService
     /**
      * @param array<string, IdentityProvider> $testIdpsIndexed
      * @param array<string, IdentityProvider> $otherIdpsIndexed
+     * @param array<string, IdentityProvider> $allIdps
      */
     private function addEntitiesToCollection(
         EntityConnectionCollection $collection,
         InstitutionId $institutionId,
         array $testIdpsIndexed,
         array $otherIdpsIndexed,
+        array $allIdps,
     ): void {
         $list = [];
         $entities = $this->entityService->findPublishedTestEntitiesByInstitutionId($institutionId);
@@ -131,10 +135,11 @@ class ServiceConnectionService
                     $serviceName,
                     $testIdpsIndexed,
                     $otherIdpsIndexed,
-                    $testIdpsIndexed + $otherIdpsIndexed,
+                    $allIdps,
                     $supportContact,
                     $technicalContact,
-                    $adminContact
+                    $adminContact,
+                    true
                 );
                 continue;
             }
@@ -148,7 +153,8 @@ class ServiceConnectionService
                 $this->gatherConnectedIdps($entity, $testIdpsIndexed),
                 $supportContact,
                 $technicalContact,
-                $adminContact
+                $adminContact,
+                false
             );
         }
         $collection->addEntityConnections($list);

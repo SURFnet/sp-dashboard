@@ -20,6 +20,7 @@ declare(strict_types = 1);
 
 namespace Surfnet\ServiceProviderDashboard\Application\Service;
 
+use Surfnet\ServiceProviderDashboard\Domain\Entity\IdentityProvider;
 use Surfnet\ServiceProviderDashboard\Domain\Repository\IdentityProviderRepository;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\ConfiguredTestIdpCollection;
 use Surfnet\ServiceProviderDashboard\Domain\ValueObject\IdpCollection;
@@ -46,5 +47,13 @@ class IdpService implements IdpServiceInterface
     public function findInstitutionIdps(InstitutionId $institutionId): InstitutionIdpCollection
     {
         return new InstitutionIdpCollection($this->identityProviderRepository->findByInstitutionId($institutionId));
+    }
+
+    /**
+     * @return array<string, IdentityProvider>
+     */
+    public function findAll(): array
+    {
+        return $this->identityProviderRepository->findAll();
     }
 }

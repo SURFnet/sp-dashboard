@@ -24,7 +24,7 @@ use Surfnet\ServiceProviderDashboard\Domain\ValueObject\InstitutionId;
 interface IdentityProviderRepository
 {
     /**
-     * @return IdentityProvider[]
+     * @return array<string, IdentityProvider>
      */
     public function findAll();
 
