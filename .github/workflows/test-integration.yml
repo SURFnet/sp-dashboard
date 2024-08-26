@@ -27,14 +27,14 @@ jobs:
         with: 
           path: OpenConext-devconf
           repository: OpenConext/OpenConext-devconf
-          
-      - name: Start the docker images for testing
-        working-directory: spdashboard
-        run: ${DOCKER_COMPOSE} up -d
 
       - name: Bootstrap the openconext environment
         working-directory: spdashboard
         run: bash ../OpenConext-devconf/core/scripts/init.sh
+      
+      - name: Start the docker images for testing
+        working-directory: spdashboard
+        run: ${DOCKER_COMPOSE} up -d
 
       - name: Instantiate the env file
         run: cp spdashboard/.env.dist spdashboard/.env
