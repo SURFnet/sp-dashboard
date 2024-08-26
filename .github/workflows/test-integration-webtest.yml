@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      DOCKER_COMPOSE: PHP_MEMORY_LIMIT=265M docker compose -f docker-compose.yml -f docker-compose-ci.yml
+      DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-ci.yml
       DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-ci.yml exec -T spdashboard
 
     steps:
@@ -30,6 +30,8 @@ jobs:
       - name: Start the docker images for testing
         working-directory: spdashboard
         run: ${DOCKER_COMPOSE} up -d
+        env:
+          PHP_MEMORY_LIMIT: 265M
 
       - name: Bootstrap the openconext environment
         working-directory: spdashboard
