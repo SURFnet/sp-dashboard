@@ -14,6 +14,7 @@ jobs:
     env:
       DOCKER_COMPOSE: PHP_MEMORY_LIMIT=265M docker compose -f docker-compose.yml -f docker-compose-ci.yml
       DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-ci.yml exec -T spdashboard
+      DOCKER_RUN_SPD_AS_WWW: docker exec --user 33:33 spdashboard-spdashboard-1
 
     steps:
       - name: Check out the repo
@@ -53,10 +54,15 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP} yarn run encore production
 
+      - name: Delete the database if present
+        working-directory: spdashboard
+        run: | 
+          ${DOCKER_COMPOSE_PHP} rm -f /tmp/spdashboard-webtests.sqlite
+
       - name: Get the database up and running
         working-directory: spdashboard
         run: |
-          ${DOCKER_COMPOSE_PHP} bin/console doctrine:schema:create
+          ${DOCKER_RUN_SPD_AS_WWW} bin/console doctrine:schema:create
         env:
           APP_ENV: test
 
