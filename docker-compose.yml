@@ -4,6 +4,8 @@ include:
 services:
     spdashboard:
       image:  ghcr.io/openconext/openconext-basecontainers/php82-apache2-node20-composer2:latest
+      environment:
+        PHP_MEMORY_LIMIT: 256M
       volumes:
         - ../OpenConext-devconf/core/:/config
         - ./:/var/www/html/
