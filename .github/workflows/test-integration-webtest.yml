@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      DOCKER_COMPOSE: PHP_MEMORY_LIMIT=265M docker compose -f docker-compose.yml -f docker-compose-ci.yml
+      DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-ci.yml
       DOCKER_COMPOSE_PHP: docker compose -f docker-compose.yml -f docker-compose-ci.yml exec -T spdashboard
       DOCKER_RUN_SPD_AS_WWW: docker exec --user 33:33 spdashboard-spdashboard-1
 
