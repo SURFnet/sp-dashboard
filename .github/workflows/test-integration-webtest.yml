@@ -54,19 +54,7 @@ jobs:
         run: |
           ${DOCKER_COMPOSE_PHP} yarn run encore production
 
-      - name: Delete the database if present
-        working-directory: spdashboard
-        run: | 
-          ${DOCKER_COMPOSE_PHP} rm -f /tmp/spdashboard-webtests.sqlite
-
-      - name: Get the database up and running
-        working-directory: spdashboard
-        run: |
-          ${DOCKER_RUN_SPD_AS_WWW} bin/console doctrine:schema:create
-        env:
-          APP_ENV: test
-
       - name: Run CI tests
         working-directory: spdashboard
         run: |
-          ${DOCKER_COMPOSE_PHP} sh -c 'composer webtests'
+          ${DOCKER_COMPOSE_PHP} sh -c 'composer webtest'
