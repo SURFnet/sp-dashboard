@@ -183,9 +183,6 @@ services:
     tags:
       - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
 
-  Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser:
-    class: Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser
-
   surfnet.dashboard.metadata.client:
     class: GuzzleHttp\Client
 
@@ -218,7 +215,6 @@ services:
 
   Surfnet\ServiceProviderDashboard\Legacy\Metadata\Parser:
     arguments:
-      - '@Surfnet\ServiceProviderDashboard\Legacy\Metadata\CertificateParser'
       - '@Surfnet\ServiceProviderDashboard\Application\Service\AttributeService'
       - '%kernel.project_dir%/assets/Resources'
       - '@logger'
