@@ -310,7 +310,6 @@ class EntityEditTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://sp2-surf.com/metadata',
             'dashboard_bundle_entity_type[metadata][entityId]' => 'https://sp2-surf.com',
             'dashboard_bundle_entity_type[metadata][nameIdFormat]' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
-            'dashboard_bundle_entity_type[metadata][certificate]' => file_get_contents(__DIR__ . '/fixtures/publish/valid.cer'),
             'dashboard_bundle_entity_type[metadata][logoUrl]' => 'https://sp2-surf.com/images/logo.png',
             'dashboard_bundle_entity_type[metadata][nameNl]' => 'De Nederlandse naam voor dit entity',
             'dashboard_bundle_entity_type[metadata][descriptionNl]' => 'SURF SP2 Description Dutch',

@@ -418,9 +418,6 @@ class EntityCreateSamlTest extends WebTestCase
             'dashboard_bundle_entity_type[metadata][metadataUrl]' => 'https://metadata-url.net',
             'dashboard_bundle_entity_type[metadata][entityId]' => 'https://entity-id.url',
             'dashboard_bundle_entity_type[metadata][typeOfService][]' => 'Research',
-            'dashboard_bundle_entity_type[metadata][certificate]' => file_get_contents(
-                __DIR__ . '/fixtures/publish/valid.cer'
-            ),
             'dashboard_bundle_entity_type[metadata][logoUrl]' =>
                 'https://spdasboarddev.openconext.local/images/surfconext-logo.png',
             'dashboard_bundle_entity_type[contactInformation][administrativeContact][firstName]' => 'John',
