@@ -57,7 +57,9 @@ class CreatePrivacyQuestionsTest extends WebTestCase
 
         $crawler = self::$pantherClient->refreshCrawler();
 
-        self::assertOnPage('Your changes were saved!', $crawler);
+        $crawler = self::$pantherClient->waitFor('.flashMessage');
+        $message = $crawler->filter('.flashMessage');
+        $this->assertStringContainsString('Your changes were saved!', $message->text());
     }
     public function test_it_rejects_invalid_privacy_statement_urls()
     {

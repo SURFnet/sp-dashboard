@@ -64,9 +64,9 @@ class EditPrivacyQuestionsTest extends WebTestCase
         $this->fillFormField($form, '#dashboard_bundle_privacy_questions_type_privacyStatementUrlEn', 'https://foobar.example.com');
         $form->submit();
 
-        $crawler = self::$pantherClient->refreshCrawler();
-
-        self::assertOnPage('Your changes were saved!', $crawler);
+        $crawler = self::$pantherClient->waitFor('.flashMessage');
+        $message = $crawler->filter('.flashMessage');
+        $this->assertStringContainsString('Your changes were saved!', $message->text());
 
         // Now check if the correct DpaType is displayed and the privacy statement Url was saved
         $crawler = self::$pantherClient->request('GET', '/service/2/privacy');

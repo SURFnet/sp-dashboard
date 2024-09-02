@@ -188,8 +188,10 @@ class EntityEditTest extends WebTestCase
         self::findBy('#dashboard_bundle_entity_type_publishButton')->click();
 
         $pageTitle = self::$pantherClient->refreshCrawler()->filter('h1')->first()->text();
-        self::assertOnPage('Your changes were saved!');
         self::assertEquals('Successfully published the entity to test', $pageTitle);
+        $crawler = self::$pantherClient->waitFor('.flashMessage');
+        $message = $crawler->filter('.flashMessage');
+        $this->assertStringContainsString('Your changes were saved!', $message->text());
     }
 
     public function test_it_shows_flash_message_on_exception()

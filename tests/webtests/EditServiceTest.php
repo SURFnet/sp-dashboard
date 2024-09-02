@@ -47,7 +47,10 @@ class EditServiceTest extends WebTestCase
         $this->checkFormField($form, '#dashboard_bundle_edit_service_type_serviceStatus_surfconextRepresentativeApproved_1');
         $this->fillFormField($form, '#dashboard_bundle_edit_service_type_teams_teamName', 'urn:collab:group:vm.openconext.org:demo:openconext:org:team-a');
         self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
-        self::assertOnPage('Your changes were saved!');
+
+        $crawler = self::$pantherClient->waitFor('.flashMessage');
+        $message = $crawler->filter('.flashMessage');
+        $this->assertStringContainsString('Your changes were saved!', $message->text());
     }
 
     /**
@@ -74,8 +77,10 @@ class EditServiceTest extends WebTestCase
             ->form();
         $form->setValues($formData);
         self::$pantherClient->executeScript("document.getElementsByClassName('service-form').item(0).submit();");
-        self::$pantherClient->wait(3);
-        self::assertOnPage('Your changes were saved!');
+
+        $crawler = self::$pantherClient->waitFor('.flashMessage', 3);
+        $message = $crawler->filter('.flashMessage');
+        $this->assertStringContainsString('Your changes were saved!', $message->text());
 
         // Step 2: Surfnet can't access the privacy questions
         $this->logOut();
