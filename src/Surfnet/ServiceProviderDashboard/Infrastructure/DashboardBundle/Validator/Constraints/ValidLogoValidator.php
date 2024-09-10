@@ -41,15 +41,15 @@ class ValidLogoValidator extends ConstraintValidator
     {
     }
 
-    public function validate($value, Constraint $constraint): void
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (empty($value)) {
             return;
         }
 
         try {
-            $this->logoValidationHelper->validateLogo($value);
-            $this->getImageSizeValidation($value, $constraint);
+            $filePath = $this->logoValidationHelper->validateLogo($value);
+            $this->getImageSizeValidation($filePath, $constraint);
         } catch (LogoNotFoundException) {
             $this->context->addViolation(self::STATUS_DOWNLOAD_FAILED);
             return;
@@ -64,7 +64,7 @@ class ValidLogoValidator extends ConstraintValidator
      *
      * @param $value
      */
-    private function getImageSizeValidation($value, Constraint $constraint): void
+    private function getImageSizeValidation(string $value, Constraint $constraint): void
     {
         try {
             $imgData = getimagesize($value);
