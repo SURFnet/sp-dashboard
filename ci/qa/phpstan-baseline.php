@@ -928,7 +928,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^If condition is always true\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
 ];
 $ignoreErrors[] = [
@@ -992,11 +992,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\JsonGenerator\\:\\:generateLogoMetadata\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\JsonGenerator\\:\\:generateOrganizationMetadata\\(\\) return type has no value type specified in iterable type array\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
@@ -1008,11 +1003,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$acsLocations of static method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\AcsLocationHelper\\:\\:addEmptyAcsLocationsToMetaData\\(\\) expects array, array\\|null given\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$filename of function getimagesize expects string, string\\|null given\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/JsonGenerator.php',
 ];
@@ -1182,11 +1172,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OauthClientCredentialsClientJsonGenerator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\OauthClientCredentialsClientJsonGenerator\\:\\:generateLogoMetadata\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OauthClientCredentialsClientJsonGenerator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\OauthClientCredentialsClientJsonGenerator\\:\\:generateMetadataFields\\(\\) never returns float so it can be removed from the return type\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OauthClientCredentialsClientJsonGenerator.php',
@@ -1219,11 +1204,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$entityId of static method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Parser\\\\OidcngClientIdParser\\:\\:parse\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OauthClientCredentialsClientJsonGenerator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$filename of function getimagesize expects string, string\\|null given\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OauthClientCredentialsClientJsonGenerator.php',
 ];
 $ignoreErrors[] = [
@@ -1342,11 +1322,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngJsonGenerator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\OidcngJsonGenerator\\:\\:generateLogoMetadata\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngJsonGenerator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Metadata\\\\OidcngJsonGenerator\\:\\:generateMetadataFields\\(\\) never returns float so it can be removed from the return type\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngJsonGenerator.php',
@@ -1379,11 +1354,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$entityId of static method Surfnet\\\\ServiceProviderDashboard\\\\Application\\\\Parser\\\\OidcngClientIdParser\\:\\:parse\\(\\) expects string, string\\|null given\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngJsonGenerator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$filename of function getimagesize expects string, string\\|null given\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Application/Metadata/OidcngJsonGenerator.php',
 ];
 $ignoreErrors[] = [
@@ -3867,11 +3837,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/CurlLogoValidationHelper.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\LogoValidationHelperInterface\\:\\:validateLogo\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/LogoValidationHelperInterface.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Service\\\\LogoValidationHelperInterface\\:\\:validateLogo\\(\\) has parameter \\$url with no type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Service/LogoValidationHelperInterface.php',
@@ -3954,16 +3919,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidLogoValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Validator\\\\Constraints\\\\ValidLogoValidator\\:\\:getImageSizeValidation\\(\\) has parameter \\$value with no type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidLogoValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Surfnet\\\\ServiceProviderDashboard\\\\Infrastructure\\\\DashboardBundle\\\\Validator\\\\Constraints\\\\ValidLogoValidator\\:\\:validate\\(\\) has parameter \\$value with no type specified\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/../../src/Surfnet/ServiceProviderDashboard/Infrastructure/DashboardBundle/Validator/Constraints/ValidLogoValidator.php',
 ];
 $ignoreErrors[] = [

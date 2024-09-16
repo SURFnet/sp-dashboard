@@ -47,7 +47,7 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
 
         $this->validationHelper
             ->shouldReceive('validateLogo')
-            ->andReturn(null);
+            ->andReturn('file://'.__DIR__.'/fixture/logo_validator/small.png');
 
         $this->validator->validate('file://'.__DIR__.'/fixture/logo_validator/small.png', $constraint);
 
@@ -60,7 +60,7 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
 
         $this->validationHelper
             ->shouldReceive('validateLogo')
-            ->andReturn(null);
+            ->andReturn('file://'.__DIR__.'/fixture/logo_validator/small.gif');
 
         $this->validator->validate('file://'.__DIR__.'/fixture/logo_validator/small.gif', $constraint);
 
@@ -81,7 +81,7 @@ class ValidLogoValidatorTest extends ConstraintValidatorTestCase
 
         $this->validationHelper
             ->shouldReceive('validateLogo')
-            ->andReturn(null);
+            ->andReturn('file://'.__DIR__.'/fixture/logo_validator/ufjd');
 
         $this->validator->validate('ufjd', $constraint);
 

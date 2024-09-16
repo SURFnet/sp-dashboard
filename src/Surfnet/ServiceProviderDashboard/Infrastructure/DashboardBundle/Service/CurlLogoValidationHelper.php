@@ -33,12 +33,12 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
      * Using Curl: tests:
      *  - is the curl response code erroneous (>= 400)
      *  - if the content type is correct
+     * Returns the location where the logo is stored temporarily
      *
-     * @param  $url
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */
-    public function validateLogo($url): void
+    public function validateLogo($url): string
     {
         $this->logger->debug(sprintf('Validating logo: "%s" using curl', $url));
 
@@ -46,11 +46,13 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
-        curl_exec($ch);
+        $content = curl_exec($ch);
+        $fileLocation = '/tmp/logo-validation-' . uniqid();
+        file_put_contents($fileLocation, $content);
 
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         $responseCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
@@ -76,5 +78,7 @@ class CurlLogoValidationHelper implements LogoValidationHelperInterface
             $this->logger->info('The logo file type is invalid');
             throw new LogoInvalidTypeException('The logo file type is invalid');
         }
+
+        return $fileLocation;
     }
 }

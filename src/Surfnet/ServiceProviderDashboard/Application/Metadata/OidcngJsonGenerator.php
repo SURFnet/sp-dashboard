@@ -196,7 +196,7 @@ class OidcngJsonGenerator implements GeneratorInterface
         $metadata += $this->generateOidcClient($entity);
 
         if ($entity->getMetaData()->getLogo() instanceof Logo && $entity->getMetaData()->getLogo()->getUrl() !== '') {
-            $metadata += $this->generateLogoMetadata($entity);
+            $metadata['logo:0:url'] = $entity->getMetaData()->getLogo()->getUrl();
         }
         if ($entity->getMetaData()?->getCoin()->getContractualBase() !== null) {
             $metadata['coin:contractual_base'] = $entity->getMetaData()->getCoin()->getContractualBase();
@@ -293,37 +293,6 @@ class OidcngJsonGenerator implements GeneratorInterface
         if ($contact->getPhone() !== null && $contact->getPhone() !== '' && $contact->getPhone() !== '0') {
             $metadata[sprintf('contacts:%d:telephoneNumber', $index)] = $contact->getPhone();
         }
-
-        return $metadata;
-    }
-
-    /**
-     * Generate logo metadata fields.
-     *
-     * Logo dimensions are required in the SAML spec. They are always present,
-     * except when the user just created the entity in the interface. We
-     * determine the dimensions in those situations.
-     *
-     * @SuppressWarnings(PHPMD.ErrorControlOperator)
-     */
-    private function generateLogoMetadata(ManageEntity $entity): array
-    {
-        $logoUrl = $entity->getMetaData()->getLogo()->getUrl();
-        $metadata = [
-            'logo:0:url' => $logoUrl,
-        ];
-
-        $logoData = @getimagesize($logoUrl);
-
-        if ($logoData !== false) {
-            [$width, $height] = $logoData;
-        } else {
-            $width = 50;
-            $height = 50;
-        }
-
-        $metadata['logo:0:width'] = (string) $width;
-        $metadata['logo:0:height'] = (string) $height;
 
         return $metadata;
     }

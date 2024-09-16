@@ -34,10 +34,10 @@ interface LogoValidationHelperInterface
 
     /**
      * Validates the logo, throws an exception if validation failed.
-     *
+     * Returns the local path to the curl'ed image
      * @param  $url
      * @throws LogoInvalidTypeException
      * @throws LogoNotFoundException
      */
-    public function validateLogo($url);
+    public function validateLogo($url): string;
 }
